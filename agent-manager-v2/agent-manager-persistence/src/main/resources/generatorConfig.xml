@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 数据库驱动 -->
+    <classPathEntry location="/Users/didi/.m2/repository/mysql/mysql-connector-java/5.1.41/mysql-connector-java-5.1.41.jar"/>
+    <context id="BigDataTables" targetRuntime="MyBatis3">
+        <!-- 禁用mybatis插件自动生成的注释 -->
+        <commentGenerator>
+            <property name="suppressDate" value="true" />
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.178.24.87:8099/agent_manager_v2?useSSL=false"
+                password="Work2019" userId="root" />
+
+        <!-- 类型转换器 -->
+        <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- java实体类配置 生成位置-->
+        <javaModelGenerator
+                targetPackage="com.didichuxing.datachannel.agentmanager.common.bean.po.agent"
+                targetProject="src/main/java" />
+
+        <!-- sqlMap映射xml配置 生成位置-->
+        <sqlMapGenerator
+                targetPackage="mybatis"
+                targetProject="src/main/resources" />
+        <!-- mybatis接口类配置 生成位置-->
+        <javaClientGenerator
+                targetPackage="com.didichuxing.datachannel.agentmanager.persistence.mysql"
+                targetProject="src/main/java"
+                type="XMLMAPPER" />
+
+        <!-- table name 可以添加多个table标签-->
+        <table tableName="collect_task_metric"  domainObjectName="CollectTaskMetric" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" />
+
+    </context>
+</generatorConfiguration>

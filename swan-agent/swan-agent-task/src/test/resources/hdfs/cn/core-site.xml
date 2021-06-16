@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns:xi="http://www.w3.org/2001/XInclude">
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://difed</value>
+    </property>
+    <property>
+        <name>fs.permissions.umask-mode</name>
+        <value>022</value>
+    </property>
+    <property>
+        <name>io.compression.codec.lzo.class</name>
+        <value>com.hadoop.compression.lzo.LzoCodec</value>
+    </property>
+    <property>
+        <name>io.compression.codecs</name>
+        <value>org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,com.hadoop.compression.lzo.LzoCodec,com.hadoop.compression.lzo.LzopCodec,org.apache.hadoop.io.compress.BZip2Codec</value>
+    </property>
+    <property>
+        <name>io.file.buffer.size</name>
+        <value>65536</value>
+    </property>
+    <property>
+        <name>fs.trash.rootpath</name>
+        <value>/trash</value>
+    </property>
+    <property>
+        <name>fs.hdfs.impl.disable.cache</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>mergefs.remote.addr</name>
+        <value>http://10.82.128.15:8183/mergefs</value>
+    </property>
+</configuration>

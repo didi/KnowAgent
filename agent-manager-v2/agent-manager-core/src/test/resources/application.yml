@@ -1,0 +1,131 @@
+# agentmanager
+agentmanager:
+  port:
+    web: 8006
+  contextPath: /agent-manager
+
+# 日志相关配置
+logging:
+  pattern:
+    file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
+  path: .
+  file:
+    max-history: 7
+  config: classpath:logback-spring.xml
+  level:
+    dao: debug
+    org:
+      mybatis: debug
+
+# mybatis公共配置
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
+  mapper-locations: classpath:mybatis/*.xml
+
+spring:
+  datasource:
+    name: data
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://10.178.24.87:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+      username: root
+      password: Work2019
+      initialSize: 10
+      validationQueryTimeout: 5000
+      transactionQueryTimeout: 60000
+      minIdle: 10
+      maxActive: 30
+      max-wait: 60000
+      keepAlive: true
+      time-between-eviction-runs-millis: 1000
+      min-evictable-idle-time-millis: 300000
+      defaultAutoCommit: true
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnReturn: false
+      testOnBorrow: true
+      logAbandoned: true
+      pool-prepared-statements: true
+      max-open-prepared-statements: 50
+      filters: stat,wall
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  messages:
+    encoding: UTF-8
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 600MB
+      max-request-size: 600MB
+  auv-job:
+    jdbc-url: jdbc:mysql://10.178.24.87:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+    username: root
+    password: Work2019
+    driver-class-name: com.mysql.jdbc.Driver
+    max-lifetime: 60000
+    init-sql: true
+    init-thread-num: 10
+    max-thread-num: 20
+
+# 事务超时时间
+spring.transaction.default-timeout: 300
+
+kcm:
+  enabled: true
+  gift:
+    endpoint: http://10.90.27.13:8095
+    accessKeyID: AKDD000000000004DPWHQZAKWDKQ93
+    secretAccessKey: ASDDfDeYmhCmzgHgVsaquaFzpxwYBahhKQXevzIr
+    bucket: agentmanager
+
+lam:
+  n9e-job:
+    #    base-url: http://172.20.24.231:8004
+    #    timeout: 300
+    #    account: root
+    #    script-file: lam_script.sh
+    #    user-token: 11ba5de91a8828cb2784398a8d4a8b99
+
+    base-url: http://10.86.76.13:8054
+    timeout: 300
+    account: root
+    script-file: lam_script.sh
+    user-token: 82957c91ba316b3a1c5cb3a5319d6ae8
+
+metadata:
+  sync:
+    request:
+      service:
+        url: http://10.86.76.13:8075/v1/rdb/nodes
+        enabled: false
+      host:
+        url: http://10.86.76.13:8075/v1/rdb/node
+      kafkacluster:
+        url: http://10.178.24.118:8061/kafka/api/v1/third-part/cluster/list
+        enabled: false
+      containers:
+        url: http://10.178.24.116:8066/v1/ccpapi/pod/containers
+      permission:
+        url: http://10.86.76.13:8075/v1/rdb/can-do-node-ops
+        srv-token: uic-internal-third-module-pass-32es6
+        user-token: 2bcddb0bb451916f47bd03a68ca933c1
+        enabled: false
+agent:
+  metrics:
+    datasource:
+      elasticsearch:
+        ip: 10.96.98.234
+        port: 8200
+        appId: 11
+        appSecret: R8XJRm0Wrv7Zwvq
+        agentMetricsIndexName: epri_swan_agent_metrics
+        agentErrorLogIndexName: epri_swan_agent_errlogs
+
+k8s:
+  service-key: servicename
+  path-name: logpath

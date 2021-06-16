@@ -1,0 +1,55 @@
+#.gitignore for java
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+**/META-INF/
+# logs
+/stacktrace.log
+/test/reports
+/logs
+*.log
+*.log.*
+
+## .gitignore for intellij
+*.iml
+*.ipr
+*.iws
+.mvn/
+
+## .gitignore for eclipse
+*.pydevproject
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+tmp
+temp
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+
+.DS_Store
+
+*.http.svn/
+target/
+test-output/
+*.class
+.classpath
+.project
+.settings/
+.idea
+*.iml
+*/.DS_Store
+.DS_Store
+swan-agent.iml
+*/conf.local
+.gitversion
+output
+output.*
+

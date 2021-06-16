@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+  <property name="pathPrefix" value="./logs"/>
+
+  <appender name="swan-agent" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/swan-agent.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/swan-agent.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="channelAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/channel-full.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/channel-full.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="kafkaAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/kafka.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/kafka.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="hdfsAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/hdfs.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/hdfs.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="configAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/config.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/config.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="sysLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/system.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/system.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="errorLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/error.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/error.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="perf" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/perf.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/perf.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="statics" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/statistics.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/statistics.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="monitorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/monitor.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/monitor.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="hdfsAuthAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/hdfs-auth.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/hdfs-auth.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="ddCloudAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+    <file>${pathPrefix}/ddcloud.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <fileNamePattern>${pathPrefix}/ddcloud.log.%i</fileNamePattern>
+      <minIndex>1</minIndex>
+      <maxIndex>5</maxIndex>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+      <charset>utf-8</charset>
+    </encoder>
+  </appender>
+
+  <logger name="ddcloud" additivity="false" level="info">
+    <appender-ref ref="ddCloudAppender"/>
+  </logger>
+
+  <logger name="hdfs-auth" additivity="false" level="info">
+    <appender-ref ref="hdfsAuthAppender"/>
+  </logger>
+
+  <logger name="monitor" additivity="false" level="info">
+    <appender-ref ref="monitorAppender"/>
+  </logger>
+
+  <logger name="channel" additivity="false" level="info">
+    <appender-ref ref="channelAppender"/>
+  </logger>
+
+  <logger name="perfLogger" additivity="false" level="info">
+    <appender-ref ref="perf"/>
+  </logger>
+
+  <logger name="staticslog" additivity="false" level="info">
+    <appender-ref ref="statics"/>
+  </logger>
+
+  <logger name="gatherErrorLogger" additivity="false" level="error">
+    <appender-ref ref="errorLogger"/>
+  </logger>
+
+  <logger name="config" additivity="false" level="info">
+    <appender-ref ref="configAppender"/>
+  </logger>
+
+  <logger name="com.didichuxing" additivity="false" level="debug">
+    <appender-ref ref="swan-agent"/>
+  </logger>
+
+  <logger name="org.apache.kafka" additivity="false" level="debug">
+    <appender-ref ref="kafkaAppender"/>
+  </logger>
+
+  <logger name="org.apache.hadoop.hdfs" additivity="false" level="debug">
+    <appender-ref ref="hdfsAppender"/>
+  </logger>
+
+  <root level="debug">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

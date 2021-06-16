@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="log_collect_task_name" property="logCollectTaskName" jdbcType="VARCHAR" />
+    <result column="log_collect_task_remark" property="logCollectTaskRemark" jdbcType="VARCHAR" />
+    <result column="log_collect_task_type" property="logCollectTaskType" jdbcType="TINYINT" />
+    <result column="collect_start_time_business" property="collectStartTimeBusiness" jdbcType="TIMESTAMP" />
+    <result column="collect_end_time_business" property="collectEndTimeBusiness" jdbcType="TIMESTAMP" />
+    <result column="log_collect_task_status" property="logCollectTaskStatus" jdbcType="TINYINT" />
+    <result column="limit_priority" property="limitPriority" jdbcType="TINYINT" />
+    <result column="old_data_filter_type" property="oldDataFilterType" jdbcType="TINYINT" />
+    <result column="send_topic" property="sendTopic" jdbcType="VARCHAR" />
+    <result column="kafka_cluster_id" property="kafkaClusterId" jdbcType="BIGINT" />
+    <result column="host_filter_rule_logic_json_string" property="hostFilterRuleLogicJsonString" jdbcType="VARCHAR" />
+    <result column="advanced_configuration_json_string" property="advancedConfigurationJsonString" jdbcType="VARCHAR" />
+    <result column="configuration_version" property="configurationVersion" jdbcType="INTEGER"/>
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="log_collect_task_execute_timeout_ms" property="logCollectTaskExecuteTimeoutMs" jdbcType="BIGINT" />
+    <result column="log_content_filter_rule_logic_json_string" property="logContentFilterRuleLogicJsonString" jdbcType="VARCHAR" />
+    <result column="log_collect_task_finish_time" property="logCollectTaskFinishTime" jdbcType="TIMESTAMP" />
+    <result column="kafka_producer_configuration" property="kafkaProducerConfiguration" jdbcType="VARCHAR" />
+    <result column="log_content_slice_rule_logic_json_string" property="logContentSliceRuleLogicJsonString" jdbcType="VARCHAR" />
+    <result column="file_name_suffix_match_rule_logic_json_string" property="fileNameSuffixMatchRuleLogicJsonString" jdbcType="VARCHAR" />
+    <result column="collect_delay_threshold_ms" property="collectDelayThresholdMs" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, log_collect_task_name, log_collect_task_remark, log_collect_task_type,
+    collect_start_time_business, collect_end_time_business, limit_priority, log_collect_task_status,
+    send_topic, kafka_cluster_id, host_filter_rule_logic_json_string, advanced_configuration_json_string,
+    operator, create_time, modify_time, configuration_version,old_data_filter_type, log_collect_task_execute_timeout_ms, log_content_filter_rule_logic_json_string, log_collect_task_finish_time, kafka_producer_configuration, log_content_slice_rule_logic_json_string,
+    file_name_suffix_match_rule_logic_json_string, collect_delay_threshold_ms
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <sql id="Base_Column_List_getLogCollectTaskListByHostId" >
+    t1.id, t1.log_collect_task_name, t1.log_collect_task_remark, t1.log_collect_task_type,
+    t1.collect_start_time_business, t1.collect_end_time_business, t1.limit_priority, t1.log_collect_task_status,
+    t1.send_topic, t1.kafka_cluster_id, t1.host_filter_rule_logic_json_string, t1.advanced_configuration_json_string,
+    t1.operator, t1.create_time, t1.modify_time, t1.configuration_version,t1.old_data_filter_type, t1.log_collect_task_execute_timeout_ms, t1.log_content_filter_rule_logic_json_string, t1.log_collect_task_finish_time, kafka_producer_configuration, t1.log_content_slice_rule_logic_json_string,
+    t1.file_name_suffix_match_rule_logic_json_string, t1.collect_delay_threshold_ms
+  </sql>
+
+  <select id="getLogCollectTaskListByHostId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT
+    <include refid="Base_Column_List_getLogCollectTaskListByHostId" />
+    FROM tb_log_collect_task t1 INNER JOIN
+    (
+    SELECT DISTINCT t2.log_collector_task_id from tb_log_collect_task_service t2
+    INNER JOIN tb_service_host t3 ON t3.service_id = t2.service_id
+    WHERE t3.host_id = #{hostId,jdbcType=BIGINT}
+    ) t4 ON t1.id = t4.log_collector_task_id
+  </select>
+
+  <resultMap id="PaginationQueryByConditonResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO" >
+    <id column="log_collect_task_id" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="log_collect_task_name" property="logCollectTaskName" jdbcType="VARCHAR" />
+    <result column="log_collect_task_type" property="logCollectTaskType" jdbcType="TINYINT" />
+    <result column="log_collect_task_health_level" property="logCollectTaskHealthLevel" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="send_topic" property="sendTopic" jdbcType="VARCHAR" />
+    <result column="log_collect_task_status" property="logCollectTaskStatus" jdbcType="INTEGER" />
+    <result column="kafka_cluster_id" property="kafkaClusterId" jdbcType="BIGINT" />
+    <result column="log_collect_task_finish_time" property="logCollectTaskFinishTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <select id="paginationQueryByConditon" resultMap="PaginationQueryByConditonResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO" >
+    SELECT
+      distinct t1.id as log_collect_task_id, t1.log_collect_task_name, t1.log_collect_task_type,
+      t3.log_collect_task_health_level,t1.create_time create_time, t1.send_topic, t1.log_collect_task_status, t1.kafka_cluster_id, t1.log_collect_task_finish_time log_collect_task_finish_time
+      FROM tb_log_collect_task as t1
+	INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id
+	INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
+    <if test="projectId != null">
+      INNER JOIN tb_service_project t5 ON t5.service_id = t2.service_id
+    </if>
+    <where>
+      1 = 1
+      <if test="logCollectTaskName != null">
+        and t1.log_collect_task_name like concat('%',#{logCollectTaskName},'%')
+      </if>
+      <if test="logCollectTaskId != null">
+        and t1.id = #{logCollectTaskId}
+      </if>
+      <if test="logCollectTaskTypeList != null">
+        and t1.log_collect_task_type in
+        <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskType}
+        </foreach>
+      </if>
+      <if test="logCollectTaskHealthLevelList != null">
+        and t3.log_collect_task_health_level in
+        <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskHealthLevel}
+        </foreach>
+      </if>
+      <if test="serviceIdList != null">
+        and t2.service_id in
+        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+          #{serviceId}
+        </foreach>
+      </if>
+      <if test="projectId != null">
+        and t5.project_id = #{projectId}
+      </if>
+      <if test="createTimeStart != null">
+        and t1.create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= t1.create_time
+      </if>
+    </where>
+    ORDER BY
+    <choose>
+      <when test="sortColumn != null">
+        ${sortColumn}
+        <choose>
+          <when test="asc == true">
+            asc
+          </when>
+          <otherwise>
+            desc
+          </otherwise>
+        </choose>
+      </when>
+      <otherwise>
+        create_time desc
+      </otherwise>
+    </choose>
+    limit #{limitFrom}, #{limitSize}
+  </select>
+
+  <select id="queryCountByCondition" resultType="java.lang.Integer" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO" >
+    select count(t4.c) from (
+    SELECT distinct t1.id as c
+    FROM tb_log_collect_task as t1
+    INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id
+    INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
+    <if test="projectId != null">
+      INNER JOIN tb_service_project t5 ON t5.service_id = t2.service_id
+    </if>
+    <where>
+      1 = 1
+      <if test="logCollectTaskName != null">
+        and t1.log_collect_task_name like concat('%',#{logCollectTaskName},'%')
+      </if>
+      <if test="logCollectTaskId != null">
+        and t1.id = #{logCollectTaskId}
+      </if>
+      <if test="logCollectTaskTypeList != null">
+        and t1.log_collect_task_type in
+        <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskType}
+        </foreach>
+      </if>
+      <if test="logCollectTaskHealthLevelList != null">
+        and t3.log_collect_task_health_level in
+        <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskHealthLevel}
+        </foreach>
+      </if>
+      <if test="serviceIdList != null">
+        and t2.service_id in
+        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+          #{serviceId}
+        </foreach>
+      </if>
+      <if test="projectId != null">
+        and t5.project_id = #{projectId}
+      </if>
+      <if test="createTimeStart != null">
+        and t1.create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= t1.create_time
+      </if>
+    </where>
+    ) as t4
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_log_collect_task (log_collect_task_name, log_collect_task_remark, log_collect_task_type,
+    collect_start_time_business, collect_end_time_business, limit_priority, log_collect_task_status,
+    send_topic, kafka_cluster_id, host_filter_rule_logic_json_string, advanced_configuration_json_string,
+    operator, create_time, modify_time, configuration_version,old_data_filter_type, log_collect_task_execute_timeout_ms, log_content_filter_rule_logic_json_string, log_collect_task_finish_time, kafka_producer_configuration, log_content_slice_rule_logic_json_string,
+    file_name_suffix_match_rule_logic_json_string, collect_delay_threshold_ms)
+    values (
+    #{logCollectTaskName,jdbcType=VARCHAR},
+    #{logCollectTaskRemark,jdbcType=VARCHAR},
+    #{logCollectTaskType,jdbcType=TINYINT},
+    #{collectStartTimeBusiness,jdbcType=BIGINT},
+    #{collectEndTimeBusiness,jdbcType=BIGINT},
+    #{limitPriority,jdbcType=TINYINT},
+    #{logCollectTaskStatus,jdbcType=TINYINT},
+    #{sendTopic,jdbcType=VARCHAR},
+    #{kafkaClusterId,jdbcType=BIGINT},
+    #{hostFilterRuleLogicJsonString,jdbcType=VARCHAR},
+    #{advancedConfigurationJsonString,jdbcType=VARCHAR},
+    #{operator,jdbcType=VARCHAR},
+    #{createTime,jdbcType=TIMESTAMP},
+    #{modifyTime,jdbcType=TIMESTAMP},
+    #{configurationVersion,jdbcType=INTEGER},
+    #{oldDataFilterType,jdbcType=TINYINT},
+    #{logCollectTaskExecuteTimeoutMs,jdbcType=BIGINT},
+    #{logContentFilterRuleLogicJsonString,jdbcType=VARCHAR},
+    #{logCollectTaskFinishTime,jdbcType=TIMESTAMP},
+    #{kafkaProducerConfiguration,jdbcType=VARCHAR},
+    #{logContentSliceRuleLogicJsonString,jdbcType=VARCHAR},
+    #{fileNameSuffixMatchRuleLogicJsonString},
+    #{collectDelayThresholdMs}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO" >
+    update tb_log_collect_task
+    set log_collect_task_name = #{logCollectTaskName,jdbcType=VARCHAR},
+      log_collect_task_remark = #{logCollectTaskRemark,jdbcType=VARCHAR},
+      log_collect_task_type = #{logCollectTaskType,jdbcType=TINYINT},
+      collect_start_time_business = #{collectStartTimeBusiness,jdbcType=BIGINT},
+      collect_end_time_business = #{collectEndTimeBusiness,jdbcType=BIGINT},
+      limit_priority = #{limitPriority,jdbcType=TINYINT},
+      log_collect_task_status = #{logCollectTaskStatus,jdbcType=TINYINT},
+      send_topic = #{sendTopic,jdbcType=VARCHAR},
+      kafka_cluster_id = #{kafkaClusterId,jdbcType=BIGINT},
+      host_filter_rule_logic_json_string = #{hostFilterRuleLogicJsonString,jdbcType=VARCHAR},
+      advanced_configuration_json_string = #{advancedConfigurationJsonString,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      configuration_version = configuration_version+1,
+      old_data_filter_type = #{oldDataFilterType,jdbcType=TINYINT},
+      log_collect_task_execute_timeout_ms = #{logCollectTaskExecuteTimeoutMs,jdbcType=BIGINT},
+      log_content_filter_rule_logic_json_string = #{logContentFilterRuleLogicJsonString,jdbcType=VARCHAR},
+      log_collect_task_finish_time = #{logCollectTaskFinishTime,jdbcType=TIMESTAMP},
+      kafka_producer_configuration = #{kafkaProducerConfiguration,jdbcType=VARCHAR},
+      log_content_slice_rule_logic_json_string = #{logContentSliceRuleLogicJsonString,jdbcType=VARCHAR},
+      file_name_suffix_match_rule_logic_json_string = #{fileNameSuffixMatchRuleLogicJsonString},
+      collect_delay_threshold_ms = #{collectDelayThresholdMs}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getByStatus" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task
+    where log_collect_task_status = #{logCollectTaskStatus,jdbcType=TINYINT}
+  </select>
+
+  <select id="getLogCollectTaskListByServiceId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT
+    <include refid="Base_Column_List_getLogCollectTaskListByHostId" />
+    from tb_log_collect_task as t1
+    INNER JOIN tb_log_collect_task_service as t2 ON t1.id = t2.log_collector_task_id
+    WHERE t2.service_id = #{serviceId,jdbcType=BIGINT}
+  </select>
+
+  <select id="getLogCollectTaskListByKafkaClusterId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task
+    WHERE kafka_cluster_id = #{kafkaClusterId,jdbcType=BIGINT}
+  </select>
+
+</mapper>
