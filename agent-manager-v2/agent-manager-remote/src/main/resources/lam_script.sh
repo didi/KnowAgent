@@ -16,10 +16,6 @@ P_PACKAGE_URL=${4}              # 包下载地址
 
 # P_OPERATION_TYPE=1           # 任务类型 0：安装 1：卸载 2：升级
 
-# P_PACKAGE_NAME="swan-log-collector"             # 包名
-# P_PACKAGE_MD5="93b589240dbd77e7a424738c58d8fd3c"              # 包MD5
-# P_PACKAGE_URL="http://img-ys011.didistatic.com/static/bigdata_kafka/do1_pGFCx7DwCIkU6l8T9TvP"              # 包下载地址
-
 WORKSPACE_DIR=$(cd ~ && pwd)    # 工作目录, 设置不同的目录, 可以安装不同的LogAgent
 
 OP_LOG_AGENT_NAME="op_logi_agent"
