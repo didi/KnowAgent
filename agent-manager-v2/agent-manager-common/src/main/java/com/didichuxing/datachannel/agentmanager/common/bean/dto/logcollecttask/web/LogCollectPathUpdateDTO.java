@@ -8,6 +8,9 @@ import lombok.Data;
 @ApiModel(value = "日志采集路径配置", description = "")
 public class LogCollectPathUpdateDTO {
 
+    @ApiModelProperty(value = "采集路径id")
+    private Long id;
+
     @ApiModelProperty(value = "待采集文件字符集")
     private String charset;
 
@@ -22,6 +25,14 @@ public class LogCollectPathUpdateDTO {
 
     @ApiModelProperty(value = "日志切片规则")
     private LogSliceRuleDTO logSliceRuleDTO;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public void setCharset(String charset) {
         this.charset = charset;

@@ -163,6 +163,7 @@ public class NormalLogCollectTaskController {
                 directoryLogCollectPathDO.setCollectFilesFilterRegularPipelineJsonString(JSON.toJSONString(directoryLogCollectPathUpdateDTO.getFilterRuleChain()));
                 directoryLogCollectPathDO.setDirectoryCollectDepth(directoryLogCollectPathUpdateDTO.getDirectoryCollectDepth());
                 directoryLogCollectPathDO.setPath(directoryLogCollectPathUpdateDTO.getPath());
+                directoryLogCollectPathDO.setId(directoryLogCollectPathUpdateDTO.getId());
                 directoryLogCollectPathList.add(directoryLogCollectPathDO);
             }
             logCollectTaskDO.setDirectoryLogCollectPathList(directoryLogCollectPathList);
@@ -173,6 +174,7 @@ public class NormalLogCollectTaskController {
             for (FileLogCollectPathUpdateDTO fileLogCollectPathUpdateDTO : dto.getFileLogCollectPathList()) {
                 FileLogCollectPathDO fileLogCollectPathDO = new FileLogCollectPathDO();
                 fileLogCollectPathDO.setPath(fileLogCollectPathUpdateDTO.getPath());
+                fileLogCollectPathDO.setId(fileLogCollectPathUpdateDTO.getId());
                 fileLogCollectPathList.add(fileLogCollectPathDO);
             }
             logCollectTaskDO.setFileLogCollectPathList(fileLogCollectPathList);
