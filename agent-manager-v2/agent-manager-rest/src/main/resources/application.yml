@@ -78,9 +78,9 @@ spring.transaction.default-timeout: 300
 kcm:
   enabled: true
   gift:
-    endpoint:
-    accessKeyID:
-    secretAccessKey:
+    endpoint: 'url'
+    accessKeyID: 'id'
+    secretAccessKey: 'secret'
     bucket: agentmanager
 
 lam:

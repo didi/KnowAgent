@@ -24,7 +24,7 @@ public class GiftV3Config {
 
   @Bean
   public MinioClient minioClient() {
-    MinioClient minioClient = new MinioClient(endpoint, accessKeyID, secretAccessKey);
+    MinioClient minioClient = new MinioClient.Builder().endpoint(endpoint).credentials(accessKeyID, secretAccessKey).build();
 
     return minioClient;
   }
