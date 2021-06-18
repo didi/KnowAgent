@@ -523,7 +523,6 @@ public class FileUtils {
      * @return result of read
      */
     public static List<String> readFileContent(File file, int maxNum) {
-        LOGGER.info("readFileContent file. huangjiawei.file is " + file + ",size is " + file.length());
         List<String> contents = new ArrayList<>();
         BufferedReader br = null;
         try {
@@ -540,7 +539,6 @@ public class FileUtils {
                 }
             }
         } catch (Exception e) {
-            LOGGER.info("readFileContent file. huangjiawei.file is " + file, e);
             LogGather.recordErrorLog("FileUtil error!", "readFileContent error file is " + file, e);
         } finally {
             try {

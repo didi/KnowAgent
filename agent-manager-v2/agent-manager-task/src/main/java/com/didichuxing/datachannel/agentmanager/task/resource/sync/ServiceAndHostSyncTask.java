@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
  * 日志采集任务健康监控任务
  */
 @Task(name = "ServiceAndHostSyncTask", description = "定时同步系统中所有的服务&主机、容器信息检查周期为 10分钟/次 ",
-        cron = "0 0/3 * * * ?", autoRegister = true)
+        cron = "0 0/10 * * * ?", autoRegister = true)
 public class ServiceAndHostSyncTask implements Job {
 
     private static final ILog LOGGER = LogFactory.getLog("LogCollectTaskHealthCheckTask");

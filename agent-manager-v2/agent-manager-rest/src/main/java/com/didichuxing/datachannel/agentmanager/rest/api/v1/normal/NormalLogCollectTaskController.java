@@ -153,6 +153,8 @@ public class NormalLogCollectTaskController {
         logCollectTaskDO.setCollectStartTimeBusiness(dto.getCollectStartBusinessTime());
         logCollectTaskDO.setLogCollectTaskRemark(dto.getLogCollectTaskRemark());
         logCollectTaskDO.setLogCollectTaskName(dto.getLogCollectTaskName());
+        logCollectTaskDO.setCollectDelayThresholdMs(dto.getCollectDelayThresholdMs());
+        logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
         //  setDirectoryLogCollectPathList
         if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
@@ -203,6 +205,7 @@ public class NormalLogCollectTaskController {
         //  setDirectoryLogCollectPathList
         logCollectTaskDO.setCollectDelayThresholdMs(dto.getCollectDelayThresholdMs());
         logCollectTaskDO.setLogContentSliceRuleLogicJsonString(JSON.toJSONString(dto.getLogSliceRuleDTO()));
+        logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
         if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
             for (DirectoryLogCollectPathCreateDTO directoryLogCollectPathCreateDTO : dto.getDirectoryLogCollectPathList()) {
@@ -224,7 +227,6 @@ public class NormalLogCollectTaskController {
             }
             logCollectTaskDO.setFileLogCollectPathList(fileLogCollectPathList);
         }
-        logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
         return logCollectTaskDO;
     }
 

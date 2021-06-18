@@ -49,17 +49,26 @@ public class LogCollectTaskUpdateDTO {
     @ApiModelProperty(value = "主机过滤规则")
     private HostFilterRuleDTO hostFilterRuleDTO;
 
+    @ApiModelProperty(value = "日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型\"按指定时间范围采集\"时才存在值")
+    private Long logCollectTaskExecuteTimeoutMs;
+
     @ApiModelProperty(value = "目录类型采集路径集")
     private List<DirectoryLogCollectPathUpdateDTO> directoryLogCollectPathList;
 
     @ApiModelProperty(value = "文件类型采集路径集")
     private List<FileLogCollectPathUpdateDTO> fileLogCollectPathList;
 
-    @ApiModelProperty(value = "日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型\"按指定时间范围采集\"时才存在值")
-    private Long logCollectTaskExecuteTimeoutMs;
-
     @ApiModelProperty(value = "日志内容过滤规则")
     private LogContentFilterRuleDTO logContentFilterLogicDTO;
+
+    @ApiModelProperty(value = "该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~ 当前时间间隔")
+    private Long collectDelayThresholdMs;
+
+    @ApiModelProperty(value = "文件匹配后缀规则")
+    private FileNameSuffixMatchRuleDTO fileNameSuffixMatchRuleDTO;
+
+    @ApiModelProperty(value = "日志切片规则")
+    private LogSliceRuleDTO logSliceRuleDTO;
 
     public Long getId() {
         return id;
@@ -195,5 +204,29 @@ public class LogCollectTaskUpdateDTO {
 
     public void setLogContentFilterLogicDTO(LogContentFilterRuleDTO logContentFilterLogicDTO) {
         this.logContentFilterLogicDTO = logContentFilterLogicDTO;
+    }
+
+    public Long getCollectDelayThresholdMs() {
+        return collectDelayThresholdMs;
+    }
+
+    public void setCollectDelayThresholdMs(Long collectDelayThresholdMs) {
+        this.collectDelayThresholdMs = collectDelayThresholdMs;
+    }
+
+    public FileNameSuffixMatchRuleDTO getFileNameSuffixMatchRuleDTO() {
+        return fileNameSuffixMatchRuleDTO;
+    }
+
+    public void setFileNameSuffixMatchRuleDTO(FileNameSuffixMatchRuleDTO fileNameSuffixMatchRuleDTO) {
+        this.fileNameSuffixMatchRuleDTO = fileNameSuffixMatchRuleDTO;
+    }
+
+    public LogSliceRuleDTO getLogSliceRuleDTO() {
+        return logSliceRuleDTO;
+    }
+
+    public void setLogSliceRuleDTO(LogSliceRuleDTO logSliceRuleDTO) {
+        this.logSliceRuleDTO = logSliceRuleDTO;
     }
 }

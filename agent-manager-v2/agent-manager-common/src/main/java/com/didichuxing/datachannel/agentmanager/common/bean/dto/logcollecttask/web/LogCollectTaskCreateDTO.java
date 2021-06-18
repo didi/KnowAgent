@@ -202,4 +202,20 @@ public class LogCollectTaskCreateDTO {
     public void setCollectDelayThresholdMs(Long collectDelayThresholdMs) {
         this.collectDelayThresholdMs = collectDelayThresholdMs;
     }
+
+    public FileNameSuffixMatchRuleDTO getFileNameSuffixMatchRuleDTO() {
+        return fileNameSuffixMatchRuleDTO;
+    }
+
+    public void setFileNameSuffixMatchRuleDTO(FileNameSuffixMatchRuleDTO fileNameSuffixMatchRuleDTO) {
+        this.fileNameSuffixMatchRuleDTO = fileNameSuffixMatchRuleDTO;
+    }
+
+    public LogSliceRuleDTO getLogSliceRuleDTO() {
+        return logSliceRuleDTO;
+    }
+
+    public void setLogSliceRuleDTO(LogSliceRuleDTO logSliceRuleDTO) {
+        this.logSliceRuleDTO = logSliceRuleDTO;
+    }
 }

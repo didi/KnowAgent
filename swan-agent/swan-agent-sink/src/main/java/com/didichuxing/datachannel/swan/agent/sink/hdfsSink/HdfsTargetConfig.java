@@ -34,7 +34,7 @@ public class HdfsTargetConfig extends TargetConfig {
 
     /**
      * hdfs 目录
-     * /huangjiaweihjw/${path}/${yyyy}/${MM}/${dd}/${HH}
+     * /${path}/${yyyy}/${MM}/${dd}/${HH}
      */
     private String  hdfsPath;
 
