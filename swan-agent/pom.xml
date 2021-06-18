@@ -93,12 +93,6 @@
                 <version>0.1.8</version>
             </dependency>
 
-            <!--<dependency>-->
-            <!--<groupId>com.didichuxing.tunnel</groupId>-->
-            <!--<artifactId>tunnel-log4j2</artifactId>-->
-            <!--<version>0.1.7</version>-->
-            <!--</dependency>-->
-
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
