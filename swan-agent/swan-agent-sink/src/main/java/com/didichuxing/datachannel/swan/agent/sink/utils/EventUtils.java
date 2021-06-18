@@ -4,11 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.didichuxing.datachannel.swan.agent.common.api.*;
-import com.didichuxing.datachannel.swan.agent.sink.hdfsSink.HdfsEvent;
-import com.didichuxing.datachannel.swan.agent.sink.hdfsSink.HdfsSink;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
@@ -371,39 +368,6 @@ public class EventUtils {
             return object;
         }
         return null;
-    }
-
-    public static void buildHdfsContent(ByteArrayOutputStream byteStream, HdfsSink hdfsSink,
-                                        HdfsEvent hdfsEvent) throws Exception {
-        if (hdfsSink.getHdfsTargetConfig().getTransFormate() == HdfsTransFormat.HDFS_EVENT
-            .getStatus()) {
-            StringBuilder sb = new StringBuilder("");
-            sb.append("{");
-            sb.append("\"hostName\":").append("\"" + CommonUtils.getHOSTNAME() + "\"").append(",");
-            sb.append("\"logId\":").append(hdfsEvent.getModelId()).append(",");
-            sb.append("\"pathId\":").append(hdfsEvent.getSourceId()).append(",");
-            sb.append("\"service\":")
-                .append(
-                    "\"" + hdfsSink.getModelConfig().getEventMetricsConfig().getOriginalAppName()
-                            + "\"").append(",");
-            sb.append("\"leaf\":")
-                .append(
-                    "\"" + hdfsSink.getModelConfig().getEventMetricsConfig().getOdinLeaf() + "\"")
-                .append(",");
-            sb.append("\"offset\":").append(hdfsEvent.getRateOfSource()).append(",");
-            sb.append("\"collectTime\":").append(hdfsEvent.getSourceTime()).append(",");
-            sb.append("\"logTime\":").append(hdfsEvent.getLogTime()).append(",");
-            sb.append("\"uniqueKey\":").append("\"" + hdfsEvent.getMsgUniqueKey() + "\"")
-                .append(",");
-            sb.append("\"content\":").append("\"");
-
-            byteStream.write(sb.toString().getBytes());
-            byteStream.write(hdfsEvent.getBytes());
-            byteStream.write(END_OF_JSON_OBJECT);
-        } else {
-            byteStream.write(hdfsEvent.getBytes());
-        }
-
     }
 
     /**

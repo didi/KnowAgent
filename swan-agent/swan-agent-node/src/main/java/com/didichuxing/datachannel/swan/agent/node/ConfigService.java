@@ -20,7 +20,6 @@ import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.*;
 import com.didichuxing.datachannel.swan.agent.engine.component.AgentComponent;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.node.service.http.client.HttpClient;
-import com.didichuxing.datachannel.swan.agent.sink.hdfsSink.HdfsTargetConfig;
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaTargetConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.tunnel.util.log.ILog;
@@ -460,63 +459,6 @@ public class ConfigService extends AgentComponent {
             CONFIG_LOGGER.error("buildAgentConfigFromString error! input is " + input, e);
         }
         return agentConfig;
-    }
-
-    private ModelConfig getModelConfigFromJSONObject(JSONObject object) {
-        ModelConfig modelConfig = JSONObject.parseObject(object.toString(), ModelConfig.class);
-        String targetTag;
-        if (modelConfig.getTag().equals(Tags.TASK_LOG2HDFS)) {
-            targetTag = Tags.TARGET_HDFS;
-        } else {
-            targetTag = Tags.TARGET_KAFKA;
-        }
-
-        CommonConfig commonConfig = JSONObject.parseObject(object.get("commonConfig").toString(), CommonConfig.class);
-        modelConfig.setCommonConfig(commonConfig);
-
-        EventMetricsConfig eventMetricsConfig = JSONObject.parseObject(object.get("eventMetricsConfig").toString(),
-                                                                       EventMetricsConfig.class);
-        modelConfig.setEventMetricsConfig(eventMetricsConfig);
-
-        ModelLimitConfig modelLimitConfig = JSONObject.parseObject(object.get("modelLimitConfig").toString(),
-                                                                   ModelLimitConfig.class);
-        modelConfig.setModelLimitConfig(modelLimitConfig);
-
-        if (targetTag.equals(Tags.TARGET_KAFKA)) {
-            KafkaTargetConfig targetConfig = JSONObject.parseObject(object.get("targetConfig").toString(),
-                                                                    KafkaTargetConfig.class);
-            modelConfig.setTargetConfig(targetConfig);
-        } else {
-            HdfsTargetConfig targetConfig = JSONObject.parseObject(object.get("targetConfig").toString(),
-                                                                   HdfsTargetConfig.class);
-            modelConfig.setTargetConfig(targetConfig);
-        }
-
-        LogSourceConfig sourceConfig = JSONObject.parseObject(object.get("sourceConfig").toString(),
-                                                              LogSourceConfig.class);
-        modelConfig.setSourceConfig(sourceConfig);
-
-        ChannelConfig channelConfig = JSONObject.parseObject(object.get("channelConfig").toString(),
-                                                             ChannelConfig.class);
-        modelConfig.setChannelConfig(channelConfig);
-
-        if (object.get("version") != null) {
-            modelConfig.setVersion(Integer.parseInt(object.get("version").toString()));
-        }
-
-        if (object.get("hostname") != null) {
-            modelConfig.setHostname(object.get("hostname").toString());
-        }
-
-        if (object.get("collectType") != null) {
-            modelConfig.setCollectType(Integer.parseInt(object.get("collectType").toString()));
-        }
-
-        if (object.get("sourceLogModeId") != null) {
-            modelConfig.setSourceLogModeId(Long.parseLong(object.get("sourceLogModeId").toString()));
-        }
-
-        return modelConfig;
     }
 
     /**

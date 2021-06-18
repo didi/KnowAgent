@@ -18,7 +18,6 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.CollectUtils;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.node.SwanAgent;
 import com.didichuxing.datachannel.swan.agent.source.log.offset.OffsetManager;
-import com.didichuxing.datachannel.swan.agent.task.log.log2hdfs.Log2HdfsModel;
 import com.didichuxing.datachannel.swan.agent.task.log.log2kafak.Log2KafkaModel;
 import com.didichuxing.tunnel.util.log.ILog;
 import com.didichuxing.tunnel.util.log.LogFactory;
@@ -98,7 +97,9 @@ public class ModelManager extends AgentComponent {
                 if (Tags.TASK_LOG2KAFKA.equals(tag)) {
                     return new Log2KafkaModel(taskConfig);
                 } else if (Tags.TASK_LOG2HDFS.equals(tag)) {
-                    return new Log2HdfsModel(taskConfig);
+                    //TODO：TASK_LOG2HDFS not support
+                    LOGGER.warn("taskconfig matched TASK_LOG2HDFS model, but not support.taskConfig is " + taskConfig);
+                    return null;
                 }
             }
         }

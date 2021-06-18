@@ -93,7 +93,6 @@ public class ModelManagerTest extends ConfigServiceTest {
 
         List<ModelConfig> list = new ArrayList<>();
         list.add(getKafkaModelConfig());
-        list.add(getHdfsModelConfig());
         agentConfig.setModelConfigs(list);
         return agentConfig;
     }

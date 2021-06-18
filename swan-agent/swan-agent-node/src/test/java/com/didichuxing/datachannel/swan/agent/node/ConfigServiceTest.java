@@ -21,7 +21,6 @@ import com.didichuxing.datachannel.swan.agent.common.configs.v2.*;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.*;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.node.service.http.client.HttpClient;
-import com.didichuxing.datachannel.swan.agent.sink.hdfsSink.HdfsTargetConfig;
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaTargetConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.config.MatchConfig;
@@ -52,7 +51,6 @@ public class ConfigServiceTest {
 
         List<ModelConfig> list = new ArrayList<>();
         list.add(getKafkaModelConfig());
-        list.add(getHdfsModelConfig());
         agentConfig.setModelConfigs(list);
         ConfigService configService = new ConfigService(null);
         configService.writeLocalConfig(agentConfig);
@@ -119,38 +117,6 @@ public class ConfigServiceTest {
         modelConfig.setSourceConfig(logSourceConfig);
         modelConfig.setTargetConfig(targetConfig);
         time++;
-
-        return modelConfig;
-    }
-
-    protected ModelConfig getHdfsModelConfig() {
-        ModelConfig modelConfig = new ModelConfig(Tags.TASK_LOG2HDFS);
-
-        EventMetricsConfig eventMetricsConfig = getEventMetricsConfig();
-        CommonConfig commonConfig = getCommonConfig(-1L, "log-hdfs-task");
-        ModelLimitConfig modelLimitConfig = new ModelLimitConfig();
-        ChannelConfig channelConfig = new ChannelConfig();
-
-        LogPath logPath0 = new LogPath(-1L, 0L, "/home/xiaoju/hdfs/test0.log");
-        LogPath logPath1 = new LogPath(-1L, 1L, "/home/xiaoju/hdfs/test1.log");
-        List<LogPath> list = new ArrayList<>();
-        list.add(logPath0);
-        list.add(logPath1);
-        LogSourceConfig logSourceConfig = new LogSourceConfig();
-        logSourceConfig.setLogPaths(list);
-        logSourceConfig.setMatchConfig(new MatchConfig());
-
-        HdfsTargetConfig hdfsTargetConfig = new HdfsTargetConfig();
-        hdfsTargetConfig.setUsername("username");
-        hdfsTargetConfig.setPassword("password");
-        hdfsTargetConfig.setHdfsPath("/huangjiaweihjw/${path}/${yyyy}/${MM}/${dd}/${HH}");
-
-        modelConfig.setEventMetricsConfig(eventMetricsConfig);
-        modelConfig.setCommonConfig(commonConfig);
-        modelConfig.setModelLimitConfig(modelLimitConfig);
-        modelConfig.setChannelConfig(channelConfig);
-        modelConfig.setSourceConfig(logSourceConfig);
-        modelConfig.setTargetConfig(hdfsTargetConfig);
 
         return modelConfig;
     }
@@ -324,9 +290,7 @@ public class ConfigServiceTest {
                             modelItem.get("targetConfig").toString(), KafkaTargetConfig.class);
                         System.out.println(targetConfig);
                     } else if (targetTag.equals(Tags.TARGET_HDFS)) {
-                        HdfsTargetConfig targetConfig = JSONObject.parseObject(
-                            modelItem.get("targetConfig").toString(), HdfsTargetConfig.class);
-                        System.out.println(targetConfig);
+                        //TODO：TASK_LOG2HDFS not support
                     }
 
                     if (sourceTag.equals(Tags.SOURCE_LOG)) {
