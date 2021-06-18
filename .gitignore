@@ -53,3 +53,4 @@ swan-agent.iml
 output
 output.*
 
+*.http
