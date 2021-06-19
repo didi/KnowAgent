@@ -98,7 +98,9 @@ public class ModelManager extends AgentComponent {
                     return new Log2KafkaModel(taskConfig);
                 } else if (Tags.TASK_LOG2HDFS.equals(tag)) {
                     //TODO：TASK_LOG2HDFS not support
-                    LOGGER.warn("taskconfig matched TASK_LOG2HDFS model, but not support.taskConfig is " + taskConfig);
+                    LOGGER
+                        .warn("taskconfig matched TASK_LOG2HDFS model, but not support.taskConfig is "
+                              + taskConfig);
                     return null;
                 }
             }

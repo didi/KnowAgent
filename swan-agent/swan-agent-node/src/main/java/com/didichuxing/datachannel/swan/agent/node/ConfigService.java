@@ -1,30 +1,35 @@
 package com.didichuxing.datachannel.swan.agent.node;
 
-import java.io.*;
-import java.util.*;
-
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentRegisterDTO;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.ResultTypeEnum;
-import com.didichuxing.datachannel.swan.agent.node.am.v2.AgentCollectConfigurationImpl;
-import com.didichuxing.datachannel.swan.agent.common.constants.Tags;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentRegisterDTO;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ResultTypeEnum;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.AgentConfig;
-import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.*;
+import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.swan.agent.engine.component.AgentComponent;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
+import com.didichuxing.datachannel.swan.agent.node.am.v2.AgentCollectConfigurationImpl;
 import com.didichuxing.datachannel.swan.agent.node.service.http.client.HttpClient;
-import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaTargetConfig;
-import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.tunnel.util.log.ILog;
 import com.didichuxing.tunnel.util.log.LogFactory;
 import com.didichuxing.tunnel.util.log.LogGather;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @description: config service

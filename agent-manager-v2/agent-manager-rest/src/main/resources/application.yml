@@ -7,11 +7,10 @@ agentmanager:
 # 日志相关配置
 logging:
   pattern:
-    file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
+    file: "[%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%level][%t] %msg%xEx%n"
   path: .
   file:
     max-history: 7
-  config: classpath:logback-spring.xml
   level:
     dao: debug
     org:

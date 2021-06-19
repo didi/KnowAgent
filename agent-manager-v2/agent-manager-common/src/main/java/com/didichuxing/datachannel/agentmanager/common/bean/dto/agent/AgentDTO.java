@@ -3,9 +3,6 @@ package com.didichuxing.datachannel.agentmanager.common.bean.dto.agent;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * @author huqidong
  * @date 2020-09-21

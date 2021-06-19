@@ -1,6 +1,5 @@
 package com.didichuxing.datachannel.swan.agent.engine.utils;
 
-import com.didichuxing.datachannel.agentmanager.common.util.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
