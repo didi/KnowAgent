@@ -99,19 +99,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- es -->
-            <dependency>
-                <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>elasticsearch-didi-internal-client</artifactId>
-                <version>${es.client.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.didichuxing.tunnel</groupId>
-                        <artifactId>tunnel-log4j2</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
             <!-- spring boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
