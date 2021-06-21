@@ -4,7 +4,7 @@
 
     <appender name="swan-agent" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/swan-agent.log" />
+        <param name="File" value="./logs/swan-agent.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -15,7 +15,7 @@
 
     <appender name="channelAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/channel-full.log" />
+        <param name="File" value="./logs/channel-full.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -26,7 +26,7 @@
 
     <appender name="kafkaAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/kafka.log" />
+        <param name="File" value="./logs/kafka.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -37,7 +37,7 @@
 
     <appender name="hdfsAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/hdfs.log" />
+        <param name="File" value="./logs/hdfs.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -48,7 +48,7 @@
 
     <appender name="configAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/config.log" />
+        <param name="File" value="./logs/config.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -59,7 +59,7 @@
 
     <appender name="sysLogger" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/system.log" />
+        <param name="File" value="./logs/system.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="false" />
@@ -70,7 +70,7 @@
 
     <appender name="errorAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/error.log" />
+        <param name="File" value="./logs/error.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -81,7 +81,7 @@
 
     <appender name="perf" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/perf.log" />
+        <param name="File" value="./logs/perf.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -92,7 +92,7 @@
 
     <appender name="statics" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/statistics.log" />
+        <param name="File" value="./logs/statistics.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="false" />
@@ -103,7 +103,7 @@
 
     <appender name="monitorAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/monitor.log" />
+        <param name="File" value="./logs/monitor.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -114,7 +114,7 @@
 
     <appender name="hdfsAuthAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/hdfs-auth.log" />
+        <param name="File" value="./logs/hdfs-auth.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
@@ -125,7 +125,7 @@
 
     <appender name="ddCloudAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Encoding" value="UTF-8" />
-        <param name="File" value="${baselog}/ddcloud.log" />
+        <param name="File" value="./logs/ddcloud.log" />
         <param name="maxFileSize" value="50MB" />
         <param name="maxBackupIndex" value="2" />
         <param name="Append" value="true" />
