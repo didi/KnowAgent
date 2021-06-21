@@ -155,6 +155,7 @@ public class NormalLogCollectTaskController {
         logCollectTaskDO.setLogCollectTaskName(dto.getLogCollectTaskName());
         logCollectTaskDO.setCollectDelayThresholdMs(dto.getCollectDelayThresholdMs());
         logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
+        logCollectTaskDO.setKafkaProducerConfiguration(dto.getKafkaProducerConfiguration());
         //  setDirectoryLogCollectPathList
         if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
@@ -208,6 +209,7 @@ public class NormalLogCollectTaskController {
         logCollectTaskDO.setCollectDelayThresholdMs(dto.getCollectDelayThresholdMs());
         logCollectTaskDO.setLogContentSliceRuleLogicJsonString(JSON.toJSONString(dto.getLogSliceRuleDTO()));
         logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
+        logCollectTaskDO.setKafkaProducerConfiguration(dto.getKafkaProducerConfiguration());
         if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
             for (DirectoryLogCollectPathCreateDTO directoryLogCollectPathCreateDTO : dto.getDirectoryLogCollectPathList()) {

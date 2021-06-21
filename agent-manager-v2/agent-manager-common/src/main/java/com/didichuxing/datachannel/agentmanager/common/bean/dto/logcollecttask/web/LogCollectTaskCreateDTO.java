@@ -67,6 +67,9 @@ public class LogCollectTaskCreateDTO {
     @ApiModelProperty(value = "日志切片规则")
     private LogSliceRuleDTO logSliceRuleDTO;
 
+    @ApiModelProperty(value = "生产端属性")
+    private String kafkaProducerConfiguration;
+
     public String getLogCollectTaskName() {
         return logCollectTaskName;
     }
@@ -217,5 +220,13 @@ public class LogCollectTaskCreateDTO {
 
     public void setLogSliceRuleDTO(LogSliceRuleDTO logSliceRuleDTO) {
         this.logSliceRuleDTO = logSliceRuleDTO;
+    }
+
+    public String getKafkaProducerConfiguration() {
+        return kafkaProducerConfiguration;
+    }
+
+    public void setKafkaProducerConfiguration(String kafkaProducerConfiguration) {
+        this.kafkaProducerConfiguration = kafkaProducerConfiguration;
     }
 }

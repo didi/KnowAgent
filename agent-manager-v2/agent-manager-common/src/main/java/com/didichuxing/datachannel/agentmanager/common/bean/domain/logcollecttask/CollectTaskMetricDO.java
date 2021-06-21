@@ -94,7 +94,7 @@ public class CollectTaskMetricDO extends BaseDO {
     @JSONField(name = "source.type")
     private String sourceType;
 
-    private Date logTime;
+    private Long logTime;
 
     private Integer flushFailedCount;
 
@@ -458,11 +458,11 @@ public class CollectTaskMetricDO extends BaseDO {
         this.sourceType = sourceType;
     }
 
-    public Date getLogTime() {
+    public Long getLogTime() {
         return logTime;
     }
 
-    public void setLogTime(Date logTime) {
+    public void setLogTime(Long logTime) {
         this.logTime = logTime;
     }
 
