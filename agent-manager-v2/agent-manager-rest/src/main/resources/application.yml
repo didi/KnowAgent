@@ -93,28 +93,20 @@ lam:
 metadata:
   sync:
     request:
-      service:
-        url:
-        enabled: false
-      host:
-        url:
       kafkacluster:
         url:
         enabled: false
-      containers:
-        url:
-      permission:
-        url:
-        srv-token:
-        user-token:
-        enabled:
+      k8s:
+        service-key: servicename
+        path-name: logpath
+        enabled: true
 agent:
   metrics:
     datasource:
       elasticsearch:
         ip:
         port:
-        appId:
+        apappIdpId:
         appSecret:
         agentMetricsIndexName:
         agentErrorLogIndexName:
@@ -124,7 +116,3 @@ agent:
         url: http://%s:%d/swan-agent/path
         port: 2023
         body:
-
-k8s:
-  service-key: servicename
-  path-name: logpath

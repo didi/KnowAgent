@@ -1,7 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServicePaginationQueryConditionDO;
@@ -16,18 +15,14 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.enumeration.service.ServiceTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
-import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
-import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceLogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceProjectManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.ServiceMapper;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
-import com.didichuxing.datachannel.agentmanager.remote.service.RemoteServiceManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.service.extension.ServiceManageServiceExtension;
 import com.didichuxing.tunnel.util.log.ILog;
 import com.didichuxing.tunnel.util.log.LogFactory;
@@ -41,7 +36,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @org.springframework.stereotype.Service
 public class ServiceManageServiceImpl implements ServiceManageService {
@@ -67,17 +61,7 @@ public class ServiceManageServiceImpl implements ServiceManageService {
     private LogCollectTaskManageService logCollectTaskManageService;
 
     @Autowired
-    private RemoteServiceManageService remoteServiceManageService;
-
-    @Autowired
     private ServiceProjectManageService serviceProjectManageService;
-
-    /**
-     * ServiceDO 对象比较器
-     */
-    private ServiceDOComparator comparator = new ServiceDOComparator();
-
-    private ServicProjectPOComparator servicProjectPOComparator = new ServicProjectPOComparator();
 
     @Override
     @Transactional
@@ -173,123 +157,6 @@ public class ServiceManageServiceImpl implements ServiceManageService {
     @Override
     public Integer queryCountByCondition(ServicePaginationQueryConditionDO servicePaginationQueryConditionDO) {
         return serviceDAO.queryCountByCondition(servicePaginationQueryConditionDO);
-    }
-
-    @Override
-    public void pullServiceListFromRemoteAndMergeInLocal() {
-        long startTime = System.currentTimeMillis();//use to lo
-        /*
-         * 获取远程服务节点对象集
-         */
-        List<ServiceDO> remoteList = remoteServiceManageService.getServicesFromRemote();
-        Map<String, String> serviceName2ProjectServiceNameMap = buildServiceName2ProjectServiceNameRelation(remoteList);//该map用于维护各服务节点 ~ 该服务节点对应项目节点节点名
-
-        long getRemoteListTime = System.currentTimeMillis() - startTime;//获取远程主机信息集耗时
-        /*
-         * 获取本地服务节点对象集
-         */
-        long getLocalListStartTime = System.currentTimeMillis();
-        List<ServiceDO> localList = list();
-        long getLocalListTime = System.currentTimeMillis() - getLocalListStartTime;//获取本地主机信息集耗时
-        /*
-         * 与本地服务节点集进行对比，得到待新增、待删除、待更新服务节点列表
-         */
-        long compareStartTime = System.currentTimeMillis();
-        ListCompareResult<ServiceDO> listCompareResult = ListCompareUtil.compare(localList, remoteList, comparator);
-        long compareTime = System.currentTimeMillis() - compareStartTime;
-        /*
-         * 针对上一步得到的待新增、待删除、待更新服务节点列表，进行新增、删除、更新操作
-         */
-        long persistStartTime = System.currentTimeMillis();
-        int createSuccessCount = 0, removeScucessCount = 0, modifiedSuccessCount = 0;//创建成功数、删除成功数、更新成功数
-        //处理待创建对象集
-        List<ServiceDO> createList = listCompareResult.getCreateList();
-        for (ServiceDO serviceDO : createList) {
-            Long savedId = createService(serviceDO, null);
-            if (savedId > 0) {
-                createSuccessCount++;
-            } else {
-                LOGGER.error(
-                        String.format("class=ServiceManageServiceImpl||method=pullServiceListFromRemoteAndMergeInLocal||errMsg={%s}",
-                                String.format("创建对象Service={%s}失败", JSON.toJSONString(serviceDO)))
-                );
-            }
-        }
-        //处理待修改对象集
-        List<ServiceDO> modifyList = listCompareResult.getModifyList();
-        for (ServiceDO serviceDO : modifyList) {
-            //删除服务 & 主机关联关系
-            serviceHostManageService.deleteServiceHostByServiceId(serviceDO.getId());
-            updateService(serviceDO, null);
-            modifiedSuccessCount++;
-        }
-        //处理待删除对象集
-        List<ServiceDO> removeList = listCompareResult.getRemoveList();
-        for (ServiceDO serviceDO : removeList) {
-            //删除服务 & 主机关联关系
-            serviceHostManageService.deleteServiceHostByServiceId(serviceDO.getId());
-            //删除服务 & 日志采集任务关联关系
-            serviceLogCollectTaskManageService.removeServiceLogCollectTaskByServiceId(serviceDO.getId());
-            deleteService(serviceDO.getId(), true,null);
-            removeScucessCount++;
-        }
-        long persistTime = System.currentTimeMillis() - persistStartTime;
-
-        /*
-         * 更新 "服务 ~ 项目" 关联关系集
-         */
-        List<ServiceProjectPO> serviceProjectPOListInLocal = serviceProjectManageService.list();
-        List<ServiceDO> serviceDOListInLocal = list();
-        List<ServiceProjectPO> serviceProjectPOListRemote = buildServiceProjectRelation(serviceName2ProjectServiceNameMap, serviceDOListInLocal);
-        int serviceProjectRelationCreateSuccessCount = 0, serviceProjectRelationRemoveSuccessCount = 0;//服务~项目关联关系创建成功数、删除成功数
-        ListCompareResult<ServiceProjectPO> serviceProjectPOListCompareResult = ListCompareUtil.compare(serviceProjectPOListInLocal, serviceProjectPOListRemote, servicProjectPOComparator);
-        //处理待创建对象集
-        List<ServiceProjectPO> createServiceProjectPOList = serviceProjectPOListCompareResult.getCreateList();
-        serviceProjectManageService.createServiceProjectList(createServiceProjectPOList);
-        serviceProjectRelationCreateSuccessCount = createServiceProjectPOList.size();
-        //处理待删除对象集
-        List<ServiceProjectPO> removeServiceProjectPOList = serviceProjectPOListCompareResult.getRemoveList();
-        for (ServiceProjectPO serviceProjectPO : removeServiceProjectPOList) {
-            serviceProjectManageService.deleteById(serviceProjectPO.getId());
-            serviceProjectRelationRemoveSuccessCount++;
-        }
-
-        /*
-         * 记录日志
-         */
-        String logInfo = String.format(
-                "class=ServiceManageServiceImpl||method=pullServiceListFromRemoteAndMergeInLocal||remoteListSize={%d}||localListSize={%d}||" +
-                        "total-cost-time={%d}||getRemoteList-cost-time={%d}||getLocalList-cost-time={%d}||compareRemoteListAndLocalList-cost-time={%d}||persistList-cost-time={%d}||" +
-                        "计划扩容数={%d}||扩容成功数={%d}||扩容失败数={%d}||计划缩容数={%d}||缩容成功数={%d}||缩容失败数={%d}||计划更新数={%d}||更新成功数={%d}||更新失败数={%d}",
-                remoteList.size(),
-                localList.size(),
-                System.currentTimeMillis() - startTime,
-                getRemoteListTime,
-                getLocalListTime,
-                compareTime,
-                persistTime,
-                listCompareResult.getCreateList().size(),
-                createSuccessCount,
-                (listCompareResult.getCreateList().size() - createSuccessCount),
-                listCompareResult.getRemoveList().size(),
-                removeScucessCount,
-                (listCompareResult.getRemoveList().size() - removeScucessCount),
-                listCompareResult.getModifyList().size(),
-                modifiedSuccessCount,
-                (listCompareResult.getModifyList().size() - modifiedSuccessCount)
-        );
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(logInfo);
-        }
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(
-                    String.format(
-                            "remoteList={%s}||localHostList={%s}",
-                            JSON.toJSONString(remoteList),
-                            JSON.toJSONString(localList)
-                    )
-            );
-        }
     }
 
     /**
@@ -570,44 +437,6 @@ public class ServiceManageServiceImpl implements ServiceManageService {
             serviceHostPOList.add(new ServiceHostPO(serviceId, hostId));
         }
         serviceHostManageService.createServiceHostList( serviceHostPOList );
-    }
-
-    /**
-     * ServiceDO 对象比较器类
-     */
-    private class ServiceDOComparator implements Comparator<ServiceDO, Long> {
-        @Override
-        public Long getKey(ServiceDO serviceDO) {
-            return serviceDO.getExtenalServiceId();
-        }
-        @Override
-        public boolean compare(ServiceDO t1, ServiceDO t2) {
-            return t1.getServicename().equals(t2.getServicename());
-        }
-        @Override
-        public ServiceDO getModified(ServiceDO source, ServiceDO target) {
-            source.setServicename(target.getServicename());
-            return source;
-        }
-    }
-
-    /**
-     * ServiceHostPO 对象比较器类
-     */
-    class ServicProjectPOComparator implements Comparator<ServiceProjectPO, String> {
-        @Override
-        public String getKey(ServiceProjectPO serviceProjectPO) {
-            return serviceProjectPO.getServiceId()+"_"+serviceProjectPO.getProjectId();
-        }
-        @Override
-        public boolean compare(ServiceProjectPO t1, ServiceProjectPO t2) {
-            return t1.getServiceId().equals(t2.getServiceId()) &&
-                    t1.getProjectId().equals(t2.getProjectId());
-        }
-        @Override
-        public ServiceProjectPO getModified(ServiceProjectPO source, ServiceProjectPO target) {
-            return source;
-        }
     }
 
 }
