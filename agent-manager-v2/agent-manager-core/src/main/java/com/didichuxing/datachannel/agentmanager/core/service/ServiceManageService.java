@@ -88,11 +88,6 @@ public interface ServiceManageService {
     Integer queryCountByCondition(ServicePaginationQueryConditionDO servicePaginationQueryConditionDO);
 
     /**
-     * 根据远程端获取的服务节点信息集更新本地服务节点信息集
-     */
-    void pullServiceListFromRemoteAndMergeInLocal();
-
-    /**
      * 根据外部 service 节点 id 获取对应 Service 对象
      * @param extenalServiceId 外部 service 节点 id
      * @return 返回根据外部 service 节点 id 获取到的对应 Service dx

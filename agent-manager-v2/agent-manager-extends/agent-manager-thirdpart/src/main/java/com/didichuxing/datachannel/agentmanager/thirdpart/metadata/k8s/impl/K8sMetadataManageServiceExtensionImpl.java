@@ -25,10 +25,10 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
 
     private static final Logger LOGGER = LoggerFactory.getLogger(K8sMetadataManageServiceExtensionImpl.class);
 
-    @Value("${k8s.service-key}")
+    @Value("${metadata.sync.request.k8s.service-key}")
     private String serviceKey;
 
-    @Value("${k8s.path-name}")
+    @Value("${metadata.sync.request.k8s.path-name}")
     private String pathName;
 
     /**

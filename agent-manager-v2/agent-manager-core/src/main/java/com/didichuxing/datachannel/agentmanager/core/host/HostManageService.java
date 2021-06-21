@@ -69,13 +69,6 @@ public interface HostManageService {
     List<HostDO> list();
 
     /**
-     * 根据远程端获取的主机信息集更新本地全量主机信息集
-     * 注：由于主机同步操作可能会涉及大量主机对象持久化，将持续较长时间，时长不可控，可能导致事务超时 回滚，因而，该函数涉及到的主机新增、
-     *     删除、修改并不采用全局事务，而采用局部事务（即：一个主机持久化操作一个事务），如期间遇到某主机对象持久化失败，将以 ERROR 日志进行记录
-     */
-    void pullHostListFromRemoteAndMergeInLocal();
-
-    /**
      * 根据服务id查询该服务下的主机列表
      * @param serviceId 服务id
      * @return 返回根据服务id查询到的该服务下的主机列表
