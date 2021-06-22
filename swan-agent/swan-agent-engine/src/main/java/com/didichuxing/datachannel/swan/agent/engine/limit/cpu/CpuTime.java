@@ -7,12 +7,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.apache.commons.lang3.StringUtils;
 
 import com.didichuxing.datachannel.swan.agent.engine.utils.SystemUtils;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CpuTime {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CpuTime.class);
 
     public long all;    // 整个系统从启动到现在的cpu耗时
     public long process; // 当前进程从启动到现在的cpu耗时
@@ -64,6 +68,7 @@ public class CpuTime {
 
     // 获得当前进程从启动到现在的cpu耗时
     private final static String PROCESS_PATH;
+
     static {
         PROCESS_PATH = "/proc/" + SystemUtils.getPid().trim() + "/stat";
     }
@@ -101,7 +106,7 @@ public class CpuTime {
     /**
      * 读取文件
      *
-     * @param file file
+     * @param file   file
      * @param maxNum num of content to read
      * @return result of read
      */

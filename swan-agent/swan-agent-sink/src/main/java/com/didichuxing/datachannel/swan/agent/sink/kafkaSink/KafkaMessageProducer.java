@@ -1,11 +1,11 @@
 package com.didichuxing.datachannel.swan.agent.sink.kafkaSink;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -14,9 +14,9 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 
 import com.didichuxing.datachannel.swan.agent.common.api.KafkaCompression;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: kafka producer
@@ -25,9 +25,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class KafkaMessageProducer {
 
-    private static final ILog             LOGGER             = LogFactory
-                                                                 .getLog(KafkaMessageProducer.class
-                                                                     .getName());
+    private static final Logger LOGGER             = LoggerFactory.getLogger(KafkaMessageProducer.class);
 
     /** * 默认配置文件 */
     private static String                 DEFAULT_PROPERTIES = "default.kafka-producer.properties";

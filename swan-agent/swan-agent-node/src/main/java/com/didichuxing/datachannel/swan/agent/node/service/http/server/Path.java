@@ -2,12 +2,13 @@ package com.didichuxing.datachannel.swan.agent.node.service.http.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,8 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Path extends Handler implements HttpHandler {
-    private static final ILog  LOGGER = LogFactory.getLog("swan-agent");
-
+    private static final Logger LOGGER = LoggerFactory.getLogger("swan-agent");
     public final static String URI    = "/swan-agent/path";
 
     @Override

@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.apache.commons.lang3.StringUtils;
 
 import com.didichuxing.datachannel.swan.agent.common.api.CollectLocation;
@@ -17,9 +18,9 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.TimeUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.BufferedRandomAccessFile;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.FileUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 运行的FileNoe
@@ -28,9 +29,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class WorkingFileNode {
 
-    private static final ILog        LOGGER                 = LogFactory
-                                                                .getLog(WorkingFileNode.class
-                                                                    .getName());
+    private static final Logger LOGGER                 = LoggerFactory.getLogger(WorkingFileNode.class);
 
     FileNode                         fileNode;
 

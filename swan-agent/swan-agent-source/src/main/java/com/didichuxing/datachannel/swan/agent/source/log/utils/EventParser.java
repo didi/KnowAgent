@@ -10,8 +10,9 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.engine.utils.TimeUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.beans.WorkingFileNode;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description: 包装解析器
@@ -20,9 +21,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class EventParser {
 
-    private static final ILog LOGGER         = LogFactory.getLog(EventParser.class.getName());
-
-    /**
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventParser.class.getName());/**
      * 上一条有效日志的时间戳
      */
     private Long              lastTimestamp  = null;

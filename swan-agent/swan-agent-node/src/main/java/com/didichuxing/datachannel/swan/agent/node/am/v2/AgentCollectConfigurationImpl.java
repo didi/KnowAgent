@@ -18,10 +18,11 @@ import com.didichuxing.datachannel.swan.agent.common.constants.Tags;
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaTargetConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.config.MatchConfig;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -35,32 +36,31 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
     /**
      * 日志模型限流等级 - 高
      */
-    private static final Integer MODEL_LIMIT_LEVEL_HIGH   = 9;
+    private static final Integer MODEL_LIMIT_LEVEL_HIGH = 9;
     /**
      * 日志模型限流等级 - 低
      */
-    private static final Integer MODEL_LIMIT_LEVEL_LOW    = 1;
+    private static final Integer MODEL_LIMIT_LEVEL_LOW = 1;
     /**
      * 日志模型限流等级 - 中
      */
     private static final Integer MODEL_LIMIT_LEVEL_MIDDLE = 5;
 
-    private static final ILog    LOGGER                   = LogFactory
-                                                              .getLog(AgentCollectConfigurationImpl.class
-                                                                  .getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AgentCollectConfigurationImpl.class);
 
     /**
      * 将自身转化为AgentConfig对象并返回
+     *
      * @return 返回自身转化为的AgentConfig对象
      */
     public AgentConfig convertToAgentConfig() {
         AgentConfiguration agentConfiguration = getAgentConfiguration();
         String advancedConfigurationJsonString = agentConfiguration.getAdvancedConfigurationJsonString();
         AgentAdvancedConfiguration agentAdvancedConfiguration = null;
-        if(StringUtils.isNotBlank(advancedConfigurationJsonString)) {
+        if (StringUtils.isNotBlank(advancedConfigurationJsonString)) {
             agentAdvancedConfiguration = JSON.parseObject(advancedConfigurationJsonString, AgentAdvancedConfiguration.class);
         }
-        if(null == agentAdvancedConfiguration) {//未配置 或 解析出错
+        if (null == agentAdvancedConfiguration) {//未配置 或 解析出错
             agentAdvancedConfiguration = new AgentAdvancedConfiguration();//采用默认配置
         }
         AgentConfig agentConfig = new AgentConfig();
@@ -121,7 +121,8 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
 
     /**
      * 根据给定主机 & 日志采集任务构建对应日志模型配置对象
-     * @param hostInfo 主机对象
+     *
+     * @param hostInfo                    主机对象
      * @param logCollectTaskConfiguration 日志采集任务对象
      * @return 根据给定主机 & 日志采集任务构建的对应日志模型配置对象
      */
@@ -132,10 +133,10 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
          */
         LogCollectTaskAdvancedConfiguration logCollectTaskAdvancedConfiguration = null;//日志采集任务高级配置信息
         String advancedConfigurationJsonString = logCollectTaskConfiguration.getAdvancedConfigurationJsonString();
-        if(StringUtils.isNotBlank(advancedConfigurationJsonString)) {
+        if (StringUtils.isNotBlank(advancedConfigurationJsonString)) {
             logCollectTaskAdvancedConfiguration = JSON.parseObject(advancedConfigurationJsonString, LogCollectTaskAdvancedConfiguration.class);
         }
-        if(null == logCollectTaskAdvancedConfiguration) {//未配置 或 解析出错
+        if (null == logCollectTaskAdvancedConfiguration) {//未配置 或 解析出错
             logCollectTaskAdvancedConfiguration = new LogCollectTaskAdvancedConfiguration();//采用默认配置
         }
         /*
@@ -161,7 +162,7 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
         commonConfig.setModelType(
                 logCollectTaskConfiguration.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode()) ? LogConfigConstants.COLLECT_TYPE_PERIODICITY : LogConfigConstants.COLLECT_TYPE_TEMPORALITY
         );
-        if(commonConfig.getModelType().equals(LogConfigConstants.COLLECT_TYPE_TEMPORALITY)) {
+        if (commonConfig.getModelType().equals(LogConfigConstants.COLLECT_TYPE_TEMPORALITY)) {
             commonConfig.setEndTime(new Date(logCollectTaskConfiguration.getCollectEndTimeBusiness()));
             commonConfig.setStartTime(new Date(logCollectTaskConfiguration.getCollectStartTimeBusiness()));
         }
@@ -182,9 +183,9 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
          */
         ModelLimitConfig modelLimitConfig = new ModelLimitConfig();
         Integer limitPriority = logCollectTaskConfiguration.getLimitPriority();
-        if(limitPriority.equals(LogCollectTaskLimitPriorityLevelEnum.HIGH.getCode())) {
+        if (limitPriority.equals(LogCollectTaskLimitPriorityLevelEnum.HIGH.getCode())) {
             modelLimitConfig.setLevel(MODEL_LIMIT_LEVEL_HIGH);
-        } else if(limitPriority.equals(LogCollectTaskLimitPriorityLevelEnum.MIDDLE.getCode())) {
+        } else if (limitPriority.equals(LogCollectTaskLimitPriorityLevelEnum.MIDDLE.getCode())) {
             modelLimitConfig.setLevel(MODEL_LIMIT_LEVEL_MIDDLE);
         } else {
             modelLimitConfig.setLevel(MODEL_LIMIT_LEVEL_LOW);
@@ -232,14 +233,14 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
             }
         }
         //set log paths
-        if(CollectionUtils.isNotEmpty(logCollectTaskConfiguration.getFileLogCollectPathList())) {//文件型采集
+        if (CollectionUtils.isNotEmpty(logCollectTaskConfiguration.getFileLogCollectPathList())) {//文件型采集
             List<LogPath> logPaths = new ArrayList<>(logCollectTaskConfiguration.getFileLogCollectPathList().size());
             for (FileLogCollectPathConfiguration fileLogCollectPathConfiguration : logCollectTaskConfiguration.getFileLogCollectPathList()) {
                 LogPath logPath = new LogPath();
                 logPath.setLogModelId(logCollectTaskConfiguration.getLogCollectTaskId());
                 logPath.setPath(fileLogCollectPathConfiguration.getPath());
                 logPath.setPathId(fileLogCollectPathConfiguration.getPathId());
-                if(hostInfo.getHostType().equals(HostTypeEnum.CONTAINER.getCode())) {//容器采集case须设置其 dockerPath
+                if (hostInfo.getHostType().equals(HostTypeEnum.CONTAINER.getCode())) {//容器采集case须设置其 dockerPath
                     String containerPath = fileLogCollectPathConfiguration.getRealPath();//容器路径
                     logPath.setDockerPath(containerPath);
                     logPath.setRealPath(containerPath);

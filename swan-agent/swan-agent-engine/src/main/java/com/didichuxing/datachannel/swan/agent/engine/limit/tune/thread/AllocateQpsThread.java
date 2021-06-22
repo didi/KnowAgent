@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.swan.agent.engine.limit.tune.TuneNode;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AllocateQpsThread implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AllocateQpsThread.class);
 
     private static final int MAX_LEVEL_VALUE = 10;
 
@@ -18,7 +21,7 @@ public class AllocateQpsThread implements Runnable {
     private LimitService     limiter;
 
     private String           peroid          = "tps.period";
-    private long             interval        = 1 * 1000;
+    private long             interval;
 
     public AllocateQpsThread(LimitService limiter) throws Exception {
         this.limiter = limiter;

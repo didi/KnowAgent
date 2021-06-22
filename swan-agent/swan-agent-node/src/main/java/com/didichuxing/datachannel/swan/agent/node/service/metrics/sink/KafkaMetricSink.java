@@ -21,21 +21,21 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.metrics.FileMetricsFields;
 import com.didichuxing.datachannel.swan.agent.source.log.metrics.FileStatistic;
 import com.didichuxing.datachannel.swan.agent.task.log.metrics.ModelMetricsFields;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.apache.commons.configuration.SubsetConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
 
-    private static final ILog   LOGGER             = LogFactory.getLog("perfLogger");
+    private static final Logger LOGGER = LoggerFactory.getLogger("perfLogger");
+    private KafkaTopicSink sink;
 
-    private KafkaTopicSink      sink;
-
-    private static final String LIMIT_TIME_TAG     = "limitTime";
+    private static final String LIMIT_TIME_TAG = "limitTime";
     private static final String NEW_LIMIT_TIME_TAG = TaskMetricsFields.PREFIX_METRICS_
-                                                     + LIMIT_TIME_TAG;
+            + LIMIT_TIME_TAG;
 
     @Override
     public void init(SubsetConfiguration conf) {
@@ -103,27 +103,27 @@ public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
                 if (loopTag.value() != null) {
                     if (loopTag.name().equals(FileMetricsFields.COLLECT_FILE_NAMES_STR)) {
                         List<FileStatistic> list = JSON.parseArray(loopTag.value().replace("\\", ""),
-                                                                   FileStatistic.class);
+                                FileStatistic.class);
                         String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
                         result.put(name, list);
                     } else if (loopTag.name().equals(FileMetricsFields.RELATED_FILES)
-                               && StringUtils.isNotBlank(loopTag.value())) {
+                            && StringUtils.isNotBlank(loopTag.value())) {
                         String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
                         result.put(name, Long.parseLong(loopTag.value()));
                     } else if (loopTag.name().equals(FileMetricsFields.MAX_TIME_GAP_STR)
-                               && StringUtils.isNotBlank(loopTag.value())) {
+                            && StringUtils.isNotBlank(loopTag.value())) {
                         String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
                         result.put(name, Long.parseLong(loopTag.value()));
                     } else if (loopTag.name().equals(FileMetricsFields.LATEST_LOG_TIME)
-                               && StringUtils.isNotBlank(loopTag.value())) {
+                            && StringUtils.isNotBlank(loopTag.value())) {
                         String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
                         result.put(name, Long.parseLong(loopTag.value()));
                     } else if (loopTag.name().equals(ModelMetricsFields.MODEL_VERSION)
-                               && StringUtils.isNotBlank(loopTag.value())) {
+                            && StringUtils.isNotBlank(loopTag.value())) {
                         String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
                         result.put(name, Long.parseLong(loopTag.value()));
                     } else if (loopTag.name().equals(FileMetricsFields.LATEST_MODIFY_TIME)
-                               && StringUtils.isNotBlank(loopTag.value())) {
+                            && StringUtils.isNotBlank(loopTag.value())) {
                         String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
                         result.put(name, Long.parseLong(loopTag.value()));
                     } else {
@@ -137,7 +137,7 @@ public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
             result.put(MetricsFields.HOST_IP, CommonUtils.getHOSTIP());
 
             if (!result.containsKey(ModelMetricsFields.MODEL_VERSION)
-                && !record.name().equals(MetricsFields.KEY_BASIC)) {
+                    && !record.name().equals(MetricsFields.KEY_BASIC)) {
                 String name = metricConfig.isTransfer() ? getOldName(ModelMetricsFields.MODEL_VERSION) : ModelMetricsFields.MODEL_VERSION;
                 if (!result.containsKey(name)) {
                     result.put(name, -1);
@@ -192,10 +192,10 @@ public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
         if (StringUtils.isNotBlank(newName)) {
             if (newName.startsWith(SourceMetricsFields.PREFIX_METRICS_)) {
                 return newName.substring(SourceMetricsFields.PREFIX_METRICS_.length()).replace(
-                    ComponentType.SOURCE, "read");
+                        ComponentType.SOURCE, "read");
             } else if (newName.startsWith(SinkMetricsFields.PREFIX_METRICS_)) {
                 return newName.substring(SinkMetricsFields.PREFIX_METRICS_.length()).replace(
-                    ComponentType.SINK, "send");
+                        ComponentType.SINK, "send");
             } else if (newName.startsWith(TaskMetricsFields.PREFIX_METRICS_)) {
                 return newName.substring(TaskMetricsFields.PREFIX_METRICS_.length());
             } else if (newName.startsWith(TaskMetricsFields.PREFIX_LIMIT_)) {

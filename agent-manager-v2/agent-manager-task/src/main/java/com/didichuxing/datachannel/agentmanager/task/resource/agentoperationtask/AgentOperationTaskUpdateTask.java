@@ -1,11 +1,11 @@
 package com.didichuxing.datachannel.agentmanager.task.resource.agentoperationtask;
 
 import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentOperationTaskManageService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
 import com.didiglobal.logi.auvjob.core.job.JobContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
@@ -20,9 +20,7 @@ import java.util.Date;
         cron = "0 0/1 * * * ?", autoRegister = true)
 public class AgentOperationTaskUpdateTask implements Job {
 
-    private static final ILog LOGGER = LogFactory.getLog("AgentOperationTaskUpdateTask");
-
-    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger("AgentOperationTaskUpdateTask");@Autowired
     private AgentOperationTaskManageService agentOperationTaskManageService;
 
     @Override

@@ -23,5 +23,9 @@ public interface AgentMetricMapper {
 
     List<MetricPoint> selectSinglePerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
 
+    AgentMetricPO selectLatestByHostname(@Param("hostname") String hostName);
+
+    Long selectSum(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
+
     int deleteBeforeTime(@Param("time") Long time);
 }

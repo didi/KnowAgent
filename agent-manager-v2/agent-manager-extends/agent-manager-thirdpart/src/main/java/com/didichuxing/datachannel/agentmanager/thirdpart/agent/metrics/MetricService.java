@@ -15,11 +15,11 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.CollectTaskMetricMapper;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.KafkaClusterMapper;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -39,9 +39,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class MetricService {
-    private static final ILog LOGGER = LogFactory.getLog(MetricService.class);
-
-    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class);@Autowired
     private AgentMetricMapper agentMetricMapper;
 
     @Autowired

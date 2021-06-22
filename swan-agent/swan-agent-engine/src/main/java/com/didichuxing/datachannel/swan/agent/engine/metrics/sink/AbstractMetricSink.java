@@ -4,8 +4,8 @@ import org.apache.commons.configuration.SubsetConfiguration;
 
 import com.didichuxing.datachannel.metrics.MetricsSink;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.MetricConfig;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author jinbinbin
@@ -13,9 +13,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public abstract class AbstractMetricSink implements MetricsSink {
 
-    private static final ILog LOGGER = LogFactory.getLog(AbstractMetricSink.class.getName());
-
-    protected MetricConfig    metricConfig;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMetricSink.class.getName());protected MetricConfig    metricConfig;
 
     public AbstractMetricSink(MetricConfig metricConfig) {
         this.metricConfig = metricConfig;

@@ -1,10 +1,11 @@
-package com.didichuxing.datachannel.swan.agent.node.service.errorlog;
+package com.didichuxing.datachannel.swan.agent.sink.kafkaSink.errorlog;
 
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.ErrorLogConfig;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaMessageProducer;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description: kafka发送工具
@@ -13,9 +14,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class KafkaSender {
 
-    private static final ILog    LOGGER = LogFactory.getLog(KafkaSender.class.getName());
-
-    private ErrorLogConfig       config;
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSender.class.getName());private ErrorLogConfig       config;
     private KafkaMessageProducer producer;
 
     public KafkaSender(ErrorLogConfig config) throws Exception {

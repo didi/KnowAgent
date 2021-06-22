@@ -1,10 +1,5 @@
 package com.didichuxing.datachannel.swan.agent.task.log;
 
-import java.util.*;
-
-import org.apache.commons.lang.StringUtils;
-
-import com.didichuxing.datachannel.swan.agent.common.api.CollectType;
 import com.didichuxing.datachannel.swan.agent.common.api.FileType;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.common.beans.LogPath;
@@ -18,9 +13,16 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.FileUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @description: log 模型
@@ -29,8 +31,8 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public abstract class LogModel extends AbstractModel {
 
-    private static final ILog LOGGER         = LogFactory.getLog(LogModel.class.getName());
-    private static final ILog DDCLOUD_LOGGER = LogFactory.getLog("ddcloud");
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogModel.class.getName());
+    private static final Logger DDCLOUD_LOGGER = LoggerFactory.getLogger("ddcloud");
 
     public LogModel(ModelConfig config) {
         super(config);
@@ -226,8 +228,7 @@ public abstract class LogModel extends AbstractModel {
                 return false;
             }
         } catch (Exception e) {
-            LogGather.recordErrorLog("LogModel error",
-                                     "checkLocation error.serverName is " + serverName + ", suffix is " + suffix, e);
+            LOGGER.error("LogModel error, checkLocation error.serverName is " + serverName + ", suffix is " + suffix, e);
         }
         return false;
     }

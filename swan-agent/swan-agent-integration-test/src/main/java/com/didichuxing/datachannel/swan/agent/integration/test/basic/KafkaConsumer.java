@@ -19,14 +19,11 @@ import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 
 public class KafkaConsumer {
 
-    private static final ILog   LOGGER        = LogFactory.getLog(KafkaConsumer.class.getName());
-
-    private static final String consumerGroup = "consumer-group";
+private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class.getName());private static final String consumerGroup = "consumer-group";
 
     public void shutdown() {
         kafkaConsumer.close();

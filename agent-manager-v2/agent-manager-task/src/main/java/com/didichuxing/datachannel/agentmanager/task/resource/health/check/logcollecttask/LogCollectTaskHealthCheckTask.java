@@ -3,12 +3,12 @@ package com.didichuxing.datachannel.agentmanager.task.resource.health.check.logc
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
 import com.didiglobal.logi.auvjob.core.job.JobContext;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
@@ -26,9 +26,7 @@ import java.util.concurrent.Future;
         cron = "0 0/10 * * * ?", autoRegister = true)
 public class LogCollectTaskHealthCheckTask implements Job {
 
-    private static final ILog LOGGER = LogFactory.getLog("LogCollectTaskHealthCheckTask");
-
-    private ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    private static final Logger LOGGER = LoggerFactory.getLogger("LogCollectTaskHealthCheckTask");private ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;

@@ -17,9 +17,10 @@ import com.didichuxing.datachannel.swan.agent.engine.service.DefaultThreadFactor
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.FileUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 目录监控
@@ -29,9 +30,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
 public enum ScheduleDirMonitor implements Monitor {
                                                    INSTANCE;
 
-    private static final ILog                          LOGGER           = LogFactory.getLog("monitor");
-
-    private static ScheduledExecutorService            scheduledService = null;
+private static final Logger LOGGER = LoggerFactory.getLogger("monitor");private static ScheduledExecutorService            scheduledService = null;
 
     /**
      * key: key of LogModel

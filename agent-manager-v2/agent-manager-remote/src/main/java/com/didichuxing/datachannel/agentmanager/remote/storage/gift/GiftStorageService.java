@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.remote.storage.AbstractStorageService;
 import io.minio.BucketExistsArgs;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -77,7 +78,8 @@ public class GiftStorageService extends AbstractStorageService {
       Assert.hasLength(fileName, "parameter fileName can not be empty...");
       //return new Result<>(minioClient.getObjectUrl(bucket, fileName));
 
-      return Result.buildSucc(minioClient.presignedGetObject(bucket, fileName));
+      GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder().bucket(bucket).object(fileName).build();
+      return Result.buildSucc(minioClient.getPresignedObjectUrl(args));
     } catch (Exception e) {
       LOGGER.error("get object URL from Gift error...", e);
       return Result.build(
@@ -90,7 +92,8 @@ public class GiftStorageService extends AbstractStorageService {
   @Override
   public String getDownloadUrl(String fileName, String fileMd5) {
     try {
-      return minioClient.presignedGetObject(bucket, fileName);
+      GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder().bucket(bucket).object(fileName).build();
+      return minioClient.getPresignedObjectUrl(args);
     } catch (Exception ex) {
       throw new ServiceException(
               String.format("文件={fileName=%s,fileMd5=%s}下载链接获取失败", fileName, fileMd5),

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.didichuxing.datachannel.swan.agent.common.constants.Tags;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.AgentConfig;
@@ -19,9 +20,9 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.node.SwanAgent;
 import com.didichuxing.datachannel.swan.agent.source.log.offset.OffsetManager;
 import com.didichuxing.datachannel.swan.agent.task.log.log2kafak.Log2KafkaModel;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 模型管理器
@@ -30,9 +31,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class ModelManager extends AgentComponent {
 
-    private static final ILog          LOGGER = LogFactory.getLog(ModelManager.class.getName());
-
-    private AgentConfig                agentConfig;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ModelManager.class.getName());private AgentConfig                agentConfig;
 
     private Map<String, AbstractModel> models;
 

@@ -6,8 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description: kafka producer池
@@ -16,9 +17,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class KafkaProducerContainer {
 
-    private static final ILog                                      LOGGER                  = LogFactory.getLog(KafkaProducerContainer.class.getName());
-
-    // key:modelId + orderNum
+private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducerContainer.class.getName());// key:modelId + orderNum
     private static ConcurrentHashMap<String, KafkaMessageProducer> kafkaMessageProducerMap = new ConcurrentHashMap<>();
 
     private static Object                                          lock                    = new Object();

@@ -1,9 +1,9 @@
 package com.didichuxing.datachannel.agentmanager.rest.swagger;
 
 import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -28,9 +28,7 @@ import java.util.List;
 @Profile({"dev", "test"})
 public class SwaggerConfiguration {
 
-    private static final ILog LOGGER = LogFactory.getLog(SwaggerConfiguration.class);
-
-    private static List<String> ENVS = Lists.newArrayList();
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwaggerConfiguration.class);private static List<String> ENVS = Lists.newArrayList();
 
     @Bean
     public Docket createRestApi() {

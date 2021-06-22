@@ -11,15 +11,13 @@ import com.didichuxing.datachannel.swan.agent.engine.metrics.metric.SinkMetricsF
 import com.didichuxing.datachannel.swan.agent.engine.metrics.metric.SourceMetricsFields;
 import com.didichuxing.datachannel.swan.agent.engine.metrics.metric.TaskMetricsFields;
 import com.didichuxing.datachannel.swan.agent.engine.metrics.stat.MetricMutableTimeStat;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // 需要和业务代码强耦合
 public class TaskPatternStatistics extends AbstractStatistics {
 
-    private static final ILog                     LOGGER = LogFactory.getLog("perfLogger");
-
-    private AbstractTask                          abstractTask;
+    private static final Logger LOGGER = LoggerFactory.getLogger("perfLogger");private AbstractTask                          abstractTask;
 
     /*
      * sourceCountPerPeriod 每周期读取总的条数 sourceBytePerPeriod 每周期读取总的流量 sourceTime 读取耗时统计

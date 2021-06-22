@@ -13,12 +13,6 @@
     <version>${swan.agent.engine.version}</version>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.didichuxing.tunnel</groupId>
-            <artifactId>tunnel-log</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.didichuxing.datachannel</groupId>
             <artifactId>metrics</artifactId>

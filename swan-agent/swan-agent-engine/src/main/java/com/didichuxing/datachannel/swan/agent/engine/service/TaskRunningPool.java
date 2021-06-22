@@ -4,8 +4,9 @@ import java.util.concurrent.*;
 
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.engine.AbstractTask;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description: 任务运行线程池
@@ -14,28 +15,26 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class TaskRunningPool {
 
-    private static final ILog      LOGGER              = LogFactory.getLog(TaskRunningPool.class
-                                                           .getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskRunningPool.class.getName());
 
     /**
      * 文件采集池
      */
-    private static ExecutorService executorService     = new ThreadPoolExecutor(
-                                                           24,
-                                                           1000,
-                                                           1000L,
-                                                           TimeUnit.MILLISECONDS,
-                                                           new SynchronousQueue<Runnable>(),
-                                                           new DefaultThreadFactory("task-Executor"));
+    private static ExecutorService executorService = new ThreadPoolExecutor(
+            24,
+            1000,
+            1000L,
+            TimeUnit.MILLISECONDS,
+            new SynchronousQueue<Runnable>(),
+            new DefaultThreadFactory("task-Executor"));
 
     private static ExecutorService tempExecutorService = new ThreadPoolExecutor(2, 2, 1000L,
-                                                           TimeUnit.MILLISECONDS,
-                                                           new LinkedBlockingQueue(),
-                                                           new DefaultThreadFactory(
-                                                               "temp-task-Executor"));
+            TimeUnit.MILLISECONDS,
+            new LinkedBlockingQueue<>(),
+            new DefaultThreadFactory(
+                    "temp-task-Executor"));
 
     /**
-     *
      * @param task
      */
     public static void submit(AbstractTask task) {

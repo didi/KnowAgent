@@ -1,26 +1,25 @@
-package com.didichuxing.datachannel.swan.agent.node.service.errorlog;
+package com.didichuxing.datachannel.swan.agent.sink.kafkaSink.errorlog;
 
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.ErrorLogConfig;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogSink;
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.didichuxing.datachannel.swan.agent.common.api.MetricsFields;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.ILogSink;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 错误日志
  * @author: huangjw
  * @Date: 2019-07-17 11:46
  */
-public class ErrorLogSinker implements ILogSink {
+public class ErrorLogSinker implements LogSink {
 
-    private static final ILog LOGGER = LogFactory.getLog(ErrorLogSinker.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorLogSinker.class.getName());
     private KafkaSender       sender;
 
     public ErrorLogSinker(ErrorLogConfig config) throws Exception {

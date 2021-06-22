@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.apache.commons.lang3.StringUtils;
 
 import com.didichuxing.datachannel.swan.agent.common.api.*;
@@ -28,9 +29,9 @@ import com.didichuxing.datachannel.swan.agent.source.log.offset.OffsetManager;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.EventParser;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.FileReader;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.FileUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: log source
@@ -39,8 +40,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class LogSource extends AbstractSource {
 
-    private static final ILog        LOGGER           = LogFactory
-                                                          .getLog(LogSource.class.getName());
+    private static final Logger LOGGER           = LoggerFactory.getLogger(LogSource.class.getName());
     private final Object             lock             = new Object();
     private int                      num;
 

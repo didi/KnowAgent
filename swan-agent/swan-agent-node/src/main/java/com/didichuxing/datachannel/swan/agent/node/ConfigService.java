@@ -13,11 +13,11 @@ import com.didichuxing.datachannel.swan.agent.engine.component.AgentComponent;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.node.am.v2.AgentCollectConfigurationImpl;
 import com.didichuxing.datachannel.swan.agent.node.service.http.client.HttpClient;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,11 +39,9 @@ import java.util.Map;
 // TODO: 19/7/5 增加是否需要定时向管理平台拉取配置的 配置
 public class ConfigService extends AgentComponent {
 
-    private static final ILog          CONFIG_LOGGER        = LogFactory.getLog("config");
-    private static final ILog          LOGGER               = LogFactory.getLog(ConfigService.class.getName());
-
-    private String                     local                = System.getProperty("user.home") + File.separator
-                                                              + "new.conf.local";
+    private static final Logger CONFIG_LOGGER = LoggerFactory.getLogger("config");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigService.class);
+    private String                     local                = System.getProperty("user.home") + File.separator + "new.conf.local";
 
     private static final long          INTERVAL             = 30 * 1000;
 
@@ -83,7 +81,7 @@ public class ConfigService extends AgentComponent {
             isRunning = true;
             Thread.sleep(waitTime);
         } catch (Throwable e) {
-            LogGather.recordErrorLog("ConfigService error!", "wait time sleep error!", e);
+            LOGGER.error("ConfigService error!", "wait time sleep error!, {}", e.getMessage());
         }
 
         // 第一次拉取配置并初始化整个系统
@@ -96,7 +94,7 @@ public class ConfigService extends AgentComponent {
                 writeLocalConfig(curAgentConfig);
             }
         } catch (Throwable e) {
-            LogGather.recordErrorLog("ConfigService error!", "getAgentConfig error!", e);
+            LOGGER.error("ConfigService error!", "getAgentConfig error!, {}", e.getMessage());
         }
 
         // 后台线程
@@ -113,7 +111,7 @@ public class ConfigService extends AgentComponent {
                             }
                         }
                     } catch (Throwable t) {
-                        LogGather.recordErrorLog("ConfigChange", "config service change error", t);
+                        LOGGER.error("ConfigChange", "config service change error, {}", t.getMessage());
                     }
 
                     try {
