@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AbstractStatistics implements MetricsSource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractStatistics.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractStatistics.class);
     protected String          name;
     protected MetricsRegistry metricsRegistry;
 

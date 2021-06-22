@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 */
 public class AgentStatistics extends AbstractStatistics {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AgentStatistics.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AgentStatistics.class);
     private LimitService      limiter;
 
     private Long              startTime;

@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 
 public class LimitCpuThread implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LimitCpuThread.class.getName());private static final float FACTOR     = 0.1f;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LimitCpuThread.class.getName());
+    private static final float FACTOR     = 0.1f;
     private static final float TPS_FACTOR = 0.2f;
     // 最大10G/s
     private static final long  maxQPS     = 10 * 1024 * 1024 * 1024L;
