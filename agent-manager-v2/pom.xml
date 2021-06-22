@@ -23,6 +23,7 @@
         <module>agent-manager-rest</module>
         <module>agent-manager-task</module>
         <module>agent-manager-extends/agent-manager-thirdpart</module>
+        <module>agent-manager-console</module>
     </modules>
 
     <properties>
