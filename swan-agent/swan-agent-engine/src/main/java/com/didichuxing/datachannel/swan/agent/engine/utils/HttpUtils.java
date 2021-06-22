@@ -21,13 +21,13 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 
 public class HttpUtils {
 
-    private static final ILog       logger               = LogFactory.getLog(HttpUtils.class
+    private static final Logger LOGGER               = LoggerFactory.getLogger(HttpUtils.class
                                                              .getName());
 
     public static final String      UTF8                 = "UTF-8";
@@ -147,8 +147,8 @@ public class HttpUtils {
             post.releaseConnection();
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("response=" + response);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("response=" + response);
         }
         return response;
     }
@@ -194,8 +194,8 @@ public class HttpUtils {
             post.releaseConnection();
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("response=" + response);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("response=" + response);
         }
         return response;
     }
@@ -219,8 +219,8 @@ public class HttpUtils {
             get.releaseConnection();
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("response=" + response);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("response=" + response);
         }
         return response;
     }

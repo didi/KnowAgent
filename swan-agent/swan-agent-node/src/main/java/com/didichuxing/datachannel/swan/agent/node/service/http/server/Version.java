@@ -4,17 +4,17 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Version extends Handler implements HttpHandler {
 
-    private static final ILog  LOGGER  = LogFactory.getLog(Version.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(Version.class.getName());
     public final static String URI     = "/swan-agent/version";
 
     String                     version = null;

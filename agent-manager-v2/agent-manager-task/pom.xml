@@ -35,17 +35,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.didichuxing.tunnel</groupId>
-            <artifactId>tunnel-common</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>dozer</artifactId>
-                    <groupId>net.sf.dozer</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
             <version>4.8</version>

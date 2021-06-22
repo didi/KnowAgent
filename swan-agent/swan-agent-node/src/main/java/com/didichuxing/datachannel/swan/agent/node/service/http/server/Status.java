@@ -12,11 +12,12 @@ import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.node.LaunchService;
 import com.didichuxing.datachannel.swan.agent.node.ConfigService;
 import com.didichuxing.datachannel.swan.agent.node.SwanAgent;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 启停swan-agent
@@ -25,9 +26,7 @@ import com.sun.net.httpserver.HttpHandler;
  */
 public class Status extends Handler implements HttpHandler {
 
-    private static final ILog  LOGGER = LogFactory.getLog(Status.class.getName());
-
-    public final static String URI    = "/swan-agent/status";
+    private static final Logger LOGGER = LoggerFactory.getLogger(Status.class.getName());public final static String URI    = "/swan-agent/status";
 
     private LaunchService      launchService;
 

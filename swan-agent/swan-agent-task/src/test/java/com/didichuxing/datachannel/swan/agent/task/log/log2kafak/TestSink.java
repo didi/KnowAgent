@@ -21,9 +21,10 @@ import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaProducerContai
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaSink;
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaTargetConfig;
 import com.didichuxing.datachannel.swan.agent.sink.utils.StringFilter;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description:
@@ -32,36 +33,35 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class TestSink extends AbstractSink<KafkaEvent> {
 
-    private static final ILog LOGGER                = LogFactory.getLog(KafkaSink.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.getName());
     private static final long MAX_FAILED_SLEEP_TIME = 16000L;
 
-    private static final long INITAL_TO_SLEEP_TIME  = 500L;
+    private static final long INITAL_TO_SLEEP_TIME = 500L;
 
     // 批量发送时间
-    private long              lastPutTime;
+    private long lastPutTime;
 
-    private List<KafkaEvent>  batch                 = new ArrayList<>();
+    private List<KafkaEvent> batch = new ArrayList<>();
 
     // 记录已发送的批次数
-    private AtomicInteger     batchSendCounter      = new AtomicInteger(0);
+    private AtomicInteger batchSendCounter = new AtomicInteger(0);
 
-    private volatile Boolean  isStop                = false;
+    private volatile Boolean isStop = false;
 
     // 最新的有效kafkaEvent
-    private KafkaEvent        latestKafkaEvent      = null;
+    private KafkaEvent latestKafkaEvent = null;
 
     private KafkaTargetConfig kafkaTargetConfig;
 
     /**
      * 固定partiton key时的延迟量
      */
-    private volatile long     keyDelay              = 10000L;
+    private volatile long keyDelay = 10000L;
 
-    private Map<String, Long> failedRateMapS0       = new ConcurrentHashMap<>();
-    private Map<String, Long> failedRateMapS1       = new ConcurrentHashMap<>();
+    private Map<String, Long> failedRateMapS0 = new ConcurrentHashMap<>();
+    private Map<String, Long> failedRateMapS1 = new ConcurrentHashMap<>();
 
-    public TestSink(ModelConfig config, AbstractChannel channel, int orderNum){
+    public TestSink(ModelConfig config, AbstractChannel channel, int orderNum) {
         super(config, channel, orderNum);
     }
 
@@ -81,13 +81,13 @@ public class TestSink extends AbstractSink<KafkaEvent> {
             if (event instanceof LogEvent) {
                 LogEvent logEvent = (LogEvent) event;
                 KafkaEvent kafkaEvent = new KafkaEvent(logEvent.getContent(), logEvent.getBytes().length,
-                                                       logEvent.getTimestamp(), logEvent.getCollectTime(),
-                                                       logEvent.getLogTime(), logEvent.getOffset(),
-                                                       logEvent.getUniqueKey(), logEvent.getPreOffset(),
-                                                       logEvent.getLogId(), logEvent.getLogPathId(),
-                                                       logEvent.getFileKey(), logEvent.getFileNodeKey(),
-                                                       logEvent.getDockerParentPath() == null ? logEvent.getFilePath() : logEvent.getDockerParentPath(),
-                                                       logEvent.getFileName(), true);
+                        logEvent.getTimestamp(), logEvent.getCollectTime(),
+                        logEvent.getLogTime(), logEvent.getOffset(),
+                        logEvent.getUniqueKey(), logEvent.getPreOffset(),
+                        logEvent.getLogId(), logEvent.getLogPathId(),
+                        logEvent.getFileKey(), logEvent.getFileNodeKey(),
+                        logEvent.getDockerParentPath() == null ? logEvent.getFilePath() : logEvent.getDockerParentPath(),
+                        logEvent.getFileName(), true);
                 kafkaEvent.setNeedToSend(filter(kafkaEvent));
                 latestKafkaEvent = kafkaEvent;
                 if (kafkaEvent.isNeedToSend()) {
@@ -150,9 +150,9 @@ public class TestSink extends AbstractSink<KafkaEvent> {
                 return true;
             }
             if (modelConfig.getCommonConfig().getStartTime() != null
-                && modelConfig.getCommonConfig().getEndTime() != null) {
+                    && modelConfig.getCommonConfig().getEndTime() != null) {
                 if (modelConfig.getCommonConfig().getStartTime().getTime() >= event.getMsgTime()
-                    && modelConfig.getCommonConfig().getEndTime().getTime() <= event.getMsgTime()) {
+                        && modelConfig.getCommonConfig().getEndTime().getTime() <= event.getMsgTime()) {
                 }
                 return true;
             } else {
@@ -165,8 +165,8 @@ public class TestSink extends AbstractSink<KafkaEvent> {
     @Override
     public void send(KafkaEvent kafkaEvent) {
         if ((batch.size() >= kafkaTargetConfig.getSendBatchSize()
-             || (System.currentTimeMillis() - lastPutTime) >= kafkaTargetConfig.getSendBatchTimeThreshold())
-            && !batch.isEmpty()) {
+                || (System.currentTimeMillis() - lastPutTime) >= kafkaTargetConfig.getSendBatchTimeThreshold())
+                && !batch.isEmpty()) {
 
             batchSendCounter.incrementAndGet();
 

@@ -2,8 +2,8 @@ package com.didichuxing.datachannel.agentmanager.core.receiver;
 
 import com.didichuxing.datachannel.agentmanager.core.ApplicationTests;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 @Transactional
 @Rollback
 public class ReceiverManageServiceTest extends ApplicationTests {
-    private static final ILog LOGGER = LogFactory.getLog(ReceiverManageServiceTest.class);
-
-    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReceiverManageServiceTest.class);@Autowired
     private KafkaClusterManageService kafkaClusterManageService;
 
 //    @Test

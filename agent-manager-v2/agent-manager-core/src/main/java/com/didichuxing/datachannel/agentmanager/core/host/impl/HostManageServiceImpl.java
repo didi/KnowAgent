@@ -2,10 +2,9 @@ package com.didichuxing.datachannel.agentmanager.core.host.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
-import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
-import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostAgentDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostPaginationQueryConditionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
@@ -18,29 +17,27 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentCo
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
-import com.didichuxing.datachannel.agentmanager.common.util.*;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
-import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.HostMapper;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
+import com.didichuxing.datachannel.agentmanager.persistence.mysql.HostMapper;
+import com.didichuxing.datachannel.agentmanager.remote.host.RemoteHostManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.AgentCollectConfigurationManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.host.extension.HostManageServiceExtension;
-import com.didichuxing.datachannel.agentmanager.remote.host.RemoteHostManageService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author huqidong
@@ -50,9 +47,7 @@ import java.util.*;
 @org.springframework.stereotype.Service
 public class HostManageServiceImpl implements HostManageService {
 
-    private static final ILog LOGGER = LogFactory.getLog(HostManageServiceImpl.class);
-
-    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostManageServiceImpl.class);@Autowired
     private HostMapper hostDAO;
 
     @Autowired

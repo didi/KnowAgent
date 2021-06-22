@@ -3,11 +3,11 @@ package com.didichuxing.datachannel.agentmanager.task.resource.sync;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.metadata.MetadataManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
 import com.didiglobal.logi.auvjob.core.job.JobContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
         cron = "0 0/5 * * * ?", autoRegister = true)
 public class MetadataSyncTask implements Job {
 
-    private static final ILog LOGGER = LogFactory.getLog("MetadataSyncTask");
-
-    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger("MetadataSyncTask");@Autowired
     private MetadataManageService metadataManageService;
 
     /**

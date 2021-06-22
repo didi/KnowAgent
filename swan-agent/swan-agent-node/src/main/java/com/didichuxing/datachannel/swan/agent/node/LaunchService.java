@@ -1,14 +1,15 @@
 package com.didichuxing.datachannel.swan.agent.node;
 
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.AgentConfig;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.component.AgentComponent;
 import com.didichuxing.datachannel.swan.agent.engine.metrics.MetricService;
 import com.didichuxing.datachannel.swan.agent.node.service.ModelManager;
-import com.didichuxing.datachannel.swan.agent.node.service.errorlog.ErrLogService;
+import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.errorlog.ErrLogService;
 import com.didichuxing.datachannel.swan.agent.node.service.metrics.sink.KafkaMetricSink;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 负责启动和实时拉取配置信息
@@ -17,9 +18,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class LaunchService extends AgentComponent {
 
-    private static final ILog  LOGGER          = LogFactory.getLog(LaunchService.class.getName());
-
-    /**
+    private static final Logger LOGGER = LoggerFactory.getLogger(LaunchService.class.getName());/**
      * agent当前配置
      */
     private static AgentConfig lastAgentConfig = null;

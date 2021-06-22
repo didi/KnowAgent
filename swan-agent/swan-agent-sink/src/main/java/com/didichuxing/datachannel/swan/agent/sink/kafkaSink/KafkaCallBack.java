@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 import com.didichuxing.datachannel.swan.agent.engine.utils.TimeUtils;
-import com.didichuxing.tunnel.util.log.LogGather;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 
 /**
  * @description: kafka回调方法

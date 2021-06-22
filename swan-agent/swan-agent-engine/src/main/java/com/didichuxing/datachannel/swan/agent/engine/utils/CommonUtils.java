@@ -15,9 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 通用工具类
@@ -26,24 +25,24 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class CommonUtils {
 
-    private static final ILog               LOGGER           = LogFactory.getLog(CommonUtils.class
-                                                                 .getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class
+            .getName());
 
-    private static String                   HOSTNAME;
+    private static String HOSTNAME;
 
-    private static String                   HOSTNAMESUFFIX;
+    private static String HOSTNAMESUFFIX;
 
-    private static String                   HOSTIP;
+    private static String HOSTIP;
 
-    private static Integer                  HOSTNAMEHASHCODE = 0;
+    private static Integer HOSTNAMEHASHCODE = 0;
 
-    private static String                   DIDIDOMAIN       = ".diditaxi.com";
+    private static String DIDIDOMAIN = ".diditaxi.com";
 
-    private static String                   settingsFile     = "settings.properties";
+    private static String settingsFile = "settings.properties";
 
-    private static String                   DIDIENV_ODIN_SU;
+    private static String DIDIENV_ODIN_SU;
 
-    private static ScheduledExecutorService exec             = Executors.newScheduledThreadPool(1);
+    private static ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
 
     static {
         getHostNameAndIP();
@@ -74,6 +73,7 @@ public class CommonUtils {
 
     /**
      * 获取当前系统
+     *
      * @return
      */
     public static String getSystemType() {
@@ -131,7 +131,7 @@ public class CommonUtils {
             }
             String hostname = buf.toString();
             if (StringUtils.isBlank(hostname) || hostname.contains("localhost")
-                || hostname.indexOf("请求超时") != -1) {
+                    || hostname.indexOf("请求超时") != -1) {
                 return null;
             }
         } catch (Exception e) {
@@ -192,8 +192,7 @@ public class CommonUtils {
             }
             return buf.toString();
         } catch (NoSuchAlgorithmException e) {
-            LogGather
-                .recordErrorLog("CommonUtil error!", "get md5 error.string is " + plainText, e);
+            LOGGER.error("CommonUtil error!", "get md5 error.string is , {}" + plainText, e.getMessage());
         }
         return null;
     }
@@ -232,7 +231,7 @@ public class CommonUtils {
         try {
             prop.load(is);
         } catch (IOException e) {
-            LogGather.recordErrorLog("CommonUtil error!", "load " + settingsFile + " error", e);
+            LOGGER.error("CommonUtil error!", "load " + settingsFile + " error, {}", e.getMessage());
         } finally {
             is.close();
         }
@@ -259,19 +258,21 @@ public class CommonUtils {
 
     /**
      * 多个topic选择发送
+     *
      * @param originalTopics
      * @return
      */
     public static String selectTopic(String originalTopics) {
         if (StringUtils.isBlank(originalTopics)) {
             LOGGER.warn(String.format(
-                "originalTopics [%s] is null, please check input param topic.", originalTopics));
+                    "originalTopics [%s] is null, please check input param topic.", originalTopics));
         }
         return originalTopics;
     }
 
     /**
      * base64 解密
+     *
      * @param encode
      * @return
      */
@@ -279,13 +280,14 @@ public class CommonUtils {
         try {
             return new String(Base64.getDecoder().decode(encode.getBytes()));
         } catch (Exception e) {
-            LogGather.recordErrorLog("CommonUtil error!", "decode error. string is " + encode, e);
+            LOGGER.error("CommonUtil error!", "decode error. string is {}, {}", encode, e.getMessage());
         }
         return "";
     }
 
     /**
      * base64 加密
+     *
      * @param source
      * @return
      */
@@ -293,13 +295,14 @@ public class CommonUtils {
         try {
             return new String(Base64.getEncoder().encode(source.getBytes()));
         } catch (Exception e) {
-            LogGather.recordErrorLog("CommonUtil error!", "encode error. string is " + source, e);
+            LOGGER.error("CommonUtil error!", "encode error. string is {}, {}", source, e.getMessage());
         }
         return "";
     }
 
     /**
      * 根据文本内容返回其MD5值
+     *
      * @param content
      * @return
      */
@@ -312,8 +315,8 @@ public class CommonUtils {
             // 加密
             byte[] digest = md5.digest(b);
             // 十六进制的字符
-            char[] chars = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
-                    'C', 'D', 'E', 'F' };
+            char[] chars = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
+                    'C', 'D', 'E', 'F'};
             StringBuffer sb = new StringBuffer();
             // 处理成十六进制的字符串(通常)
             for (byte bb : digest) {
@@ -323,7 +326,7 @@ public class CommonUtils {
             // 返回加密结果
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            LogGather.recordErrorLog("CommonUtil error!", "get md5 error.string is " + content, e);
+            LOGGER.error("CommonUtil error!", "get md5 error.string is {}, {}", content, e.getMessage());
         }
         return null;
     }

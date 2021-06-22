@@ -4,8 +4,9 @@ import com.didichuxing.datachannel.metrics.MetricsBuilder;
 import com.didichuxing.datachannel.metrics.MetricsSource;
 import com.didichuxing.datachannel.metrics.lib.MetricsRegistry;
 import com.didichuxing.datachannel.swan.agent.engine.metrics.MetricService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @author jinbinbin
@@ -13,8 +14,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class AbstractStatistics implements MetricsSource {
 
-    private static final ILog LOGGER = LogFactory.getLog(AbstractStatistics.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractStatistics.class.getName());
     protected String          name;
     protected MetricsRegistry metricsRegistry;
 

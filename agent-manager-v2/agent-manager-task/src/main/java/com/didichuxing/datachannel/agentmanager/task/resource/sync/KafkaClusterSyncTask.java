@@ -1,11 +1,11 @@
 package com.didichuxing.datachannel.agentmanager.task.resource.sync;
 
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
 import com.didiglobal.logi.auvjob.core.job.JobContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
         cron = "0 0/10 * * * ?", autoRegister = true)
 public class KafkaClusterSyncTask implements Job {
 
-    private static final ILog LOGGER = LogFactory.getLog("KafkaClusterSyncTask");
-
-    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger("KafkaClusterSyncTask");@Autowired
     private KafkaClusterManageService kafkaClusterManageService;
 
     /**

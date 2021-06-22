@@ -3,12 +3,13 @@ package com.didichuxing.datachannel.swan.agent.engine.limit;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ComponentConfig;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ModelLimitConfig;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.swan.agent.engine.conf.Configurable;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
 import com.google.common.util.concurrent.RateLimiter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 令牌桶限流
@@ -17,9 +18,7 @@ import com.google.common.util.concurrent.RateLimiter;
  */
 public class TaskLimit implements Configurable {
 
-    private static final ILog LOGGER    = LogFactory.getLog(TaskLimit.class.getName());
-
-    private RateLimiter       limiter   = null;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskLimit.class.getName());private RateLimiter       limiter   = null;
 
     private volatile boolean  isRegular = false;
 
@@ -33,8 +32,7 @@ public class TaskLimit implements Configurable {
             configure(config);
             return true;
         } catch (Exception e) {
-            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is "
-                                                        + this, e);
+            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is " + this, e);
             return false;
         }
     }
@@ -44,8 +42,7 @@ public class TaskLimit implements Configurable {
             LimitService.LIMITER.unregister(this.abstractTask);
             return true;
         } catch (Exception e) {
-            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is "
-                                                        + this, e);
+            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is " + this, e);
             return false;
         }
     }

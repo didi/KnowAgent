@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.offset.OffsetManager;
 import org.apache.commons.lang3.StringUtils;
@@ -21,9 +22,9 @@ import com.didichuxing.datachannel.swan.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.beans.FileNode;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.FileUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 实时文件监控
@@ -32,20 +33,19 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public enum RealTimeFileMonitor implements Monitor {
 
-                                                    INSTANCE;
+    INSTANCE;
 
-    private static final ILog                          LOGGER        = LogFactory.getLog("monitor");
-
+    private static final Logger LOGGER = LoggerFactory.getLogger("monitor");
     /**
      * 考虑到软连接目录的key和真是目录key是一致的，因此将value调整成set
      */
-    private static Map<WatchKey, Set<String>>          keyDirMap     = new ConcurrentHashMap<>();
-    private static AtomicInteger                       keyDirMapSize = new AtomicInteger(0);
+    private static Map<WatchKey, Set<String>> keyDirMap = new ConcurrentHashMap<>();
+    private static AtomicInteger keyDirMapSize = new AtomicInteger(0);
 
-    private static Map<String, Map<String, LogSource>> dirMap        = new ConcurrentHashMap<>();
+    private static Map<String, Map<String, LogSource>> dirMap = new ConcurrentHashMap<>();
 
-    private static WatchService                        watch         = null;
-    private static volatile boolean                    running       = false;
+    private static WatchService watch = null;
+    private static volatile boolean running = false;
 
     @Override
     public boolean register(TaskComponent component) {
@@ -61,10 +61,10 @@ public enum RealTimeFileMonitor implements Monitor {
             return true;
         }
         LOGGER.info("begin to register dir " + dir + ", modelId is "
-                    + logSource.getModelConfig().getCommonConfig().getModelId());
+                + logSource.getModelConfig().getCommonConfig().getModelId());
         if (dirMap.containsKey(dir)) {
             LOGGER.info("dir " + dir
-                        + " is already in com.didichuxing.datachannel.swan.agent.source.log.monitor.ignore!");
+                    + " is already in com.didichuxing.datachannel.swan.agent.source.log.monitor.ignore!");
             dirMap.get(dir).put(logSource.getUniqueKey(), logSource);
         } else {
             Map<String, LogSource> map = new ConcurrentHashMap<>(16);
@@ -105,6 +105,7 @@ public enum RealTimeFileMonitor implements Monitor {
     /**
      * 替换fileKey 通常发生于目录被删除后的重新创建
      * 若之前watchKey不存在，则进行注册操作
+     *
      * @param dir
      */
     public void replaceWatchKey(String dir) {
@@ -299,7 +300,7 @@ public enum RealTimeFileMonitor implements Monitor {
      * 处理文件新增逻辑
      *
      * @param newFileName new file
-     * @param dir file's dir
+     * @param dir         file's dir
      */
     private void processAdd(String newFileName, String dir) {
         LOGGER.info("new find created.file is " + (dir + File.separator + newFileName));
@@ -315,15 +316,15 @@ public enum RealTimeFileMonitor implements Monitor {
 
         for (LogSource logSource : dirMap.get(dir).values()) {
             if (!FileUtils.match(file, logSource.getLogPath().getRealPath(),
-                                 logSource.getLogSourceConfig().getMatchConfig())) {
+                    logSource.getLogSourceConfig().getMatchConfig())) {
                 continue;
             }
 
             if (OffsetManager.checkFileKeyExist(StringUtils.isNotBlank(logSource.getModelConfig().getHostname()) ? logSource.getModelConfig().getHostname()
-                                                                                                                   + CommonUtils.getHOSTNAMESUFFIX() : "",
-                                                logSource.getLogPath(), FileUtils.getFileKeyByAttrs(file))) {
+                            + CommonUtils.getHOSTNAMESUFFIX() : "",
+                    logSource.getLogPath(), FileUtils.getFileKeyByAttrs(file))) {
                 LOGGER.info("RealTimeFileMonitor: file key is already in offset map! fileName: "
-                            + file.getAbsolutePath() + ",fileKey:" + FileUtils.getFileKeyByAttrs(file));
+                        + file.getAbsolutePath() + ",fileKey:" + FileUtils.getFileKeyByAttrs(file));
                 continue;
             }
 
@@ -332,8 +333,8 @@ public enum RealTimeFileMonitor implements Monitor {
             }
 
             FileNode fileNode = new FileNode(logSource.getModelConfig().getCommonConfig().getModelId(),
-                                             logSource.getLogPath().getPathId(), FileUtils.getFileKeyByAttrs(file),
-                                             FileUtils.getModifyTime(file), dir, newFileName, file.length(), file);
+                    logSource.getLogPath().getPathId(), FileUtils.getFileKeyByAttrs(file),
+                    FileUtils.getModifyTime(file), dir, newFileName, file.length(), file);
             if (logSource.checkStandardLogType(fileNode)) {
                 logSource.appendFile(fileNode);
             }

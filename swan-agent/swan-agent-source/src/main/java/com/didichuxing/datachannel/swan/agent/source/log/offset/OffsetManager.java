@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.apache.commons.lang3.StringUtils;
 
 import com.alibaba.fastjson.JSON;
@@ -14,9 +15,9 @@ import com.didichuxing.datachannel.swan.agent.common.configs.v2.OffsetConfig;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.beans.FileNode;
 import com.didichuxing.datachannel.swan.agent.source.log.utils.FileUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: offset管理器
@@ -25,9 +26,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class OffsetManager {
 
-    private static final ILog                                         LOGGER                         = LogFactory.getLog(OffsetManager.class.getName());
-
-    private static final String                                       OLD_AGENT_PATH                 = System.getProperty("user.home")
+private static final Logger LOGGER = LoggerFactory.getLogger(OffsetManager.class.getName());private static final String                                       OLD_AGENT_PATH                 = System.getProperty("user.home")
                                                                                                        + File.separator
                                                                                                        + ".swan-logOffSet";
 

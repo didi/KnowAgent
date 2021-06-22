@@ -9,10 +9,11 @@ import org.apache.commons.lang.StringUtils;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.node.LaunchService;
 import com.didichuxing.datachannel.swan.agent.node.ConfigService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.sun.net.httpserver.HttpServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: http服务
@@ -21,9 +22,7 @@ import com.sun.net.httpserver.HttpServer;
  */
 public class HttpService {
 
-    private static final ILog LOGGER = LogFactory.getLog(HttpService.class.getName());
-
-    private final static int  PORT   = 2023;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpService.class.getName());private final static int  PORT   = 2023;
 
     private HttpServer        httpServer;
 

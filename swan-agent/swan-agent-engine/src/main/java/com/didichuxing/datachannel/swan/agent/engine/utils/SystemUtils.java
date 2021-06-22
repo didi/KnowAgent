@@ -8,28 +8,28 @@ import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.util.Date;
 
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hyperic.sigar.Sigar;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by huangjw on 18/6/19.
  */
 public class SystemUtils {
 
-    private final static int             cpuNum;
-    private final static String          pid;
-    private final static String          startTime;
-    private static long                  preGcCount = 0L;
+    private final static int cpuNum;
+    private final static String pid;
+    private final static String startTime;
+    private static long preGcCount = 0L;
 
-    private static final ILog            LOGGER     = LogFactory.getLog(SystemUtils.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemUtils.class);
     /**
      * 用于获取 OS 信息 bean
      */
-    private static OperatingSystemMXBean osMxBean   = ManagementFactory.getOperatingSystemMXBean();
-    private static Sigar                 sigar      = new Sigar();
+    private static OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
+    private static Sigar sigar = new Sigar();
 
     static {
         cpuNum = Runtime.getRuntime().availableProcessors();
@@ -53,6 +53,7 @@ public class SystemUtils {
 
     /**
      * 周期内gc次数
+     *
      * @return
      */
     public static long getGcCount() {
@@ -65,7 +66,7 @@ public class SystemUtils {
     public static long getCurGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-            .getGarbageCollectorMXBeans()) {
+                .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();
@@ -91,7 +92,7 @@ public class SystemUtils {
             String procFDShell = "svmon -P $pid | wc -l";
             try {
                 procFDShell = procFDShell.replaceAll("\\$pid", pid + "");
-                String[] cmd = new String[] { "/bin/sh", "-c", procFDShell };
+                String[] cmd = new String[]{"/bin/sh", "-c", procFDShell};
                 process = Runtime.getRuntime().exec(cmd);
                 int resultCode = process.waitFor();
                 br = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -128,7 +129,7 @@ public class SystemUtils {
             String procFDShell = "ls /proc/%d/fd | wc -l";
             try {
                 procFDShell = String.format(procFDShell, pid);
-                String[] cmd = new String[] { "sh", "-c", procFDShell };
+                String[] cmd = new String[]{"sh", "-c", procFDShell};
                 process = Runtime.getRuntime().exec(cmd);
                 int resultCode = process.waitFor();
                 br = new BufferedReader(new InputStreamReader(process.getInputStream()));

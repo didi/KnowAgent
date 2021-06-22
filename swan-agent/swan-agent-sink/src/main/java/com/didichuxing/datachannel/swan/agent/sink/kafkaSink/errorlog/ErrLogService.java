@@ -1,10 +1,11 @@
-package com.didichuxing.datachannel.swan.agent.node.service.errorlog;
+package com.didichuxing.datachannel.swan.agent.sink.kafkaSink.errorlog;
 
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.ErrorLogConfig;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
-import com.didichuxing.tunnel.util.log.GatherLogSinkRegistry;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description:
@@ -13,8 +14,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class ErrLogService {
 
-    private static final ILog     LOGGER        = LogFactory.getLog(ErrLogService.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrLogService.class.getName());
     private static ErrorLogSinker logSinker     = null;
     private final static String   REGISTER_NAME = "agent-error-log";
     private static boolean        isInit        = false;
@@ -38,7 +38,7 @@ public class ErrLogService {
              * 将 logSinker 注册入日志聚合表
              * GatherLogSinkRegistry：用于对同类型日志进行聚合发送，LogGather 进行 发送
              */
-            GatherLogSinkRegistry.registryErrorSink(REGISTER_NAME, logSinker);
+            LogGather.registryErrorSink(REGISTER_NAME, logSinker);
             isInit = true;
         }
     }
@@ -56,7 +56,7 @@ public class ErrLogService {
 
     public static void stop() {
         logSinker.stop();
-        GatherLogSinkRegistry.unRegistryErrorSink(REGISTER_NAME);
+        LogGather.unRegistryErrorSink(REGISTER_NAME);
         isInit = false;
     }
 }

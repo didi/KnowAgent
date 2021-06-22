@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
-import com.didichuxing.tunnel.util.log.LogGather;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 
 /**
  * @description: eventList序列化器

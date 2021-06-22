@@ -5,14 +5,15 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.swan.agent.engine.component.TaskComponent;
 import com.didichuxing.datachannel.swan.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.swan.agent.engine.service.DefaultThreadFactory;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 校验文件是否可以关闭
@@ -22,9 +23,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
 public enum FileCloseMonitor implements Monitor {
                                                  INSTANCE;
 
-    private static final ILog                    LOGGER           = LogFactory.getLog("monitor");
-
-    private static final int                     PERIOD           = 2;
+private static final Logger LOGGER = LoggerFactory.getLogger("monitor");private static final int                     PERIOD           = 2;
 
     private static ScheduledExecutorService      scheduledService = null;
 

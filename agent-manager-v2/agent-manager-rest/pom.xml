@@ -11,10 +11,6 @@
 
     <artifactId>agent-manager-rest</artifactId>
 
-    <properties>
-        <springframework.boot.version>2.1.1.RELEASE</springframework.boot.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.didichuxing.datachannel</groupId>
@@ -34,21 +30,6 @@
         <dependency>
             <groupId>com.didichuxing.datachannel</groupId>
             <artifactId>agent-manager-thirdpart</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.didichuxing.tunnel</groupId>
-            <artifactId>tunnel-common</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-beanutils</artifactId>
-                    <groupId>commons-beanutils</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -101,22 +82,13 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
         </dependency>
-
-        <!-- spring 构建静态资源 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <version>${springframework.boot.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

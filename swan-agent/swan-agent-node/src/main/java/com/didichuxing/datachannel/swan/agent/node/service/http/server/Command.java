@@ -9,10 +9,11 @@ import java.net.URLDecoder;
 import org.apache.commons.io.IOUtils;
 
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 执行本地脚本
@@ -21,9 +22,7 @@ import com.sun.net.httpserver.HttpHandler;
  */
 public class Command extends Handler implements HttpHandler {
 
-    private static final ILog  LOGGER = LogFactory.getLog(Command.class.getName());
-
-    public final static String URI    = "/swan-agent/command";
+    private static final Logger LOGGER = LoggerFactory.getLogger(Command.class.getName());public final static String URI    = "/swan-agent/command";
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {

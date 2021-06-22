@@ -17,9 +17,10 @@ import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaTargetConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.beans.WorkingFileNode;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description:
@@ -28,9 +29,8 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class TestLog2KafkaTask extends AbstractTask {
 
-    private static final ILog LOGGER        = LogFactory.getLog(Log2KafkaTask.class.getName());
-
-    private long              lastFlushTime = 0;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Log2KafkaTask.class.getName());
+    private long lastFlushTime = 0;
 
     public TestLog2KafkaTask(ComponentConfig config, LogSource logSource) {
         this.source = logSource;
@@ -60,7 +60,7 @@ public class TestLog2KafkaTask extends AbstractTask {
         }
 
         if (sendNum > getKafkaTargetConfig().getFlushBatchSize()
-            || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
+                || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
                 .getFlushBatchTimeThreshold()) {
             lastFlushTime = System.currentTimeMillis();
             // 同步远程文件
@@ -135,7 +135,7 @@ public class TestLog2KafkaTask extends AbstractTask {
         try {
             LogSourceConfig logSourceConfig = (LogSourceConfig) modelConfig.getSourceConfig();
             if (modelConfig.getCommonConfig().getModelType() == LogConfigConstants.COLLECT_TYPE_TEMPORALITY
-                && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
+                    && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
                 return true;
             }
         } catch (Exception e) {

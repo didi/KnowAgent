@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MetricTest extends ApplicationTests {
 
-    @Qualifier("agentMetricsMysqlDAOImpl")
+    @Qualifier("agentMetricsRDSImpl")
     @Autowired
     private AgentMetricsDAO dao;
 
