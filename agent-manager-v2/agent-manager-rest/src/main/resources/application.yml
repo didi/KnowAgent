@@ -7,7 +7,7 @@ agentmanager:
 # 日志相关配置
 logging:
   pattern:
-    file: "[%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%level][%t] %msg%xEx%n"
+    file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
   path: .
   file:
     max-history: 7
@@ -27,7 +27,7 @@ spring:
     name: data
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      driver-class-name: com.mysql.jdbc.Driver
+      driver-class-name: org.mariadb.jdbc.Driver
       url: jdbc:mysql://localhost:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
       username:
       password:
@@ -65,7 +65,7 @@ spring:
     jdbc-url: jdbc:mysql://localhost:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
     username:
     password:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: org.mariadb.jdbc.Driver
     max-lifetime: 60000
     init-sql: true
     init-thread-num: 10
@@ -108,6 +108,10 @@ metadata:
         srv-token:
         user-token:
         enabled:
+      k8s:
+        service-key: servicename
+        path-name: logpath
+
 agent:
   metrics:
     datasource:
@@ -124,7 +128,3 @@ agent:
         url: http://%s:%d/swan-agent/path
         port: 2023
         body:
-
-k8s:
-  service-key: servicename
-  path-name: logpath

@@ -244,6 +244,15 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
         if(null != target.getLogCollectTaskFinishTime()) {
             source.setLogCollectTaskFinishTime(target.getLogCollectTaskFinishTime());
         }
+        if (!StringUtils.isBlank(target.getLogContentSliceRuleLogicJsonString()) && !"null".equals(target.getLogContentSliceRuleLogicJsonString())) {
+            source.setLogContentSliceRuleLogicJsonString(target.getLogContentSliceRuleLogicJsonString());
+        }
+        if (!StringUtils.isBlank(target.getFileNameSuffixMatchRuleLogicJsonString()) && !"null".equals(target.getFileNameSuffixMatchRuleLogicJsonString())) {
+            source.setFileNameSuffixMatchRuleLogicJsonString(target.getFileNameSuffixMatchRuleLogicJsonString());
+        }
+        if (!StringUtils.isBlank(target.getKafkaProducerConfiguration())) {
+            source.setKafkaProducerConfiguration(target.getKafkaProducerConfiguration());
+        }
         return source;
     }
 
