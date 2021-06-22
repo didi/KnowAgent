@@ -25,7 +25,7 @@ public class AgentMetricPO extends BasePO {
 
     private Integer fdCount;
 
-    private Integer limitTps;
+    private Long limitTps;
 
     private Date startTime;
 
@@ -113,11 +113,11 @@ public class AgentMetricPO extends BasePO {
         this.fdCount = fdCount;
     }
 
-    public Integer getLimitTps() {
+    public Long getLimitTps() {
         return limitTps;
     }
 
-    public void setLimitTps(Integer limitTps) {
+    public void setLimitTps(Long limitTps) {
         this.limitTps = limitTps;
     }
 

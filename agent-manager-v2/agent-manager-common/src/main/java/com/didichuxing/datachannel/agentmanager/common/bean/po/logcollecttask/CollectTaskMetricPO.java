@@ -91,7 +91,7 @@ public class CollectTaskMetricPO extends BasePO {
 
     private String sourceType;
 
-    private Date logTime;
+    private Long logTime;
 
     private Integer flushFailedCount;
 
@@ -455,11 +455,11 @@ public class CollectTaskMetricPO extends BasePO {
         this.sourceType = sourceType;
     }
 
-    public Date getLogTime() {
+    public Long getLogTime() {
         return logTime;
     }
 
-    public void setLogTime(Date logTime) {
+    public void setLogTime(Long logTime) {
         this.logTime = logTime;
     }
 

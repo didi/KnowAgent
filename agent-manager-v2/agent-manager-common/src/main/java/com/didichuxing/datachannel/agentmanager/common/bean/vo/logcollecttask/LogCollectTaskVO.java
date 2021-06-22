@@ -70,11 +70,23 @@ public class LogCollectTaskVO {
     @ApiModelProperty(value = "日志采集任务执行完成时间 注：仅日志采集任务为时间范围采集类型时")
     private Long logCollectTaskFinishTime;
 
-    @ApiModelProperty(value = "日志采集任务健康度 ", notes="")
+    @ApiModelProperty(value = "日志采集任务健康度", notes="")
     private Integer logCollectTaskHealthLevel;
 
-    @ApiModelProperty(value = "日志采集任务创建人 ", notes="")
+    @ApiModelProperty(value = "日志采集任务创建人", notes="")
     private String logCollectTaskCreator;
+
+    @ApiModelProperty(value = "kafka生产端属性", notes="")
+    private String kafkaProducerConfiguration;
+
+    @ApiModelProperty(value = "日志切片规则", notes="")
+    private LogSliceRuleVO logContentSliceRule;
+
+    @ApiModelProperty(value = "待采集文件后缀匹配规则信息", notes="")
+    private FileNameSuffixMatchRuleVO fileNameSuffixMatchRule;
+
+    @ApiModelProperty(value = "采集延迟监控阈值", notes="")
+    private Long collectDelayThresholdMs;
 
     public Integer getLogCollectTaskHealthLevel() {
         return logCollectTaskHealthLevel;
@@ -242,5 +254,37 @@ public class LogCollectTaskVO {
 
     public void setLogCollectTaskFinishTime(Long logCollectTaskFinishTime) {
         this.logCollectTaskFinishTime = logCollectTaskFinishTime;
+    }
+
+    public String getKafkaProducerConfiguration() {
+        return kafkaProducerConfiguration;
+    }
+
+    public void setKafkaProducerConfiguration(String kafkaProducerConfiguration) {
+        this.kafkaProducerConfiguration = kafkaProducerConfiguration;
+    }
+
+    public LogSliceRuleVO getLogContentSliceRule() {
+        return logContentSliceRule;
+    }
+
+    public void setLogContentSliceRule(LogSliceRuleVO logContentSliceRule) {
+        this.logContentSliceRule = logContentSliceRule;
+    }
+
+    public FileNameSuffixMatchRuleVO getFileNameSuffixMatchRule() {
+        return fileNameSuffixMatchRule;
+    }
+
+    public void setFileNameSuffixMatchRule(FileNameSuffixMatchRuleVO fileNameSuffixMatchRule) {
+        this.fileNameSuffixMatchRule = fileNameSuffixMatchRule;
+    }
+
+    public Long getCollectDelayThresholdMs() {
+        return collectDelayThresholdMs;
+    }
+
+    public void setCollectDelayThresholdMs(Long collectDelayThresholdMs) {
+        this.collectDelayThresholdMs = collectDelayThresholdMs;
     }
 }

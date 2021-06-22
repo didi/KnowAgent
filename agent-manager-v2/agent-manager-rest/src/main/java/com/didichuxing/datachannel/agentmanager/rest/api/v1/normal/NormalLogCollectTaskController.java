@@ -101,7 +101,7 @@ public class NormalLogCollectTaskController {
         LogCollectTaskPaginationQueryConditionDO logCollectTaskPaginationQueryConditionDO = LogCollectTaskPaginationRequestDTO2LogCollectTaskPaginationQueryConditionDO(dto);
         logCollectTaskPaginationQueryConditionDO.setProjectId(projectId);
         List<LogCollectTaskPaginationRecordVO> logCollectTaskPaginationRecordVOList = logCollectTaskPaginationRecordDOList2LogCollectTaskPaginationRecordVOList(logCollectTaskManageService.paginationQueryByConditon(logCollectTaskPaginationQueryConditionDO));
-        PaginationResult<LogCollectTaskPaginationRecordVO> paginationResult = new PaginationResult(logCollectTaskPaginationRecordVOList, logCollectTaskManageService.queryCountByCondition(logCollectTaskPaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
+        PaginationResult<LogCollectTaskPaginationRecordVO> paginationResult = new PaginationResult<>(logCollectTaskPaginationRecordVOList, logCollectTaskManageService.queryCountByCondition(logCollectTaskPaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
         return Result.buildSucc(paginationResult);
     }
 
@@ -117,10 +117,7 @@ public class NormalLogCollectTaskController {
     @RequestMapping(value = "/switch", method = RequestMethod.GET)
     @ResponseBody
     @CheckPermission(permission = AGENT_TASK_START_PAUSE)
-    public Result switchLogCollectTask(
-                @RequestParam (value = "logCollectTaskId") Long logCollectTaskId,
-                @RequestParam (value = "status") Integer status
-            ) {
+    public Result switchLogCollectTask(@RequestParam (value = "logCollectTaskId") Long logCollectTaskId, @RequestParam (value = "status") Integer status) {
         logCollectTaskManageService.switchLogCollectTask(logCollectTaskId, status, SpringTool.getUserName());
         return Result.buildSucc();
     }
@@ -155,6 +152,8 @@ public class NormalLogCollectTaskController {
         logCollectTaskDO.setLogCollectTaskName(dto.getLogCollectTaskName());
         logCollectTaskDO.setCollectDelayThresholdMs(dto.getCollectDelayThresholdMs());
         logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
+        logCollectTaskDO.setKafkaProducerConfiguration(dto.getKafkaProducerConfiguration());
+        logCollectTaskDO.setLogContentSliceRuleLogicJsonString(JSON.toJSONString(dto.getLogSliceRuleDTO()));
         //  setDirectoryLogCollectPathList
         if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
@@ -208,6 +207,7 @@ public class NormalLogCollectTaskController {
         logCollectTaskDO.setCollectDelayThresholdMs(dto.getCollectDelayThresholdMs());
         logCollectTaskDO.setLogContentSliceRuleLogicJsonString(JSON.toJSONString(dto.getLogSliceRuleDTO()));
         logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
+        logCollectTaskDO.setKafkaProducerConfiguration(dto.getKafkaProducerConfiguration());
         if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
             for (DirectoryLogCollectPathCreateDTO directoryLogCollectPathCreateDTO : dto.getDirectoryLogCollectPathList()) {
@@ -385,6 +385,10 @@ public class NormalLogCollectTaskController {
         }
         logCollectTaskVO.setLogCollectTaskHealthLevel(logCollectTaskHealthDO.getLogCollectTaskHealthLevel());
         logCollectTaskVO.setLogCollectTaskCreator(logCollectTaskHealthDO.getOperator());
+        logCollectTaskVO.setKafkaProducerConfiguration(logCollectTaskDO.getKafkaProducerConfiguration());
+        logCollectTaskVO.setLogContentSliceRule(JSON.parseObject(logCollectTaskDO.getLogContentSliceRuleLogicJsonString(), LogSliceRuleVO.class));
+        logCollectTaskVO.setFileNameSuffixMatchRule(JSON.parseObject(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString(), FileNameSuffixMatchRuleVO.class));
+        logCollectTaskVO.setCollectDelayThresholdMs(logCollectTaskDO.getCollectDelayThresholdMs());
         return logCollectTaskVO;
     }
 
