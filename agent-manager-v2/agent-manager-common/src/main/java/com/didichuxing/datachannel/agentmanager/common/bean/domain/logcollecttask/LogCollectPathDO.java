@@ -28,6 +28,11 @@ public class LogCollectPathDO extends BaseDO {
      */
     private String realPath;
 
+    /**
+     * 字符集
+     */
+    private String charset;
+
     public Long getId() {
         return id;
     }
@@ -58,6 +63,14 @@ public class LogCollectPathDO extends BaseDO {
 
     public void setRealPath(String realPath) {
         this.realPath = realPath;
+    }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
     }
 }
 
