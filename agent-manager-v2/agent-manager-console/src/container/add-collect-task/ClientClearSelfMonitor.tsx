@@ -68,6 +68,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
 
   useEffect(() => {
     getReceiversList();
+
   }, []);
 
   useEffect(() => {
@@ -168,7 +169,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
             <InputNumber min={1} />,
           )}&nbsp;分钟，则视为异常
         </Form.Item>} */}
-        {props.collectType !== 0 &&
+        {/* {props.collectType !== 0 &&
           <Form.Item label="采集完成时间限制">
             该任务超过&nbsp;
           {getFieldDecorator('step3_logCollectTaskExecuteTimeoutMs', {
@@ -177,7 +178,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
           })(
             <InputNumber min={1} />,
           )}&nbsp;分钟未完成，则视为异常
-        </Form.Item>}
+        </Form.Item>} */}
 
         <Form.Item label="任务保障等级" extra="限流时，资源优先分配给任务保障等级高的采集任务">
           {getFieldDecorator('step3_limitPriority', {
