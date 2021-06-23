@@ -1,10 +1,8 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.domain.agent;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.BaseDO;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 
-import java.util.Date;
+import lombok.Data;
 
 /**
  * @author huqidong
@@ -50,6 +48,12 @@ public class AgentDO extends BaseDO {
      * Agent指标信息发往的接收端id
      */
     private Long metricsSendReceiverId;
+
+    /**
+     * Agent指标信息发送端属性
+     */
+    private String metricsProducerConfiguration;
+
     /**
      * Agent错误日志信息发往的topic名
      */
@@ -58,6 +62,12 @@ public class AgentDO extends BaseDO {
      * Agent错误日志信息发往的接收端id
      */
     private Long errorLogsSendReceiverId;
+
+    /**
+     * Agent错误日志信息发送端属性
+     */
+    private String errorLogsProducerConfiguration;
+
     /**
      * 采集端高级配置项集，为json形式字符串
      */
@@ -139,6 +149,14 @@ public class AgentDO extends BaseDO {
         this.metricsSendReceiverId = metricsSendReceiverId;
     }
 
+    public String getMetricsProducerConfiguration() {
+        return metricsProducerConfiguration;
+    }
+
+    public void setMetricsProducerConfiguration(String metricProducerConfiguration) {
+        this.metricsProducerConfiguration = metricProducerConfiguration;
+    }
+
     public String getErrorLogsSendTopic() {
         return errorLogsSendTopic;
     }
@@ -153,6 +171,14 @@ public class AgentDO extends BaseDO {
 
     public void setErrorLogsSendReceiverId(Long errorLogsSendReceiverId) {
         this.errorLogsSendReceiverId = errorLogsSendReceiverId;
+    }
+
+    public String getErrorLogsProducerConfiguration() {
+        return errorLogsProducerConfiguration;
+    }
+
+    public void setErrorLogsProducerConfiguration(String errorLogsProducerConfiguration) {
+        this.errorLogsProducerConfiguration = errorLogsProducerConfiguration;
     }
 
     public String getAdvancedConfigurationJsonString() {

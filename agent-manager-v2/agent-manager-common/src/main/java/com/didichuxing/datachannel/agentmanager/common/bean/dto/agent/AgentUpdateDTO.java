@@ -26,11 +26,17 @@ public class AgentUpdateDTO {
     @ApiModelProperty(value = "Agent指标信息发往的接收端id")
     private Long metricsSendReceiverId;
 
+    @ApiModelProperty(value = "Agent指标信息发送端属性")
+    private String metricsProducerConfiguration;
+
     @ApiModelProperty(value = "Agent错误日志信息发往的topic名")
     private String errorLogsSendTopic;
 
     @ApiModelProperty(value = "Agent错误日志信息发往的接收端id")
     private Long errorLogsSendReceiverId;
+
+    @ApiModelProperty(value = "Agent错误日志信息发送端属性")
+    private String errorLogsProducerConfiguration;
 
     @ApiModelProperty(value = "Agent高级配置项集，为json形式字符串")
     private String advancedConfigurationJsonString;
@@ -75,6 +81,14 @@ public class AgentUpdateDTO {
         this.metricsSendReceiverId = metricsSendReceiverId;
     }
 
+    public String getMetricsProducerConfiguration() {
+        return metricsProducerConfiguration;
+    }
+
+    public void setMetricsProducerConfiguration(String metricProducerConfiguration) {
+        this.metricsProducerConfiguration = metricProducerConfiguration;
+    }
+
     public String getErrorLogsSendTopic() {
         return errorLogsSendTopic;
     }
@@ -97,5 +111,13 @@ public class AgentUpdateDTO {
 
     public void setAdvancedConfigurationJsonString(String advancedConfigurationJsonString) {
         this.advancedConfigurationJsonString = advancedConfigurationJsonString;
+    }
+
+    public String getErrorLogsProducerConfiguration() {
+        return errorLogsProducerConfiguration;
+    }
+
+    public void setErrorLogsProducerConfiguration(String errorLogsProducerConfiguration) {
+        this.errorLogsProducerConfiguration = errorLogsProducerConfiguration;
     }
 }

@@ -17,12 +17,15 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="metrics_producer_configuration" property="metricsProducerConfiguration" jdbcType="VARCHAR" />
+    <result column="error_logs_producer_configuration" property="errorLogsProducerConfiguration" jdbcType="VARCHAR" />
     <result column="configuration_version" property="configurationVersion" jdbcType="INTEGER"/>
   </resultMap>
 
   <sql id="Base_Column_List" >
     id, host_name, ip, collect_type, cpu_limit_threshold, byte_limit_threshold,
-    agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version, operator, create_time, modify_time
+    agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version, operator, create_time, modify_time,
+    metrics_producer_configuration, error_logs_producer_configuration
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -57,13 +60,13 @@
     insert into tb_agent (id, host_name, ip, 
       collect_type, cpu_limit_threshold, byte_limit_threshold, 
       agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version,
-      operator
+      operator, metrics_producer_configuration, error_logs_producer_configuration
       )
     values (#{id,jdbcType=BIGINT}, #{hostName,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
       #{collectType,jdbcType=TINYINT}, #{cpuLimitThreshold,jdbcType=INTEGER}, #{byteLimitThreshold,jdbcType=BIGINT}, 
       #{agentVersionId,jdbcType=BIGINT}, #{metricsSendTopic,jdbcType=VARCHAR}, #{metricsSendReceiverId,jdbcType=BIGINT}, #{errorLogsSendTopic,jdbcType=VARCHAR}, #{errorLogsSendReceiverId,jdbcType=BIGINT},
       #{advancedConfigurationJsonString,jdbcType=VARCHAR}, #{configurationVersion,jdbcType=INTEGER},
-      #{operator,jdbcType=VARCHAR}
+      #{operator,jdbcType=VARCHAR}, #{metricsProducerConfiguration, jdbcType=VARCHAR}, #{errorLogsProducerConfiguration, jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" >
@@ -102,6 +105,12 @@
       <if test="modifyTime != null" >
         modify_time,
       </if>
+      <if test="metricsProducerConfiguration != null" >
+        metrics_producer_configuration,
+      </if>
+      <if test="errorLogsProducerConfiguration != null" >
+        error_logs_producer_configuration,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -137,44 +146,14 @@
       <if test="modifyTime != null" >
         #{modifyTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="metricsProducerConfiguration != null" >
+        #{metricsProducerConfiguration,jdbcType=VARCHAR},
+      </if>
+      <if test="errorLogsProducerConfiguration != null" >
+        #{errorLogsProducerConfiguration,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" >
-    update tb_agent
-    <set >
-      <if test="hostName != null" >
-        host_name = #{hostName,jdbcType=VARCHAR},
-      </if>
-      <if test="ip != null" >
-        ip = #{ip,jdbcType=VARCHAR},
-      </if>
-      <if test="collectType != null" >
-        collect_type = #{collectType,jdbcType=TINYINT},
-      </if>
-      <if test="cpuLimitThreshold != null" >
-        cpu_limit_threshold = #{cpuLimitThreshold,jdbcType=INTEGER},
-      </if>
-      <if test="byteLimitThreshold != null" >
-        byte_limit_threshold = #{byteLimitThreshold,jdbcType=BIGINT},
-      </if>
-      <if test="agentVersionId != null" >
-        agentVersionId = #{agent_version_id,jdbcType=VARCHAR},
-      </if>
-      <if test="advancedConfigurationJsonString != null" >
-        advanced_configuration_json_string = #{advancedConfigurationJsonString,jdbcType=VARCHAR},
-      </if>
-      <if test="operator != null" >
-        operator = #{operator,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyTime != null" >
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" >
     update tb_agent
     set host_name = #{hostName,jdbcType=VARCHAR},
@@ -191,7 +170,9 @@
       configuration_version = configuration_version + 1,
       operator = #{operator,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      metrics_producer_configuration = #{metricsProducerConfiguration, jdbcType=VARCHAR},
+      error_logs_producer_configuration = #{errorLogsProducerConfiguration, jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT} and configuration_version = #{configurationVersion,jdbcType=INTEGER}
   </update>
 

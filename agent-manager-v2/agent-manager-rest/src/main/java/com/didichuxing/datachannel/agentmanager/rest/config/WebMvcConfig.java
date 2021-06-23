@@ -10,12 +10,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * @author zengqiao
- * @date 20/1/19
- */
-//@SpringBootConfiguration
-//@Component
+@SpringBootConfiguration
+@Component
 //@DependsOn({"permissionInterceptor"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
