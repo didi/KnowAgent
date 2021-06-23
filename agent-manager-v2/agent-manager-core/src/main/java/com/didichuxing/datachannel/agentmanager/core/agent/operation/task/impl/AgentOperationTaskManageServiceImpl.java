@@ -705,6 +705,15 @@ public class AgentOperationTaskManageServiceImpl implements AgentOperationTaskMa
         }
     }
 
+    @Override
+    public AgentOperationTaskDO agent2AgentOperationTaskUnInstall(AgentDO agentDO) {
+
+        //TODO：
+
+        return null;
+
+    }
+
     /**
      * 将给定AgentOperationSubTaskDO对象集转化为 hostName : AgentOperationSubTaskDO 对象集
      * @param agentOperationSubTaskDOList AgentOperationSubTaskDO 对象集
