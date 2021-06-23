@@ -10,9 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -56,12 +54,6 @@ public class AgentManagerApplication {
             "/agentmanager/api/druid/websession.json", "/agentmanager/api/druid/spring.html",
             "/agentmanager/api/druid/spring.json", "/agentmanager/api/druid/client.html"};
 
-    @Value(value = "${agentmanager.port.web}")
-    private int               port;
-
-    @Value(value = "${agentmanager.contextPath}")
-    private String            contextPath;
-
     /**
      * @param args
      */
@@ -76,14 +68,6 @@ public class AgentManagerApplication {
         LOGGER.info("agentmanagerApplication started");
         MetricService metricService = ctx.getBean(MetricService.class);
         metricService.run();
-    }
-
-    @Bean
-    public ConfigurableServletWebServerFactory configurableServletWebServerFactory() {
-        JettyServletWebServerFactory factory = new JettyServletWebServerFactory();
-        factory.setPort(port);
-        factory.setContextPath(contextPath);
-        return factory;
     }
 
     /**
