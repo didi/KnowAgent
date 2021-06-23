@@ -11,14 +11,6 @@ import java.util.List;
 public interface AgentManageServiceExtension {
 
     /**
-     * 将给定Agent对象转化为AgentPO对象
-     * @param agent 待转化agent对象
-     * @return 返回将给定Agent对象转化的AgentPO对象
-     * @throws ServiceException 执行该函数过程中出现的异常
-     */
-    AgentPO agent2AgentPO(AgentDO agent) throws ServiceException;
-
-    /**
      * 校验创建Agent方法对应的参数"Agent对象"信息是否合法
      * 注：该操作不应抛出异常，校验过程中出现异常需要对应实现内部处理好
      * @param agent 待校验Agent对象

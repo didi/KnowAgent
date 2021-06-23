@@ -19,42 +19,6 @@ import java.util.List;
 public class DefaultAgentManageServiceExtensionImpl implements AgentManageServiceExtension {
 
     @Override
-    public AgentPO agent2AgentPO(AgentDO agent) throws ServiceException {
-        if(null == agent) {
-            throw new ServiceException(
-                    String.format(
-                            "class=AgentManageServiceExtensionImpl||method=agent2AgentPO||msg={%s}",
-                            "入参agent对象不可为空"
-                    ),
-                    ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
-            );
-        }
-        AgentPO agentPO = null;
-        try {
-            agentPO = ConvertUtil.obj2Obj(agent, AgentPO.class);
-        } catch (Exception ex) {
-            throw new ServiceException(
-                    String.format(
-                            "class=AgentManageServiceExtensionImpl||method=agent2AgentPO||msg={%s}",
-                            String.format("Agent对象={%s}转化为AgentPO对象失败，原因为：%s", JSON.toJSONString(agent), ex.getMessage())
-                    ),
-                    ex,
-                    ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode()
-            );
-        }
-        if(null == agentPO) {
-            throw new ServiceException(
-                    String.format(
-                            "class=AgentManageServiceExtensionImpl||method=agent2AgentPO||msg={%s}",
-                            String.format("Agent对象={%s}转化为AgentPO对象失败", JSON.toJSONString(agent))
-                    ),
-                    ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode()
-            );
-        }
-        return agentPO;
-    }
-
-    @Override
     public CheckResult checkCreateParameterAgent(AgentDO agent) {
 
         //TODO：
