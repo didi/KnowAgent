@@ -28,9 +28,10 @@ import com.didichuxing.datachannel.swan.agent.source.log.monitor.FileCloseMonito
 import com.didichuxing.datachannel.swan.agent.source.log.monitor.RealTimeFileMonitor;
 import com.didichuxing.datachannel.swan.agent.source.log.monitor.ScheduleFileMonitor;
 import com.didichuxing.datachannel.swan.agent.task.log.metrics.ModelMetricsFields;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 日志采集入kafka
@@ -39,14 +40,13 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class Log2KafkaTask extends AbstractTask {
 
-    private static final ILog LOGGER        = LogFactory.getLog(Log2KafkaTask.class.getName());
-
-    private long              lastFlushTime = 0;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Log2KafkaTask.class.getName());
+    private long lastFlushTime = 0;
 
     /**
      * ceph采集时标记是否已经完成所有相关文件的同步
      */
-    private volatile boolean  isSynced      = false;
+    private volatile boolean isSynced = false;
 
     public Log2KafkaTask(ComponentConfig config, LogSource logSource) {
         this.source = logSource;
@@ -94,7 +94,7 @@ public class Log2KafkaTask extends AbstractTask {
         try {
             LogSourceConfig logSourceConfig = (LogSourceConfig) modelConfig.getSourceConfig();
             if (modelConfig.getCommonConfig().getModelType() == LogConfigConstants.COLLECT_TYPE_TEMPORALITY
-                && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
+                    && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
                 return true;
             }
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class Log2KafkaTask extends AbstractTask {
         }
 
         if (sendNum > getKafkaTargetConfig().getFlushBatchSize()
-            || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
+                || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
                 .getFlushBatchTimeThreshold()) {
             lastFlushTime = System.currentTimeMillis();
             return true;
@@ -207,7 +207,7 @@ public class Log2KafkaTask extends AbstractTask {
 
         EventMetricsConfig eventMetricsConfig = modelConfig.getEventMetricsConfig();
         if (eventMetricsConfig != null && eventMetricsConfig.getOtherMetrics() != null
-            && eventMetricsConfig.getOtherMetrics().size() != 0) {
+                && eventMetricsConfig.getOtherMetrics().size() != 0) {
             for (Map.Entry<String, String> entry : eventMetricsConfig.getOtherMetrics().entrySet()) {
                 if (StringUtils.isNotBlank(entry.getValue()) && StringUtils.isNotBlank(entry.getKey())) {
                     ret.put(entry.getKey(), entry.getValue());

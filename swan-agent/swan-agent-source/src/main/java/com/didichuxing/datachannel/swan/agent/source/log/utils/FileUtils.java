@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import com.didichuxing.datachannel.swan.agent.common.api.StandardLogType;
 import com.didichuxing.datachannel.swan.agent.common.beans.LogPath;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.beans.FileDirNode;
 import com.didichuxing.datachannel.swan.agent.source.log.config.MatchConfig;
@@ -25,9 +26,8 @@ import com.didichuxing.datachannel.swan.agent.source.log.beans.WorkingFileNode;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.offset.FileOffSet;
 import com.didichuxing.datachannel.swan.agent.source.log.type.PublicType;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 文件工具类
@@ -36,9 +36,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class FileUtils {
 
-    private static final ILog   LOGGER                = LogFactory.getLog(FileUtils.class.getName());
-
-    private static final String UNDERLINE_SEPARATOR   = "_";
+private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.getName());private static final String UNDERLINE_SEPARATOR   = "_";
 
     private static Pattern      NUM_PATTERN           = Pattern.compile("[0-9]");
 
@@ -117,7 +115,7 @@ public class FileUtils {
         try {
             return (long) Files.getAttribute(file.toPath(), "unix:dev");
         } catch (IOException e) {
-            LogGather.recordErrorLog("FileUtil error!", "get file's inode error! file is " + file, e);
+            LOGGER.error("FileUtil error! get file's inode error! file is " + file, e);
         }
         return LogConfigConstants.DEFAULT_INODE;
     }
@@ -135,7 +133,7 @@ public class FileUtils {
             BasicFileAttributes att = Files.readAttributes(path, BasicFileAttributes.class);
             return att.creationTime().toMillis();
         } catch (Exception e) {
-            LogGather.recordErrorLog("FileUtil error!", "get file's createTime error! file is " + file, e);
+            LOGGER.error("FileUtil error!", "get file's createTime error! file is " + file, e);
         }
         return LogConfigConstants.DEFAULT_CREATE_TIME;
     }

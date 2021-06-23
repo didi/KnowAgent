@@ -8,9 +8,10 @@ import java.util.concurrent.TimeUnit;
 import com.didichuxing.datachannel.swan.agent.engine.component.TaskComponent;
 import com.didichuxing.datachannel.swan.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.swan.agent.engine.service.DefaultThreadFactory;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 兼容弹性云场景
@@ -18,21 +19,20 @@ import com.didichuxing.tunnel.util.log.LogGather;
  * @Date: 2020-03-31 14:13
  */
 public enum ScheduleTaskMonitor implements Monitor {
-                                                    INSTANCE;
+    INSTANCE;
 
-    private static final ILog                          LOGGER           = LogFactory.getLog("monitor");
-
-    private static ScheduledExecutorService            scheduledService = null;
+    private static final Logger LOGGER = LoggerFactory.getLogger("monitor");
+    private static ScheduledExecutorService scheduledService = null;
 
     /**
      * key: key of LogModel
      * value: LogModel
      */
-    private static ConcurrentHashMap<String, LogModel> modelMap         = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, LogModel> modelMap = new ConcurrentHashMap<>();
 
-    private static volatile boolean                    running          = false;
+    private static volatile boolean running = false;
 
-    private final Object                               lock             = new Object();
+    private final Object lock = new Object();
 
     @Override
     public boolean register(TaskComponent component) {
@@ -61,7 +61,7 @@ public enum ScheduleTaskMonitor implements Monitor {
 
     public boolean unregister(LogModel logModel) {
         LOGGER.info("begin to unregister logModel from scheduleTaskMonitor. logModel's key is "
-                    + logModel.getUniqueKey());
+                + logModel.getUniqueKey());
         if (!running) {
             LOGGER.warn("unregister logModel failed for scheduleTaskMonitor is stopping!");
             return false;
@@ -80,7 +80,7 @@ public enum ScheduleTaskMonitor implements Monitor {
         }
         try {
             scheduledService = new ScheduledThreadPoolExecutor(1,
-                                                               new DefaultThreadFactory("ScheduleTask-Monitor-schedule"));
+                    new DefaultThreadFactory("ScheduleTask-Monitor-schedule"));
             running = true;
         } catch (Exception e) {
             LogGather.recordErrorLog("ScheduleTaskMonitor error!", "init ScheduleTaskMonitor service error!", e);

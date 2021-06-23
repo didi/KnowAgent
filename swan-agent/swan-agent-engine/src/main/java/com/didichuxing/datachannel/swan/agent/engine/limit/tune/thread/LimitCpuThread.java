@@ -1,15 +1,16 @@
 package com.didichuxing.datachannel.swan.agent.engine.limit.tune.thread;
 
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.swan.agent.engine.limit.cpu.CpuTime;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LimitCpuThread implements Runnable {
 
-    private static final ILog  LOGGER     = LogFactory.getLog(LimitCpuThread.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(LimitCpuThread.class.getName());
     private static final float FACTOR     = 0.1f;
     private static final float TPS_FACTOR = 0.2f;
     // 最大10G/s
@@ -72,7 +73,7 @@ public class LimitCpuThread implements Runnable {
                 // 4. 记录cpu耗时
                 this.currentCpuUsage = (float) (Math.round(cpuUsage * 100)) / 100;
             } catch (Throwable t) {
-                LogGather.recordErrorLog("Limiter.cpuThread", "process cpuUsage error", t);
+                LOGGER.error("Limiter.cpuThread process cpuUsage error, {}", t.getCause());
             }
         }
     }

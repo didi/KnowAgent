@@ -45,7 +45,7 @@
     <result column="control_time_max" property="controlTimeMax" jdbcType="INTEGER" />
     <result column="send_count" property="sendCount" jdbcType="INTEGER" />
     <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
-    <result column="log_time" property="logTime" jdbcType="BIGINT" />
+    <result column="log_time" property="logTime" jdbcType="TIMESTAMP" />
     <result column="flush_failed_count" property="flushFailedCount" jdbcType="INTEGER" />
     <result column="channel_size" property="channelSize" jdbcType="INTEGER" />
     <result column="filter_total_too_large_count" property="filterTotalTooLargeCount" jdbcType="INTEGER" />
@@ -114,7 +114,7 @@
       #{sendTimeMax,jdbcType=INTEGER}, #{dynamicLimiter,jdbcType=INTEGER}, #{logPathKey,jdbcType=VARCHAR},
       #{maxTimeGap,jdbcType=INTEGER}, #{sendByte,jdbcType=INTEGER}, #{sendTimeMin,jdbcType=INTEGER},
       #{logTimeStr,jdbcType=VARCHAR}, #{controlTimeMax,jdbcType=INTEGER}, #{sendCount,jdbcType=INTEGER},
-      #{sourceType,jdbcType=VARCHAR}, #{logTime,jdbcType=BIGINT}, #{flushFailedCount,jdbcType=INTEGER},
+      #{sourceType,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{flushFailedCount,jdbcType=INTEGER},
       #{channelSize,jdbcType=INTEGER}, #{filterTotalTooLargeCount,jdbcType=INTEGER},
       #{collectFiles,jdbcType=VARCHAR}, #{controlTimeMin,jdbcType=INTEGER}, #{readByte,jdbcType=INTEGER},
       #{readTimeMax,jdbcType=INTEGER}, #{validTimeConfig,jdbcType=BIT},#{isFileDisorder,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
@@ -423,7 +423,7 @@
         #{sourceType,jdbcType=VARCHAR},
       </if>
       <if test="logTime != null" >
-        #{logTime,jdbcType=BIGINT},
+        #{logTime,jdbcType=TIMESTAMP},
       </if>
       <if test="flushFailedCount != null" >
         #{flushFailedCount,jdbcType=INTEGER},
@@ -593,7 +593,7 @@
         source_type = #{sourceType,jdbcType=VARCHAR},
       </if>
       <if test="logTime != null" >
-        log_time = #{logTime,jdbcType=BIGINT},
+        log_time = #{logTime,jdbcType=TIMESTAMP},
       </if>
       <if test="flushFailedCount != null" >
         flush_failed_count = #{flushFailedCount,jdbcType=INTEGER},
@@ -678,7 +678,7 @@
       control_time_max = #{controlTimeMax,jdbcType=INTEGER},
       send_count = #{sendCount,jdbcType=INTEGER},
       source_type = #{sourceType,jdbcType=VARCHAR},
-      log_time = #{logTime,jdbcType=BIGINT},
+      log_time = #{logTime,jdbcType=TIMESTAMP},
       flush_failed_count = #{flushFailedCount,jdbcType=INTEGER},
       channel_size = #{channelSize,jdbcType=INTEGER},
       filter_total_too_large_count = #{filterTotalTooLargeCount,jdbcType=INTEGER},
@@ -736,7 +736,7 @@
     <result column="control_time_max" property="value" jdbcType="INTEGER" />
     <result column="send_count" property="value" jdbcType="INTEGER" />
     <result column="source_type" property="value" jdbcType="VARCHAR" />
-    <result column="log_time" property="value" jdbcType="BIGINT" />
+    <result column="log_time" property="value" jdbcType="TIMESTAMP" />
     <result column="flush_failed_count" property="value" jdbcType="INTEGER" />
     <result column="channel_size" property="value" jdbcType="INTEGER" />
     <result column="filter_total_too_large_count" property="value" jdbcType="INTEGER" />
@@ -779,4 +779,76 @@
     delete from collect_task_metric
     where heartbeat_time &lt;= #{time}
   </delete>
+  <select id="selectContainerCountEqualsZero" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_model_host_name = #{containerName}
+      and ${column} = 0
+  </select>
+  <select id="selectContainerCountGtZero" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_model_host_name = #{containerName}
+      and ${column} &gt; 0
+  </select>
+  <select id="selectSingleCountEqualsZero" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and path_id = #{pathId}
+      and ${column} = 0
+  </select>
+  <select id="selectSingleCountGtZero" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and path_id = #{pathId}
+      and ${column} &gt; 0
+  </select>
+  <select id="selectSingleHeartbeatCount" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and path_id = #{pathId}
+  </select>
+  <select id="selectHeartbeatCountByHostname" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and hostname = #{hostName}
+  </select>
+  <select id="selectHeartbeatCount" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and path_id = #{pathId}
+  </select>
+  <select id="selectSingleCountWithTerm" resultType="java.lang.Long">
+    select count(heartbeat_time) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and path_id = #{pathId}
+      and ${column} = #{value}
+  </select>
+  <select id="selectSingleSum" resultType="java.lang.Long">
+    select sum(${column}) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and path_id = #{pathId}
+  </select>
+  <select id="selectSumByHostname" resultType="java.lang.Long">
+    select sum(${column}) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      and hostname = #{hostName}
+  </select>
+  <select id="selectSingleMax" resultType="java.lang.Object">
+    select max(${column}) from collect_task_metric
+      where log_mode_id = #{taskId} and hostname = #{hostName}
+      and path_id = #{pathId}
+  </select>
+  <select id="selectMaxByHostname" resultType="java.lang.Object">
+    select max(${column}) from collect_task_metric
+      where hostname = #{hostName}
+  </select>
 </mapper>

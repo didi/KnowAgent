@@ -1,7 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core;
 
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsMysqlDAOImpl;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,6 @@ public class CoreSpringBootStartUp {
 
     @Bean
     public AgentMetricsDAO agentMetricsDAO() {
-        return new AgentMetricsMysqlDAOImpl();
+        return new AgentMetricsRDSImpl();
     }
 }

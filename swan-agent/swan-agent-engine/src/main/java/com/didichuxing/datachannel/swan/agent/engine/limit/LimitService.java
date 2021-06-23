@@ -10,30 +10,30 @@ import com.didichuxing.datachannel.swan.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.swan.agent.engine.limit.tune.TuneNode;
 import com.didichuxing.datachannel.swan.agent.engine.limit.tune.thread.AllocateQpsThread;
 import com.didichuxing.datachannel.swan.agent.engine.limit.tune.thread.LimitCpuThread;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 全局限流
  */
 public enum LimitService {
-                          LIMITER;
+    LIMITER;
 
-    private static final ILog                    LOGGER       = LogFactory.getLog(LimitService.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(LimitService.class);
     private ConcurrentHashMap<String, LimitNode> limitNodeMap = new ConcurrentHashMap<>();
-    private LimitConfig                          config;
+    private LimitConfig config;
 
-    private AllocateQpsThread                    allocateQpsThread;
-    private LimitCpuThread                       limitCpuThread;
+    private AllocateQpsThread allocateQpsThread;
+    private LimitCpuThread limitCpuThread;
 
-    private Thread                               qpsThread;
+    private Thread qpsThread;
 
-    private Thread                               cpuThread;
+    private Thread cpuThread;
 
-    private boolean                              limited      = false;
+    private boolean limited = false;
 
-    private boolean                              inited       = false;
+    private boolean inited = false;
 
     public void init(LimitConfig config) throws Exception {
         LOGGER.info("begin to init Limiter");
@@ -94,7 +94,7 @@ public enum LimitService {
      */
     public void onChangeNode(AbstractTask abstractTask, ModelLimitConfig config) {
         LOGGER.info("begin to change limit config. abstractTask is " + abstractTask.getUniqueKey() + ", config is "
-                    + config);
+                + config);
         String name = abstractTask.getUniqueKey();
 
         if (!limitNodeMap.containsKey(name)) {

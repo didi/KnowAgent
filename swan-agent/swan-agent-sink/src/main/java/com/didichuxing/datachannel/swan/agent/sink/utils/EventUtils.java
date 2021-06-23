@@ -14,9 +14,10 @@ import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaSink;
 import com.didichuxing.datachannel.swan.agent.sink.utils.serializer.EventItemSerializer;
 import com.didichuxing.datachannel.swan.agent.sink.utils.serializer.EventListSerializer;
 import com.didichuxing.datachannel.swan.agent.sink.utils.serializer.LogEventSerializerObject;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: logEvent工具类
@@ -25,9 +26,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class EventUtils {
 
-    private static final ILog   LOGGER             = LogFactory.getLog(EventUtils.class.getName());
-
-    private static final String CUT_FLAG           = "...";
+private static final Logger LOGGER = LoggerFactory.getLogger(EventUtils.class.getName());private static final String CUT_FLAG           = "...";
 
     private static final String START_ARRAY        = "[";
     private static final String ENG_ARRAY          = "]";

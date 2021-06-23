@@ -9,8 +9,7 @@ import java.util.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 
 import kafka.admin.AdminUtils;
 import kafka.utils.ZkUtils;
@@ -22,8 +21,7 @@ import kafka.utils.ZkUtils;
  */
 public class BasicUtil {
 
-    private static final ILog  LOGGER      = LogFactory.getLog(BasicUtil.class);
-    private static BasicUtil   instance    = new BasicUtil();
+private static final Logger LOGGER = LoggerFactory.getLogger(BasicUtil.class);private static BasicUtil   instance    = new BasicUtil();
 
     private Random             randPortGen = new Random(System.currentTimeMillis());
     private KafkaLocal         kafkaServer;

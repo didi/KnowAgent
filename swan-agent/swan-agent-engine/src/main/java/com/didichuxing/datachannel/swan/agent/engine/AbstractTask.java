@@ -1,14 +1,10 @@
 package com.didichuxing.datachannel.swan.agent.engine;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import com.didichuxing.datachannel.swan.agent.common.api.CollectType;
 import com.didichuxing.datachannel.swan.agent.common.api.ComponentStatus;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ComponentConfig;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ModelConfig;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.bean.Event;
 import com.didichuxing.datachannel.swan.agent.engine.channel.AbstractChannel;
 import com.didichuxing.datachannel.swan.agent.engine.component.TaskComponent;
@@ -18,12 +14,14 @@ import com.didichuxing.datachannel.swan.agent.engine.metrics.source.TaskPatternS
 import com.didichuxing.datachannel.swan.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.swan.agent.engine.sinker.AbstractSink;
 import com.didichuxing.datachannel.swan.agent.engine.source.AbstractSource;
-import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.engine.utils.TimeUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @description: 抽象任务
@@ -32,20 +30,21 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractTask extends TaskComponent implements Runnable, Configurable {
 
-    private static final ILog           LOGGER          = LogFactory.getLog(AbstractTask.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTask.class.getName());
+    protected AbstractSource source = null;
+    protected AbstractChannel channel = null;
+    protected Map<String, AbstractSink> sinkers = new ConcurrentHashMap<>();
+    public ModelConfig modelConfig = null;
 
-    protected AbstractSource            source          = null;
-    protected AbstractChannel           channel         = null;
-    protected Map<String, AbstractSink> sinkers         = new ConcurrentHashMap<>();
-    public ModelConfig                  modelConfig     = null;
+    private List<Monitor> monitors = null;
+    protected TaskLimit taskLimter = new TaskLimit();
 
-    private List<Monitor>               monitors        = null;
-    protected TaskLimit                 taskLimter      = new TaskLimit();
+    /**
+     * 空闲休息
+     */
+    private final static Long IDLE_SLEEP_TIME = 500L;
 
-    /** * 空闲休息 */
-    private final static Long           IDLE_SLEEP_TIME = 500L;
-
-    private TaskPatternStatistics       taskPatternStatistics;
+    private TaskPatternStatistics taskPatternStatistics;
 
     protected abstract List<Monitor> getMonitors();
 
@@ -91,10 +90,10 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
     public void run() {
         // task线程名称：task-Executor-3-1-（modelConfigKey）
         String threadNamePrefix = StringUtils.ordinalIndexOf(Thread.currentThread().getName(), "-",
-                                                             4) != -1 ? Thread.currentThread().getName().substring(0,
-                                                                                                                   StringUtils.ordinalIndexOf(Thread.currentThread().getName(),
-                                                                                                                                              "-",
-                                                                                                                                              4)) : Thread.currentThread().getName();
+                4) != -1 ? Thread.currentThread().getName().substring(0,
+                StringUtils.ordinalIndexOf(Thread.currentThread().getName(),
+                        "-",
+                        4)) : Thread.currentThread().getName();
         Thread.currentThread().setName(threadNamePrefix + "-" + modelConfig.getModelConfigKey());
         try {
             prepare();
@@ -148,7 +147,7 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
 
         if (event == null) {
             if (modelConfig.getCommonConfig().getModelType() == LogConfigConstants.COLLECT_TYPE_TEMPORALITY
-                && canStop()) {
+                    && canStop()) {
                 // 补采完成自动停止
                 LOGGER.info("task is temporality.it can be stoped now. uniqueKey is " + getUniqueKey());
                 return false;
@@ -188,18 +187,21 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
 
     /**
      * 是否刷新
+     *
      * @return
      */
     public abstract boolean needToFlush(Event event);
 
     /**
      * 重置
+     *
      * @return
      */
     public abstract void reset();
 
     /**
      * flush
+     *
      * @return
      */
     public abstract boolean flush();
@@ -216,6 +218,7 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
 
     /**
      * 获取metrics
+     *
      * @return
      */
     @Override
@@ -223,6 +226,7 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
 
     /**
      * 根据编号创建 sink
+     *
      * @param orderNum
      */
     public abstract void addSink(int orderNum);
@@ -234,6 +238,7 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
 
     /**
      * 根据编号删除 sink
+     *
      * @param orderNum
      */
     public void delSink(int orderNum) {
@@ -269,8 +274,8 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
             return true;
         }
         if (monitors != null) {
-            for (Monitor moniotr : monitors) {
-                moniotr.unregister(this);
+            for (Monitor monitor : monitors) {
+                monitor.unregister(this);
             }
 
             for (Monitor monitor : monitors) {
@@ -303,7 +308,8 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
                 sink.delete();
             }
         } catch (Exception e) {
-            LogGather.recordErrorLog("AbstractTask error", "AbstractTask delete error! uniqueKey is " + uniqueKey, e);
+            LOGGER.error("AbstractTask error",
+                    "AbstractTask special delete error! uniqueKey is {}" + uniqueKey, e.getMessage());
         }
         return true;
     }

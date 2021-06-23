@@ -1,16 +1,15 @@
 package com.didichuxing.datachannel.swan.agent.node;
 
 import com.didichuxing.datachannel.swan.agent.node.service.http.server.HttpService;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: Agent 启动类
  */
 public class SwanAgent {
 
-    private static final ILog    LOGGER     = LogFactory.getLog(SwanAgent.class.getName());
+    private static final Logger LOGGER     = LoggerFactory.getLogger(SwanAgent.class.getName());
 
     /**
      * agent http 服务
@@ -80,7 +79,7 @@ public class SwanAgent {
 
             return true;
         } catch (Exception e) {
-            LogGather.recordErrorLog("SwanAgent error!", "init error!", e);
+            LOGGER.error("SwanAgent error!", "init error! {}", e.getMessage());
         }
         return false;
     }
@@ -94,7 +93,7 @@ public class SwanAgent {
             configService.start();
             return true;
         } catch (Exception e) {
-            LogGather.recordErrorLog("SwanAgent error!", "init error!", e);
+            LOGGER.error("SwanAgent error!", "init error! {}", e.getMessage());
         }
         return false;
     }
@@ -112,7 +111,7 @@ public class SwanAgent {
             configService.stop(true);
             httpService.stop(true);
         } catch (Throwable ex) {
-            LogGather.recordErrorLog("SwanAgent error!", "stop error!", ex);
+            LOGGER.error("SwanAgent error!", "stop error! {}", ex.getMessage());
         }
         LOGGER.info("stop swan agent success.");
     }

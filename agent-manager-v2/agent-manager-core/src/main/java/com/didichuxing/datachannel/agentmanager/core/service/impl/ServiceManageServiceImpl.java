@@ -24,10 +24,10 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.ServiceMapper;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.service.extension.ServiceManageServiceExtension;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,9 +40,7 @@ import java.util.Map;
 @org.springframework.stereotype.Service
 public class ServiceManageServiceImpl implements ServiceManageService {
 
-    private static final ILog LOGGER = LogFactory.getLog(ServiceManageServiceImpl.class);
-
-    @Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManageServiceImpl.class);@Autowired
     private ServiceMapper serviceDAO;
 
     @Autowired

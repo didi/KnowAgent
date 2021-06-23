@@ -1,9 +1,11 @@
 package com.didichuxing.datachannel.swan.agent.source.log.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 
 /**
  * @description:
@@ -12,9 +14,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class Md5ConfigService {
 
-    private static final ILog                        LOGGER         = LogFactory
-                                                                        .getLog(Md5ConfigService.class
-                                                                            .getName());
+    private static final Logger LOGGER         = LoggerFactory.getLogger(Md5ConfigService.class);
 
     private static ConcurrentHashMap<String, String> logPath2Md5Map = new ConcurrentHashMap<String, String>();
 

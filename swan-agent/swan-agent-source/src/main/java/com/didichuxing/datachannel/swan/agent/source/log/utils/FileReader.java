@@ -7,14 +7,15 @@ import com.didichuxing.datachannel.swan.agent.common.api.FileReadType;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.common.api.StandardLogType;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.CommonConfig;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.bean.LogEvent;
 import com.didichuxing.datachannel.swan.agent.engine.utils.TimeUtils;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.beans.WorkingFileNode;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description:
@@ -23,9 +24,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class FileReader {
 
-    private static final ILog   LOGGER           = LogFactory.getLog(FileReader.class.getName());
-
-    private static final String LINE_SEPARATOR   = System.lineSeparator();
+private static final Logger LOGGER = LoggerFactory.getLogger(FileReader.class.getName());private static final String LINE_SEPARATOR   = System.lineSeparator();
 
     /**
      * 当前采集的时间戳

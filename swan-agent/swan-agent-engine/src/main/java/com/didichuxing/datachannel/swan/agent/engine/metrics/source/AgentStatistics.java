@@ -5,12 +5,13 @@ import java.util.Map;
 import com.didichuxing.datachannel.metrics.MetricsBuilder;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.common.api.MetricsFields;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.engine.utils.SystemUtils;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
     jvmMetrics	jvm参数：gc次数和耗时
@@ -20,8 +21,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
 */
 public class AgentStatistics extends AbstractStatistics {
 
-    private static final ILog LOGGER = LogFactory.getLog(AgentStatistics.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(AgentStatistics.class);
     private LimitService      limiter;
 
     private Long              startTime;
@@ -37,11 +37,13 @@ public class AgentStatistics extends AbstractStatistics {
         Map<String, String> settings = null;
         try {
             settings = CommonUtils.readSettings();
-            if (settings == null) {
-                LogGather.recordErrorLog("AgentStatistics error", "get local settings error.");
-            }
         } catch (Exception e) {
-
+            LOGGER.error(e.getMessage());
+        }
+        if (settings == null) {
+            LOGGER.error("setting is null");
+            LogGather.recordErrorLog("AgentStatistics error", "get local settings error.");
+            throw new NullPointerException();
         }
         String messageVersion = settings.get(LogConfigConstants.MESSSAGE_VERSION);
         metricsRegistry.tag(MetricsFields.MESSAGE_VERSION, null,

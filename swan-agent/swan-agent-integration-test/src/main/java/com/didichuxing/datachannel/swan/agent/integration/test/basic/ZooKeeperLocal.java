@@ -13,16 +13,14 @@ import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServerMain;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
 
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 
 /**
  * A local Zookeeper server for running unit tests. Reference: https://gist.github.com/fjavieralba/7930018/
  */
 public class ZooKeeperLocal {
 
-    private static final ILog   LOGGER = LogFactory.getLog(ZooKeeperLocal.class.getName());
-    private ZooKeeperServerMain zooKeeperServer;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZooKeeperLocal.class.getName());private ZooKeeperServerMain zooKeeperServer;
 
     public ZooKeeperLocal(Properties zkProperties) throws IOException {
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();

@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.didichuxing.datachannel.swan.agent.common.constants.Tags;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import org.apache.commons.lang.StringUtils;
 
@@ -20,9 +21,9 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.TimeUtils;
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.metrics.KafkaMetricsFields;
 import com.didichuxing.datachannel.swan.agent.sink.utils.EventUtils;
 import com.didichuxing.datachannel.swan.agent.sink.utils.StringFilter;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: kafka sink
@@ -31,9 +32,7 @@ import com.didichuxing.tunnel.util.log.LogGather;
  */
 public class KafkaSink extends AbstractSink<KafkaEvent> {
 
-    private static final ILog    LOGGER                = LogFactory.getLog(KafkaSink.class.getName());
-
-    private static final long    MAX_FAILED_SLEEP_TIME = 16000L;
+private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.getName());private static final long    MAX_FAILED_SLEEP_TIME = 16000L;
 
     private static final long    INITAL_TO_SLEEP_TIME  = 500L;
 

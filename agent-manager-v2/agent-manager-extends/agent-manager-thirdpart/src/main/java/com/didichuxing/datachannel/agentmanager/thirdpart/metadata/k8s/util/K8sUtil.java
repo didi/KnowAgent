@@ -5,8 +5,6 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodConfig;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodReference;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
@@ -14,6 +12,8 @@ import io.kubernetes.client.openapi.models.*;
 import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.KubeConfig;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -34,9 +34,7 @@ import java.util.Map;
  * k8s 工具类
  */
 public class K8sUtil {
-    private static final ILog LOGGER = LogFactory.getLog(K8sUtil.class);
-
-    /**
+    private static final Logger LOGGER = LoggerFactory.getLogger(K8sUtil.class);/**
      * k8s client api
      */
     private static CoreV1Api api = null;

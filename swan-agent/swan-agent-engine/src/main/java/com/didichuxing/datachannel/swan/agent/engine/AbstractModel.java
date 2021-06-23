@@ -13,8 +13,9 @@ import com.didichuxing.datachannel.swan.agent.engine.component.TaskComponent;
 import com.didichuxing.datachannel.swan.agent.engine.conf.Configurable;
 import com.didichuxing.datachannel.swan.agent.engine.service.TaskRunningPool;
 import com.didichuxing.datachannel.swan.agent.engine.source.AbstractSource;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description: 抽象模型
@@ -23,9 +24,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public abstract class AbstractModel extends TaskComponent implements Configurable {
 
-    private static final ILog             LOGGER = LogFactory.getLog(AbstractTask.class.getName());
-
-    protected Map<String, AbstractSource> sources;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTask.class.getName());protected Map<String, AbstractSource> sources;
     protected Map<String, AbstractTask>   tasks;
     protected long                        taskId;
     protected String                      modelTag;

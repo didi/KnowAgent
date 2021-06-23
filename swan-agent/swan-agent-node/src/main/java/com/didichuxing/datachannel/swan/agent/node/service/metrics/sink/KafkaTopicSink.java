@@ -3,8 +3,9 @@ package com.didichuxing.datachannel.swan.agent.node.service.metrics.sink;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.MetricConfig;
 import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaMessageProducer;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description:
@@ -13,8 +14,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class KafkaTopicSink {
 
-    private static final ILog    LOGGER = LogFactory.getLog(KafkaTopicSink.class.getName());
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTopicSink.class.getName());
     private MetricConfig         config;
     private KafkaMessageProducer producer;
 

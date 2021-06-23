@@ -1,20 +1,16 @@
 package com.didichuxing.datachannel.agentmanager.rest;
 
+import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsMysqlDAOImpl;
-import com.didichuxing.tunnel.util.common.web.WebConstants;
-import com.didichuxing.tunnel.util.common.web.filter.WebRequestLogFilter;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-
-import org.apache.commons.lang3.StringUtils;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.ApplicationContext;
@@ -22,22 +18,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
-
 /**
  * Created by limeng on 2020-04-16
  */
 @EnableAsync
 @EnableScheduling
 @ServletComponentScan
-@SpringBootApplication(scanBasePackages = { "com.didichuxing.datachannel.agentmanager" })
+@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager"})
 public class AgentManagerApplication {
 
-    private static final ILog LOGGER           = LogFactory.getLog(AgentManagerApplication.class);
+    private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
 
     static final String[]     ALL_EXCLUDE_URLS = new String[] {
             "/agent-manager/api/swagger-ui.html",
@@ -64,7 +54,7 @@ public class AgentManagerApplication {
             "/agentmanager/api/druid/weburi.html", "/agentmanager/api/druid/webapp.json",
             "/agentmanager/api/druid/weburi.json", "/agentmanager/api/druid/websession.html",
             "/agentmanager/api/druid/websession.json", "/agentmanager/api/druid/spring.html",
-            "/agentmanager/api/druid/spring.json", "/agentmanager/api/druid/client.html" };
+            "/agentmanager/api/druid/spring.json", "/agentmanager/api/druid/client.html"};
 
     @Value(value = "${agentmanager.port.web}")
     private int               port;
@@ -73,7 +63,6 @@ public class AgentManagerApplication {
     private String            contextPath;
 
     /**
-     *
      * @param args
      */
     public static void main(String[] args) {
@@ -90,63 +79,20 @@ public class AgentManagerApplication {
     }
 
     @Bean
-    public ConfigurableServletWebServerFactory  configurableServletWebServerFactory() {
+    public ConfigurableServletWebServerFactory configurableServletWebServerFactory() {
         JettyServletWebServerFactory factory = new JettyServletWebServerFactory();
         factory.setPort(port);
         factory.setContextPath(contextPath);
         return factory;
     }
 
-    @Bean
-    public FilterRegistrationBean traceRegistrationBean() {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        registrationBean.addInitParameter(WebRequestLogFilter.EXCLUDE_URLS,
-                StringUtils.join(ALL_EXCLUDE_URLS, ","));
-        registrationBean.addInitParameter(WebRequestLogFilter.RESPONSE_LOG_ENABLE, "false");
-        registrationBean.setOrder(5);
-        Filter traceFilter = new Filter() {
-
-            @Override
-            public void init(FilterConfig filterConfig) throws ServletException {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-                ((HttpServletResponse) response).setHeader(WebConstants.X_REQUEST_ID,
-                        LogFactory.getFlag());
-                chain.doFilter(request, response);
-            }
-
-            @Override
-            public void destroy() {
-                // TODO Auto-generated method stub
-            }
-        };
-        registrationBean.setFilter(traceFilter);
-        return registrationBean;
-    }
-
-    @Bean
-    public FilterRegistrationBean logFilterRegistrationBean() {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
-        WebRequestLogFilter requestLogFilter = new WebRequestLogFilter();
-
-        registrationBean.addInitParameter(WebRequestLogFilter.EXCLUDE_URLS,
-                StringUtils.join(ALL_EXCLUDE_URLS, ","));
-        registrationBean.addInitParameter(WebRequestLogFilter.RESPONSE_LOG_ENABLE, "false");
-        registrationBean.setFilter(requestLogFilter);
-        registrationBean.setOrder(4);
-        return registrationBean;
-    }
-
     /**
-     *  todo 临时添加
+     * todo 临时添加
      *
      * @return 指标流用MySQL做存储
      */
     @Bean
     public AgentMetricsDAO agentMetricsDAO() {
-        return new AgentMetricsMysqlDAOImpl();
+        return new AgentMetricsRDSImpl();
     }
 }

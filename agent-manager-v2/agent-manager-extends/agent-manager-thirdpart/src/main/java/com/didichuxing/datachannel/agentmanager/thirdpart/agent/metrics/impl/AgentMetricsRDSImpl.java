@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class AgentMetricsMysqlDAOImpl implements AgentMetricsDAO {
+public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Autowired
     private AgentMetricMapper agentMetricMapper;
@@ -21,97 +22,99 @@ public class AgentMetricsMysqlDAOImpl implements AgentMetricsDAO {
 
     @Override
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return null;
+        return collectTaskMetricMapper.selectContainerCountEqualsZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, parentHostName, containerHostName, "send_count");
     }
 
     @Override
     public Long getContainerSendCountGtZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return null;
+        return collectTaskMetricMapper.selectContainerCountGtZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, parentHostName, containerHostName, "send_count");
     }
 
     @Override
     public Long getHostSendCountEqualsZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return null;
+        return collectTaskMetricMapper.selectSingleCountEqualsZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "send_count");
     }
 
     @Override
     public Long getHostSendCountGtZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return null;
+        return collectTaskMetricMapper.selectSingleCountGtZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "send_count");
     }
 
     @Override
     public Long getHeartbeatTimesByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        return null;
+        return collectTaskMetricMapper.selectHeartbeatCount(startTime, endTime, logCollectTaskId, logCollectTaskHostName, fileLogCollectPathId);
     }
 
     @Override
     public Long getHeartBeatTimes(Long startTime, Long endTime, String hostName) {
-        return null;
+        return collectTaskMetricMapper.selectHeartbeatCountByHostname(startTime, endTime, hostName);
     }
 
     @Override
     public Integer getFilePathNotExistsCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        return null;
+        return collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logCollectTaskHostName, fileLogCollectPathId, "is_file_exist", false).intValue();
     }
 
     @Override
     public Integer getAbnormalTruncationCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        return null;
+        return collectTaskMetricMapper.selectSingleSum(startTime, endTime, logCollectTaskId, logCollectTaskHostName, fileLogCollectPathId, "filter_too_large_count").intValue();
     }
 
     @Override
     public Integer getFileDisorderCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        return null;
+        return collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "is_file_disorder", false).intValue();
     }
 
     @Override
     public Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        return null;
+        return collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "valid_time_config", false).intValue();
     }
 
     @Override
     public Long getLatestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        return null;
+        return (Long) collectTaskMetricMapper.selectSingleMax(logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
     }
 
     @Override
     public Long getLatestStartupTime(String hostName) {
-        return null;
+        return (Long) collectTaskMetricMapper.selectMaxByHostname(hostName, "start_time");
     }
 
     @Override
     public Long getHostCpuLimitDuration(Long startTime, Long endTime, String hostName) {
-        return null;
+        return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, "limit_rate");
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String hostName) {
-        return null;
+        return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, "limit_time");
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId) {
-        return null;
+        return collectTaskMetricMapper.selectSingleSum(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "limit_time");
     }
 
     @Override
     public Integer getErrorLogCount(Long startTime, Long endTime, String hostName) {
-        return null;
+        return 0;
     }
 
     @Override
     public Integer getLatestFdUsage(String hostName) {
-        return null;
+        AgentMetricPO agentMetricPO = agentMetricMapper.selectLatestByHostname(hostName);
+        return agentMetricPO.getFdCount();
     }
 
     @Override
     public Double getLatestCpuUsage(String hostName) {
-        return null;
+        AgentMetricPO agentMetricPO = agentMetricMapper.selectLatestByHostname(hostName);
+        return agentMetricPO.getCpuUsage();
     }
 
     @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
-        return null;
+        return agentMetricMapper.selectSum(startTime, endTime, hostName, "gc_count");
     }
 
     @Override

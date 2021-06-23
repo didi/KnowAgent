@@ -3,17 +3,15 @@ package com.didichuxing.datachannel.swan.agent.engine.limit;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.component.ModelLimitConfig;
 import com.didichuxing.datachannel.swan.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.swan.agent.engine.limit.tune.TuneNode;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
-import com.didichuxing.tunnel.util.log.LogGather;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LimitNode {
 
-    private static final ILog LOGGER         = LogFactory.getLog(LimitNode.class);
-    private static float      FACTOR         = 0.3f;
+    private static final Logger LOGGER = LoggerFactory.getLogger(LimitNode.class);private static float      FACTOR         = 0.3f;
     private static long       INTERVAL       = 1000;
     private static long       NUM_INTERVAL   = 1;
-    private static long       FLUSH_INTERVAL = 1 * 1000L;
+    private static long       FLUSH_INTERVAL = 1000L;
 
     private String            name;
     private LimitService      limiter;
@@ -56,7 +54,7 @@ public class LimitNode {
         try {
             return limiter.limit(abstractTask, bytes);
         } catch (Exception e) {
-            LogGather.recordErrorLog("LimitNode.limit", "LimitNode limit error", e);
+            LOGGER.error("LimitNode.limit", "LimitNode limit error, {}", e.getMessage());
         }
         return 0.0d;
     }

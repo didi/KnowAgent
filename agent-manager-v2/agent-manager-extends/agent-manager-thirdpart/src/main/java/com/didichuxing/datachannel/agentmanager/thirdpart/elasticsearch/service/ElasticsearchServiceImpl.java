@@ -2,8 +2,6 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.elasticsearch.service
 
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.message.BasicHeader;
@@ -16,6 +14,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.rest.RestStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
@@ -24,9 +24,7 @@ import java.util.Base64;
 @org.springframework.stereotype.Service
 public class ElasticsearchServiceImpl implements ElasticsearchService {
 
-    private static final ILog LOGGER = LogFactory.getLog(ElasticsearchServiceImpl.class);
-
-    @Value("${agent.metrics.datasource.elasticsearch.ip}")
+    private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchServiceImpl.class);@Value("${agent.metrics.datasource.elasticsearch.ip}")
     private String ip;
     @Value("${agent.metrics.datasource.elasticsearch.port}")
     private int port;

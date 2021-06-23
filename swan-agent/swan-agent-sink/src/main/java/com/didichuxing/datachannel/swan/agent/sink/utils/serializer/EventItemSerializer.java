@@ -3,7 +3,7 @@ package com.didichuxing.datachannel.swan.agent.sink.utils.serializer;
 import java.util.Map;
 
 import com.alibaba.fastjson.serializer.*;
-import com.didichuxing.tunnel.util.log.LogGather;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 
 /*
  * @description: event序列化器

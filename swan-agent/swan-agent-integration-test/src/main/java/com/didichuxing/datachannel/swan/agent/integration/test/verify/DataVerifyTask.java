@@ -11,8 +11,7 @@ import com.didichuxing.datachannel.swan.agent.integration.test.datasource.BasicD
 import com.didichuxing.datachannel.swan.agent.integration.test.format.Format;
 import com.didichuxing.datachannel.swan.agent.integration.test.format.LogEventFormat;
 import com.didichuxing.datachannel.swan.agent.integration.test.utils.Md5Util;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+
 
 /**
  * @description: 数据校验流程
@@ -21,9 +20,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class DataVerifyTask implements Runnable {
 
-    private static final ILog LOGGER      = LogFactory.getLog(DataVerifyTask.class.getName());
-
-    private BasicUtil         basicUtil   = BasicUtil.getInstance();
+private static final Logger LOGGER = LoggerFactory.getLogger(DataVerifyTask.class.getName());private BasicUtil         basicUtil   = BasicUtil.getInstance();
     private DataVerifyConfig  config;
 
     // 60秒未消费到数据，直接退出

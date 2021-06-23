@@ -17,8 +17,9 @@ import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaTargetConfig;
 import com.didichuxing.datachannel.swan.agent.source.log.LogSource;
 import com.didichuxing.datachannel.swan.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.swan.agent.task.log.LogModel;
-import com.didichuxing.tunnel.util.log.ILog;
-import com.didichuxing.tunnel.util.log.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @description: log2kafka模型
@@ -27,9 +28,7 @@ import com.didichuxing.tunnel.util.log.LogFactory;
  */
 public class Log2KafkaModel extends LogModel {
 
-    private static final ILog LOGGER = LogFactory.getLog(Log2KafkaModel.class.getName());
-
-    public Log2KafkaModel(ModelConfig config) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Log2KafkaModel.class.getName());public Log2KafkaModel(ModelConfig config) {
         super(config);
     }
 

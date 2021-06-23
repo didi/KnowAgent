@@ -3,7 +3,7 @@ package com.didichuxing.datachannel.swan.agent.integration.test.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.didichuxing.tunnel.util.log.LogGather;
+import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 
 /**
  * @description:

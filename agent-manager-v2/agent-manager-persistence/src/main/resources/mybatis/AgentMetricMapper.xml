@@ -12,7 +12,7 @@
     <result column="log_mode_id" property="logModeId" jdbcType="INTEGER" />
     <result column="hostname" property="hostname" jdbcType="VARCHAR" />
     <result column="fd_count" property="fdCount" jdbcType="INTEGER" />
-    <result column="limit_tps" property="limitTps" jdbcType="BIGINT" />
+    <result column="limit_tps" property="limitTps" jdbcType="INTEGER" />
     <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
     <result column="log_path_key" property="logPathKey" jdbcType="INTEGER" />
     <result column="message_version" property="messageVersion" jdbcType="VARCHAR" />
@@ -26,7 +26,7 @@
     modify_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from agent_metric
     where id = #{id,jdbcType=BIGINT}
@@ -45,7 +45,7 @@
     values (#{id,jdbcType=BIGINT}, #{cpuUsage,jdbcType=DOUBLE}, #{heartbeatTime,jdbcType=TIMESTAMP}, 
       #{hostIp,jdbcType=VARCHAR}, #{cpuLimit,jdbcType=DOUBLE}, #{gcCount,jdbcType=INTEGER}, 
       #{pathId,jdbcType=INTEGER}, #{logModeId,jdbcType=INTEGER}, #{hostname,jdbcType=VARCHAR}, 
-      #{fdCount,jdbcType=INTEGER}, #{limitTps,jdbcType=BIGINT}, #{startTime,jdbcType=TIMESTAMP},
+      #{fdCount,jdbcType=INTEGER}, #{limitTps,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
       #{logPathKey,jdbcType=INTEGER}, #{messageVersion,jdbcType=VARCHAR}, #{operator, jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{modifyTime,jdbcType=TIMESTAMP})
   </insert>
@@ -136,7 +136,7 @@
         #{fdCount,jdbcType=INTEGER},
       </if>
       <if test="limitTps != null" >
-        #{limitTps,jdbcType=BIGINT},
+        #{limitTps,jdbcType=INTEGER},
       </if>
       <if test="startTime != null" >
         #{startTime,jdbcType=TIMESTAMP},
@@ -189,7 +189,7 @@
         fd_count = #{fdCount,jdbcType=INTEGER},
       </if>
       <if test="limitTps != null" >
-        limit_tps = #{limitTps,jdbcType=BIGINT},
+        limit_tps = #{limitTps,jdbcType=INTEGER},
       </if>
       <if test="startTime != null" >
         start_time = #{startTime,jdbcType=TIMESTAMP},
@@ -223,7 +223,7 @@
       log_mode_id = #{logModeId,jdbcType=INTEGER},
       hostname = #{hostname,jdbcType=VARCHAR},
       fd_count = #{fdCount,jdbcType=INTEGER},
-      limit_tps = #{limitTps,jdbcType=BIGINT},
+      limit_tps = #{limitTps,jdbcType=INTEGER},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       log_path_key = #{logPathKey,jdbcType=INTEGER},
       message_version = #{messageVersion,jdbcType=VARCHAR},
@@ -242,7 +242,7 @@
     <result column="log_mode_id" property="value" jdbcType="INTEGER" />
     <result column="hostname" property="value" jdbcType="VARCHAR" />
     <result column="fd_count" property="value" jdbcType="INTEGER" />
-    <result column="limit_tps" property="value" jdbcType="BIGINT" />
+    <result column="limit_tps" property="value" jdbcType="INTEGER" />
     <result column="start_time" property="value" jdbcType="TIMESTAMP" />
     <result column="log_path_key" property="value" jdbcType="INTEGER" />
     <result column="message_version" property="value" jdbcType="VARCHAR" />
@@ -251,6 +251,18 @@
     select ${column}, heartbeat_time from agent_metric
     where
     heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+    and hostname = #{hostName}
+  </select>
+  <select id="selectLatestByHostname" resultMap="MetricPointMap">
+    select
+    <include refid="Base_Column_List"/>
+    from agent_metric where hostname = #{hostName}
+    order by heartbeat_time limit 1
+  </select>
+  <select id="selectSum" resultType="java.lang.Long">
+    select sum(${column})
+    from agent_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and hostname = #{hostName}
   </select>
   <delete id="deleteBeforeTime" parameterType="java.lang.Long">
