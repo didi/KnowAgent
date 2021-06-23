@@ -31,9 +31,9 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
   const [vass, setvass] = useState(false);
 
   const handlelogSuffixfiles = (key: number) => {
-    const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular_${key}`)
+    const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
     const logFilePath = getFieldValue(`step2_file_path_${key}`)
-    const hostName = getFieldValue(`step2_hostName_${key}`)
+    const hostName = getFieldValue(`step2_hostName`)
     const params = {
       path: logFilePath,
       suffixMatchRegular: logSuffixfilesValue,
@@ -41,7 +41,8 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
     }
     if (logFilePath && hostName) {
       getCollectPathList(params).then((res) => {
-        logArr[key] = res.massage.split()
+        // logArr[key] = res.massage.split()
+        logArr.push(...res.massage.split())
       })
     }
   }
@@ -75,45 +76,22 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
     });
   };
 
-  const onLogFilterChange = (key: any) => {
-    debouncedCallApi(key)
-  }
+
 
   const row = (index: any, item: any) => (
     <div key={getKey(index)}>
-      <Collapse activeKey={['1']}>
-        <Panel header='' key="1" showArrow={false}>
-          <Form.Item label="日志路径" extra='可增加，最多10个, 默认与上一个选择配置项内容保持一致。'>
-            {getFieldDecorator(`step2_file_path_${getKey(index)}`, {
-              initialValue: item,
-              rules: [{ required: true, message: '请输入日志路径' }],
-            })(<Input onChange={() => debouncedCallApi(index)} className={`w-300 step2_file_path_input${getKey(index)}`} placeholder="如：/home/xiaoju/changjiang/logs/app.log" />)}
-            {list.length > 1 && (<Icon type="minus-circle-o" className='ml-10' onClick={() => remove(index)} />)}
-            {list.length < 11 && (<Icon type="plus-circle-o" className='ml-10' onClick={() => addPush()} />)}
-          </Form.Item>
-          {hostNameList.length > 0 ? <Form.Item label="主机名称">
-            {getFieldDecorator(`step2_hostName_${getKey(index)}`, {
-              initialValue: hostNameList[0]?.id,
-              rules: [{ required: true, message: '请选择主机名称' }],
-            })(
-              <Radio.Group onChange={() => onLogFilterChange(getKey(index))}>
-                {
-                  hostNameList?.map((ele: any, index: number) => {
-                    return <Radio key={ele.id} value={ele.id}>{ele.hostName}</Radio>
-                  })
-                }
-              </Radio.Group>
-            )}
-          </Form.Item> : null}
-          <LogFileType
-            form={props.form}
-            addFileLog={addFileLog}
-            getKey={getKey(index)}
-            suffixfiles={judgeEmpty(props.suffixfilesList[getKey(index)]) === '' ? suffixfiles : props.suffixfilesList[getKey(index)]}
-            slicingRuleLog={judgeEmpty(props.slicingRuleLogList[getKey(index)]) === '' ? slicingRuleLog : props.slicingRuleLogList[getKey(index)]}
-          />
-        </Panel>
-      </Collapse>
+      {/* <Collapse activeKey={['1']}>
+        <Panel header='' key="1" showArrow={false}> */}
+      <Form.Item label="日志路径" extra='可增加，最多10个, 默认与上一个选择配置项内容保持一致。'>
+        {getFieldDecorator(`step2_file_path_${getKey(index)}`, {
+          initialValue: item,
+          rules: [{ required: true, message: '请输入日志路径' }],
+        })(<Input onChange={() => debouncedCallApi(index)} className={`w-300 step2_file_path_input${getKey(index)}`} placeholder="如：/home/xiaoju/changjiang/logs/app.log" />)}
+        {list.length > 1 && (<Icon type="minus-circle-o" className='ml-10' onClick={() => remove(index)} />)}
+        {list.length < 11 && (<Icon type="plus-circle-o" className='ml-10' onClick={() => addPush()} />)}
+      </Form.Item>
+      {/* </Panel>
+      </Collapse> */}
     </div>
   );
 

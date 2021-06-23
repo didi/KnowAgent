@@ -12,6 +12,7 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { flowUnitList } from '../../constants/common';
 import { ILabelValue } from '../../interface/common';
 import './index.less';
+import LogFileType from './LogFileType';
 
 
 
@@ -113,6 +114,9 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
           suffixfilesList={props.suffixfilesList}
           filePathList={props.filePathList}
           slicingRuleLogList={props.slicingRuleLogList}
+        />
+        <LogFileType
+          form={props.form}
         />
         <LogRepeatForm
           logType='file'

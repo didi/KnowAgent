@@ -3,10 +3,9 @@ import { FormComponentProps } from 'antd/lib/form';
 import { Form, Input, Radio, InputNumber, Button } from 'antd';
 import LogRepeatForm from './LogRepeatForm';
 import { regChar } from '../../constants/reg';
-import { logArr } from './dateRegAndGvar';
+import { hostNameList, logArr } from './dateRegAndGvar';
 import { getCollectPathList } from '../../api/collect';
 import { useDebounce } from '../../lib/utils'
-
 import './index.less';
 
 
@@ -19,21 +18,21 @@ interface ILogFileTypeProps extends FormComponentProps {
 
 const { TextArea } = Input;
 
-const LogFileType = (props: ILogFileTypeProps) => {
+const LogFileType = (props: any | ILogFileTypeProps) => {
   const { getFieldDecorator, getFieldValue } = props.form;
   const editUrl = window.location.pathname.includes('/edit-task');
   const [suffixfiles, setSuffixfiles] = useState(0);
   const [isNotLogPath, setIsNotLogPath] = useState(true);
-  const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
+  // const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
 
   const onSuffixfilesChange = (e: any) => {
     setSuffixfiles(e.target.value);
   }
   const handlelogSuffixfiles = (key: number) => {
     // const logSuffixfilesValue = e.target.value
-    const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular_${key}`)
+    const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
     const logFilePath = getFieldValue(`step2_file_path_${key}`)
-    const hostName = getFieldValue(`step2_hostName_${key}`)
+    const hostName = getFieldValue(`step2_hostName`)
     const params = {
       path: logFilePath,
       suffixMatchRegular: logSuffixfilesValue,
@@ -41,9 +40,14 @@ const LogFileType = (props: ILogFileTypeProps) => {
     }
     if (logFilePath && hostName && logSuffixfilesValue !== '') {
       getCollectPathList(params).then((res) => {
-        logArr[key] = res.massage.split()
+        // logArr[key] = res.massage.split()
+        logArr.push(...res.massage.split())
       })
     }
+  }
+
+  const onLogFilterChange = (key: any) => {
+    handlelogSuffixfiles(key)
   }
 
   useEffect(() => {
@@ -91,17 +95,31 @@ const LogFileType = (props: ILogFileTypeProps) => {
         })(<InputNumber min={0} placeholder='请输入' />)}
       </Form.Item> */}
       {/* <Form.Item label="后缀样式" className={suffixfiles === 1 ? '' : 'hide'}> */}
+      {hostNameList.length > 0 ? <Form.Item label="主机名称">
+        {getFieldDecorator(`step2_hostName`, {
+          initialValue: hostNameList[0]?.id,
+          rules: [{ required: true, message: '请选择主机名称' }],
+        })(
+          <Radio.Group onChange={() => onLogFilterChange(props.getKey)}>
+            {
+              hostNameList?.map((ele: any, index: number) => {
+                return <Radio key={ele.id} value={ele.id}>{ele.hostName}</Radio>
+              })
+            }
+          </Radio.Group>
+        )}
+      </Form.Item> : null}
       <Form.Item label="采集文件后缀匹配样式">
-        {getFieldDecorator(`step2_file_suffixMatchRegular_${props.getKey}`, {
-          initialValue: initial ? props?.addFileLog[`step2_file_suffixMatchRegular_${props.getKey}`] : '',
+        {getFieldDecorator(`step2_file_suffixMatchRegular`, {
+          initialValue: '',
           rules: [{ required: true, message: '请输入后缀的正则匹配' }],
         })(<Input style={{ width: '400px' }} onChange={(useDebounce(() => handlelogSuffixfiles(props.getKey), 700))} placeholder='请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$' />)}
         {/* <Button onClick={() => handlelogSuffixfiles(props.getKey)} type="primary" style={{ marginLeft: '20px' }}>查看日志路径下所有文件</Button> */}
       </Form.Item>
       <Form.Item>
-        <ul className={`file_list_${props.getKey} logFileList`}>
+        <ul className={`logfile_list logFileList`}>
           {
-            logArr[props.getKey] && logArr[props.getKey].map((logfile: string, key: number) => <li key={key}>{logfile}</li>)
+            logArr.length > 0 && logArr.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)
           }
         </ul>
       </Form.Item>

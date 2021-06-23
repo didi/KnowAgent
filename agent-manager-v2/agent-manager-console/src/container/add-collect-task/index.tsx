@@ -317,6 +317,7 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
       step2_file_sliceTimestampPrefixString: objs.logSliceRuleVO?.sliceTimestampPrefixString, // 左起第几个匹配
       step2_file_sliceTimestampFormat: objs.logSliceRuleVO?.sliceTimestampFormat, // 时间戳格式
       step2_file_sliceRegular: objs.logSliceRuleVO?.sliceRegular, // 日志切片规则选1 出现 切片正则
+      step2_file_suffixMatchRegular: objs.fileNameSuffixMatchRuleVO?.suffixMatchRegular || '', // 选1出现采集文件后缀匹配
     }
     setLogFilter(logObj.step2_needLogContentFilter);
     // collect 
@@ -370,7 +371,6 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
         filelog[`step2_file_suffixSeparationCharacter_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixSeparationCharacter; // 文件名后缀分隔字符
         // filelog[`step2_file_suffixMatchType_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixMatchType; // 采集文件后缀匹配 0固定格式匹配 1正则匹配
         filelog[`step2_file_suffixLength_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixLength || '';// 选0出现采集文件后缀匹配
-        filelog[`step2_file_suffixMatchRegular_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixMatchRegular || ''; // 选1出现采集文件后缀匹配
         filelog[`step2_file_maxBytesPerLogEvent_${index}`] = setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.maxBytesPerLogEvent;// 单条日志大小上限
         filelog[`step2_file_flowunit_${index}`] = setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.flowunit; // 单位 1024 KB
         filelog[`step2_file_sliceType_${index}`] = ele.logSliceRuleVO?.sliceType; // 日志切片规则 0时间戳 1正则匹配

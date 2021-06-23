@@ -139,12 +139,7 @@ export const stepTwoParams = (values: any) => {
         // collectDelayThresholdMs: values.step3_collectDelayThresholdMs * 1 * 60 * 1000, // 采集延迟监控 ———— 该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~ 当前时间间隔
         id: '', // 采集路径id 添加时不填，更新时必填
         logCollectTaskId: '', // 采集路径关联的日志采集任务id
-        fileNameSuffixMatchRuleDTO: {
-          // suffixSeparationCharacter: getParams(values, 'suffixSeparationCharacter', index) || '', // 文件名后缀分隔字符
-          // suffixMatchType: getParams(values, 'suffixMatchType', index), // 文件名后缀匹配类型 0：长度 1：正则
-          // suffixLength: getParams(values, 'suffixLength', index) || '', // 文件名后缀长度 suffixMatchType为0时必填
-          suffixMatchRegular: getParams(values, 'suffixMatchRegular', index) || '', //文件名后缀长度 suffixMatchType为1时必填
-        }, // 采集文件名后缀匹配规则
+
       } as unknown as IDirectoryLogCollectPath;
       return obj;
     });
@@ -188,7 +183,12 @@ export const setStepParams = (values: any) => {
       logContentFilterType: values.step2_logContentFilterType, // 日志内容过滤类型 0：包含 1：不包含，needLogContentFilter为1时必填
       needLogContentFilter: values.step2_needLogContentFilter, // 是否需要对日志内容进行过滤 0：否 1：是
     },// 日志过滤内容规则
-
+    fileNameSuffixMatchRuleDTO: {
+      // suffixSeparationCharacter: getParams(values, 'suffixSeparationCharacter', index) || '', // 文件名后缀分隔字符
+      // suffixMatchType: getParams(values, 'suffixMatchType', index), // 文件名后缀匹配类型 0：长度 1：正则
+      // suffixLength: getParams(values, 'suffixLength', index) || '', // 文件名后缀长度 suffixMatchType为0时必填
+      suffixMatchRegular: values.step2_file_suffixMatchRegular || '', //文件名后缀长度 suffixMatchType为1时必填
+    }, // 采集文件名后缀匹配规则
     logSliceRuleDTO: {
       // sliceType: getParams(values, 'sliceType', index), // 日志内容切片类型 0：时间戳切片 1：正则匹配切片
       sliceTimestampPrefixStringIndex: values.step2_file_sliceTimestampPrefixStringIndex, // 切片时间戳前缀字符串左起第几个，index计数从1开始
