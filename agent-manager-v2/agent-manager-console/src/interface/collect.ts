@@ -84,6 +84,7 @@ export interface ILogCollectTask extends ILogCollectTaskBase {
 }
 
 export interface ILogCollectTaskDetail extends ILogCollectTaskBase {
+  logSliceRule: any;
   logContentSliceRule: any;
   fileNameSuffixMatchRule: any;
   fileNameSuffixMatchRuleVO: any;

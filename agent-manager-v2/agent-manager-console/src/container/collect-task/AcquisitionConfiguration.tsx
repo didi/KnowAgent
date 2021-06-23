@@ -42,9 +42,9 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
             </>}
         </>}
       </Descriptions>
-      <Descriptions column={1}>
+      {/* <Descriptions column={1}>
         <Item label="采集任务描述">{detail?.logCollectTaskRemark}</Item>
-      </Descriptions>
+      </Descriptions> */}
     </>)
   }
 
@@ -63,7 +63,7 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
           {index > 0 && <Divider />}
           <Descriptions column={2}>
             <Item label="采集日志类型">{cataFile ? '目录型' : '文件型'}</Item>
-            <Item label="编码格式">{ele?.charset}</Item>
+            {/* <Item label="编码格式">{ele?.charset}</Item> */}
             <Item label="日志内容过滤">{logFilter[detail?.logContentFilterRuleVO?.needLogContentFilter]}</Item>
             {detail?.logContentFilterRuleVO?.needLogContentFilter === 1 && <>
               <Item label="过滤类型">{logFilterType[detail?.logContentFilterRuleVO?.logContentFilterType]}</Item>
@@ -75,21 +75,21 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
               <Item label="采集文件白名单">{renderTooltip(whites[0], 60)}</Item>
               <Item label="采集文件黑名单">{renderTooltip(blacks[0], 60)}</Item>
             </> : <>
-                <Item label="文件名后缀分隔字符">{ele?.fileNameSuffixMatchRuleVO?.suffixSeparationCharacter}</Item>
-                <Item label="采集文件后缀匹配">{suffixMatchMap[ele?.fileNameSuffixMatchRuleVO?.suffixMatchType]}</Item>
+                {/* <Item label="文件名后缀分隔字符">{ele?.fileNameSuffixMatchRuleVO?.suffixSeparationCharacter}</Item> */}
+                {/* <Item label="采集文件后缀匹配">{suffixMatchMap[ele?.fileNameSuffixMatchRuleVO?.suffixMatchType]}</Item> */}
                 {ele?.fileNameSuffixMatchRuleVO?.suffixMatchType === 0 ?
                   <Item label="固定格式匹配">{ele?.fileNameSuffixMatchRuleVO?.suffixLength}</Item>
-                  : <Item label="正则匹配">{ele?.fileNameSuffixMatchRuleVO?.suffixMatchRegular}</Item>}
+                  : <Item label="采集文件后缀匹配样式">{detail?.fileNameSuffixMatchRule?.suffixMatchRegular}</Item>}
               </>}
             <Item label="单机日志大小上限">{setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.maxBytesPerLogEvent}{unitText}</Item>
-            <Item label="日志切片规则">{logSliceRuleMap[ele?.logSliceRuleVO?.sliceType]}</Item>
-            {ele?.logSliceRuleVO?.sliceType === 0 ? <>
-              <Item label="左起第几个匹配">{ele?.logSliceRuleVO?.sliceTimestampPrefixStringIndex}</Item>
-              {ele?.logSliceRuleVO?.sliceTimestampPrefixString
-                && <Item label="切片时间戳前缀字符串">{ele?.logSliceRuleVO?.sliceTimestampPrefixString}</Item>}
-              <Item label="时间戳格式">{ele?.logSliceRuleVO?.sliceTimestampFormat}</Item>
+            {/* <Item label="日志切片规则">{logSliceRuleMap[ele?.logSliceRuleVO?.sliceType]}</Item> */}
+            {detail?.logContentSliceRule?.sliceType !== 0 ? <>
+              <Item label="左起第几个匹配">{detail?.logContentSliceRule?.sliceTimestampPrefixStringIndex}</Item>
+              {detail?.logContentSliceRule?.sliceTimestampPrefixString
+                && <Item label="切片时间戳前缀字符串">{detail?.logContentSliceRule?.sliceTimestampPrefixString}</Item>}
+              <Item label="时间戳格式">{detail?.logContentSliceRule?.sliceTimestampFormat}</Item>
             </> :
-              <Item label="切片正则">{ele?.logSliceRuleVO?.sliceRegular}</Item>}
+              <Item label="切片正则">{ele?.logContentSliceRule?.sliceRegular}</Item>}
           </Descriptions>
           {cataFile && <Descriptions column={1}>
             <Item label="目录路径">{paths?.join(',')}</Item>
@@ -105,19 +105,25 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
     const collectDelay = (detail?.fileLogCollectPathList[0]?.collectDelayThresholdMs || 0) / 60 / 1000;
     return (<>
       <Descriptions column={1} className='mt-10'>
-        <Item label="客户端offset（采集位点记录）清理">超过 {fdOffset} 天无数据写入，则在Agent客户端删除该文件的offset</Item>
+        {/* <Item label="客户端offset（采集位点记录）清理">超过 {fdOffset} 天无数据写入，则在Agent客户端删除该文件的offset</Item> */}
         {!judge && <Item label="采集延迟监控">该任务下Agent客户端延迟超过 {collectDelay} 分钟，则视为异常 注：仅支持对按业务时间顺序进行输出的日志进行延迟监控</Item>}
-        {detail?.logCollectTaskType === 0 && <Item label="采集完成时间限制">该任务超过 {detail?.logCollectTaskExecuteTimeoutMs} 分钟未完成，则视为异常</Item>}
+        {/* {detail?.logCollectTaskType === 0 && <Item label="采集完成时间限制">该任务超过 {detail?.logCollectTaskExecuteTimeoutMs} 分钟未完成，则视为异常</Item>} */}
         <Item label="任务保障等级">{limitType[detail?.limitPriority]}</Item>
       </Descriptions>
     </>)
   }
 
   public renderReceiveEnd = (detail: ILogCollectTaskDetail) => {
+    const collectDelay = (detail?.collectDelayThresholdMs || 0) / 60 / 1000;
     return (<>
       <Descriptions column={1} className='mt-10'>
         <Item label="Kafka集群">{renderTooltip(detail?.receiver?.kafkaClusterName, 60)}</Item>
+        {
+          detail.kafkaProducerConfiguration && <Item label="生产端属性">{detail.kafkaProducerConfiguration}</Item>
+        }
         <Item label="Topic">{renderTooltip(detail?.sendTopic, 60)}</Item>
+        <Item label="采集延迟监控">该任务下Agent客户端延迟超过 {collectDelay} 分钟，则视为异常 注：仅支持对按业务时间顺序进行输出的日志进行延迟监控</Item>
+        <Item label="任务保障等级">{limitType[detail?.limitPriority]}</Item>
       </Descriptions>
     </>)
   }
@@ -142,10 +148,10 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
             <TabPane tab="采集日志配置" key="journal">
               {this.renderCollectLog(detail)}
             </TabPane>
-            <TabPane tab="客户端清理与自监控" key="client">
+            {/* <TabPane tab="客户端清理与自监控" key="client">
               {this.renderClientMonitor(detail)}
-            </TabPane>
-            <TabPane tab="接收端配置" key="receive">
+            </TabPane> */}
+            <TabPane tab="接收端配置与监控" key="receive">
               {this.renderReceiveEnd(detail)}
             </TabPane>
             <TabPane tab="高级配置" key="senior">
