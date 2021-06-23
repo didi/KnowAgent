@@ -16,11 +16,10 @@ public interface AgentManageService {
     /**
      * 创建一个 AgentPO 对象
      * @param agent  待创建 AgentPO 对象
-     * @param install 是否需要安装Agent true：安装 false：不安装
      * @param operator 操作人
      * @return 创建成功的agent对象id
      */
-    Long createAgent(AgentDO agent, boolean install, String operator);
+    Long createAgent(AgentDO agent, String operator);
 
     /**
      * 删除主机名为hostName的Agent对象

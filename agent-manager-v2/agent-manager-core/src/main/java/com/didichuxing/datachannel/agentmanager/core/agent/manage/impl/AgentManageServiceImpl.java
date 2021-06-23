@@ -21,6 +21,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
+import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.HttpUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
@@ -94,19 +95,18 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     @Override
     @Transactional
-    public Long createAgent(AgentDO agent, boolean install, String operator) {
-        return this.handleCreateAgent(agent, install, operator);//创建 agent 对象
+    public Long createAgent(AgentDO agent, String operator) {
+        return this.handleCreateAgent(agent, operator);//创建 agent 对象
     }
 
     /**
      * 创建Agent对象处理流程
      * @param agentDO 待创建Agent对象
-     * @param install 是否需要安装Agent true：安装 false：不安装
      * @param operator 操作人
      * @return 创建成功的Agent对象id
      * @throws ServiceException 执行该函数过程中出现的异常
      */
-    private Long handleCreateAgent(AgentDO agentDO, boolean install, String operator) throws ServiceException {
+    private Long handleCreateAgent(AgentDO agentDO, String operator) throws ServiceException {
         /*
          * 校验待创建 AgentPO 对象参数信息是否合法
          */
@@ -140,23 +140,13 @@ public class AgentManageServiceImpl implements AgentManageService {
         Long savedAgentId = null;
         agentDO.setOperator(CommonConstant.getOperator(operator));
         agentDO.setConfigurationVersion(AgentConstant.AGENT_CONFIGURATION_VERSION_INIT);
-        AgentPO agentPO = agentManageServiceExtension.agent2AgentPO(agentDO);
+        AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);
         agentDAO.insert(agentPO);
         savedAgentId = agentPO.getId();
         /*
          * 初始化 & 持久化Agent关联Agent健康度信息
          */
         agentHealthManageService.createInitialAgentHealth(savedAgentId, operator);
-        /*
-         * 如agent需要执行远程安装任务，添加一条agentOperationTask记录
-         */
-        if(install) {
-            /*
-             * 添加一条Agent安装任务记录
-             */
-            AgentOperationTaskDO agentOperationTask = agentManageServiceExtension.agent2AgentOperationTaskInstall(agentDO);
-            agentOperationTaskManageService.createAgentOperationTask(agentOperationTask, operator);
-        }
         /*
          * 添加对应操作记录
          */
@@ -285,7 +275,7 @@ public class AgentManageServiceImpl implements AgentManageService {
             /*
              * 添加一条Agent卸载任务记录
              */
-            AgentOperationTaskDO agentOperationTask = agentManageServiceExtension.agent2AgentOperationTaskUnInstall(agentDO);
+            AgentOperationTaskDO agentOperationTask = agentManageServiceExtension.agent2AgentOperationTaskUnInstall(agentDO);//TODO：将其置换为api
             agentOperationTaskManageService.createAgentOperationTask(agentOperationTask, operator);
         }
         /*
@@ -545,7 +535,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 更新 Agent
          */
         AgentDO agentDO = agentManageServiceExtension.updateAgent(agentDOExists, agentDOTarget);
-        AgentPO agentPO = agentManageServiceExtension.agent2AgentPO(agentDO);
+        AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);;
         agentPO.setOperator(CommonConstant.getOperator(operator));
         agentDAO.updateByPrimaryKey(agentPO);
         /*

@@ -119,7 +119,7 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
         if(null == agentHealthPO) {
             throw new ServiceException(
                     String.format("根据给定Agent对象id={%d}删除对应AgentHealth对象失败，原因为：系统中不存在agentId={%d}的AgentHealth对象", agentId, agentId),
-                    ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
+                    ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
             );
         }
         agentHealthDAO.deleteByAgentId(agentId);
