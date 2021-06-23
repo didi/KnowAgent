@@ -1,6 +1,4 @@
 server:
-  servlet:
-    context-path: /agent-manager
   port: 8006
 # 日志相关配置
 logging:

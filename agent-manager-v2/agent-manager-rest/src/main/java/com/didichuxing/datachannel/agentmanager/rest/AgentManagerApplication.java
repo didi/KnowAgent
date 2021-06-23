@@ -7,7 +7,6 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricSe
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -26,33 +25,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
-
-    static final String[]     ALL_EXCLUDE_URLS = new String[] {
-            "/agent-manager/api/swagger-ui.html",
-            "/agent-manager/api/swagger-resources/configuration/ui",
-            "/agent-manager/api/null/swagger-resources/configuration/ui",
-            "/agent-manager/api/webjars/springfox-swagger-ui/favicon-32x32.png",
-            "/agent-manager/api/swagger-resources/configuration/security",
-            "/agent-manager/api/swagger-resources",
-            "/agent-manager/api/v1/client-docs",
-            "/agent-manager/api/",
-            "/agent-manager/api/v2/client-docs",
-            "/agent-manager/api/csrf",
-            "/agentmanager/api/druid/login.html",
-            "/agentmanager/api/druid/css/bootstrap.min.css",
-            "/agentmanager/api/druid/js/bootstrap.min.js",
-            "/agentmanager/api/druid/js/doT.js", "/agentmanager/api/druid/js/jquery.min.js",
-            "/agentmanager/api/druid/index.html", "/agentmanager/api/druid/js/client.js",
-            "/agentmanager/api/druid/css/style.css", "/agentmanager/api/druid/js/lang.js",
-            "/agentmanager/api/druid/header.html", "/agentmanager/api/druid/basic.json",
-            "/agentmanager/api/druid/datasource.html", "/agentmanager/api/druid/datasource.json",
-            "/agentmanager/api/druid/agentmanagerSql.html", "/agentmanager/api/druid/agentmanagerSql.json",
-            "/agentmanager/api/druid/wall.html", "/agentmanager/api/druid/wall.json",
-            "/agentmanager/api/druid/webapp.html", "/agentmanager/api/druid/js/doT.js",
-            "/agentmanager/api/druid/weburi.html", "/agentmanager/api/druid/webapp.json",
-            "/agentmanager/api/druid/weburi.json", "/agentmanager/api/druid/websession.html",
-            "/agentmanager/api/druid/websession.json", "/agentmanager/api/druid/spring.html",
-            "/agentmanager/api/druid/spring.json", "/agentmanager/api/druid/client.html"};
 
     /**
      * @param args
