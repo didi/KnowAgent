@@ -39,15 +39,6 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
     }
 
     @Override
-    public AgentOperationTaskDO agent2AgentOperationTaskUnInstall(AgentDO agent) throws ServiceException {
-
-        //TODO：
-
-        return null;
-
-    }
-
-    @Override
     public AgentOperationTaskDO agent2AgentOperationTaskInstall(AgentDO agent) throws ServiceException {
 
         //TODO：

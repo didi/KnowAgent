@@ -13,7 +13,7 @@ module.exports = {
   webpackDllConfig: 'config/webpack.dll.config.js',
   theme: 'config/theme.js',
   template: 'src/index.html',
-  output: `pub/${pkgJson.systemName}`,
+  output: `../agent-manager-rest/src/main/resources/templates/${pkgJson.systemName}`,
   eslintFix: true,
   hmr: false,
   port: pkgJson.port,
