@@ -46,7 +46,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
   }
 
   const onReceiverChange = (value: number) => {
-    // getReceiverTopic(value); // 等对接Kafka集群时再修复
+    getReceiverTopic(value); // 等对接Kafka集群时再修复
   }
 
   const getReceiversList = () => {
