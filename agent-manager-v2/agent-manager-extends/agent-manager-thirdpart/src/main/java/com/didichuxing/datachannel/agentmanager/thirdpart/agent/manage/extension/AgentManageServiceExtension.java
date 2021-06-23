@@ -27,14 +27,6 @@ public interface AgentManageServiceExtension {
     CheckResult checkDeleteParameterAgent(AgentDO agent);
 
     /**
-     * 根据给定agent对象构造一个用于卸载该agent的AgentOperationTask对象
-     * @param agent 待卸载 agent 对象
-     * @return 返回根据给定agent对象构造的一个用于卸载该agent的AgentOperationTask对象
-     * @throws ServiceException 执行 "根据给定agent对象构造一个用于卸载该agent的AgentOperationTask对象" 过程中出现的异常
-     */
-    AgentOperationTaskDO agent2AgentOperationTaskUnInstall(AgentDO agent) throws ServiceException;
-
-    /**
      * 根据给定agent对象构造一个用于安装该agent的AgentOperationTask对象
      * @param agent 待安装 agent 对象
      * @return 返回根据给定agent对象构造的一个用于安装该agent的AgentOperationTask对象
