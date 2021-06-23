@@ -23,7 +23,7 @@ const mapStateToProps = (state: any) => ({
 type Props = ReturnType<typeof mapStateToProps>
 
 const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => {
-  const { getFieldDecorator } = props.form;
+  const { getFieldDecorator, getFieldValue } = props.form;
   const [receivers, setReceivers] = useState([] as IReceivers[]);
   const [receiverTopic, setReceiverTopic] = useState([] as DataSourceItemType[]);
   const [activeKeys, setActiveKeys] = useState([] as string[]);
@@ -69,6 +69,10 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
   useEffect(() => {
     getReceiversList();
   }, []);
+
+  useEffect(() => {
+    setOpenDelay(getFieldValue('step3_opencollectDelay'))
+  }, [getFieldValue('step3_opencollectDelay')]);
 
   const collapseCallBack = (key: any) => {
     setActiveKeys(key);
@@ -127,32 +131,33 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
           <InputNumber min={1} />,
         )}&nbsp;天无数据写入，则在Agent客户端删除该文件的offset
         </Form.Item> */}
-        <Form.Item label="采集延迟监控" extra="注：仅支持对按业务时间顺序进行输出的日志进行延迟监控">
-          <Col span={2}>
-            {getFieldDecorator('step3_opencollectDelay', {
-              initialValue: false,
-              valuePropName: 'checked',
-              rules: [{ required: true }],
-            })(
-              <Switch onChange={openHistoryChange} />,
-            )}
-          </Col>
-          <Col span={15}>
-            {
-              openDelay &&
-              <Form.Item >
-                该任务下Agent客户端延迟超过&nbsp;
-                {getFieldDecorator('step3_collectDelayThresholdMs', {
-                initialValue: '3',
-                rules: [{ required: true, message: '请输入' }],
+        {props.logType === 'file' &&
+          <Form.Item label="采集延迟监控" extra="注：仅支持对按业务时间顺序进行输出的日志进行延迟监控">
+            <Col span={2}>
+              {getFieldDecorator('step3_opencollectDelay', {
+                initialValue: false,
+                valuePropName: 'checked',
+                rules: [{ required: true }],
               })(
-                <InputNumber min={1} />,
-              )}&nbsp;分钟，则视为异常
+                <Switch onChange={openHistoryChange} />,
+              )}
+            </Col>
+            <Col span={15}>
+              {
+                openDelay &&
+                <Form.Item >
+                  该任务下Agent客户端延迟超过&nbsp;
+                {getFieldDecorator('step3_collectDelayThresholdMs', {
+                  initialValue: '3',
+                  rules: [{ required: true, message: '请输入' }],
+                })(
+                  <InputNumber min={1} />,
+                )}&nbsp;分钟，则视为异常
               </Form.Item>
-            }
-          </Col>
-        </Form.Item>
-
+              }
+            </Col>
+          </Form.Item>
+        }
         {/* {props.logType === 'file' &&
           <Form.Item label="采集延迟监控" extra="注：仅支持对按业务时间顺序进行输出的日志进行延迟监控">
             该任务下Agent客户端延迟超过&nbsp;
@@ -163,8 +168,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
             <InputNumber min={1} />,
           )}&nbsp;分钟，则视为异常
         </Form.Item>} */}
-
-        {/* {props.collectType !== 1 &&
+        {props.collectType !== 0 &&
           <Form.Item label="采集完成时间限制">
             该任务超过&nbsp;
           {getFieldDecorator('step3_logCollectTaskExecuteTimeoutMs', {
@@ -173,7 +177,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
           })(
             <InputNumber min={1} />,
           )}&nbsp;分钟未完成，则视为异常
-        </Form.Item>} */}
+        </Form.Item>}
 
         <Form.Item label="任务保障等级" extra="限流时，资源优先分配给任务保障等级高的采集任务">
           {getFieldDecorator('step3_limitPriority', {

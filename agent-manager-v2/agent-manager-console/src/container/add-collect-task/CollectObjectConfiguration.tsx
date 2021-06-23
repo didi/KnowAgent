@@ -129,7 +129,7 @@ const CollectObjectConfiguration = (props: Props & ICollectObjectProps) => {
         </Form.Item>
         <Form.Item label="采集应用">
           {getFieldDecorator('step1_serviceId', {
-            initialValue: '',
+            // initialValue: '',
             rules: [{ required: true, message: '请选择采集应用' }],
           })(
             <Select
@@ -143,6 +143,7 @@ const CollectObjectConfiguration = (props: Props & ICollectObjectProps) => {
                 }
                 return (option.props.children + '').toLowerCase().indexOf(input.toLowerCase()) >= 0;
               }}
+              placeholder="请选择应用"
             >
               {serviceList && serviceList.map((groupOption, index) => {
                 return (
@@ -183,7 +184,7 @@ const CollectObjectConfiguration = (props: Props & ICollectObjectProps) => {
                   })(
                     <Radio.Group onChange={onModeChange}>
                       <Radio value={0}>流式</Radio>
-                      <Radio value={1}>时间段</Radio>
+                      {/* <Radio value={1}>时间段</Radio> */}
                     </Radio.Group>,
                   )}
                 </Col>

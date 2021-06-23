@@ -181,9 +181,10 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
         collapseCallBack(['high']);
         return false;
       }
+      console.log(values)
       const params = {
-        metricsSendTopicProducerConfiguration: values?.metricsSendTopicProducerConfiguration,
-        errorLogsSendTopicProducerConfiguration: values?.errorLogsSendTopicProducerConfiguration,
+        metricsProducerConfiguration: values?.metricsProducerConfiguration,
+        errorLogsProducerConfiguration: values?.errorLogsProducerConfiguration,
         advancedConfigurationJsonString: values?.advancedConfigurationJsonString,
         byteLimitThreshold: values?.byteLimitThreshold * values?.unit,
         cpuLimitThreshold: values?.cpuLimitThreshold,
@@ -334,8 +335,8 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
                 )}
               </Form.Item>
               <Form.Item label="生产端属性">
-                {getFieldDecorator('metricsSendTopicProducerConfiguration', {
-                  initialValue: agentDetail?.metricsSendTopicProducerConfiguration,
+                {getFieldDecorator('metricsProducerConfiguration', {
+                  initialValue: agentDetail?.metricsProducerConfiguration,
                   rules: [{ message: '请输入' }],
                 })(
                   <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />,
@@ -368,8 +369,8 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
                 )}
               </Form.Item>
               <Form.Item label="生产端属性">
-                {getFieldDecorator('errorLogsSendTopicProducerConfiguration', {
-                  initialValue: agentDetail?.errorLogsSendTopicProducerConfiguration,
+                {getFieldDecorator('errorLogsProducerConfiguration', {
+                  initialValue: agentDetail?.metricsProducerConfiguration,
                   rules: [{ message: '请输入' }],
                 })(
                   <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />,

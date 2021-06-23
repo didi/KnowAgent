@@ -5,7 +5,7 @@ import { useDynamicList } from 'antd-advanced';
 import LogFileType from './LogFileType';
 import { judgeEmpty } from '../../lib/utils';
 import { setIndexs } from './config';
-import { hostNameList, logArr } from './dateRegAndGvar'
+import { hostNameList, logArr, logFilePathKey, setlogFilePathKey } from './dateRegAndGvar'
 import _ from 'lodash'
 import './index.less';
 import { getCollectPathList } from '../../api/collect';
@@ -28,7 +28,6 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
   const [addFileLog, setAddFileLog] = useState({} as any);
   const [suffixfiles, setSuffixfiles] = useState(0);
   const [slicingRuleLog, setSlicingRuleLog] = useState(0);
-  const [vass, setvass] = useState(false);
 
   const handlelogSuffixfiles = (key: number) => {
     const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
@@ -39,6 +38,7 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
       suffixMatchRegular: logSuffixfilesValue,
       hostName
     }
+    setlogFilePathKey(key) // 同步日志路径的key值，防止减少日志路径key值乱
     if (logFilePath && hostName) {
       getCollectPathList(params).then((res) => {
         // logArr[key] = res.massage.split()
@@ -86,8 +86,8 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
         {getFieldDecorator(`step2_file_path_${getKey(index)}`, {
           initialValue: item,
           rules: [{ required: true, message: '请输入日志路径' }],
-        })(<Input onChange={() => debouncedCallApi(index)} className={`w-300 step2_file_path_input${getKey(index)}`} placeholder="如：/home/xiaoju/changjiang/logs/app.log" />)}
-        {list.length > 1 && (<Icon type="minus-circle-o" className='ml-10' onClick={() => remove(index)} />)}
+        })(<Input onChange={() => debouncedCallApi(getKey(index))} className={`w-300 step2_file_path_input${getKey(index)}`} placeholder="如：/home/xiaoju/changjiang/logs/app.log" />)}
+        {list.length > 1 && (<Icon type="minus-circle-o" className='ml-10' onClick={() => remove(getKey(index))} />)}
         {list.length < 11 && (<Icon type="plus-circle-o" className='ml-10' onClick={() => addPush()} />)}
       </Form.Item>
       {/* </Panel>

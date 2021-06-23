@@ -18,7 +18,7 @@ import { setLimitUnit } from '../../lib/utils';
 import moment from 'moment';
 import './index.less';
 import { getHostListbyServiceId } from '../../api';
-import { hostNameList, setHostNameList } from './dateRegAndGvar';
+import { setHostNameList, setlogFilePathKey } from './dateRegAndGvar';
 
 const { Step } = Steps;
 
@@ -60,6 +60,7 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
   const [filePathList, setFilePathList] = useState(['']);
   const [slicingRuleLogList, setSlicingRuleLogList] = useState([] as number[]); // LogRepeatForm file 循环 (cata/file重复)页面 
   const [suffixfilesList, setSuffixfilesList] = useState([] as number[]); // LogFileType （file里面的）循环 页面
+
 
   const steps = [{
     title: '采集对象配置',
@@ -146,7 +147,6 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
       params.id = props.taskId;
       return editTask(params);
     }
-
     return addTask(params);
   }
 
@@ -197,7 +197,6 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
         setCurrentStep(currentStep);
         return false;
       }
-      console.log(values, 'handleSubmit')
       return processParameters(values);
     });
   }
@@ -313,11 +312,11 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
       // step2_maxBytesPerLogEvent: objs.maxBytesPerLogEvent * 1 > flowUnitList[1].value ? (objs.maxBytesPerLogEvent * 1 / Number(flowUnitList[1].value)) : (objs.maxBytesPerLogEvent * 1 / Number(flowUnitList[0].value)),// 单条日志大小上限
       // Number(values.step2_maxBytesPerLogEvent) * Number(values.step2_flowunit)
       step2_maxBytesPerLogEvent: setLimitUnit(objs.maxBytesPerLogEvent)?.maxBytesPerLogEvent,// 单条日志大小上限
-      step2_file_sliceTimestampPrefixStringIndex: objs.logSliceRuleVO?.sliceTimestampPrefixStringIndex, // 左起第几个匹配
-      step2_file_sliceTimestampPrefixString: objs.logSliceRuleVO?.sliceTimestampPrefixString, // 左起第几个匹配
-      step2_file_sliceTimestampFormat: objs.logSliceRuleVO?.sliceTimestampFormat, // 时间戳格式
-      step2_file_sliceRegular: objs.logSliceRuleVO?.sliceRegular, // 日志切片规则选1 出现 切片正则
-      step2_file_suffixMatchRegular: objs.fileNameSuffixMatchRuleVO?.suffixMatchRegular || '', // 选1出现采集文件后缀匹配
+      step2_file_sliceTimestampPrefixStringIndex: objs.logContentSliceRule?.sliceTimestampPrefixStringIndex, // 左起第几个匹配
+      step2_file_sliceTimestampPrefixString: objs.logContentSliceRule?.sliceTimestampPrefixString, // 左起第几个匹配
+      step2_file_sliceTimestampFormat: objs.logContentSliceRule?.sliceTimestampFormat, // 时间戳格式
+      step2_file_sliceRegular: objs.logContentSliceRule?.sliceRegular, // 日志切片规则选1 出现 切片正则
+      step2_file_suffixMatchRegular: objs.fileNameSuffixMatchRule?.suffixMatchRegular || '', // 选1出现采集文件后缀匹配
     }
     setLogFilter(logObj.step2_needLogContentFilter);
     // collect 
@@ -403,6 +402,8 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
     if (editUrl) {
       getCollectDetail()
     }
+    setHostNameList([]); // 清除映射主机列表，进入新增任务时不显示
+    setlogFilePathKey(0); // 清除保存日志路径的下标
     return;
   }, []);
 

@@ -92,9 +92,6 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
   }
 
   public render() {
-    console.log(this.props)
-    console.log(this.props.timeRange, '1111timeRange=======')
-    console.log(this.props.chartMetrics, '2222chartMetrics=======')
     return (
       <>
         <div className='tc'><Spin spinning={this.props.loading}></Spin></div>

@@ -180,7 +180,7 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
               <Row>
                 <Col span={7}>
                   {getFieldDecorator(`step2_maxBytesPerLogEvent`, {
-                    initialValue: 1,
+                    initialValue: 2,
                     rules: [{ required: true, message: '请输入单条日志大小上限' }],
                   })(
                     <InputNumber className='w-200' min={1} placeholder='请输入数字' />,

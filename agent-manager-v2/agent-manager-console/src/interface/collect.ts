@@ -84,6 +84,9 @@ export interface ILogCollectTask extends ILogCollectTaskBase {
 }
 
 export interface ILogCollectTaskDetail extends ILogCollectTaskBase {
+  logContentSliceRule: any;
+  fileNameSuffixMatchRule: any;
+  fileNameSuffixMatchRuleVO: any;
   kafkaProducerConfiguration: string; // kafka生产端属性
   logSliceRuleVO: any;
   collectDelayThresholdMs: number;

@@ -71,8 +71,8 @@ export interface IEditOpHostsParams {
 }
 
 export interface IOpAgent {
-  metricsSendTopicProducerConfiguration: string; // 指标流接收Topic生产端属性
-  errorLogsSendTopicProducerConfiguration:string; // 错误日志接收Topic生产端属性
+  metricsProducerConfiguration: string; // 指标流接收Topic生产端属性
+  errorLogsProducerConfiguration:string; // 错误日志接收Topic生产端属性
   advancedConfigurationJsonString: string; // 采集端高级配置项集，为json形式字符串
   byteLimitThreshold: number; // Agent限流流量阈值 单位：字节
   collectType: number; // Agent采集方式 0：采集宿主机日志 1：采集宿主机挂载的所有容器日志 2：采集宿主机日志 & 宿主机挂载的所有容器日志

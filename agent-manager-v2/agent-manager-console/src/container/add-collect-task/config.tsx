@@ -159,7 +159,7 @@ export const setStepParams = (values: any) => {
     id: '', // 日志采集任务id 添加时不填，更新时必填
     // logCollectTaskRemark: values.step1_logCollectTaskRemark, // 日志采集任务备注
     // directoryLogCollectPathList: stepTwo.cataLogList,	// 目录类型采集路径集
-    // logCollectTaskExecuteTimeoutMs: values.step3_logCollectTaskExecuteTimeoutMs || 0, // 采集完成时间限制 ———— 日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型"按指定时间范围采集"时才存在值
+    logCollectTaskExecuteTimeoutMs: values.step3_logCollectTaskExecuteTimeoutMs || 0, // 采集完成时间限制 ———— 日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型"按指定时间范围采集"时才存在值
     // >>>>>>>> Step1 <<<<<<<<<
     logCollectTaskName: values.step1_logCollectTaskName, // 日志采集任务名 Yes
     serviceIdList: [values.step1_serviceId], // 采集应用 ———— 采集服务集 Yes
@@ -177,7 +177,7 @@ export const setStepParams = (values: any) => {
     // >>>>>>>> Step2 <<<<<<<<<
 
     fileLogCollectPathList: stepTwo.fileList,	// 文件类型路径采集配置
-    maxBytesPerLogEvent: Number(values.step2_maxBytesPerLogEvent) * Number(values.step2_flowunit) || '', //step2_maxBytesPerLogEvent 单条日志大小上限 ———— 单个日志切片最大大小 单位：字节 注：单个日志切片大小超过该值后，采集端将以该值进行截断采集
+    maxBytesPerLogEvent: Number(values.step2_maxBytesPerLogEvent) * Number(values.step2_flowunit) || 2, //step2_maxBytesPerLogEvent 单条日志大小上限 ———— 单个日志切片最大大小 单位：字节 注：单个日志切片大小超过该值后，采集端将以该值进行截断采集
     logContentFilterLogicDTO: {
       logContentFilterExpression: values.step2_logContentFilterExpression, // 日志内容过滤表达式，needLogContentFilter为1时必填
       logContentFilterType: values.step2_logContentFilterType, // 日志内容过滤类型 0：包含 1：不包含，needLogContentFilter为1时必填
@@ -215,7 +215,6 @@ export const setStepParams = (values: any) => {
 export const setEditThreeParams = (objs: ILogCollectTaskDetail) => {
   let step3_fdOffsetExpirationTimeMs = '' as unknown;
   let step3_collectDelayThresholdMs = '' as unknown;
-  let step3_productionSide = ''
   let step3_opencollectDelay = false
   if (objs.directoryLogCollectPathList?.length) {
     step3_fdOffsetExpirationTimeMs = objs.directoryLogCollectPathList[0]?.fdOffsetExpirationTimeMs;
@@ -223,13 +222,13 @@ export const setEditThreeParams = (objs: ILogCollectTaskDetail) => {
     step3_fdOffsetExpirationTimeMs = objs.fileLogCollectPathList[0]?.fdOffsetExpirationTimeMs;
     step3_opencollectDelay = objs.collectDelayThresholdMs > 0 ? true : false
     step3_collectDelayThresholdMs = objs.collectDelayThresholdMs * 1 / 60 / 1000;
-    step3_productionSide = objs.kafkaProducerConfiguration; // kafka生产端属性
   }
   return {
     // step3_fdOffsetExpirationTimeMs, // 客户端offset（采集位点记录）清理
     step3_collectDelayThresholdMs, // 采集延迟监控
     step3_opencollectDelay, // 是否开启采集延迟监控
-    // step3_logCollectTaskExecuteTimeoutMs: objs.logCollectTaskExecuteTimeoutMs || 0, // 采集完成时间限制 
+    step3_productionSide: objs.kafkaProducerConfiguration,// kafka生产端属性
+    step3_logCollectTaskExecuteTimeoutMs: objs.logCollectTaskExecuteTimeoutMs || 0, // 采集完成时间限制 
     step3_limitPriority: objs.limitPriority, // 采集任务限流保障优先级 0：高 1：中 2：低 
   } as any;
 }
