@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration xmlns:xi="http://www.w3.org/2001/XInclude">
-    <xi:include href="http://10.14.128.102:8183/us-hadoop-2.7.2/hdfs-site.xml">
-        <xi:fallback>
-            <xi:include href="http://10.14.128.102:8183/us-hadoop-2.7.2/hdfs-site.xml"/>
-        </xi:fallback>
-    </xi:include>
-</configuration>

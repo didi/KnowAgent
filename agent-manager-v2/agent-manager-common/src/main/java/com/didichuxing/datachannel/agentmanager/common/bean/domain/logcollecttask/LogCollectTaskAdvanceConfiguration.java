@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.thirdpart;
+package com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask;
 
 /**
  * 日志采集任务高级配置项
