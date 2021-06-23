@@ -17,6 +17,11 @@ public class LogCollectPathVO {
     @ApiModelProperty(value = "待采集路径")
     private String path;
 
+    /**
+     * 字符集
+     */
+    private String charset;
+
     public Long getId() {
         return id;
     }
@@ -41,4 +46,11 @@ public class LogCollectPathVO {
         this.path = path;
     }
 
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
 }
