@@ -55,9 +55,9 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
             if (null == logCollectTaskDO.getCollectEndTimeBusiness() && logCollectTaskDO.getCollectEndTimeBusiness() <= logCollectTaskDO.getCollectStartTimeBusiness()) {
                 return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "时间范围采集类型的日志采集任务对应 collectStartTimeBusiness 属性值不可为空 & 大于 collectStartTimeBusiness 属性值");
             }
-            if (null == logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs() || logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs().equals(0L)) {
+            /*if (null == logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs() || logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs().equals(0L)) {
                 return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "logCollectTaskExecuteTimeoutMs属性值不可为空 & 等于0");
-            }
+            }*/
         }
         if(null == logCollectTaskDO.getOldDataFilterType()) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "oldDataFilterType不可为空");
@@ -151,9 +151,9 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
             if(null == logCollectTaskDO.getCollectEndTimeBusiness() && logCollectTaskDO.getCollectEndTimeBusiness().longValue() <= logCollectTaskDO.getCollectStartTimeBusiness().longValue()) {
                 return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "时间范围采集类型的日志采集任务对应 collectStartTimeBusiness 属性值不可为空 & 大于 collectStartTimeBusiness 属性值");
             }
-            if(null == logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs() || logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs().equals(0)) {
+            /*if(null == logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs() || logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs().equals(0)) {
                 return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "logCollectTaskExecuteTimeoutMs属性值不可为空 & 等于0");
-            }
+            }*/
         }
         if(null == logCollectTaskDO.getOldDataFilterType()) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "oldDataFilterType不可为空");

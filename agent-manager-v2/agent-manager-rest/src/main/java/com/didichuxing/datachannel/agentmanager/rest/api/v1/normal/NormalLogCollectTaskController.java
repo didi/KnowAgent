@@ -30,7 +30,9 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +97,7 @@ public class NormalLogCollectTaskController {
         //TODO：获取 projectId
         String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
         Long projectId = null;
-        if(StringUtils.isNotBlank(projectIdStr)) {
+        if (StringUtils.isNotBlank(projectIdStr)) {
             projectId = Long.valueOf(projectIdStr);
         }
         LogCollectTaskPaginationQueryConditionDO logCollectTaskPaginationQueryConditionDO = LogCollectTaskPaginationRequestDTO2LogCollectTaskPaginationQueryConditionDO(dto);
@@ -117,7 +119,7 @@ public class NormalLogCollectTaskController {
     @RequestMapping(value = "/switch", method = RequestMethod.GET)
     @ResponseBody
     @CheckPermission(permission = AGENT_TASK_START_PAUSE)
-    public Result switchLogCollectTask(@RequestParam (value = "logCollectTaskId") Long logCollectTaskId, @RequestParam (value = "status") Integer status) {
+    public Result switchLogCollectTask(@RequestParam(value = "logCollectTaskId") Long logCollectTaskId, @RequestParam(value = "status") Integer status) {
         logCollectTaskManageService.switchLogCollectTask(logCollectTaskId, status, SpringTool.getUserName());
         return Result.buildSucc();
     }
@@ -155,7 +157,7 @@ public class NormalLogCollectTaskController {
         logCollectTaskDO.setKafkaProducerConfiguration(dto.getKafkaProducerConfiguration());
         logCollectTaskDO.setLogContentSliceRuleLogicJsonString(JSON.toJSONString(dto.getLogSliceRuleDTO()));
         //  setDirectoryLogCollectPathList
-        if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
+        if (CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
             for (DirectoryLogCollectPathUpdateDTO directoryLogCollectPathUpdateDTO : dto.getDirectoryLogCollectPathList()) {
                 DirectoryLogCollectPathDO directoryLogCollectPathDO = new DirectoryLogCollectPathDO();
@@ -163,17 +165,19 @@ public class NormalLogCollectTaskController {
                 directoryLogCollectPathDO.setDirectoryCollectDepth(directoryLogCollectPathUpdateDTO.getDirectoryCollectDepth());
                 directoryLogCollectPathDO.setPath(directoryLogCollectPathUpdateDTO.getPath());
                 directoryLogCollectPathDO.setId(directoryLogCollectPathUpdateDTO.getId());
+                directoryLogCollectPathDO.setCharset(directoryLogCollectPathUpdateDTO.getCharset());
                 directoryLogCollectPathList.add(directoryLogCollectPathDO);
             }
             logCollectTaskDO.setDirectoryLogCollectPathList(directoryLogCollectPathList);
         }
         //  setFileLogCollectPathList
-        if(CollectionUtils.isNotEmpty(dto.getFileLogCollectPathList())) {
+        if (CollectionUtils.isNotEmpty(dto.getFileLogCollectPathList())) {
             List<FileLogCollectPathDO> fileLogCollectPathList = new ArrayList<>(dto.getFileLogCollectPathList().size());
             for (FileLogCollectPathUpdateDTO fileLogCollectPathUpdateDTO : dto.getFileLogCollectPathList()) {
                 FileLogCollectPathDO fileLogCollectPathDO = new FileLogCollectPathDO();
                 fileLogCollectPathDO.setPath(fileLogCollectPathUpdateDTO.getPath());
                 fileLogCollectPathDO.setId(fileLogCollectPathUpdateDTO.getId());
+                fileLogCollectPathDO.setCharset(fileLogCollectPathUpdateDTO.getCharset());
                 fileLogCollectPathList.add(fileLogCollectPathDO);
             }
             logCollectTaskDO.setFileLogCollectPathList(fileLogCollectPathList);
@@ -208,23 +212,25 @@ public class NormalLogCollectTaskController {
         logCollectTaskDO.setLogContentSliceRuleLogicJsonString(JSON.toJSONString(dto.getLogSliceRuleDTO()));
         logCollectTaskDO.setFileNameSuffixMatchRuleLogicJsonString(JSON.toJSONString(dto.getFileNameSuffixMatchRuleDTO()));
         logCollectTaskDO.setKafkaProducerConfiguration(dto.getKafkaProducerConfiguration());
-        if(CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
+        if (CollectionUtils.isNotEmpty(dto.getDirectoryLogCollectPathList())) {
             List<DirectoryLogCollectPathDO> directoryLogCollectPathList = new ArrayList<>(dto.getDirectoryLogCollectPathList().size());
             for (DirectoryLogCollectPathCreateDTO directoryLogCollectPathCreateDTO : dto.getDirectoryLogCollectPathList()) {
                 DirectoryLogCollectPathDO directoryLogCollectPathDO = new DirectoryLogCollectPathDO();
                 directoryLogCollectPathDO.setCollectFilesFilterRegularPipelineJsonString(JSON.toJSONString(directoryLogCollectPathCreateDTO.getFilterRuleChain()));
                 directoryLogCollectPathDO.setDirectoryCollectDepth(directoryLogCollectPathCreateDTO.getDirectoryCollectDepth());
                 directoryLogCollectPathDO.setPath(directoryLogCollectPathCreateDTO.getPath());
+                directoryLogCollectPathDO.setCharset(directoryLogCollectPathCreateDTO.getCharset());
                 directoryLogCollectPathList.add(directoryLogCollectPathDO);
             }
             logCollectTaskDO.setDirectoryLogCollectPathList(directoryLogCollectPathList);
         }
         //  setFileLogCollectPathList
-        if(CollectionUtils.isNotEmpty(dto.getFileLogCollectPathList())) {
+        if (CollectionUtils.isNotEmpty(dto.getFileLogCollectPathList())) {
             List<FileLogCollectPathDO> fileLogCollectPathList = new ArrayList<>(dto.getFileLogCollectPathList().size());
             for (FileLogCollectPathCreateDTO fileLogCollectPathCreateDTO : dto.getFileLogCollectPathList()) {
                 FileLogCollectPathDO fileLogCollectPathDO = new FileLogCollectPathDO();
                 fileLogCollectPathDO.setPath(fileLogCollectPathCreateDTO.getPath());
+                fileLogCollectPathDO.setCharset(fileLogCollectPathCreateDTO.getCharset());
                 fileLogCollectPathList.add(fileLogCollectPathDO);
             }
             logCollectTaskDO.setFileLogCollectPathList(fileLogCollectPathList);
@@ -234,6 +240,7 @@ public class NormalLogCollectTaskController {
 
     /**
      * 将LogCollectTaskPaginationRecordDO对象集转化为LogCollectTaskPaginationRecordVO对象集
+     *
      * @param logCollectTaskPaginationRecordDOList 待转化LogCollectTaskPaginationRecordDO对象集
      * @return 返回将LogCollectTaskPaginationRecordDO对象集转化为LogCollectTaskPaginationRecordVO对象集
      */
@@ -242,10 +249,10 @@ public class NormalLogCollectTaskController {
         for (LogCollectTaskPaginationRecordDO logCollectTaskPaginationRecordDO : logCollectTaskPaginationRecordDOList) {
             LogCollectTaskPaginationRecordVO logCollectTaskPaginationRecordVO = new LogCollectTaskPaginationRecordVO();
             logCollectTaskPaginationRecordVO.setLogCollectTaskCreateTime(logCollectTaskPaginationRecordDO.getCreateTime().getTime());
-            if(logCollectTaskPaginationRecordDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode())) {//仅当日志采集任务为时间范围采集类型日志采集任务时，存在日志采集任务完成时间
-               if(null != logCollectTaskPaginationRecordDO.getLogCollectTaskFinishTime()) {
-                   logCollectTaskPaginationRecordVO.setLogCollectTaskFinishTime(logCollectTaskPaginationRecordDO.getLogCollectTaskFinishTime().getTime());
-               }
+            if (logCollectTaskPaginationRecordDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode())) {//仅当日志采集任务为时间范围采集类型日志采集任务时，存在日志采集任务完成时间
+                if (null != logCollectTaskPaginationRecordDO.getLogCollectTaskFinishTime()) {
+                    logCollectTaskPaginationRecordVO.setLogCollectTaskFinishTime(logCollectTaskPaginationRecordDO.getLogCollectTaskFinishTime().getTime());
+                }
             }
             logCollectTaskPaginationRecordVO.setLogCollectTaskHealthLevel(logCollectTaskPaginationRecordDO.getLogCollectTaskHealthLevel());
             logCollectTaskPaginationRecordVO.setLogCollectTaskId(logCollectTaskPaginationRecordDO.getLogCollectTaskId());
@@ -266,30 +273,31 @@ public class NormalLogCollectTaskController {
 
     /**
      * 将 LogCollectTaskPaginationRequestDTO 对象转化为 LogCollectTaskPaginationQueryConditionDO 对象
+     *
      * @param dto 待转化 LogCollectTaskPaginationRequestDTO 对象
      * @return 返回将 LogCollectTaskPaginationRequestDTO 对象转化为 LogCollectTaskPaginationQueryConditionDO 对象
      */
     private LogCollectTaskPaginationQueryConditionDO LogCollectTaskPaginationRequestDTO2LogCollectTaskPaginationQueryConditionDO(LogCollectTaskPaginationRequestDTO dto) {
         LogCollectTaskPaginationQueryConditionDO logCollectTaskPaginationQueryConditionDO = new LogCollectTaskPaginationQueryConditionDO();
-        if(StringUtils.isNotBlank(dto.getLogCollectTaskName())) {
+        if (StringUtils.isNotBlank(dto.getLogCollectTaskName())) {
             logCollectTaskPaginationQueryConditionDO.setLogCollectTaskName(dto.getLogCollectTaskName().replace("_", "\\_").replace("%", "\\%"));
         }
-        if(CollectionUtils.isNotEmpty(dto.getLogCollectTaskHealthLevelList())) {
+        if (CollectionUtils.isNotEmpty(dto.getLogCollectTaskHealthLevelList())) {
             logCollectTaskPaginationQueryConditionDO.setLogCollectTaskHealthLevelList(dto.getLogCollectTaskHealthLevelList());
         }
-        if(CollectionUtils.isNotEmpty(dto.getLogCollectTaskTypeList())) {
+        if (CollectionUtils.isNotEmpty(dto.getLogCollectTaskTypeList())) {
             logCollectTaskPaginationQueryConditionDO.setLogCollectTaskTypeList(dto.getLogCollectTaskTypeList());
         }
-        if(CollectionUtils.isNotEmpty(dto.getServiceIdList())) {
+        if (CollectionUtils.isNotEmpty(dto.getServiceIdList())) {
             logCollectTaskPaginationQueryConditionDO.setServiceIdList(dto.getServiceIdList());
         }
-        if(null != dto.getLogCollectTaskId()) {
+        if (null != dto.getLogCollectTaskId()) {
             logCollectTaskPaginationQueryConditionDO.setLogCollectTaskId(dto.getLogCollectTaskId());
         }
-        if(null != dto.getLocCollectTaskCreateTimeEnd()) {
+        if (null != dto.getLocCollectTaskCreateTimeEnd()) {
             logCollectTaskPaginationQueryConditionDO.setCreateTimeEnd(new Date(dto.getLocCollectTaskCreateTimeEnd()));
         }
-        if(null != dto.getLocCollectTaskCreateTimeStart()) {
+        if (null != dto.getLocCollectTaskCreateTimeStart()) {
             logCollectTaskPaginationQueryConditionDO.setCreateTimeStart(new Date(dto.getLocCollectTaskCreateTimeStart()));
         }
         logCollectTaskPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
@@ -301,6 +309,7 @@ public class NormalLogCollectTaskController {
 
     /**
      * 将给定LogCollectTaskDO对象转化为LogCollectTaskVO对象
+     *
      * @param logCollectTaskDO 待转化LogCollectTaskDO对象
      * @return 返回将给定LogCollectTaskDO对象转化为LogCollectTaskVO对象
      * @throws ServiceException 执行该函数过程中出现的异常
@@ -321,7 +330,7 @@ public class NormalLogCollectTaskController {
         logCollectTaskVO.setOldDataFilterType(logCollectTaskDO.getOldDataFilterType());
         //set receiver
         ReceiverDO receiverDO = kafkaClusterManageService.getById(logCollectTaskDO.getKafkaClusterId());
-        if(null == receiverDO) {
+        if (null == receiverDO) {
             logCollectTaskVO.setReceiver(null);
             logCollectTaskVO.setSendTopic(null);
             throw new ServiceException(String.format("LogCollectTask对象={id=%d}关联的Receiver对象={id=%d}在系统中不存在", logCollectTaskDO.getId(), logCollectTaskDO.getKafkaClusterId()), ErrorCodeEnum.KAFKA_CLUSTER_NOT_EXISTS.getCode());
@@ -332,7 +341,7 @@ public class NormalLogCollectTaskController {
         //set service list
         List<Long> serviceIdList = logCollectTaskDO.getServiceIdList();
         List<ServiceVO> serviceVOList = new ArrayList<>(serviceIdList.size());
-        for(Long serviceId : serviceIdList) {
+        for (Long serviceId : serviceIdList) {
             ServiceDO serviceDO = serviceManageService.getServiceById(serviceId);
             if (null == serviceDO) {
                 throw new ServiceException(String.format("LogCollectTask对象={id=%d}关联的Service对象={id=%d}在系统中不存在", logCollectTaskDO.getId(), serviceId), ErrorCodeEnum.SERVICE_NOT_EXISTS.getCode());
@@ -340,7 +349,7 @@ public class NormalLogCollectTaskController {
             serviceVOList.add(ConvertUtil.obj2Obj(serviceDO, ServiceVO.class));
         }
         logCollectTaskVO.setServices(serviceVOList);
-        if(null != logCollectTaskDO.getLogCollectTaskFinishTime()) {
+        if (null != logCollectTaskDO.getLogCollectTaskFinishTime()) {
             logCollectTaskVO.setLogCollectTaskFinishTime(logCollectTaskDO.getLogCollectTaskFinishTime().getTime());
         }
         logCollectTaskVO.setLogCollectTaskStatus(logCollectTaskDO.getLogCollectTaskStatus());
@@ -352,7 +361,7 @@ public class NormalLogCollectTaskController {
             directoryLogCollectPathVO.setDirectoryCollectDepth(directoryLogCollectPathDO.getDirectoryCollectDepth());
             //setFilterRuleChain
             List<Pair<Integer, String>> collectFilesFilterRegularPipeline = JSON.parseObject(directoryLogCollectPathDO.getCollectFilesFilterRegularPipelineJsonString(), new ArrayList<Pair<Integer, String>>().getClass());
-            if(CollectionUtils.isNotEmpty(collectFilesFilterRegularPipeline)) {
+            if (CollectionUtils.isNotEmpty(collectFilesFilterRegularPipeline)) {
                 List<Pair<Integer, String>> filterRuleChain = new ArrayList<>(collectFilesFilterRegularPipeline.size());
                 for (Object obj : collectFilesFilterRegularPipeline) {
                     JSONObject pair = (JSONObject) obj;
@@ -364,6 +373,7 @@ public class NormalLogCollectTaskController {
             directoryLogCollectPathVO.setId(directoryLogCollectPathDO.getId());
             directoryLogCollectPathVO.setLogCollectTaskId(directoryLogCollectPathDO.getLogCollectTaskId());
             directoryLogCollectPathVO.setPath(directoryLogCollectPathDO.getPath());
+            directoryLogCollectPathVO.setCharset(directoryLogCollectPathDO.getCharset());
             directoryLogCollectPathVOList.add(directoryLogCollectPathVO);
         }
         logCollectTaskVO.setDirectoryLogCollectPathList(directoryLogCollectPathVOList);
@@ -375,12 +385,13 @@ public class NormalLogCollectTaskController {
             fileLogCollectPathVO.setId(fileLogCollectPathDO.getId());
             fileLogCollectPathVO.setLogCollectTaskId(fileLogCollectPathDO.getLogCollectTaskId());
             fileLogCollectPathVO.setPath(fileLogCollectPathDO.getPath());
+            fileLogCollectPathVO.setCharset(fileLogCollectPathDO.getCharset());
             fileLogCollectPathVOList.add(fileLogCollectPathVO);
         }
         logCollectTaskVO.setFileLogCollectPathList(fileLogCollectPathVOList);
         //set logCollectTaskHealthLevel
         LogCollectTaskHealthDO logCollectTaskHealthDO = logCollectTaskHealthManageService.getByLogCollectTaskId(logCollectTaskDO.getId());
-        if(null == logCollectTaskHealthDO) {
+        if (null == logCollectTaskHealthDO) {
             throw new ServiceException(String.format("LogCollectTask对象={id=%d}关联的LogCollectTaskHealth对象在系统中不存在", logCollectTaskDO.getId()), ErrorCodeEnum.LOGCOLLECTTASK_HEALTH_NOT_EXISTS.getCode());
         }
         logCollectTaskVO.setLogCollectTaskHealthLevel(logCollectTaskHealthDO.getLogCollectTaskHealthLevel());
