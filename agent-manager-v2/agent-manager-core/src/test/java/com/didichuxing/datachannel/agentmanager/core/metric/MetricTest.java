@@ -28,8 +28,8 @@ public class MetricTest extends ApplicationTests {
     //    private static String hostName = "cs-ecmc-k8s01-01.py";
     private static String hostName = "10.190.32.213";
 
-    private static long endTime = System.currentTimeMillis();
-    private static long startTime = endTime - 10 * 60 * 1000;
+    private static long endTime = 1624524757821L;
+    private static long startTime = 1624524157821L;
 
     @Test
     public void test() {
@@ -99,7 +99,7 @@ public class MetricTest extends ApplicationTests {
 
     @Test
     public void agentFdUsagePerMinTest() {
-        List<MetricPoint> points = dao.getAgentFdUsagePerMin(System.currentTimeMillis() - 600 * 1000, System.currentTimeMillis(), "cs-ecmc-k8s01-01.py");
+        List<MetricPoint> points = dao.getAgentFdUsagePerMin(startTime, endTime, "cs-ecmc-k8s01-01.py");
         for (MetricPoint point : points) {
             System.out.println(point.getTimestamp());
             System.out.println(point.getValue());
@@ -108,7 +108,7 @@ public class MetricTest extends ApplicationTests {
 
     @Test
     public void collectSendBytePerMinTest() {
-        List<MetricPoint> points = dao.getAgentOutputBytesPerMin(System.currentTimeMillis() - 600 * 1000, System.currentTimeMillis(), "cs-ecmc-k8s01-01.py");
+        List<MetricPoint> points = dao.getAgentOutputBytesPerMin(startTime, endTime, "cs-ecmc-k8s01-01.py");
         for (MetricPoint point : points) {
             System.out.println(point.getTimestamp());
             System.out.println(point.getValue());
@@ -117,7 +117,7 @@ public class MetricTest extends ApplicationTests {
 
     @Test
     public void collectCountPerMinTest() {
-        List<MetricPoint> points = dao.getLogCollectTaskLogCountPerMin(1070L, System.currentTimeMillis() - 600 * 1000, System.currentTimeMillis());
+        List<MetricPoint> points = dao.getLogCollectTaskLogCountPerMin(1070L, startTime, endTime);
         for (MetricPoint point : points) {
             System.out.println(point.getTimestamp());
             System.out.println(point.getValue());
@@ -126,7 +126,7 @@ public class MetricTest extends ApplicationTests {
 
     @Test
     public void collectTaskBytesPerMinTest() {
-        List<MetricPoint> points = dao.getLogCollectTaskBytesPerMin(1070L, System.currentTimeMillis() - 600 * 1000, System.currentTimeMillis());
+        List<MetricPoint> points = dao.getLogCollectTaskBytesPerMin(1070L, startTime, endTime);
         for (MetricPoint point : points) {
             System.out.println(point.getTimestamp());
             System.out.println(point.getValue());
@@ -135,7 +135,7 @@ public class MetricTest extends ApplicationTests {
 
     @Test
     public void listAgentMetricsTest() {
-        List<MetricPanelGroup> list = agentManageService.listAgentMetrics(393L, System.currentTimeMillis() - 600 * 1000, System.currentTimeMillis());
+        List<MetricPanelGroup> list = agentManageService.listAgentMetrics(393L, startTime, endTime);
         for (MetricPanelGroup metricPanelGroup : list) {
             List<MetricPanel> panelList = metricPanelGroup.getMetricPanelList();
             System.out.println(panelList);
@@ -144,7 +144,7 @@ public class MetricTest extends ApplicationTests {
 
     @Test
     public void listCollectTaskMetricsTest() {
-        List<MetricPanelGroup> list = logCollectTaskManageService.listLogCollectTaskMetrics(1070L, System.currentTimeMillis() - 600 * 1000, System.currentTimeMillis());
+        List<MetricPanelGroup> list = logCollectTaskManageService.listLogCollectTaskMetrics(1070L, startTime, endTime);
         for (MetricPanelGroup metricPanelGroup : list) {
             List<MetricPanel> panelList = metricPanelGroup.getMetricPanelList();
             System.out.println(panelList);

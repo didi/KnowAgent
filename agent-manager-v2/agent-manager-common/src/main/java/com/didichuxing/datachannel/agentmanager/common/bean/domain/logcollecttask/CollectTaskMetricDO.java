@@ -63,7 +63,7 @@ public class CollectTaskMetricDO extends BaseDO {
 
     private Integer limitRate;
 
-    private Integer controlTimeMean;
+    private Long controlTimeMean;
 
     private Integer limitTime;
 
@@ -87,7 +87,7 @@ public class CollectTaskMetricDO extends BaseDO {
 
     private String logTimeStr;
 
-    private Integer controlTimeMax;
+    private Long controlTimeMax;
 
     private Integer sendCount;
 
@@ -104,7 +104,7 @@ public class CollectTaskMetricDO extends BaseDO {
 
     private String collectFiles;
 
-    private Integer controlTimeMin;
+    private Long controlTimeMin;
 
     private Integer readByte;
 
@@ -338,11 +338,11 @@ public class CollectTaskMetricDO extends BaseDO {
         this.limitRate = limitRate;
     }
 
-    public Integer getControlTimeMean() {
+    public Long getControlTimeMean() {
         return controlTimeMean;
     }
 
-    public void setControlTimeMean(Integer controlTimeMean) {
+    public void setControlTimeMean(Long controlTimeMean) {
         this.controlTimeMean = controlTimeMean;
     }
 
@@ -434,11 +434,11 @@ public class CollectTaskMetricDO extends BaseDO {
         this.logTimeStr = logTimeStr;
     }
 
-    public Integer getControlTimeMax() {
+    public Long getControlTimeMax() {
         return controlTimeMax;
     }
 
-    public void setControlTimeMax(Integer controlTimeMax) {
+    public void setControlTimeMax(Long controlTimeMax) {
         this.controlTimeMax = controlTimeMax;
     }
 
@@ -498,11 +498,11 @@ public class CollectTaskMetricDO extends BaseDO {
         this.collectFiles = collectFiles;
     }
 
-    public Integer getControlTimeMin() {
+    public Long getControlTimeMin() {
         return controlTimeMin;
     }
 
-    public void setControlTimeMin(Integer controlTimeMin) {
+    public void setControlTimeMin(Long controlTimeMin) {
         this.controlTimeMin = controlTimeMin;
     }
 

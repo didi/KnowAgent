@@ -139,7 +139,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         agentDO.setOperator(CommonConstant.getOperator(operator));
         agentDO.setConfigurationVersion(AgentConstant.AGENT_CONFIGURATION_VERSION_INIT);
         AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);
-        agentDAO.insert(agentPO);
+        agentDAO.insertSelective(agentPO);
         savedAgentId = agentPO.getId();
         /*
          * 初始化 & 持久化Agent关联Agent健康度信息
