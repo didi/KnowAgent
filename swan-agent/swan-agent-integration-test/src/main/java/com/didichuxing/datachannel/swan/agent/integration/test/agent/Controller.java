@@ -5,7 +5,8 @@ import java.util.List;
 
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.AgentConfig;
 import com.didichuxing.datachannel.swan.agent.integration.test.verify.DataVerifyConfig;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: swan-agent控制器
@@ -14,12 +15,13 @@ import com.didichuxing.datachannel.swan.agent.integration.test.verify.DataVerify
  */
 public class Controller {
 
-private static final Logger LOGGER = LoggerFactory.getLogger(Controller.class.getName());private String            local    = System.getProperty("user.home") + File.separator
-                                         + "conf.local";
+    private static final Logger LOGGER   = LoggerFactory.getLogger(Controller.class.getName());
+    private String              local    = System.getProperty("user.home") + File.separator
+                                           + "conf.local";
 
-    AgentConfig               agentConfig;
+    AgentConfig                 agentConfig;
 
-    private static Controller instance = new Controller();
+    private static Controller   instance = new Controller();
 
     public static Controller getInstance() {
         return instance;

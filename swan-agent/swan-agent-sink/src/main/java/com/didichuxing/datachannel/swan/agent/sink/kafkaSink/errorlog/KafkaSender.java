@@ -6,7 +6,6 @@ import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaMessageProduce
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @description: kafka发送工具
  * @author: huangjw
@@ -14,7 +13,8 @@ import org.slf4j.LoggerFactory;
  */
 public class KafkaSender {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSender.class.getName());private ErrorLogConfig       config;
+    private static final Logger  LOGGER = LoggerFactory.getLogger(KafkaSender.class.getName());
+    private ErrorLogConfig       config;
     private KafkaMessageProducer producer;
 
     public KafkaSender(ErrorLogConfig config) throws Exception {

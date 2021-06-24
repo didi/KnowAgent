@@ -19,7 +19,7 @@ public interface AgentMapper {
 
     AgentPO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKey(AgentPO record);
+    int updateByPrimaryKeySelective(AgentPO record);
 
     AgentPO selectByHostName(String hostName);
 

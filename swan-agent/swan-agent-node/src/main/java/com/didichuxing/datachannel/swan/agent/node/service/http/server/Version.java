@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 
 public class Version extends Handler implements HttpHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Version.class.getName());
-    public final static String URI     = "/swan-agent/version";
+    private static final Logger LOGGER  = LoggerFactory.getLogger(Version.class.getName());
+    public final static String  URI     = "/swan-agent/version";
 
-    String                     version = null;
+    String                      version = null;
 
     public Version() {
         Map<String, String> settings = null;

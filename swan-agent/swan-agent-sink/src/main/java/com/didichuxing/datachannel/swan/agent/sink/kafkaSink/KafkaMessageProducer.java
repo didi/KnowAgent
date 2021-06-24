@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
  */
 public class KafkaMessageProducer {
 
-    private static final Logger LOGGER             = LoggerFactory.getLogger(KafkaMessageProducer.class);
+    private static final Logger           LOGGER             = LoggerFactory
+                                                                 .getLogger(KafkaMessageProducer.class);
 
     /** * 默认配置文件 */
     private static String                 DEFAULT_PROPERTIES = "default.kafka-producer.properties";

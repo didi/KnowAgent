@@ -18,7 +18,8 @@ import com.didichuxing.datachannel.swan.agent.integration.test.format.OriginalFo
 import com.didichuxing.datachannel.swan.agent.integration.test.verify.DataVerifyConfig;
 import com.didichuxing.datachannel.swan.agent.integration.test.verify.DataVerifyTask;
 import com.didichuxing.datachannel.swan.agent.integration.test.verify.VerifyConfig;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 集成测试入口
@@ -27,7 +28,9 @@ import com.didichuxing.datachannel.swan.agent.integration.test.verify.VerifyConf
  */
 public class IntegrationTest {
 
-private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTest.class.getName());private static final int    partitions     = 1;
+    private static final Logger LOGGER         = LoggerFactory.getLogger(IntegrationTest.class
+                                                   .getName());
+    private static final int    partitions     = 1;
 
     private static final String configFileName = "verify.properties";
 

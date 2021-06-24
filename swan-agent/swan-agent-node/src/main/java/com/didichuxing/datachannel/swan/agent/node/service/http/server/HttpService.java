@@ -22,12 +22,13 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpService.class.getName());private final static int  PORT   = 2023;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpService.class.getName());
+    private final static int    PORT   = 2023;
 
-    private HttpServer        httpServer;
+    private HttpServer          httpServer;
 
-    private LaunchService     launchService;
-    private ConfigService     configService;
+    private LaunchService       launchService;
+    private ConfigService       configService;
 
     public HttpService(LaunchService launchService, ConfigService configService) {
         this.launchService = launchService;

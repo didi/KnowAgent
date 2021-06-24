@@ -20,7 +20,6 @@ import com.didichuxing.datachannel.swan.agent.task.log.LogModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @description: log2kafka模型
  * @author: huangjw
@@ -28,7 +27,9 @@ import org.slf4j.LoggerFactory;
  */
 public class Log2KafkaModel extends LogModel {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Log2KafkaModel.class.getName());public Log2KafkaModel(ModelConfig config) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Log2KafkaModel.class.getName());
+
+    public Log2KafkaModel(ModelConfig config) {
         super(config);
     }
 

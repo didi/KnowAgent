@@ -40,9 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -536,7 +534,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         AgentDO agentDO = agentManageServiceExtension.updateAgent(agentDOExists, agentDOTarget);
         AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);;
         agentPO.setOperator(CommonConstant.getOperator(operator));
-        agentDAO.updateByPrimaryKey(agentPO);
+        agentDAO.updateByPrimaryKeySelective(agentPO);
         /*
          * 添加对应操作记录
          */

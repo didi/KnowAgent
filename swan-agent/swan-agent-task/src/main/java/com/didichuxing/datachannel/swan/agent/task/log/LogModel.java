@@ -31,7 +31,7 @@ import java.util.Set;
  */
 public abstract class LogModel extends AbstractModel {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogModel.class.getName());
+    private static final Logger LOGGER         = LoggerFactory.getLogger(LogModel.class.getName());
     private static final Logger DDCLOUD_LOGGER = LoggerFactory.getLogger("ddcloud");
 
     public LogModel(ModelConfig config) {

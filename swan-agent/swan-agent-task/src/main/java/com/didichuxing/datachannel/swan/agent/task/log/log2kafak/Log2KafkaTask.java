@@ -40,13 +40,14 @@ import org.slf4j.LoggerFactory;
  */
 public class Log2KafkaTask extends AbstractTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Log2KafkaTask.class.getName());
-    private long lastFlushTime = 0;
+    private static final Logger LOGGER        = LoggerFactory.getLogger(Log2KafkaTask.class
+                                                  .getName());
+    private long                lastFlushTime = 0;
 
     /**
      * ceph采集时标记是否已经完成所有相关文件的同步
      */
-    private volatile boolean isSynced = false;
+    private volatile boolean    isSynced      = false;
 
     public Log2KafkaTask(ComponentConfig config, LogSource logSource) {
         this.source = logSource;
@@ -94,7 +95,7 @@ public class Log2KafkaTask extends AbstractTask {
         try {
             LogSourceConfig logSourceConfig = (LogSourceConfig) modelConfig.getSourceConfig();
             if (modelConfig.getCommonConfig().getModelType() == LogConfigConstants.COLLECT_TYPE_TEMPORALITY
-                    && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
+                && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
                 return true;
             }
         } catch (Exception e) {
@@ -120,7 +121,7 @@ public class Log2KafkaTask extends AbstractTask {
         }
 
         if (sendNum > getKafkaTargetConfig().getFlushBatchSize()
-                || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
+            || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
                 .getFlushBatchTimeThreshold()) {
             lastFlushTime = System.currentTimeMillis();
             return true;
