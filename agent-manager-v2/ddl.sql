@@ -225,6 +225,8 @@ CREATE TABLE `tb_agent` (
   `metrics_send_receiver_id` bigint(20) DEFAULT NULL COMMENT 'Agent指标信息发往的接收端id',
   `error_logs_send_topic` varchar(255) DEFAULT NULL COMMENT 'Agent错误日志信息发往的topic名',
   `error_logs_send_receiver_id` bigint(20) DEFAULT NULL COMMENT 'Agent错误日志信息发往的接收端id',
+  `metrics_producer_configuration`     varchar(256)  default ''                not null,
+  `error_logs_producer_configuration`  varchar(256)  default ''                not null,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uniq_host_name` (`host_name`) COMMENT '主机名唯一索引'
 ) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8 COMMENT='采集端表：表示一个部署在某host上的采集端';
