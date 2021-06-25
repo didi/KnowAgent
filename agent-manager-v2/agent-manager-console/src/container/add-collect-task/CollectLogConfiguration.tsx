@@ -39,7 +39,7 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
   const [logFilter, setLogFilter] = useState(0);
   const [activeKeys, setActiveKeys] = useState([] as string[]);
   // const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
-
+  const [logListFile, setLogListFile] = useState([])
   const customPanelStyle = {
     border: 0,
     overflow: 'hidden',
@@ -114,9 +114,13 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
           suffixfilesList={props.suffixfilesList}
           filePathList={props.filePathList}
           slicingRuleLogList={props.slicingRuleLogList}
+          setLogListFile={setLogListFile}
+          logListFile={logListFile}
         />
         <LogFileType
           form={props.form}
+          setLogListFile={setLogListFile}
+          logListFile={logListFile}
         />
         <LogRepeatForm
           logType='file'

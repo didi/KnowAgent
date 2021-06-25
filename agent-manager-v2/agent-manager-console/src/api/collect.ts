@@ -47,8 +47,6 @@ export const getHostCollectTaskDetails = (hostId: number) => {
 }
 
 export const getCollectPathList = (params: any) => {
-  console.log(params?.suffixMatchRegular)
-  console.log(apiMap.getCollectPathList + `?path=${params?.path}&suffixMatchRegular=${params?.suffixMatchRegular}&hostName=${params?.hostName}`)
   return fetch(apiMap.getCollectPathList + `?path=${params?.path}&suffixMatchRegular=${params?.suffixMatchRegular}&hostName=${params?.hostName}`);
 }
 

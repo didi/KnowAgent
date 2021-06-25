@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { Modal, Tag, Input, DatePicker, Select } from 'antd';
+import { Modal, Tag, Input, DatePicker, Select, Tooltip } from 'antd';
 import { IBaseInfo } from '../../interface/common';
 import { renderOperationBtns, IBtn, NavRouterLink, renderTooltip } from '../../component/CustomComponent';
 import { healthMap, hostTypeMap, healthTypes, hostTypes } from '../../constants/common';
@@ -175,7 +175,9 @@ export const getAgentListColumns = (cb: any, drawer: any, getData: any) => {
     render: (t: number, record: IAgentHostSet) => {
       return (<>
         <Tag color={healthMap[t]}>{healthMap[t]}</Tag>
-        {/* {(t === 0 || t === 1) && <a onClick={() => getDiagnosisReport(drawer, record)}>诊断报告</a>} */}
+        {(t === 0 || t === 1) && <Tooltip placement="topLeft" title={'更多功能请关注商业版'}>
+          <span><a style={{ color: '#00000040' }}>诊断报告</a></span>
+        </Tooltip>}
       </>);
     },
   }, {

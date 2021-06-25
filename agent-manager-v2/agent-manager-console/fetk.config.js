@@ -1,20 +1,24 @@
 const pkgJson = require('./package');
 const axios = require('axios');
-
+const entry ={
+    [pkgJson.systemName]: './src/index.tsx',
+}
 module.exports = {
-  devEntry: {
-    [pkgJson.systemName]: './src/index.tsx',
-  },
-  buildEntry: {
-    [pkgJson.systemName]: './src/index.tsx',
-  },
+  // devEntry: {
+  //   [pkgJson.systemName]: './src/index.tsx',
+  // },
+  // buildEntry: {
+  //   [pkgJson.systemName]: './src/index.tsx',
+  // },
+  devEntry: entry,
+  buildEntry: entry,
   webpackDevConfig: 'config/webpack.dev.config.js',
   webpackBuildConfig: 'config/webpack.build.config.js',
   webpackDllConfig: 'config/webpack.dll.config.js',
   theme: 'config/theme.js',
   template: 'src/index.html',
-  output: `/pub`,
-  publicPath:'/anents',
+  output: `../agent-manager-rest/src/main/resources/templates`,
+  publicPath:'/',
   eslintFix: true,
   hmr: false,
   port: pkgJson.port,

@@ -12,7 +12,6 @@ export const yyMMDD = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}/
     
 // export const yY = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}/g;  //匹配YY时间格式正则
 
-export const logArr:any = []
 export let logFilePathKey = 0;
 export let hostNameList:any = []
 

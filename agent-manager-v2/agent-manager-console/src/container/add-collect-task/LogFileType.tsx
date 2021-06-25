@@ -3,10 +3,11 @@ import { FormComponentProps } from 'antd/lib/form';
 import { Form, Input, Radio, InputNumber, Button, AutoComplete, Select } from 'antd';
 import LogRepeatForm from './LogRepeatForm';
 import { regChar } from '../../constants/reg';
-import { hostNameList, logArr, logFilePathKey } from './dateRegAndGvar';
+import { logFilePathKey } from './dateRegAndGvar';
 import { getCollectPathList } from '../../api/collect';
 import { useDebounce } from '../../lib/utils'
 import './index.less';
+import { getHostListbyServiceId } from '../../api';
 
 
 interface ILogFileTypeProps extends FormComponentProps {
@@ -23,14 +24,15 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
   const { getFieldDecorator, getFieldValue, setFieldsValue } = props.form;
   const editUrl = window.location.pathname.includes('/edit-task');
   const [suffixfiles, setSuffixfiles] = useState(0);
-  const [isNotLogPath, setIsNotLogPath] = useState(true);
+  const [isNotLogPath, setIsNotLogPath] = useState(false);
+  const [fileArrList, setFileArrList] = useState([])
+  const [hostNameList, setHostNameList] = useState([])
   // const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
   const options = hostNameList.length > 0 && hostNameList.map((group: any, index: number) => {
     return <Option key={group.id} value={group.hostName}>
       {group.hostName}
     </Option>
   })
-
   const onSuffixfilesChange = (e: any) => {
     setSuffixfiles(e.target.value);
   }
@@ -38,20 +40,30 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
     const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
     const logFilePath = getFieldValue(`step2_file_path_${logFilePathKey}`)
     const hostName = getFieldValue(`step2_hostName`)
+    const serviceId = getFieldValue(`step1_serviceId`)
+    if (serviceId) {
+      getHostListbyServiceId(serviceId).then((res: any) => {
+        if (res?.hostList?.length > 0) {
+          setIsNotLogPath(true)
+          setHostNameList(res?.hostList)
+        } else {
+          setIsNotLogPath(false)
+          setHostNameList([])
+        }
+      })
+    }
     const params = {
       path: logFilePath,
       suffixMatchRegular: logSuffixfilesValue,
       hostName
     }
-    if (logFilePath && hostName) {
+    if (logFilePath && logSuffixfilesValue) {
       getCollectPathList(params).then((res) => {
         // logArr[key] = res.massage.split()
-        console.log(res, 'res')
-        logArr.push(...res.massage.split())
+        setFileArrList(res)
       })
     }
   }, 700)
-
   const onLogFilterChange = (e: any) => {
     handlelogSuffixfiles()
   }
@@ -61,6 +73,10 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
       setSuffixfiles(props.suffixfiles);
     }
   }, [props.suffixfiles]);
+
+  useEffect(() => {
+    setFileArrList(props.logListFile);
+  }, [props.logListFile]);
 
   return (
     <div className='set-up' key={props.getKey}>
@@ -99,23 +115,24 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
         })(<InputNumber min={0} placeholder='请输入' />)}
       </Form.Item> */}
       {/* <Form.Item label="后缀样式" className={suffixfiles === 1 ? '' : 'hide'}> */}
+      <Form.Item label="采集文件后缀匹配样式">
+        {getFieldDecorator(`step2_file_suffixMatchRegular`, {
+          initialValue: '',
+          rules: [{ required: true, message: '请输入后缀的正则匹配' }],
+        })(<Input style={{ width: '400px' }} onChange={handlelogSuffixfiles} placeholder='请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$' />)}
+        {/* <Button onClick={() => handlelogSuffixfiles(props.getKey)} type="primary" style={{ marginLeft: '20px' }}>查看日志路径下所有文件</Button> */}
+      </Form.Item>
       {hostNameList.length > 0 ? <Form.Item label="映射主机">
         {getFieldDecorator(`step2_hostName`, {
-          initialValue: hostNameList[0]?.hostName,
-          rules: [{ required: true, message: '请选择映射主机名称' }],
+          // initialValue: hostNameList[0]?.hostName,
+          rules: [{ message: '请选择映射主机名称' }],
         })(
           <Select
             showSearch
             style={{ width: 200 }}
-            placeholder="Select a person"
+            placeholder="请选择主机"
             optionFilterProp="children"
             onChange={onLogFilterChange}
-          // onFocus={onFocus}
-          // onBlur={onBlur}
-          // onSearch={onSearch}
-          // filterOption={(input, option) =>
-          //   option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-          // }
           >
             {options}
           </Select>
@@ -128,21 +145,15 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
           // </Radio.Group>
         )}
       </Form.Item> : null}
-      <Form.Item label="采集文件后缀匹配样式">
-        {getFieldDecorator(`step2_file_suffixMatchRegular`, {
-          initialValue: '',
-          rules: [{ required: true, message: '请输入后缀的正则匹配' }],
-        })(<Input style={{ width: '400px' }} onChange={handlelogSuffixfiles} placeholder='请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$' />)}
-        {/* <Button onClick={() => handlelogSuffixfiles(props.getKey)} type="primary" style={{ marginLeft: '20px' }}>查看日志路径下所有文件</Button> */}
-      </Form.Item>
-      <Form.Item>
-        <ul className={`logfile_list logFileList`}>
-          {
-            logArr.length > 0 && logArr.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)
-          }
-        </ul>
-      </Form.Item>
-
+      {
+        isNotLogPath && <Form.Item>
+          <ul className={`logfile_list logFileList`}>
+            {
+              fileArrList && fileArrList?.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)
+            }
+          </ul>
+        </Form.Item>
+      }
       {/* 重复表单 */}
     </div>
   );

@@ -5,7 +5,7 @@ import { useDynamicList } from 'antd-advanced';
 import LogFileType from './LogFileType';
 import { judgeEmpty } from '../../lib/utils';
 import { setIndexs } from './config';
-import { hostNameList, logArr, logFilePathKey, setlogFilePathKey } from './dateRegAndGvar'
+import { setlogFilePathKey } from './dateRegAndGvar'
 import _ from 'lodash'
 import './index.less';
 import { getCollectPathList } from '../../api/collect';
@@ -20,7 +20,7 @@ interface ILoopAddLogFileType extends FormComponentProps {
   hostNames: any
 }
 
-const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
+const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
   // console.log(props,'props=====');
   const editUrl = window.location.pathname.includes('/edit-task');
   const { list, remove, getKey, push, resetList } = useDynamicList(['']);
@@ -39,10 +39,9 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
       hostName
     }
     setlogFilePathKey(key) // 同步日志路径的key值，防止减少日志路径key值乱
-    if (logFilePath && hostName) {
+    if (logFilePath && logSuffixfilesValue) {
       getCollectPathList(params).then((res) => {
-        // logArr[key] = res.massage.split()
-        logArr.push(...res.massage.split())
+        props.setLogListFile(res)
       })
     }
   }
@@ -75,7 +74,6 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType) => {
       setSlicingRuleLog(values[`step2_file_sliceType_${index}`]);
     });
   };
-
 
 
   const row = (index: any, item: any) => (
