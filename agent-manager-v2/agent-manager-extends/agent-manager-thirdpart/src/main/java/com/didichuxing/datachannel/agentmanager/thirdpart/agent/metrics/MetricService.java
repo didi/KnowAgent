@@ -51,6 +51,8 @@ public class MetricService {
     @Autowired
     private CollectTaskMetricMapper collectTaskMetricMapper;
 
+    private static volatile boolean trigger = false;
+
     private static final String CONSUMER_GROUP_ID = "g1";
 
     private static Set<ReceiverTopicDO> receiverSet = new HashSet<>();
@@ -59,7 +61,6 @@ public class MetricService {
             5, 20, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
 
     private void loadClustersAndTopics() {
-        receiverSet.clear();
         List<AgentPO> agentPOList = agentMapper.getAll();
         List<AgentDO> agentDOList = ConvertUtil.list2List(agentPOList, AgentDO.class);
         for (AgentDO agentDO : agentDOList) {
@@ -104,7 +105,15 @@ public class MetricService {
                         collectTaskMetricMapper.insertSelective(collectTaskMetricPO);
                     }
                 }
+                if (trigger) {
+                    if (receiverSet.contains(receiverTopicDO)) {
+                        continue;
+                    }
+                    consumer.close();
+                    break;
+                }
             } catch (Throwable e) {
+                // todo 优化kafka连接的处理
                 LOGGER.error(e.getMessage());
             }
         }
@@ -115,12 +124,14 @@ public class MetricService {
         collectTaskMetricMapper.deleteBeforeTime(System.currentTimeMillis() - 7 * 24 * 3600 * 1000);
     }
 
-    @Async
-    public void run() {
-        loadClustersAndTopics();
+    public void resetMetricConsumers() {
+        receiverSet.clear();
         executor.execute(() -> {
             try {
+                trigger = true;
+                // 等待现有的kafka consumer线程全部关闭
                 Thread.sleep(60 * 1000);
+                trigger = false;
                 loadClustersAndTopics();
             } catch (InterruptedException e) {
                 e.printStackTrace();

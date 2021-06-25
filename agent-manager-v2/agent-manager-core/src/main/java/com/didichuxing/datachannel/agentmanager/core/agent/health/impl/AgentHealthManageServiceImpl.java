@@ -45,7 +45,7 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
             );
         }
         AgentHealthPO agentHealthPO = buildInitialAgentHealthPO(agentDO, operator);
-        agentHealthDAO.insert(agentHealthPO);
+        agentHealthDAO.insertSelective(agentHealthPO);
         return agentHealthPO.getId();
     }
 

@@ -12,10 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * Created by limeng on 2020-04-16
@@ -40,8 +38,6 @@ public class AgentManagerApplication {
             LOGGER.info("Spring Boot use profile: {}", profile);
         }
         LOGGER.info("agentmanagerApplication started");
-        MetricService metricService = ctx.getBean(MetricService.class);
-        metricService.run();
     }
 
     /**

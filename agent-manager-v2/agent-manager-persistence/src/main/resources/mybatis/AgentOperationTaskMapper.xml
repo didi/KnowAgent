@@ -32,11 +32,11 @@
   </delete>
     <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.operationtask.AgentOperationTaskPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_agent_operation_task (id, task_name, task_status,
-      task_type, hosts_number, source_agent_version_id, target_agent_version_id, external_agent_task_id, operator, create_time, modify_time, task_start_time, task_end_time)
+      task_type, hosts_number, source_agent_version_id, target_agent_version_id, external_agent_task_id, operator, task_start_time, task_end_time)
     values (#{id,jdbcType=BIGINT}, #{taskName,jdbcType=VARCHAR}, #{taskStatus,jdbcType=TINYINT},
       #{taskType,jdbcType=TINYINT}, #{hostsNumber,jdbcType=INTEGER}, #{sourceAgentVersionId,jdbcType=BIGINT},
       #{targetAgentVersionId,jdbcType=BIGINT}, #{externalAgentTaskId,jdbcType=BIGINT},
-      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{operator,jdbcType=VARCHAR},
       #{taskStartTime,jdbcType=TIMESTAMP}, #{taskEndTime,jdbcType=TIMESTAMP})
   </insert>
     <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.operationtask.AgentOperationTaskPO" >

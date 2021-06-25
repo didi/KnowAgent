@@ -30,7 +30,7 @@
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" useGeneratedKeys="true" keyProperty="id" >
     insert into tb_agent_health (id, agent_id, agent_health_level, 
       agent_health_description, lastest_error_logs_exists_check_healthy_time, 
-      operator, create_time, modify_time, agent_startup_time, agent_startup_time_last_time
+      operator, agent_startup_time, agent_startup_time_last_time
       )
     values (#{id,jdbcType=BIGINT}, #{agentId,jdbcType=BIGINT}, #{agentHealthLevel,jdbcType=TINYINT}, 
       #{agentHealthDescription,jdbcType=VARCHAR}, #{lastestErrorLogsExistsCheckHealthyTime,jdbcType=BIGINT}, 
@@ -38,7 +38,7 @@
       #{agentStartupTime,jdbcType=BIGINT}, #{agentStartupTimeLastTime,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_agent_health
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -65,6 +65,12 @@
       <if test="modifyTime != null" >
         modify_time,
       </if>
+      <if test="agentStartupTime != null" >
+        agent_startup_time,
+      </if>
+      <if test="agentStartupTimeLastTime != null" >
+        agent_startup_time_last_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -90,6 +96,12 @@
       </if>
       <if test="modifyTime != null" >
         #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="agentStartupTime != null" >
+        #{agentStartupTime,jdbcType=BIGINT},
+      </if>
+      <if test="agentStartupTimeLastTime != null" >
+        #{agentStartupTimeLastTime,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
