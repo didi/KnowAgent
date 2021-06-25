@@ -50,4 +50,7 @@ public interface MetricsFields {
     String LOSS_COUNT             = "filterOut";
 
     String COLLECT_STATUS         = "collectStatus";
+    String MEMORY_USAGE = "memoryUsage";
+
+
 }
