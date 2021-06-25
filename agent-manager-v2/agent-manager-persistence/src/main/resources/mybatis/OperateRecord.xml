@@ -44,10 +44,4 @@
         order by id desc
     </select>
 
-    <update id="compatible">
-      update operate_record
-      set biz_id = CONCAT(business_id,'')
-      where biz_id = '';
-    </update>
-
 </mapper>

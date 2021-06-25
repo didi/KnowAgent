@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Value;
         cron = "0 0/5 * * * ?", autoRegister = true)
 public class MetadataSyncTask implements Job {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("MetadataSyncTask");@Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger("MetadataSyncTask");
+
+    @Autowired
     private MetadataManageService metadataManageService;
 
     /**

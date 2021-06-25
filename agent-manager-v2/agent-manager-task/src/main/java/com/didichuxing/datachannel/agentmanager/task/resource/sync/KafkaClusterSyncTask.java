@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
         cron = "0 0/10 * * * ?", autoRegister = true)
 public class KafkaClusterSyncTask implements Job {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("KafkaClusterSyncTask");@Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger("KafkaClusterSyncTask");
+
+    @Autowired
     private KafkaClusterManageService kafkaClusterManageService;
 
     /**

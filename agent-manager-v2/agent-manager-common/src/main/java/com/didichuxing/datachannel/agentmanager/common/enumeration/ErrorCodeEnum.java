@@ -23,6 +23,7 @@ public enum ErrorCodeEnum {
     SYSTEM_NOT_SUPPORT(21001, "系统不支持"),
     SOCKET_CLOSE_FAILED(21002, "socket链接关闭失败"),
     METHOD_NOT_SUPPORTED(21003, "方法不支持"),
+    HTTP_CONNECT_FAILED(21004, "http请求失败"),
     /*
      * Agent 相关 22000 ~ 22999
      */
@@ -100,6 +101,8 @@ public enum ErrorCodeEnum {
      * Elasticsearch 查询相关 33000 ~ 33999
      */
     ELASTICSEARCH_QUERY_FAILED(33000, "Elasticsearch 查询失败"),
+
+    UNKNOWN(90001, "未知错误"),
 
     /**************************************** 第三方系统错误状态码 100000 ~ 199999 ****************************************/
 

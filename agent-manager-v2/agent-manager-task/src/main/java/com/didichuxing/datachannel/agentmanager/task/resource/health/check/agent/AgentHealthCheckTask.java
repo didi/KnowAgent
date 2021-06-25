@@ -26,7 +26,8 @@ import java.util.concurrent.Future;
         cron = "0 0/10 * * * ?", autoRegister = true)
 public class AgentHealthCheckTask implements Job {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("AgentHealthCheckTask");private ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    private static final Logger LOGGER = LoggerFactory.getLogger("AgentHealthCheckTask");
+    private ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     @Autowired
     private AgentManageService agentManageService;
