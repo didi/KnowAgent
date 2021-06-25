@@ -230,9 +230,13 @@ public interface AgentMetricsDAO {
 
     Double getLatestCpuUsage(String hostName);
 
+    Long getLatestMemoryUsage(String hostName);
+
     Long getGCCount(Long startTime, Long endTime, String hostName);
 
     List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName);
+
+    List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName);
 
     List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName);
 

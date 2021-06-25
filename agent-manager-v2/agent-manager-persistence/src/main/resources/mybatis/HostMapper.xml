@@ -209,9 +209,8 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO" useGeneratedKeys="true" keyProperty="id">
-    insert into tb_host (id, host_name, ip, container, parent_host_name, machine_zone, department, operator, create_time, modify_time, extend_field)
+    insert into tb_host (host_name, ip, container, parent_host_name, machine_zone, department, operator, extend_field)
     values (
-        #{id,jdbcType=BIGINT},
         #{hostName,jdbcType=VARCHAR},
         #{ip,jdbcType=VARCHAR},
         #{container,jdbcType=TINYINT},
@@ -219,29 +218,9 @@
         #{machineZone,jdbcType=VARCHAR},
         #{department,jdbcType=VARCHAR},
         #{operator,jdbcType=VARCHAR},
-        #{createTime,jdbcType=TIMESTAMP},
-        #{modifyTime,jdbcType=TIMESTAMP},
         #{extendField,jdbcType=VARCHAR}
       )
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO">
-    update tb_host
-    <set>
-      <if test="heartbeatTime != null">
-        heartbeat_time = #{heartbeatTime,jdbcType=BIGINT},
-      </if>
-      <if test="hostName != null">
-        host_name = #{hostName,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null">
-        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="gmtModify != null">
-        gmt_modify = #{gmtModify,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO">
     update tb_host
     set machine_zone = #{machineZone,jdbcType=VARCHAR},

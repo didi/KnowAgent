@@ -16,8 +16,6 @@ public interface HostMapper {
 
     HostPO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(HostPO record);
-
     int updateByPrimaryKey(HostPO record);
 
     HostPO selectByHostName(String hostName);

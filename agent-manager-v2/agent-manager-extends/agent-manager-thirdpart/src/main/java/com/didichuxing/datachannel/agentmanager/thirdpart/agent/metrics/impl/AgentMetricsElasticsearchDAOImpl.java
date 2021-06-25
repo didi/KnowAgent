@@ -298,6 +298,28 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public Long getLatestMemoryUsage(String hostName) {
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.filter(QueryBuilders.termQuery("hostname", hostName))
+                .filter(QueryBuilders.existsQuery("memoryUsage"));
+        builder.query(boolQueryBuilder);
+        builder.sort("heartbeatTime", SortOrder.DESC);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        if (hits.length == 0) {
+            return 0L;
+        }
+        SearchHit hit = hits[0];
+        return TypeUtils.castToLong(hit.getSourceAsMap().get("memoryUsage"));
+    }
+
+
+
+    @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
         return (long) hostSumByFieldName(startTime, endTime, hostName, "gcCount");
     }
@@ -305,6 +327,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName) {
         return hostMetricSumByMinute(startTime, endTime, hostName, "cpuUsage");
+    }
+
+    @Override
+    public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
+        return hostMetricSumByMinute(startTime, endTime, hostName, "memoryUsage");
     }
 
     @Override

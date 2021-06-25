@@ -27,7 +27,9 @@ public class AgentMetricDO extends BaseDO {
 
     private Long limitTps;
 
-    private Date startTime;
+    private Long memoryUsage;
+
+    private Long startTime;
 
     private Integer logPathKey;
 
@@ -121,11 +123,19 @@ public class AgentMetricDO extends BaseDO {
         this.limitTps = limitTps;
     }
 
-    public Date getStartTime() {
+    public Long getMemoryUsage() {
+        return memoryUsage;
+    }
+
+    public void setMemoryUsage(Long memoryUsage) {
+        this.memoryUsage = memoryUsage;
+    }
+
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 

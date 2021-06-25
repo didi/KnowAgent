@@ -18,6 +18,7 @@ CREATE TABLE `agent_metric` (
   `hostname` varchar(64) NOT NULL DEFAULT '',
   `fd_count` int(11) NOT NULL DEFAULT '0',
   `limit_tps` bigint NOT NULL DEFAULT '0',
+  `memory_usage` bigint NOT NULL DEFAULT '0',
   `start_time` bigint NOT NULL DEFAULT '0',
   `log_path_key` int(11) NOT NULL DEFAULT '-1',
   `message_version` varchar(32) NOT NULL DEFAULT '',
