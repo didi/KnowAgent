@@ -231,7 +231,6 @@ public class AgentManageServiceImpl implements AgentManageService {
         /*
          * 删除 agent
          */
-        deleteAgent(agentDO, checkAgentCompleteCollect, uninstall, operator);
         /*
          * 添加对应操作记录
          */
@@ -275,10 +274,10 @@ public class AgentManageServiceImpl implements AgentManageService {
             /*
              * 添加一条Agent卸载任务记录
              */
-            AgentOperationTaskDO agentOperationTask = agentManageServiceExtension.agent2AgentOperationTaskUnInstall(agentDO);//TODO：将其置换为api
+            AgentOperationTaskDO agentOperationTask = agentOperationTaskManageService.agent2AgentOperationTaskUnInstall(agentDO);
             agentOperationTaskManageService.createAgentOperationTask(agentOperationTask, operator);
         }
-        /*
+        /*'
          * 删除Agent关联Agent健康信息
          */
         agentHealthManageService.deleteByAgentId(agentDO.getId(), operator);

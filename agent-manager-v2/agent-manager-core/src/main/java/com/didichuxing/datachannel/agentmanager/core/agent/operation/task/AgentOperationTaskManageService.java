@@ -1,8 +1,10 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.operation.task;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.operationtask.AgentOperationTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.operationtask.AgentOperationTaskPaginationQueryConditionDO;
+import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.remote.operation.task.common.enumeration.AgentOperationTaskSubStateEnum;
 
 import java.util.List;
@@ -77,5 +79,12 @@ public interface AgentOperationTaskManageService {
      * @return true：存在 false：不存在
      */
     boolean unfinishedAgentOperationTaskExistsByAgentVersionId(Long agentVersionId);
+
+    /**
+     * 根据给定agent对象构造一个用于卸载该agent的AgentOperationTask对象
+     * @param agentDO 待卸载 agent 对象
+     * @return 返回根据给定agent对象构造的一个用于卸载该agent的AgentOperationTask对象
+     */
+    AgentOperationTaskDO agent2AgentOperationTaskUnInstall(AgentDO agentDO);
 
 }
