@@ -67,4 +67,8 @@ output
 output.*
 agent-manager-v2/agent-manager-rest/src/main/resources/templates/
 
+*.zip
+*.tar.gz
+*.tgz
+
 *.http
