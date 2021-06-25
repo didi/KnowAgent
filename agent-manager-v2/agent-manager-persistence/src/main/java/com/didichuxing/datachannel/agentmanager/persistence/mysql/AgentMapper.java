@@ -21,8 +21,6 @@ public interface AgentMapper {
 
     int updateByPrimaryKeySelective(AgentPO record);
 
-    int updateByPrimaryKey(AgentPO record);
-
     AgentPO selectByHostName(String hostName);
 
     List<String> listVersions();

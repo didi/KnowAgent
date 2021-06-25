@@ -40,9 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -141,7 +139,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         agentDO.setOperator(CommonConstant.getOperator(operator));
         agentDO.setConfigurationVersion(AgentConstant.AGENT_CONFIGURATION_VERSION_INIT);
         AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);
-        agentDAO.insert(agentPO);
+        agentDAO.insertSelective(agentPO);
         savedAgentId = agentPO.getId();
         /*
          * 初始化 & 持久化Agent关联Agent健康度信息
@@ -536,7 +534,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         AgentDO agentDO = agentManageServiceExtension.updateAgent(agentDOExists, agentDOTarget);
         AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);;
         agentPO.setOperator(CommonConstant.getOperator(operator));
-        agentDAO.updateByPrimaryKey(agentPO);
+        agentDAO.updateByPrimaryKeySelective(agentPO);
         /*
          * 添加对应操作记录
          */
@@ -804,11 +802,7 @@ public class AgentManageServiceImpl implements AgentManageService {
                 endTime,
                 hostName
         );//主机cpu限流时长 单位：ms
-        if(hostCpuLimiDturationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD) {
-            return true;
-        } else {
-            return false;
-        }
+        return hostCpuLimiDturationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
     }
 
     /**
@@ -821,11 +815,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取最近一次agent心跳中对应 fd 使用量值，判断该值是否 > AgentHealthCheckConstant.AGENT_FD_USED_THRESHOLD
          */
         Integer fdUsage = agentMetricsManageService.getLastestFdUsage(hostName);
-        if(fdUsage > AgentHealthCheckConstant.AGENT_FD_USED_THRESHOLD) {
-            return true;
-        } else {
-            return false;
-        }
+        return fdUsage > AgentHealthCheckConstant.AGENT_FD_USED_THRESHOLD;
     }
 
     /**
@@ -842,11 +832,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         /*
          * cpu_usage 是否超限
          */
-        if(cpuUsage > cpuLimitThreshold) {
-            return true;
-        } else {
-            return false;
-        }
+        return cpuUsage > cpuLimitThreshold;
     }
 
     /**
@@ -866,11 +852,7 @@ public class AgentManageServiceImpl implements AgentManageService {
                 endTime,
                 hostName
         );
-        if(agentFullgcTimes > AgentHealthCheckConstant.AGENT_GC_TIMES_METRIC_CHECK_THRESHOLD) {
-            return true;
-        } else {
-            return false;
-        }
+        return agentFullgcTimes > AgentHealthCheckConstant.AGENT_GC_TIMES_METRIC_CHECK_THRESHOLD;
     }
 
     /**
@@ -939,11 +921,7 @@ public class AgentManageServiceImpl implements AgentManageService {
                 agentHealthCheckTimeEnd,
                 hostName
         );
-        if(errorlogsCount > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return errorlogsCount > 0;
     }
 
     /**
@@ -962,11 +940,7 @@ public class AgentManageServiceImpl implements AgentManageService {
                 currentTime,
                 hostName
         );
-        if(!heartbeatTimes.equals(0L)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !heartbeatTimes.equals(0L);
     }
 
 }

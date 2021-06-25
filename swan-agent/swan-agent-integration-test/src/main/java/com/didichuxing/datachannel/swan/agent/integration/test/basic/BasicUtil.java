@@ -13,6 +13,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import kafka.admin.AdminUtils;
 import kafka.utils.ZkUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @description: 启动/停止 kafka server
@@ -21,7 +23,8 @@ import kafka.utils.ZkUtils;
  */
 public class BasicUtil {
 
-private static final Logger LOGGER = LoggerFactory.getLogger(BasicUtil.class);private static BasicUtil   instance    = new BasicUtil();
+    private static final Logger LOGGER = LoggerFactory.getLogger(BasicUtil.class);
+    private static BasicUtil   instance    = new BasicUtil();
 
     private Random             randPortGen = new Random(System.currentTimeMillis());
     private KafkaLocal         kafkaServer;

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SwanAgent {
 
-    private static final Logger LOGGER     = LoggerFactory.getLogger(SwanAgent.class.getName());
+    private static final Logger  LOGGER     = LoggerFactory.getLogger(SwanAgent.class.getName());
 
     /**
      * agent http 服务

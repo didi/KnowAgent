@@ -16,6 +16,4 @@ public interface OperateRecordDAO {
     List<OperateRecordPO> queryByCondt(OperateRecordPO condt);
 
     int insert(OperateRecordPO po);
-
-    int compatible();
 }

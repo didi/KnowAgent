@@ -18,13 +18,14 @@ import org.slf4j.LoggerFactory;
  */
 public class TaskLimit implements Configurable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TaskLimit.class.getName());private RateLimiter       limiter   = null;
+    private static final Logger LOGGER    = LoggerFactory.getLogger(TaskLimit.class.getName());
+    private RateLimiter         limiter   = null;
 
-    private volatile boolean  isRegular = false;
+    private volatile boolean    isRegular = false;
 
-    private AbstractTask      abstractTask;
+    private AbstractTask        abstractTask;
 
-    private LimitNode         limitNode;
+    private LimitNode           limitNode;
 
     public boolean init(AbstractTask abstractTask, ComponentConfig config) {
         try {
@@ -32,7 +33,8 @@ public class TaskLimit implements Configurable {
             configure(config);
             return true;
         } catch (Exception e) {
-            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is " + this, e);
+            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is "
+                                                        + this, e);
             return false;
         }
     }
@@ -42,7 +44,8 @@ public class TaskLimit implements Configurable {
             LimitService.LIMITER.unregister(this.abstractTask);
             return true;
         } catch (Exception e) {
-            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is " + this, e);
+            LogGather.recordErrorLog("TaskLimit error", "unexpected error, fileCollectTask is "
+                                                        + this, e);
             return false;
         }
     }

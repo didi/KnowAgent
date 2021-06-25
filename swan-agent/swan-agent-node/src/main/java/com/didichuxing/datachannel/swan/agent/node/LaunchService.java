@@ -18,14 +18,16 @@ import org.slf4j.LoggerFactory;
  */
 public class LaunchService extends AgentComponent {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LaunchService.class.getName());/**
-     * agent当前配置
-     */
-    private static AgentConfig lastAgentConfig = null;
+    private static final Logger LOGGER          = LoggerFactory.getLogger(LaunchService.class
+                                                    .getName());
+    /**
+    * agent当前配置
+    */
+    private static AgentConfig  lastAgentConfig = null;
     /**
      * agent日志模型管理器
      */
-    private ModelManager       modelManager;
+    private ModelManager        modelManager;
 
     @Override
     public boolean init(AgentConfig config) {

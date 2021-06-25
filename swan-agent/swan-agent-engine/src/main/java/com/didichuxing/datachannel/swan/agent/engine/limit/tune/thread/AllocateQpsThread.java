@@ -13,15 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AllocateQpsThread implements Runnable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AllocateQpsThread.class);
+    private static final Logger LOGGER          = LoggerFactory.getLogger(AllocateQpsThread.class);
 
-    private static final int MAX_LEVEL_VALUE = 10;
+    private static final int    MAX_LEVEL_VALUE = 10;
 
-    private boolean          isStop          = false;
-    private LimitService     limiter;
+    private boolean             isStop          = false;
+    private LimitService        limiter;
 
-    private String           peroid          = "tps.period";
-    private long             interval;
+    private String              peroid          = "tps.period";
+    private long                interval;
 
     public AllocateQpsThread(LimitService limiter) throws Exception {
         this.limiter = limiter;

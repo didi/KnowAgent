@@ -7,7 +7,6 @@ import com.didichuxing.datachannel.swan.agent.engine.metrics.MetricService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author jinbinbin
  * @version $Id: ReceiveInstrumentation.java, v 0.1 2017年10月01日 22:54 jinbinbin Exp $
@@ -15,8 +14,8 @@ import org.slf4j.LoggerFactory;
 public class AbstractStatistics implements MetricsSource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractStatistics.class);
-    protected String          name;
-    protected MetricsRegistry metricsRegistry;
+    protected String            name;
+    protected MetricsRegistry   metricsRegistry;
 
     public AbstractStatistics(String name) {
         super();

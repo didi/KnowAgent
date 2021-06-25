@@ -8,21 +8,22 @@ import org.slf4j.LoggerFactory;
 
 public class LimitNode {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LimitNode.class);private static float      FACTOR         = 0.3f;
-    private static long       INTERVAL       = 1000;
-    private static long       NUM_INTERVAL   = 1;
-    private static long       FLUSH_INTERVAL = 1000L;
+    private static final Logger LOGGER         = LoggerFactory.getLogger(LimitNode.class);
+    private static float        FACTOR         = 0.3f;
+    private static long         INTERVAL       = 1000;
+    private static long         NUM_INTERVAL   = 1;
+    private static long         FLUSH_INTERVAL = 1000L;
 
-    private String            name;
-    private LimitService      limiter;
-    private ModelLimitConfig  config;
+    private String              name;
+    private LimitService        limiter;
+    private ModelLimitConfig    config;
 
-    private TuneNode          tuneNode;                                           // 限流调整模块
-    private TaskLimit         taskLimit;
+    private TuneNode            tuneNode;                                                 // 限流调整模块
+    private TaskLimit           taskLimit;
 
     // 统计信息
-    private long              startTime;                                          // 当前周期的开始时间
-    private long              bytesCount;                                         // 当前周期已经发送的字节数
+    private long                startTime;                                                // 当前周期的开始时间
+    private long                bytesCount;                                               // 当前周期已经发送的字节数
 
     public LimitNode(String name, LimitService limiter, ModelLimitConfig config, TaskLimit taskLimit) {
         this.limiter = limiter;

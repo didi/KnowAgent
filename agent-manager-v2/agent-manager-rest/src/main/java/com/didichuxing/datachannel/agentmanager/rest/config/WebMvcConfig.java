@@ -10,12 +10,8 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * @author zengqiao
- * @date 20/1/19
- */
-//@SpringBootConfiguration
-//@Component
+@SpringBootConfiguration
+@Component
 //@DependsOn({"permissionInterceptor"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
@@ -29,8 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/index.html").setViewName("index");
-        registry.addViewController("/agent-manager").setViewName("index");
-        registry.addViewController("/agent-manager/**").setViewName("index");
+        registry.addViewController("/agent/**").setViewName("index");
     }
 
     @Override
@@ -44,7 +39,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // SWAGGER
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 
         // FE
         registry.addResourceHandler("index.html", "/**").addResourceLocations("classpath:/templates/","classpath:/static/");

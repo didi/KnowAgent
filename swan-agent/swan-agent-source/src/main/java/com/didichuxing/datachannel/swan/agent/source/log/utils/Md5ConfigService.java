@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-
-
 /**
  * @description:
  * @author: huangjw
@@ -14,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Md5ConfigService {
 
-    private static final Logger LOGGER         = LoggerFactory.getLogger(Md5ConfigService.class);
+    private static final Logger                      LOGGER         = LoggerFactory
+                                                                        .getLogger(Md5ConfigService.class);
 
     private static ConcurrentHashMap<String, String> logPath2Md5Map = new ConcurrentHashMap<String, String>();
 

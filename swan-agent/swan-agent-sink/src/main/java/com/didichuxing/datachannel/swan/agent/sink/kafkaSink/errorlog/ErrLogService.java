@@ -6,7 +6,6 @@ import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @description:
  * @author: huangjw
@@ -14,7 +13,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ErrLogService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ErrLogService.class.getName());
+    private static final Logger   LOGGER        = LoggerFactory.getLogger(ErrLogService.class
+                                                    .getName());
     private static ErrorLogSinker logSinker     = null;
     private final static String   REGISTER_NAME = "agent-error-log";
     private static boolean        isInit        = false;

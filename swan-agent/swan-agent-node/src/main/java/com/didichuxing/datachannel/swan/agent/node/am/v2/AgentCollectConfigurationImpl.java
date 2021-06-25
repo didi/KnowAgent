@@ -36,17 +36,18 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
     /**
      * 日志模型限流等级 - 高
      */
-    private static final Integer MODEL_LIMIT_LEVEL_HIGH = 9;
+    private static final Integer MODEL_LIMIT_LEVEL_HIGH   = 9;
     /**
      * 日志模型限流等级 - 低
      */
-    private static final Integer MODEL_LIMIT_LEVEL_LOW = 1;
+    private static final Integer MODEL_LIMIT_LEVEL_LOW    = 1;
     /**
      * 日志模型限流等级 - 中
      */
     private static final Integer MODEL_LIMIT_LEVEL_MIDDLE = 5;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AgentCollectConfigurationImpl.class);
+    private static final Logger  LOGGER                   = LoggerFactory
+                                                              .getLogger(AgentCollectConfigurationImpl.class);
 
     /**
      * 将自身转化为AgentConfig对象并返回

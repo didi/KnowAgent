@@ -13,7 +13,6 @@ import com.didichuxing.datachannel.swan.agent.source.log.beans.WorkingFileNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @description: 包装解析器
  * @author: huangjw
@@ -21,20 +20,22 @@ import org.slf4j.LoggerFactory;
  */
 public class EventParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EventParser.class.getName());/**
-     * 上一条有效日志的时间戳
-     */
-    private Long              lastTimestamp  = null;
+    private static final Logger LOGGER         = LoggerFactory.getLogger(EventParser.class
+                                                   .getName());
+    /**
+    * 上一条有效日志的时间戳
+    */
+    private Long                lastTimestamp  = null;
 
     /**
      * 上一条有效日志的时间
      */
-    private String            lastTimeString = "";
+    private String              lastTimeString = "";
 
     /**
      * 上一条有效日志的wfn'key
      */
-    private String            lastWFNKey     = "";
+    private String              lastWFNKey     = "";
 
     public void parse(LogSource logSource, WorkingFileNode workingFileNode, LogEvent logEvent) {
         if (logEvent != null) {

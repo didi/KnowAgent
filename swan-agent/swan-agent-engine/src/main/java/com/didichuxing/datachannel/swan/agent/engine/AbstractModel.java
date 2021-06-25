@@ -16,7 +16,6 @@ import com.didichuxing.datachannel.swan.agent.engine.source.AbstractSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @description: 抽象模型
  * @author: huangjw
@@ -24,7 +23,9 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractModel extends TaskComponent implements Configurable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTask.class.getName());protected Map<String, AbstractSource> sources;
+    private static final Logger           LOGGER = LoggerFactory.getLogger(AbstractTask.class
+                                                     .getName());
+    protected Map<String, AbstractSource> sources;
     protected Map<String, AbstractTask>   tasks;
     protected long                        taskId;
     protected String                      modelTag;

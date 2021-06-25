@@ -10,21 +10,22 @@ import org.slf4j.LoggerFactory;
 
 public class LimitCpuThread implements Runnable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LimitCpuThread.class.getName());
-    private static final float FACTOR     = 0.1f;
-    private static final float TPS_FACTOR = 0.2f;
+    private static final Logger LOGGER     = LoggerFactory
+                                               .getLogger(LimitCpuThread.class.getName());
+    private static final float  FACTOR     = 0.1f;
+    private static final float  TPS_FACTOR = 0.2f;
     // 最大10G/s
-    private static final long  maxQPS     = 10 * 1024 * 1024 * 1024L;
+    private static final long   maxQPS     = 10 * 1024 * 1024 * 1024L;
 
-    private boolean            isStop     = false;
-    private LimitService       limiter;
+    private boolean             isStop     = false;
+    private LimitService        limiter;
 
-    private long               allQps;                                                        // 当前整体的限制阀值
-    private float              currentCpuUsage;                                               // 当前cpu利用率
-    private CpuTime            lastCpuTime;                                                   // 记录上次的cpu耗时
+    private long                allQps;                                                   // 当前整体的限制阀值
+    private float               currentCpuUsage;                                          // 当前cpu利用率
+    private CpuTime             lastCpuTime;                                              // 记录上次的cpu耗时
 
-    private String             peroid     = "cpu.period";
-    private long               interval   = 30 * 1000;
+    private String              peroid     = "cpu.period";
+    private long                interval   = 30 * 1000;
 
     public LimitCpuThread(LimitService limiter, long qps) throws Exception {
         this.limiter = limiter;

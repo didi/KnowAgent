@@ -18,8 +18,8 @@ public class CpuTime {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CpuTime.class);
 
-    public long all;    // 整个系统从启动到现在的cpu耗时
-    public long process; // 当前进程从启动到现在的cpu耗时
+    public long                 all;                                            // 整个系统从启动到现在的cpu耗时
+    public long                 process;                                        // 当前进程从启动到现在的cpu耗时
 
     // 获得当前的耗时
     public CpuTime() throws Exception {

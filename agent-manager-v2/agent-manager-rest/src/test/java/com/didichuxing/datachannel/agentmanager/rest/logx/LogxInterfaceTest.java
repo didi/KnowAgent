@@ -13,7 +13,7 @@ public class LogxInterfaceTest {
 
     public static void main(String[] args) throws InterruptedException {
 
-//        String createRequestUrl = "http://localhost:8006/agent-manager/api/v1/logx/collect-task";
+//        String createRequestUrl = "http://localhost:8006/api/v1/logx/collect-task";
 //        LogCollectTaskCreateDTO logCollectTaskCreateDTO = new LogCollectTaskCreateDTO();
 //        logCollectTaskCreateDTO.setServiceId(96L);
 //        logCollectTaskCreateDTO.setKafkaClusterId(1L);

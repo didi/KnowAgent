@@ -24,7 +24,9 @@ import org.slf4j.LoggerFactory;
  */
 public class FileReader {
 
-private static final Logger LOGGER = LoggerFactory.getLogger(FileReader.class.getName());private static final String LINE_SEPARATOR   = System.lineSeparator();
+    private static final Logger LOGGER           = LoggerFactory.getLogger(FileReader.class
+                                                     .getName());
+    private static final String LINE_SEPARATOR   = System.lineSeparator();
 
     /**
      * 当前采集的时间戳

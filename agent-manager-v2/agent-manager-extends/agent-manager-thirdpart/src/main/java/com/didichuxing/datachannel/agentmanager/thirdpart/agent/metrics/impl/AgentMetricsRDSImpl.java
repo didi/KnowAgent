@@ -77,7 +77,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public Long getLatestStartupTime(String hostName) {
-        return (Long) collectTaskMetricMapper.selectMaxByHostname(hostName, "start_time");
+        return agentMetricMapper.selectMaxByHostname(hostName, "start_time");
     }
 
     @Override

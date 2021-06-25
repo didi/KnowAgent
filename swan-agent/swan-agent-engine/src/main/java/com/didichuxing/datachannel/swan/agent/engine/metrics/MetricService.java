@@ -10,20 +10,21 @@ import com.didichuxing.datachannel.swan.agent.engine.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class MetricService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class.getName());
+    private static final Logger                LOGGER       = LoggerFactory
+                                                                .getLogger(MetricService.class
+                                                                    .getName());
 
-    public static final String NAME = "SwanAgent";
+    public static final String                 NAME         = "SwanAgent";
 
-    private static final String AGENT_METRIC = "agent-metrics";
+    private static final String                AGENT_METRIC = "agent-metrics";
 
-    private volatile static MetricsSystem metricsSystem;
+    private volatile static MetricsSystem      metricsSystem;
 
     private volatile static AbstractMetricSink metricSink;
 
-    private static boolean isInit = false;
+    private static boolean                     isInit       = false;
 
     /* 分配metrics cpu */
     public static synchronized MetricsSystem getMetricsSystem() {
@@ -35,7 +36,7 @@ public class MetricService {
     }
 
     public static void init(MetricConfig config, AbstractMetricSink abstractMetricSink)
-            throws Exception {
+                                                                                       throws Exception {
         if (config.isValid()) {
             LOGGER.info("begin to init metric reporter");
             /*

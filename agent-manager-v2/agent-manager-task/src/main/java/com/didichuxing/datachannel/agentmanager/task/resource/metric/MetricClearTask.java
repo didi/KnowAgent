@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Task(name = "MetricClearTask", description = "定时清除系统中超过7天的metric，每一天执行一次",
         cron = "0 0 * * * ?", autoRegister = true)
 public class MetricClearTask implements Job {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricClearTask.class);@Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricClearTask.class);
+
+    @Autowired
     private MetricService metricService;
 
     @Override

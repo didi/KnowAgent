@@ -9,11 +9,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class HttpClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClient.class.getName());
-    private static String URL_PATTERN = "http://%s:%d%s";
+    private static final Logger LOGGER      = LoggerFactory.getLogger(HttpClient.class.getName());
+    private static String       URL_PATTERN = "http://%s:%d%s";
 
     public static String get(String ip, int port, String uri, Map<String, String> param) {
         if (StringUtils.isBlank(ip) || StringUtils.isBlank(uri) || port == 0) {

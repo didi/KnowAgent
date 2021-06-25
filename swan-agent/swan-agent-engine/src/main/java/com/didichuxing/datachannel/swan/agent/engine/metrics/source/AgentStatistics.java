@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 public class AgentStatistics extends AbstractStatistics {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentStatistics.class);
-    private LimitService      limiter;
+    private LimitService        limiter;
 
-    private Long              startTime;
+    private Long                startTime;
 
     public AgentStatistics(String name, LimitService limiter, Long startTime) {
         super(name);

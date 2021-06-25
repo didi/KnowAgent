@@ -17,7 +17,8 @@ import org.slf4j.LoggerFactory;
 // 需要和业务代码强耦合
 public class TaskPatternStatistics extends AbstractStatistics {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("perfLogger");private AbstractTask                          abstractTask;
+    private static final Logger                   LOGGER = LoggerFactory.getLogger("perfLogger");
+    private AbstractTask                          abstractTask;
 
     /*
      * sourceCountPerPeriod 每周期读取总的条数 sourceBytePerPeriod 每周期读取总的流量 sourceTime 读取耗时统计

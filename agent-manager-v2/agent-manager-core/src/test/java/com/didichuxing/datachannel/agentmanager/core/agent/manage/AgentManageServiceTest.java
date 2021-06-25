@@ -10,7 +10,6 @@ import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageServic
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentVersionMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

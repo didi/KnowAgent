@@ -8,9 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * @author huqidong
  * @date 2020-09-21
@@ -20,7 +17,9 @@ import java.util.Date;
         cron = "0 0/1 * * * ?", autoRegister = true)
 public class AgentOperationTaskUpdateTask implements Job {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("AgentOperationTaskUpdateTask");@Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger("AgentOperationTaskUpdateTask");
+
+    @Autowired
     private AgentOperationTaskManageService agentOperationTaskManageService;
 
     @Override
