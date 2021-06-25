@@ -111,8 +111,10 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
         sourceAgent.setByteLimitThreshold(targetAgent.getByteLimitThreshold());
         sourceAgent.setMetricsSendReceiverId(targetAgent.getMetricsSendReceiverId());
         sourceAgent.setMetricsSendTopic(targetAgent.getMetricsSendTopic());
+        sourceAgent.setMetricsProducerConfiguration(targetAgent.getMetricsProducerConfiguration());
         sourceAgent.setErrorLogsSendReceiverId(targetAgent.getErrorLogsSendReceiverId());
         sourceAgent.setErrorLogsSendTopic(targetAgent.getErrorLogsSendTopic());
+        sourceAgent.setErrorLogsProducerConfiguration(targetAgent.getErrorLogsProducerConfiguration());
         sourceAgent.setAdvancedConfigurationJsonString(targetAgent.getAdvancedConfigurationJsonString());
         return sourceAgent;
     }

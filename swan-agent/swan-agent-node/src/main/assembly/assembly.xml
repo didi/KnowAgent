@@ -22,6 +22,7 @@
                 <include>**/*.xml</include>
                 <include>**/*.properties</include>
                 <include>**/*.type</include>
+                <include>**/*.yaml</include>
             </includes>
             <fileMode>0644</fileMode>
         </fileSet>

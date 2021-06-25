@@ -30,12 +30,12 @@ import org.slf4j.LoggerFactory;
 
 public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("perfLogger");
-    private KafkaTopicSink sink;
+    private static final Logger LOGGER             = LoggerFactory.getLogger("perfLogger");
+    private KafkaTopicSink      sink;
 
-    private static final String LIMIT_TIME_TAG = "limitTime";
+    private static final String LIMIT_TIME_TAG     = "limitTime";
     private static final String NEW_LIMIT_TIME_TAG = TaskMetricsFields.PREFIX_METRICS_
-            + LIMIT_TIME_TAG;
+                                                     + LIMIT_TIME_TAG;
 
     @Override
     public void init(SubsetConfiguration conf) {
@@ -192,10 +192,10 @@ public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
         if (StringUtils.isNotBlank(newName)) {
             if (newName.startsWith(SourceMetricsFields.PREFIX_METRICS_)) {
                 return newName.substring(SourceMetricsFields.PREFIX_METRICS_.length()).replace(
-                        ComponentType.SOURCE, "read");
+                    ComponentType.SOURCE, "read");
             } else if (newName.startsWith(SinkMetricsFields.PREFIX_METRICS_)) {
                 return newName.substring(SinkMetricsFields.PREFIX_METRICS_.length()).replace(
-                        ComponentType.SINK, "send");
+                    ComponentType.SINK, "send");
             } else if (newName.startsWith(TaskMetricsFields.PREFIX_METRICS_)) {
                 return newName.substring(TaskMetricsFields.PREFIX_METRICS_.length());
             } else if (newName.startsWith(TaskMetricsFields.PREFIX_LIMIT_)) {

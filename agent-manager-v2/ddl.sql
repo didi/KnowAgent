@@ -18,7 +18,7 @@ CREATE TABLE `agent_metric` (
   `hostname` varchar(64) NOT NULL DEFAULT '',
   `fd_count` int(11) NOT NULL DEFAULT '0',
   `limit_tps` bigint NOT NULL DEFAULT '0',
-  `start_time` timestamp NOT NULL DEFAULT '1971-01-01 00:00:00',
+  `start_time` bigint NOT NULL DEFAULT '0',
   `log_path_key` int(11) NOT NULL DEFAULT '-1',
   `message_version` varchar(32) NOT NULL DEFAULT '',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -27,116 +27,99 @@ CREATE TABLE `agent_metric` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11922 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Table structure for auv_job
--- ----------------------------
-DROP TABLE IF EXISTS `auv_job`;
-CREATE TABLE `auv_job` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(100) NOT NULL DEFAULT '' COMMENT 'task code',
-  `task_code` varchar(255) NOT NULL DEFAULT '' COMMENT '任务code',
-  `class_name` varchar(255) NOT NULL DEFAULT '' COMMENT '类的全限定名',
-  `try_times` int(10) NOT NULL DEFAULT '0' COMMENT '第几次重试',
-  `worker_code` varchar(200) NOT NULL DEFAULT '' COMMENT '执行机器',
-  `start_time` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '开始时间',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=19059 DEFAULT CHARSET=utf8 COMMENT='正在执行的job信息';
-
--- ----------------------------
--- Table structure for auv_job_log
--- ----------------------------
-DROP TABLE IF EXISTS `auv_job_log`;
-CREATE TABLE `auv_job_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `job_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'job code',
-  `task_code` varchar(255) NOT NULL DEFAULT '' COMMENT '任务code',
-  `class_name` varchar(255) NOT NULL DEFAULT '' COMMENT '类的全限定名',
-  `try_times` int(10) NOT NULL DEFAULT '0' COMMENT '第几次重试',
-  `worker_code` varchar(200) NOT NULL DEFAULT '' COMMENT '执行机器',
-  `start_time` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '开始时间',
-  `end_time` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '结束时间',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行结果 1成功 2失败 3取消',
-  `error` text NOT NULL COMMENT '错误信息',
-  `result` text NOT NULL COMMENT '执行结果',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19053 DEFAULT CHARSET=utf8 COMMENT='job执行历史日志';
-
--- ----------------------------
--- Table structure for auv_task
--- ----------------------------
-DROP TABLE IF EXISTS `auv_task`;
+drop table if exists `auv_task`;
 CREATE TABLE `auv_task` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(100) NOT NULL DEFAULT '' COMMENT 'task code',
-  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '名称',
-  `description` varchar(1000) NOT NULL DEFAULT '' COMMENT '任务描述',
-  `cron` varchar(100) NOT NULL DEFAULT '' COMMENT 'cron 表达式',
-  `class_name` varchar(255) NOT NULL DEFAULT '' COMMENT '类的全限定名',
-  `params` varchar(1000) NOT NULL DEFAULT '' COMMENT '执行参数 map 形式{key1:value1,key2:value2}',
-  `retry_times` int(10) NOT NULL DEFAULT '0' COMMENT '允许重试次数',
-  `last_fire_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '上次执行时间',
-  `timeout` bigint(20) NOT NULL DEFAULT '0' COMMENT '超时 毫秒',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1等待 2运行中 3暂停 ',
-  `sub_task_codes` varchar(1000) NOT NULL DEFAULT '' COMMENT '子任务code列表,逗号分隔',
-  `consensual` varchar(200) NOT NULL DEFAULT '' COMMENT '执行策略',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='任务信息';
+                          `id` BIGINT(20) auto_increment,
+                          `code` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'task code',
+                          `name` VARCHAR(255) DEFAULT '' NOT NULL COMMENT '名称',
+                          `description` VARCHAR(1000) DEFAULT '' NOT NULL COMMENT '任务描述',
+                          `cron` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'cron 表达式',
+                          `class_name` VARCHAR(255) DEFAULT '' NOT NULL COMMENT '类的全限定名',
+                          `params` VARCHAR(1000) DEFAULT '' NOT NULL COMMENT '执行参数 map 形式{key1:value1,key2:value2}',
+                          `retry_times` INT(10) DEFAULT 0 NOT NULL COMMENT '允许重试次数',
+                          `last_fire_time` DATETIME DEFAULT NOW() COMMENT '上次执行时间 [Deprecated]',
+                          `timeout` BIGINT(20) DEFAULT 0 NOT NULL COMMENT '超时 毫秒',
+                          `status` TINYINT(4) DEFAULT 0 NOT NULL COMMENT '1等待 2运行中 3暂停 [Deprecated]',
+                          `sub_task_codes` VARCHAR(1000) DEFAULT '' NOT NULL COMMENT '子任务code列表,逗号分隔',
+                          `consensual` VARCHAR(200) DEFAULT '' NOT NULL COMMENT '执行策略',
+                          `task_worker_str` VARCHAR(1000) DEFAULT '' NOT NULL COMMENT '机器执行信息',
+                          `create_time` DATETIME DEFAULT NOW() COMMENT '创建时间',
+                          `update_time` DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT '更新时间',
+                          PRIMARY KEY (`id`),
+                          UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务信息';
 
--- ----------------------------
--- Table structure for auv_task_lock
--- ----------------------------
-DROP TABLE IF EXISTS `auv_task_lock`;
+drop table if exists `auv_task_lock`;
 CREATE TABLE `auv_task_lock` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `task_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'task code',
-  `worker_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker code',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `task_code` (`task_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=19063 DEFAULT CHARSET=utf8 COMMENT='任务锁';
+                               `id` BIGINT(20) auto_increment,
+                               `task_code` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'task code',
+                               `worker_code` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'worker code',
+                               `expire_time` bigint(20) DEFAULT 0 NOT NULL COMMENT '过期时间',
+                               `create_time` DATETIME DEFAULT NOW() COMMENT '创建时间',
+                               `update_time` DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT '更新时间',
+                               PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务锁';
 
--- ----------------------------
--- Table structure for auv_worker
--- ----------------------------
-DROP TABLE IF EXISTS `auv_worker`;
+drop table if exists `auv_job`;
+CREATE TABLE `auv_job` (
+                         `id` BIGINT(20) auto_increment,
+                         `code` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'task code',
+                         `task_code` VARCHAR(255) DEFAULT '' NOT NULL COMMENT '任务code',
+                         `class_name` VARCHAR(255) DEFAULT '' NOT NULL COMMENT '类的全限定名',
+                         `try_times` INT(10) DEFAULT 0 NOT NULL COMMENT '第几次重试',
+                         `worker_code` varchar(200) default '' not null comment '执行机器',
+                         `start_time` DATETIME DEFAULT '1971-1-1 00:00:00' COMMENT '开始时间',
+                         `create_time` DATETIME DEFAULT NOW() COMMENT '创建时间',
+                         `update_time` DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT '更新时间',
+                         PRIMARY KEY (`id`),
+                         UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='正在执行的job信息';
+
+drop table if exists `auv_job_log`;
+CREATE TABLE `auv_job_log` (
+                             `id` BIGINT(20) auto_increment,
+                             `job_code` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'job code',
+                             `task_code` VARCHAR(255) DEFAULT '' NOT NULL COMMENT '任务code',
+                             `class_name` VARCHAR(255) DEFAULT '' NOT NULL COMMENT '类的全限定名',
+                             `try_times` INT(10) DEFAULT 0 NOT NULL COMMENT '第几次重试',
+                             `worker_code` varchar(200) default '' not null comment '执行机器',
+                             `start_time` DATETIME DEFAULT '1971-1-1 00:00:00' COMMENT '开始时间',
+                             `end_time` DATETIME DEFAULT '1971-1-1 00:00:00' COMMENT '结束时间',
+                             `status` TINYINT(4) DEFAULT 0 NOT NULL COMMENT '执行结果 1成功 2失败 3取消',
+                             `error` TEXT NOT NULL COMMENT '错误信息',
+                             `result` TEXT NOT NULL COMMENT '执行结果',
+                             `create_time` DATETIME DEFAULT NOW() COMMENT '创建时间',
+                             `update_time` DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT '更新时间',
+                             PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='job执行历史日志';
+
+drop table if exists `auv_worker`;
 CREATE TABLE `auv_worker` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker code',
-  `name` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker名',
-  `cpu` int(11) NOT NULL DEFAULT '0' COMMENT 'cpu数量',
-  `cpu_used` double NOT NULL DEFAULT '0' COMMENT 'cpu使用率',
-  `memory` double NOT NULL DEFAULT '0' COMMENT '内存,以M为单位',
-  `memory_used` double NOT NULL DEFAULT '0' COMMENT '内存使用率',
-  `jvm_memory` double NOT NULL DEFAULT '0' COMMENT 'jvm堆大小，以M为单位',
-  `jvm_memory_used` double NOT NULL DEFAULT '0' COMMENT 'jvm堆使用率',
-  `job_num` int(10) NOT NULL DEFAULT '0' COMMENT '正在执行job数',
-  `heartbeat` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '心跳时间',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=311791 DEFAULT CHARSET=utf8 COMMENT='worker信息';
+                            `id` BIGINT(20) auto_increment,
+                            `code` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'worker code',
+                            `name` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'worker名',
+                            `cpu` int(11) DEFAULT 0 NOT NULL COMMENT 'cpu数量',
+                            `cpu_used` DOUBLE DEFAULT 0 NOT NULL COMMENT 'cpu使用率',
+                            `memory` DOUBLE DEFAULT 0 NOT NULL COMMENT '内存,以M为单位',
+                            `memory_used` DOUBLE DEFAULT 0 NOT NULL COMMENT '内存使用率',
+                            `jvm_memory` DOUBLE DEFAULT 0 NOT NULL COMMENT 'jvm堆大小，以M为单位',
+                            `jvm_memory_used` DOUBLE DEFAULT 0 NOT NULL COMMENT 'jvm堆使用率',
+                            `job_num` INT(10) DEFAULT 0 NOT NULL COMMENT '正在执行job数',
+                            `heartbeat` DATETIME DEFAULT '1971-1-1 00:00:00' COMMENT '心跳时间',
+                            `create_time` DATETIME DEFAULT NOW() COMMENT '创建时间',
+                            `update_time` DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT '更新时间',
+                            PRIMARY KEY (`id`),
+                            UNIQUE KEY `code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='worker信息';
 
--- ----------------------------
--- Table structure for auv_worker_blacklist
--- ----------------------------
-DROP TABLE IF EXISTS `auv_worker_blacklist`;
+drop table if exists `auv_worker_blacklist`;
 CREATE TABLE `auv_worker_blacklist` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `worker_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker code',
-  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`worker_code`)
+                                      `id` BIGINT(20) auto_increment,
+                                      `worker_code` VARCHAR(100) DEFAULT '' NOT NULL COMMENT 'worker code',
+                                      `create_time` DATETIME DEFAULT NOW() COMMENT '创建时间',
+                                      `update_time` DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT '更新时间',
+                                      PRIMARY KEY (`id`),
+                                      UNIQUE KEY `code` (`worker_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='worker黑名单列表';
 
 -- ----------------------------
@@ -172,7 +155,7 @@ CREATE TABLE `collect_task_metric` (
   `log_model_host_name` varchar(64) NOT NULL DEFAULT '',
   `cluster_id` bigint(20) NOT NULL DEFAULT '-1',
   `limit_rate` int(11) NOT NULL DEFAULT '0',
-  `control_time_mean` int(11) NOT NULL DEFAULT '0',
+  `control_time_mean` bigint(20) NOT NULL DEFAULT '0',
   `limit_time` int(11) NOT NULL DEFAULT '0',
   `log_mode_id` bigint(20) NOT NULL DEFAULT '-1',
   `flush_time_min` int(11) NOT NULL DEFAULT '0',
@@ -184,7 +167,7 @@ CREATE TABLE `collect_task_metric` (
   `send_byte` int(11) NOT NULL DEFAULT '0',
   `send_time_min` int(11) NOT NULL DEFAULT '0',
   `log_time_str` varchar(256) NOT NULL DEFAULT '',
-  `control_time_max` int(11) NOT NULL DEFAULT '0',
+  `control_time_max` bigint(20) NOT NULL DEFAULT '0',
   `send_count` int(11) NOT NULL DEFAULT '0',
   `source_type` varchar(64) NOT NULL DEFAULT '',
   `log_time` bigint(20) NOT NULL DEFAULT '0',
@@ -192,7 +175,7 @@ CREATE TABLE `collect_task_metric` (
   `channel_size` int(11) NOT NULL DEFAULT '0',
   `filter_total_too_large_count` int(11) NOT NULL DEFAULT '0',
   `collect_files` varchar(1024) NOT NULL DEFAULT '',
-  `control_time_min` int(11) NOT NULL DEFAULT '0',
+  `control_time_min` bigint(20) NOT NULL DEFAULT '0',
   `read_byte` int(11) NOT NULL DEFAULT '0',
   `read_time_max` int(11) NOT NULL DEFAULT '0',
   `is_file_disorder` tinyint(1) NOT NULL DEFAULT '0',

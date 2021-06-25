@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.util;
 
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -163,8 +165,10 @@ public class HttpUtils {
             }
 
             return handleResponseBodyToString(conn.getInputStream());
+        } catch (IOException e) {
+            throw new ServiceException("无法连接至远程地址: " + url, ErrorCodeEnum.HTTP_CONNECT_FAILED.getCode());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new ServiceException("未知错误: " + e.getMessage(), ErrorCodeEnum.UNKNOWN.getCode());
         } finally {
             closeConnection(conn);
         }

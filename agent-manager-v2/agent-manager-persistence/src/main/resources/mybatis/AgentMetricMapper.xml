@@ -13,7 +13,7 @@
     <result column="hostname" property="hostname" jdbcType="VARCHAR" />
     <result column="fd_count" property="fdCount" jdbcType="INTEGER" />
     <result column="limit_tps" property="limitTps" jdbcType="INTEGER" />
-    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="BIGINT" />
     <result column="log_path_key" property="logPathKey" jdbcType="INTEGER" />
     <result column="message_version" property="messageVersion" jdbcType="VARCHAR" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
@@ -45,7 +45,7 @@
     values (#{id,jdbcType=BIGINT}, #{cpuUsage,jdbcType=DOUBLE}, #{heartbeatTime,jdbcType=TIMESTAMP}, 
       #{hostIp,jdbcType=VARCHAR}, #{cpuLimit,jdbcType=DOUBLE}, #{gcCount,jdbcType=INTEGER}, 
       #{pathId,jdbcType=INTEGER}, #{logModeId,jdbcType=INTEGER}, #{hostname,jdbcType=VARCHAR}, 
-      #{fdCount,jdbcType=INTEGER}, #{limitTps,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{fdCount,jdbcType=INTEGER}, #{limitTps,jdbcType=INTEGER}, #{startTime,jdbcType=BIGINT},
       #{logPathKey,jdbcType=INTEGER}, #{messageVersion,jdbcType=VARCHAR}, #{operator, jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{modifyTime,jdbcType=TIMESTAMP})
   </insert>
@@ -139,7 +139,7 @@
         #{limitTps,jdbcType=INTEGER},
       </if>
       <if test="startTime != null" >
-        #{startTime,jdbcType=TIMESTAMP},
+        #{startTime,jdbcType=BIGINT},
       </if>
       <if test="logPathKey != null" >
         #{logPathKey,jdbcType=INTEGER},
@@ -192,7 +192,7 @@
         limit_tps = #{limitTps,jdbcType=INTEGER},
       </if>
       <if test="startTime != null" >
-        start_time = #{startTime,jdbcType=TIMESTAMP},
+        start_time = #{startTime,jdbcType=BIGINT},
       </if>
       <if test="logPathKey != null" >
         log_path_key = #{logPathKey,jdbcType=INTEGER},
@@ -224,7 +224,7 @@
       hostname = #{hostname,jdbcType=VARCHAR},
       fd_count = #{fdCount,jdbcType=INTEGER},
       limit_tps = #{limitTps,jdbcType=INTEGER},
-      start_time = #{startTime,jdbcType=TIMESTAMP},
+      start_time = #{startTime,jdbcType=BIGINT},
       log_path_key = #{logPathKey,jdbcType=INTEGER},
       message_version = #{messageVersion,jdbcType=VARCHAR},
       operator = #{operator,jdbcType=VARCHAR},
@@ -243,7 +243,7 @@
     <result column="hostname" property="value" jdbcType="VARCHAR" />
     <result column="fd_count" property="value" jdbcType="INTEGER" />
     <result column="limit_tps" property="value" jdbcType="INTEGER" />
-    <result column="start_time" property="value" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="value" jdbcType="BIGINT" />
     <result column="log_path_key" property="value" jdbcType="INTEGER" />
     <result column="message_version" property="value" jdbcType="VARCHAR" />
   </resultMap>
@@ -269,4 +269,8 @@
     delete from agent_metric
     where heartbeat_time &lt;= #{time}
   </delete>
+  <select id="selectMaxByHostname" resultType="java.lang.Long">
+    select max(${column}) from agent_metric
+    where hostname = #{hostname}
+  </select>
 </mapper>

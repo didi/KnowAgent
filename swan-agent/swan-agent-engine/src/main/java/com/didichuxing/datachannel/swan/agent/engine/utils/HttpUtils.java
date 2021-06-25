@@ -24,10 +24,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class HttpUtils {
 
-    private static final Logger LOGGER               = LoggerFactory.getLogger(HttpUtils.class
+    private static final Logger     LOGGER               = LoggerFactory.getLogger(HttpUtils.class
                                                              .getName());
 
     public static final String      UTF8                 = "UTF-8";

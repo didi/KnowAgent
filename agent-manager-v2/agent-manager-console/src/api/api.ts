@@ -1,7 +1,7 @@
 import { IStringMap } from "../interface/common";
 
 const prefixMap = {
-  v1: '/agent-manager/api/v1',
+  v1: '/api/v1',
 } as IStringMap;
 
 export const csrfTokenMethod = ['POST', 'PUT', 'DELETE'];

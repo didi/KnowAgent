@@ -19,31 +19,33 @@ import org.slf4j.LoggerFactory;
  * @Date: 19/6/18 16:30
  */
 public abstract class AbstractSink<T extends Event> extends TaskComponent implements Runnable,
-        Configurable {
+                                                                         Configurable {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSink.class.getName());
+    private static final Logger     LOGGER                       = LoggerFactory
+                                                                     .getLogger(AbstractSink.class
+                                                                         .getName());
 
-    AbstractChannel channel;
+    AbstractChannel                 channel;
 
     // 顺序编号
-    public int orderNum;
+    public int                      orderNum;
 
-    public ModelConfig modelConfig;
+    public ModelConfig              modelConfig;
 
-    protected Thread thread;
+    protected Thread                thread;
 
-    protected boolean isRunning = false;
-    protected boolean isInited = false;
+    protected boolean               isRunning                    = false;
+    protected boolean               isInited                     = false;
 
-    protected final Object lock = new Object();
+    protected final Object          lock                         = new Object();
 
-    private int eventIsNullMaxTimes = 10;
-    private int eventIsNullTimes = 0;
+    private int                     eventIsNullMaxTimes          = 10;
+    private int                     eventIsNullTimes             = 0;
 
     /**
      * 临时采集时，是否采集所有的日志文件
      */
-    protected volatile boolean COLLECT_ALL_WHEN_TEMPORALITY = false;
+    protected volatile boolean      COLLECT_ALL_WHEN_TEMPORALITY = false;
 
     protected TaskPatternStatistics taskPatternStatistics;
 
@@ -113,7 +115,7 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
             if (result != null) {
                 if (taskPatternStatistics != null) {
                     taskPatternStatistics.controlOneRecord(TimeUtils.getNanoTime()
-                            - event.getTransNanoTime());
+                                                           - event.getTransNanoTime());
                 }
             }
             if (event == null) {

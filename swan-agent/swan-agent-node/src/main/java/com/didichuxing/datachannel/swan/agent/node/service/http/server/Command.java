@@ -22,7 +22,8 @@ import org.slf4j.LoggerFactory;
  */
 public class Command extends Handler implements HttpHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Command.class.getName());public final static String URI    = "/swan-agent/command";
+    private static final Logger LOGGER = LoggerFactory.getLogger(Command.class.getName());
+    public final static String  URI    = "/swan-agent/command";
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {

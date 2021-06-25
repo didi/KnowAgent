@@ -29,8 +29,9 @@ import org.slf4j.LoggerFactory;
  */
 public class TestLog2KafkaTask extends AbstractTask {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Log2KafkaTask.class.getName());
-    private long lastFlushTime = 0;
+    private static final Logger LOGGER        = LoggerFactory.getLogger(Log2KafkaTask.class
+                                                  .getName());
+    private long                lastFlushTime = 0;
 
     public TestLog2KafkaTask(ComponentConfig config, LogSource logSource) {
         this.source = logSource;
@@ -60,7 +61,7 @@ public class TestLog2KafkaTask extends AbstractTask {
         }
 
         if (sendNum > getKafkaTargetConfig().getFlushBatchSize()
-                || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
+            || System.currentTimeMillis() - lastFlushTime > (getKafkaTargetConfig())
                 .getFlushBatchTimeThreshold()) {
             lastFlushTime = System.currentTimeMillis();
             // 同步远程文件
@@ -135,7 +136,7 @@ public class TestLog2KafkaTask extends AbstractTask {
         try {
             LogSourceConfig logSourceConfig = (LogSourceConfig) modelConfig.getSourceConfig();
             if (modelConfig.getCommonConfig().getModelType() == LogConfigConstants.COLLECT_TYPE_TEMPORALITY
-                    && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
+                && LogConfigConstants.NO_LOG_TIME.equals(logSourceConfig.getTimeFormat())) {
                 return true;
             }
         } catch (Exception e) {

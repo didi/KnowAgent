@@ -40,7 +40,7 @@ module.exports = {
         target: 'http://10.96.98.84:8026/',
         changeOrigin: true,
       },
-      '/agent-manager/': {
+      '/': {
         target: 'http://10.164.13.170:8006/',
         changeOrigin: true,
       },

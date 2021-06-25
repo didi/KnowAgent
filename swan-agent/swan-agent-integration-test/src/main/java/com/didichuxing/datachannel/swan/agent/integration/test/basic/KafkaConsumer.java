@@ -18,12 +18,14 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaConsumer {
 
-private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class.getName());private static final String consumerGroup = "consumer-group";
+    private static final Logger LOGGER        = LoggerFactory.getLogger(KafkaConsumer.class
+                                                  .getName());
+    private static final String consumerGroup = "consumer-group";
 
     public void shutdown() {
         kafkaConsumer.close();

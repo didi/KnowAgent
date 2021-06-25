@@ -84,4 +84,4 @@ Logi-Agent 以服务为单位，进行日志采集行为的配置、治理，功
 
 # 滴滴Logi-Agent架构图
 
-![image2021-6-13_22-7-53.png](./doc/assets/clipboard_image_1623403634474.png)
+![image2021-6-13_22-7-53.png](./doc/assets/架构图.png)

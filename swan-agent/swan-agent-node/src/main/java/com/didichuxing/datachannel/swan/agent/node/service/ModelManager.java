@@ -31,7 +31,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ModelManager extends AgentComponent {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ModelManager.class.getName());private AgentConfig                agentConfig;
+    private static final Logger        LOGGER = LoggerFactory.getLogger(ModelManager.class
+                                                  .getName());
+    private AgentConfig                agentConfig;
 
     private Map<String, AbstractModel> models;
 

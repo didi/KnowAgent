@@ -33,8 +33,21 @@ temp
 *~.nib
 local.properties
 .loadpath
+.project
+.*proj
+.svn/
+*.swp
+*.swo
+*.pyc
+*.pyo
 
 .DS_Store
+node_modules/
+npm-debug.log
+coverage
+.cache-loader
+pub
+package-lock.json
 
 *.http.svn/
 target/
@@ -52,5 +65,10 @@ swan-agent.iml
 .gitversion
 output
 output.*
+agent-manager-v2/agent-manager-rest/src/main/resources/templates/
+
+*.zip
+*.tar.gz
+*.tgz
 
 *.http

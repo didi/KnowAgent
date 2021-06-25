@@ -1,9 +1,5 @@
-# agentmanager
-agentmanager:
-  port:
-    web: 8006
-  contextPath: /agent-manager
-
+server:
+  port: 8006
 # 日志相关配置
 logging:
   pattern:
@@ -12,10 +8,6 @@ logging:
   path: .
   file:
     max-history: 7
-  level:
-    dao: debug
-    org:
-      mybatis: debug
 
 # mybatis公共配置
 mybatis:
@@ -87,7 +79,7 @@ lam:
   n9e-job:
     base-url:
     timeout: 300
-    account:
+    account: root
     script-file: lam_script.sh
     user-token:
 
@@ -112,6 +104,7 @@ metadata:
       k8s:
         service-key: servicename
         path-name: logpath
+        enabled: false
 
 agent:
   metrics:

@@ -23,10 +23,11 @@ import java.util.concurrent.Future;
  * 日志采集任务健康监控任务
  */
 @Task(name = "AgentHealthCheckTask", description = "定时检查系统中所有的 Agent 健康度，并将检查结果记录至表 tb_agent 中，检查周期为 5分钟/次 ",
-        cron = "0 0/10 * * * ?", autoRegister = true)
+        cron = "0 0/5 * * * ?", autoRegister = true)
 public class AgentHealthCheckTask implements Job {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("AgentHealthCheckTask");private ExecutorService threadPool = Executors.newFixedThreadPool(2);
+    private static final Logger LOGGER = LoggerFactory.getLogger("AgentHealthCheckTask");
+    private ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     @Autowired
     private AgentManageService agentManageService;

@@ -33,7 +33,7 @@ public class LogDetail {
         return throwable;
     }
 
-    public LogDetail(String logCode, String logMsg, Throwable throwable){
+    public LogDetail(String logCode, String logMsg, Throwable throwable) {
         this.logCode = logCode;
         this.logMsg = logMsg;
         this.throwable = throwable;

@@ -167,8 +167,7 @@ public class ConfigServiceTest {
             configService.curAgentConfig = c3;
         }
 
-        assertTrue(configService.curAgentConfig.getHostname().equals(
-            ""));
+        assertTrue(configService.curAgentConfig.getHostname().equals(""));
 
         for (int i = 0; i < 10; i++) {
             CommonUtils.setHOSTNAME("");
@@ -177,8 +176,7 @@ public class ConfigServiceTest {
                 configService.curAgentConfig = c4;
             }
         }
-        assertTrue(configService.curAgentConfig.getHostname().equals(
-            ""));
+        assertTrue(configService.curAgentConfig.getHostname().equals(""));
 
         for (int i = 0; i < 10; i++) {
             CommonUtils.setHOSTNAME("");
@@ -187,8 +185,7 @@ public class ConfigServiceTest {
                 configService.curAgentConfig = c5;
             }
         }
-        assertTrue(configService.curAgentConfig.getHostname().equals(
-            ""));
+        assertTrue(configService.curAgentConfig.getHostname().equals(""));
 
         for (int i = 0; i < 3; i++) {
             CommonUtils.setHOSTNAME("");
@@ -197,8 +194,7 @@ public class ConfigServiceTest {
                 configService.curAgentConfig = c6;
             }
         }
-        assertTrue(configService.curAgentConfig.getHostname().equals(
-            ""));
+        assertTrue(configService.curAgentConfig.getHostname().equals(""));
     }
 
     @Test
@@ -215,8 +211,7 @@ public class ConfigServiceTest {
                 configService.curAgentConfig = c6;
             }
         }
-        assertTrue(configService.curAgentConfig.getHostname().equals(
-            ""));
+        assertTrue(configService.curAgentConfig.getHostname().equals(""));
     }
 
     @Ignore

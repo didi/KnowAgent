@@ -26,7 +26,9 @@ import org.slf4j.LoggerFactory;
  */
 public class EventUtils {
 
-private static final Logger LOGGER = LoggerFactory.getLogger(EventUtils.class.getName());private static final String CUT_FLAG           = "...";
+    private static final Logger LOGGER             = LoggerFactory.getLogger(EventUtils.class
+                                                       .getName());
+    private static final String CUT_FLAG           = "...";
 
     private static final String START_ARRAY        = "[";
     private static final String ENG_ARRAY          = "]";

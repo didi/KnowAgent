@@ -28,4 +28,6 @@ public interface AgentMetricMapper {
     Long selectSum(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
 
     int deleteBeforeTime(@Param("time") Long time);
+
+    Long selectMaxByHostname(@Param("hostname") String hostName, @Param("column") String column);
 }

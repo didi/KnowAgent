@@ -6,7 +6,6 @@ import com.didichuxing.datachannel.swan.agent.sink.kafkaSink.KafkaMessageProduce
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @description:
  * @author: huangjw
@@ -14,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class KafkaTopicSink {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaTopicSink.class.getName());
+    private static final Logger  LOGGER = LoggerFactory.getLogger(KafkaTopicSink.class.getName());
     private MetricConfig         config;
     private KafkaMessageProducer producer;
 

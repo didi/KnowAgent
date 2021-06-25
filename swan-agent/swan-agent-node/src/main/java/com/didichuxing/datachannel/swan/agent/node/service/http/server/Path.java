@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class Path extends Handler implements HttpHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger("swan-agent");
-    public final static String URI    = "/swan-agent/path";
+    public final static String  URI    = "/swan-agent/path";
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -89,7 +89,7 @@ public class Path extends Handler implements HttpHandler {
                         Pattern pattern = Pattern.compile(suffix);
                         Matcher matcher = pattern.matcher(suffixName);
                         if (matcher.find()) {
-                            validFileList.add(suffixName);
+                            validFileList.add(name);
                         }
                     }
                 }

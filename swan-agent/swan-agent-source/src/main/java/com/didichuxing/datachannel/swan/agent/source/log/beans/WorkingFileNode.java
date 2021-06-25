@@ -29,7 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 public class WorkingFileNode {
 
-    private static final Logger LOGGER                 = LoggerFactory.getLogger(WorkingFileNode.class);
+    private static final Logger      LOGGER                 = LoggerFactory
+                                                                .getLogger(WorkingFileNode.class);
 
     FileNode                         fileNode;
 

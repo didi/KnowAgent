@@ -12,15 +12,16 @@ import java.util.Properties;
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServerMain;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A local Zookeeper server for running unit tests. Reference: https://gist.github.com/fjavieralba/7930018/
  */
 public class ZooKeeperLocal {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ZooKeeperLocal.class.getName());private ZooKeeperServerMain zooKeeperServer;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZooKeeperLocal.class.getName());
+    private ZooKeeperServerMain zooKeeperServer;
 
     public ZooKeeperLocal(Properties zkProperties) throws IOException {
         QuorumPeerConfig quorumConfiguration = new QuorumPeerConfig();

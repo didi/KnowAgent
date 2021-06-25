@@ -26,11 +26,12 @@ import org.slf4j.LoggerFactory;
  */
 public class Status extends Handler implements HttpHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Status.class.getName());public final static String URI    = "/swan-agent/status";
+    private static final Logger LOGGER = LoggerFactory.getLogger(Status.class.getName());
+    public final static String  URI    = "/swan-agent/status";
 
-    private LaunchService      launchService;
+    private LaunchService       launchService;
 
-    private ConfigService      configService;
+    private ConfigService       configService;
 
     public Status(LaunchService launchService, ConfigService configService) {
         this.launchService = launchService;

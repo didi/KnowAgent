@@ -13,7 +13,9 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractMetricSink implements MetricsSink {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMetricSink.class.getName());protected MetricConfig    metricConfig;
+    private static final Logger LOGGER = LoggerFactory
+                                           .getLogger(AbstractMetricSink.class.getName());
+    protected MetricConfig      metricConfig;
 
     public AbstractMetricSink(MetricConfig metricConfig) {
         this.metricConfig = metricConfig;

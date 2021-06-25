@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class ErrorLogSinker implements LogSink {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorLogSinker.class.getName());
-    private KafkaSender       sender;
+    private KafkaSender         sender;
 
     public ErrorLogSinker(ErrorLogConfig config) throws Exception {
         sender = new KafkaSender(config);

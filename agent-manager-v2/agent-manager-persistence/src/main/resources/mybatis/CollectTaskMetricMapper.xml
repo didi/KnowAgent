@@ -30,7 +30,7 @@
     <result column="log_model_host_name" property="logModelHostName" jdbcType="VARCHAR" />
     <result column="cluster_id" property="clusterId" jdbcType="BIGINT" />
     <result column="limit_rate" property="limitRate" jdbcType="INTEGER" />
-    <result column="control_time_mean" property="controlTimeMean" jdbcType="INTEGER" />
+    <result column="control_time_mean" property="controlTimeMean" jdbcType="BIGINT" />
     <result column="limit_time" property="limitTime" jdbcType="INTEGER" />
     <result column="log_mode_id" property="logModeId" jdbcType="BIGINT" />
     <result column="flush_time_min" property="flushTimeMin" jdbcType="INTEGER" />
@@ -42,7 +42,7 @@
     <result column="send_byte" property="sendByte" jdbcType="INTEGER" />
     <result column="send_time_min" property="sendTimeMin" jdbcType="INTEGER" />
     <result column="log_time_str" property="logTimeStr" jdbcType="VARCHAR" />
-    <result column="control_time_max" property="controlTimeMax" jdbcType="INTEGER" />
+    <result column="control_time_max" property="controlTimeMax" jdbcType="BIGINT" />
     <result column="send_count" property="sendCount" jdbcType="INTEGER" />
     <result column="source_type" property="sourceType" jdbcType="VARCHAR" />
     <result column="log_time" property="logTime" jdbcType="TIMESTAMP" />
@@ -50,7 +50,7 @@
     <result column="channel_size" property="channelSize" jdbcType="INTEGER" />
     <result column="filter_total_too_large_count" property="filterTotalTooLargeCount" jdbcType="INTEGER" />
     <result column="collect_files" property="collectFiles" jdbcType="VARCHAR" />
-    <result column="control_time_min" property="controlTimeMin" jdbcType="INTEGER" />
+    <result column="control_time_min" property="controlTimeMin" jdbcType="BIGINT" />
     <result column="read_byte" property="readByte" jdbcType="INTEGER" />
     <result column="read_time_max" property="readTimeMax" jdbcType="INTEGER" />
     <result column="valid_time_config" property="validTimeConfig" jdbcType="BIT" />
@@ -109,14 +109,14 @@
       #{channelType,jdbcType=VARCHAR}, #{logModelVersion,jdbcType=INTEGER}, #{topic,jdbcType=VARCHAR},
       #{flushCount,jdbcType=INTEGER}, #{flushTimeMax,jdbcType=INTEGER}, #{filterOut,jdbcType=INTEGER},
       #{relatedFiles,jdbcType=INTEGER}, #{logModelHostName,jdbcType=VARCHAR}, #{clusterId,jdbcType=BIGINT},
-      #{limitRate,jdbcType=INTEGER}, #{controlTimeMean,jdbcType=INTEGER}, #{limitTime,jdbcType=INTEGER},
+      #{limitRate,jdbcType=INTEGER}, #{controlTimeMean,jdbcType=BIGINT}, #{limitTime,jdbcType=INTEGER},
       #{logModeId,jdbcType=BIGINT}, #{flushTimeMin,jdbcType=INTEGER}, #{readTimeMin,jdbcType=INTEGER},
       #{sendTimeMax,jdbcType=INTEGER}, #{dynamicLimiter,jdbcType=INTEGER}, #{logPathKey,jdbcType=VARCHAR},
       #{maxTimeGap,jdbcType=INTEGER}, #{sendByte,jdbcType=INTEGER}, #{sendTimeMin,jdbcType=INTEGER},
-      #{logTimeStr,jdbcType=VARCHAR}, #{controlTimeMax,jdbcType=INTEGER}, #{sendCount,jdbcType=INTEGER},
+      #{logTimeStr,jdbcType=VARCHAR}, #{controlTimeMax,jdbcType=BIGINT}, #{sendCount,jdbcType=INTEGER},
       #{sourceType,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{flushFailedCount,jdbcType=INTEGER},
       #{channelSize,jdbcType=INTEGER}, #{filterTotalTooLargeCount,jdbcType=INTEGER},
-      #{collectFiles,jdbcType=VARCHAR}, #{controlTimeMin,jdbcType=INTEGER}, #{readByte,jdbcType=INTEGER},
+      #{collectFiles,jdbcType=VARCHAR}, #{controlTimeMin,jdbcType=BIGINT}, #{readByte,jdbcType=INTEGER},
       #{readTimeMax,jdbcType=INTEGER}, #{validTimeConfig,jdbcType=BIT},#{isFileDisorder,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{modifyTime,jdbcType=TIMESTAMP})
   </insert>
@@ -378,7 +378,7 @@
         #{limitRate,jdbcType=INTEGER},
       </if>
       <if test="controlTimeMean != null" >
-        #{controlTimeMean,jdbcType=INTEGER},
+        #{controlTimeMean,jdbcType=BIGINT},
       </if>
       <if test="limitTime != null" >
         #{limitTime,jdbcType=INTEGER},
@@ -414,7 +414,7 @@
         #{logTimeStr,jdbcType=VARCHAR},
       </if>
       <if test="controlTimeMax != null" >
-        #{controlTimeMax,jdbcType=INTEGER},
+        #{controlTimeMax,jdbcType=BIGINT},
       </if>
       <if test="sendCount != null" >
         #{sendCount,jdbcType=INTEGER},
@@ -438,7 +438,7 @@
         #{collectFiles,jdbcType=VARCHAR},
       </if>
       <if test="controlTimeMin != null" >
-        #{controlTimeMin,jdbcType=INTEGER},
+        #{controlTimeMin,jdbcType=BIGINT},
       </if>
       <if test="readByte != null" >
         #{readByte,jdbcType=INTEGER},
@@ -548,7 +548,7 @@
         limit_rate = #{limitRate,jdbcType=INTEGER},
       </if>
       <if test="controlTimeMean != null" >
-        control_time_mean = #{controlTimeMean,jdbcType=INTEGER},
+        control_time_mean = #{controlTimeMean,jdbcType=BIGINT},
       </if>
       <if test="limitTime != null" >
         limit_time = #{limitTime,jdbcType=INTEGER},
@@ -584,7 +584,7 @@
         log_time_str = #{logTimeStr,jdbcType=VARCHAR},
       </if>
       <if test="controlTimeMax != null" >
-        control_time_max = #{controlTimeMax,jdbcType=INTEGER},
+        control_time_max = #{controlTimeMax,jdbcType=BIGINT},
       </if>
       <if test="sendCount != null" >
         send_count = #{sendCount,jdbcType=INTEGER},
@@ -608,7 +608,7 @@
         collect_files = #{collectFiles,jdbcType=VARCHAR},
       </if>
       <if test="controlTimeMin != null" >
-        control_time_min = #{controlTimeMin,jdbcType=INTEGER},
+        control_time_min = #{controlTimeMin,jdbcType=BIGINT},
       </if>
       <if test="readByte != null" >
         read_byte = #{readByte,jdbcType=INTEGER},
@@ -663,7 +663,7 @@
       log_model_host_name = #{logModelHostName,jdbcType=VARCHAR},
       cluster_id = #{clusterId,jdbcType=BIGINT},
       limit_rate = #{limitRate,jdbcType=INTEGER},
-      control_time_mean = #{controlTimeMean,jdbcType=INTEGER},
+      control_time_mean = #{controlTimeMean,jdbcType=BIGINT},
       limit_time = #{limitTime,jdbcType=INTEGER},
       log_mode_id = #{logModeId,jdbcType=BIGINT},
       flush_time_min = #{flushTimeMin,jdbcType=INTEGER},
@@ -675,7 +675,7 @@
       send_byte = #{sendByte,jdbcType=INTEGER},
       send_time_min = #{sendTimeMin,jdbcType=INTEGER},
       log_time_str = #{logTimeStr,jdbcType=VARCHAR},
-      control_time_max = #{controlTimeMax,jdbcType=INTEGER},
+      control_time_max = #{controlTimeMax,jdbcType=BIGINT},
       send_count = #{sendCount,jdbcType=INTEGER},
       source_type = #{sourceType,jdbcType=VARCHAR},
       log_time = #{logTime,jdbcType=TIMESTAMP},
@@ -683,7 +683,7 @@
       channel_size = #{channelSize,jdbcType=INTEGER},
       filter_total_too_large_count = #{filterTotalTooLargeCount,jdbcType=INTEGER},
       collect_files = #{collectFiles,jdbcType=VARCHAR},
-      control_time_min = #{controlTimeMin,jdbcType=INTEGER},
+      control_time_min = #{controlTimeMin,jdbcType=BIGINT},
       read_byte = #{readByte,jdbcType=INTEGER},
       read_time_max = #{readTimeMax,jdbcType=INTEGER},
       valid_time_config = #{validTimeConfig, jdbcType=BIT},
@@ -721,7 +721,7 @@
     <result column="log_model_host_name" property="value" jdbcType="VARCHAR" />
     <result column="cluster_id" property="value" jdbcType="BIGINT" />
     <result column="limit_rate" property="value" jdbcType="INTEGER" />
-    <result column="control_time_mean" property="value" jdbcType="INTEGER" />
+    <result column="control_time_mean" property="value" jdbcType="BIGINT" />
     <result column="limit_time" property="value" jdbcType="INTEGER" />
     <result column="log_mode_id" property="value" jdbcType="BIGINT" />
     <result column="flush_time_min" property="value" jdbcType="INTEGER" />
@@ -733,7 +733,7 @@
     <result column="send_byte" property="value" jdbcType="INTEGER" />
     <result column="send_time_min" property="value" jdbcType="INTEGER" />
     <result column="log_time_str" property="value" jdbcType="VARCHAR" />
-    <result column="control_time_max" property="value" jdbcType="INTEGER" />
+    <result column="control_time_max" property="value" jdbcType="BIGINT" />
     <result column="send_count" property="value" jdbcType="INTEGER" />
     <result column="source_type" property="value" jdbcType="VARCHAR" />
     <result column="log_time" property="value" jdbcType="TIMESTAMP" />
@@ -741,7 +741,7 @@
     <result column="channel_size" property="value" jdbcType="INTEGER" />
     <result column="filter_total_too_large_count" property="value" jdbcType="INTEGER" />
     <result column="collect_files" property="value" jdbcType="VARCHAR" />
-    <result column="control_time_min" property="value" jdbcType="INTEGER" />
+    <result column="control_time_min" property="value" jdbcType="BIGINT" />
     <result column="read_byte" property="value" jdbcType="INTEGER" />
     <result column="read_time_max" property="value" jdbcType="INTEGER" />
     <result column="valid_time_config" property="value" jdbcType="BIT" />
