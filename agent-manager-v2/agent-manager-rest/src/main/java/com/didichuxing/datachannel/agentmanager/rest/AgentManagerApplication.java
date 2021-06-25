@@ -44,13 +44,6 @@ public class AgentManagerApplication {
         metricService.run();
     }
 
-    @Bean
-    public TaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(6);
-        return scheduler;
-    }
-
     /**
      * todo 临时添加
      *

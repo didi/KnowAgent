@@ -23,8 +23,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("agent/index");
-        registry.addViewController("/index.html").setViewName("agent/index");
+        registry.addViewController("/").setViewName("index");
+        registry.addViewController("/index.html").setViewName("index");
+        registry.addViewController("/agent/**").setViewName("index");
     }
 
     @Override
@@ -40,6 +41,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
 
         // FE
-        registry.addResourceHandler("agent/index.html", "/**").addResourceLocations("classpath:/templates/","classpath:/static/", "classpath:/templates/agent/");
+        registry.addResourceHandler("index.html", "/**").addResourceLocations("classpath:/templates/","classpath:/static/");
     }
 }

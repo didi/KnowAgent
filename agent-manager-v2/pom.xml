@@ -38,7 +38,7 @@
         <swagger.version>1.5.21</swagger.version>
         <mybatis.version>1.3.2</mybatis.version>
         <scala.binary.version>2.11</scala.binary.version>
-        <junit.jupiter.version>5.7.0</junit.jupiter.version>
+        <junit.jupiter.version>5.7.2</junit.jupiter.version>
         <elasticsearch.version>7.6.1</elasticsearch.version>
         <kubernetes.client.version>12.0.0</kubernetes.client.version>
     </properties>
@@ -126,6 +126,10 @@
                     <exclusion>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
