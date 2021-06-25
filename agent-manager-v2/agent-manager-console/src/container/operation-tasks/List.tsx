@@ -12,6 +12,7 @@ import { BasicTable } from 'antd-advanced';
 import { Dispatch } from 'redux';
 import { IOperationTaskParams } from '../../interface/operationTask';
 import { getOperationTasks } from '../../api/operationTasks';
+import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -108,7 +109,9 @@ export class TaskList extends React.Component<Props> {
         title: '开始时间',
         dataIndex: 'agentOperationTaskCreateTimeStart',
         component: (
-          <RangePicker showTime className="searchWidth" />
+          <RangePicker showTime={{
+            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+          }} className="searchWidth" />
         ),
       },
     ];

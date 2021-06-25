@@ -64,10 +64,13 @@ export const queryHealthTypes = [{
 
 export const hostTypes = [{
   value: 0,
-  label: '主机',
+  label: '物理机',
 }, {
   value: 1,
   label: '容器',
+},{
+  value: 2,
+  label: 'VM虚拟机',
 }] as ILabelValue[];
 
 export const queryHostTypes = [{
@@ -76,8 +79,9 @@ export const queryHostTypes = [{
 }, ...hostTypes] as ILabelValue[];
 
 export const hostTypeMap = {
-  0: '主机',
+  0: '物理机',
   1: '容器',
+  2:'VM虚拟机',
 } as INumberMap;
 
 export const healthMap = {

@@ -13,7 +13,8 @@ module.exports = {
   webpackDllConfig: 'config/webpack.dll.config.js',
   theme: 'config/theme.js',
   template: 'src/index.html',
-  output: `../agent-manager-rest/src/main/resources/templates/${pkgJson.systemName}`,
+  output: `pub/${pkgJson.systemName}`,
+  publicPath:'/',
   eslintFix: true,
   hmr: false,
   port: pkgJson.port,
@@ -33,7 +34,7 @@ module.exports = {
     inline: true,
     proxy: {
       '/api/v1': {
-        target: 'http://10.96.98.84:8026/',
+        target: 'http://172.20.24.252:8006/',
         changeOrigin: true,
       },
       '/bigdata_cloud_agent_manager_test/': {

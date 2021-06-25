@@ -379,7 +379,7 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
               <Form.Item label="配置信息">
                 {getFieldDecorator('advancedConfigurationJsonString', {
                   initialValue: agentDetail?.advancedConfigurationJsonString || '',
-                  rules: [{ required: false, message: '请输入' }],
+                  rules: [{ required: true, message: '请输入' }],
                 })(
                   <MonacoEditor {...props} />
                 )}

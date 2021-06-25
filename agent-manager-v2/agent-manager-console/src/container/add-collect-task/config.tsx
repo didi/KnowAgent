@@ -203,7 +203,7 @@ export const setStepParams = (values: any) => {
     kafkaProducerConfiguration: values.step3_productionSide || '',// kafka生产端属性
     sendTopic: values.step4_sendTopic, // Topic ———— 采集任务采集的日志需要发往的topic名 (values.step3_collectDelayThresholdMs ?? 0) * 60 * 1000
     opencollectDelay: values.step3_opencollectDelay, // 是否开启采集延时监控
-    collectDelayThresholdMs: (values?.step3_collectDelayThresholdMs) * 60 * 1000 || 0, //采集延迟监控 ———— 该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~当前时间间隔
+    collectDelayThresholdMs: (values?.step3_collectDelayThresholdMs) * 60 * 1000 || 3 * 60 * 1000, //采集延迟监控 ———— 该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~当前时间间隔
     limitPriority: values.step3_limitPriority, // 采集任务限流保障优先级 0：高 1：中 2：低
     advancedConfigurationJsonString: values.step4_advancedConfigurationJsonString, //高级配置信息 ———— 采集任务高级配置项集，为json形式字符串
     // >>>>>>>> Step3 <<<<<<<<<

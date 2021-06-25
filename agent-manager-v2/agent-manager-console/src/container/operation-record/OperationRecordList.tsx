@@ -30,17 +30,15 @@ export class OperationRecordList extends React.Component<Props> {
     recordList: [],
     isModalVisible: false,
     total: 0,
-    pageNo: 1,
-    pageSize: 20,
     recordParams: {
-      // pageNo: 1,
-      // pageSize: 20,
-      // moduleId: '',
-      // operateId: '',
-      // operator: '',
-      // beginTime: '',
-      // endTime: '',
-      // operateTime: ''
+      pageNo: 1,
+      pageSize: 20,
+      moduleId: '',
+      operateId: '',
+      operator: '',
+      beginTime: '',
+      endTime: '',
+      operateTime: ''
     } as unknown as IOperationRecordParams,
   }
   public handleOk() {
@@ -127,12 +125,14 @@ export class OperationRecordList extends React.Component<Props> {
 
   public onResetParams = () => {
     const resetParams = {
-      // moduleId: '',
-      // operateId: '',
-      // operator: '',
-      // beginTime: '',
-      // endTime: '',
-      // operateTime: ''
+      pageNo: 1,
+      pageSize: 20,
+      moduleId: '',
+      operateId: '',
+      operator: '',
+      beginTime: '',
+      endTime: '',
+      operateTime: ''
     };
     this.setState({ recordParams: resetParams });
     this.getOperationRecordList(resetParams);
@@ -151,7 +151,7 @@ export class OperationRecordList extends React.Component<Props> {
     });
   }
 
-  public getOperationRecordList = (params: IOperationRecordParams) => {
+  public getOperationRecordList = (params: any) => {
     getRecordList(params).then((res: any) => {
       this.setState({
         pageNo: 1,
@@ -168,6 +168,7 @@ export class OperationRecordList extends React.Component<Props> {
   }
 
   public onSearchParams = () => {
+
     this.getOperationRecordList(this.state.recordParams);
   }
 
@@ -220,9 +221,11 @@ export class OperationRecordList extends React.Component<Props> {
               onReset: this.onResetParams,
             }}
             pagination={{
-              current: this.state.pageNo,
-              pageSize: this.state.pageSize,
+              // current: this.state.pageNo,
+              // pageSize: this.state.pageSize,
               onChange: (current, size) => {
+                console.log(current)
+                console.log(size)
                 this.setState({
                   pageNo: current,
                   pageSize: size

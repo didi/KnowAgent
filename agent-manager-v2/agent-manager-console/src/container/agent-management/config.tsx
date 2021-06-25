@@ -33,13 +33,13 @@ export const getQueryFormColumns = (agentVersions: IAgentVersion[], versionRef: 
   const queryFormColumns = [
     {
       type: 'custom',
-      title: '主机名',
+      title: '主机名/IP',
       dataIndex: 'hostNameOrIp',
       component: (<Input placeholder='请输入' />),
     },
     {
       type: 'custom',
-      title: 'Agent版本',
+      title: 'Agent版本号',
       dataIndex: 'agentVersionIdList',
       component: (
         <Select
@@ -114,7 +114,9 @@ export const getQueryFormColumns = (agentVersions: IAgentVersion[], versionRef: 
       title: '新增时间',
       dataIndex: 'hostCreateTime', // hostCreateTimeStart hostCreateTimeEnd
       component: (
-        <RangePicker showTime style={{ width: '100%' }} />
+        <RangePicker showTime={{
+          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+        }} style={{ width: '100%' }} />
       ),
     },
   ];
@@ -173,7 +175,7 @@ export const getAgentListColumns = (cb: any, drawer: any, getData: any) => {
     render: (t: number, record: IAgentHostSet) => {
       return (<>
         <Tag color={healthMap[t]}>{healthMap[t]}</Tag>
-        {(t === 0 || t === 1) && <a onClick={() => getDiagnosisReport(drawer, record)}>诊断报告</a>}
+        {/* {(t === 0 || t === 1) && <a onClick={() => getDiagnosisReport(drawer, record)}>诊断报告</a>} */}
       </>);
     },
   }, {

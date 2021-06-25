@@ -111,7 +111,9 @@ export const getCollectFormColumns = (collectRef: any, healthRef: any, form: any
     title: '创建时间',
     dataIndex: 'locCollectTaskCreateTime', // locCollectTaskCreateTimeStart locCollectTaskCreateTimeEnd
     component: (
-      <RangePicker showTime style={{ width: '100%' }} />
+      <RangePicker showTime={{
+        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+      }} style={{ width: '100%' }} />
     ),
   }];
   return collectFormColumns;

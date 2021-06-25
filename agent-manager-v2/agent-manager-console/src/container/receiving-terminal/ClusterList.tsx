@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { BasicTable } from 'antd-advanced';
 import { IReceivingTerminalParams, IReceivingTerminalVo } from '../../interface/receivingTerminal';
 import { getReceivingList, deleteReceive, getAgentId, getLogCollectTaskId } from '../../api/receivingTerminal'
+import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 
@@ -26,7 +27,9 @@ const queryFormColumns = [
     title: '新增时间',
     dataIndex: 'receiverCreateTimeStart',
     component: (
-      <RangePicker showTime className="searchWidth" />
+      <RangePicker showTime={{
+        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+      }} className="searchWidth" />
     ),
   },
 ];

@@ -40,12 +40,13 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
     const hostName = getFieldValue(`step2_hostName`)
     const params = {
       path: logFilePath,
-      suffixMatchRegular: JSON.stringify(logSuffixfilesValue),
+      suffixMatchRegular: logSuffixfilesValue,
       hostName
     }
     if (logFilePath && hostName) {
       getCollectPathList(params).then((res) => {
         // logArr[key] = res.massage.split()
+        console.log(res, 'res')
         logArr.push(...res.massage.split())
       })
     }

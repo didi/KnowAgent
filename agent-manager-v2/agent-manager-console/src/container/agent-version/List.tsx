@@ -12,6 +12,7 @@ import { BasicTable } from 'antd-advanced';
 import { Dispatch } from 'redux';
 import { IAgentVersionParams, IVersion, IAgentVersionVo } from '../../interface/agentVersion';
 import { getAgentVersion, getVersion } from '../../api/agentVersion';
+import moment from 'moment';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -102,7 +103,9 @@ export class VerSionList extends React.Component<Props> {
         title: '新增时间',
         dataIndex: 'agentVersionCreateTimeStart',
         component: (
-          <RangePicker showTime className="searchWidth" format='YYYY/MM/DD' />
+          <RangePicker showTime={{
+            defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+          }} style={{ width: '100%' }} className="searchWidth" />
         ),
       },
     ];
