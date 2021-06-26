@@ -376,12 +376,6 @@ public class AgentManageServiceImpl implements AgentManageService {
         List<MetricPoint> agentFdUsagePerMinMetricPointList = agentMetricsManageService.getAgentFdUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
         agentFdUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_FD_USAGE_PER_MIN, agentFdUsagePerMinMetricPointList);
         /*
-         * 构建"Agent是否存在启动/分钟"指标
-         */
-        MetricPanel agentStartupExistsPerMinMetricPanel = agentMetricPanelGroup.buildMetricPanel(AgentConstant.AGENT_METRIC_PANEL_NAME_STARTUP_EXISTS_COUNT_PER_MIN);
-        List<MetricPoint> agentStartupExistsPerMinMetricPointList = agentMetricsManageService.getAgentStartupExistsPerMinMetric(agentDO.getHostName(), startTime, endTime);
-        agentStartupExistsPerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_STARTUP_EXISTS_PER_MIN, agentStartupExistsPerMinMetricPointList);
-        /*
          * 构建"Agent fullgc次数/分钟"指标
          */
         MetricPanel agentFullGcTimesPerMinMetricPanel = agentMetricPanelGroup.buildMetricPanel(AgentConstant.AGENT_METRIC_PANEL_NAME_FULL_GC_TIMES_PER_MIN);

@@ -280,4 +280,9 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         return agentMetricsDAO.getMinCurrentCollectTimePerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
     }
 
+    @Override
+    public List<MetricPoint> getLimitTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime) {
+        return agentMetricsDAO.getLimitTimePerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
+    }
+
 }

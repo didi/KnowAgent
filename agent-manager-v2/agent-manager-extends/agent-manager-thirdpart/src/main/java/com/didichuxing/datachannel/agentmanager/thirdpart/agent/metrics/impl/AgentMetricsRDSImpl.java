@@ -134,7 +134,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, "memory_usage");
+        List<MetricPoint> graph = agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, "memory_usage");
+        for (MetricPoint metricPoint : graph) {
+            metricPoint.setValue(((Number) metricPoint.getValue()).longValue() / 1024 / 1024);
+        }
+        return graph;
     }
 
     @Override
@@ -144,7 +148,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName) {
-        return collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, "send_byte");
+        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, "send_byte");
+        for (MetricPoint metricPoint : graph) {
+            metricPoint.setValue(((Number) metricPoint.getValue()).longValue() / 1024 / 1024);
+        }
+        return graph;
     }
 
     @Override
@@ -164,7 +172,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, "send_byte");
+        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, "send_byte");
+        // 修改单位为MB
+        for (MetricPoint metricPoint : graph) {
+            metricPoint.setValue(((Number) metricPoint.getValue()).longValue() / 1024 / 1024);
+        }
+        return graph;
     }
 
     @Override
@@ -193,6 +206,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public List<MetricPoint> getLimitTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
+        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "limit_time");
+    }
+
+    @Override
     public List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "valid_time_config");
     }
@@ -201,6 +219,5 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "filter_too_large_count");
     }
-
 
 }

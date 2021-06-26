@@ -235,6 +235,15 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 List<MetricPoint> fileLogPathMinCollectBusinessTimePerMinMetricPointList = agentMetricsManageService.getMinCurrentCollectTimePerLogPathPerMinMetric(logCollectTaskId, fileLogCollectPathDO.getId(), hostDO.getHostName(), startTime, endTime);
                 fileLogPathMinCollectBusinessTimePerMinMetricPanel.buildMetric(hostDO.getHostName(), fileLogPathMinCollectBusinessTimePerMinMetricPointList);
             }
+
+            /*
+             * 构建"fileLogPath对应数据限流时长/分钟"指标
+             */
+            MetricPanel fileLogPathLimitTimePerMinMetricPanel = fileLogPathLevelMetricPanelGroup.buildMetricPanel(LogCollectTaskConstant.LOG_COLLECT_TASK_METRIC_PANEL_NAME_FILELOGPATH_LIMIT_TIME_PER_MIN);
+            for (HostDO hostDO : hostDOList) {
+                List<MetricPoint> fileLogPathLimitTimePerMinMetricPointList = agentMetricsManageService.getLimitTimePerLogPathPerMinMetric(logCollectTaskId, fileLogCollectPathDO.getId(), hostDO.getHostName(), startTime, endTime);
+                fileLogPathLimitTimePerMinMetricPanel.buildMetric(hostDO.getHostName(), fileLogPathLimitTimePerMinMetricPointList);
+            }
         }
         return metricsDashBoard;
     }
@@ -993,8 +1002,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = LogCollectTaskHealthLevelEnum.GREEN;//日志采集任务健康度检查结果
         String logCollectTaskHealthDescription = "";//日志采集任务健康检查描述
         Long minCurrentCollectTime = Long.MAX_VALUE;//记录logCollectTaskDO对应各LogCollectPath最小采集时间，记为采集完整性时间
-        Map<Long, Long> logFilePathId2CollctCompleteTimeMap = new HashMap<>();//存储各fileLogPath对应采集完整性时间 map，key:logPathId value:collctCompleteTime
-        Long logCollectTaskHealthCheckTimeEnd = DateUtils.getBeforeSeconds(new Date(), 1).getTime();//日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
+        Map<Long, Long> logFilePathId2CollctCompleteTimeMap = new HashMap<>(); //存储各fileLogPath对应采集完整性时间 map，key:logPathId value:collctCompleteTime
+        Long logCollectTaskHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
         //存储各健康值对应时间点
         Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
         Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
@@ -1343,11 +1352,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 fileLogCollectPathId,
                 hostName
         );
-        if(abnormalTruncationCount > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return abnormalTruncationCount > 0;
     }
 
     /**
@@ -1377,11 +1382,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 fileLogCollectPathId,
                 hostName
         );
-        if(logSliceErrorCount > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return logSliceErrorCount > 0;
     }
 
     /**
@@ -1419,7 +1420,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
      * @param logCollectTaskId 日志采集任务 id
      * @param fileLogCollectPathId 日志采集路径 id
      * @param hostName 主机名
-     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
+     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
      * @param fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap filePathId : LastestFilePathExistsCheckHealthyTime
      * @return 返回logCollectTaskId+fileLogCollectPathId在host上是否存在 true：存在 false：不存在
      */
@@ -1441,11 +1442,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 fileLogCollectPathId,
                 hostName
         );
-        if(filePathNotExistsCount > 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return filePathNotExistsCount == 0;
     }
 
     /**
@@ -1453,7 +1450,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
      * @param logCollectTaskId 日志采集任务 id
      * @param fileLogCollectPathId 日志采集路径 id
      * @param logCollectTaskHostName 日志采集任务对应主机名
-     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
+     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
      * @return 距当前时间的心跳存活判定周期内，logCollectTaskId+fileLogCollectPathId+hostName是否存在心跳 true：存在 心跳 false：不存在心跳
      */
     private boolean checkAliveByHeartbeat(Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName, Long logCollectTaskHealthCheckTimeEnd) {
@@ -1468,11 +1465,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 fileLogCollectPathId,
                 logCollectTaskHostName
         );
-        if(!heartbeatTimes.equals(0L)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !heartbeatTimes.equals(0L);
     }
 
     /**

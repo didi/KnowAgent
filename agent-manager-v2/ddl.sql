@@ -457,7 +457,7 @@ CREATE TABLE `tb_log_collect_task` (
   `send_topic` varchar(256) NOT NULL DEFAULT '' COMMENT '采集任务采集的日志需要发往的topic名',
   `kafka_cluster_id` bigint(20) NOT NULL COMMENT '表tb_kafka_cluster主键',
   `host_filter_rule_logic_json_string` varchar(4096) NOT NULL COMMENT '主机过滤规则信息（存储 BaseHostFilterRuleLogic 某具体实现类的 json 化形式）',
-  `advanced_configuration_json_string` varchar(4096) NOT NULL DEFAULT '' COMMENT '采集任务高级配置项集，为json形式字符串',
+  `advanced_configuration_json_string` varchar(4096) DEFAULT '' COMMENT '采集任务高级配置项集，为json形式字符串',
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
