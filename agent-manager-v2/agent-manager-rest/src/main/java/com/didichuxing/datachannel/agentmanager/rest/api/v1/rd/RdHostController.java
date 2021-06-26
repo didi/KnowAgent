@@ -31,6 +31,7 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpa
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +72,9 @@ public class RdHostController {
 
     @Autowired
     private DirectoryLogCollectPathManageService directoryLogCollectPathManageService;
+
+    @Autowired
+    private AgentMetricsDAO agentMetricsDAO;
 
     @ApiOperation(value = "测试主机名连通性", notes = "")
     @RequestMapping(value = "/connectivity/{hostname}", method = RequestMethod.GET)
@@ -244,6 +248,7 @@ public class RdHostController {
                 }
                 hostAgentVO.setOpenedLogCollectTaskNum(openedLogCollectTaskNum);
                 hostAgentVO.setOpenedLogPathNum(openedLogPathNum);
+                hostAgentVO.setLastestAgentStartupTime(agentMetricsDAO.getLatestStartupTime(agentDO.getHostName()));
             }
             return hostAgentVO;
         }
