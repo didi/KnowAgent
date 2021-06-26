@@ -1238,8 +1238,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 获取近 LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD 时间范围内 logCollectTaskId+fileLogCollectPathId+hostName 指标集中，
          * 总限流时间是否超过阈值 LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD
          */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
+        Long startTime = System.currentTimeMillis() - LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
+        Long endTime = System.currentTimeMillis();
         Long hostCpuLimiDturationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
                 startTime,
                 endTime,
@@ -1247,11 +1247,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 fileLogCollectPathId,
                 hostName
         );//主机cpu限流时长 单位：ms
-        if(hostCpuLimiDturationMs > LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD) {
-            return true;
-        } else {
-            return false;
-        }
+        return hostCpuLimiDturationMs > LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
     }
 
     /**
@@ -1415,11 +1411,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 fileLogCollectPathId,
                 hostName
         );
-        if(fileDisorderCount > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return fileDisorderCount > 0;
     }
 
     /**

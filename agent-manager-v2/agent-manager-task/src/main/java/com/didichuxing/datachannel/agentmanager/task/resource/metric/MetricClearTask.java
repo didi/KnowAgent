@@ -1,6 +1,5 @@
 package com.didichuxing.datachannel.agentmanager.task.resource.metric;
 
-import com.didichuxing.datachannel.agentmanager.common.util.LogUtil;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
@@ -19,9 +18,9 @@ public class MetricClearTask implements Job {
 
     @Override
     public Object execute(JobContext jobContext) throws Exception {
-        LOGGER.info(String.format(LogUtil.defaultLogFormat(), "cleanStart"));
+        LOGGER.info(String.format("class=MetricClearTask||method=execute||msg=%s", "cleanStart"));
         metricService.clear();
-        LOGGER.info(String.format(LogUtil.defaultLogFormat(), "cleanEnd"));
+        LOGGER.info(String.format("class=MetricClearTask||method=execute||msg=%s", "cleanEnd"));
         return "success";
     }
 

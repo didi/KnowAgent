@@ -4,9 +4,15 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMet
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(scanBasePackages = { "com.didichuxing.datachannel.agentmanager" })
+@EnableAsync
+@EnableScheduling
+@ServletComponentScan
+@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager"})
 public class CoreSpringBootStartUp {
     public static void main(String[] args) {
         SpringApplication.run(CoreSpringBootStartUp.class, args);

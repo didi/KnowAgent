@@ -363,9 +363,12 @@ public class AgentManageServiceImpl implements AgentManageService {
         List<MetricPoint> agentCpuUsagePerMinMetricPointList = agentMetricsManageService.getAgentCpuUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
         agentCpuUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_CPU_USAGE_PER_MIN, agentCpuUsagePerMinMetricPointList);
 
+        /*
+         * 构建"Agent 内存使用量/分钟"指标
+         */
         MetricPanel agentMemoryUsagePerMinMetricPanel = agentMetricPanelGroup.buildMetricPanel(AgentConstant.AGENT_METRIC_PANEL_NAME_MEMORY_USAGE_PER_MIN);
         List<MetricPoint> agentMemoryUsagePerMinMetricPointList = agentMetricsManageService.getAgentMemoryUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
-        agentMemoryUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_CPU_USAGE_PER_MIN, agentMemoryUsagePerMinMetricPointList);
+        agentMemoryUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_PANEL_NAME_MEMORY_USAGE_PER_MIN, agentMemoryUsagePerMinMetricPointList);
         /*
          * 构建"Agent fd使用量/分钟"指标
          */
@@ -799,8 +802,8 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取近 AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD 时间范围内 hostName 指标集中，
          * 总限流时间是否超过阈值 AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD
          */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
+        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
+        Long endTime = System.currentTimeMillis();
         Long hostCpuLimiDturationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
                 startTime,
                 endTime,
@@ -849,8 +852,8 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取 agent 近一小时内 fullgc 次数是否 > 1，如是：表示存在 agent 进程 gc 指标异常 如不是：表示不存在 agent 进程 gc 指标异常
          *
          */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
+        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
+        Long endTime = System.currentTimeMillis();
         Long agentFullgcTimes = agentMetricsManageService.getAgentFullgcTimesByTimeFrame(
                 startTime,
                 endTime,

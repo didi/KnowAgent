@@ -21,6 +21,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,18 @@ public class MetricService {
 
     @Autowired
     private CollectTaskMetricMapper collectTaskMetricMapper;
+
+    @Value("${agent.metrics.producer.identify:false}")
+    private boolean identify;
+
+    @Value("${agent.metrics.producer.appId:0}")
+    private String appId;
+
+    @Value("${agent.metrics.producer.clusterId:0}")
+    private String clusterId;
+
+    @Value("${agent.metrics.producer.password:0}")
+    private String password;
 
     private static volatile boolean trigger = false;
 
@@ -86,6 +99,14 @@ public class MetricService {
         props.put("session.timeout.ms", "30000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+        if (identify) {
+            String format = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s.%s\" password=\"%s\";";
+            String jaasConfig = String.format(format, clusterId, appId, password);
+            props.put("sasl.jaas.config", jaasConfig);
+            props.put("security.protocol", "SASL_PLAINTEXT");
+            props.put("sasl.mechanism", "PLAIN");
+        }
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Arrays.asList(receiverTopicDO.getTopic()));
@@ -126,17 +147,15 @@ public class MetricService {
 
     public void resetMetricConsumers() {
         receiverSet.clear();
-        executor.execute(() -> {
-            try {
-                trigger = true;
-                // 等待现有的kafka consumer线程全部关闭
-                Thread.sleep(60 * 1000);
-                trigger = false;
-                loadClustersAndTopics();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+        trigger = true;
+        try {
+            // 等待现有的kafka consumer线程全部关闭
+            Thread.sleep(60 * 1000);
+            loadClustersAndTopics();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        trigger = false;
         for (ReceiverTopicDO receiverTopicDO : receiverSet) {
             executor.execute(() -> writeMetrics(receiverTopicDO));
         }
