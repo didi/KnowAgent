@@ -9,6 +9,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.version
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostAgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostPaginationQueryConditionDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.host.HostPaginationRequestDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostAgentVO;
@@ -16,6 +19,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.constant.ProjectConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
@@ -23,6 +27,9 @@ import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthMan
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.DirectoryLogCollectPathManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,6 +62,15 @@ public class RdHostController {
 
     @Autowired
     private AgentHealthManageService agentHealthManageService;
+
+    @Autowired
+    private LogCollectTaskManageService logCollectTaskManageService;
+
+    @Autowired
+    private FileLogCollectPathManageService fileLogCollectPathManageService;
+
+    @Autowired
+    private DirectoryLogCollectPathManageService directoryLogCollectPathManageService;
 
     @ApiOperation(value = "测试主机名连通性", notes = "")
     @RequestMapping(value = "/connectivity/{hostname}", method = RequestMethod.GET)
@@ -184,7 +200,8 @@ public class RdHostController {
             hostAgentVO.setIp(hostDO.getIp());
             hostAgentVO.setMachineZone(hostDO.getMachineZone());
             hostAgentVO.setParentHostName(hostDO.getParentHostName());
-            /**
+
+            /*
              * 设置主机关联服务相关信息
              */
             List<ServiceDO> serviceDOList = serviceManageService.getServicesByHostId(hostDO.getId());
@@ -214,6 +231,19 @@ public class RdHostController {
                     );
                 }
                 hostAgentVO.setAgentVersion(agentVersionDO.getVersion());
+                List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getLogCollectTaskListByAgentId(agentDO.getId());
+                Integer openedLogCollectTaskNum = 0;
+                Integer openedLogPathNum = 0;
+                for (LogCollectTaskDO logCollectTaskDO : logCollectTaskDOList) {
+                    if(logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.RUNNING.getCode())) {
+                        openedLogCollectTaskNum++;
+                        List<FileLogCollectPathDO> fileLogCollectPathDOList = fileLogCollectPathManageService.getAllFileLogCollectPathByLogCollectTaskId(logCollectTaskDO.getId());
+                        List<DirectoryLogCollectPathDO> directoryLogCollectPathDOList = directoryLogCollectPathManageService.getAllDirectoryLogCollectPathByLogCollectTaskId(logCollectTaskDO.getId());
+                        openedLogPathNum = openedLogPathNum + fileLogCollectPathDOList.size() + directoryLogCollectPathDOList.size();
+                    }
+                }
+                hostAgentVO.setOpenedLogCollectTaskNum(openedLogCollectTaskNum);
+                hostAgentVO.setOpenedLogPathNum(openedLogPathNum);
             }
             return hostAgentVO;
         }
