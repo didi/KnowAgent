@@ -51,6 +51,17 @@ public class HostAgentVO {
     @ApiModelProperty(value = "agent在运行的状态为已开启的日志采集路径数")
     private Integer openedLogPathNum;
 
+    @ApiModelProperty(value = "agent最近一次启动时间")
+    private Long lastestAgentStartupTime;
+
+    public Long getLastestAgentStartupTime() {
+        return lastestAgentStartupTime;
+    }
+
+    public void setLastestAgentStartupTime(Long lastestAgentStartupTime) {
+        this.lastestAgentStartupTime = lastestAgentStartupTime;
+    }
+
     public void setHostId(Long hostId) {
         this.hostId = hostId;
     }
