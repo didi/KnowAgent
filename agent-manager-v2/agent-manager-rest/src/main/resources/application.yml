@@ -113,6 +113,11 @@ agent:
         appSecret:
         agentMetricsIndexName:
         agentErrorLogIndexName:
+    producer:
+      identify: false
+      appId: 0
+      clusterId:
+      password:
   http:
     path:
       request:

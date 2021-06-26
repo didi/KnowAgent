@@ -1,6 +1,5 @@
 package com.didichuxing.datachannel.agentmanager.task.resource.metric;
 
-import com.didichuxing.datachannel.agentmanager.common.util.LogUtil;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
@@ -19,9 +18,9 @@ public class MetricConsumerResetTask implements Job {
 
     @Override
     public Object execute(JobContext jobContext) throws Exception {
-        LOGGER.info(String.format(LogUtil.defaultLogFormat(), "consumer reset started"));
+        LOGGER.info(String.format("class=MetricConsumerResetTask||method=execute||msg=%s", "consumer reset started"));
         metricService.resetMetricConsumers();
-        LOGGER.info(String.format(LogUtil.defaultLogFormat(), "cleanEnd"));
+        LOGGER.info(String.format("class=MetricConsumerResetTask||method=execute||msg=%s", "cleanEnd"));
         return "success";
     }
 }
