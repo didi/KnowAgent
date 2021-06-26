@@ -363,9 +363,12 @@ public class AgentManageServiceImpl implements AgentManageService {
         List<MetricPoint> agentCpuUsagePerMinMetricPointList = agentMetricsManageService.getAgentCpuUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
         agentCpuUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_CPU_USAGE_PER_MIN, agentCpuUsagePerMinMetricPointList);
 
+        /*
+         * 构建"Agent 内存使用量/分钟"指标
+         */
         MetricPanel agentMemoryUsagePerMinMetricPanel = agentMetricPanelGroup.buildMetricPanel(AgentConstant.AGENT_METRIC_PANEL_NAME_MEMORY_USAGE_PER_MIN);
         List<MetricPoint> agentMemoryUsagePerMinMetricPointList = agentMetricsManageService.getAgentMemoryUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
-        agentMemoryUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_CPU_USAGE_PER_MIN, agentMemoryUsagePerMinMetricPointList);
+        agentMemoryUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_PANEL_NAME_MEMORY_USAGE_PER_MIN, agentMemoryUsagePerMinMetricPointList);
         /*
          * 构建"Agent fd使用量/分钟"指标
          */
