@@ -135,7 +135,7 @@ public class MetricTest extends ApplicationTests {
 
     @Test
     public void listAgentMetricsTest() {
-        List<MetricPanelGroup> list = agentManageService.listAgentMetrics(393L, startTime, endTime);
+        List<MetricPanelGroup> list = agentManageService.listAgentMetrics(387L, startTime, endTime);
         for (MetricPanelGroup metricPanelGroup : list) {
             List<MetricPanel> panelList = metricPanelGroup.getMetricPanelList();
             System.out.println(panelList);

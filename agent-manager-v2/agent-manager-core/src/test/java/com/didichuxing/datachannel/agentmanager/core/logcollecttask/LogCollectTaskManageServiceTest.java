@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+//@Transactional
 //@Rollback
 public class LogCollectTaskManageServiceTest extends ApplicationTests {
 

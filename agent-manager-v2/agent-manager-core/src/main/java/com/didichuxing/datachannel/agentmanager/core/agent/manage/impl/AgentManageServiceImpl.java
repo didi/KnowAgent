@@ -802,8 +802,8 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取近 AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD 时间范围内 hostName 指标集中，
          * 总限流时间是否超过阈值 AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD
          */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
+        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
+        Long endTime = System.currentTimeMillis();
         Long hostCpuLimiDturationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
                 startTime,
                 endTime,
@@ -852,8 +852,8 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取 agent 近一小时内 fullgc 次数是否 > 1，如是：表示存在 agent 进程 gc 指标异常 如不是：表示不存在 agent 进程 gc 指标异常
          *
          */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
+        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
+        Long endTime = System.currentTimeMillis();
         Long agentFullgcTimes = agentMetricsManageService.getAgentFullgcTimesByTimeFrame(
                 startTime,
                 endTime,
