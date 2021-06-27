@@ -158,12 +158,7 @@ $123$33$2018-01-08 sqrwqrq
         let regStr = contentList[i].match(dateType[sliceFormat])[0]
         let startTimeIndex = contentList[i].indexOf(regStr) //时间格式开始的下标
         let startStr = contentList[i].slice(0, startTimeIndex) // 时间格式前面的字符串
-        console.log(slicePrefixString, 'slicePrefixString')
-        console.log(slicePrefixStringIndex, 'slicePrefixStringIndex')
-        console.log(startTimeIndex, 'startTimeIndex')
         if (slicePrefixString === '' && slicePrefixStringIndex === 0 && startTimeIndex === 0) {
-          console.log('走着了')
-          console.log(contentList[i], 'contentList[i]')
           resContentLists.push(contentList[i])
         } else if (!!slicePrefixString && startStr.slice(-1) === slicePrefixString && startStr.split(slicePrefixString).length - 2 === slicePrefixStringIndex) {
           // if (resContentLists.length > 0) {
