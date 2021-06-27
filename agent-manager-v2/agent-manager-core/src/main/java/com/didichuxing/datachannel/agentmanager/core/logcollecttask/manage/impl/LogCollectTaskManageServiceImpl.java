@@ -1250,7 +1250,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          */
         Long startTime = System.currentTimeMillis() - LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
         Long endTime = System.currentTimeMillis();
-        Long hostCpuLimiDturationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
+        Long hostCpuLimiDturationMs = agentMetricsManageService.getHostByteLimitDurationByTimeFrame(
                 startTime,
                 endTime,
                 logCollectTaskId,
