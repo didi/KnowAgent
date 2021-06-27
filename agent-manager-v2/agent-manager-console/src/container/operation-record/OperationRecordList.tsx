@@ -224,8 +224,6 @@ export class OperationRecordList extends React.Component<Props> {
               // current: this.state.pageNo,
               // pageSize: this.state.pageSize,
               onChange: (current, size) => {
-                console.log(current)
-                console.log(size)
                 this.setState({
                   pageNo: current,
                   pageSize: size

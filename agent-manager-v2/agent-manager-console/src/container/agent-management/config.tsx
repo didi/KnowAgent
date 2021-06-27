@@ -344,9 +344,20 @@ export const hostDetailBaseInfo = (info: IAgentHostSet) => {
     label: 'Agent版本名',
     key: 'agentVersion',
   }, {
-    label: '所属机房',
-    key: 'machineZone',
+    label: '已开启日志采集任务数',
+    key: 'openedLogCollectTaskNum',
   }, {
+    label: '已开启日志采集路径数',
+    key: 'openedLogPathNum',
+  }, {
+    label: '最近 agent 启动时间',
+    key: 'lastestAgentStartupTime ',
+  },
+  // {
+  //   label: '所属机房',
+  //   key: 'machineZone',
+  // }, 
+  {
     label: '新增时间',
     key: 'hostCreateTime',
     render: (t: number) => moment(t).format(timeFormat),

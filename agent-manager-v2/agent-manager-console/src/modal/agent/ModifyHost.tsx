@@ -181,7 +181,6 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
         collapseCallBack(['high']);
         return false;
       }
-      console.log(values)
       const params = {
         metricsProducerConfiguration: values?.metricsProducerConfiguration,
         errorLogsProducerConfiguration: values?.errorLogsProducerConfiguration,

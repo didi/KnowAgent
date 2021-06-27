@@ -40,6 +40,8 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
   const [activeKeys, setActiveKeys] = useState([] as string[]);
   // const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
   const [logListFile, setLogListFile] = useState([])
+  const [isNotLogPath, setisNotLogPath] = useState(false)
+
   const customPanelStyle = {
     border: 0,
     overflow: 'hidden',
@@ -116,11 +118,14 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
           slicingRuleLogList={props.slicingRuleLogList}
           setLogListFile={setLogListFile}
           logListFile={logListFile}
+          setisNotLogPath={setisNotLogPath}
         />
         <LogFileType
           form={props.form}
           setLogListFile={setLogListFile}
           logListFile={logListFile}
+          isNotLogPath={isNotLogPath}
+          setisNotLogPath={setisNotLogPath}
         />
         <LogRepeatForm
           logType='file'
@@ -128,7 +133,7 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
           form={props.form}
           slicingRuleLog={props.slicingRuleLog}
         />
-        <Collapse
+        {/* <Collapse
           bordered={false}
           expandIconPosition="right"
           onChange={collapseCallBack}
@@ -209,7 +214,7 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
               </Row>
             </Form.Item>
           </Panel>
-        </Collapse>
+        </Collapse> */}
         {/* 文件型 file */}
         {/* {collectLogType === 'file' ?
           <LoopAddLogFileType

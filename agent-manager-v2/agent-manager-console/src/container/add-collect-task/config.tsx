@@ -59,8 +59,8 @@ export const stepOneParams = (values: any) => {
     }
   } else {
     oldDataFilterType = 0;
-    collectStartBusinessTime = Date.parse(values.step1_collectBusinessTime[0]);
-    collectEndBusinessTime = Date.parse(values.step1_collectBusinessTime[1]);
+    // collectStartBusinessTime = Date.parse(values.step1_collectBusinessTime[0]);
+    // collectEndBusinessTime = Date.parse(values.step1_collectBusinessTime[1]);
   }
   let hostNames = [] as string[];
   let filterSQL = '' as string;
@@ -163,12 +163,12 @@ export const setStepParams = (values: any) => {
     // >>>>>>>> Step1 <<<<<<<<<
     logCollectTaskName: values.step1_logCollectTaskName, // 日志采集任务名 Yes
     serviceIdList: [values.step1_serviceId], // 采集应用 ———— 采集服务集 Yes
-    logCollectTaskType: values.step1_logCollectTaskType, // 采集模式 ———— 采集任务类型 0：常规流式采集 1：按指定时间范围采集 Yes
-    oldDataFilterType: stepOne.oldDataFilterType, // 历史数据过滤 ———— 0：不过滤 1：从当前时间开始采集 2：从自定义时间开始采集，自定义时间取collectStartBusinessTime属性值
+    logCollectTaskType: values.step1_logCollectTaskType || 0, // 采集模式 ———— 采集任务类型 0：常规流式采集 1：按指定时间范围采集 Yes
+    oldDataFilterType: stepOne.oldDataFilterType || 0, // 历史数据过滤 ———— 0：不过滤 1：从当前时间开始采集 2：从自定义时间开始采集，自定义时间取collectStartBusinessTime属性值
     collectStartBusinessTime: stepOne.collectStartBusinessTime || 0, // 日志采集任务对应采集开始业务时间 注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 & oldDataFilterTyp = 2 时，该值必填
     collectEndBusinessTime: stepOne.collectEndBusinessTime || 0, // 日志采集任务对应采集结束业务时间 注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 情况，该值不填
     hostFilterRuleDTO: {
-      needHostFilterRule: values.step1_needHostFilterRule, // 0否-全部 1是-部分 ———— 是否需要主机过滤规则 0：否 1：是
+      needHostFilterRule: values.step1_needHostFilterRule || 0, // 0否-全部 1是-部分 ———— 是否需要主机过滤规则 0：否 1：是
       filterSQL: stepOne.filterSQL, // sql ———— 主机筛选命中sql，白名单
       hostNames: stepOne.hostNames,
     }, // 主机范围 ———— 主机过滤规则
@@ -181,13 +181,13 @@ export const setStepParams = (values: any) => {
     logContentFilterLogicDTO: {
       logContentFilterExpression: values.step2_logContentFilterExpression, // 日志内容过滤表达式，needLogContentFilter为1时必填
       logContentFilterType: values.step2_logContentFilterType, // 日志内容过滤类型 0：包含 1：不包含，needLogContentFilter为1时必填
-      needLogContentFilter: values.step2_needLogContentFilter, // 是否需要对日志内容进行过滤 0：否 1：是
+      needLogContentFilter: values.step2_needLogContentFilter || 0, // 是否需要对日志内容进行过滤 0：否 1：是
     },// 日志过滤内容规则
     fileNameSuffixMatchRuleDTO: {
       // suffixSeparationCharacter: getParams(values, 'suffixSeparationCharacter', index) || '', // 文件名后缀分隔字符
       // suffixMatchType: getParams(values, 'suffixMatchType', index), // 文件名后缀匹配类型 0：长度 1：正则
       // suffixLength: getParams(values, 'suffixLength', index) || '', // 文件名后缀长度 suffixMatchType为0时必填
-      suffixMatchRegular: values.step2_file_suffixMatchRegular || '', //文件名后缀长度 suffixMatchType为1时必填
+      suffixMatchRegular: values.step2_file_suffixMatchRegular, //文件名后缀长度 suffixMatchType为1时必填
     }, // 采集文件名后缀匹配规则
     logSliceRuleDTO: {
       // sliceType: getParams(values, 'sliceType', index), // 日志内容切片类型 0：时间戳切片 1：正则匹配切片
