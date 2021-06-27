@@ -36,6 +36,8 @@ import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentO
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +53,7 @@ import java.util.List;
  */
 @org.springframework.stereotype.Service
 public class AgentManageServiceImpl implements AgentManageService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AgentManageServiceImpl.class);
 
     @Autowired
     private AgentMapper agentDAO;
@@ -166,11 +169,7 @@ public class AgentManageServiceImpl implements AgentManageService {
      */
     private boolean hostExists(String hostName) throws ServiceException {
         HostDO hostDO = hostManageService.getHostByHostName(hostName);
-        if(null == hostDO) {
-            return false;
-        } else {
-            return true;
-        }
+        return null != hostDO;
     }
 
     /**
@@ -363,21 +362,18 @@ public class AgentManageServiceImpl implements AgentManageService {
         List<MetricPoint> agentCpuUsagePerMinMetricPointList = agentMetricsManageService.getAgentCpuUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
         agentCpuUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_CPU_USAGE_PER_MIN, agentCpuUsagePerMinMetricPointList);
 
+        /*
+         * 构建"Agent 内存使用量/分钟"指标
+         */
         MetricPanel agentMemoryUsagePerMinMetricPanel = agentMetricPanelGroup.buildMetricPanel(AgentConstant.AGENT_METRIC_PANEL_NAME_MEMORY_USAGE_PER_MIN);
         List<MetricPoint> agentMemoryUsagePerMinMetricPointList = agentMetricsManageService.getAgentMemoryUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
-        agentMemoryUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_CPU_USAGE_PER_MIN, agentMemoryUsagePerMinMetricPointList);
+        agentMemoryUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_PANEL_NAME_MEMORY_USAGE_PER_MIN, agentMemoryUsagePerMinMetricPointList);
         /*
          * 构建"Agent fd使用量/分钟"指标
          */
         MetricPanel agentFdUsagePerMinMetricPanel = agentMetricPanelGroup.buildMetricPanel(AgentConstant.AGENT_METRIC_PANEL_NAME_FD_USAGE_PER_MIN);
         List<MetricPoint> agentFdUsagePerMinMetricPointList = agentMetricsManageService.getAgentFdUsagePerMinMetric(agentDO.getHostName(), startTime, endTime);
         agentFdUsagePerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_FD_USAGE_PER_MIN, agentFdUsagePerMinMetricPointList);
-        /*
-         * 构建"Agent是否存在启动/分钟"指标
-         */
-        MetricPanel agentStartupExistsPerMinMetricPanel = agentMetricPanelGroup.buildMetricPanel(AgentConstant.AGENT_METRIC_PANEL_NAME_STARTUP_EXISTS_COUNT_PER_MIN);
-        List<MetricPoint> agentStartupExistsPerMinMetricPointList = agentMetricsManageService.getAgentStartupExistsPerMinMetric(agentDO.getHostName(), startTime, endTime);
-        agentStartupExistsPerMinMetricPanel.buildMetric(AgentConstant.AGENT_METRIC_NAME_STARTUP_EXISTS_PER_MIN, agentStartupExistsPerMinMetricPointList);
         /*
          * 构建"Agent fullgc次数/分钟"指标
          */
@@ -612,7 +608,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         /*
          * 校验 agent 是否存在错误日志输出
          */
-        Long agentHealthCheckTimeEnd = DateUtils.getBeforeSeconds(new Date(), 1).getTime();//Agent健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
+        Long agentHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //Agent健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
         boolean errorLogsExists = checkErrorLogsExists(agentDO.getHostName(), agentHealthDO, agentHealthCheckTimeEnd);
         if(errorLogsExists) {//agent 存在错误日志输出
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_EXISTS.getAgentHealthLevel();
@@ -706,7 +702,7 @@ public class AgentManageServiceImpl implements AgentManageService {
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
-                    AgentHealthInspectionResultEnum.AGENT_FD_USAGE_METRIC_EXCEPTION.getDescription(),
+                    AgentHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(),
                     agentDO.getId(),
                     agentDO.getHostName()
             );
@@ -723,7 +719,7 @@ public class AgentManageServiceImpl implements AgentManageService {
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.NOT_RELATE_ANY_LOGCOLLECTTASK.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
-                    AgentHealthInspectionResultEnum.AGENT_FD_USAGE_METRIC_EXCEPTION.getDescription(),
+                    AgentHealthInspectionResultEnum.NOT_RELATE_ANY_LOGCOLLECTTASK.getDescription(),
                     agentDO.getId(),
                     agentDO.getHostName()
             );
@@ -799,14 +795,14 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取近 AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD 时间范围内 hostName 指标集中，
          * 总限流时间是否超过阈值 AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD
          */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
-        Long hostCpuLimiDturationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
+        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
+        Long endTime = System.currentTimeMillis();
+        Long hostByteLimitDurationMs = agentMetricsManageService.getHostByteLimitDurationByTimeFrame(
                 startTime,
                 endTime,
                 hostName
-        );//主机cpu限流时长 单位：ms
-        return hostCpuLimiDturationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
+        );//主机流量限流时长 单位：ms
+        return hostByteLimitDurationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
     }
 
     /**
@@ -849,8 +845,8 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取 agent 近一小时内 fullgc 次数是否 > 1，如是：表示存在 agent 进程 gc 指标异常 如不是：表示不存在 agent 进程 gc 指标异常
          *
          */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
+        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
+        Long endTime = System.currentTimeMillis();
         Long agentFullgcTimes = agentMetricsManageService.getAgentFullgcTimesByTimeFrame(
                 startTime,
                 endTime,
@@ -944,7 +940,7 @@ public class AgentManageServiceImpl implements AgentManageService {
                 currentTime,
                 hostName
         );
-        return !heartbeatTimes.equals(0L);
+        return heartbeatTimes > 0;
     }
 
 }

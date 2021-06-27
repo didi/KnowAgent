@@ -2,10 +2,7 @@ package com.didichuxing.datachannel.swan.agent.engine.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.lang.management.RuntimeMXBean;
+import java.lang.management.*;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -157,6 +154,22 @@ public class SystemUtils {
                 }
             }
             LOGGER.error("获取系统资源项[文件句柄数使用率]失败");
+            return 0;
+        }
+    }
+
+    /**
+     * 获取当前进程对应内存使用量 单位：byte
+     * @return 返回获取到的当前进程对应内存使用量
+     */
+    public static long getCurrentMemoryUsage() {
+        try {
+            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+            MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
+            MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
+            return heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前进程内存使用量]失败", ex);
             return 0;
         }
     }

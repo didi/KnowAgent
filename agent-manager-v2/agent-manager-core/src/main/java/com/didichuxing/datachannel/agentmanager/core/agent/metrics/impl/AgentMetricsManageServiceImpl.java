@@ -101,7 +101,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
-    public Long getHostByteLimiDturationByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
+    public Long getHostByteLimitDurationByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
         return agentMetricsDAO.getHostByteLimitDuration(startTime, endTime, logModelHostName, logCollectTaskId, fileLogCollectPathId);
     }
 
@@ -167,8 +167,9 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
-    public Long getHostByteLimiDturationByTimeFrame(Long startTime, Long endTime, String hostName) {
-        return agentMetricsDAO.getHostByteLimitDuration(startTime, endTime, hostName);
+    public Long getHostByteLimitDurationByTimeFrame(Long startTime, Long endTime, String hostName) {
+        Long value = agentMetricsDAO.getHostByteLimitDuration(startTime, endTime, hostName);
+        return value == null ? 0L : value;
     }
 
     @Override
@@ -278,6 +279,11 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime) {
         return agentMetricsDAO.getMinCurrentCollectTimePerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
+    }
+
+    @Override
+    public List<MetricPoint> getLimitTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime) {
+        return agentMetricsDAO.getLimitTimePerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
     }
 
 }

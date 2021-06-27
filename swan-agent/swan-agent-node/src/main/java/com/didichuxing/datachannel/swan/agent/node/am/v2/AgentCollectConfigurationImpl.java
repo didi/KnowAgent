@@ -101,7 +101,7 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
         metricConfig.setProperties(metricsProducerConfiguration.getProperties());
         metricConfig.setTopic(metricsProducerConfiguration.getTopic());
         metricConfig.setSwitchConfig(ServiceSwitch.ON.getStatus());
-        metricConfig.setTransfer(true);//TODO：@旋姐
+        metricConfig.setTransfer(true);//TODO：
         agentConfig.setMetricConfig(metricConfig);
         /*
          * set model config
@@ -191,6 +191,8 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
         } else {
             modelLimitConfig.setLevel(MODEL_LIMIT_LEVEL_LOW);
         }
+        modelLimitConfig.setStartThrehold(logCollectTaskAdvancedConfiguration.getStartThrehold());
+        modelLimitConfig.setMinThreshold(logCollectTaskAdvancedConfiguration.getMinThreshold());
         modelConfig.setModelLimitConfig(modelLimitConfig);
         /*
          * set source config
@@ -220,11 +222,11 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
             if (logSliceRuleDTO != null) {
                 //日志切分规则
                 String timeFormat = logSliceRuleDTO.getSliceTimestampFormat();
-                if (timeFormat != null && timeFormat != "") {
+                if (timeFormat != null && !timeFormat.equals("")) {
                     logSourceConfig.setTimeFormat(timeFormat);  //时间戳格式
                 }
                 String timeStartFlag = logSliceRuleDTO.getSliceTimestampPrefixString();
-                if (timeStartFlag != null && timeStartFlag != "") {
+                if (timeStartFlag != null && !timeStartFlag.equals("")) {
                     logSourceConfig.setTimeStartFlag(timeStartFlag);  //切片时间戳前缀字符串
                 }
                 Integer timeStartFlagIndex = logSliceRuleDTO.getSliceTimestampPrefixStringIndex();

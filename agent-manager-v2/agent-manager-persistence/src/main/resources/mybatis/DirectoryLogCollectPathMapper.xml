@@ -39,14 +39,13 @@
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.DirectoryLogCollectPathPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_directory_log_collect_path (
       log_collect_task_id, path,
-      collect_files_filter_regular_pipeline_json_string, directory_collect_depth, operator,
-      create_time, modify_time
+      collect_files_filter_regular_pipeline_json_string, directory_collect_depth, operator
     )
     values (
       #{logCollectTaskId,jdbcType=BIGINT},
       #{path,jdbcType=VARCHAR},
       #{collectFilesFilterRegularPipelineJsonString,jdbcType=VARCHAR}, #{directoryCollectDepth,jdbcType=INTEGER}, 
-      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{operator,jdbcType=VARCHAR}
     )
   </insert>
 

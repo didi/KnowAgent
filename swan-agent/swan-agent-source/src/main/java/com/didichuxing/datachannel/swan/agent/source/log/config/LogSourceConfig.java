@@ -68,7 +68,7 @@ public class LogSourceConfig extends SourceConfig {
     /**
      * 是否是有效的时间戳配置
      */
-    private Boolean       isVaildTimeConfig  = true;
+    private Boolean       isValidTimeConfig  = true;
 
     /**
      * 文件读取类型，默认多行聚合（java栈）
@@ -195,12 +195,12 @@ public class LogSourceConfig extends SourceConfig {
         this.maxErrorLineNum = maxErrorLineNum;
     }
 
-    public Boolean getVaildTimeConfig() {
-        return isVaildTimeConfig;
+    public Boolean getValidTimeConfig() {
+        return isValidTimeConfig;
     }
 
-    public void setVaildTimeConfig(Boolean vaildTimeConfig) {
-        isVaildTimeConfig = vaildTimeConfig;
+    public void setValidTimeConfig(Boolean vaildTimeConfig) {
+        isValidTimeConfig = vaildTimeConfig;
     }
 
     public Integer getReadFileType() {
@@ -252,7 +252,7 @@ public class LogSourceConfig extends SourceConfig {
                + sequentialCollect + ", collectLocation=" + collectLocation + ", isOrderFile="
                + isOrderFile + ", validLatestFiles=" + validLatestFiles + ", waitCheckTime="
                + waitCheckTime + ", maxThreadNum=" + maxThreadNum + ", maxErrorLineNum="
-               + maxErrorLineNum + ", isVaildTimeConfig=" + isVaildTimeConfig + ", readFileType="
+               + maxErrorLineNum + ", isValidTimeConfig=" + isValidTimeConfig + ", readFileType="
                + readFileType + ", maxModifyTime=" + maxModifyTime + ", readTimeOut=" + readTimeOut
                + ", matchConfig=" + matchConfig + ", logPaths=" + logPaths + '}';
     }

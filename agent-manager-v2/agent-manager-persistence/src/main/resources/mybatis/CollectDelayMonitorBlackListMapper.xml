@@ -26,11 +26,9 @@
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.collectblacklist.CollectDelayMonitorBlackListPO" >
     insert into tb_collect_delay_monitor_black_list (id, collect_delay_monitor_black_list_type, 
-      host_name, log_collector_task_id, operator, 
-      create_time, modify_time)
+      host_name, log_collector_task_id, operator)
     values (#{id,jdbcType=BIGINT}, #{collectDelayMonitorBlackListType,jdbcType=TINYINT}, 
-      #{hostName,jdbcType=VARCHAR}, #{logCollectorTaskId,jdbcType=BIGINT}, #{operator,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+      #{hostName,jdbcType=VARCHAR}, #{logCollectorTaskId,jdbcType=BIGINT}, #{operator,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.collectblacklist.CollectDelayMonitorBlackListPO" >
     insert into tb_collect_delay_monitor_black_list

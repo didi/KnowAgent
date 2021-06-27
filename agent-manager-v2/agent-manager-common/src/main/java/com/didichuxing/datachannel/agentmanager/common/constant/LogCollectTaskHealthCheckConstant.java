@@ -36,8 +36,9 @@ public class LogCollectTaskHealthCheckConstant {
     public static final Long CONCURRENT_COLLECT_CHECK_LASTEST_MS_THRESHOLD = 10 * 60 * 1000L;
     /**
      * 校验 logcollecttask + logpath 在 host 端是否存在多 agent 并发采集过程中，心跳次数阈值
+     * agent通常为60s一次
      */
-    public static final Integer CONCURRENT_COLLECT_CHECK_HEARTBEAT_TIMES_THRESHOLD = 15;
+    public static final Integer CONCURRENT_COLLECT_CHECK_HEARTBEAT_TIMES_THRESHOLD = 30;
     /**
      * 校验 logcollecttask + logpath 在 host 端是否存在心跳过程中，获取最近 ALIVE_CHECK_LASTEST_MS_THRESHOLD ms 内指标
      */

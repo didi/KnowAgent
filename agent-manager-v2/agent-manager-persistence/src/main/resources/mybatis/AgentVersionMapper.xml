@@ -43,11 +43,11 @@
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.version.AgentVersionPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_agent_version (id, file_name, file_md5, 
       file_type, description, operator, 
-      create_time, modify_time, version
+      version
       )
     values (#{id,jdbcType=BIGINT}, #{fileName,jdbcType=VARCHAR}, #{fileMd5,jdbcType=VARCHAR}, 
       #{fileType,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{version,jdbcType=VARCHAR}
+      #{version,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.version.AgentVersionPO" >

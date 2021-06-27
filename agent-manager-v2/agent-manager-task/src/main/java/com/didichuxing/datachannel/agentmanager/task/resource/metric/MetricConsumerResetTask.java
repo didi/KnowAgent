@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Task(name = "MetricClearTask", description = "定时清除系统中超过7天的metric，每一天执行一次",
-        cron = "0 0 * * * ?", autoRegister = true)
-public class MetricClearTask implements Job {
+@Task(name = "MetricClearTask", description = "定期同步agent配置的metric流、error logs流的消费端，每10分钟执行一次",
+        cron = "0 0/10 * * * ?", autoRegister = true)
+public class MetricConsumerResetTask implements Job {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricClearTask.class);
 
     @Autowired
@@ -18,10 +18,9 @@ public class MetricClearTask implements Job {
 
     @Override
     public Object execute(JobContext jobContext) throws Exception {
-        LOGGER.info(String.format("class=MetricClearTask||method=execute||msg=%s", "cleanStart"));
-        metricService.clear();
-        LOGGER.info(String.format("class=MetricClearTask||method=execute||msg=%s", "cleanEnd"));
+        LOGGER.info(String.format("class=MetricConsumerResetTask||method=execute||msg=%s", "consumer reset started"));
+        metricService.resetMetricConsumers();
+        LOGGER.info(String.format("class=MetricConsumerResetTask||method=execute||msg=%s", "cleanEnd"));
         return "success";
     }
-
 }

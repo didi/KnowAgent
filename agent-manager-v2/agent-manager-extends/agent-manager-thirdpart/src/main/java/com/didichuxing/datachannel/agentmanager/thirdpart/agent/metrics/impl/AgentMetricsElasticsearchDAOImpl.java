@@ -156,7 +156,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
                 .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
                 .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.termQuery("isFileDisorder", true))
+                .must(QueryBuilders.matchQuery("collectFiles", "\"isFileOrder\":1"))
                 .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -387,6 +387,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         return logModelMetricMinByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, "logTime");
+    }
+
+    @Override
+    public List<MetricPoint> getLimitTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
+        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, "limitTime");
     }
 
     @Override

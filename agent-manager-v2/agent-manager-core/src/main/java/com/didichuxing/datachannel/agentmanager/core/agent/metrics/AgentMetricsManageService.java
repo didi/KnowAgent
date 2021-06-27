@@ -35,7 +35,7 @@ public interface AgentMetricsManageService {
      * @param logModelHostName 主机名
      * @return 返回logCollectTaskId+fileLogCollectPathId+hostName 在给定时间范围内流量限流总时长
      */
-    Long getHostByteLimiDturationByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName);
+    Long getHostByteLimitDurationByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName);
 
     /**
      * 获取 logCollectTaskId+fileLogCollectPathId+hostName 在给定时间范围内心跳次数，sql 形式 如下：
@@ -186,7 +186,7 @@ public interface AgentMetricsManageService {
      * @param hostName 主机名
      * @return 返回 hostName 在给定时间范围内流量限流总时长
      */
-    Long getHostByteLimiDturationByTimeFrame(Long startTime, Long endTime, String hostName);
+    Long getHostByteLimitDurationByTimeFrame(Long startTime, Long endTime, String hostName);
 
     /**
      * 获取 agent 最近一次心跳上报对应 fd 使用量，sql 形式 如下：
@@ -407,5 +407,7 @@ public interface AgentMetricsManageService {
      * @return 返回获取到的给定日志采集任务 & 采集路径 & 主机在给定时间段内每分钟最小采集时间
      */
     List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime);
+
+    List<MetricPoint> getLimitTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime);
 
 }

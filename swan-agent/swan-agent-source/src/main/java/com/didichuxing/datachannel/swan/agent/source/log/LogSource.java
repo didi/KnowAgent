@@ -359,7 +359,9 @@ public class LogSource extends AbstractSource {
                         this));
 
                     // 同步collectingFileNodeList
-                    for (WorkingFileNode wfn : collectingFileNodeList) {
+                    Iterator<WorkingFileNode> iterator = collectingFileNodeList.iterator();
+                    while (iterator.hasNext()) {
+                        WorkingFileNode wfn = iterator.next();
                         if (wfn.getUniqueKey().equals(fileNode.getNodeKey())) {
                             collectingFileNodeList.remove(wfn);
                             collectingFileNodeList.add(new WorkingFileNode(fileNode, this));
