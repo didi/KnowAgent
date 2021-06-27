@@ -30,8 +30,8 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
   }
 
   public refreshChart = () => {
-    this.props.refresh(valMoments);
-    this.props.setTimeRange(valMoments);
+    this.props.refresh([moment().subtract(10, 'minute'), moment()]);
+    this.props.setTimeRange([moment().subtract(10, 'minute'), moment()]);
   }
 
   public render() {
@@ -44,6 +44,7 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
             className="ml-10"
             defaultValue={this.props.timeRange}
             showTime
+            value={this.props.timeRange}
             allowClear={false}
             format={timeFormat}
             onOk={this.handleRangeChange}

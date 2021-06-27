@@ -88,7 +88,7 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
 
   public componentDidMount() {
     this.props.setTimeRange([moment().subtract(10, 'minute'), moment()]);
-    this.getMetrics(valMoments);
+    this.getMetrics([moment().subtract(10, 'minute'), moment()]);
   }
 
   public render() {
