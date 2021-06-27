@@ -127,9 +127,6 @@ public class MetricService {
                     }
                 }
                 if (trigger) {
-                    if (receiverSet.contains(receiverTopicDO)) {
-                        continue;
-                    }
                     consumer.close();
                     break;
                 }

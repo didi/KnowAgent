@@ -9,6 +9,7 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.CollectTaskMet
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -66,9 +67,15 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     @Override
     public Integer getFileDisorderCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
         List<CollectTaskMetricPO> list = collectTaskMetricMapper.selectSome(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
+        if (list == null|| list.isEmpty()) {
+            return 0;
+        }
         int count = 0;
         for (CollectTaskMetricPO collectTaskMetricPO : list) {
             String files = collectTaskMetricPO.getCollectFiles();
+            if (StringUtils.isEmpty(files) || "[]".equals(files)) {
+                continue;
+            }
             count += files.split("\"isFileOrder\":1").length - 1;
         }
         return count;

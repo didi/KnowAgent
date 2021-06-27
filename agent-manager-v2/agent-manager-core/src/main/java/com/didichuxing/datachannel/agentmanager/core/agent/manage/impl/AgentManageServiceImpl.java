@@ -36,6 +36,8 @@ import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentO
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +53,7 @@ import java.util.List;
  */
 @org.springframework.stereotype.Service
 public class AgentManageServiceImpl implements AgentManageService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AgentManageServiceImpl.class);
 
     @Autowired
     private AgentMapper agentDAO;
@@ -729,6 +732,8 @@ public class AgentManageServiceImpl implements AgentManageService {
             agentHealthManageService.updateAgentHealth(agentHealthDO, CommonConstant.getOperator(null));
             return agentHealthLevelEnum;
         }
+
+        LOGGER.info(agentHealthDescription);
 
         agentHealthDO.setAgentHealthDescription(agentHealthDescription);
         agentHealthDO.setAgentHealthLevel(agentHealthLevelEnum.getCode());

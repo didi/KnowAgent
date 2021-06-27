@@ -45,6 +45,7 @@ public class LogCollectTaskHealthCheckTask implements Job {
                 LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = logCollectTaskManageService.checkLogCollectTaskHealth(logCollectTaskDO);
                 LOGGER.info("class=LogCollectTaskHealthCheckTask||method=execute||logCollectTaskId={}||"
                         + "logCollectTaskHealthLevel={}", logCollectTaskDO.getId(), logCollectTaskHealthLevelEnum.getDescription());
+                return logCollectTaskHealthLevelEnum;
             }));
         }
         for (Future future : futures) {
