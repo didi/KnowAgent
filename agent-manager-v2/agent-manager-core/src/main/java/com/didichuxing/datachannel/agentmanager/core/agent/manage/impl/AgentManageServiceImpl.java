@@ -169,11 +169,7 @@ public class AgentManageServiceImpl implements AgentManageService {
      */
     private boolean hostExists(String hostName) throws ServiceException {
         HostDO hostDO = hostManageService.getHostByHostName(hostName);
-        if(null == hostDO) {
-            return false;
-        } else {
-            return true;
-        }
+        return null != hostDO;
     }
 
     /**
@@ -733,8 +729,6 @@ public class AgentManageServiceImpl implements AgentManageService {
             return agentHealthLevelEnum;
         }
 
-        LOGGER.info(agentHealthDescription);
-
         agentHealthDO.setAgentHealthDescription(agentHealthDescription);
         agentHealthDO.setAgentHealthLevel(agentHealthLevelEnum.getCode());
         agentHealthManageService.updateAgentHealth(agentHealthDO, CommonConstant.getOperator(null));
@@ -803,12 +797,12 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
         Long endTime = System.currentTimeMillis();
-        Long hostCpuLimiDturationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
+        Long hostByteLimitDurationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
                 startTime,
                 endTime,
                 hostName
         );//主机cpu限流时长 单位：ms
-        return hostCpuLimiDturationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
+        return hostByteLimitDurationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
     }
 
     /**
@@ -946,7 +940,7 @@ public class AgentManageServiceImpl implements AgentManageService {
                 currentTime,
                 hostName
         );
-        return !heartbeatTimes.equals(0L);
+        return heartbeatTimes > 0;
     }
 
 }

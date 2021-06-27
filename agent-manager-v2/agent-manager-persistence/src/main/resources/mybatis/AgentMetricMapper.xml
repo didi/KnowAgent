@@ -283,6 +283,11 @@
   </delete>
   <select id="selectMaxByHostname" resultType="java.lang.Long">
     select max(${column}) from agent_metric
-    where hostname = #{hostname}
+    where hostname = #{hostName}
+  </select>
+  <select id="selectHeartbeatCount" resultType="java.lang.Long">
+    select count(heartbeat_time) from agent_metric
+    where hostname = #{hostName}
+    and heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
   </select>
 </mapper>

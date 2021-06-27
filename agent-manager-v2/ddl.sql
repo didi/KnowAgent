@@ -187,6 +187,24 @@ CREATE TABLE `collect_task_metric` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `error_log`;
+create table `error_log`
+(
+  id bigint auto_increment,
+  heartbeat_time bigint default 0 not null,
+  hostname varchar(64) default '' not null,
+  host_ip char(32) default '' not null,
+  log_code varchar(256) default '' not null,
+  throwable varchar(256) default '' not null,
+  count int default 0 not null,
+  log_msg varchar(256) not null,
+  `operator` varchar(64) NOT NULL DEFAULT '',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  constraint error_log_pk
+    primary key (id)
+);
+
 -- ----------------------------
 -- Table structure for operate_record
 -- ----------------------------
