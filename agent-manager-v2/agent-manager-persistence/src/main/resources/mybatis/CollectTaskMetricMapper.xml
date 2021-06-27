@@ -754,13 +754,13 @@
     <result column="is_file_disorder" property="value" jdbcType="BIT" />
   </resultMap>
   <select id="selectSumByHostnamePerMin" resultMap="MetricPointMap">
-    select sum(${column}) ${column}, heartbeat_time from collect_task_metric
+    select sum(${column}) ${column}, heartbeat_time / 1000 from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_model_host_name = #{hostName}
     group by log_model_host_name, heartbeat_time
   </select>
   <select id="selectSumByTaskIdPerMin" resultMap="MetricPointMap">
-    select sum(${column}) ${column}, heartbeat_time from collect_task_metric
+    select sum(${column}) ${column}, heartbeat_time / 1000 from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_mode_id = #{taskId}
     group by log_mode_id, heartbeat_time
@@ -776,7 +776,7 @@
     and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
   </select>
   <select id="selectMinPerMin" resultMap="MetricPointMap">
-    select min(${column}) ${column}, heartbeat_time from collect_task_metric
+    select min(${column}) ${column}, heartbeat_time / 1000 from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
     group by log_mode_id, heartbeat_time
