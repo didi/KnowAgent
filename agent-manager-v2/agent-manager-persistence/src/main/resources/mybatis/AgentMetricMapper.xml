@@ -265,10 +265,10 @@
     heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and hostname = #{hostName}
   </select>
-  <select id="selectLatestByHostname" resultMap="MetricPointMap">
+  <select id="selectLatestByHostname" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
-    from agent_metric where hostname = #{hostName}
+    from agent_metric where hostname = #{hostname}
     order by heartbeat_time limit 1
   </select>
   <select id="selectSum" resultType="java.lang.Long">

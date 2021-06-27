@@ -29,19 +29,19 @@
     delete from tb_k8s_pod
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO">
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_k8s_pod (id, uuid, pod_ip,
       service_name, log_mount_path, log_host_path,
       node_name, node_ip, container_names,
-      operator, create_time, modify_time
+      operator
       )
     values (#{id,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, #{podIp,jdbcType=VARCHAR},
       #{serviceName,jdbcType=VARCHAR}, #{logMountPath,jdbcType=VARCHAR}, #{logHostPath,jdbcType=VARCHAR},
       #{nodeName,jdbcType=VARCHAR}, #{nodeIp,jdbcType=VARCHAR}, #{containerNames,jdbcType=VARCHAR},
-      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      #{operator,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO">
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_k8s_pod
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

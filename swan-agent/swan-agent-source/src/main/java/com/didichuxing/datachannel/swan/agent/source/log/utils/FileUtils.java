@@ -354,20 +354,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         } else {
             try {
                 // startFlag不为空
-                // 对字符创进行切割，得到最终的字符创
+                // 对字符串进行切割，得到最终的字符串
                 if (!StringUtils.isEmpty(startFlag)) {
-                    boolean isVaild = true;
+                    boolean isValid = true;
                     for (int i = 0; i < startFlagIndex + 1; i++) {
                         int startSubIndex = line.indexOf(startFlag);
                         if (startSubIndex >= 0) {
                             line = line.substring(startSubIndex + startFlag.length());
                         } else {
                             // 此时说明line中不存在startFlag
-                            isVaild = false;
+                            isValid = false;
                             break;
                         }
                     }
-                    if (isVaild) {
+                    if (isValid) {
                         if (line.length() < timeFormat.length()) {
                             return null;
                         } else {

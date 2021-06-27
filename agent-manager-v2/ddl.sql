@@ -26,7 +26,7 @@ CREATE TABLE `agent_metric` (
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `operator` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11922 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 drop table if exists `auv_task`;
 CREATE TABLE `auv_task` (
@@ -185,7 +185,7 @@ CREATE TABLE `collect_task_metric` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3578 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for operate_record
@@ -202,7 +202,7 @@ CREATE TABLE `operate_record` (
   `operate_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   PRIMARY KEY (`id`),
   KEY `idx_module_business` (`module_id`,`business_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=41484 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_agent
@@ -225,9 +225,11 @@ CREATE TABLE `tb_agent` (
   `metrics_send_receiver_id` bigint(20) DEFAULT NULL COMMENT 'Agent指标信息发往的接收端id',
   `error_logs_send_topic` varchar(255) DEFAULT NULL COMMENT 'Agent错误日志信息发往的topic名',
   `error_logs_send_receiver_id` bigint(20) DEFAULT NULL COMMENT 'Agent错误日志信息发往的接收端id',
+  `metrics_producer_configuration`     varchar(256)  default '',
+  `error_logs_producer_configuration`  varchar(256)  default '',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `uniq_host_name` (`host_name`) COMMENT '主机名唯一索引'
-) ENGINE=InnoDB AUTO_INCREMENT=394 DEFAULT CHARSET=utf8 COMMENT='采集端表：表示一个部署在某host上的采集端';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采集端表：表示一个部署在某host上的采集端';
 
 -- ----------------------------
 -- Table structure for tb_agent_health
@@ -246,7 +248,7 @@ CREATE TABLE `tb_agent_health` (
   `agent_startup_time_last_time` bigint(20) DEFAULT NULL COMMENT ' agent上一次启动时间',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_agent_id` (`agent_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_agent_operation_sub_task
@@ -268,7 +270,7 @@ CREATE TABLE `tb_agent_operation_sub_task` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_agent_operation_task_id` (`agent_operation_task_id`) USING BTREE,
   KEY `idx_hostname_start_time` (`host_name`,`task_start_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8 COMMENT='采集端操作任务 & 主机名关联关系表：表示采集端操作任务 &主机名的关联关系，agentOperationTask： hostName 一对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采集端操作任务 & 主机名关联关系表：表示采集端操作任务 &主机名的关联关系，agentOperationTask： hostName 一对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_agent_operation_task
@@ -289,7 +291,7 @@ CREATE TABLE `tb_agent_operation_task` (
   `task_start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '任务开始执行时间',
   `task_end_time` timestamp NULL DEFAULT NULL COMMENT '任务执行结束时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8 COMMENT='采集端操作任务表：表示针对某个host上的agent部署、卸载操作计划任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采集端操作任务表：表示针对某个host上的agent部署、卸载操作计划任务';
 
 -- ----------------------------
 -- Table structure for tb_agent_version
@@ -308,7 +310,7 @@ CREATE TABLE `tb_agent_version` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `unq_idx_version` (`version`) USING BTREE,
   UNIQUE KEY `unq_idx_file_md5` (`file_md5`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=506 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_collect_delay_monitor_black_list
@@ -339,7 +341,7 @@ CREATE TABLE `tb_directory_log_collect_path` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT ' 修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=985 DEFAULT CHARSET=utf8 COMMENT='目录类型日志采集路径表：表示一个目录类型日志采集路径，DirectoryLogCollectPath：LogCollectorTask 多对一关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='目录类型日志采集路径表：表示一个目录类型日志采集路径，DirectoryLogCollectPath：LogCollectorTask 多对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_file_log_collect_path
@@ -353,7 +355,7 @@ CREATE TABLE `tb_file_log_collect_path` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1163 DEFAULT CHARSET=utf8 COMMENT='文件类型日志采集路径表：表示一个文件类型日志采集路径，FileLogCollectPath：LogCollectorTask 多对一关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件类型日志采集路径表：表示一个文件类型日志采集路径，FileLogCollectPath：LogCollectorTask 多对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_global_config
@@ -388,7 +390,7 @@ CREATE TABLE `tb_host` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_host_name` (`host_name`) COMMENT '主机名唯一索引',
   KEY `idx_ip` (`ip`) USING BTREE COMMENT '主机 ip 索引'
-) ENGINE=InnoDB AUTO_INCREMENT=1708 DEFAULT CHARSET=utf8 COMMENT='主机表：表示一台主机，可表示物理机、虚拟机、容器';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主机表：表示一台主机，可表示物理机、虚拟机、容器';
 
 -- ----------------------------
 -- Table structure for tb_k8s_pod
@@ -408,7 +410,7 @@ CREATE TABLE `tb_k8s_pod` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_k8s_pod_host
@@ -419,7 +421,7 @@ CREATE TABLE `tb_k8s_pod_host` (
   `k8s_pod_id` bigint(20) NOT NULL COMMENT ' 表 tb_k8s_pod 主键 id',
   `host_id` bigint(20) NOT NULL COMMENT ' 表 tb_host 主键 id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_kafka_cluster
@@ -437,7 +439,7 @@ CREATE TABLE `tb_kafka_cluster` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `unq_kafka_cluster_name` (`kafka_cluster_name`) USING BTREE,
   KEY `idx_kafka_cluster_id` (`kafka_cluster_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1396 DEFAULT CHARSET=utf8 COMMENT='Kafka集群信息表：表示一个 kafka 集群信息，KafkaCluster：LogCollectorTask 一对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Kafka集群信息表：表示一个 kafka 集群信息，KafkaCluster：LogCollectorTask 一对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task
@@ -455,7 +457,7 @@ CREATE TABLE `tb_log_collect_task` (
   `send_topic` varchar(256) NOT NULL DEFAULT '' COMMENT '采集任务采集的日志需要发往的topic名',
   `kafka_cluster_id` bigint(20) NOT NULL COMMENT '表tb_kafka_cluster主键',
   `host_filter_rule_logic_json_string` varchar(4096) NOT NULL COMMENT '主机过滤规则信息（存储 BaseHostFilterRuleLogic 某具体实现类的 json 化形式）',
-  `advanced_configuration_json_string` varchar(4096) NOT NULL DEFAULT '' COMMENT '采集任务高级配置项集，为json形式字符串',
+  `advanced_configuration_json_string` varchar(4096) DEFAULT '' COMMENT '采集任务高级配置项集，为json形式字符串',
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -469,7 +471,7 @@ CREATE TABLE `tb_log_collect_task` (
   `file_name_suffix_match_rule_logic_json_string` varchar(1024) NOT NULL DEFAULT '' COMMENT '待采集文件后缀匹配规则信息（存储 BaseCollectFileSuffixMatchRuleLogic 某具体实现类的 json 化形式）',
   `collect_delay_threshold_ms` bigint(255) NOT NULL COMMENT '该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~ 当前时间间隔',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1072 DEFAULT CHARSET=utf8 COMMENT='日志采集任务表：表示一个待运行在agent的采集任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志采集任务表：表示一个待运行在agent的采集任务';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_health
@@ -489,7 +491,7 @@ CREATE TABLE `tb_log_collect_task_health` (
   `lastest_file_disorder_check_healthy_time_per_log_file_path` varchar(2048) NOT NULL DEFAULT '' COMMENT ' 近一次“文件乱序健康检查”为健康时的时间点',
   `lastest_file_path_exists_check_healthy_time_per_log_file_path` varchar(2048) NOT NULL DEFAULT '' COMMENT ' 近一次“文件路径是否存在健康检查”为健康时的时间点',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1058 DEFAULT CHARSET=utf8 COMMENT='日志采集任务健康度信息表：表示一个日志采集任务健康度信息，LogCollectorTaskHealth：LogCollectorTask 一对一关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志采集任务健康度信息表：表示一个日志采集任务健康度信息，LogCollectorTaskHealth：LogCollectorTask 一对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_service
@@ -502,7 +504,7 @@ CREATE TABLE `tb_log_collect_task_service` (
   PRIMARY KEY (`id`),
   KEY `idx_service_id` (`service_id`),
   KEY `idx_logcollecttask_id` (`log_collector_task_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2006 DEFAULT CHARSET=utf8 COMMENT='日志采集任务 & 服务关联关系表：表示服务 & 日志采集任务的关联关系，Service：LogCollectorTask 多对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志采集任务 & 服务关联关系表：表示服务 & 日志采集任务的关联关系，Service：LogCollectorTask 多对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_meta_table_version
@@ -531,7 +533,7 @@ CREATE TABLE `tb_service` (
   `extenal_service_id` bigint(20) DEFAULT NULL COMMENT '外部系统服务id，如：夜莺服务节点 id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_service_name` (`service_name`) COMMENT '服务名唯一索引'
-) ENGINE=InnoDB AUTO_INCREMENT=5228 DEFAULT CHARSET=utf8 COMMENT='服务表：表示一个服务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='服务表：表示一个服务';
 
 -- ----------------------------
 -- Table structure for tb_service_host
@@ -544,7 +546,7 @@ CREATE TABLE `tb_service_host` (
   PRIMARY KEY (`id`),
   KEY `idx_host_id` (`host_id`),
   KEY `idx_service_id` (`service_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3340 DEFAULT CHARSET=utf8 COMMENT='服务 & 主机关联关系表：表示服务 & 主机的关联关系，Service : Host多对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='服务 & 主机关联关系表：表示服务 & 主机的关联关系，Service : Host多对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_service_project
@@ -555,6 +557,9 @@ CREATE TABLE `tb_service_project` (
   `service_id` bigint(20) NOT NULL COMMENT '对应表 tb_service id',
   `project_id` bigint(20) NOT NULL COMMENT '项目id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=821 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+insert into tb_agent_version (file_name, file_md5, file_type, description, operator, version)
+values ('agent-new.tgz',	'854b955f12beeceabdcdcdefba4c5c1c',	0,	'',	'System', '1.0.0');

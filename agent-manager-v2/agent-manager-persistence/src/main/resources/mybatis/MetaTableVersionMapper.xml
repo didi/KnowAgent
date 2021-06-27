@@ -24,10 +24,10 @@
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metatableversion.MetaTableVersionPO" >
     insert into tb_meta_table_version (id, table_name, table_version, 
-      operator, create_time, modify_time
+      operator
       )
     values (#{id,jdbcType=BIGINT}, #{tableName,jdbcType=VARCHAR}, #{tableVersion,jdbcType=BIGINT}, 
-      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      #{operator,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metatableversion.MetaTableVersionPO" >

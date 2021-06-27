@@ -69,7 +69,7 @@
       #{operator,jdbcType=VARCHAR}, #{metricsProducerConfiguration, jdbcType=VARCHAR}, #{errorLogsProducerConfiguration, jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_agent
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >

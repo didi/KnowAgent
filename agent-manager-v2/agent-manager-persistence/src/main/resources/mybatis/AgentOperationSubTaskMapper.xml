@@ -41,11 +41,11 @@
     insert into tb_agent_operation_sub_task (id, agent_operation_task_id, host_name, 
       ip, container, source_agent_version_id, 
       task_start_time, task_end_time, operator, 
-      create_time, modify_time, execute_status)
+      execute_status)
     values (#{id,jdbcType=BIGINT}, #{agentOperationTaskId,jdbcType=BIGINT}, #{hostName,jdbcType=VARCHAR}, 
       #{ip,jdbcType=VARCHAR}, #{container,jdbcType=TINYINT}, #{sourceAgentVersionId,jdbcType=BIGINT}, 
       #{taskStartTime,jdbcType=TIMESTAMP}, #{taskEndTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{executeStatus,jdbcType=TINYINT})
+      #{executeStatus,jdbcType=TINYINT})
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.operationtask.AgentOperationSubTaskPO" >

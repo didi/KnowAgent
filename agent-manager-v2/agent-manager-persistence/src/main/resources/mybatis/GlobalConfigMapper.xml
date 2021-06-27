@@ -23,12 +23,9 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.globalconfig.GlobalConfigPO">
-    insert into tb_global_config (id, key, value, 
-      operator, create_time, modify_time
-      )
+    insert into tb_global_config (id, `key`, value, operator)
     values (#{id,jdbcType=BIGINT}, #{key,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, 
-      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
-      )
+      #{operator,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.globalconfig.GlobalConfigPO">
     insert into tb_global_config

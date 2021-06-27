@@ -47,7 +47,9 @@ import java.util.List;
 @org.springframework.stereotype.Service
 public class HostManageServiceImpl implements HostManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HostManageServiceImpl.class);@Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostManageServiceImpl.class);
+
+    @Autowired
     private HostMapper hostDAO;
 
     @Autowired
