@@ -179,7 +179,9 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Integer getErrorLogCount(Long lastestCheckTimeStart, Long agentHealthCheckTimeEnd, String hostName) {
-        return agentMetricsDAO.getErrorLogCount(lastestCheckTimeStart, agentHealthCheckTimeEnd, hostName);
+        // TODO: 2021-06-28 优化错误日志的管理
+//        return agentMetricsDAO.getErrorLogCount(lastestCheckTimeStart, agentHealthCheckTimeEnd, hostName);
+        return 0;
     }
 
     @Override

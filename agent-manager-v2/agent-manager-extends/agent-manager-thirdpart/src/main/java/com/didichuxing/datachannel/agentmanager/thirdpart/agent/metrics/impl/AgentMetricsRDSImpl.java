@@ -15,7 +15,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -229,12 +228,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        List<MetricPoint> graph = collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
-        for (MetricPoint metricPoint : graph) {
-            long logTime = TypeUtils.castToLong(metricPoint.getValue());
-            metricPoint.setValue(new Date(logTime));
-        }
-        return graph;
+        return collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
     }
 
     @Override

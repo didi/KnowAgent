@@ -757,13 +757,13 @@
     select sum(${column}) ${column}, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_model_host_name = #{hostName}
-    group by log_model_host_name, heartbeat_time
+    group by log_model_host_name, heartbeat_time / 1000
   </select>
   <select id="selectSumByTaskIdPerMin" resultMap="MetricPointMap">
     select sum(${column}) ${column}, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_mode_id = #{taskId}
-    group by log_mode_id, heartbeat_time
+    group by log_mode_id, heartbeat_time / 1000
   </select>
   <select id="selectSingleByTaskIdPerMin" resultMap="MetricPointMap">
     select ${column}, heartbeat_time from collect_task_metric
@@ -779,7 +779,7 @@
     select min(${column}) ${column}, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
-    group by log_mode_id, heartbeat_time
+    group by log_mode_id, heartbeat_time / 1000
   </select>
   <delete id="deleteBeforeTime" parameterType="java.lang.Long">
     delete from collect_task_metric
