@@ -220,11 +220,11 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
             if (logSliceRuleDTO != null) {
                 //日志切分规则
                 String timeFormat = logSliceRuleDTO.getSliceTimestampFormat();
-                if (timeFormat != null && timeFormat != "") {
+                if (timeFormat != null && !timeFormat.equals("")) {
                     logSourceConfig.setTimeFormat(timeFormat);  //时间戳格式
                 }
                 String timeStartFlag = logSliceRuleDTO.getSliceTimestampPrefixString();
-                if (timeStartFlag != null && timeStartFlag != "") {
+                if (timeStartFlag != null && !timeStartFlag.equals("")) {
                     logSourceConfig.setTimeStartFlag(timeStartFlag);  //切片时间戳前缀字符串
                 }
                 Integer timeStartFlagIndex = logSliceRuleDTO.getSliceTimestampPrefixStringIndex();
