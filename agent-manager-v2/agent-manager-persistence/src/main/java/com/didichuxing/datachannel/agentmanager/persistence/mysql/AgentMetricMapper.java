@@ -29,5 +29,7 @@ public interface AgentMetricMapper {
 
     int deleteBeforeTime(@Param("time") Long time);
 
-    Long selectMaxByHostname(@Param("hostname") String hostName, @Param("column") String column);
+    Long selectMaxByHostname(@Param("hostName") String hostName, @Param("column") String column);
+
+    Long selectHeartbeatCount(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName);
 }

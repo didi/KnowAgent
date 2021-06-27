@@ -23,6 +23,7 @@ interface ICollectObjectProps extends FormComponentProps {
   hostRange: number;
   hostWhite: string;
   hostNames: string;
+  setisNotLogPath: any;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -91,6 +92,7 @@ const CollectObjectConfiguration = (props: Props & ICollectObjectProps) => {
     setSuHostList([]);
     setHostNameList([])
     getSuHostlist(value);
+    props.setisNotLogPath(false)
   }
   useEffect(() => {
     getServicesData();

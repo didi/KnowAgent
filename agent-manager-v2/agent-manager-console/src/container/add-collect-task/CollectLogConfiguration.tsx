@@ -26,6 +26,8 @@ interface ICollectLogProps extends FormComponentProps {
   slicingRuleLogList: number[];
   suffixfilesList: number[];
   hostNames: any;
+  isNotLogPath: any;
+  setisNotLogPath: any;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -40,7 +42,7 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
   const [activeKeys, setActiveKeys] = useState([] as string[]);
   // const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
   const [logListFile, setLogListFile] = useState([])
-  const [isNotLogPath, setisNotLogPath] = useState(false)
+  // const [isNotLogPath, setisNotLogPath] = useState(false)
 
   const customPanelStyle = {
     border: 0,
@@ -57,7 +59,6 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
   const onLogFilterChange = (e: any) => {
     setLogFilter(e.target.value);
   }
-
   useEffect(() => {
     if (editUrl) {
       setCollectLogType(props.collectLogType);
@@ -118,14 +119,15 @@ const CollectLogConfiguration = (props: Props & ICollectLogProps) => {
           slicingRuleLogList={props.slicingRuleLogList}
           setLogListFile={setLogListFile}
           logListFile={logListFile}
-          setisNotLogPath={setisNotLogPath}
+          isNotLogPath={props.isNotLogPath}
+          setisNotLogPath={props.setisNotLogPath}
         />
         <LogFileType
           form={props.form}
           setLogListFile={setLogListFile}
           logListFile={logListFile}
-          isNotLogPath={isNotLogPath}
-          setisNotLogPath={setisNotLogPath}
+          isNotLogPath={props.isNotLogPath}
+          setisNotLogPath={props.setisNotLogPath}
         />
         <LogRepeatForm
           logType='file'

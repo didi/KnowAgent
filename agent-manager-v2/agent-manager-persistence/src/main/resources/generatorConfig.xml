@@ -36,7 +36,7 @@
                 type="XMLMAPPER" />
 
         <!-- table name 可以添加多个table标签-->
-        <table tableName="collect_task_metric"  domainObjectName="CollectTaskMetric" enableCountByExample="false"
+        <table tableName="error_log"  domainObjectName="ErrorLog" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" />
 
