@@ -1,16 +1,21 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
+import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.CollectTaskMetricMapper;
+import com.didichuxing.datachannel.agentmanager.persistence.mysql.ErrorLogMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -21,6 +26,9 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Autowired
     private CollectTaskMetricMapper collectTaskMetricMapper;
+
+    @Autowired
+    private ErrorLogMapper errorLogMapper;
 
     @Override
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
@@ -49,7 +57,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public Long getHeartBeatTimes(Long startTime, Long endTime, String hostName) {
-        return collectTaskMetricMapper.selectHeartbeatCountByHostname(startTime, endTime, hostName);
+        return agentMetricMapper.selectHeartbeatCount(startTime, endTime, hostName);
     }
 
     @Override
@@ -114,7 +122,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getErrorLogCount(Long startTime, Long endTime, String hostName) {
-        return 0;
+        Long value = errorLogMapper.selectCount(startTime, endTime, hostName);
+        return value == null ? 0 : value.intValue();
     }
 
     @Override
@@ -149,7 +158,9 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
         List<MetricPoint> graph = agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, "memory_usage");
         for (MetricPoint metricPoint : graph) {
-            metricPoint.setValue(((Number) metricPoint.getValue()).longValue() / 1024 / 1024);
+            BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
+            BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
+            metricPoint.setValue(b2.doubleValue());
         }
         return graph;
     }
@@ -163,7 +174,9 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     public List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName) {
         List<MetricPoint> graph = collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, "send_byte");
         for (MetricPoint metricPoint : graph) {
-            metricPoint.setValue(((Number) metricPoint.getValue()).longValue() / 1024 / 1024);
+            BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
+            BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
+            metricPoint.setValue(b2.doubleValue());
         }
         return graph;
     }
@@ -186,9 +199,10 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
         List<MetricPoint> graph = collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, "send_byte");
-        // 修改单位为MB
         for (MetricPoint metricPoint : graph) {
-            metricPoint.setValue(((Number) metricPoint.getValue()).longValue() / 1024 / 1024);
+            BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
+            BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
+            metricPoint.setValue(b2.doubleValue());
         }
         return graph;
     }
@@ -215,7 +229,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
+        List<MetricPoint> graph = collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
+        for (MetricPoint metricPoint : graph) {
+            long logTime = TypeUtils.castToLong(metricPoint.getValue());
+            metricPoint.setValue(new Date(logTime));
+        }
+        return graph;
     }
 
     @Override

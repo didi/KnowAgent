@@ -125,6 +125,15 @@ public class MetricTest extends ApplicationTests {
     }
 
     @Test
+    public void getMemoryUsagePerMinTest() {
+        List<MetricPoint> points = dao.getAgentMemoryUsagePerMin(0L, endTime, "10.190.32.213");
+        for (MetricPoint point : points) {
+            System.out.println(point.getTimestamp());
+            System.out.println(point.getValue());
+        }
+    }
+
+    @Test
     public void collectTaskBytesPerMinTest() {
         List<MetricPoint> points = dao.getLogCollectTaskBytesPerMin(1070L, startTime, endTime);
         for (MetricPoint point : points) {

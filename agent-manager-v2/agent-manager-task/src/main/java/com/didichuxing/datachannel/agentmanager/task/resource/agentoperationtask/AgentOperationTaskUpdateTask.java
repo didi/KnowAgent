@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2020-09-21
  * Agent 运维操作执行任务
  */
-@Task(name = "AgentOperationTaskUpdateTask", description = "定时获取所有未完成的Agent运维操作执行任务对应各主机执行结果，并将执行结果更新至表 tb_agent_operation_task & tb_agent_operation_sub_task，周期为 1分钟/次 ",
-        cron = "0 0/1 * * * ?", autoRegister = true)
+/*@Task(name = "AgentOperationTaskUpdateTask", description = "定时获取所有未完成的Agent运维操作执行任务对应各主机执行结果，并将执行结果更新至表 tb_agent_operation_task & tb_agent_operation_sub_task，周期为 1分钟/次 ",
+        cron = "0 0/1 * * * ?", autoRegister = true)*/
 public class AgentOperationTaskUpdateTask implements Job {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("AgentOperationTaskUpdateTask");
