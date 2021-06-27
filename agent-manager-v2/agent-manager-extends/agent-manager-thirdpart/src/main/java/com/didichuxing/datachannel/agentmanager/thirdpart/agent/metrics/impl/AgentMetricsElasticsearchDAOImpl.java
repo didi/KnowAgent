@@ -156,7 +156,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
                 .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
                 .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.termQuery("isFileDisorder", true))
+                .must(QueryBuilders.matchQuery("collectFiles", "\"isFileOrder\":1"))
                 .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);

@@ -1118,18 +1118,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     }
-                    /*
-                     * 校验 logcollecttask 是否未关联主机
-                     */
-                    boolean notRelateAnyHost = checkNotRelateAnyHost(logCollectTaskDO.getId());
-                    if(notRelateAnyHost) {//logcollecttask 未关联主机
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format(
-                                "%s:LogCollectTaskId={%d}",
-                                LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getDescription(),
-                                logCollectTaskDO.getId()
-                        );
-                    }
                 }
                 /*
                  * 设置各 filePathId 对应采集完整性时间
@@ -1169,6 +1157,18 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                         logCollectTaskDO.getId(),
                         logCollectTaskDO.getKafkaClusterId(),
                         logCollectTaskDO.getSendTopic()
+                );
+            }
+            /*
+             * 校验 logcollecttask 是否未关联主机
+             */
+            boolean notRelateAnyHost = checkNotRelateAnyHost(logCollectTaskDO.getId());
+            if(notRelateAnyHost) {//logcollecttask 未关联主机
+                logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getLogCollectTaskHealthLevelEnum();
+                logCollectTaskHealthDescription = String.format(
+                        "%s:LogCollectTaskId={%d}",
+                        LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getDescription(),
+                        logCollectTaskDO.getId()
                 );
             }
         }
@@ -1228,11 +1228,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
      */
     private boolean checkNotRelateAnyHost(Long logCollectTaskId) {
         List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(logCollectTaskId);
-        if(CollectionUtils.isNotEmpty(hostDOList)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !CollectionUtils.isNotEmpty(hostDOList);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
@@ -64,8 +65,13 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getFileDisorderCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        Long value = collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "is_file_disorder", true);
-        return value == null ? 0 : value.intValue();
+        List<CollectTaskMetricPO> list = collectTaskMetricMapper.selectSome(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
+        int count = 0;
+        for (CollectTaskMetricPO collectTaskMetricPO : list) {
+            String files = collectTaskMetricPO.getCollectFiles();
+            count += files.split("\"isFileOrder\":1").length - 1;
+        }
+        return count;
     }
 
     @Override

@@ -21,6 +21,8 @@ public interface CollectTaskMetricMapper {
 
     int updateByPrimaryKey(CollectTaskMetricPO record);
 
+    List<CollectTaskMetricPO> selectSome(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId);
+
     List<MetricPoint> selectSumByHostnamePerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
 
     List<MetricPoint> selectSumByTaskIdPerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("column") String column);
@@ -40,6 +42,8 @@ public interface CollectTaskMetricMapper {
     Long selectSingleCountEqualsZero(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("column") String column);
 
     Long selectSingleCountGtZero(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("column") String column);
+
+    Long selectSingleCountLtZero(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("column") String column);
 
     Long selectSingleHeartbeatCount(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId);
 
