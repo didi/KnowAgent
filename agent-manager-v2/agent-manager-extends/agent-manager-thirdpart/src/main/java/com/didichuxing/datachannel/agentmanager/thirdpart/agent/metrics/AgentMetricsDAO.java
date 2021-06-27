@@ -240,7 +240,7 @@ public interface AgentMetricsDAO {
 
     List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName);
 
-    List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName);
+    List getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName);
 
     List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName);
 

@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -176,7 +177,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setTimestamp(metricPoint.getTimestamp() * 1000);
             metricPoint.setValue(b2.doubleValue());
         }
         return graph;
@@ -185,9 +185,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName) {
         List<MetricPoint> graph = collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, "send_count");
-        for (MetricPoint metricPoint : graph) {
-            metricPoint.setTimestamp(metricPoint.getTimestamp() * 1000);
-        }
         return graph;
     }
 
@@ -207,7 +204,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setTimestamp(metricPoint.getTimestamp() * 1000);
             metricPoint.setValue(b2.doubleValue());
         }
         return graph;
@@ -235,13 +231,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        List<MetricPoint> graph = collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
-        for (MetricPoint metricPoint : graph) {
-            long logTime = TypeUtils.castToLong(metricPoint.getValue());
-            metricPoint.setValue(new Date(logTime));
-            metricPoint.setTimestamp(metricPoint.getTimestamp() * 1000);
-        }
-        return graph;
+        return collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
     }
 
     @Override
