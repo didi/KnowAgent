@@ -60,6 +60,7 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
   const [filePathList, setFilePathList] = useState(['']);
   const [slicingRuleLogList, setSlicingRuleLogList] = useState([] as number[]); // LogRepeatForm file 循环 (cata/file重复)页面 
   const [suffixfilesList, setSuffixfilesList] = useState([] as number[]); // LogFileType （file里面的）循环 页面
+  const [isNotLogPath, setisNotLogPath] = useState(false)
 
 
   const steps = [{
@@ -72,6 +73,8 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
       historyFilter={historyFilter}
       hostRange={hostRange}
       hostWhite={hostWhite}
+      isNotLogPath={isNotLogPath}
+      setisNotLogPath={setisNotLogPath}
     />,
   }, {
     title: '采集日志配置',
@@ -85,6 +88,8 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
       filePathList={filePathList}
       slicingRuleLogList={slicingRuleLogList}
       suffixfilesList={suffixfilesList}
+      isNotLogPath={isNotLogPath}
+      setisNotLogPath={setisNotLogPath}
     />,
   }, {
     title: '接收端配置与监控',
