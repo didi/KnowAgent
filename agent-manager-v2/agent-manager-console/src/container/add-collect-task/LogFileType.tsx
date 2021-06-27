@@ -37,21 +37,24 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
     setSuffixfiles(e.target.value);
   }
 
-  const handleLogPath = () => {
+  const handleLogPath = useDebounce(() => {
     const serviceId = getFieldValue(`step1_serviceId`)
-    if (serviceId) {
+    const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
+    const logFilePath = getFieldValue(`step2_file_path_${logFilePathKey}`)
+    // const hostName = getFieldValue(`step2_hostName`)
+    if (serviceId && logSuffixfilesValue && logFilePath) {
       getHostListbyServiceId(serviceId).then((res: any) => {
         if (res?.hostList?.length > 0) {
-          setIsNotLogPath(true)
+          props.setisNotLogPath(true)
           setHostNameList(res?.hostList)
           handlelogSuffixfiles()
         } else {
-          setIsNotLogPath(false)
+          props.setisNotLogPath(false)
           setHostNameList([])
         }
       })
     }
-  }
+  }, 200)
 
   const handlelogSuffixfiles = useDebounce(() => {
     const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
@@ -62,7 +65,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
       suffixMatchRegular: logSuffixfilesValue,
       hostName
     }
-    if (logFilePath && logSuffixfilesValue) {
+    if (logFilePath && logSuffixfilesValue && hostName) {
       getCollectPathList(params).then((res) => {
         // logArr[key] = res.massage.split()
         setFileArrList(res)
@@ -85,7 +88,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
 
   useEffect(() => {
     setIsNotLogPath(props.isNotLogPath)
-  }, [props.logListFile]);
+  }, [props.isNotLogPath]);
 
   return (
     <div className='set-up' key={props.getKey}>
@@ -134,7 +137,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
         }} placeholder='请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$' />)}
         <Button onClick={handleLogPath} type="primary" style={{ marginLeft: '20px' }}>预览</Button>
       </Form.Item>
-      {hostNameList.length > 0 ? <Form.Item label="映射主机">
+      {hostNameList.length > 0 && props.isNotLogPath ? <Form.Item label="映射主机">
         {getFieldDecorator(`step2_hostName`, {
           initialValue: hostNameList[0].hostName,
           rules: [{ message: '请选择映射主机名称' }],
@@ -158,7 +161,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
         )}
       </Form.Item> : null}
       {
-        isNotLogPath && <Form.Item>
+        hostNameList.length > 0 && props.isNotLogPath && <Form.Item>
           <ul className={`logfile_list logFileList`}>
             {
               fileArrList && fileArrList?.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)

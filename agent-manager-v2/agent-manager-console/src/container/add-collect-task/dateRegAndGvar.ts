@@ -4,19 +4,19 @@ yyyy-MM-dd HH:mm:ss.SSS
 yyyy-MM-dd HH:mm:ss
 HH:mm:ss.SSS
 */
-export const yyyyMMDDHHMMss = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\w]{0,1}\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
+export const yyyyMMDDHHMMss = /\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
 
-export const yyyyMMDDHHMMssSSS = /[^0-9|a-zA-Z|\u4e00-\u9fa5\w]{0,1}\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}(.)\d{3}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
+export const yyyyMMDDHHMMssSSS = /\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}(.)\d{3}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
 
-export const HHmmssSSS = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\w]{0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g
+export const HHmmssSSS = /\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g
 
-export const yyMMDDHHMMSS = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}(\s|\-|\/|.|:){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g; //匹配YYMMDDHHMMSS时间格式正则
+// export const yyMMDDHHMMSS = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}(\s|\-|\/|.|:){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g; //匹配YYMMDDHHMMSS时间格式正则
 
-export const yyMMDDHHMM = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}(\s|\-|\/|.|:){0,1}\d{2}(\-|\/|.|:)\d{2}/g; //匹配YYMMDDHHMM时间格式正则
+// export const yyMMDDHHMM = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}(\s|\-|\/|.|:){0,1}\d{2}(\-|\/|.|:)\d{2}/g; //匹配YYMMDDHHMM时间格式正则
 
-export const yyyyMMDD = /[^0-9|a-zA-Z|\u4e00-\u9fa5|]?\d{4}(\-|\/|.)\d{2}\1\d{2}/g;  //匹配YYYYMMDD时间格式正则
+// export const yyyyMMDD = /[^0-9|a-zA-Z|\u4e00-\u9fa5|]?\d{4}(\-|\/|.)\d{2}\1\d{2}/g;  //匹配YYYYMMDD时间格式正则
     
-export const yyMMDD = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}/g;  //匹配YYMMDD时间格式正则
+// export const yyMMDD = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}/g;  //匹配YYMMDD时间格式正则
     
 
 export const fuhao = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]/g
