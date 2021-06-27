@@ -113,6 +113,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public Long getLatestMemoryUsage(String hostName) {
+        AgentMetricPO agentMetricPO = agentMetricMapper.selectLatestByHostname(hostName);
+        return agentMetricPO.getMemoryUsage();
+    }
+
+    @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
         return agentMetricMapper.selectSum(startTime, endTime, hostName, "gc_count");
     }
@@ -120,6 +126,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName) {
         return agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, "cpu_usage");
+    }
+
+    @Override
+    public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
+        return agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, "memory_usage");
     }
 
     @Override
@@ -186,4 +197,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "filter_too_large_count");
     }
+
+
 }

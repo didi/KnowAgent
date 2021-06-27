@@ -1,6 +1,5 @@
 server:
   port: 8006
-# 日志相关配置
 logging:
   pattern:
     file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
@@ -9,7 +8,6 @@ logging:
   file:
     max-history: 7
 
-# mybatis公共配置
 mybatis:
   configuration:
     mapUnderscoreToCamelCase: true
@@ -63,9 +61,8 @@ spring:
     init-sql: true
     init-thread-num: 10
     max-thread-num: 20
-
-# 事务超时时间
-spring.transaction.default-timeout: 300
+  transaction:
+    default-timeout: 300
 
 kcm:
   enabled: true

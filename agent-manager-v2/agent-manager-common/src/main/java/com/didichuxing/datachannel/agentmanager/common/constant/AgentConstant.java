@@ -25,6 +25,10 @@ public class AgentConstant {
      */
     public static final String AGENT_METRIC_PANEL_NAME_CPU_USAGE_PER_MIN = "Agent Cpu 使用率/分钟";
     /**
+     * Agent指标面板名 - Agent 内存使用/分钟
+     */
+    public static final String AGENT_METRIC_PANEL_NAME_MEMORY_USAGE_PER_MIN = "Agent 内存使用量/分钟";
+    /**
      * Agent指标名 - Agent fullgc 次数/分钟
      */
     public static final String AGENT_METRIC_NAME_FULL_GC_TIMES_PER_MIN = "Agent fullgc 次数/分钟";

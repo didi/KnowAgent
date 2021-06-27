@@ -191,6 +191,10 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         return agentMetricsDAO.getLatestCpuUsage(hostName).intValue();
     }
 
+    public Long getLatestMemoryUsage(String hostName) {
+        return agentMetricsDAO.getLatestMemoryUsage(hostName);
+    }
+
     @Override
     public Long getLastestAgentStartupTime(String hostName) {
         return agentMetricsDAO.getLatestStartupTime(hostName);
@@ -204,6 +208,11 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     @Override
     public List<MetricPoint> getAgentCpuUsagePerMinMetric(String hostName, Long startTime, Long endTime) {
         return agentMetricsDAO.getAgentCpuUsagePerMin(startTime, endTime, hostName);
+    }
+
+    @Override
+    public List<MetricPoint> getAgentMemoryUsagePerMinMetric(String hostName, Long startTime, Long endTime) {
+        return agentMetricsDAO.getAgentMemoryUsagePerMin(startTime, endTime, hostName);
     }
 
     @Override

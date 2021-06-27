@@ -271,6 +271,15 @@ public interface AgentMetricsManageService {
     List<MetricPoint> getAgentCpuUsagePerMinMetric(String hostName, Long startTime, Long endTime);
 
     /**
+     * 获取agent 内存使用/分钟指标信息
+     * @param hostName agent所在主机名
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return 返回获取到的agent 内存使用/分钟指标信息
+     */
+    List<MetricPoint> getAgentMemoryUsagePerMinMetric(String hostName, Long startTime, Long endTime);
+
+    /**
      * 获取agent fullgc次数/分钟指标信息
      * @param hostName agent所在主机名
      * @param startTime 开始时间
