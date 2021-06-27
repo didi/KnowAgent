@@ -39,9 +39,9 @@ const LogRepeatForm = (props: ILogRepeatForm) => {
   // const regYmd = new RegExp(yyMMDD)
 
   const dateType: any = {
-    "yyyy-MM-DD HH:mm:ss.SSS": regYymdhmsSSS,
-    "yyyy-MM-DD HH:mm:ss,SSS": regYymdhmsSS,
-    "yyyy-MM-DD HH:mm:ss": regYymdhms,
+    "yyyy-MM-dd HH:mm:ss.SSS": regYymdhmsSSS,
+    "yyyy-MM-dd HH:mm:ss,SSS": regYymdhmsSS,
+    "yyyy-MM-dd HH:mm:ss": regYymdhms,
     'HH:mm:ss.SSS': regHmsS,
     // 'YYYY-MM-DD': regYymd,
     // 'YY-MM-DD': regYmd,
@@ -103,11 +103,11 @@ $123$33$2018-01-08 sqrwqrq
       */
 
       if (selObj?.match(regYymdhmsSSS)) {
-        cheageSliceTypeReg(regYymdhmsSSS, "yyyy-MM-DD HH:mm:ss.SSS", selObj, userCopyContent)
+        cheageSliceTypeReg(regYymdhmsSSS, "yyyy-MM-dd HH:mm:ss.SSS", selObj, userCopyContent)
       } else if (selObj?.match(regYymdhmsSS)) {
-        cheageSliceTypeReg(regYymdhmsSS, "yyyy-MM-DD HH:mm:ss,SSS", selObj, userCopyContent)
+        cheageSliceTypeReg(regYymdhmsSS, "yyyy-MM-dd HH:mm:ss,SSS", selObj, userCopyContent)
       } else if (selObj?.match(regYymdhms)) {
-        cheageSliceTypeReg(regYymdhms, "yyyy-MM-DD HH:mm:ss", selObj, userCopyContent)
+        cheageSliceTypeReg(regYymdhms, "yyyy-MM-dd HH:mm:ss", selObj, userCopyContent)
       } else if (selObj?.match(regHmsS)) {
         cheageSliceTypeReg(regHmsS, "HH:mm:ss.SSS", selObj, userCopyContent)
       }
