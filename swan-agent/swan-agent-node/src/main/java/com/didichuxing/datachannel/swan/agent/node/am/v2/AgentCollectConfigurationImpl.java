@@ -101,7 +101,7 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
         metricConfig.setProperties(metricsProducerConfiguration.getProperties());
         metricConfig.setTopic(metricsProducerConfiguration.getTopic());
         metricConfig.setSwitchConfig(ServiceSwitch.ON.getStatus());
-        metricConfig.setTransfer(true);//TODO：@旋姐
+        metricConfig.setTransfer(true);//TODO：
         agentConfig.setMetricConfig(metricConfig);
         /*
          * set model config
@@ -191,6 +191,8 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
         } else {
             modelLimitConfig.setLevel(MODEL_LIMIT_LEVEL_LOW);
         }
+        modelLimitConfig.setStartThrehold(logCollectTaskAdvancedConfiguration.getStartThrehold());
+        modelLimitConfig.setMinThreshold(logCollectTaskAdvancedConfiguration.getMinThreshold());
         modelConfig.setModelLimitConfig(modelLimitConfig);
         /*
          * set source config

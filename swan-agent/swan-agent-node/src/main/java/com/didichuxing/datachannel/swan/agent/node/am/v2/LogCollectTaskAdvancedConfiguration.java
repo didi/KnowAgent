@@ -101,6 +101,15 @@ public class LogCollectTaskAdvancedConfiguration {
      */
     private int sinkNum = 1;
 
+    /**
+     * 日志模型对应其实限流阈值 单位：byte
+     */
+    private long startThrehold = 200000;
+    /**
+     * 日志模型对应最小限流阈值
+     */
+    private long minThreshold  = 100000;
+
     public int getSinkNum() {
         return sinkNum;
     }
@@ -135,6 +144,22 @@ public class LogCollectTaskAdvancedConfiguration {
 
     public String getRegularPartKey() {
         return regularPartKey;
+    }
+
+    public long getStartThrehold() {
+        return startThrehold;
+    }
+
+    public void setStartThrehold(long startThrehold) {
+        this.startThrehold = startThrehold;
+    }
+
+    public long getMinThreshold() {
+        return minThreshold;
+    }
+
+    public void setMinThreshold(long minThreshold) {
+        this.minThreshold = minThreshold;
     }
 
     public void setRegularPartKey(String regularPartKey) {
