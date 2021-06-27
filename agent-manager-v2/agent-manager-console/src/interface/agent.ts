@@ -143,4 +143,5 @@ export interface IMetricOptions {
   title: string;
   selfHide: boolean;
   metricOptions: EChartOption;
+  metricPanelGroupName:string;
 }

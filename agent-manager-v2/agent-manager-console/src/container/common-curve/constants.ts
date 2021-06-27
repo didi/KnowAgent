@@ -39,7 +39,7 @@ export const getLegendHight = (options: EChartOption | any) => {
   return legendHight;
 };
 
-export const dealMetricPanel = (metricPanelList: IMetricPanels[]) => {
+export const dealMetricPanel = (metricPanelList: IMetricPanels[],metricPanelGroupName:any) => {
   return metricPanelList.map(ele => {
     const timestamps = ele.metricList[0]?.metricPonitList?.map(p => moment(p.timestamp).format(timeFormat)); // 对应的时间戳
     const titles = ele.metricList?.map(v => { return v.metricName });
@@ -47,7 +47,7 @@ export const dealMetricPanel = (metricPanelList: IMetricPanels[]) => {
       return {
         name: v.metricName, // 对应的单个折线标题
         type: 'line',
-        stack: '总量',
+        // stack: '总量',
         data: v.metricPonitList.map(p => p.value),  // 对应的单个折线数据
       };
     });
@@ -55,11 +55,11 @@ export const dealMetricPanel = (metricPanelList: IMetricPanels[]) => {
       title: ele.panelName,
       selfHide: ele.selfHide,
       metricOptions: {
-        title: {
-          text: ''
-        },
+        // title: {
+        //   text: ''
+        // },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
         },
         legend: {
           ...baseLineLegend,
@@ -68,18 +68,19 @@ export const dealMetricPanel = (metricPanelList: IMetricPanels[]) => {
         grid: {
           ...baseLineGrid,
         },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
+        // toolbox: {
+        //   feature: {
+        //     saveAsImage: {}
+        //   }
+        // },
         xAxis: {
           type: 'category',
           boundaryGap: false,
           data: timestamps, // 对应的时间戳
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          scale:true
         },
         series,
       }

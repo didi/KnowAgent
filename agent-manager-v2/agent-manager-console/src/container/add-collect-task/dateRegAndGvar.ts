@@ -6,9 +6,10 @@ HH:mm:ss.SSS
 */
 export const yyyyMMDDHHMMss = /\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
 
-export const yyyyMMDDHHMMssSSS = /\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}(.)\d{3}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
+export const yyyyMMDDHHMMssSSS = /\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}(\.)\d{3}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
+export const yyyyMMDDHHMMssSS = /\d{4}(\-|\/|.)\d{2}\1\d{2}(\s){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}(\,)\d{3}/g;  //匹配YYYYMMDDHHMMSS时间格式正则
 
-export const HHmmssSSS = /\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g
+export const HHmmssSSS = /\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}(.)\d{3}/g
 
 // export const yyMMDDHHMMSS = /[^0-9|a-zA-Z|\u4e00-\u9fa5|\s]\d{2}(\-|\/|.)\d{2}\1\d{2}(\s|\-|\/|.|:){0,1}\d{2}(\-|\/|.|:)?\d{2}(\-|\/|.|:)?\d{2}/g; //匹配YYMMDDHHMMSS时间格式正则
 

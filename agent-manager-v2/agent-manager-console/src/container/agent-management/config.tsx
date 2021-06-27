@@ -351,7 +351,8 @@ export const hostDetailBaseInfo = (info: IAgentHostSet) => {
     key: 'openedLogPathNum',
   }, {
     label: '最近 agent 启动时间',
-    key: 'lastestAgentStartupTime ',
+    key: 'lastestAgentStartupTime',
+    render: (t: number) => moment(t).format(timeFormat),
   },
   // {
   //   label: '所属机房',

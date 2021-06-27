@@ -38,7 +38,7 @@ module.exports = {
     inline: true,
     proxy: {
       '/api/v1': {
-        target: 'http://172.20.24.252:8006/',
+        target: 'http://116.85.23.35/',
         changeOrigin: true,
       },
       '/bigdata_cloud_agent_manager_test/': {
