@@ -28,8 +28,8 @@ public class MetricTest extends ApplicationTests {
     //    private static String hostName = "cs-ecmc-k8s01-01.py";
     private static String hostName = "10.190.32.213";
 
-    private static long endTime = 1624524757821L;
-    private static long startTime = 1624524157821L;
+    private static long endTime = System.currentTimeMillis();
+    private static long startTime = endTime - 10 * 60 * 1000;
 
     @Test
     public void test() {
@@ -74,6 +74,12 @@ public class MetricTest extends ApplicationTests {
     }
 
     @Test
+    public void fileOrderTest() {
+        Integer count = dao.getFileDisorderCount(0L, endTime, 1092L, 1201L, hostName);
+        System.out.println(count);
+    }
+
+    @Test
     public void gcCountTest() {
         Long count = dao.getGCCount(startTime, endTime, hostName);
         System.out.println(count);
@@ -89,12 +95,6 @@ public class MetricTest extends ApplicationTests {
     public void fdUsageTest() {
         Integer usage = dao.getLatestFdUsage(hostName);
         System.out.println(usage);
-    }
-
-    @Test
-    public void disorderCountTest() {
-        Integer count = dao.getLatestFdUsage("10.190.24.99");
-        System.out.println(count);
     }
 
     @Test
