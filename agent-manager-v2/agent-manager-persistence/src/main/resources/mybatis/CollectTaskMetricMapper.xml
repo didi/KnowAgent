@@ -693,10 +693,11 @@
       modify_time = #{modifyTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectSome" resultType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO">
+  <select id="selectSome" resultMap="BaseResultMap">
     select <include refid="Base_Column_List"/> from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    and log_mode_id = #{taskId} and hostname = #{hostName} and path_id = #{pathId}
+    and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
+    limit 100
   </select>
   <resultMap id="MetricPointMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint">
     <result column="heartbeat_time" property="timestamp"/>
@@ -755,8 +756,8 @@
   <select id="selectSumByHostnamePerMin" resultMap="MetricPointMap">
     select sum(${column}) ${column}, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    and hostname = #{hostName}
-    group by hostname, heartbeat_time
+    and log_model_host_name = #{hostName}
+    group by log_model_host_name, heartbeat_time
   </select>
   <select id="selectSumByTaskIdPerMin" resultMap="MetricPointMap">
     select sum(${column}) ${column}, heartbeat_time from collect_task_metric
@@ -772,12 +773,12 @@
   <select id="selectSinglePerMin" resultMap="MetricPointMap">
     select ${column}, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    and log_mode_id = #{taskId} and hostname = #{hostName} and path_id = #{pathId}
+    and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
   </select>
   <select id="selectMinPerMin" resultMap="MetricPointMap">
     select min(${column}) ${column}, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    and log_mode_id = #{taskId} and hostname = #{hostName} and path_id = #{pathId}
+    and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
     group by log_mode_id, heartbeat_time
   </select>
   <delete id="deleteBeforeTime" parameterType="java.lang.Long">
@@ -801,66 +802,66 @@
   <select id="selectSingleCountEqualsZero" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
       and ${column} = 0
   </select>
   <select id="selectSingleCountGtZero" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
       and ${column} &gt; 0
   </select>
   <select id="selectSingleCountLtZero" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
       and ${column} &lt; 0
   </select>
   <select id="selectSingleHeartbeatCount" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
   </select>
   <select id="selectHeartbeatCountByHostname" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and hostname = #{hostName}
+      and log_model_host_name = #{hostName}
   </select>
   <select id="selectHeartbeatCount" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
   </select>
   <select id="selectSingleCountWithTerm" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
       and ${column} = #{value}
   </select>
   <select id="selectSingleSum" resultType="java.lang.Long">
     select sum(${column}) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and hostname = #{hostName}
+      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
   </select>
   <select id="selectSumByHostname" resultType="java.lang.Long">
     select sum(${column}) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and hostname = #{hostName}
+      and log_model_host_name = #{hostName}
   </select>
   <select id="selectSingleMax" resultType="java.lang.Object">
     select max(${column}) from collect_task_metric
-      where log_mode_id = #{taskId} and hostname = #{hostName}
+      where log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
   </select>
   <select id="selectMaxByHostname" resultType="java.lang.Object">
     select max(${column}) from collect_task_metric
-      where hostname = #{hostName}
+      where log_model_host_name = #{hostName}
   </select>
 </mapper>
