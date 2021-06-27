@@ -43,6 +43,8 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +57,7 @@ import java.util.*;
  */
 @org.springframework.stereotype.Service
 public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogCollectTaskManageServiceImpl.class);
 
     @Autowired
     private LogCollectTaskMapper logCollectorTaskDAO;
@@ -1172,6 +1175,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 );
             }
         }
+
+        LOGGER.info(logCollectTaskHealthDescription);
 
         /*
          * 持久化 logCollectTaskHealth 信息

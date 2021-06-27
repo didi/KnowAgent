@@ -160,7 +160,7 @@ const CollectObjectConfiguration = (props: Props & ICollectObjectProps) => {
             initialValue: '',
           })(<span />)}
         </Form.Item> */}
-        <Collapse
+        {/*<Collapse
           bordered={false}
           expandIconPosition="right"
           onChange={collapseCallBack}
@@ -184,7 +184,7 @@ const CollectObjectConfiguration = (props: Props & ICollectObjectProps) => {
                   })(
                     <Radio.Group onChange={onModeChange}>
                       <Radio value={0}>流式</Radio>
-                      {/* <Radio value={1}>时间段</Radio> */}
+                      <Radio value={1}>时间段</Radio>
                     </Radio.Group>,
                   )}
                 </Col>
@@ -305,7 +305,7 @@ const CollectObjectConfiguration = (props: Props & ICollectObjectProps) => {
                 )}
               </Form.Item>}
           </Panel>
-        </Collapse>
+        </Collapse>*/}
 
         {/* <Form.Item label="采集任务描述">
           {getFieldDecorator('step1_logCollectTaskRemark', {

@@ -45,6 +45,7 @@ public class AgentHealthCheckTask implements Job {
                 AgentHealthLevelEnum agentHealthLevelEnum = agentManageService.checkAgentHealth(agentDO);
                 LOGGER.info("class=AgentHealthCheckTask||method=execute||agentId={}||"
                         + "agentHealthLevelEnum={}", agentDO.getId(), agentHealthLevelEnum.getDescription());
+                return agentHealthLevelEnum;
             }));
         }
         for (Future future : futures) {

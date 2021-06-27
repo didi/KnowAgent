@@ -266,10 +266,12 @@ export const collectTaskDetailBaseInfo = (detail: ILogCollectTaskDetail) => {
   const baseInfo: IBaseInfo[] = [{
     label: '采集任务ID',
     key: 'id',
-  }, {
-    label: '所属项目',
-    key: 'project',
-  }, {
+  },
+  // {
+  //   label: '所属项目',
+  //   key: 'project',
+  // }, 
+  {
     label: '采集应用名',
     key: 'logCollectTaskName',
   }, {

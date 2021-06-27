@@ -3,7 +3,7 @@ import { FormComponentProps } from 'antd/lib/form';
 import { Row, Col, Select, Form, Input, InputNumber, Radio, Button, AutoComplete } from 'antd';
 import { flowUnitList } from '../../constants/common';
 import { ILabelValue } from '../../interface/common';
-import { yyyyMMDDHHMMSS, yyMMDDHHMMSS, yyMMDDHHMM, yyyyMMDD, yyMMDD, yyMM, yY } from './dateRegAndGvar'
+import { yyyyMMDDHHMMss, HHmmssSSS, yyMMDDHHMM, yyyyMMDD, yyMMDD, yyyyMMDDHHMMssSSS, yY, fuhao } from './dateRegAndGvar'
 import './index.less';
 
 interface ILogRepeatForm extends FormComponentProps {
@@ -23,24 +23,25 @@ const LogRepeatForm = (props: ILogRepeatForm) => {
   const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
   const [contents, setContents] = useState<any>(null); // 鼠标选取内容正则匹配结果
   const [isShow, setShow] = useState(false); // 是否显示日志切片框
-  const [slicePre, setSlicePre] = useState([]); // 日志切片列表
+  const [slicePre, setSlicePre] = useState<string[]>([]); // 日志切片列表
+  const [start, setStart] = useState(0)
   const onSlicingRuleLogChange = (e: any) => {
     setSlicingRuleLog(e.target.value);
   }
 
   // 匹配时间格式
-  const regYymdhms = new RegExp(yyyyMMDDHHMMSS)
-  const regYmdhms = new RegExp(yyMMDDHHMMSS)
-  const regYmdhm = new RegExp(yyMMDDHHMM)
-  const regYymd = new RegExp(yyyyMMDD)
-  const regYmd = new RegExp(yyMMDD)
+  const regYymdhmsS = new RegExp(yyyyMMDDHHMMssSSS)
+  const regYymdhms = new RegExp(yyyyMMDDHHMMss)
+  const regHmsS = new RegExp(HHmmssSSS)
+  // const regYymd = new RegExp(yyyyMMDD)
+  // const regYmd = new RegExp(yyMMDD)
 
   const dateType: any = {
-    "YYYY-MM-DDHH:MM:SS": regYymdhms,
-    "YY-MM-DDHH:MM:SS": regYmdhms,
-    'YY-MM-DDHH:MM': regYmdhm,
-    'YYYY-MM-DD': regYymd,
-    'YY-MM-DD': regYmd,
+    "yyyy-MM-DD HH:MM:ss.SSS": regYymdhmsS,
+    "yyyy-MM-DD HH:MM:ss": regYymdhms,
+    'HH:MM:ss.SSS': regHmsS,
+    // 'YYYY-MM-DD': regYymd,
+    // 'YY-MM-DD': regYmd,
   }
 
   // 获取选中的内容，并将内容匹配对应规则放入时间戳表单中
@@ -58,7 +59,10 @@ const LogRepeatForm = (props: ILogRepeatForm) => {
   const cheageSliceTypeReg = (reg: any, dateType: string, selObj: string, userCopyContent: string) => {
     sliceTimestampPrefixString = selObj?.match(reg)[0].slice(0, 1);
     sliceTimestampFormat = dateType
-
+    const aaaa = userCopyContent.split('\n')
+    let bbbb = aaaa.map(item => {
+      return item.split(selObj?.match(reg)[0])
+    })
     let aNewlineIs = userCopyContent.slice(0, userCopyContent.indexOf(selObj) + selObj.indexOf(selObj?.match(reg)[0])).lastIndexOf('\n')
 
     if (aNewlineIs === -1) {
@@ -71,7 +75,7 @@ const LogRepeatForm = (props: ILogRepeatForm) => {
   }
 
   const getSelectionType = () => {
-    let selObj = window?.getSelection()?.toString().trim() || document.getSelection()?.toString().trim();
+    let selObj = window?.getSelection()?.toString() || document.getSelection()?.toString();
     const userCopyContent = getFieldValue(`step2_${props.logType}_selectionType`)
     setShow(false)
 
@@ -82,17 +86,21 @@ const LogRepeatForm = (props: ILogRepeatForm) => {
       12$2018-04-08 asdsad
 $123$123$2018-04-09 sqrwqrq
 $123$33$2018-01-08 sqrwqrq
+
+      yyyy-MM-dd HH:mm:ss.SSS
+      yyyy-MM-dd HH:mm:ss
+      HH:mm:ss.SSS
+
+    2021-06-25 14:51:31.798 [main] ERROR logger3 - 4191185 1624603891798
+    2021-06-25 14:51:31.798 [main] ERROR logger3 - 4191185 1624603891798
       */
-      if (selObj?.match(regYymdhms)) {
-        cheageSliceTypeReg(regYymdhms, "YYYY-MM-DDHH:MM:SS", selObj, userCopyContent)
-      } else if (selObj?.match(regYmdhms)) {
-        cheageSliceTypeReg(regYmdhms, "YY-MM-DDHH:MM:SS", selObj, userCopyContent)
-      } else if (selObj?.match(regYmdhm)) {
-        cheageSliceTypeReg(regYmdhm, "YY-MM-DDHH:MM", selObj, userCopyContent)
-      } else if (selObj?.match(regYymd)) {
-        cheageSliceTypeReg(regYymd, 'YYYY-MM-DD', selObj, userCopyContent)
-      } else if (selObj?.match(regYmd)) {
-        cheageSliceTypeReg(regYmd, 'YY-MM-DD', selObj, userCopyContent)
+
+      if (selObj?.match(regYymdhmsS)) {
+        cheageSliceTypeReg(regYymdhmsS, "yyyy-MM-DD HH:MM:ss.SSS", selObj, userCopyContent)
+      } else if (selObj?.match(regYymdhms)) {
+        cheageSliceTypeReg(regYymdhms, "yyyy-MM-DD HH:MM:ss", selObj, userCopyContent)
+      } else if (selObj?.match(regHmsS)) {
+        cheageSliceTypeReg(regHmsS, "HH:MM:ss.SSS", selObj, userCopyContent)
       }
       setFieldsValue({
         [`step2_${props.logType}_sliceTimestampPrefixString`]: sliceTimestampPrefixString,
@@ -117,12 +125,22 @@ $123$33$2018-01-08 sqrwqrq
       return item.split(sliceSymbol).length - 2 === symbolIndex
     })
     for (let index = 0; index < userInterceptionContent.length; index++) {
-      if (conformSliceBoolean[index] && userInterceptionContent[index]?.match(dateType[sliceFormat])) {
+      if (conformSliceBoolean[index] || userInterceptionContent[index]?.match(dateType[sliceFormat])) {
         conformSlice.push(...userInterceptionContent[index]?.match(dateType[sliceFormat]))
       }
     }
     return conformSlice
   }
+  const getNumber = (str: string, slicePrefixString: string) => {
+    let index = str.indexOf(slicePrefixString); // 字符出现的位置
+    let num = 0; // 这个字符出现的次数
+    while (index !== -1) {
+      num++; // 每出现一次 次数加一
+      index = str.indexOf(slicePrefixString, index + 1); // 从字符串出现的位置的下一位置开始继续查找
+    }
+    return num
+  }
+
 
   // 日志预览按钮
   const slicePreview = () => {
@@ -130,9 +148,124 @@ $123$33$2018-01-08 sqrwqrq
     const slicePrefixString = getFieldValue(`step2_${props.logType}_sliceTimestampPrefixString`)
     const sliceFormat = getFieldValue(`step2_${props.logType}_sliceTimestampFormat`)
     const slicePrefixStringIndex = getFieldValue(`step2_${props.logType}_sliceTimestampPrefixStringIndex`)
+    // let newVal = userCopyContent.slice(start < 0 ? 0 : start)
 
+    let contentList = userCopyContent.split('\n')
+    let resContentList: any = []
+
+
+    for (let i = 0; i < contentList.length; i++) {
+      if (contentList[i].match(dateType[sliceFormat])) {
+        let regStr = contentList[i].match(dateType[sliceFormat])[0]
+        // console.log(regStr, 'regStr')
+
+        // console.log(contentList[i].split(regStr))
+        // console.log(contentList[i].split(regStr)[0].split(slicePrefixString).length - 1, 'length')
+        if (regStr[0] === slicePrefixString) {
+          if (contentList[i].split(regStr)[0].split(slicePrefixString).length - 1 === slicePrefixStringIndex) {
+            //  && contentList[i].split(regStr)[0].slice(-1) === slicePrefixString,
+            // console.log(contentList[i].split(regStr)[0], '0')
+            // console.log(regStr + contentList[i].split(regStr)[1], '1')
+            // console.log(contentList.lastIndexOf(contentList[i].split(regStr)[0]), '11111')
+            if (resContentList.length > 0) {
+              resContentList[resContentList.length - 1] += contentList[i].split(regStr)[0]
+            } else {
+              resContentList[0] = contentList[i].split(regStr)[0]
+            }
+            resContentList.push(regStr + contentList[i].split(regStr)[1])
+          } else {
+            // console.log(contentList[i], 'contentList[i]')
+            // console.log(resContentList, 'resContentList[i]')
+            if (resContentList.length > 0) {
+              resContentList[resContentList.length - 1] += contentList[i]
+            } else {
+              resContentList[0] = contentList[i]
+            }
+          }
+        } else if (contentList[i].indexOf(contentList[i].split(regStr)[0] + regStr) === 0 && fuhao.test(regStr[0])) {
+          if (resContentList.length > 0) {
+            resContentList[resContentList.length - 1] += contentList[i]
+          } else {
+            resContentList[0] = contentList[i]
+          }
+          let aaaa = contentList[i].split(regStr)[0].length === 0 ? 0 : contentList[i].split(regStr)[0].length - 1
+          resContentList.push(contentList[i].slice(aaaa))
+        } else if (!slicePrefixString || !fuhao.test(regStr[0])) {
+          // console.log(regStr, 'regStrBBBB')
+          if (contentList[i].indexOf(regStr) === 0) {
+            // if (resContentList.length > 0) {
+            //   resContentList[resContentList.length - 1] += contentList[i]
+            // } else {
+            //   resContentList[0] = contentList[i]
+            // }
+            resContentList.push(contentList[i])
+          }
+          // if (resContentList.length > 0) {
+          //   resContentList[resContentList.length - 1] += contentList[i]
+          // } else {
+          //   resContentList[0] = contentList[i]
+          // }
+        } else {
+          if (resContentList.length > 0) {
+            resContentList[resContentList.length - 1] += contentList[i]
+          } else {
+            resContentList[0] = contentList[i]
+          }
+          // console.log(contentList[i])
+        }
+      } else {
+        if (resContentList.length > 0) {
+          resContentList[resContentList.length - 1] += contentList[i]
+        } else {
+          resContentList[0] = contentList[i]
+        }
+      }
+    }
+
+    // console.log(resContentList, 'resContentList')
+
+    // console.log(start, 'start')
+
+
+    let newVal = userCopyContent.slice(start < 0 ? 0 : start)
+    // console.log(newVal.match(dateType[sliceFormat]))
+    let startTimeStr = newVal.match(dateType[sliceFormat]) ? newVal.match(dateType[sliceFormat])[0] : ''
+    // startTimeStr.slice(1).match(dateType[sliceFormat])
+    // console.log(startTimeStr.slice(1).match(dateType[sliceFormat]));
+    if (startTimeStr.slice(1).match(dateType[sliceFormat])) {
+      startTimeStr = startTimeStr.slice(1)
+    }
+
+    let startNum = userCopyContent.indexOf(startTimeStr, start)
+    let qq = userCopyContent.lastIndexOf('\n', startNum)
+    // console.log(qq, startNum, startTimeStr);
+    // let sliceC2 = userCopyContent.slice(qq, startNum)
+    let sliceC = userCopyContent.slice(qq + 1, startNum)
+
+
+    // console.log(sliceC, 'sliceC');
+    // console.log(sliceC2, 'sliceC2');
+
+    // console.log(sliceC + startTimeStr)
+    // sliceC + startTimeStr
+    let aaaaas = userCopyContent.split('\n')
+    let res = ['']
+    for (let i = 0; i < aaaaas.length; i++) {
+      if (aaaaas[i].indexOf(sliceC + startTimeStr) === 0) {
+        res[res.length - 1] += sliceC.slice(0, -1)
+        let aaaa = sliceC.length === 0 ? 0 : sliceC.length - 1
+        res.push(aaaaas[i].slice(aaaa))
+      } else {
+        let index = res.length - 1
+        res[index] += aaaaas[i]
+      }
+    }
+
+    // console.log(aaaaas);
+    // console.log(res);
     if (userCopyContent && slicePrefixString && sliceFormat && slicePrefixStringIndex >= 0 && dateType[sliceFormat]) {
-      setSlicePre(handleArray(userCopyContent, getStrCount(userCopyContent, slicePrefixString, slicePrefixStringIndex, sliceFormat, dateType)))
+      // setSlicePre(handleArray(userCopyContent, getStrCount(userCopyContent, slicePrefixString, slicePrefixStringIndex, sliceFormat, dateType)))
+      setSlicePre(resContentList)
       setShow(true)
       return
     } else {
@@ -149,6 +282,8 @@ $123$33$2018-01-08 sqrwqrq
   const handleArray = (str: string, rules: any[]) => {
     let arr: any = []
     let brr: any = []
+
+
     if (str.trim().length < 1) {
       return
     }
@@ -246,7 +381,7 @@ $123$33$2018-01-08 sqrwqrq
                 // initialValue: contents,
                 initialValue: '',
                 rules: [{ required: false, message: '请输入' }],
-              })(<Input className='w-200' placeholder='请输入切片时间戳前缀字符串' />)} {/* ,如yyyy-MM-ddMM-dd HH-mm-ss */}
+              })(<Input onChange={() => setStart(-1)} className='w-200' placeholder='请输入切片时间戳前缀字符串' />)} {/* ,如yyyy-MM-ddMM-dd HH-mm-ss */}
             </Form.Item>
           </Col>
           <Col span={6} style={{ margin: '0 10px' }} >
@@ -276,6 +411,7 @@ $123$33$2018-01-08 sqrwqrq
                 dataSource={options}
                 style={{ width: 180 }}
                 className='step2_file_sliceTimestampFormat'
+                onChange={() => setStart(-1)}
               // onSelect={onSelect}
               // onSearch={this.onSearch}
               // placeholder="input here"
@@ -293,14 +429,16 @@ $123$33$2018-01-08 sqrwqrq
           {getFieldDecorator(`step2_${props.logType}_selectionType`, {
             // initialValue: initial ? props?.addFileLog[`step2_file_selectionType_${props.getKey}`] : '',
             rules: [{ message: '请输入正则表达式，如.\d+' }],
-          })(<TextArea style={{ height: '120px' }} onClick={getSelectionType} className='w-300' placeholder='请复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始，复制单行日志' />)}
+          })(<TextArea style={{ height: '120px' }} onBlur={e => {
+            setStart(e.target.selectionStart)
+          }} onClick={getSelectionType} className='w-300' placeholder='请复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始，复制单行日志' />)}
         </Col>
         <Col span={8} style={{ display: 'block' }}>
           {
             isShow && <div className='w-300 slicePreview' style={{ height: '120px', border: '1px solid #CCC' }}  >
               {
                 slicePre && slicePre.map((item: string, key) => {
-                  if (item.trim() === '') {
+                  if (item === '') {
                     return null
                   }
                   return <span key={key}>{item}</span>

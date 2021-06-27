@@ -14,7 +14,7 @@ import { addCollectTask, getCollectDetails, editCollectTask } from '../../api/co
 import { ILogCollectTask, ILogCollectTaskDetail } from '../../interface/collect';
 import { RouteComponentProps } from 'react-router-dom';
 import { setStepParams, setEditThreeParams, setEditFourParams } from './config';
-import { setLimitUnit } from '../../lib/utils';
+import { setLimitUnit, useDebounce } from '../../lib/utils';
 import moment from 'moment';
 import './index.less';
 import { getHostListbyServiceId } from '../../api';
@@ -141,7 +141,6 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
   };
 
   const processParameters = (values: any) => {
-    console.log(values, 'values-aaa')
     const params = setStepParams(values);
     if (editUrl) {
       params.id = props.taskId;
@@ -201,13 +200,13 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
     });
   }
 
-  const handleAddTaskSubmit = () => { // 新建按钮
+  const handleAddTaskSubmit = useDebounce(() => { // 新建按钮
     handleSubmit();
-  };
+  }, 600);
 
-  const handleEditTaskSubmit = () => { // 编辑按钮
+  const handleEditTaskSubmit = useDebounce(() => { // 编辑按钮
     handleSubmit();
-  };
+  }, 600);
 
   const getCollectDetail = () => {
     setLoading(true);

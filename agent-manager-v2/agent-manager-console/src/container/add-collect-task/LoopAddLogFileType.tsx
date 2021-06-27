@@ -39,11 +39,12 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
       hostName
     }
     setlogFilePathKey(key) // 同步日志路径的key值，防止减少日志路径key值乱
-    if (logFilePath && logSuffixfilesValue) {
-      getCollectPathList(params).then((res) => {
-        props.setLogListFile(res)
-      })
-    }
+    props.setisNotLogPath(false)
+    // if (logFilePath && logSuffixfilesValue) {
+    //   getCollectPathList(params).then((res) => {
+    //     props.setLogListFile(res)
+    //   })
+    // }
   }
   const [debouncedCallApi] = useState(() => _.debounce(handlelogSuffixfiles, 700)); // 做事件防抖时，为了防止每次触发都会重新渲染，维护一个state函数，让每次执行的时候都是同一个函数
 

@@ -26,7 +26,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
   const [suffixfiles, setSuffixfiles] = useState(0);
   const [isNotLogPath, setIsNotLogPath] = useState(false);
   const [fileArrList, setFileArrList] = useState([])
-  const [hostNameList, setHostNameList] = useState([])
+  const [hostNameList, setHostNameList] = useState<any>([])
   // const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
   const options = hostNameList.length > 0 && hostNameList.map((group: any, index: number) => {
     return <Option key={group.id} value={group.hostName}>
@@ -36,22 +36,27 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
   const onSuffixfilesChange = (e: any) => {
     setSuffixfiles(e.target.value);
   }
-  const handlelogSuffixfiles = useDebounce(() => {
-    const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
-    const logFilePath = getFieldValue(`step2_file_path_${logFilePathKey}`)
-    const hostName = getFieldValue(`step2_hostName`)
+
+  const handleLogPath = () => {
     const serviceId = getFieldValue(`step1_serviceId`)
     if (serviceId) {
       getHostListbyServiceId(serviceId).then((res: any) => {
         if (res?.hostList?.length > 0) {
           setIsNotLogPath(true)
           setHostNameList(res?.hostList)
+          handlelogSuffixfiles()
         } else {
           setIsNotLogPath(false)
           setHostNameList([])
         }
       })
     }
+  }
+
+  const handlelogSuffixfiles = useDebounce(() => {
+    const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
+    const logFilePath = getFieldValue(`step2_file_path_${logFilePathKey}`)
+    const hostName = getFieldValue(`step2_hostName`)
     const params = {
       path: logFilePath,
       suffixMatchRegular: logSuffixfilesValue,
@@ -63,7 +68,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
         setFileArrList(res)
       })
     }
-  }, 700)
+  }, 0)
   const onLogFilterChange = (e: any) => {
     handlelogSuffixfiles()
   }
@@ -76,6 +81,10 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
 
   useEffect(() => {
     setFileArrList(props.logListFile);
+  }, [props.logListFile]);
+
+  useEffect(() => {
+    setIsNotLogPath(props.isNotLogPath)
   }, [props.logListFile]);
 
   return (
@@ -115,16 +124,19 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
         })(<InputNumber min={0} placeholder='请输入' />)}
       </Form.Item> */}
       {/* <Form.Item label="后缀样式" className={suffixfiles === 1 ? '' : 'hide'}> */}
-      <Form.Item label="采集文件后缀匹配样式">
+      <Form.Item label="采集文件后缀匹配样式" extra='注:如需验证或遇到操作困难,可点击预览,展示日志路径下文件列表'>
         {getFieldDecorator(`step2_file_suffixMatchRegular`, {
           initialValue: '',
           rules: [{ required: true, message: '请输入后缀的正则匹配' }],
-        })(<Input style={{ width: '400px' }} onChange={handlelogSuffixfiles} placeholder='请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$' />)}
-        {/* <Button onClick={() => handlelogSuffixfiles(props.getKey)} type="primary" style={{ marginLeft: '20px' }}>查看日志路径下所有文件</Button> */}
+        })(<Input style={{ width: '400px' }} onChange={() => {
+          setIsNotLogPath(false)
+          setHostNameList([])
+        }} placeholder='请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$' />)}
+        <Button onClick={handleLogPath} type="primary" style={{ marginLeft: '20px' }}>预览</Button>
       </Form.Item>
       {hostNameList.length > 0 ? <Form.Item label="映射主机">
         {getFieldDecorator(`step2_hostName`, {
-          // initialValue: hostNameList[0]?.hostName,
+          initialValue: hostNameList[0].hostName,
           rules: [{ message: '请选择映射主机名称' }],
         })(
           <Select
@@ -132,7 +144,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
             style={{ width: 200 }}
             placeholder="请选择主机"
             optionFilterProp="children"
-            onChange={onLogFilterChange}
+            onChange={handlelogSuffixfiles}
           >
             {options}
           </Select>
