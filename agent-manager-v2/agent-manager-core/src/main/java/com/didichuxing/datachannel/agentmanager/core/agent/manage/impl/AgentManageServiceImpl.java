@@ -608,7 +608,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         /*
          * 校验 agent 是否存在错误日志输出
          */
-        Long agentHealthCheckTimeEnd = DateUtils.getBeforeSeconds(new Date(), 1).getTime();//Agent健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
+        Long agentHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //Agent健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
         boolean errorLogsExists = checkErrorLogsExists(agentDO.getHostName(), agentHealthDO, agentHealthCheckTimeEnd);
         if(errorLogsExists) {//agent 存在错误日志输出
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_EXISTS.getAgentHealthLevel();
@@ -702,7 +702,7 @@ public class AgentManageServiceImpl implements AgentManageService {
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
-                    AgentHealthInspectionResultEnum.AGENT_FD_USAGE_METRIC_EXCEPTION.getDescription(),
+                    AgentHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(),
                     agentDO.getId(),
                     agentDO.getHostName()
             );
@@ -719,7 +719,7 @@ public class AgentManageServiceImpl implements AgentManageService {
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.NOT_RELATE_ANY_LOGCOLLECTTASK.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
-                    AgentHealthInspectionResultEnum.AGENT_FD_USAGE_METRIC_EXCEPTION.getDescription(),
+                    AgentHealthInspectionResultEnum.NOT_RELATE_ANY_LOGCOLLECTTASK.getDescription(),
                     agentDO.getId(),
                     agentDO.getHostName()
             );
@@ -797,11 +797,11 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
         Long endTime = System.currentTimeMillis();
-        Long hostByteLimitDurationMs = agentMetricsManageService.getHostByteLimiDturationByTimeFrame(
+        Long hostByteLimitDurationMs = agentMetricsManageService.getHostByteLimitDurationByTimeFrame(
                 startTime,
                 endTime,
                 hostName
-        );//主机cpu限流时长 单位：ms
+        );//主机流量限流时长 单位：ms
         return hostByteLimitDurationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
     }
 

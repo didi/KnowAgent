@@ -39,7 +39,7 @@ public class LogCollectTaskAdvancedConfiguration {
     /**
      * 最大的同时采集的线程数
      */
-    private Integer       maxThreadNum       = 2;
+    private Integer       maxThreadNum       = 10;
     /**
      * 上线两条日志时间戳相差orderTimeMaxGap，即认为是乱序的日志,乱序阈值
      */

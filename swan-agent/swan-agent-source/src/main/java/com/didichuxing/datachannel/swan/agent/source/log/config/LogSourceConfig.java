@@ -68,7 +68,7 @@ public class LogSourceConfig extends SourceConfig {
     /**
      * 是否是有效的时间戳配置
      */
-    private Boolean isValidTimeConfig = true;
+    private Boolean       isValidTimeConfig  = true;
 
     /**
      * 文件读取类型，默认多行聚合（java栈）

@@ -10,7 +10,7 @@ public enum AgentHealthInspectionResultEnum {
     AGENT_HEART_BEAT_NOT_EXISTS(1, "agent 心跳不存在", AgentHealthLevelEnum.RED),
     AGENT_METRICS_KAFKA_CONFIG_ERROR(2, "agent metrics 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
     AGENT_ERRORLOGS_KAFKA_CONFIG_ERROR(3, "agent errorlogs 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
-    AGENT_ERRORLOGS_EXISTS(4, "agent 自身是否存在 errorlogs 输出 注：errorlogs 属 agent 自身，而非其他任何日志采集任务", AgentHealthLevelEnum.RED),
+    AGENT_ERRORLOGS_EXISTS(4, "agent 自身存在 errorlogs 输出 注：errorlogs 属 agent 自身，而非其他任何日志采集任务", AgentHealthLevelEnum.RED),
     AGENT_STARTUP_FREQUENTLY(5, "agent 非人工启动过频", AgentHealthLevelEnum.YELLOW),
     AGENT_CPU_USAGE_METRIC_EXCEPTION(6, "agent 进程 cpu 使用率指标异常", AgentHealthLevelEnum.YELLOW),
     AGENT_GC_METRIC_EXCEPTION(7, "agent 进程 gc 指标异常", AgentHealthLevelEnum.YELLOW),
