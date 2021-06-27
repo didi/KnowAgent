@@ -99,7 +99,6 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
         <DataCurveFilter refresh={this.getMetrics} {...this.props} />
         <div>
           {this.props.chartMetrics?.length > 0 && this.props.chartMetrics.map((ele: IRdAgentMetrics, index: number) => {
-            console.log(this.props.chartMetrics, 'this.props.chartMetrics')
             return <ExpandCard key={index} groupHide={ele.groupHide} title={ele.metricPanelGroupName} charts={this.getCurves(ele.metricPanelList, ele.metricPanelGroupName)} />;
           })}
         </div>
