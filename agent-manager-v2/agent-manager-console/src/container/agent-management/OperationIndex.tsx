@@ -87,7 +87,7 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
 
 
   public componentDidMount() {
-    this.props.setTimeRange(valMoments);
+    this.props.setTimeRange([moment().subtract(10, 'minute'), moment()]);
     this.getMetrics(valMoments);
   }
 
@@ -99,6 +99,7 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
         <DataCurveFilter refresh={this.getMetrics} {...this.props} />
         <div>
           {this.props.chartMetrics?.length > 0 && this.props.chartMetrics.map((ele: IRdAgentMetrics, index: number) => {
+            console.log(ele, 'ele')
             return <ExpandCard key={index} groupHide={ele.groupHide} title={ele.metricPanelGroupName} charts={this.getCurves(ele.metricPanelList)} />;
           })}
         </div>
