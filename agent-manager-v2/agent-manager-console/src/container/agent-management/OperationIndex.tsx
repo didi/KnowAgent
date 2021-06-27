@@ -38,8 +38,8 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
     metrics: [],
   }
 
-  public getCurves = (metricPanelList: IMetricPanels[]) => {
-    const metricPanels = dealMetricPanel(metricPanelList) as IMetricOptions[];
+  public getCurves = (metricPanelList: IMetricPanels[], metricPanelGroupName: string) => {
+    const metricPanels = dealMetricPanel(metricPanelList, metricPanelGroupName);
     return metricPanels.map((o, index) => {
       return <CommonCurve key={o.title + index} title={o.title} options={o.metricOptions} selfHide={o.selfHide} {...this.props} />;
     });
@@ -87,7 +87,7 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
 
 
   public componentDidMount() {
-    this.props.setTimeRange(valMoments);
+    this.props.setTimeRange([moment().subtract(10, 'minute'), moment()]);
     this.getMetrics(valMoments);
   }
 
@@ -99,7 +99,8 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
         <DataCurveFilter refresh={this.getMetrics} {...this.props} />
         <div>
           {this.props.chartMetrics?.length > 0 && this.props.chartMetrics.map((ele: IRdAgentMetrics, index: number) => {
-            return <ExpandCard key={index} groupHide={ele.groupHide} title={ele.metricPanelGroupName} charts={this.getCurves(ele.metricPanelList)} />;
+            console.log(this.props.chartMetrics, 'this.props.chartMetrics')
+            return <ExpandCard key={index} groupHide={ele.groupHide} title={ele.metricPanelGroupName} charts={this.getCurves(ele.metricPanelList, ele.metricPanelGroupName)} />;
           })}
         </div>
       </>

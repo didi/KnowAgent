@@ -3,7 +3,7 @@ import { FormComponentProps } from 'antd/lib/form';
 import { Row, Col, Select, Form, Input, InputNumber, Radio, Button, AutoComplete } from 'antd';
 import { flowUnitList } from '../../constants/common';
 import { ILabelValue } from '../../interface/common';
-import { yyyyMMDDHHMMss, HHmmssSSS, yyyyMMDDHHMMssSSS, fuhao } from './dateRegAndGvar'
+import { yyyyMMDDHHMMss, HHmmssSSS, yyyyMMDDHHMMssSSS, yyyyMMDDHHMMssSS, fuhao } from './dateRegAndGvar'
 import './index.less';
 import { lastIndexOf } from 'lodash';
 
@@ -31,16 +31,18 @@ const LogRepeatForm = (props: ILogRepeatForm) => {
   }
 
   // 匹配时间格式
-  const regYymdhmsS = new RegExp(yyyyMMDDHHMMssSSS)
+  const regYymdhmsSSS = new RegExp(yyyyMMDDHHMMssSSS)
+  const regYymdhmsSS = new RegExp(yyyyMMDDHHMMssSS)
   const regYymdhms = new RegExp(yyyyMMDDHHMMss)
   const regHmsS = new RegExp(HHmmssSSS)
   // const regYymd = new RegExp(yyyyMMDD)
   // const regYmd = new RegExp(yyMMDD)
 
   const dateType: any = {
-    "yyyy-MM-DD HH:MM:ss.SSS": regYymdhmsS,
-    "yyyy-MM-DD HH:MM:ss": regYymdhms,
-    'HH:MM:ss.SSS': regHmsS,
+    "yyyy-MM-dd HH:mm:ss.SSS": regYymdhmsSSS,
+    "yyyy-MM-dd HH:mm:ss,SSS": regYymdhmsSS,
+    "yyyy-MM-dd HH:mm:ss": regYymdhms,
+    'HH:mm:ss.SSS': regHmsS,
     // 'YYYY-MM-DD': regYymd,
     // 'YY-MM-DD': regYmd,
   }
@@ -100,12 +102,14 @@ $123$33$2018-01-08 sqrwqrq
     2021-06-25 14:51:31.798 [main] ERROR logger3 - 4191185 1624603891798
       */
 
-      if (selObj?.match(regYymdhmsS)) {
-        cheageSliceTypeReg(regYymdhmsS, "yyyy-MM-DD HH:MM:ss.SSS", selObj, userCopyContent)
+      if (selObj?.match(regYymdhmsSSS)) {
+        cheageSliceTypeReg(regYymdhmsSSS, "yyyy-MM-dd HH:mm:ss.SSS", selObj, userCopyContent)
+      } else if (selObj?.match(regYymdhmsSS)) {
+        cheageSliceTypeReg(regYymdhmsSS, "yyyy-MM-dd HH:mm:ss,SSS", selObj, userCopyContent)
       } else if (selObj?.match(regYymdhms)) {
-        cheageSliceTypeReg(regYymdhms, "yyyy-MM-DD HH:MM:ss", selObj, userCopyContent)
+        cheageSliceTypeReg(regYymdhms, "yyyy-MM-dd HH:mm:ss", selObj, userCopyContent)
       } else if (selObj?.match(regHmsS)) {
-        cheageSliceTypeReg(regHmsS, "HH:MM:ss.SSS", selObj, userCopyContent)
+        cheageSliceTypeReg(regHmsS, "HH:mm:ss.SSS", selObj, userCopyContent)
       }
       setFieldsValue({
         [`step2_${props.logType}_sliceTimestampPrefixString`]: sliceTimestampPrefixString || '',
@@ -141,9 +145,11 @@ $123$33$2018-01-08 sqrwqrq
     const userCopyContent = getFieldValue(`step2_${props.logType}_selectionType`)
     const slicePrefixString = getFieldValue(`step2_${props.logType}_sliceTimestampPrefixString`)
     const sliceFormat = getFieldValue(`step2_${props.logType}_sliceTimestampFormat`)
-    const slicePrefixStringIndex = getFieldValue(`step2_${props.logType}_sliceTimestampPrefixStringIndex`)
+    let slicePrefixStringIndex = getFieldValue(`step2_${props.logType}_sliceTimestampPrefixStringIndex`)
     // let newVal = userCopyContent.slice(start < 0 ? 0 : start)
-
+    if (slicePrefixStringIndex < 0) {
+      slicePrefixStringIndex = 0
+    }
     let contentList = userCopyContent.split('\n')
     let resContentLists: any = []
 
@@ -152,15 +158,20 @@ $123$33$2018-01-08 sqrwqrq
         let regStr = contentList[i].match(dateType[sliceFormat])[0]
         let startTimeIndex = contentList[i].indexOf(regStr) //时间格式开始的下标
         let startStr = contentList[i].slice(0, startTimeIndex) // 时间格式前面的字符串
+        console.log(slicePrefixString, 'slicePrefixString')
+        console.log(slicePrefixStringIndex, 'slicePrefixStringIndex')
+        console.log(startTimeIndex, 'startTimeIndex')
         if (slicePrefixString === '' && slicePrefixStringIndex === 0 && startTimeIndex === 0) {
+          console.log('走着了')
+          console.log(contentList[i], 'contentList[i]')
           resContentLists.push(contentList[i])
         } else if (!!slicePrefixString && startStr.slice(-1) === slicePrefixString && startStr.split(slicePrefixString).length - 2 === slicePrefixStringIndex) {
-          if (resContentLists.length > 0) {
-            resContentLists[resContentLists.length - 1] += contentList[i].split(regStr)[0]
-          } else {
-            resContentLists[0] = contentList[i].split(regStr)[0]
-          }
-          resContentLists.push(regStr + contentList[i].split(regStr)[1])
+          // if (resContentLists.length > 0) {
+          //   resContentLists[resContentLists.length - 1] += contentList[i].split(regStr)[0]
+          // } else {
+          //   resContentLists[0] = contentList[i].split(regStr)[0]
+          // }
+          resContentLists.push(contentList[i].split(regStr)[0] + regStr + contentList[i].split(regStr)[1])
         } else {
           if (resContentLists.length > 0) {
             resContentLists[resContentLists.length - 1] += contentList[i]

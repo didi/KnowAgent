@@ -24,14 +24,14 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 @connect(mapStateToProps, mapDispatchToProps)
 export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
-
   public handleRangeChange = (dates: any) => {
     this.props.setTimeRange(dates);
     this.props.refresh(dates);
   }
 
   public refreshChart = () => {
-    this.props.refresh(this.props.timeRange);
+    this.props.refresh(valMoments);
+    this.props.setTimeRange(valMoments);
   }
 
   public render() {
@@ -42,7 +42,7 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
           <span>时间：</span>
           <RangePicker
             className="ml-10"
-            defaultValue={valMoments}
+            defaultValue={this.props.timeRange}
             showTime
             allowClear={false}
             format={timeFormat}
