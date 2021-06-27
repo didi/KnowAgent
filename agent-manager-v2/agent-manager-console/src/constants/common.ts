@@ -68,10 +68,12 @@ export const hostTypes = [{
 }, {
   value: 1,
   label: '容器',
-},{
-  value: 2,
-  label: 'VM虚拟机',
-}] as ILabelValue[];
+},
+// {
+//   value: 2,
+//   label: 'VM虚拟机',
+// }
+] as ILabelValue[];
 
 export const queryHostTypes = [{
   value: 'all',
@@ -81,7 +83,7 @@ export const queryHostTypes = [{
 export const hostTypeMap = {
   0: '物理机',
   1: '容器',
-  2:'VM虚拟机',
+  // 2:'VM虚拟机',
 } as INumberMap;
 
 export const healthMap = {

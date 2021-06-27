@@ -71,9 +71,9 @@ const LogRepeatForm = (props: ILogRepeatForm) => {
       }
     } else {
       if (aNewlineIs === -1) {
-        sliceTimestampPrefixStringIndex = userCopyContent.slice(0, userCopyContent.indexOf(selObj) + selObj.indexOf(selObj?.match(reg)[0])).split(`${sliceTimestampPrefixString}`).length - 2
+        sliceTimestampPrefixStringIndex = userCopyContent.slice(0, userCopyContent.indexOf(selObj) + selObj.indexOf(selObj?.match(reg)[0])).split(`${sliceTimestampPrefixString}`).length - 1
       } else {
-        sliceTimestampPrefixStringIndex = userCopyContent.slice(aNewlineIs, userCopyContent.indexOf(selObj) + selObj.indexOf(selObj?.match(reg)[0])).split(sliceTimestampPrefixString).length - 2
+        sliceTimestampPrefixStringIndex = userCopyContent.slice(aNewlineIs, userCopyContent.indexOf(selObj) + selObj.indexOf(selObj?.match(reg)[0])).split(sliceTimestampPrefixString).length - 1
       }
     }
 
@@ -160,7 +160,7 @@ $123$33$2018-01-08 sqrwqrq
         let startStr = contentList[i].slice(0, startTimeIndex) // 时间格式前面的字符串
         if (slicePrefixString === '' && slicePrefixStringIndex === 0 && startTimeIndex === 0) {
           resContentLists.push(contentList[i])
-        } else if (!!slicePrefixString && startStr.slice(-1) === slicePrefixString && startStr.split(slicePrefixString).length - 2 === slicePrefixStringIndex) {
+        } else if (!!slicePrefixString && startStr.slice(-1) === slicePrefixString && startStr.split(slicePrefixString).length - 1 === slicePrefixStringIndex) {
           // if (resContentLists.length > 0) {
           //   resContentLists[resContentLists.length - 1] += contentList[i].split(regStr)[0]
           // } else {
