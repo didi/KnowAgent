@@ -285,7 +285,7 @@ $123$33$2018-01-08 sqrwqrq
       </Form.Item> */}
 
       {/* {slicingRuleLog === 0 ? */}
-      <Form.Item className='col-time-stramp' extra='注：填写时间戳，或复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始，复制单行日志' label='日志切片规则'>
+      <Form.Item className='col-time-stramp' extra='注：填写时间戳，或复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始' label='日志切片规则'>
         <Row>
           <Col span={6}>
             左起第&nbsp;{getFieldDecorator(`step2_${props.logType}_sliceTimestampPrefixStringIndex`, {
@@ -338,7 +338,7 @@ $123$33$2018-01-08 sqrwqrq
 
           </Col>
           <Col span={3} style={{ margin: '0 10px' }} >
-            <Button onClick={slicePreview}>切片预览</Button>
+            <Button type='primary' onClick={slicePreview}>切片预览</Button>
           </Col>
         </Row>
       </Form.Item>
@@ -349,7 +349,7 @@ $123$33$2018-01-08 sqrwqrq
             rules: [{ message: '请输入正则表达式，如.\d+' }],
           })(<TextArea style={{ height: '120px' }} onBlur={e => {
             setStart(e.target.selectionStart)
-          }} onClick={getSelectionType} className='w-300' placeholder='请复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始，复制单行日志' />)}
+          }} onClick={getSelectionType} className='w-300' placeholder='请复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始' />)}
         </Col>
         <Col span={8} style={{ display: 'block' }}>
           {
