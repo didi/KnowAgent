@@ -2,6 +2,7 @@ import { EChartOption } from 'echarts/lib/echarts';
 import { timeFormat } from '../../constants/time';
 import { IMetricPanels } from '../../interface/agent';
 import moment from 'moment';
+import { slice } from 'lodash';
 
 export const LEGEND_HEIGHT = 18;
 export const defaultLegendPadding = 10;
@@ -39,7 +40,7 @@ export const getLegendHight = (options: EChartOption | any) => {
   return legendHight;
 };
 
-export const dealMetricPanel = (metricPanelList: IMetricPanels[],metricPanelGroupName:any) => {
+export const dealMetricPanel = (metricPanelList: IMetricPanels[], metricPanelGroupName: any) => {
   return metricPanelList.map(ele => {
     const timestamps = ele.metricList[0]?.metricPonitList?.map(p => moment(p.timestamp).format(timeFormat)); // 对应的时间戳
     const titles = ele.metricList?.map(v => { return v.metricName });
@@ -60,6 +61,16 @@ export const dealMetricPanel = (metricPanelList: IMetricPanels[],metricPanelGrou
         // },
         tooltip: {
           trigger: 'axis',
+          [`${ele.panelName === '日志采集路径采集最小时间' ? 'formatter' : ''}`]: (params) => {
+            let tip = ''
+            if (params != null && params.length > 0) {
+              tip += params[0].name + '<br />';
+              for (let i = 0; i < params.length; i++) {
+                tip += params[i].marker + params[i].seriesName + ': ' + moment(params[i].data).format('YYYY-MM-DD HH:mm:ss.SSS')+ '<br />';
+              }
+            }
+            return tip
+          }
         },
         legend: {
           ...baseLineLegend,
@@ -79,8 +90,15 @@ export const dealMetricPanel = (metricPanelList: IMetricPanels[],metricPanelGrou
           data: timestamps, // 对应的时间戳
         },
         yAxis: {
-          type: 'value',
-          scale:true
+          type: `value`,
+          scale: true,
+          [`${ele.panelName === '日志采集路径采集最小时间' ? 'axisLabel' : ''}`]: {
+            formatter:  (value)=> {
+               return moment(value).format('YYYY-MM-DD HH:mm:ss.SSS')
+            }
+          },
+          // width:1
+          data:series
         },
         series,
       }

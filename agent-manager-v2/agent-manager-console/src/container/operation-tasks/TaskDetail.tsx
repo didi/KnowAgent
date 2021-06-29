@@ -103,6 +103,7 @@ export class TaskDetail extends React.Component<Props> {
           subTitle={(<Tag className={this.state.subtitle}>{agentOperationTaskStatus === 100 ? '完成' : agentOperationTaskStatus === 30 ? '执行中' : ''}</Tag>)}
           baseInfo={taskDetailBaseInfo}
           baseData={this.state.taskDetail}
+          className='taskDetailBaseInfo'
         />
         <div className="detail-wrapper">
           <TaskTable agentOperationTaskId={this.props.location.state.agentOperationTaskId} detailList={this.state.agentOperationTaskExecuteDetailVOList} total={this.state.total} />

@@ -68,9 +68,8 @@ public class RemoteKafkaClusterServiceImpl implements RemoteKafkaClusterService 
 
     @Override
     public boolean checkTopicLimitExists(Long kafkaClusterId, String topicName, KafkaProducerSecurity kafkaProducerSecurity) {
-//        String requestUrl = "http://10.96.81.201:8180/kafka/api/v1/third-part/logi/6/kmo_test_zq/dkm_admin/throttleInfo";
-//
-//        // TODO：http://10.96.81.201:8180/swagger-ui.html#!/2432025918255092147545Logi3045620851255092147540REST41/getProjTopicThrottleInfoUsingGET
+//        String requestUrl = "http://localhost:8180/kafka/api/v1/third-part/logi/6/kmo_test_zq/dkm_admin/throttleInfo";
+//        // TODO：http://localhost:8180/swagger-ui.html#!/2432025918255092147545Logi3045620851255092147540REST41/getProjTopicThrottleInfoUsingGET
 //
 //        String response = HttpUtils.get(requestUrl, null);
 //        Result result = JSON.parseObject(response, Result.class);

@@ -148,6 +148,7 @@ public class MetricService {
                     ErrorLogPO errorLogPO = JSON.parseObject(record.value(), ErrorLogPO.class);
                     errorLogMapper.insertSelective(errorLogPO);
                 }
+                // todo 修改删除逻辑
                 if (trigger) {
                     consumer.close();
                     break;
@@ -163,7 +164,6 @@ public class MetricService {
         Properties props = new Properties();
         props.put("bootstrap.servers", bootstrapServers);
         props.put("group.id", CONSUMER_GROUP_ID);
-        props.put("auto.offset.reset", "latest");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");
@@ -192,7 +192,7 @@ public class MetricService {
         trigger = true;
         try {
             // 等待现有的kafka consumer线程全部关闭
-            Thread.sleep(60 * 1000);
+            Thread.sleep(10 * 1000);
             loadClustersAndTopics();
         } catch (InterruptedException e) {
             e.printStackTrace();
