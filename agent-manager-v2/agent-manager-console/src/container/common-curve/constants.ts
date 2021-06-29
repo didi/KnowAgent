@@ -94,7 +94,7 @@ export const dealMetricPanel = (metricPanelList: IMetricPanels[], metricPanelGro
           scale: true,
           [`${ele.panelName === '日志采集路径采集最小时间' ? 'axisLabel' : ''}`]: {
             formatter:  (value)=> {
-               return moment(value).format('YYYY-MM-DD HH:mm:ss.SSS').split(' ')[1] 
+               return moment(value).format('YYYY-MM-DD HH:mm:ss.SSS')
             }
           },
           // width:1
