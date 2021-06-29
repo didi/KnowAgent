@@ -81,13 +81,15 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
     <div key={getKey(index)}>
       {/* <Collapse activeKey={['1']}>
         <Panel header='' key="1" showArrow={false}> */}
-      <Form.Item label="日志路径" extra='可增加，最多10个, 默认与上一个选择配置项内容保持一致。'>
+      <Form.Item label="日志路径" extra={`${list.length - 1 === index ? '可增加，最多10个, 默认与上一个选择配置项内容保持一致。' : ''}`}>
         {getFieldDecorator(`step2_file_path_${getKey(index)}`, {
           initialValue: item,
           rules: [{ required: true, message: '请输入日志路径' }],
         })(<Input onChange={() => debouncedCallApi(getKey(index))} className={`w-300 step2_file_path_input${getKey(index)}`} placeholder="如：/home/xiaoju/changjiang/logs/app.log" />)}
-        {list.length > 1 && (<Icon type="minus-circle-o" className='ml-10' onClick={() => remove(getKey(index))} />)}
-        {list.length < 11 && (<Icon type="plus-circle-o" className='ml-10' onClick={() => addPush()} />)}
+        {list.length > 1 && (<Icon type="minus-circle-o" className='ml-10' onClick={() => {
+          remove(index)
+        }} />)}
+        {list.length < 10 && (<Icon type="plus-circle-o" className='ml-10' onClick={() => addPush()} />)}
       </Form.Item>
       {/* </Panel>
       </Collapse> */}

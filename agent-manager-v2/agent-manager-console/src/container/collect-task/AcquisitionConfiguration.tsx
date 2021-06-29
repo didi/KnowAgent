@@ -62,14 +62,14 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
         return (<div key={index} className='mt-10'>
           {index > 0 && <Divider />}
           <Descriptions column={2}>
-            <Item label="采集日志类型">{cataFile ? '目录型' : '文件型'}</Item>
+            {/* <Item label="采集日志类型">{cataFile ? '目录型' : '文件型'}</Item> */}
             {/* <Item label="编码格式">{ele?.charset}</Item> */}
             <Item label="日志内容过滤">{logFilter[detail?.logContentFilterRuleVO?.needLogContentFilter]}</Item>
             {detail?.logContentFilterRuleVO?.needLogContentFilter === 1 && <>
               <Item label="过滤类型">{logFilterType[detail?.logContentFilterRuleVO?.logContentFilterType]}</Item>
               <Item label="过滤规则">{detail?.logContentFilterRuleVO?.logContentFilterExpression}</Item>
             </>}
-            {!cataFile && <Item label="目录路径">{renderTooltip(ele?.path, 60)}</Item>}
+            {!cataFile && <Item label="日志路径">{renderTooltip(ele?.path, 60)}</Item>}
             {cataFile ? <>
               <Item label="采集深度">{ele?.directoryCollectDepth}</Item>
               <Item label="采集文件白名单">{renderTooltip(whites[0], 60)}</Item>
@@ -84,10 +84,11 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
             <Item label="单机日志大小上限">{setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.maxBytesPerLogEvent}{unitText}</Item>
             {/* <Item label="日志切片规则">{logSliceRuleMap[ele?.logSliceRuleVO?.sliceType]}</Item> */}
             {detail?.logContentSliceRule?.sliceType !== 0 ? <>
-              <Item label="左起第几个匹配">{detail?.logContentSliceRule?.sliceTimestampPrefixStringIndex}</Item>
+              <Item label="日志切片规则">{`左起第${detail?.logContentSliceRule?.sliceTimestampPrefixStringIndex}个匹配 ${detail?.logContentSliceRule?.sliceTimestampPrefixString} ${detail?.logContentSliceRule?.sliceTimestampFormat}`}</Item>
+              {/* <Item label="左起第几个匹配">{detail?.logContentSliceRule?.sliceTimestampPrefixStringIndex}</Item>
               {detail?.logContentSliceRule?.sliceTimestampPrefixString
                 && <Item label="切片时间戳前缀字符串">{detail?.logContentSliceRule?.sliceTimestampPrefixString}</Item>}
-              <Item label="时间戳格式">{detail?.logContentSliceRule?.sliceTimestampFormat}</Item>
+              <Item label="时间戳格式">{detail?.logContentSliceRule?.sliceTimestampFormat}</Item> */}
             </> :
               <Item label="切片正则">{ele?.logContentSliceRule?.sliceRegular}</Item>}
           </Descriptions>
@@ -154,9 +155,9 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
             <TabPane tab="接收端配置与监控" key="receive">
               {this.renderReceiveEnd(detail)}
             </TabPane>
-            <TabPane tab="高级配置" key="senior">
+            {/* <TabPane tab="高级配置" key="senior">
               {this.renderAdvancedConfig(detail)}
-            </TabPane>
+            </TabPane> */}
           </Tabs>
         </div>
       }</Spin>
