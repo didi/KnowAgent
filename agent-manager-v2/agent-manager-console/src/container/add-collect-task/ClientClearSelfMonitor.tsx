@@ -85,7 +85,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
       <Form {...clientFormItemLayout}>
         <Form.Item
           label="Kafka集群"
-          extra={<>如目标集群不在下拉列表，请至<NavRouterLink needToolTip element={' 接收端管理>Kafka集群 '} href="/collect/detail" />新增</>}
+          extra={<>如目标集群不在下拉列表，请至<NavRouterLink needToolTip element={' 接收端管理>Kafka集群 '} href="/receivingTerminal/clusterList" />新增</>}
         >
           {getFieldDecorator('step4_kafkaClusterId', {
             validateTrigger: ['onChange', 'onBlur'],
