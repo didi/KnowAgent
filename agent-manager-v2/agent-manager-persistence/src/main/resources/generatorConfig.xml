@@ -12,8 +12,8 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
 
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.178.24.87:8099/agent_manager_v2?useSSL=false"
-                password="Work2019" userId="root" />
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:8099/agent_manager_v2?useSSL=false"
+                password="123456" userId="root" />
 
         <!-- 类型转换器 -->
         <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
