@@ -83,6 +83,17 @@ public interface LogCollectTaskManageService {
     List<MetricPanelGroup> listLogCollectTaskMetrics(Long logCollectTaskId, Long startTime, Long endTime);
 
     /**
+     * 日志采集任务对应某个待采集路径在具体某主机采集指标信息
+     * @param logCollectTaskId 日志采集任务 id
+     * @param logPathId 日志采集路径 id
+     * @param hostName 主机名
+     * @param startTime 指标信息查询开始时间
+     * @param endTime 指标信息查询结束时间
+     * @return 返回日志采集任务对应某个待采集路径在具体某主机采集指标信息
+     */
+    List<MetricPanelGroup> listLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime);
+
+    /**
      * 检查给定日志采集任务健康度，具体包括如下操作：
      *  1.）检查给定日志采集任务健康度，并将检查结果信息存入对应 LogCollectTaskHealth 记录表
      *  2.）计算给定日志采集任务各采集路径的采集完整性时间，并将其存入对应 LogCollectTaskHealth 记录表

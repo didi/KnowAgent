@@ -145,6 +145,90 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return handlerListLogCollectTaskMetrics(logCollectTaskId, startTime, endTime).getMetricPanelGroupList();
     }
 
+    @Override
+    public List<MetricPanelGroup> listLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime) {
+        return handleListLogCollectTaskMetricsPerHostAndPath(logCollectTaskId, logPathId, hostName, startTime, endTime);
+    }
+
+    /**
+     * 日志采集任务对应某个待采集路径在具体某主机采集指标信息
+     * @param logCollectTaskId 日志采集任务 id
+     * @param logPathId 日志采集路径 id
+     * @param hostName 主机名
+     * @param startTime 指标信息查询开始时间
+     * @param endTime 指标信息查询结束时间
+     * @return 返回日志采集任务对应某个待采集路径在具体某主机采集指标信息
+     *
+     * TODO：
+     *
+     */
+    private List<MetricPanelGroup> handleListLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime) {
+
+        MetricsDashBoard metricsDashBoard = new MetricsDashBoard();
+
+        /*
+         * 构建指标面板组
+         */
+        MetricPanelGroup metricPanelGroup = metricsDashBoard.buildMetricPanelGroup(LogCollectTaskConstant.LOG_COLLECT_TASK_METRIC_PANEL_GROUP_NAME_LOGCOLLECTTASK_LEVEL);
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志读取字节数/分钟" 指标
+         * 日志读取意义为：从给定 fd 读取一个 log event（含：时间戳 解析）
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志读取条数/分钟" 指标
+         * 日志读取意义为：从给定 fd 读取一个 log event（含：时间戳 解析）
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志读取耗时/分钟" 指标
+         * 日志读取意义为：从给定 fd 读取一个 log event（含：时间戳 解析）
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志处理耗时/分钟" 指标
+         * 日志处理意义为：日志被读取 ~ 日志被 kafka sink 取出 & 将 log event 转化为 kafka event & 发送（ps：存入 sink 缓冲区 一定条件下 触发 kafka producer 发送） & 提交 对应 offset
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志发送字节数/分钟" 指标
+         * 日志发送意义为：kafka event 集 被 kafka producer 实际 发送 至 kafka broker 并得到 对应 response
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志发送条数/分钟" 指标
+         * 日志发送意义为：kafka event 集 被 kafka producer 实际 发送 至 kafka broker 并得到 对应 response
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志发送耗时/分钟" 指标
+         * 日志发送意义为：kafka event 集 被 kafka producer 实际 发送 至 kafka broker 并得到 对应 response
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志 flush 次数/分钟" 指标
+         * 日志flush意义为：kafka producer 从各 sink 端获取所有待发送 kafka event 发送至 kafka broker 端并 get 对应 response
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志 flush 耗时/分钟" 指标
+         * 日志flush意义为：kafka producer 从各 sink 端获取所有待发送 kafka event 发送至 kafka broker 端并 get 对应 response
+         */
+
+        /*
+         * 构建 日志采集任务+采集日志路径+主机 对应 "日志 flush 失败次数/分钟" 指标
+         * 日志flush意义为：kafka producer 从各 sink 端获取所有待发送 kafka event 发送至 kafka broker 端并 get 对应 response
+         */
+
+        /*
+         * 构建"日志采集任务+采集日志路径+主机 对应 "channel 当前 log event 数" 指标（ps：channel size）
+         */
+
+        return null;
+
+    }
+
     /**
      * 根据日志采集任务 id 获取给定时间范围内对应日志采集任务运行时指标信息
      * @param logCollectTaskId 日志采集任务 id
