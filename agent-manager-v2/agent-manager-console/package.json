@@ -24,6 +24,7 @@
     "react-app-rewired": "^2.1.8",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "16.8.6",
+    "react-highlight-words": "^0.17.0",
     "react-intl": "^3.2.1",
     "react-router-dom": "4.x",
     "single-spa": "^5.8.0",
