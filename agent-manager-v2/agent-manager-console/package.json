@@ -6,7 +6,6 @@
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
     "@babel/polyfill": "^7.12.1",
-    "@didi/layout-web-fe": "latest",
     "@hot-loader/react-dom": "16.8.6",
     "@umijs/hooks": "^1.9.0",
     "antd": "^3.24.0",
@@ -87,9 +86,7 @@
   },
   "scripts": {
     "build": "rm -rf pub/ & fetk run build",
-    "deploy-layout-web": "./node_modules/@didi/layout-web-fe/build.sh",
     "dev": "Mode=headless fetk run devServer",
-    "install-packages": "git clone git@git.xiaojukeji.com:state-grid-web/ecmc-fe-packages.git src/packages",
     "lint": "fetk run lint",
     "start": "fetk run devServer"
   },
