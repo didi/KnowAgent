@@ -187,7 +187,7 @@ export class ClusterList extends React.Component<Props> {
           <CommonHead heads={clusterHead} />
           <BasicTable
             showReloadBtn={false}
-            showQueryCollapseButton={true}
+            showQueryCollapseButton={queryFormColumns.length > 2 ? true : false}
             loading={this.state.loading}
             reloadBtnPos="left"
             reloadBtnType="btn"

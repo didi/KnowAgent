@@ -231,7 +231,7 @@ export class AppList extends React.Component<Props> {
           <CommonHead heads={dataSourceHead} />
           <BasicTable
             showReloadBtn={false}
-            showQueryCollapseButton={true}
+            showQueryCollapseButton={queryFormColumns.length > 2 ? true : false}
             loading={this.state.loading}
             reloadBtnPos="left"
             reloadBtnType="btn"

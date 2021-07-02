@@ -6,7 +6,6 @@
   "dependencies": {
     "@ant-design/icons": "^4.3.0",
     "@babel/polyfill": "^7.12.1",
-    "@didi/layout-web-fe": "latest",
     "@hot-loader/react-dom": "16.8.6",
     "@umijs/hooks": "^1.9.0",
     "antd": "^3.24.0",
@@ -25,6 +24,7 @@
     "react-app-rewired": "^2.1.8",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "16.8.6",
+    "react-highlight-words": "^0.17.0",
     "react-intl": "^3.2.1",
     "react-router-dom": "4.x",
     "single-spa": "^5.8.0",
@@ -87,9 +87,7 @@
   },
   "scripts": {
     "build": "rm -rf pub/ & fetk run build",
-    "deploy-layout-web": "./node_modules/@didi/layout-web-fe/build.sh",
     "dev": "Mode=headless fetk run devServer",
-    "install-packages": "git clone git@git.xiaojukeji.com:state-grid-web/ecmc-fe-packages.git src/packages",
     "lint": "fetk run lint",
     "start": "fetk run devServer"
   },
