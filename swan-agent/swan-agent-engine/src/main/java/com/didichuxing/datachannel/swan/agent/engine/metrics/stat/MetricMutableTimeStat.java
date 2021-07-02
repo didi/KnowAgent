@@ -18,8 +18,8 @@
 
 package com.didichuxing.datachannel.swan.agent.engine.metrics.stat;
 
-import com.didichuxing.datachannel.metrics.MetricsRecordBuilder;
-import com.didichuxing.datachannel.metrics.lib.MetricMutable;
+import com.didichuxing.datachannel.swan.agent.common.metrics.MetricsRecordBuilder;
+import com.didichuxing.datachannel.swan.agent.common.metrics.lib.MetricMutable;
 
 /* 9分位统计时间
     "min": 23,

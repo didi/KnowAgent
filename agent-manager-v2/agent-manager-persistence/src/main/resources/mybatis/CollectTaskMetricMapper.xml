@@ -775,6 +775,12 @@
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
   </select>
+  <select id="selectAvgPerMin" resultMap="MetricPointMap">
+    select avg(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+    and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
+    group by round(heartbeat_time / 60000) * 60000
+  </select>
   <select id="selectSumPerMin" resultMap="MetricPointMap">
     select sum(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}

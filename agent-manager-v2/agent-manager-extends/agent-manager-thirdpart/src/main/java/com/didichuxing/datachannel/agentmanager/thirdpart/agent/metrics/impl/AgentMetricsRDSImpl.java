@@ -75,7 +75,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     @Override
     public Integer getFileDisorderCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
         List<CollectTaskMetricPO> list = collectTaskMetricMapper.selectSome(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
-        if (list == null|| list.isEmpty()) {
+        if (list == null || list.isEmpty()) {
             return 0;
         }
         int count = 0;
@@ -151,16 +151,16 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectSumPerMin(startTime, endTime, hostName, "cpu_usage");
+        return agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, "cpu_usage");
     }
 
     @Override
     public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
-        List<MetricPoint> graph = agentMetricMapper.selectSumPerMin(startTime, endTime, hostName, "memory_usage");
+        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, "memory_usage");
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b2.doubleValue());
+            metricPoint.setValue(b2);
         }
         return graph;
     }
@@ -176,7 +176,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b2.doubleValue());
+            metricPoint.setValue(b2);
         }
         return graph;
     }
@@ -188,7 +188,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getAgentFdUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectSumPerMin(startTime, endTime, hostName, "fd_count");
+        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, "fd_count");
+        for (MetricPoint metricPoint : graph) {
+            Integer i = TypeUtils.castToInt(metricPoint.getValue());
+            metricPoint.setValue(i);
+        }
+        return graph;
     }
 
     @Override
@@ -202,7 +207,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b2.doubleValue());
+            metricPoint.setValue(b2);
         }
         return graph;
     }
