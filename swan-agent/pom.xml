@@ -318,9 +318,4 @@
         </testResources>
     </build>
 
-    <parent>
-        <groupId>com.xiaoju</groupId>
-        <artifactId>base-pom</artifactId>
-        <version>0.0.1</version>
-    </parent>
 </project>

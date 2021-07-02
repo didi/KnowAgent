@@ -1,6 +1,5 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util;
 
-import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodConfig;
@@ -8,22 +7,25 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.Po
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.Configuration;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
-import io.kubernetes.client.openapi.models.*;
+import io.kubernetes.client.openapi.models.V1Container;
+import io.kubernetes.client.openapi.models.V1HostPathVolumeSource;
+import io.kubernetes.client.openapi.models.V1ObjectMeta;
+import io.kubernetes.client.openapi.models.V1Pod;
+import io.kubernetes.client.openapi.models.V1PodList;
+import io.kubernetes.client.openapi.models.V1PodSpec;
+import io.kubernetes.client.openapi.models.V1PodStatus;
+import io.kubernetes.client.openapi.models.V1Volume;
+import io.kubernetes.client.openapi.models.V1VolumeMount;
 import io.kubernetes.client.util.ClientBuilder;
 import io.kubernetes.client.util.KubeConfig;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +49,11 @@ public class K8sUtil {
      */
     public static synchronized CoreV1Api getK8sApi() throws IOException {
         if (null == api) {
-            ClassPathResource resource = new ClassPathResource("config");
+            Resource resource;
+            resource = new FileSystemResource("config");
+            if (!resource.exists()) {
+                resource = new ClassPathResource("config");
+            }
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
             ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(br)).build();
             Configuration.setDefaultApiClient(client);
