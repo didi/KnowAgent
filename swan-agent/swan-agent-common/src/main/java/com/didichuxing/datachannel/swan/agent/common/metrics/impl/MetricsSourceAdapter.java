@@ -46,7 +46,8 @@ import static com.didichuxing.datachannel.swan.agent.common.metrics.impl.Metrics
  */
 class MetricsSourceAdapter implements DynamicMBean {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsSourceAdapter.class);
+    private static final Logger              LOGGER = LoggerFactory
+                                                        .getLogger(MetricsSourceAdapter.class);
 
     private final String                     prefix, name;
     private final MetricsSource              source;
@@ -62,8 +63,8 @@ class MetricsSourceAdapter implements DynamicMBean {
     private ObjectName                       mbeanName;
 
     MetricsSourceAdapter(String prefix, String name, String description, MetricsSource source,
-                         Iterable<MetricsTag> injectedTags, MetricsFilter recordFilter, MetricsFilter metricFilter,
-                         int jmxCacheTTL) {
+                         Iterable<MetricsTag> injectedTags, MetricsFilter recordFilter,
+                         MetricsFilter metricFilter, int jmxCacheTTL) {
         this.prefix = Contracts.checkNotNull(prefix, "prefix");
         this.name = Contracts.checkNotNull(name, "name");
         this.source = Contracts.checkNotNull(source, "source");
@@ -91,8 +92,8 @@ class MetricsSourceAdapter implements DynamicMBean {
     }
 
     @Override
-    public synchronized Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException,
-                                                              ReflectionException {
+    public synchronized Object getAttribute(String attribute) throws AttributeNotFoundException,
+                                                             MBeanException, ReflectionException {
         updateJmxCache();
         Attribute a = attrCache.get(attribute);
         if (a == null) {
@@ -104,8 +105,9 @@ class MetricsSourceAdapter implements DynamicMBean {
         return a.getValue();
     }
 
-    public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException,
-                                                  MBeanException, ReflectionException {
+    public void setAttribute(Attribute attribute) throws AttributeNotFoundException,
+                                                 InvalidAttributeValueException, MBeanException,
+                                                 ReflectionException {
         throw new UnsupportedOperationException("Metrics are read-only.");
     }
 
@@ -129,8 +131,9 @@ class MetricsSourceAdapter implements DynamicMBean {
     }
 
     @Override
-    public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException,
-                                                                                 ReflectionException {
+    public Object invoke(String actionName, Object[] params, String[] signature)
+                                                                                throws MBeanException,
+                                                                                ReflectionException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

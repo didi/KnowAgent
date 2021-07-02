@@ -28,10 +28,10 @@ import com.didichuxing.datachannel.swan.agent.common.metrics.impl.MetricsSystemI
  */
 public enum DefaultMetricsSystem implements MetricsSystem {
 
-                                                           /**
-                                                            * The singleton instance
-                                                            */
-                                                           INSTANCE;
+    /**
+     * The singleton instance
+     */
+    INSTANCE;
 
     private static final int        VERSION = 2;
 

@@ -112,8 +112,8 @@ public class SinkQueue<T> {
 
     private synchronized void checkConsumer() {
         if (currentConsumer != null) {
-            throw new ConcurrentModificationException(
-                "The " + currentConsumer.getName() + " thread is consuming the queue.");
+            throw new ConcurrentModificationException("The " + currentConsumer.getName()
+                                                      + " thread is consuming the queue.");
         }
     }
 

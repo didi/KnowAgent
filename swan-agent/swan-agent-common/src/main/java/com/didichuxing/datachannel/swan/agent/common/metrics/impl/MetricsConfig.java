@@ -39,44 +39,46 @@ import java.util.regex.Pattern;
 
 public class MetricsConfig extends SubsetConfiguration {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsConfig.class);
+    private static final Logger LOGGER                 = LoggerFactory
+                                                           .getLogger(MetricsConfig.class);
 
-    static final String  DEFAULT_FILE_NAME      = "metrics.properties";
-    static final String  PREFIX_DEFAULT         = "*.";
+    static final String         DEFAULT_FILE_NAME      = "metrics.properties";
+    static final String         PREFIX_DEFAULT         = "*.";
 
-    static final String  PERIOD_KEY             = "period";
-    static final int     PERIOD_DEFAULT         = 10;                                    // seconds
+    static final String         PERIOD_KEY             = "period";
+    static final int            PERIOD_DEFAULT         = 10;                               // seconds
 
-    static final String  QUEUE_CAPACITY_KEY     = "queue.capacity";
-    static final int     QUEUE_CAPACITY_DEFAULT = 1;
+    static final String         QUEUE_CAPACITY_KEY     = "queue.capacity";
+    static final int            QUEUE_CAPACITY_DEFAULT = 1;
 
-    static final String  RETRY_DELAY_KEY        = "retry.delay";
-    static final int     RETRY_DELAY_DEFAULT    = 10;                                    // seconds
-    static final String  RETRY_BACKOFF_KEY      = "retry.backoff";
-    static final int     RETRY_BACKOFF_DEFAULT  = 2;                                     // back off factor
-    static final String  RETRY_COUNT_KEY        = "retry.count";
-    static final int     RETRY_COUNT_DEFAULT    = 1;
+    static final String         RETRY_DELAY_KEY        = "retry.delay";
+    static final int            RETRY_DELAY_DEFAULT    = 10;                               // seconds
+    static final String         RETRY_BACKOFF_KEY      = "retry.backoff";
+    static final int            RETRY_BACKOFF_DEFAULT  = 2;                                // back off factor
+    static final String         RETRY_COUNT_KEY        = "retry.count";
+    static final int            RETRY_COUNT_DEFAULT    = 1;
 
-    static final String  JMX_CACHE_TTL_KEY      = "jmx.cache.ttl";
-    static final int     JMX_CACHE_TTL_DEFAULT  = 10000;                                 // millis
+    static final String         JMX_CACHE_TTL_KEY      = "jmx.cache.ttl";
+    static final int            JMX_CACHE_TTL_DEFAULT  = 10000;                            // millis
 
-    static final String  CONTEXT_KEY            = "context";
-    static final String  NAME_KEY               = "name";
-    static final String  DESC_KEY               = "description";
-    static final String  SOURCE_KEY             = "source";
-    static final String  SINK_KEY               = "sink";
-    static final String  METRIC_FILTER_KEY      = "metric.filter";
-    static final String  RECORD_FILTER_KEY      = "record.filter";
-    static final String  SOURCE_FILTER_KEY      = "source.filter";
+    static final String         CONTEXT_KEY            = "context";
+    static final String         NAME_KEY               = "name";
+    static final String         DESC_KEY               = "description";
+    static final String         SOURCE_KEY             = "source";
+    static final String         SINK_KEY               = "sink";
+    static final String         METRIC_FILTER_KEY      = "metric.filter";
+    static final String         RECORD_FILTER_KEY      = "record.filter";
+    static final String         SOURCE_FILTER_KEY      = "source.filter";
 
-    static final Pattern INSTANCE_REGEX         = Pattern.compile("([^.*]+)\\..+");
+    static final Pattern        INSTANCE_REGEX         = Pattern.compile("([^.*]+)\\..+");
 
     MetricsConfig(Configuration c, String prefix) {
         super(c, prefix.toLowerCase(Locale.US), ".");
     }
 
     static MetricsConfig create(String prefix) {
-        return loadFirst(prefix, "metrics" + prefix.toLowerCase(Locale.US) + ".properties", DEFAULT_FILE_NAME);
+        return loadFirst(prefix, "metrics" + prefix.toLowerCase(Locale.US) + ".properties",
+            DEFAULT_FILE_NAME);
     }
 
     static MetricsConfig create(String prefix, String... fileNames) {
@@ -102,7 +104,8 @@ public class MetricsConfig extends SubsetConfiguration {
                 throw new MetricsConfigException(e);
             }
         }
-        throw new MetricsConfigException("Cannot locate configuration: tried " + StringUtils.join(fileNames, ", "));
+        throw new MetricsConfigException("Cannot locate configuration: tried "
+                                         + StringUtils.join(fileNames, ", "));
     }
 
     @Override
@@ -153,7 +156,8 @@ public class MetricsConfig extends SubsetConfiguration {
         Object value = super.getProperty(key);
         if (value == null) {
             LOGGER.debug("poking parent " + getParent().getClass().getSimpleName() + " for " + key);
-            return getParent().getProperty(key.startsWith(PREFIX_DEFAULT) ? key : PREFIX_DEFAULT + key);
+            return getParent().getProperty(
+                key.startsWith(PREFIX_DEFAULT) ? key : PREFIX_DEFAULT + key);
         }
         return value;
     }

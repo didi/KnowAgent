@@ -160,7 +160,8 @@ public class MetricMutableFactory {
      * @param initValue of the metric
      * @return  a new metric object
      */
-    public MetricMutablePeriodGaugeLong newPeriodGauge(String name, String description, long initValue) {
+    public MetricMutablePeriodGaugeLong newPeriodGauge(String name, String description,
+                                                       long initValue) {
         return new MetricMutablePeriodGaugeLong(name, description, initValue);
     }
 
@@ -183,8 +184,8 @@ public class MetricMutableFactory {
      * @param extended    if true, produces extended stat (stdev, min/max etc.)
      * @return  a new metric object
      */
-    public MetricMutableStat newStat(String name, String description, String sampleName, String valueName,
-                                     boolean extended) {
+    public MetricMutableStat newStat(String name, String description, String sampleName,
+                                     String valueName, boolean extended) {
         return new MetricMutableStat(name, description, sampleName, valueName, extended);
     }
 

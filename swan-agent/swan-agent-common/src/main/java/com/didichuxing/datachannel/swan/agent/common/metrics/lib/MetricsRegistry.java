@@ -174,7 +174,8 @@ public class MetricsRegistry {
      * @param initValue of the metric
      * @return  a new gauge object
      */
-    public MetricMutablePeriodGaugeLong newPeriodGauge(String name, String description, long initValue) {
+    public MetricMutablePeriodGaugeLong newPeriodGauge(String name, String description,
+                                                       long initValue) {
         checkMetricName(name);
         MetricMutablePeriodGaugeLong ret = mf.newPeriodGauge(name, description, initValue);
         metricsMap.put(name, ret);
@@ -205,8 +206,8 @@ public class MetricsRegistry {
      * @param extended    produce extended stat (stdev, min/max etc.) if true.
      * @return  a new metric object
      */
-    public MetricMutableStat newStat(String name, String description, String sampleName, String valueName,
-                                     boolean extended) {
+    public MetricMutableStat newStat(String name, String description, String sampleName,
+                                     String valueName, boolean extended) {
         checkMetricName(name);
         MetricMutableStat ret = mf.newStat(name, description, sampleName, valueName, extended);
         metricsMap.put(name, ret);
@@ -221,7 +222,8 @@ public class MetricsRegistry {
      * @param valueName   of the metric (e.g., "time" or "latency")
      * @return  a new metric object
      */
-    public MetricMutableStat newStat(String name, String description, String sampleName, String valueName) {
+    public MetricMutableStat newStat(String name, String description, String sampleName,
+                                     String valueName) {
         return newStat(name, description, sampleName, valueName, false);
     }
 

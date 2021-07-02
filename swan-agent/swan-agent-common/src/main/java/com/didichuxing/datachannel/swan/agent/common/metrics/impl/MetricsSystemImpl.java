@@ -57,67 +57,74 @@ import static com.didichuxing.datachannel.swan.agent.common.metrics.impl.Metrics
  */
 public class MetricsSystemImpl implements MetricsSystem {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsSystemImpl.class);
+    private static final Logger                     LOGGER             = LoggerFactory
+                                                                           .getLogger(MetricsSystemImpl.class);
 
-    static final String MS_CONTEXT = "metricssystem";
+    static final String                             MS_CONTEXT         = "metricssystem";
 
-    static final String NUM_SOURCES_KEY = "num_sources";
+    static final String                             NUM_SOURCES_KEY    = "num_sources";
 
-    static final String NUM_SOURCES_DESC = "Number of metrics sources";
+    static final String                             NUM_SOURCES_DESC   = "Number of metrics sources";
 
-    static final String NUM_SINKS_KEY = "num_sinks";
+    static final String                             NUM_SINKS_KEY      = "num_sinks";
 
-    static final String NUM_SINKS_DESC = "Number of metrics sinks";
+    static final String                             NUM_SINKS_DESC     = "Number of metrics sinks";
 
-    static final String MS_NAME = "MetricsSystem";
+    static final String                             MS_NAME            = "MetricsSystem";
 
-    static final String MS_STATS_NAME = MS_NAME + ",sub=Stats";
+    static final String                             MS_STATS_NAME      = MS_NAME + ",sub=Stats";
 
-    static final String MS_STATS_DESC = "Metrics system metrics";
+    static final String                             MS_STATS_DESC      = "Metrics system metrics";
 
-    static final String MS_CONTROL_NAME = MS_NAME + ",sub=Control";
+    static final String                             MS_CONTROL_NAME    = MS_NAME + ",sub=Control";
 
     private final Map<String, MetricsSourceAdapter> sources;
 
-    private final Map<String, MetricsSinkAdapter> sinks;
+    private final Map<String, MetricsSinkAdapter>   sinks;
 
-    private final List<Callback> callbacks;
+    private final List<Callback>                    callbacks;
 
-    private final MetricsBuilderImpl metricsBuilder;
+    private final MetricsBuilderImpl                metricsBuilder;
 
-    private final MetricMutableStat snapshotStat = new MetricMutableStat("snapshot",
-            "snapshot stats", "ops", "time", true);
+    private final MetricMutableStat                 snapshotStat       = new MetricMutableStat(
+                                                                           "snapshot",
+                                                                           "snapshot stats", "ops",
+                                                                           "time", true);
 
-    private final MetricMutableStat publishStat = new MetricMutableStat("publish",
-            "publishing stats", "ops", "time", true);
+    private final MetricMutableStat                 publishStat        = new MetricMutableStat(
+                                                                           "publish",
+                                                                           "publishing stats",
+                                                                           "ops", "time", true);
 
-    private final MetricMutableCounterLong dropStat = new MetricMutableCounterLong("dropped_pub_all",
-            "number of dropped updates by all sinks", 0L);
+    private final MetricMutableCounterLong          dropStat           = new MetricMutableCounterLong(
+                                                                           "dropped_pub_all",
+                                                                           "number of dropped updates by all sinks",
+                                                                           0L);
 
-    private final List<MetricsTag> injectedTags;
+    private final List<MetricsTag>                  injectedTags;
 
     // Things that are changed by init()/start()/stop()
-    private String prefix;
+    private String                                  prefix;
 
-    private MetricsFilter sourceFilter;
+    private MetricsFilter                           sourceFilter;
 
-    private MetricsConfig config;
+    private MetricsConfig                           config;
 
-    private Map<String, MetricsConfig> sourceConfigs, sinkConfigs;
+    private Map<String, MetricsConfig>              sourceConfigs, sinkConfigs;
 
-    private boolean monitoring = false;
+    private boolean                                 monitoring         = false;
 
-    private Timer timer;
+    private Timer                                   timer;
 
-    private int period;                                                             // seconds
+    private int                                     period;                                                    // seconds
 
-    private long logicalTime;                                                        // number of timer invocations * period
+    private long                                    logicalTime;                                               // number of timer invocations * period
 
-    private ObjectName mbeanName;
+    private ObjectName                              mbeanName;
 
-    private boolean publishSelfMetrics = false;
+    private boolean                                 publishSelfMetrics = false;
 
-    private MetricsSourceAdapter sysSource;
+    private MetricsSourceAdapter                    sysSource;
 
     /**
      * Construct the metrics system
@@ -170,7 +177,8 @@ public class MetricsSystemImpl implements MetricsSystem {
     public synchronized void start() {
         Contracts.checkNotNull(prefix, "prefix");
         if (monitoring) {
-            LOGGER.warn(prefix + " metrics system already started!", new MetricsException("Illegal start"));
+            LOGGER.warn(prefix + " metrics system already started!", new MetricsException(
+                "Illegal start"));
             return;
         }
         for (Callback cb : callbacks)
@@ -186,7 +194,8 @@ public class MetricsSystemImpl implements MetricsSystem {
     @Override
     public synchronized void stop() {
         if (!monitoring) {
-            LOGGER.warn(prefix + " metrics system not yet started!", new MetricsException("Illegal stop"));
+            LOGGER.warn(prefix + " metrics system not yet started!", new MetricsException(
+                "Illegal stop"));
             return;
         }
         for (Callback cb : callbacks)
@@ -203,7 +212,8 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     @Override
-    public synchronized <T extends MetricsSource> T register(final String name, final String desc, final T source) {
+    public synchronized <T extends MetricsSource> T register(final String name, final String desc,
+                                                             final T source) {
         if (monitoring) {
             registerSource(name, desc, source);
         }
@@ -249,8 +259,9 @@ public class MetricsSystemImpl implements MetricsSystem {
             return;
         }
         MetricsConfig conf = sourceConfigs.get(name);
-        sa = conf != null ? new MetricsSourceAdapter(prefix, name, desc, source, injectedTags, period, conf)
-                : new MetricsSourceAdapter(prefix, name, desc, source, injectedTags, period, config.subset(SOURCE_KEY));
+        sa = conf != null ? new MetricsSourceAdapter(prefix, name, desc, source, injectedTags,
+            period, conf) : new MetricsSourceAdapter(prefix, name, desc, source, injectedTags,
+            period, config.subset(SOURCE_KEY));
         sources.put(name, sa);
         sa.start();
         LOGGER.debug("Registered source " + name);
@@ -271,7 +282,8 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     @Override
-    public synchronized <T extends MetricsSink> T register(final String name, final String description, final T sink) {
+    public synchronized <T extends MetricsSink> T register(final String name,
+                                                           final String description, final T sink) {
         if (config != null) {
             registerSink(name, description, sink);
         }
@@ -296,7 +308,8 @@ public class MetricsSystemImpl implements MetricsSystem {
             return;
         }
         MetricsConfig conf = sinkConfigs.get(name);
-        sa = conf != null ? newSink(name, desc, sink, conf) : newSink(name, desc, sink, config.subset(SINK_KEY));
+        sa = conf != null ? newSink(name, desc, sink, conf) : newSink(name, desc, sink,
+            config.subset(SINK_KEY));
         sinks.put(name, sa);
         sa.start();
         LOGGER.debug("Registered sink " + name);
@@ -305,16 +318,16 @@ public class MetricsSystemImpl implements MetricsSystem {
     @Override
     public synchronized void register(final Callback callback) {
         callbacks.add((Callback) Proxy.newProxyInstance(callback.getClass().getClassLoader(),
-                new Class<?>[]{Callback.class}, new InvocationHandler() {
-                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        try {
-                            return method.invoke(callback, args);
-                        } catch (Exception e) {
-                            LOGGER.warn("Caught exception in callback " + method.getName(), e);
-                        }
-                        return null;
+            new Class<?>[] { Callback.class }, new InvocationHandler() {
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    try {
+                        return method.invoke(callback, args);
+                    } catch (Exception e) {
+                        LOGGER.warn("Caught exception in callback " + method.getName(), e);
                     }
-                }));
+                    return null;
+                }
+            }));
     }
 
     @Override
@@ -418,7 +431,8 @@ public class MetricsSystemImpl implements MetricsSystem {
     private synchronized void stopSources() {
         for (Entry<String, MetricsSourceAdapter> entry : sources.entrySet()) {
             MetricsSourceAdapter sa = entry.getValue();
-            LOGGER.info("Stopping metrics source " + entry.getKey() + "(" + sa.source().getClass().getName() + ")");
+            LOGGER.info("Stopping metrics source " + entry.getKey() + "("
+                        + sa.source().getClass().getName() + ")");
             sa.stop();
         }
         sysSource.stop();
@@ -428,7 +442,8 @@ public class MetricsSystemImpl implements MetricsSystem {
     private synchronized void stopSinks() {
         for (Entry<String, MetricsSinkAdapter> entry : sinks.entrySet()) {
             MetricsSinkAdapter sa = entry.getValue();
-            LOGGER.info("Stopping metrics sink " + entry.getKey() + "(" + sa.sink().getClass().getName() + ")");
+            LOGGER.info("Stopping metrics sink " + entry.getKey() + "("
+                        + sa.sink().getClass().getName() + ")");
             sa.stop();
         }
         sinks.clear();
@@ -469,11 +484,12 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     static MetricsSinkAdapter newSink(String name, String desc, MetricsSink sink, MetricsConfig conf) {
-        return new MetricsSinkAdapter(name, desc, sink, conf.getString(CONTEXT_KEY), conf.getFilter(SOURCE_FILTER_KEY),
-                conf.getFilter(RECORD_FILTER_KEY), conf.getFilter(METRIC_FILTER_KEY),
-                conf.getInt(PERIOD_KEY, PERIOD_DEFAULT), conf.getInt(QUEUE_CAPACITY_KEY, QUEUE_CAPACITY_DEFAULT),
-                conf.getInt(RETRY_DELAY_KEY, RETRY_DELAY_DEFAULT), conf.getFloat(RETRY_BACKOFF_KEY, RETRY_BACKOFF_DEFAULT),
-                conf.getInt(RETRY_COUNT_KEY, RETRY_COUNT_DEFAULT));
+        return new MetricsSinkAdapter(name, desc, sink, conf.getString(CONTEXT_KEY),
+            conf.getFilter(SOURCE_FILTER_KEY), conf.getFilter(RECORD_FILTER_KEY),
+            conf.getFilter(METRIC_FILTER_KEY), conf.getInt(PERIOD_KEY, PERIOD_DEFAULT),
+            conf.getInt(QUEUE_CAPACITY_KEY, QUEUE_CAPACITY_DEFAULT), conf.getInt(RETRY_DELAY_KEY,
+                RETRY_DELAY_DEFAULT), conf.getFloat(RETRY_BACKOFF_KEY, RETRY_BACKOFF_DEFAULT),
+            conf.getInt(RETRY_COUNT_KEY, RETRY_COUNT_DEFAULT));
     }
 
     static MetricsSinkAdapter newSink(String name, String desc, MetricsConfig conf) {
@@ -509,27 +525,28 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     private void registerSystemSource() {
-        sysSource = new MetricsSourceAdapter(prefix, MS_STATS_NAME, MS_STATS_DESC, new MetricsSource() {
-            @Override
-            public void getMetrics(MetricsBuilder builder, boolean all) {
-                int numSources, numSinks;
-                synchronized (MetricsSystemImpl.this) {
-                    numSources = sources.size();
-                    numSinks = sinks.size();
-                }
-                MetricsRecordBuilder rb = builder.addRecord(MS_NAME).setContext(MS_CONTEXT)
+        sysSource = new MetricsSourceAdapter(prefix, MS_STATS_NAME, MS_STATS_DESC,
+            new MetricsSource() {
+                @Override
+                public void getMetrics(MetricsBuilder builder, boolean all) {
+                    int numSources, numSinks;
+                    synchronized (MetricsSystemImpl.this) {
+                        numSources = sources.size();
+                        numSinks = sinks.size();
+                    }
+                    MetricsRecordBuilder rb = builder.addRecord(MS_NAME).setContext(MS_CONTEXT)
                         .addGauge(NUM_SOURCES_KEY, NUM_SOURCES_DESC, numSources)
                         .addGauge(NUM_SINKS_KEY, NUM_SINKS_DESC, numSinks);
-                synchronized (MetricsSystemImpl.this) {
-                    for (MetricsSinkAdapter sa : sinks.values()) {
-                        sa.snapshot(rb, all);
+                    synchronized (MetricsSystemImpl.this) {
+                        for (MetricsSinkAdapter sa : sinks.values()) {
+                            sa.snapshot(rb, all);
+                        }
                     }
+                    snapshotStat.snapshot(rb, all);
+                    publishStat.snapshot(rb, all);
+                    dropStat.snapshot(rb, all);
                 }
-                snapshotStat.snapshot(rb, all);
-                publishStat.snapshot(rb, all);
-                dropStat.snapshot(rb, all);
-            }
-        }, injectedTags, null, null, period);
+            }, injectedTags, null, null, period);
         sysSource.start();
     }
 

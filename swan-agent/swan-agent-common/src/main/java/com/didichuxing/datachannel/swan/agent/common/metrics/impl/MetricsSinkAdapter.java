@@ -36,30 +36,32 @@ import java.util.Random;
  */
 public class MetricsSinkAdapter {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(MetricsSinkAdapter.class);
-    private final String name, description, context;
-    private final MetricsSink sink;
-    private final MetricsFilter sourceFilter, recordFilter, metricFilter;
+    private final Logger                   LOGGER   = LoggerFactory
+                                                        .getLogger(MetricsSinkAdapter.class);
+    private final String                   name, description, context;
+    private final MetricsSink              sink;
+    private final MetricsFilter            sourceFilter, recordFilter, metricFilter;
     private final SinkQueue<MetricsBuffer> queue;
-    private final Thread sinkThread;
-    private volatile boolean stopping = false;
-    private volatile boolean inError = false;
-    private final int period, firstRetryDelay, retryCount;
-    private final float retryBackoff;
-    private final MetricsRegistry registry = new MetricsRegistry("sinkadapter");
-    private final MetricMutableStat latency;
-    private final MetricMutableCounterInt dropped;
-    private final MetricMutableGaugeInt qsize;
+    private final Thread                   sinkThread;
+    private volatile boolean               stopping = false;
+    private volatile boolean               inError  = false;
+    private final int                      period, firstRetryDelay, retryCount;
+    private final float                    retryBackoff;
+    private final MetricsRegistry          registry = new MetricsRegistry("sinkadapter");
+    private final MetricMutableStat        latency;
+    private final MetricMutableCounterInt  dropped;
+    private final MetricMutableGaugeInt    qsize;
 
-    private final Consumer<MetricsBuffer> consumer = new Consumer<MetricsBuffer>() {
-        public void consume(MetricsBuffer buffer) {
-            publishMetrics(buffer);
-        }
-    };
+    private final Consumer<MetricsBuffer>  consumer = new Consumer<MetricsBuffer>() {
+                                                        public void consume(MetricsBuffer buffer) {
+                                                            publishMetrics(buffer);
+                                                        }
+                                                    };
 
-    MetricsSinkAdapter(String name, String description, MetricsSink sink, String context, MetricsFilter sourceFilter,
-                       MetricsFilter recordFilter, MetricsFilter metricFilter, int period, int queueCapacity,
-                       int retryDelay, float retryBackoff, int retryCount) {
+    MetricsSinkAdapter(String name, String description, MetricsSink sink, String context,
+                       MetricsFilter sourceFilter, MetricsFilter recordFilter,
+                       MetricsFilter metricFilter, int period, int queueCapacity, int retryDelay,
+                       float retryBackoff, int retryCount) {
         this.name = Contracts.checkNotNull(name, "name");
         this.description = description;
         this.sink = Contracts.checkNotNull(sink, "sink object");
@@ -71,9 +73,10 @@ public class MetricsSinkAdapter {
         firstRetryDelay = Contracts.checkArg(retryDelay, retryDelay > 0, "retry delay");
         this.retryBackoff = Contracts.checkArg(retryBackoff, retryBackoff > 1, "backoff factor");
         this.retryCount = retryCount;
-        this.queue = new SinkQueue<MetricsBuffer>(
-                Contracts.checkArg(queueCapacity, queueCapacity > 0, "queue capacity"));
-        latency = registry.newStat("sink." + name + ".latency", "Sink end to end latency", "ops", "time");
+        this.queue = new SinkQueue<MetricsBuffer>(Contracts.checkArg(queueCapacity,
+            queueCapacity > 0, "queue capacity"));
+        latency = registry.newStat("sink." + name + ".latency", "Sink end to end latency", "ops",
+            "time");
         dropped = registry.newCounter("sink." + name + ".dropped", "Dropped updates per sink", 0);
         qsize = registry.newGauge("sink." + name + ".qsize", "Queue size", 0);
 
@@ -130,8 +133,8 @@ public class MetricsSinkAdapter {
                     --n;
                 } else {
                     if (!inError) {
-                        LOGGER.error("Got sink exception and over retry limit, " + "suppressing further error messages",
-                                e);
+                        LOGGER.error("Got sink exception and over retry limit, "
+                                     + "suppressing further error messages", e);
                     }
                     queue.clear();
                     inError = true; // Don't keep complaining ad infinitum
@@ -147,13 +150,13 @@ public class MetricsSinkAdapter {
             if (sourceFilter == null || sourceFilter.accepts(entry.name())) {
                 for (MetricsRecordImpl record : entry.records()) {
                     if ((context == null || context.equals(record.context()))
-                            && (recordFilter == null || recordFilter.accepts(record))) {
+                        && (recordFilter == null || recordFilter.accepts(record))) {
                         if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Pushing record " + entry.name() + "." + record.context() + "." + record.name()
-                                    + " to " + name);
+                            LOGGER.debug("Pushing record " + entry.name() + "." + record.context()
+                                         + "." + record.name() + " to " + name);
                         }
-                        sink.putMetrics(
-                                metricFilter == null ? record : new MetricsRecordFiltered(record, metricFilter));
+                        sink.putMetrics(metricFilter == null ? record : new MetricsRecordFiltered(
+                            record, metricFilter));
                         if (ts == 0)
                             ts = record.timestamp();
                     }

@@ -103,7 +103,8 @@ public abstract class Metric {
 
     @Override
     public String toString() {
-        return "Metric{" + "name='" + name + "' description='" + description + "' value=" + value() + '}';
+        return "Metric{" + "name='" + name + "' description='" + description + "' value=" + value()
+               + '}';
     }
 
 }

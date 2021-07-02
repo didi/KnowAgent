@@ -35,10 +35,10 @@ import java.util.NoSuchElementException;
 public abstract class TryIterator<T> implements Iterator<T> {
 
     enum State {
-                PENDING, // Ready to tryNext().
-                GOT_NEXT, // Got the next element from tryNext() and yet to return it.
-                DONE, // Done/finished.
-                FAILED, // An exception occurred in the last op.
+        PENDING, // Ready to tryNext().
+        GOT_NEXT, // Got the next element from tryNext() and yet to return it.
+        DONE, // Done/finished.
+        FAILED, // An exception occurred in the last op.
     }
 
     private State state = State.PENDING;

@@ -38,7 +38,8 @@ public class MetricsRecordBuilderImpl extends MetricsRecordBuilder {
     private final MetricsFilter    recordFilter, metricFilter;
     private final boolean          acceptable;
 
-    public MetricsRecordBuilderImpl(String name, MetricsFilter rf, MetricsFilter mf, boolean acceptable) {
+    public MetricsRecordBuilderImpl(String name, MetricsFilter rf, MetricsFilter mf,
+                                    boolean acceptable) {
         timestamp = System.currentTimeMillis();
         this.name = name;
         metrics = new ArrayList<Metric>();

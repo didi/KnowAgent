@@ -40,7 +40,8 @@ public class MetricsRecordImpl implements MetricsRecord {
      * @param tags  of the record
      * @param metrics of the record
      */
-    public MetricsRecordImpl(String name, long timestamp, Iterable<MetricsTag> tags, Iterable<Metric> metrics) {
+    public MetricsRecordImpl(String name, long timestamp, Iterable<MetricsTag> tags,
+                             Iterable<Metric> metrics) {
         this.timestamp = Contracts.checkArg(timestamp, timestamp > 0, "timestamp");
         this.name = Contracts.checkNotNull(name, "name");
         this.tags = Contracts.checkNotNull(tags, "tags");
@@ -105,8 +106,8 @@ public class MetricsRecordImpl implements MetricsRecord {
 
     @Override
     public String toString() {
-        return "MetricsRecordImpl{" + "timestamp=" + timestamp + " name='" + name + "' tags=" + tags + " metrics="
-               + metrics + "}\n";
+        return "MetricsRecordImpl{" + "timestamp=" + timestamp + " name='" + name + "' tags="
+               + tags + " metrics=" + metrics + "}\n";
     }
 
 }

@@ -31,7 +31,8 @@ class MetricsBuilderImpl extends ArrayList<MetricsRecordBuilderImpl> implements 
     @Override
     public MetricsRecordBuilderImpl addRecord(String name) {
         boolean acceptable = recordFilter == null || recordFilter.accepts(name);
-        MetricsRecordBuilderImpl rb = new MetricsRecordBuilderImpl(name, recordFilter, metricFilter, acceptable);
+        MetricsRecordBuilderImpl rb = new MetricsRecordBuilderImpl(name, recordFilter,
+            metricFilter, acceptable);
         if (acceptable) {
             add(rb);
         }

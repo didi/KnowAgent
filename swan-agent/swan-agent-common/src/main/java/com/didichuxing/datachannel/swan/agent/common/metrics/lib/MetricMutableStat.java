@@ -53,7 +53,8 @@ public class MetricMutableStat extends MetricMutable {
      * @param valueName   of the metric (e.g. "time", "latency")
      * @param extended    create extended stats (stdev, min/max etc.) by default.
      */
-    public MetricMutableStat(String name, String description, String sampleName, String valueName, boolean extended) {
+    public MetricMutableStat(String name, String description, String sampleName, String valueName,
+                             boolean extended) {
         super(name, description);
         String desc = StringUtils.uncapitalize(description);
         numSamplesName = name + "_num_" + sampleName;

@@ -96,7 +96,8 @@ public class MetricsTag {
 
     @Override
     public String toString() {
-        return "MetricsTag{" + "name='" + name + "' description='" + description + "' value='" + value + "'}";
+        return "MetricsTag{" + "name='" + name + "' description='" + description + "' value='"
+               + value + "'}";
     }
 
 }
