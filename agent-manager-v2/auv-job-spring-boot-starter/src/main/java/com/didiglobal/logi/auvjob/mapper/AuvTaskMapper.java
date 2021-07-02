@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -16,6 +17,7 @@ import org.apache.ibatis.annotations.Update;
  * @author dengshan
  * @since 2020-11-10
  */
+@Repository
 public interface AuvTaskMapper {
 
   @Insert("INSERT INTO auv_task(code, name, description, cron, class_name, params, retry_times,"
