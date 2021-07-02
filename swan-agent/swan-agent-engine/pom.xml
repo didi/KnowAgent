@@ -13,10 +13,6 @@
     <version>${swan.agent.engine.version}</version>
 
     <dependencies>
-        <dependency>
-            <groupId>com.didichuxing.datachannel</groupId>
-            <artifactId>metrics</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>

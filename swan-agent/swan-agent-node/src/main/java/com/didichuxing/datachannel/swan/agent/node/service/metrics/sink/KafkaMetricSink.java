@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.didichuxing.datachannel.metrics.Metric;
-import com.didichuxing.datachannel.metrics.MetricsRecord;
-import com.didichuxing.datachannel.metrics.MetricsSink;
-import com.didichuxing.datachannel.metrics.MetricsTag;
+import com.didichuxing.datachannel.swan.agent.common.metrics.Metric;
+import com.didichuxing.datachannel.swan.agent.common.metrics.MetricsRecord;
+import com.didichuxing.datachannel.swan.agent.common.metrics.MetricsSink;
+import com.didichuxing.datachannel.swan.agent.common.metrics.MetricsTag;
 import com.didichuxing.datachannel.swan.agent.common.api.MetricsFields;
 import com.didichuxing.datachannel.swan.agent.common.configs.v2.MetricConfig;
 import com.didichuxing.datachannel.swan.agent.common.constants.ComponentType;

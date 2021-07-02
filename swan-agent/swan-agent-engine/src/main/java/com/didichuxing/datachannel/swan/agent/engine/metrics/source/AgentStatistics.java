@@ -2,7 +2,7 @@ package com.didichuxing.datachannel.swan.agent.engine.metrics.source;
 
 import java.util.Map;
 
-import com.didichuxing.datachannel.metrics.MetricsBuilder;
+import com.didichuxing.datachannel.swan.agent.common.metrics.MetricsBuilder;
 import com.didichuxing.datachannel.swan.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.swan.agent.common.api.MetricsFields;
 import com.didichuxing.datachannel.swan.agent.common.loggather.LogGather;
