@@ -50,10 +50,6 @@
                     <groupId>com.github.oshi</groupId>
                     <artifactId>oshi-core</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>mysql</groupId>
-                    <artifactId>mysql-connector-java</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 
