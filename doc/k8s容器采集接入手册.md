@@ -23,7 +23,7 @@
    kind: Pod
    metadata: 
    	name: log-collect
-   	namespace: default
+      namespace: default
    	annotations:
    		- servicename: k8s_test -- 标注1
    spec: 
