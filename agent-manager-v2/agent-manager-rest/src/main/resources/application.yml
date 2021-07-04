@@ -1,5 +1,5 @@
 server:
-  port: 8006
+  port: 8080
 logging:
   pattern:
     file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
