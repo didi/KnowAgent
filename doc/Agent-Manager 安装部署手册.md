@@ -34,9 +34,9 @@ auv-job.username：同配置项 spring.datasource.druid.username
 auv-job.password：同配置项 spring.datasource.druid.password
 ```
 
-## 5. 启动
+## 5. 启动与停止
 
-在`output`目录下，执行`sh start.sh`即可启动服务。
+在`output`目录下，执行`sh start.sh`即可启动Agent-Manager服务，执行`sh stop.sh`即可停止Agent-Manager服务。
 
 ## 6. 使用
 
