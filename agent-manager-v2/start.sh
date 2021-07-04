@@ -9,5 +9,5 @@ GC_STRATEGY="-XX:+UseParallelGC -XX:CMSInitiatingOccupancyFraction=80 -XX:+UseCM
 
 nohup ${JAVA_HOME}/bin/java ${GC_STRATEGY} -jar ${JAR_FILE} &
 
-echo $? > am.pid
-echo "service started as pid: $?"
+echo $! > am.pid
+echo "service started as pid: $!"
