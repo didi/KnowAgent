@@ -5,7 +5,7 @@
 - java 8+ （运行环境）
 - MySQL 5.7 （数据存储）
 - Maven 3.5+ （后端打包依赖）
-- node 12+ （用于打包依赖，其中npm版本6.14.8）
+- node 14.15.1 （用于打包依赖，其中npm版本6.14.8）
 
 ## 2. 源代码编译打包
 
@@ -15,7 +15,7 @@
 
 ## 3. MySQL-DB初始化
 
-执行[create_mysql_table.sql](https://github.com/didi/Logi-KafkaManager/blob/master/docs/install_guide/create_mysql_table.sql)中的SQL命令，从而创建所需的MySQL库及表，默认创建的库名是`logi_agent_manager`。
+执行[create_mysql_table.sql](../agent-manager-v2/create_mysql_table.sql)中的SQL命令，从而创建所需的MySQL库及表，默认创建的库名是`logi_agent_manager`。
 
 ```
 # 示例：
@@ -40,4 +40,4 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 6. 使用
 
-本地启动的话，访问`http://localhost:8080`。更多参考：[agent-manager 用户使用手册](https://github.com/didi/Logi-KafkaManager/blob/master/docs/user_guide/user_guide_cn.md)
+本地启动的话，访问`http://localhost:8080`。

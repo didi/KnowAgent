@@ -67,9 +67,9 @@ spring:
 kcm:
   enabled: true
   gift:
-    endpoint:
-    accessKeyID:
-    secretAccessKey:
+    endpoint: 1
+    accessKeyID: 1
+    secretAccessKey: 1
     bucket: agentmanager
 
 lam:
@@ -84,19 +84,19 @@ metadata:
   sync:
     request:
       service:
-        url:
+        url: 1
         enabled: false
       host:
-        url:
+        url: 1
       kafkacluster:
-        url:
+        url: 1
         enabled: false
       containers:
-        url:
+        url: 1
       permission:
-        url:
-        srv-token:
-        user-token:
+        url: 1
+        srv-token: 1
+        user-token: 1
         enabled: false
       k8s:
         service-key: servicename
@@ -107,12 +107,12 @@ agent:
   metrics:
     datasource:
       elasticsearch:
-        ip:
-        port:
-        appId:
-        appSecret:
-        agentMetricsIndexName:
-        agentErrorLogIndexName:
+        ip: 1
+        port: 1
+        appId: 1
+        appSecret: 1
+        agentMetricsIndexName: 1
+        agentErrorLogIndexName: 1
     producer:
       identify: false
       appId: 0
