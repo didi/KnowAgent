@@ -40,4 +40,4 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 6. 使用
 
-本地启动的话，访问`http://localhost:8080`。
+本地启动的话，访问`http://localhost:8080`。更多参考：[agent-manager 用户使用手册](../doc/user_guide/user_guide_cn.md)
