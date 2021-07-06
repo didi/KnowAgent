@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.alibaba.fastjson.util.TypeUtils;
+import com.didichuxing.datachannel.agentmanager.common.bean.common.AgentMetricRDSField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -32,22 +33,22 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return collectTaskMetricMapper.selectContainerCountEqualsZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, parentHostName, containerHostName, "send_count");
+        return collectTaskMetricMapper.selectContainerCountEqualsZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, parentHostName, containerHostName, AgentMetricRDSField.SEND_COUNT);
     }
 
     @Override
     public Long getContainerSendCountGtZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return collectTaskMetricMapper.selectContainerCountGtZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, parentHostName, containerHostName, "send_count");
+        return collectTaskMetricMapper.selectContainerCountGtZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, parentHostName, containerHostName, AgentMetricRDSField.SEND_COUNT);
     }
 
     @Override
     public Long getHostSendCountEqualsZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return collectTaskMetricMapper.selectSingleCountEqualsZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "send_count");
+        return collectTaskMetricMapper.selectSingleCountEqualsZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.SEND_COUNT);
     }
 
     @Override
     public Long getHostSendCountGtZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
-        return collectTaskMetricMapper.selectSingleCountGtZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "send_count");
+        return collectTaskMetricMapper.selectSingleCountGtZero(heartbeatStartTime, heartbeatEndTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.SEND_COUNT);
     }
 
     @Override
@@ -62,13 +63,13 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getFilePathNotExistsCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        Long value = collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logCollectTaskHostName, fileLogCollectPathId, "is_file_exist", false);
+        Long value = collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logCollectTaskHostName, fileLogCollectPathId, AgentMetricRDSField.IS_FILE_EXIST, false);
         return value == null ? 0 : value.intValue();
     }
 
     @Override
     public Integer getAbnormalTruncationCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        Long value = collectTaskMetricMapper.selectSingleSum(startTime, endTime, logCollectTaskId, logCollectTaskHostName, fileLogCollectPathId, "filter_too_large_count");
+        Long value = collectTaskMetricMapper.selectSingleSum(startTime, endTime, logCollectTaskId, logCollectTaskHostName, fileLogCollectPathId, AgentMetricRDSField.FILTER_TOO_LARGE_COUNT);
         return value == null ? 0 : value.intValue();
     }
 
@@ -84,40 +85,40 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
             if (StringUtils.isEmpty(files) || "[]".equals(files)) {
                 continue;
             }
-            count += files.split("\"isFileOrder\":1").length - 1;
+            count += files.split("\""+ AgentMetricRDSField.IS_FILE_ORDER +"\":1").length - 1;
         }
         return count;
     }
 
     @Override
     public Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        Long value = collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "valid_time_config", true);
+        Long value = collectTaskMetricMapper.selectSingleCountWithTerm(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.VALID_TIME_CONFIG, true);
         return value == null ? 0 : value.intValue();
     }
 
     @Override
     public Long getLatestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        return (Long) collectTaskMetricMapper.selectSingleMax(logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
+        return (Long) collectTaskMetricMapper.selectSingleMax(logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.LOG_TIME);
     }
 
     @Override
     public Long getLatestStartupTime(String hostName) {
-        return agentMetricMapper.selectMaxByHostname(hostName, "start_time");
+        return agentMetricMapper.selectMaxByHostname(hostName, AgentMetricRDSField.START_TIME);
     }
 
     @Override
     public Long getHostCpuLimitDuration(Long startTime, Long endTime, String hostName) {
-        return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, "limit_rate");
+        return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, AgentMetricRDSField.LIMIT_RATE);
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String hostName) {
-        return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, "limit_time");
+        return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, AgentMetricRDSField.LIMIT_TIME);
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId) {
-        return collectTaskMetricMapper.selectSingleSum(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "limit_time");
+        return collectTaskMetricMapper.selectSingleSum(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.LIMIT_TIME);
     }
 
     @Override
@@ -146,17 +147,17 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectSum(startTime, endTime, hostName, "gc_count");
+        return agentMetricMapper.selectSum(startTime, endTime, hostName, AgentMetricRDSField.GC_COUNT);
     }
 
     @Override
     public List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, "cpu_usage");
+        return agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, AgentMetricRDSField.CPU_USAGE);
     }
 
     @Override
     public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
-        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, "memory_usage");
+        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, AgentMetricRDSField.MEMORY_USAGE);
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
@@ -167,12 +168,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectSumPerMin(startTime, endTime, hostName, "gc_count");
+        return agentMetricMapper.selectSumPerMin(startTime, endTime, hostName, AgentMetricRDSField.GC_COUNT);
     }
 
     @Override
     public List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName) {
-        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, "send_byte");
+        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, AgentMetricRDSField.SEND_BYTE);
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
@@ -183,12 +184,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName) {
-        return collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, "send_count");
+        return collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, AgentMetricRDSField.SEND_COUNT);
     }
 
     @Override
     public List<MetricPoint> getAgentFdUsagePerMin(Long startTime, Long endTime, String hostName) {
-        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, "fd_count");
+        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, AgentMetricRDSField.FD_COUNT);
         for (MetricPoint metricPoint : graph) {
             Integer i = TypeUtils.castToInt(metricPoint.getValue());
             metricPoint.setValue(i);
@@ -198,12 +199,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, "start_time");
+        return agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, AgentMetricRDSField.START_TIME);
     }
 
     @Override
     public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, "send_byte");
+        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, AgentMetricRDSField.SEND_BYTE);
         for (MetricPoint metricPoint : graph) {
             BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
             BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
@@ -214,42 +215,47 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, "read_count");
+        return collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, AgentMetricRDSField.READ_COUNT);
     }
 
     @Override
     public List<MetricPoint> getFileLogPathNotExistsPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "is_file_exist");
+        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.IS_FILE_EXIST);
     }
 
     @Override
     public List<MetricPoint> getFileLogPathDisorderPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "is_file_disorder");
+        List<MetricPoint> graph = collectTaskMetricMapper.selectFileDisorderPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
+        for (MetricPoint metricPoint : graph) {
+            String collectFiles = TypeUtils.castToString(metricPoint.getValue());
+            metricPoint.setValue(collectFiles.matches( "\"" + AgentMetricRDSField.IS_FILE_ORDER + "\":1"));
+        }
+        return graph;
     }
 
     @Override
     public List<MetricPoint> getFilterOutPerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "filter_out");
+        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.FILTER_OUT);
     }
 
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "log_time");
+        return collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.LOG_TIME);
     }
 
     @Override
     public List<MetricPoint> getLimitTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSumPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "limit_time");
+        return collectTaskMetricMapper.selectSumPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.LIMIT_TIME);
     }
 
     @Override
     public List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "valid_time_config");
+        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.VALID_TIME_CONFIG);
     }
 
     @Override
     public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, "filter_too_large_count");
+        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.FILTER_TOO_LARGE_COUNT);
     }
 
 }

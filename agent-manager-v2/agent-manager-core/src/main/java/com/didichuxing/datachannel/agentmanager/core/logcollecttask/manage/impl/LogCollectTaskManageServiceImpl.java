@@ -46,6 +46,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -55,7 +56,7 @@ import java.util.*;
  * @date 2020-09-21
  * 日志采集任务管理服务实现类
  */
-@org.springframework.stereotype.Service
+@Service
 public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogCollectTaskManageServiceImpl.class);
 
@@ -158,8 +159,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
      * @param startTime 指标信息查询开始时间
      * @param endTime 指标信息查询结束时间
      * @return 返回日志采集任务对应某个待采集路径在具体某主机采集指标信息
-     *
-     * TODO：
      *
      */
     private List<MetricPanelGroup> handleListLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime) {

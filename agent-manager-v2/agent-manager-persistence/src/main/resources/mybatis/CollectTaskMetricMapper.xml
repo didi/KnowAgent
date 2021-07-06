@@ -54,7 +54,6 @@
     <result column="read_byte" property="readByte" jdbcType="INTEGER" />
     <result column="read_time_max" property="readTimeMax" jdbcType="INTEGER" />
     <result column="valid_time_config" property="validTimeConfig" jdbcType="BIT" />
-    <result column="is_file_disorder" property="isFileDisorder" jdbcType="BIT" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
@@ -68,7 +67,7 @@
     read_time_min, send_time_max, dynamic_limiter, log_path_key, max_time_gap, send_byte,
     send_time_min, log_time_str, control_time_max, send_count, source_type, log_time,
     flush_failed_count, channel_size, filter_total_too_large_count, collect_files, control_time_min,
-    read_byte, read_time_max, valid_time_config, is_file_disorder, operator, create_time, modify_time
+    read_byte, read_time_max, valid_time_config, operator, create_time, modify_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
@@ -98,7 +97,7 @@
       source_type, log_time, flush_failed_count,
       channel_size, filter_total_too_large_count,
       collect_files, control_time_min, read_byte,
-      read_time_max, valid_time_config, is_file_disorder, operator, create_time,
+      read_time_max, valid_time_config, operator, create_time,
       modify_time)
     values (#{id,jdbcType=BIGINT}, #{readTimeMean,jdbcType=INTEGER}, #{filterRemained,jdbcType=INTEGER},
       #{channelCapacity,jdbcType=VARCHAR}, #{isFileExist,jdbcType=BIT}, #{pathId,jdbcType=BIGINT},
@@ -117,7 +116,7 @@
       #{sourceType,jdbcType=VARCHAR}, #{logTime,jdbcType=TIMESTAMP}, #{flushFailedCount,jdbcType=INTEGER},
       #{channelSize,jdbcType=INTEGER}, #{filterTotalTooLargeCount,jdbcType=INTEGER},
       #{collectFiles,jdbcType=VARCHAR}, #{controlTimeMin,jdbcType=BIGINT}, #{readByte,jdbcType=INTEGER},
-      #{readTimeMax,jdbcType=INTEGER}, #{validTimeConfig,jdbcType=BIT},#{isFileDisorder,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{readTimeMax,jdbcType=INTEGER}, #{validTimeConfig,jdbcType=BIT}, #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
       #{modifyTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO" >
@@ -278,9 +277,6 @@
       </if>
       <if test="validTimeConfig != null" >
         valid_time_config,
-      </if>
-      <if test="isFileDisorder != null" >
-        is_file_disorder,
       </if>
       <if test="operator != null" >
         operator,
@@ -449,9 +445,6 @@
       <if test="validTimeConfig != null" >
         #{validTimeConfig, jdbcType=BIT},
       </if>
-      <if test="isFileDisorder != null" >
-        #{isFileDisorder, jdbcType=BIT},
-      </if>
       <if test="operator != null" >
         #{operator,jdbcType=VARCHAR},
       </if>
@@ -619,9 +612,6 @@
       <if test="validTimeConfig != null" >
         valid_time_config = #{validTimeConfig, jdbcType=BIT},
       </if>
-      <if test="isFileDisorder != null" >
-        is_file_disorder = #{isFileDisorder, jdbcType=BIT},
-      </if>
       <if test="operator != null" >
         operator = #{operator,jdbcType=VARCHAR},
       </if>
@@ -687,7 +677,6 @@
       read_byte = #{readByte,jdbcType=INTEGER},
       read_time_max = #{readTimeMax,jdbcType=INTEGER},
       valid_time_config = #{validTimeConfig, jdbcType=BIT},
-      is_file_disorder = #{isFileDisorder, jdbcType=BIT},
       operator = #{operator,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP}
@@ -751,7 +740,6 @@
     <result column="read_byte" property="value" jdbcType="INTEGER" />
     <result column="read_time_max" property="value" jdbcType="INTEGER" />
     <result column="valid_time_config" property="value" jdbcType="BIT" />
-    <result column="is_file_disorder" property="value" jdbcType="BIT" />
   </resultMap>
   <select id="selectSumByHostnamePerMin" resultMap="MetricPointMap">
     select sum(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
@@ -772,6 +760,11 @@
   </select>
   <select id="selectSinglePerMin" resultMap="MetricPointMap">
     select ${column}, heartbeat_time from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+    and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
+  </select>
+  <select id="selectFileDisorderPerMin" resultMap="MetricPointMap">
+    select collect_files, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_mode_id = #{taskId} and log_model_host_name = #{hostName} and path_id = #{pathId}
   </select>
