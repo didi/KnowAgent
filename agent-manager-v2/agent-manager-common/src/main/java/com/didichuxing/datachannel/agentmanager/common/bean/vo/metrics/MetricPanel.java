@@ -37,8 +37,8 @@ public class MetricPanel {
         return metricList;
     }
 
-    public Metric buildMetric(String metricName, List<MetricPoint> metricPonitList) {
-        Metric metric = new Metric(metricName, metricPonitList);
+    public Metric buildMetric(String metricName, List<MetricPoint> metricPointList) {
+        Metric metric = new Metric(metricName, metricPointList);
         this.metricList.add(metric);
         return metric;
     }

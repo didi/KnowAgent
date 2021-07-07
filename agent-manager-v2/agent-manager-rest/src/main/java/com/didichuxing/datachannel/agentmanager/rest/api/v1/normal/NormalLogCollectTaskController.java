@@ -12,7 +12,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.Servi
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostFilterRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.*;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.Metric;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -129,6 +131,28 @@ public class NormalLogCollectTaskController {
     @ResponseBody
     public Result<List<MetricPanelGroup>> listLogCollectTaskMetrics(@PathVariable Long logCollectTaskId, @PathVariable Long startTime, @PathVariable Long endTime) {
         return Result.buildSucc(logCollectTaskManageService.listLogCollectTaskMetrics(logCollectTaskId, startTime, endTime));
+    }
+
+    @ApiOperation(value = "获取指定条件下，给定时间范围（startTime ~ endTime）内，给定指标项的值", notes = "")
+    @RequestMapping(value = "/metric", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<MetricPoint>> getMetric(@RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("logCollectTaskId") Long logCollectTaskId, @RequestParam("logModelHostName") String logModelHostName, @RequestParam("fileLogCollectPathId") Long fileLogCollectPathId, @RequestParam("metricName") String metricName, @RequestParam("function") String function) {
+        if (logCollectTaskId == null) {
+            return Result.buildFail("采集任务的task id不存在");
+        }
+        if (startTime == null) {
+            return Result.buildFail("采集任务的起始时间不存在");
+        }
+        if (endTime == null) {
+            return Result.buildFail("采集任务的结束时间不存在");
+        }
+        if (metricName == null) {
+            return Result.buildFail("采集任务的指标名称不存在");
+        }
+        if (function == null) {
+            return Result.buildFail("采集任务的指标名称不存在");
+        }
+        return Result.buildSucc(logCollectTaskManageService.getMetricByName(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId));
     }
 
     /**

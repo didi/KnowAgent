@@ -151,6 +151,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return handleListLogCollectTaskMetricsPerHostAndPath(logCollectTaskId, logPathId, hostName, startTime, endTime);
     }
 
+    public List<MetricPoint> getMetricByName(Long startTime, Long endTime, Long logCollectTaskId, String logModelHostName, Long fileLogCollectPathId) {
+        return null;
+    }
+
     /**
      * 日志采集任务对应某个待采集路径在具体某主机采集指标信息
      * @param logCollectTaskId 日志采集任务 id

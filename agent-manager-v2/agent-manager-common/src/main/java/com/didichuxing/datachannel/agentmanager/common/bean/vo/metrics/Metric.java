@@ -14,29 +14,29 @@ public class Metric {
     private String metricName;
 
     @ApiModelProperty(value = "指标对应的数据点集")
-    private List<MetricPoint> metricPonitList;
+    private List<MetricPoint> metricPointList;
 
     public Metric() {
     }
 
-    public Metric(String metricName, List<MetricPoint> metricPonitList) {
+    public Metric(String metricName, List<MetricPoint> metricPointList) {
         this.metricName = metricName;
-        this.metricPonitList = metricPonitList;
+        this.metricPointList = metricPointList;
     }
 
     public void setMetricName(String metricName) {
         this.metricName = metricName;
     }
 
-    public void setMetricPonitList(List<MetricPoint> metricPonitList) {
-        this.metricPonitList = metricPonitList;
+    public void setMetricPointList(List<MetricPoint> metricPointList) {
+        this.metricPointList = metricPointList;
     }
 
     public String getMetricName() {
         return metricName;
     }
 
-    public List<MetricPoint> getMetricPonitList() {
-        return metricPonitList;
+    public List<MetricPoint> getMetricPointList() {
+        return metricPointList;
     }
 }

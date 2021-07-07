@@ -45,6 +45,7 @@ public class GlobalExceptionProcessInterceptor {
             return Result.build(ex.getServiceExceptionCode(), ex.getMessage());
         } catch (Throwable t) {
             LOGGER.error("error occurred when proceed method:{}.", methodName, t);
+            return Result.buildFail(t.getMessage());
         } finally {
 
         }

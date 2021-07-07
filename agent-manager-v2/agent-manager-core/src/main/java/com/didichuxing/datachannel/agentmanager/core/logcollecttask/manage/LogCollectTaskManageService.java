@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import java.util.List;
 
@@ -92,6 +93,8 @@ public interface LogCollectTaskManageService {
      * @return 返回日志采集任务对应某个待采集路径在具体某主机采集指标信息
      */
     List<MetricPanelGroup> listLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime);
+
+    List<MetricPoint> getMetricByName(Long startTime, Long endTime, Long logCollectTaskId, String logModelHostName, Long fileLogCollectPathId);
 
     /**
      * 检查给定日志采集任务健康度，具体包括如下操作：
