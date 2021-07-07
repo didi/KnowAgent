@@ -1,9 +1,16 @@
 package com.didichuxing.datachannel.agentmanager.common.util;
 
+import com.alibaba.fastjson.util.TypeUtils;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -278,5 +285,31 @@ public class DateUtils {
             i++;
         }
         return i;
+    }
+
+    public static Long castToTimestamp(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Number) {
+            return ((Number) value).longValue();
+        }
+        if (value instanceof Date) {
+            return ((Date) value).getTime();
+        }
+        if (value instanceof ZonedDateTime) {
+            return ((ZonedDateTime) value).toInstant().toEpochMilli();
+        }
+        if (value instanceof LocalDateTime) {
+            return ((LocalDateTime) value).toInstant(ZoneOffset.of("+8")).toEpochMilli();
+        }
+        if (value instanceof String) {
+            try {
+                return TypeUtils.castToDate(value).getTime();
+            } catch (NumberFormatException e) {
+                throw new ServiceException("无法解析字符串：" + value, ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+            }
+        }
+        throw new ServiceException("不支持的时间类型：" + value.getClass().getCanonicalName(), ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
     }
 }

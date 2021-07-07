@@ -113,7 +113,7 @@ public enum AgentMetricField {
 
     COLLECT_FILES("collectFiles"),
 
-    IS_FILE_ORDER("isFileOrder"),
+    IS_FILE_ORDER("collectFiles.isFileOrder"),
 
     CONTROL_TIME_MIN("controlTimeMin"),
 
@@ -121,7 +121,7 @@ public enum AgentMetricField {
 
     READ_TIME_MAX("readTimeMax"),
 
-    VALID_TIME_CONFIG("validTimeConfig");
+    VALID_TIME_CONFIG("collectFiles.validTimeConfig");
 
     private String value;
 
