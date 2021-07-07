@@ -42,14 +42,14 @@ export const getLegendHight = (options: EChartOption | any) => {
 
 export const dealMetricPanel = (metricPanelList: IMetricPanels[], metricPanelGroupName: any) => {
   return metricPanelList.map(ele => {
-    const timestamps = ele.metricList[0]?.metricPonitList?.map(p => moment(p.timestamp).format(timeFormat)); // 对应的时间戳
+    const timestamps = ele.metricList[0]?.metricPointList?.map(p => moment(p.timestamp).format(timeFormat)); // 对应的时间戳
     const titles = ele.metricList?.map(v => { return v.metricName });
     const series = ele.metricList?.map(v => { // 对应的折线图数据
       return {
         name: v.metricName, // 对应的单个折线标题
         type: 'line',
         // stack: '总量',
-        data: v.metricPonitList.map(p => p.value),  // 对应的单个折线数据
+        data: v.metricPointList.map(p => p.value),  // 对应的单个折线数据
       };
     });
     return {

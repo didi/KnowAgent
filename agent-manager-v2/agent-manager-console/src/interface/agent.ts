@@ -131,10 +131,10 @@ export interface IMetricPanels {
 
 export interface IAgentMetrics {
   metricName: string; // 指标名 图表里面包含多条折线
-  metricPonitList: IMetricPonits[];
+  metricPointList: IMetricPoints[];
 }
 
-export interface IMetricPonits { // 每条折线的数据
+export interface IMetricPoints { // 每条折线的数据
   timestamp: number; // Agent指标的某个数据点对应时间戳
   value: number; // Agent指标的某个数据点对应值
 }

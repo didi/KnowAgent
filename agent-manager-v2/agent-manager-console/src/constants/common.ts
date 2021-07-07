@@ -57,6 +57,17 @@ export const healthTypes = [{
   label: 'green',
 }] as ILabelValue[];
 
+export const taskhealthTypes = [{
+  value: 0,
+  label: 'green',
+}, {
+  value: 1,
+  label: 'yellow',
+}, {
+  value: 2,
+  label: 'red',
+}] as ILabelValue[];
+
 export const queryHealthTypes = [{
   value: 'all',
   label: '请选择',
