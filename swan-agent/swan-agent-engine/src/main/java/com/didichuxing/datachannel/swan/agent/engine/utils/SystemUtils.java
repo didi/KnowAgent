@@ -6,7 +6,7 @@ import java.lang.management.*;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hyperic.sigar.Sigar;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,6 @@ public class SystemUtils {
      * 用于获取 OS 信息 bean
      */
     private static OperatingSystemMXBean osMxBean   = ManagementFactory.getOperatingSystemMXBean();
-    private static Sigar                 sigar      = new Sigar();
 
     static {
         cpuNum = Runtime.getRuntime().availableProcessors();

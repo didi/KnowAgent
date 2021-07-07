@@ -66,13 +66,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- 获取 fd 使用量 -->
-        <dependency>
-            <groupId>org.fusesource</groupId>
-            <artifactId>sigar</artifactId>
-            <version>1.6.4</version>
-        </dependency>
-
     </dependencies>
 
     <build>
