@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMethod;
 import springfox.documentation.builders.*;
 import springfox.documentation.schema.ModelRef;
@@ -20,12 +19,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by limeng on 2020-04-16
- */
 @Configuration
 @EnableSwagger2
-@Profile({"dev", "test"})
 public class SwaggerConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwaggerConfiguration.class);private static List<String> ENVS = Lists.newArrayList();
