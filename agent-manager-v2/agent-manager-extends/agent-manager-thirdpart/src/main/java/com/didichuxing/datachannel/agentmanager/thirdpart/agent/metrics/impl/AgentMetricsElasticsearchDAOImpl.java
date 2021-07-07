@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.alibaba.fastjson.util.TypeUtils;
+import com.didichuxing.datachannel.agentmanager.common.bean.common.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
@@ -44,12 +45,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", containerHostName))
-                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
-                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.termQuery("hostname", parentHostName))
-                .must(QueryBuilders.termQuery("sendCount", 0))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME, containerHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID, logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID, fileLogCollectPathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME, parentHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.SEND_COUNT, 0))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -60,12 +61,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getContainerSendCountGtZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", containerHostName))
-                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
-                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.termQuery("hostname", parentHostName))
-                .must(QueryBuilders.rangeQuery("sendCount").from(0, false))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME, containerHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID, logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID, fileLogCollectPathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME, parentHostName))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.SEND_COUNT).from(0, false))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -76,11 +77,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getHostSendCountEqualsZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
-                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
-                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.termQuery("sendCount", 0))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME, logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID, logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID, fileLogCollectPathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.SEND_COUNT, 0))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -91,11 +92,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getHostSendCountGtZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
-                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
-                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.rangeQuery("sendCount").from(0, false))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME, logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID, logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID, fileLogCollectPathId))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.SEND_COUNT).from(0, false))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -107,10 +108,10 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logCollectTaskHostName))
-                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
-                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME, logCollectTaskHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID, logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID, fileLogCollectPathId))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
         return countResponse.getCount();
@@ -121,8 +122,8 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery("hostname", hostName))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME, hostName))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
         return countResponse.getCount();
@@ -130,17 +131,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getFilePathNotExistsCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        CountRequest countRequest = new CountRequest(agentMetricsIndex);
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logCollectTaskHostName))
-                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
-                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.termQuery("isFileExist", false))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
-        countRequest.query(boolQueryBuilder);
-        CountResponse countResponse = elasticsearchService.doCount(countRequest);
-        return (int) countResponse.getCount();
+        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, AgentMetricField.IS_FILE_EXIST, false);
+        if (value != null) {
+            return value.intValue();
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -156,7 +152,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
                 .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
                 .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.matchQuery("collectFiles", "\"isFileOrder\":1"))
+                .must(QueryBuilders.termQuery("collectFiles.isFileOrder", "1"))
                 .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -164,8 +160,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     /**
-     * todo 无log slice指标
-     *
      * @param startTime            心跳开始时间
      * @param endTime              心跳结束时间
      * @param logCollectTaskId     日志采集任务 id
@@ -175,17 +169,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
      */
     @Override
     public Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        CountRequest countRequest = new CountRequest(agentMetricsIndex);
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
-                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
-                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.termQuery("validTimeConfig", false))
-                .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
-        countRequest.query(boolQueryBuilder);
-        CountResponse countResponse = elasticsearchService.doCount(countRequest);
-        return (int) countResponse.getCount();
+        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG, true);
+        if (value != null) {
+            return value.intValue();
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -318,7 +307,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
 
-
     @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
         return (long) hostSumByFieldName(startTime, endTime, hostName, "gcCount");
@@ -376,7 +364,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getFileLogPathDisorderPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, "isFileOrder", 1);
+        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, "collectFiles.isFileOrder", 1);
     }
 
     @Override
@@ -402,6 +390,20 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, "filterTooLargeCount");
+    }
+
+    private Long selectCountByFieldName(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, String fieldName, Object value) {
+        CountRequest countRequest = new CountRequest(agentMetricsIndex);
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
+                .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
+                .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
+                .must(QueryBuilders.matchQuery(fieldName, value))
+                .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
+        countRequest.query(boolQueryBuilder);
+        CountResponse countResponse = elasticsearchService.doCount(countRequest);
+        return countResponse.getCount();
     }
 
     private double hostSumByFieldName(Long startTime, Long endTime, String hostName, String fieldName) {
