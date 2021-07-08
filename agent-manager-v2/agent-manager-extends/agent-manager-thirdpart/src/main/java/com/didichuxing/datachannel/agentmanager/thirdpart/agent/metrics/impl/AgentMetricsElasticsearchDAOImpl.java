@@ -4,6 +4,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.elasticsearch.service.ElasticsearchService;
 import org.elasticsearch.action.search.SearchRequest;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -306,7 +308,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         return TypeUtils.castToLong(hit.getSourceAsMap().get("memoryUsage"));
     }
 
-
     @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
         return (long) hostSumByFieldName(startTime, endTime, hostName, "gcCount");
@@ -364,7 +365,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getFileLogPathDisorderPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, "collectFiles.isFileOrder", 1);
+        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.IS_FILE_ORDER.getValue(), 1);
     }
 
     @Override
@@ -384,7 +385,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, "validTimeConfig", false);
+        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getValue(), false);
     }
 
     @Override
@@ -399,7 +400,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery("logModelHostName", logModelHostName))
                 .must(QueryBuilders.termQuery("logModeId", logCollectTaskId))
                 .must(QueryBuilders.termQuery("pathId", fileLogCollectPathId))
-                .must(QueryBuilders.matchQuery(fieldName, value))
+                .must(QueryBuilders.termQuery(fieldName, value))
                 .must(QueryBuilders.rangeQuery("heartbeatTime").from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -418,7 +419,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         builder.aggregation(AggregationBuilders.sum(sumName).field(fieldName));
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-        Sum sum = searchResponse.getAggregations().get(sumName);
+        Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return 0;
+        }
+        Sum sum = aggregations.get(sumName);
         return sum.getValue();
     }
 
@@ -436,7 +441,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         builder.aggregation(AggregationBuilders.sum(sumName).field(fieldName));
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-        Sum sum = searchResponse.getAggregations().get(sumName);
+        Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return 0;
+        }
+        Sum sum = aggregations.get(sumName);
         return sum.getValue();
     }
 
@@ -459,10 +468,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
         Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
         Histogram histogram = aggregations.get(sumName);
         List<MetricPoint> list = new ArrayList<>();
         for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = (Long) bucket.getKey();
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
             NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
             MetricPoint point = new MetricPoint();
             point.setTimestamp(timeKey);
@@ -491,10 +503,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
         Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
         Histogram histogram = aggregations.get(sumName);
         List<MetricPoint> list = new ArrayList<>();
         for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = (Long) bucket.getKey();
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
             NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
             MetricPoint point = new MetricPoint();
             point.setTimestamp(timeKey);
@@ -523,10 +538,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
         Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
         Histogram histogram = aggregations.get(sumName);
         List<MetricPoint> list = new ArrayList<>();
         for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = (Long) bucket.getKey();
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
             NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
             MetricPoint point = new MetricPoint();
             point.setTimestamp(timeKey);
@@ -555,10 +573,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
         Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
         Histogram histogram = aggregations.get(sumName);
         List<MetricPoint> list = new ArrayList<>();
         for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = (Long) bucket.getKey();
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
             NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
             MetricPoint point = new MetricPoint();
             point.setTimestamp(timeKey);
@@ -589,10 +610,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
         Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
         Histogram histogram = aggregations.get(sumName);
         List<MetricPoint> list = new ArrayList<>();
         for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = (Long) bucket.getKey();
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
             NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
             MetricPoint point = new MetricPoint();
             point.setTimestamp(timeKey);
@@ -623,10 +647,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
         Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
         Histogram histogram = aggregations.get(sumName);
         List<MetricPoint> list = new ArrayList<>();
         for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = (Long) bucket.getKey();
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
             NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
             MetricPoint point = new MetricPoint();
             point.setTimestamp(timeKey);
@@ -658,10 +685,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
         Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
         Histogram histogram = aggregations.get(sumName);
         List<MetricPoint> list = new ArrayList<>();
         for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = (Long) bucket.getKey();
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
             NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
             MetricPoint point = new MetricPoint();
             point.setTimestamp(timeKey);
