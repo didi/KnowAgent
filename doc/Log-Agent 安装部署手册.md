@@ -9,7 +9,7 @@
 
 ### Log-Agent
 
-下载好源代码后，进入Log-Agent目录，执行`sh build.sh`命令，得到output目录。
+在编译打包Log-Agent项目前，请先对Agent-Manager项目进行编译打包（见：[Agent-Manager 安装部署手册.md](Agent-Manager%20安装部署手册.md)）。下载好Log-Agent项目源代码后，进入Log-Agent目录，执行`sh build.sh`命令，得到output目录。
 
 ## 3. 配置文件修改
 
@@ -26,4 +26,3 @@ config.port=Agent-Manager微服务配置的http端口（默认：8080）
 ## 5. 使用
 
 Agent启动成功后，需要在Agent-Manager平台上将安装Agent的宿主机作为新增主机项维护进去，Agent将自动在Agent-Manager平台进行注册，然后即可在Agent-Manager平台管理对刚刚安装的Agent进行管理与采集任务下发。
-
