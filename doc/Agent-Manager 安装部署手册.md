@@ -15,7 +15,7 @@
 
 ## 3. MySQL-DB初始化
 
-执行[create_mysql_table.sql](../agent-manager-v2/create_mysql_table.sql)中的SQL命令，从而创建所需的MySQL库及表，默认创建的库名是`logi_agent_manager`。
+执行[create_mysql_table.sql](../agent-manager/create_mysql_table.sql)中的SQL命令，从而创建所需的MySQL库及表，默认创建的库名是`logi_agent_manager`。
 
 ```
 # 示例：

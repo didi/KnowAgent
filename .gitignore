@@ -60,12 +60,12 @@ test-output/
 *.iml
 */.DS_Store
 .DS_Store
-swan-agent.iml
+log-agent.iml
 */conf.local
 .gitversion
 output
 output.*
-agent-manager-v2/agent-manager-rest/src/main/resources/templates/
+agent-manager/agent-manager-rest/src/main/resources/templates/
 
 *.zip
 *.tar.gz
