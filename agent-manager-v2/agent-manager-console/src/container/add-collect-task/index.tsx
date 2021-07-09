@@ -438,10 +438,15 @@ const StepsForm = (props: Props & RouteComponentProps & IStepsFormProps) => {
                 <Button><NavRouterLink element='取消' href="/collect" /></Button>
               </div>
             </> :
-            <div className="edit-btns">
-              <Button type="primary" className='mr-10' onClick={handleEditTaskSubmit}>确认</Button>
-              <Button><NavRouterLink element='取消' href="/collect" /></Button>
-            </div>}
+            <>
+              {currentStep > 0 && (<Button className='mr-10' onClick={handlePrev}>上一步</Button>)}
+              {currentStep < steps.length - 1 && (<Button type="primary" onClick={handleNext}>下一步</Button>)}
+              {/* {currentStep === steps.length - 1 && (<Button type="primary" onClick={handleAddTaskSubmit}>完成</Button>)} */}
+              <div className="edit-btns">
+                <Button type="primary" className='mr-10' onClick={handleEditTaskSubmit}>确认</Button>
+                <Button><NavRouterLink element='取消' href="/collect" /></Button>
+              </div>
+            </>}
         </div>
       </div>
     </Spin>

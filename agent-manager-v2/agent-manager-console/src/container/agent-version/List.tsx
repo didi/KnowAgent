@@ -186,7 +186,8 @@ export class VerSionList extends React.Component<Props> {
           <CommonHead heads={versionHead} />
           <BasicTable
             showReloadBtn={false}
-            showQueryCollapseButton={true}
+            // showQueryCollapseButton={true}
+            showQueryCollapseButton={this.versionListColumns().length > 2 ? true : false}
             loading={this.state.loading}
             reloadBtnPos="left"
             reloadBtnType="btn"

@@ -105,7 +105,7 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
         </Form.Item>
         <Form.Item label="生产端属性">
           {getFieldDecorator('step3_productionSide', {
-            rules: [{ message: '请输入' }],
+            rules: [{ message: '请输入', pattern: /^[-\w]{1,1024}$/, }],
           })(
             <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />,
           )}

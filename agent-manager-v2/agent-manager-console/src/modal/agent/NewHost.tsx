@@ -55,6 +55,7 @@ const NewHost = (props: { dispatch: any, params: any }) => {
       visible={true}
       onOk={handleModifyOk}
       onCancel={handleModifyCancel}
+      okText='确认'
     >
       <WrappedAddHostForm ref={ref} />
     </Modal>

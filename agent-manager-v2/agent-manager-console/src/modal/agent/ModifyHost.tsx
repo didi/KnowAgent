@@ -121,7 +121,7 @@ const HostConfigurationForm = (props: IFormProps & IDispatch) => {
     >
       <div className="agent-list-head">
         <b>主机配置</b>
-        <Button type="primary" htmlType="submit">保存</Button>
+        <Button type="primary" htmlType="submit">确认</Button>
       </div>
       <Divider />
       <Form.Item label="主机名">
@@ -255,7 +255,7 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
     >
       <div className="agent-list-head">
         <b>Agent配置</b>
-        {hostObj.agentId && <Button type="primary" htmlType="submit">保存</Button>}
+        {hostObj.agentId && <Button type="primary" htmlType="submit">确认</Button>}
       </div>
       <Divider />
       {hostObj.agentId ? <>
@@ -336,7 +336,7 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
               <Form.Item label="生产端属性">
                 {getFieldDecorator('metricsProducerConfiguration', {
                   initialValue: agentDetail?.metricsProducerConfiguration,
-                  rules: [{ message: '请输入' }],
+                  rules: [{ message: '请输入', pattern: /^[-\w]{1,1024}$/, }],
                 })(
                   <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />,
                 )}
@@ -370,7 +370,7 @@ const AgentConfigurationForm = (props: IFormProps & IDispatch) => {
               <Form.Item label="生产端属性">
                 {getFieldDecorator('errorLogsProducerConfiguration', {
                   initialValue: agentDetail?.metricsProducerConfiguration,
-                  rules: [{ message: '请输入' }],
+                  rules: [{ message: '请输入', pattern: /^[-\w]{1,1024}$/, }],
                 })(
                   <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />,
                 )}

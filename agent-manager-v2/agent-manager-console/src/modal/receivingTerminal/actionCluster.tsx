@@ -90,7 +90,7 @@ const ActionClusterForm = (props: IFormProps) => {
           initialValue: cluster && cluster.kafkaClusterName,
           rules: [{
             required: true,
-            message: '请输入集群名，支持大小写中英文字母、数字、下划线、短横线,32位限制',
+            message: '请输入集群名，支持大小写中英文字母、数字、下划线、短横线，32位限制',
             validator: (rule: any, value: string) => {
               return !!value && new RegExp(regName).test(value);
             },
@@ -104,7 +104,7 @@ const ActionClusterForm = (props: IFormProps) => {
           initialValue: cluster && cluster.kafkaClusterBrokerConfiguration,
           rules: [{
             required: true,
-            message: '请输入集群地址，支持限制中英文字母、大小写、数字、下划线、短横线、点、冒号、逗号',
+            message: '请输入集群地址，支持限制中英文字母、大小写、数字、下划线、短横线、点、冒号、逗号，32位限制',
             validator: (rule: any, value: string) => {
               return !!value && new RegExp(regAdress).test(value);
             },

@@ -180,14 +180,15 @@ export const getCollectListColumns = (drawer: any, getData: any) => {
     width: '10%',
     sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskCreateTime - a.logCollectTaskCreateTime,
     render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
-  }, {
-    title: '结束时间',
-    dataIndex: 'logCollectTaskFinishTime',
-    key: 'logCollectTaskFinishTime',
-    width: '10%',
-    sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskFinishTime - a.logCollectTaskFinishTime,
-    render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
   },
+  // {
+  //   title: '结束时间',
+  //   dataIndex: 'logCollectTaskFinishTime',
+  //   key: 'logCollectTaskFinishTime',
+  //   width: '10%',
+  //   sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskFinishTime - a.logCollectTaskFinishTime,
+  //   render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
+  // },
   {
     title: '操作',
     width: '11%',
