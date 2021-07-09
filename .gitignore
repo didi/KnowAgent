@@ -58,14 +58,12 @@ test-output/
 .settings/
 .idea
 *.iml
-*/.DS_Store
 .DS_Store
-log-agent.iml
 */conf.local
 .gitversion
 output
 output.*
-agent-manager/agent-manager-rest/src/main/resources/templates/
+agent-manager-rest/src/main/resources/templates/
 
 *.zip
 *.tar.gz
