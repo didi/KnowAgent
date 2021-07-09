@@ -20,7 +20,7 @@ JAVA_OPTS=" $JAVA_OPTS -cp $BASE_CLASS_PATH "
 JAVA="$JAVA_HOME/bin/java $JAVA_OPTS"
 
 function get_pid() {
-    local pid=`ps axu | grep "swan" | grep "integration" | grep -v grep  | awk '{print $2}'`
+    local pid=`ps axu | grep "integration" | grep -v grep  | awk '{print $2}'`
     echo $pid
 }
 
@@ -46,8 +46,8 @@ if [ ! -z "$pid" ];then
     echo "process has been shutdown"
 fi
 
-sh /home/logger/swan-log-collector/bin/old_stop.sh
-nohup $JAVA com.didichuxing.datachannel.swan.agent.integration.test.IntegrationTest 1>>$STD_LOG 2>>$ERR_LOG &
+sh /home/logger/log-collector/bin/old_stop.sh
+nohup $JAVA com.didichuxing.datachannel.agent.integration.test.IntegrationTest 1>>$STD_LOG 2>>$ERR_LOG &
 sleep 3
 
 
@@ -57,8 +57,8 @@ if [ -z "$pid" ];then
     exit 1
 else
     echo "start success!"
-    rm -rf /home/logger/.swan-logOffSet
-    sh /home/logger/swan-log-collector/bin/old_start.sh
+    rm -rf /home/logger/.logOffSet
+    sh /home/logger/log-collector/bin/old_start.sh
     exit 0
 fi
 else

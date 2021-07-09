@@ -27,7 +27,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- dependdency by agent-manager-common -->
+        <!-- dependency by agent-manager-common -->
         <dependency>
             <groupId>com.didichuxing.datachannel</groupId>
             <artifactId>agent-manager-common</artifactId>

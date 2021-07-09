@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "shutting down!"
 function get_pid() {
-    local pid=`ps axu | grep "swan" | grep "integration" | grep -v "old" |grep -v grep  | awk '{print $2}'`
+    local pid=`ps axu | grep "integration" | grep -v "old" |grep -v grep  | awk '{print $2}'`
     echo $pid
 }
 
@@ -28,4 +28,4 @@ else
     echo "process has been shutdown"
 fi
 
-sh /home/logger/swan-log-collector/bin/old_stop.sh
+sh /home/logger/log-collector/bin/old_stop.sh

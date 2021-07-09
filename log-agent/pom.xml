@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.didichuxing.datachannel</groupId>
-    <artifactId>log-agent</artifactId>
+    <artifactId>Log-Agent</artifactId>
     <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>log-agent-common</module>
@@ -329,7 +329,7 @@
         </plugins>
 
 <!--        <filters>-->
-<!--            <filter>${user.dir}/swan.${profile.id}.properties</filter>-->
+<!--            <filter>${user.dir}/${profile.id}.properties</filter>-->
 <!--        </filters>-->
 
         <resources>

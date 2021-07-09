@@ -9,14 +9,14 @@ HOME_DIR=$(cd ~ && pwd)
 STATUS_URL="http://127.0.0.1:2023/log-agent/version"
 PID_URL="http://127.0.0.1:2023/log-agent/pid"
 
-APP_NAME=swan-log-collector
-TASK_NAME=swanAgent
+APP_NAME=log-collector
+TASK_NAME=agent
 LOCK_FILE=var/lock.tmp
 
 
 LOG_DIRS="${workspace}/logs"
 VAR_DIRS="${workspace}/var"
-CONFIG_FILE_NAME="swan.offline.properties"
+CONFIG_FILE_NAME="offline.properties"
 
 LINUX_VERSION="7.2"
 
@@ -89,7 +89,7 @@ function start() {
        exit 1;
     }
 
-    nohup $JAVA com.didichuxing.datachannel.swan.agent.node.SwanAgent 1>>${LOG_DIRS}/std.log 2>>${LOG_DIRS}/err.log &
+    nohup $JAVA com.didichuxing.datachannel.agent.node.Agent 1>>${LOG_DIRS}/std.log 2>>${LOG_DIRS}/err.log &
 
     # 通过agent提供api获取进程名称获取pid, 循环获取pid,如果10秒钟还获取不到pid,则判断进程启动失败
     local timeout=10

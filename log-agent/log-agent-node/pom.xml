@@ -104,7 +104,7 @@
                     <descriptors>
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
                     </descriptors>
-                    <finalName>swan-log-collector</finalName>
+                    <finalName>log-collector</finalName>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
             </plugin>
@@ -134,7 +134,7 @@
         </plugins>
 
         <filters>
-            <filter>${basedir}/../properties/swan.${profile.id}.properties</filter>
+            <filter>${basedir}/../properties/${profile.id}.properties</filter>
         </filters>
     </build>
 

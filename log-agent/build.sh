@@ -3,10 +3,10 @@ workspace=$(cd $(dirname $0) && pwd -P)
 cd $workspace
 
 ## const
-app=swan-log-collector
+app=log-collector
 
 gitversion=.gitversion
-startswanagent=bin/999-startswanagent.optional.sh
+startagent=bin/999-startagent.optional.sh
 ## function
 function build() {
     # 进行编译
@@ -41,7 +41,7 @@ function make_output() {
     mkdir -p $output/ddcloud/init &>/dev/null
     # 填充output目录, output内的内容 即为 线上部署内容
     (
-        cp -rf $startswanagent $output/ddcloud/init/  &&
+        cp -rf $startagent $output/ddcloud/init/  &&
         cp -rf bin/* $output &&         # 拷贝至output目录
         tar -zxf log-agent-node/target/${app}.tar.gz -C ${output} &&     # 解压war包到output目录
         cp -rf properties/*.properties ${output}/properties &&  
