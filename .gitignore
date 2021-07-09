@@ -29,7 +29,6 @@ tmp
 temp
 *.tmp
 *.bak
-*.swp
 *~.nib
 local.properties
 .loadpath
@@ -49,24 +48,18 @@ coverage
 pub
 package-lock.json
 
-*.http.svn/
+*.http
 target/
 test-output/
-*.class
 .classpath
-.project
 .settings/
 .idea
-*.iml
-.DS_Store
 */conf.local
 .gitversion
 output
 output.*
-agent-manager-rest/src/main/resources/templates/
+templates/
 
 *.zip
 *.tar.gz
 *.tgz
-
-*.http
