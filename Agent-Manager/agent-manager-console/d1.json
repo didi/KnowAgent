@@ -1,0 +1,17 @@
+{
+  "preset": "",
+  "generator": "@didi/d1-generator-opensource",
+  "version": "0.0.1",
+  "appConfig": {
+    "ident": "agent",
+    "port": "8001",
+    "appName": "agent-fe",
+    "entry": [
+      {
+        "src": "",
+        "title": "",
+        "name": "agent"
+      }
+    ]
+  }
+}
