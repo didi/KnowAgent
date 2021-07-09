@@ -6,7 +6,7 @@
 
     <groupId>com.didichuxing.datachannel</groupId>
     <artifactId>log-agent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <modules>
         <module>log-agent-common</module>
         <module>log-agent-engine</module>
