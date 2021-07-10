@@ -45,3 +45,17 @@
 
 [LogiAM用户使用手册](doc/user_guide/user_guide_cn.md)
 
+# 3 滴滴Logi开源用户交流群
+
+![logi开源用户交流群](/Users/didi/Desktop/workspace/logi-am/opensource/LogiAM/doc/assets/logi开源用户交流群.png)
+
+微信加群：关注公众号 云原生可观测性 回复 "Logi加群"
+
+# 4 OCE认证
+
+OCE是一个认证机制和交流平台，为滴滴Logi产品生产用户量身打造，我们会为OCE企业提供更好的技术支持，比如专属的技术沙龙、企业一对一的交流机会、专属的答疑群等，如果贵司Logi产品上了生产，[快来加入吧](http://obsuite.didiyun.com/open/openAuth)
+
+# 5 协议
+
+`agent-manager`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)
+
