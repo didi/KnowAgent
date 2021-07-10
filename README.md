@@ -47,7 +47,7 @@
 
 # 3 滴滴Logi开源用户交流群
 
-![logi开源用户交流群](/Users/didi/Desktop/workspace/logi-am/opensource/LogiAM/doc/assets/logi开源用户交流群.png)
+![logi开源用户交流群](doc/assets/logi开源用户交流群.png)
 
 微信加群：关注公众号 云原生可观测性 回复 "Logi加群"
 
