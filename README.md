@@ -38,3 +38,10 @@
 
 # 2 相关文档
 ## 2.1 产品文档
+
+[LogiAM安装部署手册](doc/LogiAM安装部署手册.md)
+
+[k8s容器采集接入手册](doc/k8s容器采集接入手册.md)
+
+[LogiAM用户使用手册](doc/user_guide/user_guide_cn.md)
+
