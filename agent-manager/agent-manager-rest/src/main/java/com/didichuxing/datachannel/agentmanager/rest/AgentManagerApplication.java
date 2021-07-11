@@ -43,9 +43,7 @@ public class AgentManagerApplication {
     }
 
     /**
-     * todo 临时添加
-     *
-     * @return 指标流用MySQL做存储
+     * @return 默认指标流用MySQL做存储
      */
     @Bean
     public AgentMetricsDAO agentMetricsDAO() {
