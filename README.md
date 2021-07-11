@@ -43,6 +43,8 @@
 
 [k8s容器采集接入手册](doc/k8s容器采集接入手册.md)
 
+[LogiAM开发手册](doc/LogiAM开发手册.md)
+
 [LogiAM用户使用手册](doc/user_guide/user_guide_cn.md)
 
 # 3 滴滴Logi开源用户交流群
