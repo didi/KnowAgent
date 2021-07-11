@@ -9,7 +9,7 @@
 - `Node 14.15.1 (前端环境)`
 - `Mysql 5.7+ (数据存储)`
 - `kafka 2.3+`
-- `idea`
+- `IDEA`
 
 ### 1.2 数据库初始化
 
@@ -22,7 +22,7 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ## 2 本地启动
 
-因为本地直接使用`IDEA`启动，并不会将前端资源文件生成，因此在第一次启动之前，需要执行一下`mvn install`命令，将前端的静态资源文件打包出来。
+因为本地直接使用`IDEA`启动，并不会将前端资源文件生成，因此在第一次启动之前，需要执行一下`mvn clean install -DskipTests`命令，将前端的静态资源文件打包出来。
 
 `mvn install`执行完成以后，修改`application.yml`配置文件，然后点击启动即可。
 
@@ -30,13 +30,27 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 具体的`IDEA`启动及配置见图：
 
+**IDEA 打包**
 
+![IDEA打包](assets/agent-manager%20maven%20打包.png)
+
+**修改 Agent-Manager 配置文件**
+
+![agent-manager配置文件修改](assets/agent-manager%20配置.png)
+
+**启动 Agent-Manager**
+
+![agent-manager 启动](assets/agent-manager%20启动.png)
+
+**Agent-Manager 浏览器访问**
+
+![agent-manager 浏览器访问](assets/agent-manager%20浏览器访问.png)
 
 ## 3 Agent-Manager 简要介绍
 
 ### 3.1 整体架构
 
-![agent-manager整体架构](assets/agent-manager整体架构.png)
+![agent-manager整体架构](assets/agent-manager%20整体架构.png)
 
 ### 3.2 模块介绍
 
@@ -52,5 +66,5 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 | agent-manager-task        | 定时任务模块                | 基于MySQL通过抢占方式实现的一个定时任务的负载均衡以及定时任务的执行模块，用于执行既有定时任务，比如日志采集任务、Agent的健康度巡检 |
 | agent-manager-rest        | web 模块                    | 接受外部 Rest Http 请求及进行相关控制                        |
 
-
+### 
 
