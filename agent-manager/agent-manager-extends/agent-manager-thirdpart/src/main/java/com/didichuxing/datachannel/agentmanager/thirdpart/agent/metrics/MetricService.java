@@ -11,6 +11,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
@@ -36,12 +37,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * todo 动态设置kafka连接
- */
 @Service
 public class MetricService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class);
+    
     @Autowired
     private AgentMetricMapper agentMetricMapper;
 
@@ -72,6 +71,7 @@ public class MetricService {
     private static volatile boolean trigger = false;
 
     private static final String CONSUMER_GROUP_ID = "g1";
+    private static final long RETENTION_TIME = 7 * 24 * 3600 * 1000;
 
     private static Set<ReceiverTopicDO> metricSet = new HashSet<>();
     private static Set<ReceiverTopicDO> errorSet = new HashSet<>();
@@ -114,7 +114,7 @@ public class MetricService {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
                 for (ConsumerRecord<String, String> record : records) {
                     JSONObject object = JSON.parseObject(record.value());
-                    if (object.getInteger("logModeId") == -1) {
+                    if (object.getInteger(AgentMetricField.LOG_MODE_ID.getValue()) == -1) {
                         AgentMetricDO agentMetric = JSON.parseObject(record.value(), AgentMetricDO.class);
                         AgentMetricPO agentMetricPO = ConvertUtil.obj2Obj(agentMetric, AgentMetricPO.class);
                         agentMetricMapper.insertSelective(agentMetricPO);
@@ -129,8 +129,8 @@ public class MetricService {
                     break;
                 }
             } catch (Throwable e) {
-                // todo 优化kafka连接的处理
                 LOGGER.error(e.getMessage());
+                consumer.close();
             }
         }
     }
@@ -148,14 +148,13 @@ public class MetricService {
                     ErrorLogPO errorLogPO = JSON.parseObject(record.value(), ErrorLogPO.class);
                     errorLogMapper.insertSelective(errorLogPO);
                 }
-                // todo 修改删除逻辑
                 if (trigger) {
                     consumer.close();
                     break;
                 }
             } catch (Throwable e) {
-                // todo 优化kafka连接的处理
                 LOGGER.error(e.getMessage());
+                consumer.close();
             }
         }
     }
@@ -181,9 +180,9 @@ public class MetricService {
     }
 
     public void clear() {
-        agentMetricMapper.deleteBeforeTime(System.currentTimeMillis() - 7 * 24 * 3600 * 1000);
-        collectTaskMetricMapper.deleteBeforeTime(System.currentTimeMillis() - 7 * 24 * 3600 * 1000);
-        errorLogMapper.deleteBeforeTime(System.currentTimeMillis() - 7 * 24 * 3600 * 1000);
+        agentMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
+        collectTaskMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
+        errorLogMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
     }
 
     public void resetMetricConsumers() {
@@ -195,7 +194,7 @@ public class MetricService {
             Thread.sleep(10 * 1000);
             loadClustersAndTopics();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("thread interrupted", e);
         }
         trigger = false;
         for (ReceiverTopicDO receiverTopicDO : metricSet) {

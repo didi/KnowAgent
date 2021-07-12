@@ -28,9 +28,10 @@ import org.slf4j.LoggerFactory;
  * @Date: 2019-07-23 11:44
  */
 public enum ScheduleDirMonitor implements Monitor {
-                                                   INSTANCE;
+    INSTANCE;
 
-private static final Logger LOGGER = LoggerFactory.getLogger("monitor");private static ScheduledExecutorService            scheduledService = null;
+    private static final Logger LOGGER = LoggerFactory.getLogger("monitor");
+    private static ScheduledExecutorService            scheduledService = null;
 
     /**
      * key: key of LogModel
