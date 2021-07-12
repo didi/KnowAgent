@@ -19,6 +19,7 @@ import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
+import org.elasticsearch.search.aggregations.bucket.histogram.HistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.NumericMetricsAggregation;
 import org.elasticsearch.search.aggregations.metrics.Sum;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +44,8 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Value("${agent.metrics.datasource.elasticsearch.agentErrorLogIndexName}")
     private String agentErrlogIndex;
+
+    private static final long TIME_INTERVAL = 60 * 1000;
 
     @Override
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
@@ -459,11 +463,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
-        DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram(sumName)
-                .fixedInterval(DateHistogramInterval.MINUTE).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
                 .subAggregation(AggregationBuilders.sum(customName).field(field));
         builder.query(boolQueryBuilder);
-        builder.aggregation(dateHistogramAggregationBuilder);
+        builder.aggregation(histogramAggregationBuilder);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
@@ -494,11 +498,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
-        DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram(sumName)
-                .fixedInterval(DateHistogramInterval.MINUTE).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
-        builder.aggregation(dateHistogramAggregationBuilder);
+        builder.aggregation(histogramAggregationBuilder);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
@@ -529,11 +533,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), taskId))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
-        DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram(sumName)
-                .fixedInterval(DateHistogramInterval.MINUTE).field(AgentMetricField.HEARTBEAT_TIME.getValue())
-                .subAggregation(AggregationBuilders.sum(customName).field(field));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
-        builder.aggregation(dateHistogramAggregationBuilder);
+        builder.aggregation(histogramAggregationBuilder);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
@@ -564,11 +568,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), taskId))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
-        DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram(sumName)
-                .fixedInterval(DateHistogramInterval.MINUTE).field(AgentMetricField.HEARTBEAT_TIME.getValue())
-                .subAggregation(AggregationBuilders.min(customName).field(field));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
-        builder.aggregation(dateHistogramAggregationBuilder);
+        builder.aggregation(histogramAggregationBuilder);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
@@ -601,11 +605,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
-        DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram(sumName)
-                .fixedInterval(DateHistogramInterval.MINUTE).field(AgentMetricField.HEARTBEAT_TIME.getValue())
-                .subAggregation(AggregationBuilders.sum(customName).field(field));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
-        builder.aggregation(dateHistogramAggregationBuilder);
+        builder.aggregation(histogramAggregationBuilder);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
@@ -638,11 +642,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
-        DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram(sumName)
-                .fixedInterval(DateHistogramInterval.MINUTE).field(AgentMetricField.HEARTBEAT_TIME.getValue())
-                .subAggregation(AggregationBuilders.min(customName).field(field));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
-        builder.aggregation(dateHistogramAggregationBuilder);
+        builder.aggregation(histogramAggregationBuilder);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
@@ -676,11 +680,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.termQuery(field, fieldValue))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
-        DateHistogramAggregationBuilder dateHistogramAggregationBuilder = AggregationBuilders.dateHistogram(sumName)
-                .fixedInterval(DateHistogramInterval.MINUTE).field(AgentMetricField.HEARTBEAT_TIME.getValue())
-                .subAggregation(AggregationBuilders.count(customName).field(field));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
-        builder.aggregation(dateHistogramAggregationBuilder);
+        builder.aggregation(histogramAggregationBuilder);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
 
