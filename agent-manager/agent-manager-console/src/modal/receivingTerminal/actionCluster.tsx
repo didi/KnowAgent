@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { IFormProps } from '../../interface/common';
 import { addReceive, modifyReceive } from '../../api/receivingTerminal'
 import { IReceivingTerminal } from '../../interface/receivingTerminal';
-import { regName, regAdress } from '../../constants/reg';
+import { regName, regAdress, regProducerName } from '../../constants/reg';
 import TextArea from "antd/lib/input/TextArea";
 
 const mapStateToProps = (state: any) => ({
@@ -118,10 +118,14 @@ const ActionClusterForm = (props: IFormProps) => {
           initialValue: cluster && cluster.kafkaClusterProducerInitConfiguration,
           rules: [{
             required: true,
-            message: '请输入生产端初始化属性',
-            // validator: (rule: any, value: string) => {
-            //   return !!value && new RegExp(regName).test(value);
-            // },
+            // message: '请输入生产端初始化属性',
+            validator: (rule: any, value: string, cb: any) => {
+              if (!value) cb('请输入生产端初始化属性')
+              if (!new RegExp(regProducerName).test(value)) {
+                cb('最大输入长度为1024位')
+              }
+              cb()
+            },
           }],
         })(
           <TextArea placeholder="请输入" />,

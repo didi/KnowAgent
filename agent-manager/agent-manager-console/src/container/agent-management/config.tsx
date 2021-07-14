@@ -161,7 +161,7 @@ export const getAgentListColumns = (cb: any, drawer: any, getData: any) => {
       return (<>{renderTooltip(servicenames?.join(','))}</>)
     }
   }, {
-    title: 'Agent版本',
+    title: 'Agent版本号',
     dataIndex: 'agentVersion',
     key: 'agentVersion',
     width: '10%',

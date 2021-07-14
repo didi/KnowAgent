@@ -77,7 +77,7 @@ export class OperationRecordList extends React.Component<Props> {
           // maxTagCount={0}
           // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
           >
-            <Option value={''} key={''}>请选择</Option>
+            {/* <Option value={''} key={''}>请选择</Option> */}
             {this.state.modulesList?.map((d: any) =>
               <Option value={d.code} key={d.code}> {d.desc}</Option>
             )}
@@ -103,7 +103,7 @@ export class OperationRecordList extends React.Component<Props> {
           // maxTagCount={0}
           // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
           >
-            <Option value={''} key={''}>请选择</Option>
+            {/* <Option value={''} key={''}>请选择</Option> */}
             <Option value={1} key={1}>新增</Option>
             <Option value={2} key={2}>删除</Option>
             <Option value={3} key={3}>编辑</Option>

@@ -18,6 +18,11 @@ http://localhost:8000/agent
 4. 打包
 ```
 npm run build
+
+修改打包配置
+/config/webpack.dev.config.js 更改webpack配置
+/fetk.config.js 更webpack一样，优先级没有webpack.dev.config.js中的配置高
+
 ```
 ### 本地开发代理配置
 - fetk.config.js 文件配置
@@ -31,7 +36,35 @@ devServer: {
   }
 },
 ```
+
 ### 目录结构
+
+1. 根目录文件
+
+|根目录|含义|
+|:-------:|:-----:|
+|config|项目配置目录|
+|fetk.config.js|同webpack配置相同|
+
+
+2. src目录
+
+
+|src|含义|
+|:-------:|:-----:|
+|pages|页面目录|
+|api|接口相关|
+|actions|redux相关|
+|constants|配置常量，侧边栏menu|
+|container|页面下各个模块|
+|interface|TS接口定义目录|
+|lib|封装方法目录|
+|modal|封装Modal，Drawer的目录|
+|reducers|redux相关|
+|store|redux相关|
+|packages|套件、基座|
+
+3. src详细结构
 ```
 |-- src
     |-- HeadlessIndex.tsx
@@ -39,10 +72,10 @@ devServer: {
     |-- index.html
     |-- index.less
     |-- index.tsx
-    |-- @types
+    |-- @types  -- 类型
     |   |-- index.d.ts
-    |-- actions
-    |   |-- actionTypes.ts
+    |-- actions  -- 更新store相关
+    |   |-- actionTypes.ts  -- 更新store所有的type
     |   |-- agent.ts
     |   |-- collect.ts
     |   |-- echarts.ts
@@ -52,10 +85,10 @@ devServer: {
     |   |-- modal.ts
     |   |-- permissionPoint.ts
     |   |-- resPermission.ts
-    |-- api
+    |-- api  -- 接口相关
     |   |-- agent.ts
     |   |-- agentVersion.ts
-    |   |-- api.ts
+    |   |-- api.ts  -- 接口url配置
     |   |-- collect.ts
     |   |-- dataSource.ts
     |   |-- hola.ts

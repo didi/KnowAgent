@@ -67,17 +67,19 @@ export const getVersionListBtns = (record: any, cb: any, getData: any): IBtn[] =
   //   const params = { record, getData }
   //   cb('ActionVersion', params);
   // },
-}, {
-  label: '下载',
-  clickFunc: (record: any) => {
-    download(record.agentVersionId).then((res: any) => {
-      // window.open(`${window.origin}/api/v1/op/version/${record.agentVersionId}`)
-      window.open(res)
-    }).catch((err: any) => {
-      message.error(err.message);
-    });
-  },
-}, {
+},
+// {
+//   label: '下载',
+//   clickFunc: (record: any) => {
+//     download(record.agentVersionId).then((res: any) => {
+//       // window.open(`${window.origin}/api/v1/op/version/${record.agentVersionId}`)
+//       window.open(res)
+//     }).catch((err: any) => {
+//       message.error(err.message);
+//     });
+//   },
+// }, 
+{
   label: '删除',
   needTooltip: true
   // invisible: !store.getState()?.resPermission.rdbPoints?.agent_version_delete,
