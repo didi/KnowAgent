@@ -45,10 +45,20 @@ module.exports = {
         target: 'http://10.96.98.84:8026/',
         changeOrigin: true,
       },
+      // '/': {
+      //   target: 'http://10.164.13.170:8006/',
+      //   changeOrigin: true,
+      // },
       '/': {
-        target: 'http://10.164.13.170:8006/',
-        changeOrigin: true,
-      },
+        target: 'https://localhost:8001',
+        secure: false,
+        bypass: function(req) {
+          if (req.headers.accept.indexOf('html') !== -1) {
+            return '/index.html';
+          }
+        }
+      }
+    
     },
     historyApiFallback: true,
     headers: {
