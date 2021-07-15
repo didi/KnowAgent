@@ -129,6 +129,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -212,6 +213,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .filter(QueryBuilders.existsQuery(AgentMetricField.START_TIME.getValue()));
         builder.query(boolQueryBuilder);
         builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
@@ -246,6 +248,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -259,6 +262,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .filter(QueryBuilders.existsQuery(AgentMetricField.FD_COUNT.getValue()));
         builder.query(boolQueryBuilder);
         builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
@@ -279,6 +283,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .filter(QueryBuilders.existsQuery(AgentMetricField.CPU_USAGE.getValue()));
         builder.query(boolQueryBuilder);
         builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
@@ -299,6 +304,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .filter(QueryBuilders.existsQuery(AgentMetricField.MEMORY_USAGE.getValue()));
         builder.query(boolQueryBuilder);
         builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
@@ -418,6 +424,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
         builder.query(boolQueryBuilder);
         builder.aggregation(AggregationBuilders.sum(sumName).field(fieldName));
@@ -461,6 +468,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
@@ -496,6 +504,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
