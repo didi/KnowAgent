@@ -64,7 +64,7 @@ public class AgentStatistics extends AbstractStatistics {
             String.valueOf(limiter.getCurrentCpuUsage()), true);
         metricsRegistry.tag(MetricsFields.LIMIT_TPS, null, String.valueOf(limiter.getAllQps()),
             true);
-        metricsRegistry.tag(MetricsFields.GC_COUNT, null, String.valueOf(SystemUtils.getGcCount()),
+        metricsRegistry.tag(MetricsFields.GC_COUNT, null, String.valueOf(SystemUtils.getFullGcCount()),
             true);
         //TODO：添加 fd 使用量
         metricsRegistry.tag(MetricsFields.FD_COUNT, null, String.valueOf(SystemUtils.getFdCount()),

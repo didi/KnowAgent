@@ -66,5 +66,30 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 | agent-manager-task        | 定时任务模块                | 基于MySQL通过抢占方式实现的一个定时任务的负载均衡以及定时任务的执行模块，用于执行既有定时任务，比如日志采集任务、Agent的健康度巡检 |
 | agent-manager-rest        | web 模块                    | 接受外部 Rest Http 请求及进行相关控制                        |
 
-### 
+# Log-Agent 本地开发环境搭建
+
+## 1 环境准备
+
+### 1.1 环境依赖
+
+- `Java 8+`
+- `Maven 3.5+`
+- `kafka 2.3+`
+- `IDEA`
+
+**注意：在搭建Log-Agent本地开发环境前，请先对Agent-Manager工程进行Maven打包、安装。**
+
+## 2 本地启动
+
+修改`settings.properties`配置文件，将`log-agent-node`项目中的`com.didichuxing.datachannel.agent.node.Agent`类作为启动类运行即可，如下图：
+
+
+
+本地启动成功之后，访问http://localhost:8080。
+
+具体的`IDEA`启动及配置见图：
+
+## 3 Log-Agent 简要介绍
+
+### 3.1 整体架构
 
