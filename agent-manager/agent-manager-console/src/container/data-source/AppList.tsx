@@ -118,7 +118,7 @@ export class AppList extends React.Component<Props> {
                       id: record.id,
                       name: record.serviceName,
                       // deleteTip: agentId === false && logCollectTaskId === false ? false : true
-                      deleteTip: logCollectTaskId === false ? false : true
+                      deleteTip: logCollectTaskId ? false : true
                     })
                   })
                   // .catch((err: any) => {
@@ -268,6 +268,7 @@ export class AppList extends React.Component<Props> {
           <Modal title="删除"
             visible={this.state.isDelete}
             onOk={this.handleOk}
+            okText='确认'
             onCancel={() => this.setState({ isDelete: false })}>
             {this.state.deleteTip ? <p>删除应用将会导致该应用相关的采集任务失败，是否确认删除？</p>
               : <p>是否确认删除{this.state.name}应用？</p>}

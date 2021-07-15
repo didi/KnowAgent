@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Input, Modal, Tag, Popconfirm, DatePicker, Select, InputNumber } from 'antd';
 import { IBaseInfo } from '../../interface/common';
 import { renderOperationBtns, IBtn, NavRouterLink, renderTooltip } from '../../component/CustomComponent';
-import { taskHealthMap, collectModes, healthTypes, hostTypeMap, collectModeMap, healthMap } from '../../constants/common';
+import { taskHealthMap, collectModes, taskhealthTypes, hostTypeMap, collectModeMap, healthMap } from '../../constants/common';
 import { ISwitchCollectTask, ICollectTask, IReceiverVO, ILogCollectTaskDetail } from '../../interface/collect';
 import { switchCollectTask, deleteCollectTask } from '../../api/collect'
 import { IService, IAgentHostSet } from '../../interface/agent';
@@ -84,7 +84,7 @@ export const getCollectFormColumns = (collectRef: any, healthRef: any, form: any
         maxTagCount={0}
         maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
       >
-        {healthTypes.map((d, index) =>
+        {taskhealthTypes.map((d, index) =>
           <Option value={d.value} key={index}>{d.label}</Option>
         )}
       </Select>
@@ -180,14 +180,15 @@ export const getCollectListColumns = (drawer: any, getData: any) => {
     width: '10%',
     sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskCreateTime - a.logCollectTaskCreateTime,
     render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
-  }, {
-    title: '结束时间',
-    dataIndex: 'logCollectTaskFinishTime',
-    key: 'logCollectTaskFinishTime',
-    width: '10%',
-    sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskFinishTime - a.logCollectTaskFinishTime,
-    render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
   },
+  // {
+  //   title: '结束时间',
+  //   dataIndex: 'logCollectTaskFinishTime',
+  //   key: 'logCollectTaskFinishTime',
+  //   width: '10%',
+  //   sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskFinishTime - a.logCollectTaskFinishTime,
+  //   render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
+  // },
   {
     title: '操作',
     width: '11%',

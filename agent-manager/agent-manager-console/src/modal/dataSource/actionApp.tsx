@@ -60,6 +60,7 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
       width={728}
       onOk={handleModifyOk}
       onCancel={handleModifyCancel}
+      okText='确认'
     >
       <WrappedAppForm ref={ref} params={props.params} />
     </Modal>

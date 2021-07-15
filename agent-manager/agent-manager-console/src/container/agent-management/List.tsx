@@ -425,7 +425,7 @@ export class AgentList extends React.Component<Props> {
           <BasicTable
             rowKey='hostId'
             showReloadBtn={false}
-            showQueryCollapseButton={true}
+            // showQueryCollapseButton={true}
             loading={loading}
             reloadBtnPos="left"
             reloadBtnType="btn"
@@ -437,6 +437,7 @@ export class AgentList extends React.Component<Props> {
             dataSource={agentList}
             isQuerySearchOnChange={false}
             queryFormColumns={this.queryFormColumns()}
+            showQueryCollapseButton={this.queryFormColumns().length > 2 ? true : false}
             pagination={{
               current: pageNo,
               pageSize: pageSize,
