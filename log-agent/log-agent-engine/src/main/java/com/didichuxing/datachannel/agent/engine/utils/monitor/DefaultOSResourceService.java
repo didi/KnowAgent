@@ -216,6 +216,7 @@ public class DefaultOSResourceService implements IOSResourceService {
 
     @Override
     public long getFullGcCount() {
+
         return 0;
     }
 

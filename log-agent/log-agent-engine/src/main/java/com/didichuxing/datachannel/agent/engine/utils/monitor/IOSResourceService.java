@@ -129,7 +129,7 @@ public interface IOSResourceService {
     long getYoungGcCount();
 
     /**
-     * @return 返回agent进程自启动以来 full gc 次数
+     * @return 返回当前进程自启动以来 full gc 次数
      */
     long getFullGcCount();
 
