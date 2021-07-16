@@ -57,10 +57,12 @@ export class AgentDetail extends React.Component<any> {
           baseData={hostDetail}
         />
         <div className="detail-wrapper">
-          <Tabs defaultActiveKey="1">
+          <Tabs animated={false} defaultActiveKey="1">
             <TabPane tab="Agent运行指标" key="1">
               {this.agentId ? <AgentOperationIndex id={this.agentId} {...this.props} /> : <p className='agent-installed'>该主机未安装Agent</p>}
             </TabPane>
+            <TabPane tab="Agent配置信息" key="2"></TabPane>
+            <TabPane tab="采集任务" key="3"></TabPane>
           </Tabs>
         </div>
       </div>

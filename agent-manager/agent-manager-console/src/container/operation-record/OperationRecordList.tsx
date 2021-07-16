@@ -91,8 +91,8 @@ export class OperationRecordList extends React.Component<Props> {
         component: (
           <Select
             className="searchWidth"
-            // mode="multiple"
             placeholder='请选择'
+          // mode="multiple"
           // ref={versionRef}
           // allowClear={true}
           // showArrow={true}

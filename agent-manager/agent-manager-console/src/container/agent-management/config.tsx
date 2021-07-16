@@ -340,16 +340,19 @@ export const hostDetailBaseInfo = (info: IAgentHostSet) => {
     label: '宿主机名',
     key: 'parentHostName',
     invisible: info?.container === 0,
-  }, {
-    label: 'Agent版本名',
-    key: 'agentVersion',
-  }, {
-    label: '已开启日志采集任务数',
-    key: 'openedLogCollectTaskNum',
-  }, {
-    label: '已开启日志采集路径数',
-    key: 'openedLogPathNum',
-  }, {
+  },
+  // {
+  //   label: 'Agent版本名',
+  //   key: 'agentVersion',
+  // }, 
+  // {
+  //   label: '已开启日志采集任务数',
+  //   key: 'openedLogCollectTaskNum',
+  // }, {
+  //   label: '已开启日志采集路径数',
+  //   key: 'openedLogPathNum',
+  // }, 
+  {
     label: '最近 agent 启动时间',
     key: 'lastestAgentStartupTime',
     render: (t: number) => moment(t).format(timeFormat),
