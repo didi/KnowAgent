@@ -185,6 +185,11 @@ public class DefaultOSResourceService implements IOSResourceService {
     }
 
     @Override
+    public long getProcessMemoryUsedPeak() {
+        return 0;
+    }
+
+    @Override
     public long getSystemDiskTotal() {
         return 0;
     }
@@ -247,6 +252,11 @@ public class DefaultOSResourceService implements IOSResourceService {
 
     @Override
     public int getCurrentProcessThreadNum() {
+        return 0;
+    }
+
+    @Override
+    public int getCurrentProcessThreadNumPeak() {
         return 0;
     }
 
