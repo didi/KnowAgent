@@ -399,7 +399,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricRDSField.READ_TIME_MEAN.getValue(), CalcFunction.AVG.getValue());
                 for (MetricPoint metricPoint : list) {
-                    Long value = (Long) metricPoint.getValue();
+                    Long value = TypeUtils.castToLong(metricPoint.getValue());
                     value = value * 60 / 1000;
                     metricPoint.setValue(value);
                 }
@@ -411,7 +411,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricRDSField.READ_TIME_MEAN.getValue(), CalcFunction.AVG.getValue());
             for (MetricPoint metricPoint : list) {
-                Long value = (Long) metricPoint.getValue();
+                Long value = TypeUtils.castToLong(metricPoint.getValue());
                 value = value * 60 / 1000;
                 metricPoint.setValue(value);
             }
@@ -524,7 +524,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricRDSField.SEND_TIME_MEAN.getValue(), CalcFunction.AVG.getValue());
                 for (MetricPoint metricPoint : list) {
-                    Long value = (Long) metricPoint.getValue();
+                    Long value = TypeUtils.castToLong(metricPoint.getValue());
                     value = value * 60 / 1000;
                     metricPoint.setValue(value);
                 }

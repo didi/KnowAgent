@@ -27,14 +27,6 @@ public class CpuTime {
         this.process = getProcessTime();
     }
 
-    public long getAll() {
-        return all;
-    }
-
-    public long getProcess() {
-        return process;
-    }
-
     // 根据计算cpu耗时的差值，计算这段时间中的cpu耗时
     public float getUsage(CpuTime before) {
         float cpuUsage = ((float) (all - before.all)) / SystemUtils.getCpuNum();
@@ -46,7 +38,7 @@ public class CpuTime {
     // 获得整个系统从启动到现在的cpu耗时
     private final static String ALL_PATH = "/proc/stat";
 
-    public long getAllTime() throws Exception {
+    private long getAllTime() throws Exception {
         String[] array = readFirstLine(ALL_PATH);
         if (array[0] == null || !array[0].trim().equals("cpu")) {
             throw new Exception(ALL_PATH + " first line is not init with 'cpu'");
@@ -73,7 +65,7 @@ public class CpuTime {
         PROCESS_PATH = "/proc/" + SystemUtils.getPid().trim() + "/stat";
     }
 
-    public long getProcessTime() throws Exception {
+    private long getProcessTime() throws Exception {
         String[] array = readFirstLine(PROCESS_PATH);
         if (array.length < 17) {
             throw new Exception(PROCESS_PATH + " first line is too short");
@@ -88,7 +80,7 @@ public class CpuTime {
     }
 
     // 读取文件的第一行数据
-    public String[] readFirstLine(String path) throws Exception {
+    private String[] readFirstLine(String path) throws Exception {
         String line = null;
         List<String> contents = readFileContent(new File(path), 1);
         if (contents != null && contents.size() != 0) {
