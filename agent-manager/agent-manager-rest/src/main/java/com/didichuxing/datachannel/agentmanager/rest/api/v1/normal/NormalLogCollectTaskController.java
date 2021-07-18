@@ -12,9 +12,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.Servi
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostFilterRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.*;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.Metric;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -96,7 +96,6 @@ public class NormalLogCollectTaskController {
     @ResponseBody
     // @CheckPermission(permission = AGENT_TASK_LIST)
     public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
-        //TODO：获取 projectId
         String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
         Long projectId = null;
         if (StringUtils.isNotBlank(projectIdStr)) {
@@ -133,26 +132,234 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc(logCollectTaskManageService.listLogCollectTaskMetrics(logCollectTaskId, startTime, endTime));
     }
 
-    @ApiOperation(value = "获取指定条件下，给定时间范围（startTime ~ endTime）内，给定指标项的值", notes = "")
-    @RequestMapping(value = "/metric", method = RequestMethod.GET)
+    @ApiOperation(value = "获取指定采集任务下存在心跳的主机数", notes = "")
+    @RequestMapping(value = "/metrics/health/heart-host-count", method = RequestMethod.POST)
     @ResponseBody
-    public Result<List<MetricPoint>> getMetric(@RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("logCollectTaskId") Long logCollectTaskId, @RequestParam("logModelHostName") String logModelHostName, @RequestParam("fileLogCollectPathId") Long fileLogCollectPathId, @RequestParam("metricName") String metricName, @RequestParam("function") String function) {
-        if (logCollectTaskId == null) {
-            return Result.buildFail("采集任务的task id不存在");
+    public Result<List<MetricAggregate>> getHeartbeatCountMetric(@RequestBody MetricQueryDTO metricQueryDTO) {
+        if (metricQueryDTO.getTaskId() == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "采集任务id为空");
         }
-        if (startTime == null) {
-            return Result.buildFail("采集任务的起始时间不存在");
+        return Result.buildSucc(logCollectTaskManageService.getAliveHostCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "数据最大延迟", notes = "")
+    @RequestMapping(value = "/metrics/health/max-delay", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> maxDelay(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
         }
-        if (endTime == null) {
-            return Result.buildFail("采集任务的结束时间不存在");
+        return Result.buildSucc(logCollectTaskManageService.getCollectDelayMetric(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "最小采集时间", notes = "")
+    @RequestMapping(value = "/metrics/health/min-collectbusiness-time", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> minLogTime(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
         }
-        if (metricName == null) {
-            return Result.buildFail("采集任务的指标名称不存在");
+        return Result.buildSucc(logCollectTaskManageService.getMinLogTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "限流时长", notes = "")
+    @RequestMapping(value = "/metrics/health/limit-time", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> limitTime(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
         }
-        if (function == null) {
-            return Result.buildFail("采集任务的指标名称不存在");
+        return Result.buildSucc(logCollectTaskManageService.getLimitTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "异常截断数", notes = "")
+    @RequestMapping(value = "/metrics/health/abnormal-truncation", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> abnormalTruncation(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
         }
-        return Result.buildSucc(logCollectTaskManageService.getMetricByName(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId));
+        return Result.buildSucc(logCollectTaskManageService.getAbnormalTruncation(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "路径是否存在", notes = "")
+    @RequestMapping(value = "/metrics/health/iscollectpath", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> collectPathExists(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getCollectPathExists(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "采集乱序", notes = "")
+    @RequestMapping(value = "/metrics/health/isexist-collectpath-chaos", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> fileOrder(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getIsFileOrder(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "切片错误", notes = "")
+    @RequestMapping(value = "/metrics/health/islog-chop-fault", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> sliceError(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getSliceError(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "读取字节数", notes = "")
+    @RequestMapping(value = "/metrics/performance/log-read-bytes", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> readByte(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getReadByte(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "读取条数", notes = "")
+    @RequestMapping(value = "/metrics/performance/log-read-bar", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> readCount(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getReadCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "读取总耗时ms", notes = "")
+    @RequestMapping(value = "/metrics/performance/log-read-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> readTimeConsuming(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getTotalReadTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "读取最大耗时ns", notes = "")
+    @RequestMapping(value = "/metrics/performance/logevent-max-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> readTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getReadTimeMax(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "读取平均耗时ns", notes = "")
+    @RequestMapping(value = "/metrics/performance/logevent-mean-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> readTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getReadTimeMean(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "发送字节数", notes = "")
+    @RequestMapping(value = "/metrics/performance/log-send-bytes", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> sendBytes(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getSendBytes(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "发送调数", notes = "")
+    @RequestMapping(value = "/metrics/performance/log-send-bar", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> sendCount(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getSendCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "发送总时间", notes = "")
+    @RequestMapping(value = "/metrics/performance/log-send-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> sendTimeConsuming(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getTotalSendTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "flush次数", notes = "")
+    @RequestMapping(value = "/metrics/performance/logflush-times", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> flushCount(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getFlushCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "flush最大耗时ms", notes = "")
+    @RequestMapping(value = "/metrics/performance/logflush-max-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> flushTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getFlushTimeMax(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "flush平均耗时ms", notes = "")
+    @RequestMapping(value = "/metrics/performance/logflush-mean-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> flushTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getFlushTimeMean(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "flush失败次数", notes = "")
+    @RequestMapping(value = "/metrics/performance/logflush-fail-times", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> flushFailedCount(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getFlushFailedCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "过滤数", notes = "")
+    @RequestMapping(value = "/metrics/performance/data-filter-times", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> filterTimes(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getFilterCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
     /**
@@ -425,6 +632,27 @@ public class NormalLogCollectTaskController {
         logCollectTaskVO.setFileNameSuffixMatchRule(JSON.parseObject(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString(), FileNameSuffixMatchRuleVO.class));
         logCollectTaskVO.setCollectDelayThresholdMs(logCollectTaskDO.getCollectDelayThresholdMs());
         return logCollectTaskVO;
+    }
+
+    private Result checkMetricQueryParam(MetricQueryDTO metricQueryDTO) {
+        if (metricQueryDTO.getTaskId() == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "采集任务id为空");
+        }
+        if (metricQueryDTO.getStartTime() == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "查询开始时间为空");
+        }
+        if (metricQueryDTO.getEndTime() == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "查询结束时间为空");
+        }
+        if (metricQueryDTO.getEachHost() == null) {
+            metricQueryDTO.setEachHost(false);
+        }
+        if (!metricQueryDTO.getEachHost()) {
+            if (metricQueryDTO.getHostName() == null) {
+                return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "主机名为空，且未选择所有主机");
+            }
+        }
+        return Result.buildSucc();
     }
 
 }

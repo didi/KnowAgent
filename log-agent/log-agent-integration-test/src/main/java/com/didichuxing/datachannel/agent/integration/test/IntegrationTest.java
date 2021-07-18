@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.configs.v2.AgentConfig;
-import com.didichuxing.datachannel.agent.integration.test.agent.Controller;
 import com.didichuxing.datachannel.agent.integration.test.basic.BasicUtil;
 import com.didichuxing.datachannel.agent.integration.test.beans.DataTransEnum;
 import com.didichuxing.datachannel.agent.integration.test.datasource.DailyFiveMinDataSource;
@@ -47,7 +46,7 @@ public class IntegrationTest {
 
             @Override
             public void run() {
-                destory();
+                destroy();
             }
         });
     }
@@ -59,9 +58,6 @@ public class IntegrationTest {
         if (configs == null) {
             LOGGER.warn("config is null.");
         }
-
-        // 启动agent
-        Controller.getInstance().init(configs);
 
         // 生成日志
         for (DataVerifyConfig config : configs) {
@@ -76,12 +72,12 @@ public class IntegrationTest {
             // 添加订阅
             topics.add(config.getTopic());
         }
-        AgentConfig logConfig = Controller.getInstance().getAgentConfig();
+        AgentConfig logConfig = new AgentConfig();
         // 只创建，不消费
-        BasicUtil.getInstance().createTopic(logConfig.getErrorLogConfig().getTopic(), partitions);
-        BasicUtil.getInstance().createTopic(logConfig.getMetricConfig().getTopic(), partitions);
+//        BasicUtil.getInstance().createTopic(logConfig.getErrorLogConfig().getTopic(), partitions);
+//        BasicUtil.getInstance().createTopic(logConfig.getMetricConfig().getTopic(), partitions);
 
-        BasicUtil.getInstance().initTopicList(topics);
+//        BasicUtil.getInstance().initTopicList(topics);
 
         // 启动logAgent
         // Controller.getInstance().start();
@@ -142,10 +138,9 @@ public class IntegrationTest {
         LOGGER.info("init completed.");
     }
 
-    public static void destory() {
-        Controller.getInstance().stop();
+    public static void destroy() {
         BasicUtil.getInstance().tearDown();
-        LOGGER.info("destory completed");
+        LOGGER.info("destroy completed");
     }
 
     private static DataTransEnum getDataTransEnum(VerifyConfig config) {

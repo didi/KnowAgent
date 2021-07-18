@@ -4,6 +4,8 @@ import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricRDSField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
@@ -258,4 +260,28 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricRDSField.FILTER_TOO_LARGE_COUNT.getValue());
     }
 
+    @Override
+    public List<MetricPoint> getCollectDelayPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
+        return collectTaskMetricMapper.selectDelayTimePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
+    }
+
+    @Override
+    public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column) {
+        return collectTaskMetricMapper.selectByTask(logCollectTaskId, startTime, endTime, column);
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method) {
+        return collectTaskMetricMapper.selectAggregationByTask(logCollectTaskId, startTime, endTime, column, method);
+    }
+
+    @Override
+    public List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String column) {
+        return collectTaskMetricMapper.selectByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column);
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String column, String method) {
+        return collectTaskMetricMapper.selectAggregationByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column, method);
+    }
 }

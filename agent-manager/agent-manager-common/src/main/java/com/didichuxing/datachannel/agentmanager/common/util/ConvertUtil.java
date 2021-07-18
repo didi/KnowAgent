@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 
 import javax.annotation.Nullable;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -161,7 +162,8 @@ public class ConvertUtil {
 
         T tgt = null;
         try {
-            tgt = tgtClass.newInstance();
+            Constructor<T> constructor = tgtClass.getConstructor();
+            tgt = constructor.newInstance();
             BeanUtils.copyProperties(srcObj, tgt, ignoreProperties);
             consumer.accept(tgt);
         } catch (Exception e) {

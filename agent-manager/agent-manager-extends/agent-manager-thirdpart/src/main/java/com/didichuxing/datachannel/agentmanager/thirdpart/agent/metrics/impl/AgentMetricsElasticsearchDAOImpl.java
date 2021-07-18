@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
@@ -401,6 +402,31 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.FILTER_TOO_LARGE_COUNT.getValue());
+    }
+
+    @Override
+    public List<MetricPoint> getCollectDelayPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
+        return null;
+    }
+
+    @Override
+    public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column) {
+        return null;
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method) {
+        return null;
+    }
+
+    @Override
+    public List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String column) {
+        return null;
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String column, String method) {
+        return null;
     }
 
     private Long selectCountByFieldName(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, String fieldName, Object value) {

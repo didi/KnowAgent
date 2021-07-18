@@ -35,4 +35,7 @@ public class LogCollectTaskConstant {
 
     public static final String LOG_COLLECT_TASK_METRIC_PANEL_NAME_FILELOGPATH_LIMIT_TIME_PER_MIN = "日志采集路径限流时长 ms/分钟";
 
+    public static final String HEARTBEAT_EXIST = "存在心跳主机";
+    public static final String HEARTBEAT_NOT_EXIST = "不存在心跳主机";
+
 }

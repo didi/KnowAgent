@@ -1,6 +1,8 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.metrics;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 
@@ -410,4 +412,13 @@ public interface AgentMetricsManageService {
 
     List<MetricPoint> getLimitTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime);
 
+    List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column);
+
+    List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method);
+
+    List<MetricPoint> queryByLogModel(MetricQueryDO metricQueryDO, String column);
+
+    List<MetricPoint> queryAggregationByLogModel(MetricQueryDO metricQueryDO, String column, String method);
+
+    List<MetricPoint> queryCollectDelay(MetricQueryDO metricQueryDO);
 }
