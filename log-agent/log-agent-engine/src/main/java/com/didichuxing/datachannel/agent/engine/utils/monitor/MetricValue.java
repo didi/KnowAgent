@@ -23,5 +23,4 @@ public class MetricValue<T> {
     private T max;
     private T min;
 
-
 }

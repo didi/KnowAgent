@@ -16,18 +16,19 @@ import org.slf4j.LoggerFactory;
  */
 public class SystemUtils {
 
-    private static final Logger          LOGGER     = LoggerFactory.getLogger(SystemUtils.class);
+    private static final Logger          LOGGER            = LoggerFactory
+                                                               .getLogger(SystemUtils.class);
 
-    private static IOSResourceService osResourceService = new DefaultOSResourceService();
+    private static IOSResourceService    osResourceService = new DefaultOSResourceService();
 
     private final static String          startTime;
-    private static long preFullGcCount = 0L;
-
+    private static long                  preFullGcCount    = 0L;
 
     /**
      * 用于获取 OS 信息 bean
      */
-    private static OperatingSystemMXBean osMxBean   = ManagementFactory.getOperatingSystemMXBean();
+    private static OperatingSystemMXBean osMxBean          = ManagementFactory
+                                                               .getOperatingSystemMXBean();
 
     static {
         startTime = new Date().toString();

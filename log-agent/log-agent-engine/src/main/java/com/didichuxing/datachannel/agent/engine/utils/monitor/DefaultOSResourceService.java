@@ -11,16 +11,17 @@ import java.lang.reflect.Method;
  */
 public class DefaultOSResourceService implements IOSResourceService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOSResourceService.class);
+    private static final Logger         LOGGER   = LoggerFactory
+                                                     .getLogger(DefaultOSResourceService.class);
 
     /**
      * 当前agent进程id
      */
-    private final long PID;
+    private final long                  PID;
     /**
      * agent宿主机cpu核（逻辑核）
      */
-    private final int CPU_NUM;
+    private final int                   CPU_NUM;
     /**
      * 用于获取操作系统相关属性bean
      */
@@ -28,13 +29,12 @@ public class DefaultOSResourceService implements IOSResourceService {
     /**
      * 用于获取agent宿主机最大fd数量方法，供反射调用
      */
-    private final Method getMaxFileDescriptorCountField;
+    private final Method                getMaxFileDescriptorCountField;
     /**
      * 用于获取agent宿主机已使用fd数量方法，供反射调用
      */
-    private final Method getOpenFileDescriptorCountField;
-    private final Method getProcessCpuLoad;
-
+    private final Method                getOpenFileDescriptorCountField;
+    private final Method                getProcessCpuLoad;
 
     public DefaultOSResourceService() {
         PID = initializePid();
@@ -63,7 +63,8 @@ public class DefaultOSResourceService implements IOSResourceService {
      */
     private Method getUnixMethod(String methodName) {
         try {
-            return Class.forName("com.sun.management.UnixOperatingSystemMXBean").getMethod(methodName);
+            return Class.forName("com.sun.management.UnixOperatingSystemMXBean").getMethod(
+                methodName);
         } catch (Exception t) {
             // not available
             return null;
@@ -86,7 +87,7 @@ public class DefaultOSResourceService implements IOSResourceService {
     /**
      * invoke the method given use OperatingSystemMXBean
      */
-    private <T>T invoke(Method method, OperatingSystemMXBean osMxBean) {
+    private <T> T invoke(Method method, OperatingSystemMXBean osMxBean) {
         if (method != null) {
             try {
                 T t = (T) method.invoke(osMxBean);
@@ -113,7 +114,8 @@ public class DefaultOSResourceService implements IOSResourceService {
     @Override
     public float getCurrentProcessCpuUsageTotalPercent() {
         Float currentCpuUsageTotalPercent = invoke(getProcessCpuLoad, osMxBean);
-        return null != currentCpuUsageTotalPercent ? currentCpuUsageTotalPercent.floatValue() * 100 : 0;
+        return null != currentCpuUsageTotalPercent ? currentCpuUsageTotalPercent.floatValue() * 100
+            : 0;
     }
 
     @Override
