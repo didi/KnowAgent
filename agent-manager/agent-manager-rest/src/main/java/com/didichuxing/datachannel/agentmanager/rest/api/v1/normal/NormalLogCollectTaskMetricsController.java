@@ -8,14 +8,15 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricLis
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
-import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class NormalLogCollectTaskMetricsController {
     private LogCollectTaskManageService logCollectTaskManageService;
 
     @ApiOperation(value = "获取指定采集任务下存在心跳的主机数", notes = "")
-    @RequestMapping(value = "/metrics/health/heart-host-count", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/heart-host-count", method = RequestMethod.POST)
     @ResponseBody
     public Result<List<MetricAggregate>> getHeartbeatCountMetric(@RequestBody MetricQueryDTO metricQueryDTO) {
         if (metricQueryDTO.getTaskId() == null) {
@@ -38,7 +39,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "数据最大延迟", notes = "")
-    @RequestMapping(value = "/metrics/health/max-delay", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/max-delay", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> maxDelay(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -49,7 +50,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "最小采集时间", notes = "")
-    @RequestMapping(value = "/metrics/health/min-collectbusiness-time", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/min-collectbusiness-time", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> minLogTime(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -60,7 +61,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "限流时长", notes = "")
-    @RequestMapping(value = "/metrics/health/limit-time", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/limit-time", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> limitTime(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -71,7 +72,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "异常截断数", notes = "")
-    @RequestMapping(value = "/metrics/health/abnormal-truncation", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/abnormal-truncation", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> abnormalTruncation(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -82,7 +83,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "路径是否存在", notes = "")
-    @RequestMapping(value = "/metrics/health/iscollectpath", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/iscollectpath", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> collectPathExists(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -93,7 +94,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "采集乱序", notes = "")
-    @RequestMapping(value = "/metrics/health/isexist-collectpath-chaos", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/isexist-collectpath-chaos", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> fileOrder(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -104,7 +105,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "切片错误", notes = "")
-    @RequestMapping(value = "/metrics/health/islog-chop-fault", method = RequestMethod.POST)
+    @RequestMapping(value = "/health/islog-chop-fault", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sliceError(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -115,7 +116,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "读取字节数", notes = "")
-    @RequestMapping(value = "/metrics/performance/log-read-bytes", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/log-read-bytes", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readByte(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -126,7 +127,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "读取条数", notes = "")
-    @RequestMapping(value = "/metrics/performance/log-read-bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/log-read-bar", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readCount(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -137,7 +138,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "读取总耗时ms", notes = "")
-    @RequestMapping(value = "/metrics/performance/log-read-consuming", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/log-read-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeConsuming(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -148,7 +149,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "读取最大耗时ns", notes = "")
-    @RequestMapping(value = "/metrics/performance/logevent-max-consuming", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/logevent-max-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -159,7 +160,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "读取平均耗时ns", notes = "")
-    @RequestMapping(value = "/metrics/performance/logevent-mean-consuming", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/logevent-mean-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -170,7 +171,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "发送字节数", notes = "")
-    @RequestMapping(value = "/metrics/performance/log-send-bytes", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/log-send-bytes", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendBytes(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -181,7 +182,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "发送调数", notes = "")
-    @RequestMapping(value = "/metrics/performance/log-send-bar", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/log-send-bar", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendCount(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -192,7 +193,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "发送总时间", notes = "")
-    @RequestMapping(value = "/metrics/performance/log-send-consuming", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/log-send-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendTimeConsuming(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -203,7 +204,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "flush次数", notes = "")
-    @RequestMapping(value = "/metrics/performance/logflush-times", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/logflush-times", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> flushCount(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -214,7 +215,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "flush最大耗时ms", notes = "")
-    @RequestMapping(value = "/metrics/performance/logflush-max-consuming", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/logflush-max-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> flushTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -225,7 +226,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "flush平均耗时ms", notes = "")
-    @RequestMapping(value = "/metrics/performance/logflush-mean-consuming", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/logflush-mean-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> flushTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -236,7 +237,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "flush失败次数", notes = "")
-    @RequestMapping(value = "/metrics/performance/logflush-fail-times", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/logflush-fail-times", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> flushFailedCount(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
@@ -247,7 +248,7 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     @ApiOperation(value = "过滤数", notes = "")
-    @RequestMapping(value = "/metrics/performance/data-filter-times", method = RequestMethod.POST)
+    @RequestMapping(value = "/performance/data-filter-times", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> filterTimes(@RequestBody MetricQueryDTO metricQueryDTO) {
         Result result = checkMetricQueryParam(metricQueryDTO);
