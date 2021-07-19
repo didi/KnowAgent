@@ -5,13 +5,10 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricRDSField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
-import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
@@ -23,9 +20,7 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMet
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class AgentMetricsManageServiceImpl implements AgentMetricsManageService {
@@ -302,16 +297,16 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column) {
-        AgentMetricRDSField field = AgentMetricRDSField.fromString(column);
+        AgentMetricField field = AgentMetricField.fromString(column);
         if (field == null) {
             throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
         }
-        return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field.getValue());
+        return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field);
     }
 
     @Override
     public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method) {
-        AgentMetricRDSField field = AgentMetricRDSField.fromString(column);
+        AgentMetricField field = AgentMetricField.fromString(column);
         CalcFunction function = CalcFunction.fromString(method);
         if (field == null) {
             throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
@@ -320,23 +315,23 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
             throw new ServiceException("聚合方法名不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
         }
         if (function == CalcFunction.NORMAL) {
-            return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field.getValue());
+            return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field);
         }
-        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, field.getValue(), function.getValue());
+        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, field, function);
     }
 
     @Override
     public List<MetricPoint> queryByLogModel(MetricQueryDO metricQueryDO, String column) {
-        AgentMetricRDSField field = AgentMetricRDSField.fromString(column);
+        AgentMetricField field = AgentMetricField.fromString(column);
         if (field == null) {
             throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
         }
-        return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field.getValue());
+        return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
     }
 
     @Override
     public List<MetricPoint> queryAggregationByLogModel(MetricQueryDO metricQueryDO, String column, String method) {
-        AgentMetricRDSField field = AgentMetricRDSField.fromString(column);
+        AgentMetricField field = AgentMetricField.fromString(column);
         CalcFunction function = CalcFunction.fromString(method);
         if (field == null) {
             throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
@@ -345,9 +340,9 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
             throw new ServiceException("聚合方法名不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
         }
         if (function == CalcFunction.NORMAL) {
-            return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field.getValue());
+            return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
         }
-        return agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field.getValue(), function.getValue());
+        return agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field, function);
     }
 
     @Override

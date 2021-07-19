@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
@@ -52,12 +53,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), containerHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), parentHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.SEND_COUNT.getValue(), 0))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), containerHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), parentHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.SEND_COUNT.getEsValue(), 0))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -68,12 +69,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getContainerSendCountGtZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), containerHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), parentHostName))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.SEND_COUNT.getValue()).from(0, false))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), containerHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), parentHostName))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.SEND_COUNT.getEsValue()).from(0, false))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -84,11 +85,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getHostSendCountEqualsZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.SEND_COUNT.getValue(), 0))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.SEND_COUNT.getEsValue(), 0))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -99,11 +100,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     public Long getHostSendCountGtZeroRecordSize(String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.SEND_COUNT.getValue()).from(0, false))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.SEND_COUNT.getEsValue()).from(0, false))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(heartbeatStartTime, true).to(heartbeatEndTime, true));
 
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
@@ -115,10 +116,10 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logCollectTaskHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logCollectTaskHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
         return countResponse.getCount();
@@ -129,9 +130,9 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
         return countResponse.getCount();
@@ -139,7 +140,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getFilePathNotExistsCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, AgentMetricField.IS_FILE_EXIST.getValue(), false);
+        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, AgentMetricField.IS_FILE_EXIST.getEsValue(), false);
         if (value != null) {
             return value.intValue();
         } else {
@@ -149,7 +150,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getAbnormalTruncationCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        return (int) taskSumByFieldName(logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, startTime, endTime, AgentMetricField.FILTER_TOO_LARGE_COUNT.getValue());
+        return (int) taskSumByFieldName(logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, startTime, endTime, AgentMetricField.FILTER_TOO_LARGE_COUNT.getEsValue());
     }
 
     @Override
@@ -157,11 +158,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.IS_FILE_ORDER.getValue(), "1"))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.IS_FILE_ORDER.getEsValue(), "1"))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
         return (int) countResponse.getCount();
@@ -177,7 +178,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
      */
     @Override
     public Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getValue(), true);
+        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getEsValue(), true);
         if (value != null) {
             return value.intValue();
         } else {
@@ -191,12 +192,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.LOG_TIME.getValue()));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .filter(QueryBuilders.existsQuery(AgentMetricField.LOG_TIME.getEsValue()));
         builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
+        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         SearchHit[] hits = searchResponse.getHits().getHits();
@@ -204,7 +205,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
             return 0L;
         }
         SearchHit hit = hits[0];
-        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.LOG_TIME.getValue()));
+        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.LOG_TIME.getEsValue()));
     }
 
     @Override
@@ -213,11 +214,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.START_TIME.getValue()));
+        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .filter(QueryBuilders.existsQuery(AgentMetricField.START_TIME.getEsValue()));
         builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
+        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         SearchHit[] hits = searchResponse.getHits().getHits();
@@ -225,22 +226,22 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
             return 0L;
         }
         SearchHit hit = hits[0];
-        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.START_TIME.getValue()));
+        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.START_TIME.getEsValue()));
     }
 
     @Override
     public Long getHostCpuLimitDuration(Long startTime, Long endTime, String hostName) {
-        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.LIMIT_RATE.getValue());
+        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.LIMIT_RATE.getEsValue());
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String hostName) {
-        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.LIMIT_TIME.getValue());
+        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.LIMIT_TIME.getEsValue());
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId) {
-        return (long) taskSumByFieldName(logCollectTaskId, fileLogCollectPathId, logModelHostName, startTime, endTime, AgentMetricField.LIMIT_TIME.getValue());
+        return (long) taskSumByFieldName(logCollectTaskId, fileLogCollectPathId, logModelHostName, startTime, endTime, AgentMetricField.LIMIT_TIME.getEsValue());
     }
 
     @Override
@@ -248,9 +249,9 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         CountRequest countRequest = new CountRequest(agentErrlogIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
         return (int) countResponse.getCount();
@@ -262,11 +263,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.FD_COUNT.getValue()));
+        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .filter(QueryBuilders.existsQuery(AgentMetricField.FD_COUNT.getEsValue()));
         builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
+        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         SearchHit[] hits = searchResponse.getHits().getHits();
@@ -274,7 +275,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
             return 0;
         }
         SearchHit hit = hits[0];
-        return TypeUtils.castToInt(hit.getSourceAsMap().get(AgentMetricField.FD_COUNT.getValue()));
+        return TypeUtils.castToInt(hit.getSourceAsMap().get(AgentMetricField.FD_COUNT.getEsValue()));
     }
 
     @Override
@@ -283,11 +284,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.CPU_USAGE.getValue()));
+        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .filter(QueryBuilders.existsQuery(AgentMetricField.CPU_USAGE.getEsValue()));
         builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
+        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         SearchHit[] hits = searchResponse.getHits().getHits();
@@ -295,7 +296,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
             return 0D;
         }
         SearchHit hit = hits[0];
-        return TypeUtils.castToDouble(hit.getSourceAsMap().get(AgentMetricField.CPU_USAGE.getValue()));
+        return TypeUtils.castToDouble(hit.getSourceAsMap().get(AgentMetricField.CPU_USAGE.getEsValue()));
     }
 
     @Override
@@ -304,11 +305,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.MEMORY_USAGE.getValue()));
+        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .filter(QueryBuilders.existsQuery(AgentMetricField.MEMORY_USAGE.getEsValue()));
         builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getValue(), SortOrder.DESC);
+        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         SearchHit[] hits = searchResponse.getHits().getHits();
@@ -316,92 +317,92 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
             return 0L;
         }
         SearchHit hit = hits[0];
-        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.MEMORY_USAGE.getValue()));
+        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.MEMORY_USAGE.getEsValue()));
     }
 
     @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
-        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getValue());
+        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.CPU_USAGE.getValue());
+        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.CPU_USAGE.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.MEMORY_USAGE.getValue());
+        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.MEMORY_USAGE.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getValue());
+        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.SEND_BYTE.getValue());
+        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.SEND_BYTE.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.SEND_COUNT.getValue());
+        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.SEND_COUNT.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getAgentFdUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.FD_COUNT.getValue());
+        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.FD_COUNT.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricMaxByMinute(startTime, endTime, hostName, AgentMetricField.START_TIME.getValue());
+        return hostMetricMaxByMinute(startTime, endTime, hostName, AgentMetricField.START_TIME.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        return taskMetricSumByMinute(startTime, endTime, taskId, AgentMetricField.SEND_BYTE.getValue());
+        return taskMetricSumByMinute(startTime, endTime, taskId, AgentMetricField.SEND_BYTE.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime) {
-        return taskMetricSumByMinute(startTime, endTime, taskId, AgentMetricField.SEND_COUNT.getValue());
+        return taskMetricSumByMinute(startTime, endTime, taskId, AgentMetricField.SEND_COUNT.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getFileLogPathNotExistsPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.IS_FILE_EXIST.getValue(), false);
+        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.IS_FILE_EXIST.getEsValue(), false);
     }
 
     @Override
     public List<MetricPoint> getFileLogPathDisorderPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.IS_FILE_ORDER.getValue(), 1);
+        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.IS_FILE_ORDER.getEsValue(), 1);
     }
 
     @Override
     public List<MetricPoint> getFilterOutPerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.FILTER_OUT.getValue());
+        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.FILTER_OUT.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricMinByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.LOG_TIME.getValue());
+        return logModelMetricMinByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.LOG_TIME.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getLimitTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.LIMIT_TIME.getValue());
+        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.LIMIT_TIME.getEsValue());
     }
 
     @Override
     public List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getValue(), false);
+        return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getEsValue(), false);
     }
 
     @Override
     public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.FILTER_TOO_LARGE_COUNT.getValue());
+        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.FILTER_TOO_LARGE_COUNT.getEsValue());
     }
 
     @Override
@@ -410,22 +411,22 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column) {
+    public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column) {
         return null;
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method) {
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
         return null;
     }
 
     @Override
-    public List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String column) {
+    public List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column) {
         return null;
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String column, String method) {
+    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
         return null;
     }
 
@@ -433,11 +434,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
                 .must(QueryBuilders.termQuery(fieldName, value))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         countRequest.query(boolQueryBuilder);
         CountResponse countResponse = elasticsearchService.doCount(countRequest);
         return countResponse.getCount();
@@ -449,9 +450,9 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         builder.query(boolQueryBuilder);
         builder.aggregation(AggregationBuilders.sum(sumName).field(fieldName));
         searchRequest.source(builder);
@@ -470,10 +471,10 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), fileLogCollectPathId))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         builder.query(boolQueryBuilder);
         builder.aggregation(AggregationBuilders.sum(sumName).field(fieldName));
         searchRequest.source(builder);
@@ -493,12 +494,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.sum(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -529,12 +530,12 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), -1))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -565,11 +566,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), taskId))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -600,11 +601,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), taskId))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -635,13 +636,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), taskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), pathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), pathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -672,13 +673,13 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), taskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), pathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), pathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -709,14 +710,14 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getValue(), taskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getValue(), pathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getValue(), logModelHostName))
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
+                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), pathId))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
                 .must(QueryBuilders.termQuery(field, fieldValue))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getValue()).from(startTime, false).to(endTime, true));
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getValue())
+                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
