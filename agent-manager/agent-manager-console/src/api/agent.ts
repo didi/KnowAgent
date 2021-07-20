@@ -1,6 +1,7 @@
 import fetch from "../lib/fetch";
 import { apiMap, csrfTokenMethod } from "./api";
-import { IAgentHostParams, IOperationTasksParams, IEditOpHostsParams, IOpAgent, IAddOpHostsParams } from '../interface/agent';
+import { agentApiMap } from "./agentApi";
+import { IAgentHostParams, IOperationTasksParams, IEditOpHostsParams, IOpAgent, IAddOpHostsParams, IAgentPieParams, IAgentLineParams } from '../interface/agent';
 
 export interface IAgentParam {
   pageNo: number;
@@ -100,4 +101,21 @@ export const getTaskExists = (agentIdListJsonString: string) => {
 
 export const getHostListbyServiceId = (appId: number) => {
   return fetch(`${apiMap.getServiceDetail}/${appId}`);
+}
+
+
+//  饼图通用请求方法
+export const getAgentPieData = (type: string, params: IAgentPieParams) => {
+  return fetch(agentApiMap[type], {
+    method: csrfTokenMethod[0],
+    body: JSON.stringify(params),
+  });
+}
+
+// 折线图通用请求方法
+export const getAgentLineData = (type: string, params: IAgentLineParams) => {
+  return fetch(agentApiMap[type], {
+    method: csrfTokenMethod[0],
+    body: JSON.stringify(params),
+  });
 }

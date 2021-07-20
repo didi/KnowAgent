@@ -13,3 +13,15 @@ export const setLogType = (logType: string) => ({
     logType,
   }
 });
+
+export const setCollectState = (params: any) => ({
+  type: actionTypes.SET_COLLECTSTATE,
+  payload: params
+})
+
+export const setCollectTaskDetail = (detail: any) => ({
+  type: actionTypes.SET_COLLECTTASK_DETAIL,
+  payload: {
+    detail
+  }
+})
