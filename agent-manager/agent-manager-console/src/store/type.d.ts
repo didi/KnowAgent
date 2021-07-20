@@ -32,6 +32,11 @@ type AgentState = {
 type CollectState = {
   collectType: number;
   logType: string;
+  //采集路径
+  logCollectPathId: number,
+  //主机名
+  hostName: string,
+  detail: any,
 }
 
 type fullScreenState = {
