@@ -186,15 +186,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryCollectDelay(metricQueryDO);
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryCollectDelay(metricQueryDO);
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -209,15 +211,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LOG_TIME.name(), CalcFunction.MIN.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LOG_TIME.name(), CalcFunction.MIN.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -232,15 +236,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LIMIT_TIME.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LIMIT_TIME.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -255,15 +261,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_TOO_LARGE_COUNT.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_TOO_LARGE_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -278,15 +286,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.IS_FILE_EXIST.name(), CalcFunction.NORMAL.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.IS_FILE_EXIST.name(), CalcFunction.NORMAL.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -301,15 +311,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.getFileLogPathDisorderPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.getFileLogPathDisorderPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -324,15 +336,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.getFileLogPathLogSliceErrorPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.getFileLogPathLogSliceErrorPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -347,15 +361,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -370,15 +386,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -404,9 +422,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     metricPoint.setValue(value);
                 }
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name());
@@ -415,9 +433,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 value = value * 60 / 1000;
                 metricPoint.setValue(value);
             }
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -432,15 +452,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -455,15 +477,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MAX.name(), CalcFunction.MAX.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MAX.name(), CalcFunction.MAX.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -478,15 +502,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -501,15 +527,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
             metricPointList.setMetricPointList(list);
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -529,9 +557,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     metricPoint.setValue(value);
                 }
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_TIME_MEAN.name(), CalcFunction.AVG.name());
@@ -541,8 +569,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 metricPoint.setValue(value);
             }
             metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -557,15 +587,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_COUNT.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_COUNT.name(), CalcFunction.SUM.name());
             metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -580,15 +612,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MAX.name(), CalcFunction.MAX.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MAX.name(), CalcFunction.MAX.name());
             metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -603,15 +637,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.AVG.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.AVG.name());
             metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -626,15 +662,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_FAILED_COUNT.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_FAILED_COUNT.name(), CalcFunction.SUM.name());
             metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 
@@ -649,15 +687,17 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 MetricPointList metricPointList = new MetricPointList();
                 List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_OUT.name(), CalcFunction.SUM.name());
                 metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
                 total.add(metricPointList);
             }
-            metricList.setMetricPointList(total);
         } else {
             MetricPointList metricPointList = new MetricPointList();
             List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_OUT.name(), CalcFunction.SUM.name());
             metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
             total.add(metricPointList);
         }
+        metricList.setMetricList(total);
         return metricList;
     }
 

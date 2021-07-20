@@ -3,7 +3,8 @@ package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
 import java.util.List;
 
 public class MetricPointList {
-    List<MetricPoint> metricPointList;
+    private List<MetricPoint> metricPointList;
+    private String hostName;
 
     public List<MetricPoint> getMetricPointList() {
         return metricPointList;
@@ -13,4 +14,11 @@ public class MetricPointList {
         this.metricPointList = metricPointList;
     }
 
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 }

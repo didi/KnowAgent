@@ -3,14 +3,14 @@ package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
 import java.util.List;
 
 public class MetricList {
-    List<MetricPointList> metricPointList;
+    private List<MetricPointList> metricList;
 
-    public List<MetricPointList> getMetricPointList() {
-        return metricPointList;
+    public List<MetricPointList> getMetricList() {
+        return metricList;
     }
 
-    public void setMetricPointList(List<MetricPointList> metricPointList) {
-        this.metricPointList = metricPointList;
+    public void setMetricList(List<MetricPointList> metricList) {
+        this.metricList = metricList;
     }
 
 }
