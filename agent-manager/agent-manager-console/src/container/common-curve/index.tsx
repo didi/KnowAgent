@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Dispatch } from 'redux';
 import { EChartOption } from 'echarts';
 import { getHeight, EXPAND_GRID_HEIGHT } from './constants';
-import { Spin, Icon, Button } from 'antd';
+import { Spin, Icon } from 'antd';
 import LineChart, { hasData } from '../../component/echarts';
 import './index.less';
 
@@ -12,7 +12,6 @@ export interface ICommonCurveProps {
   title: string;
   options: EChartOption;
   selfHide: boolean;
-  eachHost: boolean;
 }
 
 const mapStateToProps = (state: any) => ({
@@ -58,12 +57,6 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     return <Icon type="fullscreen" className="ml-17" onClick={this.expandChange} key="full-screen" />;
   }
 
-  public renderEachHost = () => {
-    if (this.props?.eachHost) {
-      return <Button className="common-chart-wrapper-eachhost">查看各主机</Button>
-    }
-  }
-
   public renderTitle = () => {
     return (
       <div className="charts-title" key="title">{this.props.title}</div>
@@ -87,14 +80,11 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
   }
 
   public renderEchart = (options: EChartOption, loading: boolean, expand?: boolean) => {
-    const width = expand ? undefined : 350;
-    // const height = getHeight(options);
-    // todo：后面根据线条做优化
-    const height = 300;
+    const width = expand ? undefined : 360;
+    const height = getHeight(options);
     const data = hasData(options);
     if (loading) return this.renderLoading(height);
     if (!data) return this.renderNoData(height);
-    // console.log(options)
     return <LineChart width={width} height={height} options={options} key="chart" />;
   }
 
@@ -103,7 +93,6 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     return (
       <div className="common-chart-wrapper" >
         {this.renderTitle()}
-        {this.renderEachHost()}
         {this.renderEchart(options, loading, expand)}
         {this.renderOpBtns(options, expand)}
         {data ? this.renderOthers() : null}
