@@ -342,7 +342,14 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (function == CalcFunction.NORMAL) {
             return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
         }
-        return agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field, function);
+        List<MetricPoint> graph = agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field, function);
+        for (MetricPoint metricPoint : graph) {
+            Object value = metricPoint.getValue();
+            if (value.getClass() == Boolean.class) {
+                metricPoint.setValue((Boolean)value ? 1 : 0);
+            }
+        }
+        return graph;
     }
 
     @Override

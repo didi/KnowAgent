@@ -229,7 +229,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         List<MetricPoint> graph = collectTaskMetricMapper.selectFileDisorderPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
         for (MetricPoint metricPoint : graph) {
             String collectFiles = TypeUtils.castToString(metricPoint.getValue());
-            metricPoint.setValue(collectFiles.matches( "\"" + AgentMetricField.IS_FILE_ORDER.getRdsValue() + "\":1"));
+            metricPoint.setValue(collectFiles.matches( "\"" + AgentMetricField.IS_FILE_ORDER.getRdsValue() + "\":1") ? 1 : 0);
         }
         return graph;
     }
@@ -251,7 +251,12 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricField.VALID_TIME_CONFIG.getRdsValue());
+        List<MetricPoint> graph = collectTaskMetricMapper.selectFileDisorderPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
+        for (MetricPoint metricPoint : graph) {
+            String collectFiles = TypeUtils.castToString(metricPoint.getValue());
+            metricPoint.setValue(collectFiles.matches( "\"" + AgentMetricField.VALID_TIME_CONFIG.getRdsValue() + "\":false") ? 1 : 0);
+        }
+        return graph;
     }
 
     @Override
