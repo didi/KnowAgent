@@ -19,7 +19,6 @@ const { TabPane } = Tabs;
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setDrawerId: (drawerId: string, params?: any) => dispatch(actions.setDrawerId(drawerId, params)),
-  setCollectTaskDetail: (detail: any) => dispatch(actions.setCollectTaskDetail(detail)),  
 });
 
 type Props = ReturnType<typeof mapDispatchToProps>;
@@ -40,8 +39,6 @@ export class CollectTaskDetail extends React.Component<Props> {
 
   public getDetail = () => {
     getCollectDetails(this.taskId).then((res: ILogCollectTaskDetail) => {
-      // console.log(res)
-      this.props.setCollectTaskDetail(res);
       this.setState({ collectDetail: res, loading: false });
     }).catch((err: any) => {
       this.setState({ loading: false });
