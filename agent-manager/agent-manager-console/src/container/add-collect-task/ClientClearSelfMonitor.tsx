@@ -105,7 +105,20 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
         </Form.Item>
         <Form.Item label="生产端属性">
           {getFieldDecorator('step3_productionSide', {
-            rules: [{ message: '请输入', pattern: /^[-\w]{1,1024}$/, }],
+            rules: [{
+              required: true,
+              validator: (rule: any, value: string, cb) => {
+                if (!value) {
+                  rule.massage = '请输入生产端属性'
+                  cb('请输入生产端属性')
+                } else if (!new RegExp(/^[-\w]{1,1024}$/).test(value)) {
+                  rule.massage = '生产端属性最大长度为1024位'
+                  cb('生产端属性最大长度为1024位')
+                } else {
+                  cb()
+                }
+              },
+            }],
           })(
             <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />,
           )}

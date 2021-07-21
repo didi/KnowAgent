@@ -95,7 +95,7 @@ export const getCollectFormColumns = (collectRef: any, healthRef: any, form: any
     title: '任务ID',
     dataIndex: 'logCollectTaskId',
     component: (
-      <InputNumber placeholder='请输入' />
+      <InputNumber maxLength={12} min={0} placeholder='请输入任务ID' precision={0} />
     ),
   },
   {
@@ -289,12 +289,12 @@ export const collectTaskDetailBaseInfo = (detail: ILogCollectTaskDetail) => {
   }, {
     label: '创建时间',
     key: 'collectStartBusinessTime',
-    invisible: !detail.collectStartBusinessTime,
+    // invisible: !detail.collectStartBusinessTime,
     render: (t: number) => moment(t).format(timeFormat),
   }, {
     label: '结束时间',
     key: 'collectEndBusinessTime',
-    invisible: !detail.collectEndBusinessTime,
+    // invisible: !detail.collectEndBusinessTime,
     render: (t: number) => moment(t).format(timeFormat),
   }, {
     label: '创建人',

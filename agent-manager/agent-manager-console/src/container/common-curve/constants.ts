@@ -21,7 +21,7 @@ export const baseLineLegend = {
 
 export const baseLineGrid = {
   left: '0',
-  right: '2%',
+  right: '6%',
   bottom: '3%',
   top: TITLE_HEIGHT,
   height: GRID_HEIGHT,
@@ -40,42 +40,59 @@ export const getLegendHight = (options: EChartOption | any) => {
   return legendHight;
 };
 
-export const dealMetricPanel = (metricPanelList: IMetricPanels[], metricPanelGroupName: any) => {
+export const dealMetricPanel = (metricPanelList: IMetricPanels[], metricPanelGroupName: any, apiData: any) => {
   return metricPanelList.map(ele => {
-    const timestamps = ele.metricList[0]?.metricPointList?.map(p => moment(p.timestamp).format(timeFormat)); // 对应的时间戳
-    const titles = ele.metricList?.map(v => { return v.metricName });
-    const series = ele.metricList?.map(v => { // 对应的折线图数据
+    const timestamps = apiData[ele.api]?.length ? apiData[ele.api][0]?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)) : []; // 对应的时间戳
+    const titles = apiData[ele.api]?.map(v => { return v.metricName });
+    const series = apiData[ele.api]?.map(v => { // 对应的折线图数据
       return {
         name: v.metricName, // 对应的单个折线标题
         type: 'line',
         // stack: '总量',
-        data: v.metricPointList.map(p => p.value),  // 对应的单个折线数据
+        data: v.metricPointList.map(p => ({
+          toolName: v.metricName,
+          unit: ele.unit,
+          ...p
+        })),  // 对应的单个折线数据
       };
     });
     return {
-      title: ele.panelName,
+      title: ele.title,
       selfHide: ele.selfHide,
+      eachHost: ele.eachHost,
       metricOptions: {
         // title: {
         //   text: ''
         // },
         tooltip: {
           trigger: 'axis',
-          [`${ele.panelName === '日志采集路径采集最小时间' ? 'formatter' : ''}`]: (params) => {
-            let tip = ''
+          formatter: (params: any) => {
+            console.log(params)
+            let tip = '';
             if (params != null && params.length > 0) {
               tip += params[0].name + '<br />';
               for (let i = 0; i < params.length; i++) {
-                tip += params[i].marker + params[i].seriesName + ': ' + moment(params[i].data).format('YYYY-MM-DD HH:mm:ss.SSS')+ '<br />';
+                tip += params[i].marker + params[i].data?.toolName + ': ' + params[i].value + ' ' +(params[i].data?.unit || '') + '<br />';
               }
             }
             return tip
           }
+          // [`${ele.panelName === '日志采集路径采集最小时间' ? 'formatter' : ''}`]: (params) => {
+          //   console.log(params)
+          //   let tip = ''
+          //   if (params != null && params.length > 0) {
+          //     tip += params[0].name + '<br />';
+          //     for (let i = 0; i < params.length; i++) {
+          //       tip += params[i].marker + params[i].seriesName + ': ' + moment(params[i].data).format('YYYY-MM-DD HH:mm:ss.SSS')+ '<br />';
+          //     }
+          //   }
+          //   return tip
+          // }
         },
-        legend: {
-          ...baseLineLegend,
-          data: titles, // 对应的折线图
-        },
+        // legend: {
+        //   ...baseLineLegend,
+        //   data: titles, // 对应的折线图
+        // },
         grid: {
           ...baseLineGrid,
         },
@@ -88,6 +105,12 @@ export const dealMetricPanel = (metricPanelList: IMetricPanels[], metricPanelGro
           type: 'category',
           boundaryGap: false,
           data: timestamps, // 对应的时间戳
+          axisLabel: {
+            rotate: -55,
+            formatter: (value: any) => {
+              return moment(value).format('HH:mm')
+            }
+          }
         },
         yAxis: {
           type: `value`,

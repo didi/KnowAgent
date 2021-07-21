@@ -38,17 +38,31 @@ module.exports = {
     inline: true,
     proxy: {
       '/api/v1': {
-        target: 'http://116.85.23.35/',
+        target: 'http://10.190.32.213:8080/',
         changeOrigin: true,
       },
+      // '/api/v1': {
+      //   target: 'http://116.85.23.35/',
+      //   changeOrigin: true,
+      // },
       '/bigdata_cloud_agent_manager_test/': {
         target: 'http://10.96.98.84:8026/',
         changeOrigin: true,
       },
+      // '/': {
+      //   target: 'http://10.164.13.170:8006/',
+      //   changeOrigin: true,
+      // },
       '/': {
-        target: 'http://10.164.13.170:8006/',
-        changeOrigin: true,
-      },
+        target: 'https://localhost:8001',
+        secure: false,
+        bypass: function(req) {
+          if (req.headers.accept.indexOf('html') !== -1) {
+            return '/index.html';
+          }
+        }
+      }
+    
     },
     historyApiFallback: true,
     headers: {

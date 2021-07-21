@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import * as actions from '../../actions';
 import '../../container/data-source/index.less';
-import { Modal, Form, Input, Transfer, Tooltip, message } from 'antd';
+import { Modal, Form, Input, Transfer, Tooltip, message, Select } from 'antd';
 import { connect } from "react-redux";
 import { IFormProps } from '../../interface/common';
 import { addService, modifyService, getServiceDetail } from '../../api/dataSource'
 import { IDataSource, IApp } from '../../interface/dataSource';
 import { getHosts } from '../../api/agent';
 import { regName } from '../../constants/reg';
+
+const { Option } = Select;
 
 const mapStateToProps = (state: any) => ({
   params: state.modal.params,
@@ -31,9 +33,10 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
           message.success('修改成功！');
           props.params?.cb();
           props.dispatch(actions.setModalId(''));
-        }).catch((err: any) => {
-          message.error(err.message);
-        });
+        })
+        // .catch((err: any) => {
+        //   message.error(err.message);
+        // });
       } else {
         const params = {
           hostIdList: values.hostIdList,
@@ -43,9 +46,10 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
           message.success('新增成功！');
           props.params?.cb();
           props.dispatch(actions.setModalId(''));
-        }).catch((err: any) => {
-          message.error(err.message);
-        });
+        })
+        // .catch((err: any) => {
+        //   message.error(err.message);
+        // });
       }
     });
   }
@@ -68,8 +72,8 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
 }
 
 const actionAppLayout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 7 },
+  wrapperCol: { span: 13 },
 };
 
 const ActionAppForm = (props: IFormProps) => {
@@ -95,6 +99,7 @@ const ActionAppForm = (props: IFormProps) => {
   }
 
   const handleChange = (targetKeys: any) => {
+    console.log(targetKeys, 'targetKeys')
     setappForm({
       serviceName: appForm.serviceName,
       targetKeys: targetKeys
@@ -138,14 +143,26 @@ const ActionAppForm = (props: IFormProps) => {
           initialValue: appForm.targetKeys.length > 0 ? appForm.targetKeys : [],
           rules: [{ required: true, message: '请选择' }],
         })(
-          <Transfer
-            dataSource={hostList}
-            showSearch
-            filterOption={filterOption}
-            targetKeys={appForm.targetKeys}
+          <Select
+            mode="multiple"
             onChange={handleChange}
-            render={item => item.hostName}
-          />
+          >
+            {
+              hostList.map((v: any) => {
+                console.log(v)
+                return <Option key={v.id} value={v.id}>{v?.hostName}</Option>
+              })
+            }
+          </Select>
+          // <Transfer
+          //   dataSource={hostList}
+          //   showSearch
+          //   filterOption={filterOption}
+          //   targetKeys={appForm.targetKeys}
+          //   onChange={handleChange}
+          //   render={item => item.hostName}
+          // />
+          //-----
         )}
       </Form.Item>
     </Form>

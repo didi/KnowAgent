@@ -172,8 +172,15 @@ export class AgentList extends React.Component<Props> {
 
   public onSearchParams = () => {  // 点击查询按钮的回调
     const { queryParams, targetKeys } = this.state;
-    if (!queryParams.serviceIdList?.length && targetKeys?.length) {
+    if (targetKeys?.length > 0) {
       queryParams.serviceIdList = this.setServiceIdList();
+    } else {
+      queryParams.serviceIdList = []
+      this.setState({
+        targetKeys: [],
+        applyInput: '',
+        direction: 'left',
+      });
     }
     this.getAgentData(this.state.queryParams);
   }
