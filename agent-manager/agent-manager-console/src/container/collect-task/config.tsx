@@ -95,7 +95,7 @@ export const getCollectFormColumns = (collectRef: any, healthRef: any, form: any
     title: '任务ID',
     dataIndex: 'logCollectTaskId',
     component: (
-      <Input maxLength={12} placeholder='请输入任务ID' />
+      <InputNumber className='logCollectTaskId' maxLength={12} min={0} placeholder='请输入任务ID' precision={0} />
     ),
   },
   {

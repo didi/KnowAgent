@@ -6,6 +6,7 @@ import { ILabelValue } from '../../interface/common';
 import { yyyyMMDDHHMMss, HHmmssSSS, yyyyMMDDHHMMssSSS, yyyyMMDDHHMMssSS, fuhao } from './dateRegAndGvar'
 import './index.less';
 import { lastIndexOf } from 'lodash';
+import { regLogSliceTimestampPrefixString } from '../../constants/reg';
 
 interface ILogRepeatForm extends FormComponentProps {
   getKey?: number | string,
@@ -291,14 +292,28 @@ $123$33$2018-01-08 sqrwqrq
             左起第&nbsp;{getFieldDecorator(`step2_${props.logType}_sliceTimestampPrefixStringIndex`, {
             initialValue: 0,
             rules: [{ required: true, message: '请输入' }],
-          })(<InputNumber style={{ margin: '0 5px', width: '65px' }} min={0} />)}&nbsp;个匹配上
+          })(<InputNumber style={{ margin: '0 5px', width: '65px' }} min={0} precision={0} />)}&nbsp;个匹配上
             </Col>
           <Col span={6} style={{ margin: '0 10px' }} >
             <Form.Item>
               {getFieldDecorator(`step2_${props.logType}_sliceTimestampPrefixString`, {
                 // initialValue: contents,
                 initialValue: '',
-                rules: [{ required: false, message: '请输入' }],
+                rules: [{
+                  required: true,
+                  //  message: '请输入',
+                  validator: (rule: any, value: string, cb) => {
+                    if (!value) {
+                      rule.massage = '请输入切片时间戳前缀字符串'
+                      cb('请输入切片时间戳前缀字符串')
+                    } else if (!new RegExp(regLogSliceTimestampPrefixString).test(value)) {
+                      rule.massage = '前缀字符串最大长度为128位'
+                      cb('前缀字符串最大长度为128位')
+                    } else {
+                      cb()
+                    }
+                  },
+                }],
               })(<Input onChange={() => setStart(-1)} className='w-200' placeholder='请输入切片时间戳前缀字符串' />)} {/* ,如yyyy-MM-ddMM-dd HH-mm-ss */}
             </Form.Item>
           </Col>

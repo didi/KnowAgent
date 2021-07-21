@@ -28,6 +28,7 @@ interface IBreadProps {
 
 export const CustomBreadcrumb = withRouter<any, any>((props: IBreadProps) => {
   const { btns } = props;
+  console.log(btns, 'btns')
   return (
     <>
       <Breadcrumb className="bread-crumb">
