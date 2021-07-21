@@ -1,7 +1,6 @@
 import fetch from "../lib/fetch";
 import { apiMap, csrfTokenMethod } from "./api";
-import { collectApiMap } from "./collectApi";
-import { ICollectTaskParams, ILogCollectTask, ISwitchCollectTask, ICollectPieParams, ICollectLineParams } from '../interface/collect';
+import { ICollectTaskParams, ILogCollectTask, ISwitchCollectTask } from '../interface/collect';
 
 export const getCollectTask = (params: ICollectTaskParams) => {
   return fetch(apiMap.getCollectTaskList, {
@@ -61,22 +60,3 @@ export const getUserOpPermissionPoints = (params:any) => {
   return fetch(`/api/rdb/can-do-node-ops?username=${user}&nid=${nid}&ops=${rdbPoints.join(',')}`)
 };
 
-export const getCollectTaskHostNameList = (logcollectTaskId: number) => {
-  return fetch(collectApiMap.getCollectTaskHostNameList + `/${logcollectTaskId}`);
-}
-
-//  饼图通用请求方法
-export const getCollectPieData = (type: string, params: ICollectPieParams) => {
-  return fetch(collectApiMap[type], {
-    method: csrfTokenMethod[0],
-    body: JSON.stringify(params),
-  });
-}
-
-// 折线图通用请求方法
-export const getCollectLineData = (type: string, params: ICollectLineParams) => {
-  return fetch(collectApiMap[type], {
-    method: csrfTokenMethod[0],
-    body: JSON.stringify(params),
-  });
-}

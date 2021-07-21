@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { Dispatch } from 'redux';
 import { DataCheckboxGroup } from './CheckboxGroup';
 import { IRdAgentMetrics } from '../../interface/agent';
-import { cloneDeep } from 'lodash';
 import './index.less';
 
 interface ICollapseSelectProps {
@@ -25,11 +24,11 @@ type Props = ReturnType<typeof mapDispatchToProps>;
 export class DataCollapseSelect extends React.Component<ICollapseSelectProps & Props> {
 
   public state = {
-    tansterMetrics: cloneDeep(this.props.metrics) as IRdAgentMetrics[],
+    tansterMetrics: JSON.parse(JSON.stringify(this.props.metrics)) as IRdAgentMetrics[],
   }
 
   public onBindClick = async (msg: string[], index: number) => {
-    const datas = cloneDeep(this.props.metrics) as IRdAgentMetrics[];
+    const datas = JSON.parse(JSON.stringify(this.state.tansterMetrics)) as IRdAgentMetrics[];
     datas.map((ele, i) => {
       if (index === i) {
         if (msg?.length) {
@@ -47,7 +46,6 @@ export class DataCollapseSelect extends React.Component<ICollapseSelectProps & P
       }
       return ele;
     })
-    // console.log(datas, this.state.tansterMetrics)
     this.setState({ tansterMetrics: datas });
     this.props.setChartMetrics(datas);
   }
@@ -64,7 +62,6 @@ export class DataCollapseSelect extends React.Component<ICollapseSelectProps & P
 
   public render() {
     const metriceTypes = this.setMetriceTypes();
-    // console.log(this.state.tansterMetrics, this.props.metrics)
     return (
       <div className="collapse-select">
         {metriceTypes.map((ele: IMetricesTypes, index: number) => {
