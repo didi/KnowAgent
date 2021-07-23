@@ -152,11 +152,11 @@ export interface IMetricOptions {
 }
 
 export interface IAgentPieParams {
-  agnetId: string | number,
+  agentId: string | number,
 }
 
 export interface IAgentLineParams {
-  agnetId: string | number,
+  agentId: string | number,
   startTime: number;
   endTime: number;
 }

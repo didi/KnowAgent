@@ -3,20 +3,28 @@ import * as actions from '../../actions';
 import { connect } from "react-redux";
 import { Dispatch } from 'redux';
 import { EChartOption } from 'echarts';
-import { getHeight, EXPAND_GRID_HEIGHT } from './constants';
+import { getHeight } from './constants';
 import { Spin, Icon, Button } from 'antd';
 import LineChart, { hasData } from '../../component/echarts';
+import { IMetricPanels } from '../../interface/agent';
+import { getCollectLineData, getCollectPieData } from '../../api/collect';
+import { getAgentMetrics, getCollectMetrics, getAgentLineData, getAgentPieData } from '../../api/agent';
+import { newdealMetricPanel, dealMetricPanel } from './constants';
 import './index.less';
 
 export interface ICommonCurveProps {
   title: string;
-  options: EChartOption;
+  options: IMetricPanels;
   selfHide: boolean;
-  eachHost: boolean;
+  judgeUrl: boolean;
+  taskid: number;
 }
 
 const mapStateToProps = (state: any) => ({
   loading: state.echarts.loading,
+  timeRange: state.agent.timeRange,
+  logCollectPathId: state.collect.logCollectPathId,
+  hostName: state.collect.hostName,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -27,20 +35,26 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 @connect(mapStateToProps, mapDispatchToProps)
 export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
-
+  
+  public state = {
+    data: {} as any,
+    eachHost: false,
+    loading: false,
+  }
   public getLoading = () => {
-    return this.props.loading;
+    return this.state.loading;
   }
 
   public expandChange = () => {
     const curveOption = this.getCurveData();
+    const loading = this.getLoading();
     const options = Object.assign({}, curveOption, {
       grid: {
         ...curveOption.grid,
-        height: EXPAND_GRID_HEIGHT,
+        height: Math.floor(document.getElementsByTagName('body')[0].clientHeight * 0.6),
+        right: '2%',
       },
     });
-    const loading = this.getLoading();
     this.props.showContent(this.renderCurve(options, loading, true));
   }
 
@@ -58,10 +72,20 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     return <Icon type="fullscreen" className="ml-17" onClick={this.expandChange} key="full-screen" />;
   }
 
+  public eachHostChange = () => {
+    this.setState({
+      eachHost: !this.state.eachHost
+    }, () => this.getData())
+  }
+
   public renderEachHost = () => {
-    if (this.props?.eachHost) {
-      return <Button className="common-chart-wrapper-eachhost">查看各主机</Button>
+    if (this.props.judgeUrl && !this.props.options.isPie) {
+      if(this.state.eachHost) {
+        return <Button className="common-chart-wrapper-eachhost" onClick={this.eachHostChange}>返回</Button>
+      }
+      return <Button className="common-chart-wrapper-eachhost" onClick={this.eachHostChange}>查看各主机</Button>
     }
+    return '';
   }
 
   public renderTitle = () => {
@@ -71,7 +95,7 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
   }
 
   public getCurveData = () => {
-    return this.props.options;
+    return this.state.data;
   }
 
   public renderOthers = () => null as unknown as JSX.Element;
@@ -86,29 +110,129 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     return <div className="no-data-info" style={{ ...style }} key="loading"><Spin /></div>;
   }
 
-  public renderEchart = (options: EChartOption, loading: boolean, expand?: boolean) => {
+  public renderEchart = (options: EChartOption, loading: boolean, expand?: boolean, isShow?: boolean) => {
     const width = expand ? undefined : 350;
-    // const height = getHeight(options);
+    let height = getHeight(options);
+    if (isShow) {
+      height = Math.floor(document.getElementsByTagName('body')[0].clientHeight * 0.6)
+    }
     // todo：后面根据线条做优化
-    const height = 300;
+    // const height = 300;
+    // console.log(options)
     const data = hasData(options);
     if (loading) return this.renderLoading(height);
     if (!data) return this.renderNoData(height);
-    // console.log(options)
     return <LineChart width={width} height={height} options={options} key="chart" />;
   }
 
-  public renderCurve = (options: EChartOption, loading: boolean, expand?: boolean) => {
+  public renderCurve = (options: EChartOption, loading: boolean, expand?: boolean, isShow?: boolean) => {
     const data = hasData(options);
     return (
       <div className="common-chart-wrapper" >
         {this.renderTitle()}
         {this.renderEachHost()}
-        {this.renderEchart(options, loading, expand)}
+        {this.renderEchart(options, loading, expand, isShow)}
         {this.renderOpBtns(options, expand)}
         {data ? this.renderOthers() : null}
       </div>
     );
+  }
+
+  public getAgentData = (prevProps: ICommonCurveProps & Props) => {
+    const { taskid, timeRange, options, judgeUrl } = prevProps ? prevProps : this.props;
+    const params = {
+      agentId: taskid,
+      startTime: timeRange[0].valueOf(),
+      endTime: timeRange[1].valueOf(),
+    }
+    if (options.isPie) {
+      getAgentPieData(options.api, { agentId: taskid })
+        .then((res: any) => {
+          this.setState({
+            data: newdealMetricPanel(options, res, judgeUrl),
+            loading: false,
+          })
+        }).catch((err: any) => {
+          this.setState({
+            loading: false,
+          })
+        });
+      return;
+    }
+    getAgentLineData(options.api, params).then((res: any) => {
+      const data = dealMetricPanel(options, res);
+      // console.log(data)
+      this.setState({
+        data,
+        loading: false,
+      })
+    }).catch((err: any) => {
+      this.setState({
+        loading: false,
+      })
+    });
+  }
+
+  public getCollectData = (prevProps: ICommonCurveProps & Props) => {
+    const { taskid, logCollectPathId, hostName, timeRange, options, judgeUrl } = prevProps ? prevProps : this.props;
+    const params = {
+      taskId: taskid,
+      logCollectPathId: logCollectPathId,
+      hostName: hostName,
+      startTime: timeRange[0].valueOf(),
+      endTime: timeRange[1].valueOf(),
+      eachHost: this.state.eachHost
+    }
+    if (this.state.eachHost) {
+      params.logCollectPathId = '';
+      params.hostName = '';
+    }
+    if (options.isPie) {
+      getCollectPieData(options.api, { taskId: taskid, logCollectPathId })
+        .then((res: any) => {
+          //todo 返回类型看接口在写
+          this.setState({
+            data: newdealMetricPanel(options, res, judgeUrl),
+            loading: false,
+          })
+        }).catch((err: any) => {
+          this.setState({
+            loading: false,
+          })
+        });
+      return;
+    }
+    getCollectLineData(options.api, params).then((res: any) => {
+      const data = newdealMetricPanel(options, res?.metricList, judgeUrl);
+      // console.log(data)
+      this.setState({
+        data,
+        loading: false,
+      })
+    }).catch((err: any) => {
+      this.setState({
+        loading: false,
+      })
+    });
+  }
+
+  public getData = (prevProps?: ICommonCurveProps & Props) => {
+    this.setState({
+      loading: true
+    })
+    this.props.judgeUrl ? this.getCollectData(prevProps as ICommonCurveProps & Props)
+    : this.getAgentData(prevProps as ICommonCurveProps & Props)
+  }
+
+  componentDidMount() {
+    this.getData()
+  }
+
+  componentWillReceiveProps(prevProps: ICommonCurveProps & Props) {
+    if (JSON.stringify(prevProps) !== JSON.stringify(this.props)){
+      // console.log('qingqiu',JSON.stringify(prevProps), JSON.stringify(this.props))
+      this.getData(prevProps)
+    }
   }
 
   public render() {
@@ -122,4 +246,3 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     );
   }
 }
-

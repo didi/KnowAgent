@@ -18,14 +18,14 @@ export const COLLECT_CONFIG = [
           },
           {
               "panelName": "数据最大延迟",
-              "title": '数据最大延迟 （s）',
+              "title": '数据最大延迟 （ms）',
               "metricList": [
                   {
                       "metricName": "数据最大延迟",
                       "metricPointList": []
                   }
               ],
-              'unit': 's',
+              'unit': 'ms',
               "api": 'HealthMaxDelay',
               "isPie": false,
               "isEachHost": false,
@@ -269,14 +269,14 @@ export const COLLECT_CONFIG = [
         },
         {
             "panelName": "日志flush平均耗时",
-            "title": '日志flush平均耗时 （s）',
+            "title": '日志flush平均耗时 （ms）',
             "metricList": [
                 {
                     "metricName": "日志flush平均耗时 （s）",
                     "metricPointList": []
                 }
             ],
-            'unit': 's',
+            'unit': 'ms',
             "api": 'logFlushMeanConsuming',
             "isPie": false,
             "selfHide": false

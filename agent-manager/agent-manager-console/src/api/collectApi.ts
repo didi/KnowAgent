@@ -2,7 +2,7 @@ import { IStringMap } from "../interface/common";
 
 const prefixMap = {
   v1: '/api/v1',
-  v2: '/api/v1/collect-task/metrics',
+  v2: '/api/v1/normal/collect-task/metrics',
 } as IStringMap;
 
 interface IAgentApi {
@@ -23,13 +23,13 @@ export const collectApiMap: IAgentApi = {
   // 数据最大延迟
   HealthMaxDelay: getApi('/health/max-delay', 'v2'),
   // 最小采集业务时间
-  HealthMinCollectBusineTime: getApi('/health/min-collectbusine-time', 'v2'),
+  HealthMinCollectBusineTime: getApi('/health/min-collectbusiness-time', 'v2'),
   //  限流时长（ms）(折线图)
   HealthLimitTime: getApi('/health/limit-time', 'v2'),
   //  异常截断条数（条）(折线图)
   HealthAbnormTrunca: getApi('/health/abnormal-truncation', 'v2'),
   //  采集路径是否存在 (折线图)
-  isCollectPath: getApi('collect-task/metrics/health/iscollectpath', 'v2'),
+  isCollectPath: getApi('/health/iscollectpath', 'v2'),
   // 采集路径是否存在乱序 (折线图)
   isExistCollectPathChaos: getApi('/health/isexist-collectpath-chaos', 'v2'),
   //  是否存在日志切片错误 (折线图)
@@ -54,7 +54,7 @@ export const collectApiMap: IAgentApi = {
   logFlushTime: getApi('/performance/logflush-times', 'v2'),
   //  日志flush最大耗时 （ms）(折线图)
   logFlushMaxConsuming: getApi('/performance/logflush-max-consuming', 'v2'),
-  //  日志flush平均耗时 （s）(折线图)
+  //  日志flush平均耗时 （ms）(折线图)
   logFlushMeanConsuming: getApi('/performance/logflush-mean-consuming', 'v2'),
   //  日志flush失败次数（次）(折线图)
   logFlushFailTimes: getApi('/performance/logflush-fail-times', 'v2'),

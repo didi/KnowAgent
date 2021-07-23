@@ -1,7 +1,7 @@
 import { IStringMap } from "../interface/common";
 
 const prefixMap = {
-  v1: '/api/v1/agent',
+  v1: '/api/v1/normal/agent',
 } as IStringMap;
 
 function getApi(path: string, prefix: string = 'v1') {
