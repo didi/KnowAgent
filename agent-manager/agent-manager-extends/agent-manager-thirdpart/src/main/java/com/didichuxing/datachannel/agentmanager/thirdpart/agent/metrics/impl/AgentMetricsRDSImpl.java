@@ -270,6 +270,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public List<MetricPoint> getAgentErrorLogCountPerMin(String hostname, Long startTime, Long endTime) {
+        return agentMetricMapper.selectAgentErrorLogCountPerMin(hostname, startTime, endTime);
+    }
+
+    @Override
     public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column) {
         return collectTaskMetricMapper.selectByTask(logCollectTaskId, startTime, endTime, column.getRdsValue());
     }
@@ -287,5 +292,15 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
         return collectTaskMetricMapper.selectAggregationByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column.getRdsValue(), method.getValue());
+    }
+
+    @Override
+    public List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column) {
+        return agentMetricMapper.selectGraph(hostname, startTime, endTime, column.getRdsValue());
+    }
+
+    @Override
+    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+        return agentMetricMapper.selectAggregation(hostname, startTime, endTime, column.getRdsValue(), method.getValue());
     }
 }

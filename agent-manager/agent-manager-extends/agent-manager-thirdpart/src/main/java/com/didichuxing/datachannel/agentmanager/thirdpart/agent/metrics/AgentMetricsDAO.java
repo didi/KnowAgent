@@ -270,6 +270,8 @@ public interface AgentMetricsDAO {
 
     List<MetricPoint> getCollectDelayPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
 
+    List<MetricPoint> getAgentErrorLogCountPerMin(String hostName, Long startTime, Long endTime);
+
     List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column);
 
     List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
@@ -277,5 +279,9 @@ public interface AgentMetricsDAO {
     List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column);
 
     List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
+
+    List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column);
+
+    List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
 
 }

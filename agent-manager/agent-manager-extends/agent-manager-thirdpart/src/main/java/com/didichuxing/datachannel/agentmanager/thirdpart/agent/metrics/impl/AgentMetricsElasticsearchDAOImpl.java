@@ -14,6 +14,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -411,6 +412,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public List<MetricPoint> getAgentErrorLogCountPerMin(String hostName, Long startTime, Long endTime) {
+        return null;
+    }
+
+    @Override
     public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column) {
         return null;
     }
@@ -430,6 +436,44 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         return null;
     }
 
+    @Override
+    public List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column) {
+        return null;
+    }
+
+    @Override
+    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+        return null;
+    }
+
+    private String setAggregate(SearchSourceBuilder builder, AgentMetricField field, CalcFunction method) {
+        String resultName = field.getEsValue() + method.getValue();
+        switch (method) {
+            case MAX:
+                builder.aggregation(AggregationBuilders.max(resultName).field(field.getEsValue()));
+                break;
+            case MIN:
+                builder.aggregation(AggregationBuilders.min(resultName).field(field.getEsValue()));
+                break;
+            case AVG:
+                builder.aggregation(AggregationBuilders.avg(resultName).field(field.getEsValue()));
+                break;
+            case SUM:
+                builder.aggregation(AggregationBuilders.sum(resultName).field(field.getEsValue()));
+                break;
+            case COUNT:
+                builder.aggregation(AggregationBuilders.count(resultName).field(field.getEsValue()));
+                break;
+            default:
+                break;
+        }
+        return resultName;
+    }
+
+    private String setHeartbeatTimeHistogramAggregation(SearchSourceBuilder builder, AgentMetricField field, CalcFunction method) {
+        return null;
+    }
+
     private Long selectCountByFieldName(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, String fieldName, Object value) {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -445,7 +489,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     private double hostSumByFieldName(Long startTime, Long endTime, String hostName, String fieldName) {
-        String sumName = "sum";
         SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -454,7 +497,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         builder.query(boolQueryBuilder);
-        builder.aggregation(AggregationBuilders.sum(sumName).field(fieldName));
+        String sumName = setAggregate(builder, AgentMetricField.fromString(fieldName), CalcFunction.SUM);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         Aggregations aggregations = searchResponse.getAggregations();
@@ -466,7 +509,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     private double taskSumByFieldName(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String fieldName) {
-        String sumName = "sum";
         SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -476,7 +518,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         builder.query(boolQueryBuilder);
-        builder.aggregation(AggregationBuilders.sum(sumName).field(fieldName));
+        String sumName = setAggregate(builder, AgentMetricField.fromString(fieldName), CalcFunction.SUM);
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         Aggregations aggregations = searchResponse.getAggregations();

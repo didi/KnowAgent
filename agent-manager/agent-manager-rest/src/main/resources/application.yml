@@ -19,9 +19,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: org.mariadb.jdbc.Driver
-      url: jdbc:mysql://10.178.24.87:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
-      username: root
-      password: Work2019
+      url: jdbc:mysql://localhost:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+      username:
+      password:
       initialSize: 10
       validationQueryTimeout: 5000
       transactionQueryTimeout: 60000
@@ -53,9 +53,9 @@ spring:
       max-file-size: 600MB
       max-request-size: 600MB
   auv-job:
-    jdbc-url: jdbc:mysql://10.178.24.87:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
-    username: root
-    password: Work2019
+    jdbc-url: jdbc:mysql://localhost:8099/agent_manager_v2?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+    username:
+    password:
     driver-class-name: org.mariadb.jdbc.Driver
     max-lifetime: 60000
     init-sql: true
@@ -67,36 +67,36 @@ spring:
 kcm:
   enabled: true
   gift:
-    endpoint: http://10.90.27.13:8095
-    accessKeyID: AKDD000000000004DPWHQZAKWDKQ93
-    secretAccessKey: ASDDfDeYmhCmzgHgVsaquaFzpxwYBahhKQXevzIr
+    endpoint: 1
+    accessKeyID: 1
+    secretAccessKey: 1
     bucket: agentmanager
 
 lam:
   n9e-job:
-    base-url: http://10.86.76.13:8054
+    base-url:
     timeout: 300
     account: root
     script-file: lam_script.sh
-    user-token: 82957c91ba316b3a1c5cb3a5319d6ae8
+    user-token:
 
 metadata:
   sync:
     request:
       service:
-        url: http://10.86.76.13:8075/v1/rdb/nodes
+        url: 1
         enabled: false
       host:
-        url: http://10.86.76.13:8075/v1/rdb/node
+        url: 1
       kafkacluster:
-        url: http://10.178.24.118:8061/kafka/api/v1/third-part/cluster/list
+        url: 1
         enabled: false
       containers:
-        url: http://10.178.24.116:8066/v1/ccpapi/pod/containers
+        url: 1
       permission:
-        url: http://10.86.76.13:8075/v1/rdb/can-do-node-ops
-        srv-token: uic-internal-third-module-pass-32es6
-        user-token: 2bcddb0bb451916f47bd03a68ca933c1
+        url: 1
+        srv-token: 1
+        user-token: 1
         enabled: false
       k8s:
         service-key: servicename
@@ -107,12 +107,12 @@ agent:
   metrics:
     datasource:
       elasticsearch:
-        ip: 10.96.98.234
-        port: 8200
-        appId: 11
-        appSecret: R8XJRm0Wrv7Zwvq
-        agentMetricsIndexName: epri_swan_agent_metrics
-        agentErrorLogIndexName: epri_swan_agent_errlogs
+        ip: 1
+        port: 1
+        appId: 1
+        appSecret: 1
+        agentMetricsIndexName: 1
+        agentErrorLogIndexName: 1
     producer:
       identify: false
       appId: 0

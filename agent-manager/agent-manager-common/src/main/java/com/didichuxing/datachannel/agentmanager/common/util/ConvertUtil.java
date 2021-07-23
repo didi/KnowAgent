@@ -1,6 +1,8 @@
 package com.didichuxing.datachannel.agentmanager.common.util;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.util.TypeUtils;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.google.common.collect.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,6 +13,8 @@ import org.springframework.beans.BeanUtils;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -23,7 +27,9 @@ import java.util.function.Function;
  */
 public class ConvertUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConvertUtil.class);public static <T> T obj2ObjByJSON(Object srcObj, Class<T> tgtClass) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConvertUtil.class);
+
+    public static <T> T obj2ObjByJSON(Object srcObj, Class<T> tgtClass) {
         return JSON.parseObject(JSON.toJSONString(srcObj), tgtClass);
     }
 
@@ -142,9 +148,10 @@ public class ConvertUtil {
 
     /**
      * 对象转换工具
-     * @param srcObj 元对象
+     *
+     * @param srcObj   元对象
      * @param tgtClass 目标对象类
-     * @param <T> 泛型
+     * @param <T>      泛型
      * @return 目标对象
      */
     @Nullable
@@ -182,6 +189,7 @@ public class ConvertUtil {
 
     /**
      * 将map转换为object，排除指定key
+     *
      * @param map
      * @param t
      * @param excludeKeys
@@ -221,6 +229,7 @@ public class ConvertUtil {
 
     /**
      * Map中根据key批量删除键值对
+     *
      * @param map
      * @param excludeKeys
      * @param <K>
@@ -241,8 +250,8 @@ public class ConvertUtil {
     }
 
     /**
-     *
      * Map转String
+     *
      * @param map
      * @return
      */
@@ -267,5 +276,30 @@ public class ConvertUtil {
         }
         return sb.toString();
     }
+
+    public static void nanoToSec(List<MetricPoint> metricPoints) {
+        for (MetricPoint metricPoint : metricPoints) {
+            BigDecimal value = TypeUtils.castToBigDecimal(metricPoint.getValue());
+            BigDecimal b = value.divide(new BigDecimal(1000000), 2, RoundingMode.HALF_UP);
+            metricPoint.setValue(b);
+        }
+    }
+
+    public static void nanoToMillis(List<MetricPoint> metricPoints) {
+        for (MetricPoint metricPoint : metricPoints) {
+            BigDecimal value = TypeUtils.castToBigDecimal(metricPoint.getValue());
+            BigDecimal b = value.divide(new BigDecimal(1000), 2, RoundingMode.HALF_UP);
+            metricPoint.setValue(b);
+        }
+    }
+
+    public static void byteToMB(List<MetricPoint> metricPoints) {
+        for (MetricPoint metricPoint : metricPoints) {
+            BigDecimal value = TypeUtils.castToBigDecimal(metricPoint.getValue());
+            BigDecimal b = value.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
+            metricPoint.setValue(b);
+        }
+    }
+
 
 }

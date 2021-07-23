@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.agent.metrics.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
@@ -296,6 +297,11 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
+    public List<MetricPoint> getAgentErrorLogCountPerMin(AgentMetricQueryDO agentMetricQueryDO) {
+        return agentMetricsDAO.getAgentErrorLogCountPerMin(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime());
+    }
+
+    @Override
     public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column) {
         AgentMetricField field = AgentMetricField.fromString(column);
         if (field == null) {
@@ -347,6 +353,8 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
             Object value = metricPoint.getValue();
             if (value.getClass() == Boolean.class) {
                 metricPoint.setValue((Boolean)value ? 1 : 0);
+            } else if (value.getClass() == boolean.class) {
+                metricPoint.setValue((boolean)value ? 1 : 0);
             }
         }
         return graph;
@@ -355,5 +363,30 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     @Override
     public List<MetricPoint> queryCollectDelay(MetricQueryDO metricQueryDO) {
         return agentMetricsDAO.getCollectDelayPerMin(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+    }
+
+    @Override
+    public List<MetricPoint> queryAgent(AgentMetricQueryDO agentMetricQueryDO, String column) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        return agentMetricsDAO.queryAgent(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field);
+    }
+
+    @Override
+    public List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        CalcFunction function = CalcFunction.fromString(method);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == null) {
+            throw new ServiceException("聚合方法名不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == CalcFunction.NORMAL) {
+            return agentMetricsDAO.queryAgent(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field);
+        }
+        return agentMetricsDAO.queryAgentAggregation(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field, function);
     }
 }

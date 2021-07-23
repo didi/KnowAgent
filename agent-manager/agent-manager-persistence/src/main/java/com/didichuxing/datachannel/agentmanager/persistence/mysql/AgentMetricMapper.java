@@ -36,4 +36,10 @@ public interface AgentMetricMapper {
     Long selectMaxByHostname(@Param("hostName") String hostName, @Param("column") String column);
 
     Long selectHeartbeatCount(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName);
+
+    List<MetricPoint> selectAgentErrorLogCountPerMin(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
+
+    List<MetricPoint> selectGraph(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
+
+    List<MetricPoint> selectAggregation(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
 }

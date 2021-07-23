@@ -11,7 +11,6 @@ import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(tags = "Normal-LogCollectTask-Metrics相关接口(REST)")
+@Api(tags = "Normal-LogCollectTask-Metrics相关接口")
 @RestController
 @RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "collect-task/metrics")
 public class NormalLogCollectTaskMetricsController {
@@ -50,7 +49,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getCollectDelayMetric(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "最小采集时间", notes = "")
+    @ApiOperation(value = "最小采集时间min", notes = "")
     @RequestMapping(value = "/health/min-collectbusiness-time", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> minLogTime(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -260,6 +259,9 @@ public class NormalLogCollectTaskMetricsController {
     }
 
     private Result checkMetricQueryParam(MetricQueryDTO metricQueryDTO) {
+        if (metricQueryDTO == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "请求参数为空");
+        }
         if (metricQueryDTO.getTaskId() == null) {
             return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "采集任务id为空");
         }
@@ -271,11 +273,6 @@ public class NormalLogCollectTaskMetricsController {
         }
         if (metricQueryDTO.getEachHost() == null) {
             metricQueryDTO.setEachHost(false);
-        }
-        if (!metricQueryDTO.getEachHost()) {
-            if (StringUtils.isBlank(metricQueryDTO.getHostName())) {
-                return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "主机名为空，且未选择所有主机");
-            }
         }
         return Result.buildSucc();
     }
