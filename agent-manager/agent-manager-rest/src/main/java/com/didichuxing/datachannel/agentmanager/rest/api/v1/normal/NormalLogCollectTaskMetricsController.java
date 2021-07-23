@@ -49,7 +49,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getCollectDelayMetric(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "最小采集时间min", notes = "")
+    @ApiOperation(value = "最小采集时间", notes = "")
     @RequestMapping(value = "/health/min-collectbusiness-time", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> minLogTime(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -60,7 +60,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getMinLogTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "限流时长", notes = "")
+    @ApiOperation(value = "限流时长ms", notes = "")
     @RequestMapping(value = "/health/limit-time", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> limitTime(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -115,7 +115,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getSliceError(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "读取字节数", notes = "")
+    @ApiOperation(value = "读取字节数MB", notes = "")
     @RequestMapping(value = "/performance/log-read-bytes", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readByte(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -148,7 +148,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getTotalReadTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "读取最大耗时ns", notes = "")
+    @ApiOperation(value = "读取最大耗时ms", notes = "")
     @RequestMapping(value = "/performance/logevent-max-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -159,7 +159,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getReadTimeMax(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "读取平均耗时ns", notes = "")
+    @ApiOperation(value = "读取平均耗时ms", notes = "")
     @RequestMapping(value = "/performance/logevent-mean-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -170,7 +170,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getReadTimeMean(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "发送字节数", notes = "")
+    @ApiOperation(value = "发送字节数MB", notes = "")
     @RequestMapping(value = "/performance/log-send-bytes", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendBytes(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -181,7 +181,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getSendBytes(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "发送调数", notes = "")
+    @ApiOperation(value = "发送条数", notes = "")
     @RequestMapping(value = "/performance/log-send-bar", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendCount(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -192,7 +192,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getSendCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "发送总时间", notes = "")
+    @ApiOperation(value = "发送总时间ms", notes = "")
     @RequestMapping(value = "/performance/log-send-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendTimeConsuming(@RequestBody MetricQueryDTO metricQueryDTO) {

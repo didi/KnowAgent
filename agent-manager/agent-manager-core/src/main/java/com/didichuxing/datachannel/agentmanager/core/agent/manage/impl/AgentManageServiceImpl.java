@@ -526,7 +526,6 @@ public class AgentManageServiceImpl implements AgentManageService {
         metricPointList.setMetricPointList(graph);
         metricPointList.setHostName(metricQueryDO.getHostName());
         return metricPointList;
-
     }
 
     @Override
