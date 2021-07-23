@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 
@@ -240,7 +242,7 @@ public interface AgentMetricsDAO {
 
     List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName);
 
-    List getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName);
+    List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName);
 
     List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName);
 
@@ -265,5 +267,21 @@ public interface AgentMetricsDAO {
     List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
 
     List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
+
+    List<MetricPoint> getCollectDelayPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
+
+    List<MetricPoint> getAgentErrorLogCountPerMin(String hostName, Long startTime, Long endTime);
+
+    List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column);
+
+    List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
+
+    List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column);
+
+    List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
+
+    List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column);
+
+    List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
 
 }

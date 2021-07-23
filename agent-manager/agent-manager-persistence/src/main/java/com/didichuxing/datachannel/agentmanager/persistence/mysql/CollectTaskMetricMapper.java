@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -38,6 +39,16 @@ public interface CollectTaskMetricMapper {
     List<MetricPoint> selectSumPerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("column") String column);
 
     List<MetricPoint> selectMinPerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("column") String column);
+
+    List<MetricPoint> selectDelayTimePerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId);
+
+    List<MetricPoint> selectByTask(@Param("taskId") Long logCollectTaskId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
+
+    List<MetricPoint> selectAggregationByTask(@Param("taskId") Long logCollectTaskId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+
+    List<MetricPoint> selectByLogModel(@Param("taskId") Long logCollectTaskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
+
+    List<MetricPoint> selectAggregationByLogModel(@Param("taskId") Long logCollectTaskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
 
     int deleteBeforeTime(@Param("time") Long time);
 

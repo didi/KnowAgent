@@ -2,8 +2,12 @@ package com.didichuxing.datachannel.agentmanager.core.agent.metrics.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
@@ -12,6 +16,7 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
+import com.didichuxing.datachannel.agentmanager.persistence.mysql.CollectTaskMetricMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +35,9 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     @Autowired
     private AgentMetricsDAO agentMetricsDAO;
 
+    @Autowired
+    private CollectTaskMetricMapper collectTaskMetricMapper;
+
     @Override
     public boolean completeCollect(HostDO hostDO) {
         /*
@@ -45,7 +53,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
          *      2.）针对日志采集任务列表中各日志采集任务，获取其待采集文件路径集，针对日志采集任务id+日志采集路径id+容器宿主机hostName+容器名，判断是是否已采集完
          *
          */
-        if(HostTypeEnum.HOST.getCode().equals(hostDO.getContainer())) {//主机类型
+        if (HostTypeEnum.HOST.getCode().equals(hostDO.getContainer())) {//主机类型
             /*
              * 检查主机对应日志采集任务集是否已采集完
              */
@@ -54,7 +62,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
                 List<FileLogCollectPathDO> logCollectPathDOList = logCollectTaskDO.getFileLogCollectPathList();
                 for (FileLogCollectPathDO fileLogCollectPathDO : logCollectPathDOList) {
                     boolean hostCompleteCollect = hostCompleteCollect(hostDO.getHostName(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId());
-                    if(!hostCompleteCollect) {//未完成 采集
+                    if (!hostCompleteCollect) {//未完成 采集
                         return false;
                     }
                 }
@@ -63,7 +71,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
              * 检查主机上运行的各容器对应日志采集任务集是否已采集完
              */
             List<HostDO> containerList = hostManageService.getContainerListByParentHostName(hostDO.getHostName());
-            if(CollectionUtils.isEmpty(containerList)) {//主机未运行任何容器
+            if (CollectionUtils.isEmpty(containerList)) {//主机未运行任何容器
                 return true;
             }
             for (HostDO container : containerList) {
@@ -72,21 +80,21 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
                     List<FileLogCollectPathDO> logCollectPathDOList = logCollectTaskDO.getFileLogCollectPathList();
                     for (FileLogCollectPathDO fileLogCollectPathDO : logCollectPathDOList) {
                         boolean containerCompleteCollect = containerCompleteCollect(container.getHostName(), hostDO.getHostName(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId());
-                        if(!containerCompleteCollect) {//未完成 采集
+                        if (!containerCompleteCollect) {//未完成 采集
                             return false;
                         }
                     }
                 }
             }
             return true;
-        } else if(HostTypeEnum.CONTAINER.getCode().equals(hostDO.getContainer())) {//容器类型
+        } else if (HostTypeEnum.CONTAINER.getCode().equals(hostDO.getContainer())) {//容器类型
             List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getLogCollectTaskListByHostId(hostDO.getId());//主机关联的日志采集任务集
             String parentHostName = hostDO.getParentHostName();//容器宿主机名
             for (LogCollectTaskDO logCollectTaskDO : logCollectTaskDOList) {
                 List<FileLogCollectPathDO> logCollectPathDOList = logCollectTaskDO.getFileLogCollectPathList();
                 for (FileLogCollectPathDO fileLogCollectPathDO : logCollectPathDOList) {
                     boolean containerCompleteCollect = containerCompleteCollect(hostDO.getHostName(), parentHostName, logCollectTaskDO.getId(), fileLogCollectPathDO.getId());
-                    if(!containerCompleteCollect) {//未完成 采集
+                    if (!containerCompleteCollect) {//未完成 采集
                         return false;
                     }
                 }
@@ -288,4 +296,97 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         return agentMetricsDAO.getLimitTimePerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
     }
 
+    @Override
+    public List<MetricPoint> getAgentErrorLogCountPerMin(AgentMetricQueryDO agentMetricQueryDO) {
+        return agentMetricsDAO.getAgentErrorLogCountPerMin(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime());
+    }
+
+    @Override
+    public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field);
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        CalcFunction function = CalcFunction.fromString(method);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == null) {
+            throw new ServiceException("聚合方法名不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == CalcFunction.NORMAL) {
+            return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field);
+        }
+        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, field, function);
+    }
+
+    @Override
+    public List<MetricPoint> queryByLogModel(MetricQueryDO metricQueryDO, String column) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByLogModel(MetricQueryDO metricQueryDO, String column, String method) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        CalcFunction function = CalcFunction.fromString(method);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == null) {
+            throw new ServiceException("聚合方法名不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == CalcFunction.NORMAL) {
+            return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
+        }
+        List<MetricPoint> graph = agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field, function);
+        for (MetricPoint metricPoint : graph) {
+            Object value = metricPoint.getValue();
+            if (value.getClass() == Boolean.class) {
+                metricPoint.setValue((Boolean)value ? 1 : 0);
+            } else if (value.getClass() == boolean.class) {
+                metricPoint.setValue((boolean)value ? 1 : 0);
+            }
+        }
+        return graph;
+    }
+
+    @Override
+    public List<MetricPoint> queryCollectDelay(MetricQueryDO metricQueryDO) {
+        return agentMetricsDAO.getCollectDelayPerMin(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+    }
+
+    @Override
+    public List<MetricPoint> queryAgent(AgentMetricQueryDO agentMetricQueryDO, String column) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        return agentMetricsDAO.queryAgent(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field);
+    }
+
+    @Override
+    public List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        CalcFunction function = CalcFunction.fromString(method);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == null) {
+            throw new ServiceException("聚合方法名不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == CalcFunction.NORMAL) {
+            return agentMetricsDAO.queryAgent(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field);
+        }
+        return agentMetricsDAO.queryAgentAggregation(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field, function);
+    }
 }

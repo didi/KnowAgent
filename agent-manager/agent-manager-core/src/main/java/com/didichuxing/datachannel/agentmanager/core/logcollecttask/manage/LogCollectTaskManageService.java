@@ -4,6 +4,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
@@ -94,7 +97,47 @@ public interface LogCollectTaskManageService {
      */
     List<MetricPanelGroup> listLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime);
 
-    List<MetricPoint> getMetricByName(Long startTime, Long endTime, Long logCollectTaskId, String logModelHostName, Long fileLogCollectPathId);
+    List<MetricAggregate> getAliveHostCount(MetricQueryDO metricQueryDO);
+
+    MetricList getCollectDelayMetric(MetricQueryDO metricQueryDO);
+
+    MetricList getMinLogTime(MetricQueryDO metricQueryDO);
+
+    MetricList getLimitTime(MetricQueryDO metricQueryDO);
+
+    MetricList getAbnormalTruncation(MetricQueryDO metricQueryDO);
+
+    MetricList getCollectPathExists(MetricQueryDO metricQueryDO);
+
+    MetricList getIsFileOrder(MetricQueryDO metricQueryDO);
+
+    MetricList getSliceError(MetricQueryDO metricQueryDO);
+
+    MetricList getReadByte(MetricQueryDO metricQueryDO);
+
+    MetricList getReadCount(MetricQueryDO metricQueryDO);
+
+    MetricList getTotalReadTime(MetricQueryDO metricQueryDO);
+
+    MetricList getReadTimeMean(MetricQueryDO metricQueryDO);
+
+    MetricList getReadTimeMax(MetricQueryDO metricQueryDO);
+
+    MetricList getSendBytes(MetricQueryDO metricQueryDO);
+
+    MetricList getSendCount(MetricQueryDO metricQueryDO);
+
+    MetricList getTotalSendTime(MetricQueryDO metricQueryDO);
+
+    MetricList getFlushCount(MetricQueryDO metricQueryDO);
+
+    MetricList getFlushTimeMax(MetricQueryDO metricQueryDO);
+
+    MetricList getFlushTimeMean(MetricQueryDO metricQueryDO);
+
+    MetricList getFlushFailedCount(MetricQueryDO metricQueryDO);
+
+    MetricList getFilterCount(MetricQueryDO metricQueryDO);
 
     /**
      * 检查给定日志采集任务健康度，具体包括如下操作：

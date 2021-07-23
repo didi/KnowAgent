@@ -10,10 +10,10 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
-import com.didichuxing.datachannel.agentmanager.common.util.ValidateUtils;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.optrecord.OperateRecordDAO;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +102,7 @@ public class OperateRecordServiceImpl implements OperateRecordService {
         }
 
         if (OperationEnum.EDIT.getCode() == param.getOperateId()) {
-            if (ValidateUtils.isNull(param.getContent())) {
+            if (StringUtils.isBlank(param.getContent())) {
                 return;
             }
         }
@@ -138,22 +138,22 @@ public class OperateRecordServiceImpl implements OperateRecordService {
 
     /******************************************* private method **************************************************/
     private Result checkParam(OperateRecordDTO param) {
-        if (ValidateUtils.isNull(param)) {
+        if (param == null) {
             return Result.buildParamIllegal("记录为空");
         }
-        if (ValidateUtils.isNull(param.getModuleId())) {
+        if (param.getModuleId() == null) {
             return Result.buildParamIllegal("模块为空");
         }
-        if (ValidateUtils.isNull(param.getOperateId())) {
+        if (param.getOperateId() == null) {
             return Result.buildParamIllegal("操作为空");
         }
-        if (ValidateUtils.isBlank(param.getBizId())) {
+        if (StringUtils.isBlank(param.getBizId())) {
             return Result.buildParamIllegal("业务id为空");
         }
-        if (ValidateUtils.isBlank(param.getContent())) {
+        if (StringUtils.isBlank(param.getContent())) {
             return Result.buildParamIllegal("操作内容为空");
         }
-        if (ValidateUtils.isBlank(param.getOperator())) {
+        if (StringUtils.isBlank(param.getOperator())) {
             return Result.buildParamIllegal("操作人为空");
         }
         if (!ModuleEnum.validate(param.getModuleId())) {

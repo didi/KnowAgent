@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
@@ -24,6 +25,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
+import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
@@ -125,7 +127,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
             }
         }
         List<LogCollectTaskPaginationRecordDO> logCollectTaskPaginationRecordDOList = logCollectorTaskDAO.paginationQueryByConditon(logCollectTaskPaginationQueryConditionDO);
-        if(CollectionUtils.isEmpty(logCollectTaskPaginationRecordDOList)) {
+        if (CollectionUtils.isEmpty(logCollectTaskPaginationRecordDOList)) {
             return new ArrayList<>();
         } else {
             for (LogCollectTaskPaginationRecordDO logCollectTaskPaginationRecordDO : logCollectTaskPaginationRecordDOList) {
@@ -151,19 +153,564 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return handleListLogCollectTaskMetricsPerHostAndPath(logCollectTaskId, logPathId, hostName, startTime, endTime);
     }
 
-    public List<MetricPoint> getMetricByName(Long startTime, Long endTime, Long logCollectTaskId, String logModelHostName, Long fileLogCollectPathId) {
-        return null;
+    @Override
+    public List<MetricAggregate> getAliveHostCount(MetricQueryDO metricQueryDO) {
+        List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+        MetricAggregate resultExist = new MetricAggregate();
+        MetricAggregate resultNotExist = new MetricAggregate();
+        resultExist.setName(LogCollectTaskConstant.HEARTBEAT_EXIST);
+        resultNotExist.setName(LogCollectTaskConstant.HEARTBEAT_NOT_EXIST);
+        int exist = 0;
+        int notExist = 0;
+        Long endTime = System.currentTimeMillis();
+        for (HostDO hostDO : hostDOList) {
+            if (checkAliveByHeartbeat(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), hostDO.getHostName(), endTime)) {
+                exist++;
+            } else {
+                notExist++;
+            }
+        }
+
+        resultExist.setValue(exist);
+        resultNotExist.setValue(notExist);
+        return Arrays.asList(resultExist, resultNotExist);
+    }
+
+    @Override
+    public MetricList getCollectDelayMetric(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryCollectDelay(metricQueryDO);
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryCollectDelay(metricQueryDO);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getMinLogTime(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LOG_TIME.name(), CalcFunction.MIN.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LOG_TIME.name(), CalcFunction.MIN.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getLimitTime(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LIMIT_TIME.name(), CalcFunction.SUM.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.LIMIT_TIME.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getAbnormalTruncation(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_TOO_LARGE_COUNT.name(), CalcFunction.SUM.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_TOO_LARGE_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getCollectPathExists(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.IS_FILE_EXIST.name(), CalcFunction.NORMAL.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.IS_FILE_EXIST.name(), CalcFunction.NORMAL.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getIsFileOrder(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.getFileLogPathDisorderPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.getFileLogPathDisorderPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getSliceError(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.getFileLogPathLogSliceErrorPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.getFileLogPathLogSliceErrorPerMinMetric(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getReadByte(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
+                ConvertUtil.byteToMB(list);
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
+            ConvertUtil.byteToMB(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getReadCount(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    /**
+     * todo 读取总耗时（ms）
+     *
+     * @param metricQueryDO
+     * @return
+     */
+    @Override
+    public MetricList getTotalReadTime(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name());
+                for (MetricPoint metricPoint : list) {
+                    Long value = TypeUtils.castToLong(metricPoint.getValue());
+                    value = value * 60 / 1000;
+                    metricPoint.setValue(value);
+                }
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name());
+            for (MetricPoint metricPoint : list) {
+                Long value = TypeUtils.castToLong(metricPoint.getValue());
+                value = value * 60 / 1000;
+                metricPoint.setValue(value);
+            }
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getReadTimeMean(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getReadTimeMax(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MAX.name(), CalcFunction.MAX.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_TIME_MAX.name(), CalcFunction.MAX.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getSendBytes(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.name());
+                ConvertUtil.byteToMB(list);
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.name());
+            ConvertUtil.byteToMB(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getSendCount(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            metricPointList.setMetricPointList(list);
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getTotalSendTime(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_TIME_MEAN.name(), CalcFunction.AVG.name());
+                ConvertUtil.nanoToMillis(list);
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_TIME_MEAN.name(), CalcFunction.AVG.name());
+            ConvertUtil.nanoToMillis(list);
+            metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getFlushCount(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_COUNT.name(), CalcFunction.SUM.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getFlushTimeMax(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MAX.name(), CalcFunction.MAX.name());
+                ConvertUtil.nanoToMillis(list);
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MAX.name(), CalcFunction.MAX.name());
+            ConvertUtil.nanoToMillis(list);
+            metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getFlushTimeMean(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.AVG.name());
+                ConvertUtil.nanoToMillis(list);
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.AVG.name());
+            ConvertUtil.nanoToMillis(list);
+            metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getFlushFailedCount(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_FAILED_COUNT.name(), CalcFunction.SUM.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FLUSH_FAILED_COUNT.name(), CalcFunction.SUM.name());
+            metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
+    }
+
+    @Override
+    public MetricList getFilterCount(MetricQueryDO metricQueryDO) {
+        MetricList metricList = new MetricList();
+        List<MetricPointList> total = new ArrayList<>();
+        if (metricQueryDO.getEachHost()) {
+            List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(metricQueryDO.getTaskId());
+            for (HostDO hostDO : hostDOList) {
+                metricQueryDO.setHostName(hostDO.getHostName());
+                MetricPointList metricPointList = new MetricPointList();
+                List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_OUT.name(), CalcFunction.SUM.name());
+                metricPointList.setMetricPointList(list);
+                metricPointList.setHostName(hostDO.getHostName());
+                total.add(metricPointList);
+            }
+        } else {
+            MetricPointList metricPointList = new MetricPointList();
+            List<MetricPoint> list = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.FILTER_OUT.name(), CalcFunction.SUM.name());
+            metricPointList.setMetricPointList(list);
+            metricPointList.setHostName(metricQueryDO.getHostName());
+            total.add(metricPointList);
+        }
+        metricList.setMetricList(total);
+        return metricList;
     }
 
     /**
      * 日志采集任务对应某个待采集路径在具体某主机采集指标信息
-     * @param logCollectTaskId 日志采集任务 id
-     * @param logPathId 日志采集路径 id
-     * @param hostName 主机名
-     * @param startTime 指标信息查询开始时间
-     * @param endTime 指标信息查询结束时间
-     * @return 返回日志采集任务对应某个待采集路径在具体某主机采集指标信息
      *
+     * @param logCollectTaskId 日志采集任务 id
+     * @param logPathId        日志采集路径 id
+     * @param hostName         主机名
+     * @param startTime        指标信息查询开始时间
+     * @param endTime          指标信息查询结束时间
+     * @return 返回日志采集任务对应某个待采集路径在具体某主机采集指标信息
      */
     private List<MetricPanelGroup> handleListLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime) {
 
@@ -234,15 +781,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 根据日志采集任务 id 获取给定时间范围内对应日志采集任务运行时指标信息
+     *
      * @param logCollectTaskId 日志采集任务 id
-     * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param startTime        开始时间
+     * @param endTime          结束时间
      * @return 返回根据日志采集任务 id 获取到的给定时间范围内对应日志采集任务运行时指标信息
      */
     private MetricsDashBoard handlerListLogCollectTaskMetrics(Long logCollectTaskId, Long startTime, Long endTime) {
         LogCollectTaskDO logCollectTaskDO = getById(logCollectTaskId);
         List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(logCollectTaskId);
-        if(null == logCollectTaskDO) {
+        if (null == logCollectTaskDO) {
             throw new ServiceException(
                     String.format("LogCollectTask={id=%d}在系统中不存在", logCollectTaskId),
                     ErrorCodeEnum.LOGCOLLECTTASK_NOT_EXISTS.getCode()
@@ -340,15 +888,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 启/停日志采集任务
+     *
      * @param logCollectTaskId 日志采集任务id
-     * @param operator 操作人
+     * @param operator         操作人
      * @throws ServiceException 执行该函数过程中出现的异常
      */
     private void handleSwitchLogCollectTask(Long logCollectTaskId, Integer status, String operator) throws ServiceException {
         /*
          * 校验 status 是否合法
          */
-        if(null == status || (LogCollectTaskStatusEnum.invalidStatus(status))) {
+        if (null == status || (LogCollectTaskStatusEnum.invalidStatus(status))) {
             throw new ServiceException(
                     String.format("给定日志采集任务启|停状态={%d}非法，合法取值范围为[0,1]", status),
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
@@ -358,7 +907,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 校验待启/停日志采集任务在系统中是否存在
          */
         LogCollectTaskPO logCollectTaskPO = logCollectorTaskDAO.selectByPrimaryKey(logCollectTaskId);
-        if(null == logCollectTaskPO) {
+        if (null == logCollectTaskPO) {
             throw new ServiceException(
                     String.format("待启/停LogCollectTask={id=%d}在系统中不存在", logCollectTaskId),
                     ErrorCodeEnum.LOGCOLLECTTASK_NOT_EXISTS.getCode()
@@ -385,8 +934,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     /**
      * 创建一个日志采集任务信息，在日志采集任务添加操作成功后，自动构建日志采集任务 & 服务关联关系
      * 注：该函数作为一个整体运行在一个事务中，不抛异常提交事务，抛异常回滚事务
+     *
      * @param logCollectTaskDO 日志采集任务对象
-     * @param operator 操作人
+     * @param operator         操作人
      * @return 创建成功的日志采集任务对象id值
      * @throws ServiceException 执行该函数过程中出现的异常
      */
@@ -395,7 +945,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 校验日志采集任务对象参数信息是否合法
          */
         CheckResult checkResult = logCollectTaskManageServiceExtension.checkCreateParameterLogCollectTask(logCollectTaskDO);
-        if(!checkResult.getCheckResult()) {//日志采集任务对象信息不合法
+        if (!checkResult.getCheckResult()) {//日志采集任务对象信息不合法
             throw new ServiceException(
                     checkResult.getMessage(),
                     checkResult.getCode()
@@ -428,7 +978,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 根据给定 serviceIdList & logCollectTaskId 持久化对应服务 & 日志采集任务关联关系
-     * @param serviceIdList 服务对象id集
+     *
+     * @param serviceIdList    服务对象id集
      * @param logCollectTaskId 日志采集任务对象id
      * @throws ServiceException 执行该函数过程中出现的异常
      */
@@ -437,11 +988,12 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         for (Long serviceId : serviceIdList) {
             logCollectTaskServicePOList.add(new LogCollectTaskServicePO(logCollectTaskId, serviceId));
         }
-        serviceLogCollectTaskManageService.createLogCollectTaskServiceList( logCollectTaskServicePOList );
+        serviceLogCollectTaskManageService.createLogCollectTaskServiceList(logCollectTaskServicePOList);
     }
 
     /**
      * 持久化给定日志采集任务 & 关联 LogCollectPath对象集 & LogCollectTaskHealthPO 对象对象并返回已持久化的日志采集任务对象 id 值
+     *
      * @param logCollectTaskDO 日志采集任务对象
      * @return 持久化的日志采集任务对象 id 值
      * @throws ServiceException 执行该函数过程中出现的异常
@@ -461,7 +1013,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          */
         List<DirectoryLogCollectPathDO> directoryLogCollectPathList = logCollectTaskDO.getDirectoryLogCollectPathList();
         List<FileLogCollectPathDO> fileLogCollectPathList = logCollectTaskDO.getFileLogCollectPathList();
-        if(CollectionUtils.isEmpty(directoryLogCollectPathList) && CollectionUtils.isEmpty(fileLogCollectPathList)) {
+        if (CollectionUtils.isEmpty(directoryLogCollectPathList) && CollectionUtils.isEmpty(fileLogCollectPathList)) {
             throw new ServiceException(
                     String.format(
                             "class=LogCollectTaskManageServiceImpl||method=saveLogCollectTask||msg={%s}",
@@ -470,14 +1022,14 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
             );
         }
-        if(CollectionUtils.isNotEmpty(directoryLogCollectPathList)) {
+        if (CollectionUtils.isNotEmpty(directoryLogCollectPathList)) {
             for (DirectoryLogCollectPathDO directoryLogCollectPath : directoryLogCollectPathList) {
                 //持久化目录类型日志采集路径对象 DirectoryLogCollectPathPO
                 directoryLogCollectPath.setLogCollectTaskId(logCollectTaskId);
                 directoryLogCollectPathManageService.createDirectoryLogCollectPath(directoryLogCollectPath, operator);
             }
         }
-        if(CollectionUtils.isNotEmpty(fileLogCollectPathList)) {
+        if (CollectionUtils.isNotEmpty(fileLogCollectPathList)) {
             for (FileLogCollectPathDO fileLogCollectPath : fileLogCollectPathList) {
                 //持久化文件类型日志采集路径对象 FileLogCollectPathPO
                 fileLogCollectPath.setLogCollectTaskId(logCollectTaskId);
@@ -495,15 +1047,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 删除给定id对应日志采集任务对象
+     *
      * @param logCollectTaskId 待删除日志采集任务对象 logCollectTaskId 值
-     * @param operator 操作人
+     * @param operator         操作人
      * @throws ServiceException 执行该函数过程中出现的异常
      */
     private void handleDeleteLogCollectTask(Long logCollectTaskId, String operator) throws ServiceException {
         /*
          * 检查入参 logCollectTaskId 是否为空
          */
-        if(null == logCollectTaskId) {
+        if (null == logCollectTaskId) {
             throw new ServiceException(
                     "入参logCollectTaskId不可为空",
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
@@ -512,7 +1065,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         /*
          * 检查待删除日志采集任务 logCollectTaskId 对应日志采集任务对象在系统是否存在
          */
-        if(null == logCollectorTaskDAO.selectByPrimaryKey(logCollectTaskId)) {
+        if (null == logCollectorTaskDAO.selectByPrimaryKey(logCollectTaskId)) {
             throw new ServiceException(
                     String.format("删除logCollectTask对象{logCollectTaskId=%d}失败，原因为：系统中不存在id={%d}的logCollectTask对象", logCollectTaskId, logCollectTaskId),
                     ErrorCodeEnum.LOGCOLLECTTASK_NOT_EXISTS.getCode()
@@ -556,15 +1109,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     /**
      * 更新一个日志采集任务信息：删除更新前的日志采集任务 & 服务关联关系 -> 构建更新后的日志采集任务 & 已存在服务关联关系 -> 更新"除日志采集任务 & 已存在服务关联关系外的全量日志采集任务元信息"
      * 注：该函数作为一个整体运行在一个事务中，不抛异常提交事务，抛异常回滚事务
+     *
      * @param logCollectTaskDO 待更新日志采集任务对象
-     * @param operator 操作人
+     * @param operator         操作人
      */
     private void handleUpdateLogCollectTask(LogCollectTaskDO logCollectTaskDO, String operator) throws ServiceException {
         /*
          * 校验日志采集任务对象参数信息是否合法
          */
         CheckResult checkResult = logCollectTaskManageServiceExtension.checkUpdateParameterLogCollectTask(logCollectTaskDO);
-        if(!checkResult.getCheckResult()) {//日志采集任务对象信息不合法
+        if (!checkResult.getCheckResult()) {//日志采集任务对象信息不合法
             throw new ServiceException(
                     checkResult.getMessage(),
                     checkResult.getCode()
@@ -574,7 +1128,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 校验待更新日志采集任务在系统中是否存在
          */
         LogCollectTaskDO logCollectTaskDOSource = getById(logCollectTaskDO.getId());
-        if(null == logCollectTaskDOSource) {
+        if (null == logCollectTaskDOSource) {
             throw new ServiceException(
                     String.format("待更新LogCollectTask={id=%d}在系统中不存在", logCollectTaskDO.getId()),
                     ErrorCodeEnum.LOGCOLLECTTASK_NOT_EXISTS.getCode()
@@ -595,21 +1149,23 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
             public String getKey(DirectoryLogCollectPathDO directoryLogCollectPathDO) {
                 return directoryLogCollectPathDO.getPath();
             }
+
             @Override
             public boolean compare(DirectoryLogCollectPathDO t1, DirectoryLogCollectPathDO t2) {
                 return t1.getCollectFilesFilterRegularPipelineJsonString().equals(t2.getCollectFilesFilterRegularPipelineJsonString()) &&
                         t1.getDirectoryCollectDepth().equals(t2.getDirectoryCollectDepth()) &&
                         t1.getPath().equals(t2.getPath());
             }
+
             @Override
             public DirectoryLogCollectPathDO getModified(DirectoryLogCollectPathDO source, DirectoryLogCollectPathDO target) {
-                if(!source.getPath().equals(target.getPath())) {
+                if (!source.getPath().equals(target.getPath())) {
                     source.setPath(target.getPath());
                 }
-                if(!source.getDirectoryCollectDepth().equals(target.getDirectoryCollectDepth())) {
+                if (!source.getDirectoryCollectDepth().equals(target.getDirectoryCollectDepth())) {
                     source.setDirectoryCollectDepth(target.getDirectoryCollectDepth());
                 }
-                if(!source.getCollectFilesFilterRegularPipelineJsonString().equals(target.getCollectFilesFilterRegularPipelineJsonString())) {
+                if (!source.getCollectFilesFilterRegularPipelineJsonString().equals(target.getCollectFilesFilterRegularPipelineJsonString())) {
                     source.setCollectFilesFilterRegularPipelineJsonString(target.getCollectFilesFilterRegularPipelineJsonString());
                 }
                 return source;
@@ -630,13 +1186,15 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
             public String getKey(FileLogCollectPathDO fileLogCollectPathDO) {
                 return fileLogCollectPathDO.getPath();
             }
+
             @Override
             public boolean compare(FileLogCollectPathDO t1, FileLogCollectPathDO t2) {
                 return t1.getPath().equals(t2.getPath());
             }
+
             @Override
             public FileLogCollectPathDO getModified(FileLogCollectPathDO source, FileLogCollectPathDO target) {
-                if(!source.getPath().equals(target.getPath())) {
+                if (!source.getPath().equals(target.getPath())) {
                     source.setPath(target.getPath());
                 }
                 return source;
@@ -704,7 +1262,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public List<LogCollectTaskDO> getLogCollectTaskListByHostId(Long hostId) {
         HostDO hostDO = hostManageService.getById(hostId);
-        if(null == hostDO) {
+        if (null == hostDO) {
             throw new ServiceException(
                     String.format("Host={id=%d}在系统中不存在", hostId),
                     ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
@@ -719,7 +1277,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 加载LogCollectTaskDO
          */
         LogCollectTaskPO logCollectTaskPO = this.logCollectorTaskDAO.selectByPrimaryKey(id);
-        if(null == logCollectTaskPO) {
+        if (null == logCollectTaskPO) {
             return null;
         }
         LogCollectTaskDO logCollectTaskDO = logCollectTaskManageServiceExtension.logCollectTaskPO2LogCollectTaskDO(logCollectTaskPO);
@@ -753,9 +1311,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 诊断对应日志采集任务
          */
         if (checkResult.getCheckResult()) {//须诊断对应日志采集任务
-            if(logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode())) {
+            if (logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode())) {
                 return handleCheckNormalLogCollectTaskHealth(logCollectTaskDO, true);
-            } else if(logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode()) && !logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {
+            } else if (logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode()) && !logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {
                 return handleCheckTimeScopeLogCollectTaskHealth(logCollectTaskDO, true);
             } else {
                 throw new ServiceException(
@@ -770,7 +1328,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 诊断给定时间范围采集类型日志采集任务
-     * @param logCollectTaskDO 待诊断日志采集任务对象
+     *
+     * @param logCollectTaskDO  待诊断日志采集任务对象
      * @param checkCollectDelay 是否校验日志采集任务采集延时 true：校验 false：不校验
      * @return 待诊断日志采集任务对象对应诊断结果
      */
@@ -779,7 +1338,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 获取待检测日志采集任务对应健康记录
          */
         LogCollectTaskHealthDO logCollectTaskHealthDO = logCollectTaskHealthManageService.getByLogCollectTaskId(logCollectTaskDO.getId());
-        if(null == logCollectTaskHealthDO) {
+        if (null == logCollectTaskHealthDO) {
             throw new ServiceException(String.format("LogCollectTaskHealth={logCollectTaskId=%d}在系统中不存在", logCollectTaskDO.getId()), ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode());
         }
         /*
@@ -801,11 +1360,15 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         Map<Long, Long> logFilePathId2CollctCompleteTimeMap = new HashMap<>();//存储各fileLogPath对应采集完整性时间 map，key:logPathId value:collctCompleteTime
         Long logCollectTaskHealthCheckTimeEnd = DateUtils.getBeforeSeconds(new Date(), 1).getTime();//日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
         //存储各健康值对应时间点
-        Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        Map<Long, Long> fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFileDisorderCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        Map<Long, Long> fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFilePathExistsCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        if(CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {
+        Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        Map<Long, Long> fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFileDisorderCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        Map<Long, Long> fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFilePathExistsCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        if (CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {
             for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
                 minCurrentCollectTime = Long.MAX_VALUE;
                 Integer abnormalTruncationCheckHealthyCount = 0;
@@ -824,7 +1387,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     /*
                      * 校验日志采集任务健康度
                      */
-                    if(null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()))) {
+                    if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()))) {
                         //表示健康度已被检测为 red，此时，无须再进行校验
                         continue;
                     }
@@ -833,7 +1396,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验在距当前时间的心跳存活判定周期内，logCollectTaskId+fileLogCollectPathId+hostName是否存在心跳
                      */
                     boolean alive = checkAliveByHeartbeat(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd);
-                    if(!alive) {//不存活
+                    if (!alive) {//不存活
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     }
@@ -841,7 +1404,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在
                      */
                     boolean filePathExists = checkFilePathExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap);
-                    if(!filePathExists) {//不存在
+                    if (!filePathExists) {//不存在
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -851,7 +1414,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在乱序
                      */
                     boolean fileDisorder = checkFileDisorder(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap);
-                    if(fileDisorder) {//存在 乱序
+                    if (fileDisorder) {//存在 乱序
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -861,7 +1424,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片配置错误
                      */
                     boolean errorLogsExists = checkLogSliceErrorExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap);
-                    if(errorLogsExists) {//存在 日志切片配置错误
+                    if (errorLogsExists) {//存在 日志切片配置错误
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -871,7 +1434,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断
                      */
                     boolean abnormalTruncationExists = checkAbnormalTruncationExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap);
-                    if(abnormalTruncationExists) {//存在 异常截断
+                    if (abnormalTruncationExists) {//存在 异常截断
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -881,16 +1444,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在多 agent 并发采集
                      */
                     boolean concurrentCollectExists = checkConcurrentCollectExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd);
-                    if(concurrentCollectExists) {
+                    if (concurrentCollectExists) {
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     }
                     /*
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在采集延迟
                      */
-                    if(checkCollectDelay && null != logCollectTaskDO.getCollectDelayThresholdMs() && logCollectTaskDO.getCollectDelayThresholdMs() > 0) {//该文件型日志采集路径须做采集延迟监控
+                    if (checkCollectDelay && null != logCollectTaskDO.getCollectDelayThresholdMs() && logCollectTaskDO.getCollectDelayThresholdMs() > 0) {//该文件型日志采集路径须做采集延迟监控
                         boolean collectDelay = checkCollectDelay(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskDO.getCollectDelayThresholdMs());
-                        if(collectDelay) {//存在 采集延迟
+                        if (collectDelay) {//存在 采集延迟
                             logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getLogCollectTaskHealthLevelEnum();
                             logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                         }
@@ -898,16 +1461,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     /*
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在执行超时情况 & 其是否已执行完
                      */
-                    if(logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode())) {
-                        if(!logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {//处于非 "已完成状态" & 时间范围采集类型的日志采集任务须检查其运行时长是否超时
+                    if (logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode())) {
+                        if (!logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {//处于非 "已完成状态" & 时间范围采集类型的日志采集任务须检查其运行时长是否超时
                             boolean executeTimeout = checkTimeScopeLogCollectTaskExecuteTimeout(logCollectTaskDO, fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs());
-                            if(executeTimeout) {//存在 执行超时
+                            if (executeTimeout) {//存在 执行超时
                                 logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_TIMEOUT.getLogCollectTaskHealthLevelEnum();
                                 logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_TIMEOUT.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                             }
                             //时间范围采集类型日志采集任务是否已执行完，如已执行完，scopeCollectCompleteLogPathCount++
                             boolean timeScopeCollectComplete = checkTimeScopeCollectComplete(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO);
-                            if(timeScopeCollectComplete) {
+                            if (timeScopeCollectComplete) {
                                 scopeCollectCompleteLogPathCount++;
                             }
                         }
@@ -918,7 +1481,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     /*
                      * 校验日志采集任务健康度
                      */
-                    if(null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
+                    if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
                         //表示健康度已被检测为 red or yellow，此时，无须再进行校验
                         continue;
                     }
@@ -927,7 +1490,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验 logcollecttask + logpath 在 host 端是否存在采集端出口流量阈值限流
                      */
                     boolean byteLimitOnHostExists = checkByteLimitOnHostExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    if(byteLimitOnHostExists) {//存在采集端出口流量阈值限流
+                    if (byteLimitOnHostExists) {//存在采集端出口流量阈值限流
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     }
@@ -935,7 +1498,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验 logcollecttask 是否未关联主机
                      */
                     boolean notRelateAnyHost = checkNotRelateAnyHost(logCollectTaskDO.getId());
-                    if(notRelateAnyHost) {//logcollecttask 未关联主机
+                    if (notRelateAnyHost) {//logcollecttask 未关联主机
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format(
                                 "%s:LogCollectTaskId={%d}",
@@ -951,22 +1514,22 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 /*
                  * 设置各filePathId对应各指标健康时时间，以便下次进行巡检
                  */
-                if(abnormalTruncationCheckHealthyCount.equals(hostDOList.size())) {
+                if (abnormalTruncationCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
-                if(logSliceCheckHealthyCount.equals(hostDOList.size())) {
+                if (logSliceCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
-                if(fileDisorderCheckHealthyCount.equals(hostDOList.size())) {
+                if (fileDisorderCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
-                if(filePathExistsCheckHealthyCount.equals(hostDOList.size())) {
+                if (filePathExistsCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
             }
         }
 
-        if(null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
+        if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
             //表示健康度已被检测为 red or yellow，此时，无须再进行校验
             //do nothing
         } else {
@@ -974,7 +1537,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
              * 校验 logcollecttask 对应下游 topic 是否被限流
              */
             boolean topicLimitExists = checkTopicLimitExists(logCollectTaskDO.getKafkaClusterId(), logCollectTaskDO.getSendTopic());
-            if(topicLimitExists) {//存在下游 topic 端被限流
+            if (topicLimitExists) {//存在下游 topic 端被限流
                 logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
                 logCollectTaskHealthDescription = String.format(
                         "%s:LogCollectTaskId={%d}, kafkaClusterId={%d}, sendTopic={%s}",
@@ -989,7 +1552,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         /*
          * 校验 "时间范围日志采集任务" 是否已执行完成，scopeCollectCompleteLogPathCount 是否 等于 fileLogCollectPathDOList.size()，如是，表示 logCollectTaskDO 已执行完成，记录对应任务执行结束时间，并修改对应状态为 "已完成"
          */
-        if(scopeCollectCompleteLogPathCount.equals(fileLogCollectPathDOList.size())) {
+        if (scopeCollectCompleteLogPathCount.equals(fileLogCollectPathDOList.size())) {
             LogCollectTaskPO logCollectTaskPO = logCollectorTaskDAO.selectByPrimaryKey(logCollectTaskDO.getId());
             logCollectTaskPO.setLogCollectTaskFinishTime(new Date());
             logCollectTaskPO.setLogCollectTaskStatus(LogCollectTaskStatusEnum.FINISH.getCode());
@@ -1025,12 +1588,12 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public List<LogCollectTaskDO> getLogCollectTaskListByHost(HostDO hostDO) {
         List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.getLogCollectTaskListByHostId(hostDO.getId());
-        if(CollectionUtils.isEmpty(logCollectTaskPOList)) {
+        if (CollectionUtils.isEmpty(logCollectTaskPOList)) {
             return new ArrayList<>();
         }
         String logMountPath = "";//k8s 容器内路径
         String logHostPath = "";//k8s 主机路径
-        if(hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
+        if (hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
             K8sPodDO k8sPodDO = k8sPodManageService.getByContainerId(hostDO.getId());
             logMountPath = k8sPodDO.getLogMountPath();
             logHostPath = k8sPodDO.getLogHostPath();
@@ -1038,13 +1601,13 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         List<LogCollectTaskDO> logCollectTaskList = new ArrayList<>(logCollectTaskPOList.size());
         for (LogCollectTaskPO logCollectTaskPO : logCollectTaskPOList) {
             LogCollectTaskDO logCollectTaskDO = logCollectTaskManageServiceExtension.logCollectTaskPO2LogCollectTaskDO(logCollectTaskPO);
-            if(agentCollectConfigurationManageServiceExtension.need2Deploy(logCollectTaskDO, hostDO)) {
+            if (agentCollectConfigurationManageServiceExtension.need2Deploy(logCollectTaskDO, hostDO)) {
                 //根据日志采集任务id获取其关联的日志采集任务路径对象集
                 List<FileLogCollectPathDO> fileLogCollectPathDOList = fileLogCollectPathManageService.getAllFileLogCollectPathByLogCollectTaskId(logCollectTaskDO.getId());
                 /*
                  * 对于容器日志，进行日志路径转化 映射
                  */
-                if(hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
+                if (hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
                     for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
                         String path = fileLogCollectPathDO.getPath();
                         String realPath = K8sUtil.getRealPath(logMountPath, logHostPath, path);
@@ -1066,7 +1629,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 诊断给定流式日志采集任务
-     * @param logCollectTaskDO 待诊断日志采集任务对象
+     *
+     * @param logCollectTaskDO  待诊断日志采集任务对象
      * @param checkCollectDelay 是否校验日志采集任务采集延时 true：校验 false：不校验
      * @return 待诊断日志采集任务对象对应诊断结果
      */
@@ -1075,7 +1639,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 获取待检测日志采集任务对应健康记录
          */
         LogCollectTaskHealthDO logCollectTaskHealthDO = logCollectTaskHealthManageService.getByLogCollectTaskId(logCollectTaskDO.getId());
-        if(null == logCollectTaskHealthDO) {
+        if (null == logCollectTaskHealthDO) {
             throw new ServiceException(String.format("LogCollectTaskHealth={logCollectTaskId=%d}在系统中不存在", logCollectTaskDO.getId()), ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode());
         }
         /*
@@ -1095,11 +1659,15 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         Map<Long, Long> logFilePathId2CollctCompleteTimeMap = new HashMap<>(); //存储各fileLogPath对应采集完整性时间 map，key:logPathId value:collctCompleteTime
         Long logCollectTaskHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
         //存储各健康值对应时间点
-        Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        Map<Long, Long> fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFileDisorderCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        Map<Long, Long> fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFilePathExistsCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {});
-        if(CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {
+        Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        Map<Long, Long> fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFileDisorderCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        Map<Long, Long> fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFilePathExistsCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
+        });
+        if (CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {
             for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
                 minCurrentCollectTime = Long.MAX_VALUE;
                 Integer abnormalTruncationCheckHealthyCount = 0;
@@ -1118,7 +1686,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     /*
                      * 校验日志采集任务健康度
                      */
-                    if(null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()))) {
+                    if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()))) {
                         //表示健康度已被检测为 red，此时，无须再进行校验
                         continue;
                     }
@@ -1127,7 +1695,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验在距当前时间的心跳存活判定周期内，logCollectTaskId+fileLogCollectPathId+hostName是否存在心跳
                      */
                     boolean alive = checkAliveByHeartbeat(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd);
-                    if(!alive) {//不存活
+                    if (!alive) {//不存活
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     }
@@ -1135,7 +1703,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在
                      */
                     boolean filePathExists = checkFilePathExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap);
-                    if(!filePathExists) {//不存在
+                    if (!filePathExists) {//不存在
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -1145,7 +1713,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在乱序
                      */
                     boolean fileDisorder = checkFileDisorder(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap);
-                    if(fileDisorder) {//存在 乱序
+                    if (fileDisorder) {//存在 乱序
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -1155,7 +1723,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片配置错误
                      */
                     boolean errorLogsExists = checkLogSliceErrorExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap);
-                    if(errorLogsExists) {//存在 日志切片配置错误
+                    if (errorLogsExists) {//存在 日志切片配置错误
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -1165,7 +1733,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断
                      */
                     boolean abnormalTruncationExists = checkAbnormalTruncationExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap);
-                    if(abnormalTruncationExists) {//存在 异常截断
+                    if (abnormalTruncationExists) {//存在 异常截断
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     } else {
@@ -1175,16 +1743,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在多 agent 并发采集
                      */
                     boolean concurrentCollectExists = checkConcurrentCollectExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd);
-                    if(concurrentCollectExists) {
+                    if (concurrentCollectExists) {
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     }
                     /*
                      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在采集延迟
                      */
-                    if(checkCollectDelay && null != logCollectTaskDO.getCollectDelayThresholdMs() && logCollectTaskDO.getCollectDelayThresholdMs() > 0) {//该文件型日志采集路径须做采集延迟监控
+                    if (checkCollectDelay && null != logCollectTaskDO.getCollectDelayThresholdMs() && logCollectTaskDO.getCollectDelayThresholdMs() > 0) {//该文件型日志采集路径须做采集延迟监控
                         boolean collectDelay = checkCollectDelay(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskDO.getCollectDelayThresholdMs());
-                        if(collectDelay) {//存在 采集延迟
+                        if (collectDelay) {//存在 采集延迟
                             logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getLogCollectTaskHealthLevelEnum();
                             logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                         }
@@ -1195,7 +1763,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     /*
                      * 校验日志采集任务健康度
                      */
-                    if(null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
+                    if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
                         //表示健康度已被检测为 red or yellow，此时，无须再进行校验
                         continue;
                     }
@@ -1204,7 +1772,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                      * 校验 logcollecttask + logpath 在 host 端是否存在采集端出口限流
                      */
                     boolean byteLimitOnHostExists = checkByteLimitOnHostExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    if(byteLimitOnHostExists) {//存在采集端出口流量阈值限流
+                    if (byteLimitOnHostExists) {//存在采集端出口流量阈值限流
                         logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
                         logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
                     }
@@ -1216,22 +1784,22 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 /*
                  * 设置各filePathId对应各指标健康时时间，以便下次进行巡检
                  */
-                if(abnormalTruncationCheckHealthyCount.equals(hostDOList.size())) {
+                if (abnormalTruncationCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
-                if(logSliceCheckHealthyCount.equals(hostDOList.size())) {
+                if (logSliceCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
-                if(fileDisorderCheckHealthyCount.equals(hostDOList.size())) {
+                if (fileDisorderCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
-                if(filePathExistsCheckHealthyCount.equals(hostDOList.size())) {
+                if (filePathExistsCheckHealthyCount.equals(hostDOList.size())) {
                     fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
                 }
             }
         }
 
-        if(null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
+        if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
             //表示健康度已被检测为 red or yellow，此时，无须再进行校验
             //do nothing
         } else {
@@ -1239,7 +1807,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
              * 校验 logcollecttask 对应下游 topic 是否被限流
              */
             boolean topicLimitExists = checkTopicLimitExists(logCollectTaskDO.getKafkaClusterId(), logCollectTaskDO.getSendTopic());
-            if(topicLimitExists) {//存在下游 topic 端被限流
+            if (topicLimitExists) {//存在下游 topic 端被限流
                 logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
                 logCollectTaskHealthDescription = String.format(
                         "%s:LogCollectTaskId={%d}, kafkaClusterId={%d}, sendTopic={%s}",
@@ -1253,7 +1821,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
              * 校验 logcollecttask 是否未关联主机
              */
             boolean notRelateAnyHost = checkNotRelateAnyHost(logCollectTaskDO.getId());
-            if(notRelateAnyHost) {//logcollecttask 未关联主机
+            if (notRelateAnyHost) {//logcollecttask 未关联主机
                 logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getLogCollectTaskHealthLevelEnum();
                 logCollectTaskHealthDescription = String.format(
                         "%s:LogCollectTaskId={%d}",
@@ -1282,18 +1850,19 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验 时间范围采集类型日志采集任务是否已执行完
-     * @param logCollectTaskId 日志采集任务 id
+     *
+     * @param logCollectTaskId     日志采集任务 id
      * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostDO 主机对象
+     * @param hostDO               主机对象
      * @return 返回时间范围采集类型日志采集任务是否已执行完 true：已采集完 false：未采集完
      */
     private boolean checkTimeScopeCollectComplete(Long logCollectTaskId, Long fileLogCollectPathId, HostDO hostDO) {
         /*
          * 校验 logCollectTaskId + fileLogCollectPathId + hostName 近5分钟是否心跳正常 & 采集数量为 0
          */
-        if(hostDO.getContainer().equals(HostTypeEnum.HOST.getCode())) {
+        if (hostDO.getContainer().equals(HostTypeEnum.HOST.getCode())) {
             return agentMetricsManageService.hostCompleteCollect(hostDO.getHostName(), logCollectTaskId, fileLogCollectPathId);
-        } else if(hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
+        } else if (hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
             return agentMetricsManageService.containerCompleteCollect(hostDO.getHostName(), hostDO.getParentHostName(), logCollectTaskId, fileLogCollectPathId);
         } else {
             throw new ServiceException(
@@ -1305,8 +1874,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验 logcollecttask 对应下游 topic 是否被限流
+     *
      * @param kafkaClusterId 日志采集任务对应下游 kafkaCLuster id
-     * @param sendTopic 日志采集任务对应下游 topic
+     * @param sendTopic      日志采集任务对应下游 topic
      * @return true：限流 false：非限流
      */
     private boolean checkTopicLimitExists(Long kafkaClusterId, String sendTopic) {
@@ -1315,6 +1885,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验 logcollecttask 是否未关联主机
+     *
      * @param logCollectTaskId logcollecttask 对象 id
      * @return true：logcollecttask 未关联任何主机 false：logcollecttask 存在关联主机
      */
@@ -1325,9 +1896,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验 logcollecttask + logpath 在 host 端是否存在采集端出口流量阈值限流
-     * @param logCollectTaskId 日志采集任务 id
+     *
+     * @param logCollectTaskId     日志采集任务 id
      * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
+     * @param hostName             主机名
      * @return
      */
     private boolean checkByteLimitOnHostExists(Long logCollectTaskId, Long fileLogCollectPathId, String hostName) {
@@ -1349,9 +1921,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在执行超时情况
-     * @param logCollectTaskDO 日志采集任务对象
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
+     *
+     * @param logCollectTaskDO               日志采集任务对象
+     * @param fileLogCollectPathId           日志采集路径 id
+     * @param hostName                       主机名
      * @param logCollectTaskExecuteTimeoutMs 超时阈值 单位：ms
      * @return 返回 logCollectTaskId+fileLogCollectPathId在host上是否存在执行超时情况 true：存在 执行超时 false：不存在 执行超时
      */
@@ -1372,9 +1945,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验 logCollectTaskId+fileLogCollectPathId 在host上是否存在采集延迟
-     * @param logCollectTaskId 日志采集任务 id
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
+     *
+     * @param logCollectTaskId        日志采集任务 id
+     * @param fileLogCollectPathId    日志采集路径 id
+     * @param hostName                主机名
      * @param collectDelayThresholdMs 采集延时阈值
      * @return 返回 logCollectTaskId+fileLogCollectPathId 在host上是否存在采集延迟 true：存在 采集延时 false：不存在 采集延时
      */
@@ -1391,9 +1965,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验 logCollectTaskId+fileLogCollectPathId 在host上是否存在多 agent 并发采集
-     * @param logCollectTaskId 日志采集任务 id
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
+     *
+     * @param logCollectTaskId                 日志采集任务 id
+     * @param fileLogCollectPathId             日志采集路径 id
+     * @param hostName                         主机名
      * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
      * @return 返回 logCollectTaskId+fileLogCollectPathId 在host上是否存在多 agent 并发采集 true：存在 并发采集 false：不存在 并发采集
      */
@@ -1415,10 +1990,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断
-     * @param logCollectTaskId 日志采集任务 id
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
-     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
+     *
+     * @param logCollectTaskId                                                  日志采集任务 id
+     * @param fileLogCollectPathId                                              日志采集路径 id
+     * @param hostName                                                          主机名
+     * @param logCollectTaskHealthCheckTimeEnd                                  日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
      * @param fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap filePathId : LastestAbnormalTruncationCheckHealthyTime
      * @return 返回logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断 true：存在 异常截断 false：不存在 异常截断
      */
@@ -1427,7 +2003,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 获取自上次"异常截断"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在异常截断
          */
         Long lastestCheckTime = fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap.get(fileLogCollectPathId);
-        if(null == lastestCheckTime) {
+        if (null == lastestCheckTime) {
             throw new ServiceException(
                     String.format("FileLogCollectPath={id=%d}对应AbnormalTruncationExistsCheckHealthyTime不存在", fileLogCollectPathId),
                     ErrorCodeEnum.LOGCOLLECTTASK_HEALTH_ABNORMAL_TRUNCATION_EXISTS_CHECK_HEALTHY_TIME_NOT_EXISTS.getCode()
@@ -1445,10 +2021,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片错误
-     * @param logCollectTaskId 日志采集任务 id
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
-     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
+     *
+     * @param logCollectTaskId                                        日志采集任务 id
+     * @param fileLogCollectPathId                                    日志采集路径 id
+     * @param hostName                                                主机名
+     * @param logCollectTaskHealthCheckTimeEnd                        日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
      * @param fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap filePathId : lastestLogSliceCheckHealthyTimeMap
      * @return 返回logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片错误
      */
@@ -1457,7 +2034,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 获取自上次"错误日志输出存在"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片错误
          */
         Long lastestCheckTime = fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap.get(fileLogCollectPathId);
-        if(null == lastestCheckTime) {
+        if (null == lastestCheckTime) {
             throw new ServiceException(
                     String.format("FileLogCollectPath={id=%d}对应LogSliceCheckHealthyTime不存在", fileLogCollectPathId),
                     ErrorCodeEnum.LOGCOLLECTTASK_HEALTH_LOG_SLICE_CHECK_HEALTHY_TIME_NOT_EXISTS.getCode()
@@ -1475,10 +2052,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验 logCollectTaskId+fileLogCollectPathId 在 host 上是否存在乱序
-     * @param logCollectTaskId 日志采集任务 id
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
-     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
+     *
+     * @param logCollectTaskId                                            日志采集任务 id
+     * @param fileLogCollectPathId                                        日志采集路径 id
+     * @param hostName                                                    主机名
+     * @param logCollectTaskHealthCheckTimeEnd                            日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一毫秒
      * @param fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap filePathId : LastestFileDisorderCheckHealthyTime
      * @return logCollectTaskId+fileLogCollectPathId 在 host 上是否存在乱序 true：存在 乱序 false：不存在 乱序
      */
@@ -1487,7 +2065,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 获取自上次"文件乱序"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在日志乱序
          */
         Long lastestCheckTime = fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap.get(fileLogCollectPathId);
-        if(null == lastestCheckTime) {
+        if (null == lastestCheckTime) {
             throw new ServiceException(
                     String.format("FileLogCollectPath={id=%d}对应FileDisorderCheckHealthyTime不存在", fileLogCollectPathId),
                     ErrorCodeEnum.LOGCOLLECTTASK_HEALTH_FILE_DISORDER_CHECK_HEALTHY_TIME_NOT_EXISTS.getCode()
@@ -1505,10 +2083,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在
-     * @param logCollectTaskId 日志采集任务 id
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
-     * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
+     *
+     * @param logCollectTaskId                                              日志采集任务 id
+     * @param fileLogCollectPathId                                          日志采集路径 id
+     * @param hostName                                                      主机名
+     * @param logCollectTaskHealthCheckTimeEnd                              日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
      * @param fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap filePathId : LastestFilePathExistsCheckHealthyTime
      * @return 返回logCollectTaskId+fileLogCollectPathId在host上是否存在 true：存在 false：不存在
      */
@@ -1517,7 +2096,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 获取自上次"日志采集路径存在"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在对应待采集日志文件
          */
         Long lastestCheckTime = fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap.get(fileLogCollectPathId);
-        if(null == lastestCheckTime) {
+        if (null == lastestCheckTime) {
             throw new ServiceException(
                     String.format("FileLogCollectPath={id=%d}对应FilePathExistsCheckHealthyTime不存在", fileLogCollectPathId),
                     ErrorCodeEnum.LOGCOLLECTTASK_HEALTH_FILE_PATH_EXISTS_CHECK_HEALTHY_TIME_NOT_EXISTS.getCode()
@@ -1535,9 +2114,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验在距当前时间的心跳存活判定周期内，logCollectTaskId+fileLogCollectPathId+hostName是否存在心跳
-     * @param logCollectTaskId 日志采集任务 id
-     * @param fileLogCollectPathId 日志采集路径 id
-     * @param logCollectTaskHostName 日志采集任务对应主机名
+     *
+     * @param logCollectTaskId                 日志采集任务 id
+     * @param fileLogCollectPathId             日志采集路径 id
+     * @param logCollectTaskHostName           日志采集任务对应主机名
      * @param logCollectTaskHealthCheckTimeEnd 日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
      * @return 距当前时间的心跳存活判定周期内，logCollectTaskId+fileLogCollectPathId+hostName是否存在心跳 true：存在 心跳 false：不存在心跳
      */
@@ -1558,9 +2138,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 获取logCollectTaskId+fileLogCollectPathId+hostName当前采集时间
-     * @param logCollectTaskId 日志采集任务 id
+     *
+     * @param logCollectTaskId     日志采集任务 id
      * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 主机名
+     * @param hostName             主机名
      * @return 返回logCollectTaskId+fileLogCollectPathId+hostName当前采集时间
      */
     private Long getCurrentCompleteTime(Long logCollectTaskId, Long fileLogCollectPathId, String hostName) {
@@ -1569,22 +2150,23 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     /**
      * 校验给定日志采集任务是否需要进行诊断
+     *
      * @param logCollectTaskDO 待校验日志采集任务对象
      * @return 返回给定日志采集任务是否需要进行诊断 true：需要 false：不需要
      */
     private CheckResult logCollectTaskNeedCheck(LogCollectTaskDO logCollectTaskDO) throws ServiceException {
         //TODO：后续添加日志采集任务黑名单功能后，须添加黑名单过滤规则
         Integer logCollectTaskType = logCollectTaskDO.getLogCollectTaskType();
-        if(LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode().equals(logCollectTaskType)) {//流采
-            if(logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.STOP.getCode())) {//待校验日志采集任务处于"停止"状态
+        if (LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode().equals(logCollectTaskType)) {//流采
+            if (logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.STOP.getCode())) {//待校验日志采集任务处于"停止"状态
                 return new CheckResult(false);
             }
-        } else if(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode().equals(logCollectTaskType)) {//时间范围采集
-            if(logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {//待校验日志采集任务处于"已完成"状态
+        } else if (LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode().equals(logCollectTaskType)) {//时间范围采集
+            if (logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {//待校验日志采集任务处于"已完成"状态
                 return new CheckResult(false);
             }
         } else {
-            throw  new ServiceException(
+            throw new ServiceException(
                     String.format("待校验日志采集任务对象={%s}的logCollectTaskType属性值={%d}不合法，合法值范围见枚举类LogCollectTaskTypeEnum定义", JSON.toJSONString(logCollectTaskDO), logCollectTaskType),
                     ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode()
             );
@@ -1601,7 +2183,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          */
         for (HostDO hostDO : collectHostDOList) {
             List<LogCollectTaskDO> LogCollectTaskDOList = getLogCollectTaskListByHost(hostDO);
-            if(CollectionUtils.isNotEmpty(LogCollectTaskDOList)) {
+            if (CollectionUtils.isNotEmpty(LogCollectTaskDOList)) {
                 result.addAll(LogCollectTaskDOList);
             }
         }
@@ -1617,6 +2199,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     /**
      * 将给定LogCollectTaskPO对象集转化为LogCollectTaskDO对象集，并在转化过程中加载各LogCollectTaskDO对象所关联的LogCollectPath对象集
      * 注：加载将会导致两次db查询
+     *
      * @param logCollectTaskPOList 待转化LogCollectTaskPO对象集
      * @return 返回将给定LogCollectTaskPO对象集转化为的LogCollectTaskDO对象集，并在转化过程中加载各LogCollectTaskDO对象所关联的LogCollectPath对象集
      */

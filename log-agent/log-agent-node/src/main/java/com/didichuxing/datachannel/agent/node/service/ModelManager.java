@@ -50,6 +50,8 @@ public class ModelManager extends AgentComponent {
                  * 根据限流配置初始化限流服务
                  */
                 LimitService.LIMITER.init(config.getLimitConfig());
+            } else if(CommonUtils.getSystemType().equals("mac os x")) {
+                LimitService.LIMITER.init(config.getLimitConfig());
             }
             /*
              * 构建 agent 统计信息对象

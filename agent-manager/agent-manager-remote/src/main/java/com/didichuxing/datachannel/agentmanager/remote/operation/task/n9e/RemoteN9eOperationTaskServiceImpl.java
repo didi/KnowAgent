@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.remote.operation.task.common.enu
 import com.didichuxing.datachannel.agentmanager.remote.operation.task.n9e.entry.*;
 import com.didichuxing.datachannel.agentmanager.remote.operation.task.n9e.entry.enumeration.N9eTaskActionEnum;
 import com.didichuxing.datachannel.agentmanager.remote.operation.task.n9e.entry.enumeration.N9eTaskStateEnum;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -236,7 +237,7 @@ public class RemoteN9eOperationTaskServiceImpl implements RemoteOperationTaskSer
 
             List<N9eTaskStdout> dtoList =
                     ConvertUtil.string2ArrObj(ConvertUtil.obj2String(n9eResult.getDat()), N9eTaskStdout.class);
-            if (ValidateUtils.isEmptyList(dtoList)) {
+            if (CollectionUtils.isEmpty(dtoList)) {
                 return Result.buildSucc();
             }
             AgentOperationTaskLog agentOperationTaskLog = new AgentOperationTaskLog();
@@ -297,7 +298,7 @@ public class RemoteN9eOperationTaskServiceImpl implements RemoteOperationTaskSer
         n9eCreationTask.setBatch(RemoteN9eOperationTaskServiceImpl.BATCH);
         n9eCreationTask.setTimeout(this.n9eJobTimeout);
 
-        if (ValidateUtils.isEmptyList(agentOperationTaskCreation.getHostList())) {
+        if (CollectionUtils.isEmpty(agentOperationTaskCreation.getHostList())) {
             return Result.buildFail("hostList is empty");
         }
         n9eCreationTask.setTolerance(agentOperationTaskCreation.getHostList().size());

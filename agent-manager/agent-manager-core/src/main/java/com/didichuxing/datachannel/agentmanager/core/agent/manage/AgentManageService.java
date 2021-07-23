@@ -1,7 +1,10 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.manage;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 
 import java.util.List;
@@ -116,4 +119,25 @@ public interface AgentManageService {
      */
     List<String> listFiles(String hostName, String path, String suffixMatchRegular);
 
+    MetricPointList getCpuUsage(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getMemoryUsage(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getFdUsage(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getGcCount(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getSendByte(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getSendCount(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getReadByte(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getReadCount(AgentMetricQueryDO agentMetricQueryDO);
+
+    MetricPointList getErrorLogCount(AgentMetricQueryDO agentMetricQueryDO);
+
+    List<MetricAggregate> getCollectTaskCount(AgentMetricQueryDO agentMetricQueryDO);
+
+    List<MetricAggregate> getCollectPathCount(AgentMetricQueryDO agentMetricQueryDO);
 }
