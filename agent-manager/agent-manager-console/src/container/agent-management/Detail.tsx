@@ -4,6 +4,7 @@ import { CustomBreadcrumb, DescriptionsItems } from '../../component/CustomCompo
 import { hostDetailBaseInfo, agentDetailBreadcrumb } from './config';
 import { AgentOperationIndex } from './OperationIndex';
 import { AgentConfigInfo } from './Configinformation';
+import CollectTask from './CollectTask';
 import { healthMap } from '../../constants/common';
 import Url from '../../lib/url-parser';
 import { IAgentHostSet } from '../../interface/agent';
@@ -67,7 +68,9 @@ export class AgentDetail extends React.Component<any> {
               {this.agentId ? <AgentConfigInfo hostDetail={hostDetail} {...this.props} /> : <p className='agent-installed'>该主机未安装Agent</p>}
 
             </TabPane>
-            <TabPane tab="采集任务" key="3"></TabPane>
+            <TabPane tab="采集任务" key="3">
+              {this.agentId ? <CollectTask hostDetail={hostDetail} {...this.props} /> : <p className='agent-installed'>该主机未安装Agent</p>}
+            </TabPane>
           </Tabs>
         </div>
       </div>

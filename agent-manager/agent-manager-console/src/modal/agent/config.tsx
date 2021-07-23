@@ -96,3 +96,37 @@ export const hostBaseInfo = (info: IHostDetail) => {
   }];
   return hostBaseList;
 }
+
+export const getCollectFileInfo = (info: any) => {
+  const CollectFileInfoList = [
+    {
+      label: '采集文件名',
+      key: 'collectFileName',
+    },
+    {
+      label: '切片时间戳配置是否合理',
+      key: 'sliceLogTimeStamp',
+    },
+    {
+      label: '日志待采集时间',
+      key: 'logStayCollectTime',
+    },
+    {
+      label: '是否为顺序文件',
+      key: 'whetherSequentialFile',
+    },
+    {
+      label: '是否采集至文件末尾',
+      key: 'whetherCollectFileLast',
+    },
+    {
+      label: '文件最新修改时间',
+      key: 'fileNewModifyTime',
+    },
+    {
+      label: '采集进度',
+      key: 'collectProgress',
+    },
+  ]
+  return CollectFileInfoList
+}
