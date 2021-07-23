@@ -36,7 +36,6 @@ const dataSource = [
 ];
 
 const DiagnosisReport = (props: { dispatch: any, params: any }) => {
-  console.log('props---', props);
 
   const handleModifyCancel = () => {
     props.dispatch(actions.setDrawerId(''))

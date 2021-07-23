@@ -31,12 +31,10 @@ type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchT
 export const AgentConfigInfo = (props: any) => {
   const { hostDetail } = props
   const [agentDetail, setAgentDetail] = React.useState<any>({})
-  console.log(props, 'props')
   React.useEffect(() => {
     try {
       getAgentDetails(hostDetail?.agentId).then(res => {
         setAgentDetail(res)
-        console.log(res)
       })
     } catch (error) {
       console.log(error)

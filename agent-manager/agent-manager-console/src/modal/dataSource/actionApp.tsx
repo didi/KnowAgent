@@ -99,7 +99,6 @@ const ActionAppForm = (props: IFormProps) => {
   }
 
   const handleChange = (targetKeys: any) => {
-    console.log(targetKeys, 'targetKeys')
     setappForm({
       serviceName: appForm.serviceName,
       targetKeys: targetKeys
