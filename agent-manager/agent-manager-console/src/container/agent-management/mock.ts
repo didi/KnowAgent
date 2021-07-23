@@ -1,11 +1,11 @@
 const data: any = []
-for (let i = 0; i <= 10; i++) {
+for (let i = 0; i <= 0; i++) {
   data[i] = {
     "metricName": '13131.2313.' + i,
     metricPointList: [],
   };
   for (let j = 0; j <= 60; j++) {
-    data[i].metricPointList.push({"timestamp":1626238240000 + j * 60 * 1000,"value": i},)
+    data[i].metricPointList.push({"timestamp":1626238240000 + j * 60 * 1000,"value": i + Math.random()},)
   }
 }
 export default data;

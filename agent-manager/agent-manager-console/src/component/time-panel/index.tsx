@@ -20,7 +20,7 @@ const tiemOptions = [
 ];
 
 interface IDataCurveFilter {
-  refresh: any;
+  // refresh: any;
   judgeUrl: boolean;
   agentid?: number
 }
@@ -42,26 +42,31 @@ type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchT
 export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
   public state = {
     hostNameList: [] as any[],
+    logCollectPathId: '' as unknown as number,
+    hostName: '' as string,
   }
   public handleRangeChange = (dates: any) => {
     this.props.setTimeRange(dates);
-    this.props.refresh(dates);
+    // this.props.refresh(dates);
   }
 
   public refreshChart = () => {
-    this.props.refresh([moment().subtract(60, 'minute'), moment()]);
+    // this.props.refresh([moment().subtract(60, 'minute'), moment()]);
     this.props.setTimeRange([moment().subtract(60, 'minute'), moment()]);
   }
 
   public timeChange = (event: RadioChangeEvent) => {
     const value = event.target.value;
-    this.props.refresh([moment().subtract(value, 'minute'), moment()]);
+    // this.props.refresh([moment().subtract(value, 'minute'), moment()]);
     this.props.setTimeRange([moment().subtract(value, 'minute'), moment()])
   }
 
-  public selectChange = (key: string, value: number) => {
+  public selectChange = (key: string, value: number | string) => {
     this.props.setCollectState({
-      [key]: value
+      [key]: value || ''
+    })
+    this.setState({
+      [key]: value || ''
     })
   }
 
@@ -76,8 +81,8 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
 
 
   public render() {
-    const { hostNameList } = this.state;
-    const { logCollectPathId, hostName, detail } = this.props;
+    const { hostNameList, hostName, logCollectPathId } = this.state;
+    const { detail } = this.props;
     return (
       <div className="time-box">
         <div className="time-box-select-box">
@@ -85,7 +90,7 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
             this.props.judgeUrl ? 
               <div>
                 <span>日志采集路径：</span>
-                <Select value={logCollectPathId} style={{ width: 180, marginRight: 10 }} onChange={(value: number) => this.selectChange('logCollectPathId', Number(value))}>
+                <Select allowClear value={logCollectPathId} style={{ width: 180, marginRight: 10 }} onChange={(value: number) => this.selectChange('logCollectPathId', value)}>
                   {(detail.fileLogCollectPathList as any[] || []).map(path => (
                     <Option title={path.hostName} value={path.id} key={path.id}>
                       {path.path}
@@ -93,9 +98,9 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
                   ))}
                 </Select>
                 <span>主机名：</span>
-                <Select value={hostName} style={{ width: 130, marginRight: 10 }} onChange={(value: number) => this.selectChange('hostName', Number(value))}>
+                <Select allowClear value={hostName} style={{ width: 130, marginRight: 10 }} onChange={(value: string) => this.selectChange('hostName', value)}>
                   {hostNameList.map(hostName => (
-                    <Option title={hostName.hostName} value={hostName.hostId} key={hostName.hostId}>
+                    <Option title={hostName.hostName} value={hostName.hostName} key={hostName.hostId}>
                       {hostName.hostName}
                     </Option>
                   ))}
@@ -122,7 +127,7 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
             style={{ width: 330 }}
             defaultValue={this.props.timeRange}
             showTime
-            value={this.props.timeRange}
+            // value={this.props.timeRange}
             allowClear={false}
             format={timeFormat}
             onOk={this.handleRangeChange}

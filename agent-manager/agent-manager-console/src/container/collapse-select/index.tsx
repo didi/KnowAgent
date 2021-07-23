@@ -29,7 +29,7 @@ export class DataCollapseSelect extends React.Component<ICollapseSelectProps & P
   }
 
   public onBindClick = async (msg: string[], index: number) => {
-    const datas = cloneDeep(this.props.metrics) as IRdAgentMetrics[];
+    const datas = cloneDeep(this.state.tansterMetrics) as IRdAgentMetrics[];
     datas.map((ele, i) => {
       if (index === i) {
         if (msg?.length) {
@@ -47,7 +47,6 @@ export class DataCollapseSelect extends React.Component<ICollapseSelectProps & P
       }
       return ele;
     })
-    // console.log(datas, this.state.tansterMetrics)
     this.setState({ tansterMetrics: datas });
     this.props.setChartMetrics(datas);
   }
