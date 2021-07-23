@@ -368,3 +368,96 @@ export const hostDetailBaseInfo = (info: IAgentHostSet) => {
   }];
   return hostDetailList;
 }
+export const getCollectTaskConfig = (drawer: any) => {
+  const collectTaskConfig: any = [
+    {
+      title: '采集任务ID',
+      dataIndex: 'collectTaskId',
+      key: 'collectTaskId',
+    }, {
+      title: '采集路径ID',
+      dataIndex: 'collectPathId',
+      key: 'collectPathId',
+    }, {
+      title: '主文件名',
+      dataIndex: 'fileName',
+      key: 'fileName',
+    }, {
+      title: '当前采集流量 & 条数/30s',
+      dataIndex: 'currentCollectTraffic',
+      key: 'currentCollectTraffic',
+    }, {
+      title: '当前最大延迟',
+      dataIndex: 'currentMaxDelay',
+      key: 'currentMaxDelay',
+    }, {
+      title: '当前采集时间',
+      dataIndex: 'currentCollectTime',
+      key: 'currentCollectTime',
+    }, {
+      title: '文件最近修改时间',
+      dataIndex: 'fileModifyTime',
+      key: 'fileModifyTime',
+    }, {
+      title: '限流时长/30s',
+      dataIndex: 'currentLimitTime',
+      key: 'currentLimitTime',
+    }, {
+      title: '异常截断条数/30s',
+      dataIndex: 'abnormalTruncationBar',
+      key: 'abnormalTruncationBar',
+    }, {
+      title: '文件是否存在',
+      dataIndex: 'fileExists',
+      key: 'fileExists',
+    }, {
+      title: '文件是否存在乱序',
+      dataIndex: 'fileExistsOutofOrder',
+      key: 'fileExistsOutofOrder',
+    }, {
+      title: '文件是否存在日志切片错误',
+      dataIndex: 'fileExistsLogSectionError',
+      key: 'fileExistsLogSectionError',
+    }, {
+      title: '文件过滤量/30s',
+      dataIndex: 'fileFilter',
+      key: 'fileFilter',
+    }, {
+      title: '近一次心跳时间',
+      dataIndex: 'lastHeartbeatTime',
+      key: 'lastHeartbeatTime',
+    }, {
+      title: '采集状态',
+      dataIndex: 'collectStatus',
+      key: 'collectStatus',
+    }, {
+      title: '采集文件信息',
+      dataIndex: 'collectFileInfo',
+      key: 'collectFileInfo',
+      fixed: 'right',
+      align: 'center',
+      width: 120,
+      render: (text: any, record: any) => {
+        return <div>
+          <span>共7个</span><a style={{ display: 'inline-block', marginLeft: '15px' }} onClick={() => {
+            drawer('CollectFileInfoDetail', record)
+          }}>查看</a>
+        </div>
+      }
+    }, {
+      title: '近一次指标详情',
+      dataIndex: 'lastMetricDetail',
+      key: 'lastMetricDetail',
+      fixed: 'right',
+      width: 120,
+      render: (text: any, record: any) => {
+        return <div>
+          <span>共1个</span><a style={{ display: 'inline-block', marginLeft: '15px' }} onClick={() => {
+            drawer('MetricDetail', record)
+          }}>查看</a>
+        </div>
+      }
+    },
+  ]
+  return collectTaskConfig
+}

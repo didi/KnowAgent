@@ -130,20 +130,24 @@ public class NormalAgentMetricsController {
     @RequestMapping(value = "/log-collect-task", method = RequestMethod.POST)
     @ResponseBody
     public Result<List<MetricAggregate>> collectTaskCount(@RequestBody AgentMetricQueryDTO agentMetricQueryDTO) {
-        Result result = checkParam(agentMetricQueryDTO);
-        if (result.failed()) {
-            return result;
+        if (agentMetricQueryDTO == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "请求参数为空");
+        }
+        if (agentMetricQueryDTO.getAgentId() == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "agent id为空");
         }
         return Result.buildSucc(service.getCollectTaskCount(ConvertUtil.obj2Obj(agentMetricQueryDTO, AgentMetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "获取指定agent关联的采集任务数", notes = "")
+    @ApiOperation(value = "获取指定agent关联的采集路径数", notes = "")
     @RequestMapping(value = "/log-collect-path", method = RequestMethod.POST)
     @ResponseBody
     public Result<List<MetricAggregate>> collectPathCount(@RequestBody AgentMetricQueryDTO agentMetricQueryDTO) {
-        Result result = checkParam(agentMetricQueryDTO);
-        if (result.failed()) {
-            return result;
+        if (agentMetricQueryDTO == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "请求参数为空");
+        }
+        if (agentMetricQueryDTO.getAgentId() == null) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "agent id为空");
         }
         return Result.buildSucc(service.getCollectPathCount(ConvertUtil.obj2Obj(agentMetricQueryDTO, AgentMetricQueryDO.class)));
     }
