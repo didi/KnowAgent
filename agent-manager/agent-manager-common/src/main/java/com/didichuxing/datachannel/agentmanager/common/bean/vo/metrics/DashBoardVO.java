@@ -8,22 +8,22 @@ import java.util.List;
 public class DashBoardVO {
 
     @ApiModelProperty(value = "系统现有日志采集任务总数")
-    private Integer logCollectTaskNum;
+    private Long logCollectTaskNum;
 
     @ApiModelProperty(value = "系统现有日志采集路径总数")
-    private Integer logCollectPathNum;
+    private Long logCollectPathNum;
 
     @ApiModelProperty(value = "系统现有应用总数")
-    private Integer serviceNum;
+    private Long serviceNum;
 
     @ApiModelProperty(value = "系统现有主机总数")
-    private Integer hostNum;
+    private Long hostNum;
 
     @ApiModelProperty(value = "系统现有容器总数")
-    private Integer containerNum;
+    private Long containerNum;
 
     @ApiModelProperty(value = "系统现有agent总数")
-    private Integer agentNum;
+    private Long agentNum;
 
     @ApiModelProperty(value = "系统当前采集流量总量/s")
     private Long currentCollectBytes;
@@ -82,51 +82,51 @@ public class DashBoardVO {
     @ApiModelProperty(value = "关联日志采集任务数最多top5 agent")
     private List<MetricPointList> agentListRelateLogCollectTasksTop5;
 
-    public Integer getLogCollectTaskNum() {
+    public Long getLogCollectTaskNum() {
         return logCollectTaskNum;
     }
 
-    public void setLogCollectTaskNum(Integer logCollectTaskNum) {
+    public void setLogCollectTaskNum(Long logCollectTaskNum) {
         this.logCollectTaskNum = logCollectTaskNum;
     }
 
-    public Integer getLogCollectPathNum() {
+    public Long getLogCollectPathNum() {
         return logCollectPathNum;
     }
 
-    public void setLogCollectPathNum(Integer logCollectPathNum) {
+    public void setLogCollectPathNum(Long logCollectPathNum) {
         this.logCollectPathNum = logCollectPathNum;
     }
 
-    public Integer getServiceNum() {
+    public Long getServiceNum() {
         return serviceNum;
     }
 
-    public void setServiceNum(Integer serviceNum) {
+    public void setServiceNum(Long serviceNum) {
         this.serviceNum = serviceNum;
     }
 
-    public Integer getHostNum() {
+    public Long getHostNum() {
         return hostNum;
     }
 
-    public void setHostNum(Integer hostNum) {
+    public void setHostNum(Long hostNum) {
         this.hostNum = hostNum;
     }
 
-    public Integer getContainerNum() {
+    public Long getContainerNum() {
         return containerNum;
     }
 
-    public void setContainerNum(Integer containerNum) {
+    public void setContainerNum(Long containerNum) {
         this.containerNum = containerNum;
     }
 
-    public Integer getAgentNum() {
+    public Long getAgentNum() {
         return agentNum;
     }
 
-    public void setAgentNum(Integer agentNum) {
+    public void setAgentNum(Long agentNum) {
         this.agentNum = agentNum;
     }
 

@@ -273,4 +273,10 @@
     WHERE kafka_cluster_id = #{kafkaClusterId,jdbcType=BIGINT}
   </select>
 
+  <select id="countAll" resultType="java.lang.Long" >
+    select
+    count (*)
+    from tb_log_collect_task
+  </select>
+
 </mapper>

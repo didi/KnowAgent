@@ -183,4 +183,9 @@ public interface LogCollectTaskManageService {
      */
     List<LogCollectTaskDO> getLogCollectTaskListByKafkaClusterId(Long kafkaClusterId);
 
+    /**
+     * @return 返回系统日志采集任务总数
+     */
+    Long countAll();
+
 }

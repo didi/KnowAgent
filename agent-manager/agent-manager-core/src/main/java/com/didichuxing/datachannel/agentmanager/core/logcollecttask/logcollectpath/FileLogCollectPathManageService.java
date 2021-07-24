@@ -43,4 +43,9 @@ public interface FileLogCollectPathManageService {
      */
     void deleteByLogCollectTaskId(Long logCollectTaskId);
 
+    /**
+     * @return 返回系统全量文件型路径数
+     */
+    Long countAll();
+
 }
