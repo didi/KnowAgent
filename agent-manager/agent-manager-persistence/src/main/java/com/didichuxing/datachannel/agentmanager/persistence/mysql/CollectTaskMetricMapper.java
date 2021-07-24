@@ -78,4 +78,5 @@ public interface CollectTaskMetricMapper {
 
     Object selectMaxByHostname(@Param("hostName") String hostName, @Param("column") String column);
 
+    CollectTaskMetricPO selectLatest(@Param("taskId") Long taskId);
 }

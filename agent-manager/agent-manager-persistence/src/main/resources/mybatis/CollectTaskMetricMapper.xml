@@ -990,4 +990,11 @@
     </if>
     group by round(heartbeat_time / 60000) * 60000
   </select>
+  <select id="selectLatest" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from collect_task_metric
+    where log_mode_id = #{taskId}
+    order by heartbeat_time desc limit 1
+  </select>
 </mapper>

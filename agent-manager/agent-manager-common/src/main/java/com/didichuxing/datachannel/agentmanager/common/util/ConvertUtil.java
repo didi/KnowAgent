@@ -277,29 +277,4 @@ public class ConvertUtil {
         return sb.toString();
     }
 
-    public static void nanoToSec(List<MetricPoint> metricPoints) {
-        for (MetricPoint metricPoint : metricPoints) {
-            BigDecimal value = TypeUtils.castToBigDecimal(metricPoint.getValue());
-            BigDecimal b = value.divide(new BigDecimal(1000000), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b);
-        }
-    }
-
-    public static void nanoToMillis(List<MetricPoint> metricPoints) {
-        for (MetricPoint metricPoint : metricPoints) {
-            BigDecimal value = TypeUtils.castToBigDecimal(metricPoint.getValue());
-            BigDecimal b = value.divide(new BigDecimal(1000), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b);
-        }
-    }
-
-    public static void byteToMB(List<MetricPoint> metricPoints) {
-        for (MetricPoint metricPoint : metricPoints) {
-            BigDecimal value = TypeUtils.castToBigDecimal(metricPoint.getValue());
-            BigDecimal b = value.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b);
-        }
-    }
-
-
 }

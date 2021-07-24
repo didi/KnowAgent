@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MetricService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class);
-    
+
     @Autowired
     private AgentMetricMapper agentMetricMapper;
 

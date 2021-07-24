@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.core.agent.metrics;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 
@@ -427,4 +428,7 @@ public interface AgentMetricsManageService {
     List<MetricPoint> queryAgent(AgentMetricQueryDO agentMetricQueryDO, String column);
 
     List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method);
+
+    CollectTaskMetricPO getLatestMetric(Long taskId);
+
 }

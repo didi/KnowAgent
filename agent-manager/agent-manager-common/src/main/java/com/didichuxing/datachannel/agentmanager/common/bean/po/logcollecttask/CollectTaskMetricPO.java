@@ -109,8 +109,6 @@ public class CollectTaskMetricPO extends BasePO {
 
     private Boolean validTimeConfig;
 
-    private Boolean isFileDisorder;
-
     public Long getId() {
         return id;
     }
@@ -525,13 +523,5 @@ public class CollectTaskMetricPO extends BasePO {
 
     public void setValidTimeConfig(Boolean validTimeConfig) {
         this.validTimeConfig = validTimeConfig;
-    }
-
-    public Boolean getIsFileDisorder() {
-        return isFileDisorder;
-    }
-
-    public void setIsFileDisorder(Boolean fileDisorder) {
-        isFileDisorder = fileDisorder;
     }
 }

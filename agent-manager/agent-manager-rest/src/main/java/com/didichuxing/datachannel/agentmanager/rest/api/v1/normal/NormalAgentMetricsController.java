@@ -1,8 +1,13 @@
 package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.AgentMetricQueryDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.CollectFileVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.CollectTaskMetricVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -11,13 +16,16 @@ import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(tags = "Agent-Metric相关接口")
@@ -104,7 +112,7 @@ public class NormalAgentMetricsController {
         return Result.buildSucc(service.getReadByte(ConvertUtil.obj2Obj(agentMetricQueryDTO, AgentMetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "获取指定agent的入口流量mb", notes = "")
+    @ApiOperation(value = "获取指定agent的入口条数", notes = "")
     @RequestMapping(value = "/inlet-collect-bar", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricPointList> readCount(@RequestBody AgentMetricQueryDTO agentMetricQueryDTO) {
@@ -152,6 +160,22 @@ public class NormalAgentMetricsController {
         return Result.buildSucc(service.getCollectPathCount(ConvertUtil.obj2Obj(agentMetricQueryDTO, AgentMetricQueryDO.class)));
     }
 
+    @ApiOperation(value = "获取指定agent关联的采集任务指标", notes = "")
+    @RequestMapping(value = "/collect-tasks", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<CollectTaskMetricVO>> collectTaskMetrics(@RequestParam("hostname") String hostname) {
+        if (StringUtils.isBlank(hostname)) {
+            return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "主机名为空");
+        }
+        List<CollectTaskMetricDO> collectTaskMetricList = service.getRelatedTaskMetrics(hostname);
+        List<CollectTaskMetricVO> voList = new ArrayList<>();
+        for (CollectTaskMetricDO collectTaskMetricDO : collectTaskMetricList) {
+            CollectTaskMetricVO collectTaskMetricVO = convertToCollectTaskMetric(collectTaskMetricDO);
+            voList.add(collectTaskMetricVO);
+        }
+        return Result.buildSucc(voList);
+    }
+
     private Result checkParam(AgentMetricQueryDTO dto) {
         if (dto == null) {
             return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "请求参数为空");
@@ -166,5 +190,12 @@ public class NormalAgentMetricsController {
             return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "查询结束时间为空");
         }
         return Result.buildSucc();
+    }
+
+    private CollectTaskMetricVO convertToCollectTaskMetric(CollectTaskMetricDO collectTaskMetricDO) {
+        CollectTaskMetricVO collectTaskMetricVO = ConvertUtil.obj2Obj(collectTaskMetricDO, CollectTaskMetricVO.class, "collectFiles");
+        collectTaskMetricVO.setCollectFiles(JSON.parseObject(collectTaskMetricDO.getCollectFiles(), new TypeReference<List<CollectFileVO>>() {
+        }));
+        return collectTaskMetricVO;
     }
 }
