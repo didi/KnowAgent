@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.alibaba.fastjson.util.TypeUtils;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
@@ -443,6 +444,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+        return null;
+    }
+
+    @Override
+    public CollectTaskMetricPO selectLatestMetric(Long taskId) {
         return null;
     }
 

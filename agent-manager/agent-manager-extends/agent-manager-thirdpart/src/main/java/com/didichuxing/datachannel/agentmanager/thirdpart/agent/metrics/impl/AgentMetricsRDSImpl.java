@@ -303,4 +303,9 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
         return agentMetricMapper.selectAggregation(hostname, startTime, endTime, column.getRdsValue(), method.getValue());
     }
+
+    @Override
+    public CollectTaskMetricPO selectLatestMetric(Long taskId) {
+        return collectTaskMetricMapper.selectLatest(taskId);
+    }
 }

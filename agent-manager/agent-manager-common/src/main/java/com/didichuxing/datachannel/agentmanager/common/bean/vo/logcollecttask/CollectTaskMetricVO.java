@@ -1,9 +1,10 @@
-package com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask;
+package com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.BaseDO;
 
-public class CollectTaskMetricDO extends BaseDO {
+import java.util.List;
+
+public class CollectTaskMetricVO {
     private Long id;
 
     private Integer readTimeMean;
@@ -100,7 +101,7 @@ public class CollectTaskMetricDO extends BaseDO {
 
     private Integer filterTotalTooLargeCount;
 
-    private String collectFiles;
+    private List<CollectFileVO> collectFiles;
 
     private Long controlTimeMin;
 
@@ -144,12 +145,12 @@ public class CollectTaskMetricDO extends BaseDO {
         this.channelCapacity = channelCapacity;
     }
 
-    public Boolean getIsFileExist() {
+    public Boolean getFileExist() {
         return isFileExist;
     }
 
-    public void setIsFileExist(Boolean isFileExist) {
-        this.isFileExist = isFileExist;
+    public void setFileExist(Boolean fileExist) {
+        isFileExist = fileExist;
     }
 
     public Long getPathId() {
@@ -488,11 +489,11 @@ public class CollectTaskMetricDO extends BaseDO {
         this.filterTotalTooLargeCount = filterTotalTooLargeCount;
     }
 
-    public String getCollectFiles() {
+    public List<CollectFileVO> getCollectFiles() {
         return collectFiles;
     }
 
-    public void setCollectFiles(String collectFiles) {
+    public void setCollectFiles(List<CollectFileVO> collectFiles) {
         this.collectFiles = collectFiles;
     }
 

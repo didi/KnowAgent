@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -283,5 +284,7 @@ public interface AgentMetricsDAO {
     List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column);
 
     List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
+
+    CollectTaskMetricPO selectLatestMetric(Long taskId);
 
 }
