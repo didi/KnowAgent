@@ -279,4 +279,10 @@
     from tb_log_collect_task
   </select>
 
+  <select id="getAllIds" >
+    select
+      id
+    from tb_log_collect_task
+  </select>
+
 </mapper>

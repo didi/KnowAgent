@@ -221,4 +221,16 @@
     where error_logs_send_receiver_id = #{kafkaClusterId,jdbcType=BIGINT} or metrics_send_receiver_id = #{kafkaClusterId,jdbcType=BIGINT}
   </select>
 
+  <select id="countAll" resultType="java.lang.Long" >
+    select
+      count (*)
+    from tb_agent
+  </select>
+
+  <select id="getAllHostNames" >
+    select
+      host_name
+    from tb_agent
+  </select>
+
 </mapper>

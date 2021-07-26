@@ -32,4 +32,6 @@ public interface LogCollectTaskMapper {
 
     Long countAll();
 
+    List<Long> getAllIds();
+
 }

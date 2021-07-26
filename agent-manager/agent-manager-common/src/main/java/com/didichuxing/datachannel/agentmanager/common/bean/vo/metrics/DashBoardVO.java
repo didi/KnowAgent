@@ -10,6 +10,9 @@ public class DashBoardVO {
     @ApiModelProperty(value = "系统现有日志采集任务总数")
     private Long logCollectTaskNum;
 
+    @ApiModelProperty(value = "系统现有未关联任何主机的日志采集任务数")
+    private Long nonRelateAnyHostLogCollectTaskNum;
+
     @ApiModelProperty(value = "系统现有日志采集路径总数")
     private Long logCollectPathNum;
 
@@ -25,11 +28,20 @@ public class DashBoardVO {
     @ApiModelProperty(value = "系统现有agent总数")
     private Long agentNum;
 
+    @ApiModelProperty(value = "系统现有未关联任何日志采集任务的 agent 数")
+    private Long nonRelateAnyLogCollectTaskAgentNum;
+
     @ApiModelProperty(value = "系统当前采集流量总量/s")
     private Long currentCollectBytes;
 
     @ApiModelProperty(value = "系统当前采集总条数/s")
     private Long currentCollectLogEvents;
+
+    @ApiModelProperty(value = "当日采集流量")
+    private Long collectBytesDay;
+
+    @ApiModelProperty(value = "当日采集条数")
+    private Long collectLogEventsDay;
 
     @ApiModelProperty(value = "系统当前处于red状态日志采集任务列表集 key：日志采集任务名 value：日志采集任务 id")
     private List<Pair<String, Long>> redLogCollectTaskNameIdPairList;
@@ -75,6 +87,9 @@ public class DashBoardVO {
 
     @ApiModelProperty(value = "内存使用量最多top5agent集")
     private List<MetricPointList> agentListMemoryUsageTop5;
+
+    @ApiModelProperty(value = " fd 使用量最多top5agent集")
+    private List<MetricPointList> agentListFdUsedTop5;
 
     @ApiModelProperty(value = "full gc 最多top5agent集")
     private List<MetricPointList> agentListFullGcCountTop5;
@@ -128,6 +143,26 @@ public class DashBoardVO {
 
     public void setAgentNum(Long agentNum) {
         this.agentNum = agentNum;
+    }
+
+    public Long getNonRelateAnyHostLogCollectTaskNum() {
+        return nonRelateAnyHostLogCollectTaskNum;
+    }
+
+    public Long getCollectBytesDay() {
+        return collectBytesDay;
+    }
+
+    public void setCollectBytesDay(Long collectBytesDay) {
+        this.collectBytesDay = collectBytesDay;
+    }
+
+    public Long getCollectLogEventsDay() {
+        return collectLogEventsDay;
+    }
+
+    public void setCollectLogEventsDay(Long collectLogEventsDay) {
+        this.collectLogEventsDay = collectLogEventsDay;
     }
 
     public Long getCurrentCollectBytes() {
@@ -250,6 +285,14 @@ public class DashBoardVO {
         this.agentListCpuUsageTop5 = agentListCpuUsageTop5;
     }
 
+    public List<MetricPointList> getAgentListFdUsedTop5() {
+        return agentListFdUsedTop5;
+    }
+
+    public void setAgentListFdUsedTop5(List<MetricPointList> agentListFdUsedTop5) {
+        this.agentListFdUsedTop5 = agentListFdUsedTop5;
+    }
+
     public List<MetricPointList> getAgentListCpuLoadTop5() {
         return agentListCpuLoadTop5;
     }
@@ -272,6 +315,18 @@ public class DashBoardVO {
 
     public void setAgentListFullGcCountTop5(List<MetricPointList> agentListFullGcCountTop5) {
         this.agentListFullGcCountTop5 = agentListFullGcCountTop5;
+    }
+
+    public void setNonRelateAnyHostLogCollectTaskNum(Long nonRelateAnyHostLogCollectTaskNum) {
+        this.nonRelateAnyHostLogCollectTaskNum = nonRelateAnyHostLogCollectTaskNum;
+    }
+
+    public Long getNonRelateAnyLogCollectTaskAgentNum() {
+        return nonRelateAnyLogCollectTaskAgentNum;
+    }
+
+    public void setNonRelateAnyLogCollectTaskAgentNum(Long nonRelateAnyLogCollectTaskAgentNum) {
+        this.nonRelateAnyLogCollectTaskAgentNum = nonRelateAnyLogCollectTaskAgentNum;
     }
 
     public List<MetricPointList> getAgentListRelateLogCollectTasksTop5() {

@@ -173,4 +173,12 @@
     insert into tb_service (id, service_name, operator, extenal_service_id)
     values (#{id,jdbcType=BIGINT}, #{servicename,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{extenalServiceId,jdbcType=BIGINT})
   </insert>
+
+  <select id="countAll" resultType="java.lang.Long" >
+    select
+      count (*)
+    from tb_service
+  </select>
+
 </mapper>
+

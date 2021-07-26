@@ -188,4 +188,15 @@ public interface LogCollectTaskManageService {
      */
     Long countAll();
 
+    /**
+     * @return 返回系统全量日志采集任务 id 集
+     */
+    List<Long> getAllIds();
+
+    /**
+     * 校验 logcollecttask 是否未关联主机
+     * @param logCollectTaskId logcollecttask 对象 id
+     * @return true：logcollecttask 未关联任何主机 false：logcollecttask 存在关联主机
+     */
+    boolean checkNotRelateAnyHost(Long logCollectTaskId);
 }

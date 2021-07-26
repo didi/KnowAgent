@@ -233,4 +233,12 @@
       extend_field = #{extendField,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="countByHostType" parameterType="java.lang.Integer" resultType="java.lang.Long" >
+    select
+      count (*)
+    from tb_host
+    where container = #{container,jdbcType=TINYINT}
+  </select>
+
 </mapper>
