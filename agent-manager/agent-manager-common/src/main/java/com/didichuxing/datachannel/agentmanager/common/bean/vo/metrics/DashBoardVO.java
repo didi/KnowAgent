@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class DashBoardVO {
@@ -149,22 +150,6 @@ public class DashBoardVO {
         return nonRelateAnyHostLogCollectTaskNum;
     }
 
-    public Long getCollectBytesDay() {
-        return collectBytesDay;
-    }
-
-    public void setCollectBytesDay(Long collectBytesDay) {
-        this.collectBytesDay = collectBytesDay;
-    }
-
-    public Long getCollectLogEventsDay() {
-        return collectLogEventsDay;
-    }
-
-    public void setCollectLogEventsDay(Long collectLogEventsDay) {
-        this.collectLogEventsDay = collectLogEventsDay;
-    }
-
     public Long getCurrentCollectBytes() {
         return currentCollectBytes;
     }
@@ -179,6 +164,22 @@ public class DashBoardVO {
 
     public void setCurrentCollectLogEvents(Long currentCollectLogEvents) {
         this.currentCollectLogEvents = currentCollectLogEvents;
+    }
+
+    public Long getCollectBytesDay() {
+        return collectBytesDay;
+    }
+
+    public void setCollectBytesDay(Long collectBytesDay) {
+        this.collectBytesDay = collectBytesDay;
+    }
+
+    public Long getCollectLogEventsDay() {
+        return collectLogEventsDay;
+    }
+
+    public void setCollectLogEventsDay(Long collectLogEventsDay) {
+        this.collectLogEventsDay = collectLogEventsDay;
     }
 
     public List<Pair<String, Long>> getRedLogCollectTaskNameIdPairList() {

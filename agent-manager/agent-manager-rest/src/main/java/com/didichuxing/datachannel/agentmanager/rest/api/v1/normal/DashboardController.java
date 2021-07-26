@@ -81,14 +81,10 @@ public class DashboardController {
             }
         }
         dashBoardVO.setNonRelateAnyLogCollectTaskAgentNum(nonRelateAnyLogCollectTaskAgentNum);
-        //TODO：当日采集量
-//        dashBoardVO.setCollectBytesDay();
-        //TODO：当前采集量
-//        dashBoardVO.setCurrentCollectBytes();
-//        //TODO：当日采集条数
-//        dashBoardVO.setCollectLogEventsDay();
-//        //TODO：当前采集条数
-//        dashBoardVO.setCurrentCollectLogEvents();
+        dashBoardVO.setCollectBytesDay(logCollectTaskManageService.getCollectBytesToday());
+        dashBoardVO.setCurrentCollectBytes(logCollectTaskManageService.getCurrentCollectBytes());
+        dashBoardVO.setCollectLogEventsDay(logCollectTaskManageService.getCollectCountToday());
+        dashBoardVO.setCurrentCollectLogEvents(logCollectTaskManageService.getCurrentCollectCount());
 
         /*********************** part 2：占比 饼图 ***********************/
         List<LogCollectTaskDO> redLogCollectTaskDOList = logCollectTaskManageService.getByHealthLevel(LogCollectTaskHealthLevelEnum.RED.getCode());

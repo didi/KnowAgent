@@ -305,6 +305,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+        return collectTaskMetricMapper.selectAggregationForAll(startTime, endTime, column.getRdsValue(), method.getValue());
+    }
+
+    @Override
     public CollectTaskMetricPO selectLatestMetric(Long taskId) {
         return collectTaskMetricMapper.selectLatest(taskId);
     }
