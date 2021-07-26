@@ -115,8 +115,8 @@ public class DashboardController {
         dashBoardVO.setYellowAgentHostNameIdPairList(yellowAgentHostNameIdPairList);
 
         /*********************** part 3：时序 图 指标 ***********************/
-
-
+        dashBoardVO.setLogCollectTaskListRelateHostsTop5(logCollectTaskManageService.getTop5HostCount(startTime, endTime));
+        dashBoardVO.setLogCollectTaskListRelateAgentsTop5(logCollectTaskManageService.getTop5AgentCount(startTime, endTime));
 
 
 

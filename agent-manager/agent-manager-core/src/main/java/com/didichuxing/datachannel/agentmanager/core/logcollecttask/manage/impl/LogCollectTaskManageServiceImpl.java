@@ -40,6 +40,7 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
+import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
@@ -74,6 +75,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author huqidong
@@ -84,6 +86,7 @@ import java.util.Map;
 public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogCollectTaskManageServiceImpl.class);
     private static final int HEARTBEAT_PERIOD = 30;
+    private static final int QUERY_STEP = 60000;
 
     @Autowired
     private LogCollectTaskMapper logCollectorTaskDAO;
@@ -738,6 +741,48 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         Long startTime = endTime - HEARTBEAT_PERIOD * 1000;
         Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
         return (long) Math.ceil(value / HEARTBEAT_PERIOD);
+    }
+
+    @Override
+    public List<MetricPointList> getTop5HostCount(Long startTime, Long endTime) {
+        List<LogCollectTaskPO> taskList = logCollectorTaskDAO.queryAll();
+        int limit = Math.min(taskList.size(), 5);
+        List<MetricPointList> metricPointLists = new ArrayList<>();
+        List<LogCollectTaskPO> sortedList = taskList.stream().sorted((i1, i2) -> {
+            int size1 = hostManageService.getHostListByLogCollectTaskId(i1.getId()).size();
+            int size2 = hostManageService.getHostListByLogCollectTaskId(i2.getId()).size();
+            return size2 - size1;
+        }).limit(limit).collect(Collectors.toList());
+
+        for (LogCollectTaskPO logCollectTaskPO : sortedList) {
+            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.LOG_MODEL_HOST_NAME.name(), CalcFunction.COUNT.name());
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(graph);
+            metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
+            metricPointLists.add(metricPointList);
+        }
+        return metricPointLists;
+    }
+
+    @Override
+    public List<MetricPointList> getTop5AgentCount(Long startTime, Long endTime) {
+        List<LogCollectTaskPO> taskList = logCollectorTaskDAO.queryAll();
+        int limit = Math.min(taskList.size(), 5);
+        List<MetricPointList> metricPointLists = new ArrayList<>();
+        List<LogCollectTaskPO> sortedList = taskList.stream().sorted((i1, i2) -> {
+            int size1 = hostManageService.getHostListByLogCollectTaskId(i1.getId()).size();
+            int size2 = hostManageService.getHostListByLogCollectTaskId(i2.getId()).size();
+            return size2 - size1;
+        }).limit(limit).collect(Collectors.toList());
+
+        for (LogCollectTaskPO logCollectTaskPO : sortedList) {
+            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.HOSTNAME.name(), CalcFunction.COUNT.name());
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(graph);
+            metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
+            metricPointLists.add(metricPointList);
+        }
+        return metricPointLists;
     }
 
     /**

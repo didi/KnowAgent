@@ -9,6 +9,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAgg
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 
 import java.math.BigDecimal;
@@ -148,6 +149,10 @@ public interface LogCollectTaskManageService {
     Long getCurrentCollectBytes();
 
     Long getCurrentCollectCount();
+
+    List<MetricPointList> getTop5HostCount(Long startTime, Long endTime);
+
+    List<MetricPointList> getTop5AgentCount(Long startTime, Long endTime);
 
     /**
      * 检查给定日志采集任务健康度，具体包括如下操作：
