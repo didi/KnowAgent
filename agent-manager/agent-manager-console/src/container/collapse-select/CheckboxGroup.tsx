@@ -17,7 +17,7 @@ export class DataCheckboxGroup extends React.Component<ICheckboxGroups> {
     checkedList: this.props.checkData,
     indeterminate: true,
     checkAll: true,
-    expand: true,
+    expand: false,
   };
 
   public getCheckedList(e: any) {
@@ -73,7 +73,7 @@ export class DataCheckboxGroup extends React.Component<ICheckboxGroups> {
   public render() {
     const { expand } = this.state;
     const { title, checkData } = this.props;
-    const plains = [checkData?.slice(0, 6), checkData?.slice(6)];
+    const plains = [checkData?.slice(0, 5), checkData?.slice(5)];
 
     return (
       <>
