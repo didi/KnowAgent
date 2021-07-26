@@ -650,6 +650,11 @@ public class AgentManageServiceImpl implements AgentManageService {
         return list;
     }
 
+    @Override
+    public Long countAll() {
+        return agentDAO.countAll();
+    }
+
     /**
      * 校验给定Agent是否需要被健康巡检
      *
@@ -927,13 +932,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         return agentHealthLevelEnum;
     }
 
-    /**
-     * 校验给定主机名的Agent是否不关联任何日志采集任务
-     *
-     * @param hostName 主机名
-     * @return true：不关联任何日志采集任务 false：存在关联的日志采集任务
-     */
-    private boolean checkAgentNotRelateAnyLogCollectTask(String hostName) {
+    public boolean checkAgentNotRelateAnyLogCollectTask(String hostName) {
         /*
          * 根据 hostName 获取其对应 agent
          */
@@ -952,6 +951,11 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 日志采集任务集是否为空？true：false
          */
         return CollectionUtils.isEmpty(logCollectTaskDOList);
+    }
+
+    @Override
+    public List<String> getAllHostNames() {
+        return agentDAO.getAllHostNames();
     }
 
     /**

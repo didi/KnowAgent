@@ -1858,15 +1858,16 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return kafkaClusterManageService.checkTopicLimitExists(kafkaClusterId, sendTopic);
     }
 
-    /**
-     * 校验 logcollecttask 是否未关联主机
-     *
-     * @param logCollectTaskId logcollecttask 对象 id
-     * @return true：logcollecttask 未关联任何主机 false：logcollecttask 存在关联主机
-     */
-    private boolean checkNotRelateAnyHost(Long logCollectTaskId) {
+    public boolean checkNotRelateAnyHost(Long logCollectTaskId) {
         List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(logCollectTaskId);
         return !CollectionUtils.isNotEmpty(hostDOList);
+    }
+
+    @Override
+    public List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode) {
+        List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.getLogCollectTaskListByHealthLevel(logCollectTaskHealthLevelCode);
+
+        return null;
     }
 
     /**
@@ -2174,6 +2175,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public Long countAll() {
         return logCollectorTaskDAO.countAll();
+    }
+
+    @Override
+    public List<Long> getAllIds() {
+        return logCollectorTaskDAO.getAllIds();
     }
 
     /**

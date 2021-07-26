@@ -188,4 +188,22 @@ public interface LogCollectTaskManageService {
      */
     Long countAll();
 
+    /**
+     * @return 返回系统全量日志采集任务 id 集
+     */
+    List<Long> getAllIds();
+
+    /**
+     * 校验 logcollecttask 是否未关联主机
+     * @param logCollectTaskId logcollecttask 对象 id
+     * @return true：logcollecttask 未关联任何主机 false：logcollecttask 存在关联主机
+     */
+    boolean checkNotRelateAnyHost(Long logCollectTaskId);
+
+    /**
+     * @param logCollectTaskHealthLevelCode 日志采集任务健康度对应 code（对应枚举类 LogCollectTaskHealthLevelEnum）
+     * @return 返回系统中给定健康度的日志采集任务对象集
+     */
+    List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode);
+
 }

@@ -157,4 +157,21 @@ public interface AgentManageService {
 
     List<CollectTaskMetricDO> getRelatedTaskMetrics(String hostname);
 
+    /**
+     * @return 返回系统全量 agent 数
+     */
+    Long countAll();
+
+    /**
+     * 校验给定主机名的Agent是否不关联任何日志采集任务
+     * @param hostName agent 对应 主机名
+     * @return true：不关联任何日志采集任务 false：存在关联的日志采集任务
+     */
+    boolean checkAgentNotRelateAnyLogCollectTask(String hostName);
+
+    /**
+     * @return 返回系统全量 agent 主机名集
+     */
+    List<String> getAllHostNames();
+
 }

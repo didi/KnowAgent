@@ -139,4 +139,17 @@ public interface HostManageService {
      */
     List<HostDO> getRelationHostListByAgent(AgentDO agentDO);
 
+    /**
+     * @return 返回系统全量主机数
+     */
+    Long countAllHost();
+
+    /**
+     * @return 返回系统全量容器数
+     */
+    Long countAllContainer();
+
+
+
+
 }
