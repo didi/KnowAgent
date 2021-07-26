@@ -22,6 +22,7 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMet
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -396,5 +397,18 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     @Override
     public CollectTaskMetricPO getLatestMetric(Long taskId) {
         return agentMetricsDAO.selectLatestMetric(taskId);
+    }
+
+    @Override
+    public Double queryAggregationForAll(Long startTime, Long endTime, String column, String method) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        CalcFunction function = CalcFunction.fromString(method);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == null || function == CalcFunction.NORMAL) {
+            throw new ServiceException("仅支持聚合查询", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        return agentMetricsDAO.queryAggregationForAll(startTime, endTime, field, function);
     }
 }

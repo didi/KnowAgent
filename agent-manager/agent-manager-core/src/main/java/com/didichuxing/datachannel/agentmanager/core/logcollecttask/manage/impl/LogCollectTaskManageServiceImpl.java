@@ -2,16 +2,29 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.*;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskServicePO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.*;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricList;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricsDashBoard;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
@@ -25,7 +38,6 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
-import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
@@ -51,7 +63,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author huqidong
@@ -61,6 +83,7 @@ import java.util.*;
 @Service
 public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogCollectTaskManageServiceImpl.class);
+    private static final int HEARTBEAT_PERIOD = 30;
 
     @Autowired
     private LogCollectTaskMapper logCollectorTaskDAO;
@@ -675,6 +698,46 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         }
         metricList.setMetricList(total);
         return metricList;
+    }
+
+    @Override
+    public Long getCollectBytesToday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Long startTime = calendar.getTimeInMillis();
+        Long endTime = System.currentTimeMillis();
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
+        return value.longValue();
+    }
+
+    @Override
+    public Long getCollectCountToday() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Long startTime = calendar.getTimeInMillis();
+        Long endTime = System.currentTimeMillis();
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
+        return value.longValue();
+    }
+
+    @Override
+    public Long getCurrentCollectBytes() {
+        Long endTime = System.currentTimeMillis();
+        Long startTime = endTime - HEARTBEAT_PERIOD * 1000;
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
+        return (long) Math.ceil(value / HEARTBEAT_PERIOD);
+    }
+
+    @Override
+    public Long getCurrentCollectCount() {
+        Long endTime = System.currentTimeMillis();
+        Long startTime = endTime - HEARTBEAT_PERIOD * 1000;
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
+        return (long) Math.ceil(value / HEARTBEAT_PERIOD);
     }
 
     /**

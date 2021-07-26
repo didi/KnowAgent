@@ -17,7 +17,7 @@ const checkStatus = (res: Response) => {
   }
 
   if (res.status === 405 || res.status === 403) {
-    location.href = '/403';
+    // location.href = '/403';
     return null;
   }
 

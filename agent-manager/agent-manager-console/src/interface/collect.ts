@@ -166,3 +166,17 @@ export interface IHostDetail {
   machineZone: string; // 主机所属机器单元
   parentHostName: string; // 针对容器场景，表示容器对应宿主机名
 }
+
+export interface ICollectPieParams {
+  taskId: string | number,
+  logCollectPathId: string | number,
+}
+
+export interface ICollectLineParams {
+  taskId: string | number,
+  logCollectPathId: string | number,
+  hostName: string,
+  startTime: number;
+  endTime: number;
+  eachHost: boolean;
+}

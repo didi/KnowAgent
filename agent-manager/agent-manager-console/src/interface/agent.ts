@@ -127,6 +127,11 @@ export interface IMetricPanels {
   panelName: string; // 指标面板名 每个里面包含多个图表
   agentMetricList: IAgentMetrics[];
   selfHide: boolean;
+  api: string;
+  eachHost: boolean;
+  isPie: boolean;
+  title: string;
+  unit: string;
 }
 
 export interface IAgentMetrics {
@@ -144,4 +149,14 @@ export interface IMetricOptions {
   selfHide: boolean;
   metricOptions: EChartOption;
   metricPanelGroupName:string;
+}
+
+export interface IAgentPieParams {
+  agentId: string | number,
+}
+
+export interface IAgentLineParams {
+  agentId: string | number,
+  startTime: number;
+  endTime: number;
 }

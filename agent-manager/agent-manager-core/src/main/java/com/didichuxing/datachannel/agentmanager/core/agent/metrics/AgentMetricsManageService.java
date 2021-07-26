@@ -431,4 +431,6 @@ public interface AgentMetricsManageService {
 
     CollectTaskMetricPO getLatestMetric(Long taskId);
 
+    Double queryAggregationForAll(Long startTime, Long endTime, String column, String method);
+
 }

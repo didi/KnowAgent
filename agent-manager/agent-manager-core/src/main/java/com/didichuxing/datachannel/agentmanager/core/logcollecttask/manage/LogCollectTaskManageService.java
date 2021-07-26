@@ -10,6 +10,8 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricLis
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -138,6 +140,14 @@ public interface LogCollectTaskManageService {
     MetricList getFlushFailedCount(MetricQueryDO metricQueryDO);
 
     MetricList getFilterCount(MetricQueryDO metricQueryDO);
+
+    Long getCollectBytesToday();
+
+    Long getCollectCountToday();
+
+    Long getCurrentCollectBytes();
+
+    Long getCurrentCollectCount();
 
     /**
      * 检查给定日志采集任务健康度，具体包括如下操作：

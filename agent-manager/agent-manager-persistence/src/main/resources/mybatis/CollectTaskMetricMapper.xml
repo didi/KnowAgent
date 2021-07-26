@@ -997,4 +997,8 @@
     where log_mode_id = #{taskId}
     order by heartbeat_time desc limit 1
   </select>
+  <select id="selectAggregationForAll" resultType="java.lang.Double">
+    select ${function}(${column}) from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+  </select>
 </mapper>

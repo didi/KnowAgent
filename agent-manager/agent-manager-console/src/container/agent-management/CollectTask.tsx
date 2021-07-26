@@ -65,7 +65,6 @@ type Props = ReturnType<typeof mapDispatchToProps>;
 const CollectTask = (props: any) => {
   const { hostDetail } = props
   const [collectTastData, setCollectTastData] = React.useState<any>(dataSource)
-  console.log(props, 'props')
   React.useEffect(() => {
     // try {
     //   getAgentDetails(hostDetail?.agentId).then(res => {

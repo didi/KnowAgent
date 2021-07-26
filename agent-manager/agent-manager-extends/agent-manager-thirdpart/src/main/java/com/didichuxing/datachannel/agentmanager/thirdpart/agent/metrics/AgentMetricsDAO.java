@@ -6,6 +6,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunct
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface AgentMetricsDAO {
@@ -284,6 +285,8 @@ public interface AgentMetricsDAO {
     List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column);
 
     List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
+
+    Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
 
     CollectTaskMetricPO selectLatestMetric(Long taskId);
 

@@ -448,6 +448,11 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+        return null;
+    }
+
+    @Override
     public CollectTaskMetricPO selectLatestMetric(Long taskId) {
         return null;
     }
