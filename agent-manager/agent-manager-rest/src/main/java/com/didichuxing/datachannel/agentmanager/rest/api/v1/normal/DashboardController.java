@@ -2,10 +2,12 @@ package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
@@ -103,6 +105,18 @@ public class DashboardController {
         }
         dashBoardVO.setRedLogCollectTaskNameIdPairList(redLogCollectTaskNameIdPairList);
         dashBoardVO.setYellowLogCollectTaskNameIdPairList(yellowLogCollectTaskNameIdPairList);
+        List<AgentDO> redAgentDOList = agentManageService.getByHealthLevel(AgentHealthLevelEnum.RED.getCode());
+        List<AgentDO> yellowAgentDOList = agentManageService.getByHealthLevel(AgentHealthLevelEnum.YELLOW.getCode());
+        List<Pair<String, Long>> redAgentHostNameIdPairList = new ArrayList<>(redAgentDOList.size());
+        for (AgentDO agentDO : redAgentDOList) {
+            redAgentHostNameIdPairList.add(new Pair<>(agentDO.getHostName(), agentDO.getId()));
+        }
+        List<Pair<String, Long>> yellowAgentHostNameIdPairList = new ArrayList<>(yellowAgentDOList.size());
+        for (AgentDO agentDO : yellowAgentDOList) {
+            yellowAgentHostNameIdPairList.add(new Pair<>(agentDO.getHostName(), agentDO.getId()));
+        }
+        dashBoardVO.setRedAgentHostNameIdPairList(redAgentHostNameIdPairList);
+        dashBoardVO.setYellowAgentHostNameIdPairList(yellowAgentHostNameIdPairList);
 
         /*********************** part 3：时序 图 指标 ***********************/
 

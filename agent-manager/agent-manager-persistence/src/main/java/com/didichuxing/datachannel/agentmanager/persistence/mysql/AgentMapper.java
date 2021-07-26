@@ -35,4 +35,6 @@ public interface AgentMapper {
 
     List<String> getAllHostNames();
 
+    List<AgentPO> getByHealthLevel(Integer agentHealthLevelCode);
+
 }
