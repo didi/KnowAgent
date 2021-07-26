@@ -27,6 +27,13 @@
     agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version, operator, create_time, modify_time,
     metrics_producer_configuration, error_logs_producer_configuration
   </sql>
+
+  <sql id="Base_Column_List_Relate" >
+    t1.id, t1.host_name, t1.ip, t1.collect_type, t1.cpu_limit_threshold, t1.byte_limit_threshold,
+    t1.agent_version_id, t1.metrics_send_topic, t1.metrics_send_receiver_id, t1.error_logs_send_topic, t1.error_logs_send_receiver_id, t1.advanced_configuration_json_string, t1.configuration_version, t1.operator, t1.create_time, t1.modify_time,
+    t1.metrics_producer_configuration, t1.error_logs_producer_configuration
+  </sql>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
@@ -231,6 +238,13 @@
     select
       host_name
     from tb_agent
+  </select>
+
+  <select id="getByHealthLevel" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List_Relate" />
+    from tb_agent t1 inner join tb_agent_health t2
+    where t2.agent_health_level = #{agentHealthLevelCode,jdbcType=TINYINT}
   </select>
 
 </mapper>

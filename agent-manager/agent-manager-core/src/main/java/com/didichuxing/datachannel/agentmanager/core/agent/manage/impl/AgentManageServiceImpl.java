@@ -960,6 +960,12 @@ public class AgentManageServiceImpl implements AgentManageService {
         return agentDAO.getAllHostNames();
     }
 
+    @Override
+    public List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode) {
+        List<AgentPO> agentPOList = agentDAO.getByHealthLevel(agentHealthLevelCode);
+        return agentManageServiceExtension.agentPOList2AgentDOList(agentPOList);
+    }
+
     /**
      * 校验 agent 端是否存在 cpu 阈值限流
      *

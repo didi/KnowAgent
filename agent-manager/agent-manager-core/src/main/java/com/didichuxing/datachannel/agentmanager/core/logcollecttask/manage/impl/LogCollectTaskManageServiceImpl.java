@@ -1974,8 +1974,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode) {
         List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.getLogCollectTaskListByHealthLevel(logCollectTaskHealthLevelCode);
-
-        return null;
+        return logCollectTaskManageServiceExtension.logCollectTaskPOList2LogCollectTaskDOList(logCollectTaskPOList);
     }
 
     /**

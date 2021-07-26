@@ -174,4 +174,10 @@ public interface AgentManageService {
      */
     List<String> getAllHostNames();
 
+    /**
+     * @param agentHealthLevelCode agent 健康度对应 code（对应枚举类 AgentHealthLevelEnum）
+     * @return 返回系统中给定健康度的 agent 对象集
+     */
+    List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode);
+
 }
