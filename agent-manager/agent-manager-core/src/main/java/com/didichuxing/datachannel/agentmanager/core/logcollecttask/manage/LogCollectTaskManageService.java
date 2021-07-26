@@ -199,4 +199,11 @@ public interface LogCollectTaskManageService {
      * @return true：logcollecttask 未关联任何主机 false：logcollecttask 存在关联主机
      */
     boolean checkNotRelateAnyHost(Long logCollectTaskId);
+
+    /**
+     * @param logCollectTaskHealthLevelCode 日志采集任务健康度对应 code（对应枚举类 LogCollectTaskHealthLevelEnum）
+     * @return 返回系统中给定健康度的日志采集任务对象集
+     */
+    List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode);
+
 }

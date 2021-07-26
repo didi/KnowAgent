@@ -1863,6 +1863,13 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return !CollectionUtils.isNotEmpty(hostDOList);
     }
 
+    @Override
+    public List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode) {
+        List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.getLogCollectTaskListByHealthLevel(logCollectTaskHealthLevelCode);
+
+        return null;
+    }
+
     /**
      * 校验 logcollecttask + logpath 在 host 端是否存在采集端出口流量阈值限流
      *

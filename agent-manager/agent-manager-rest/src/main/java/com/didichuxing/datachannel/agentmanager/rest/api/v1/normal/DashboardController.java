@@ -1,9 +1,12 @@
 package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
@@ -15,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(tags = "Normal-Dashboard 相关接口")
@@ -78,7 +82,6 @@ public class DashboardController {
         }
         dashBoardVO.setNonRelateAnyLogCollectTaskAgentNum(nonRelateAnyLogCollectTaskAgentNum);
         //TODO：当日采集量
-//        agentMetricsManageService.getLogCollectTaskLogsBytesPerMinMetric();
 //        dashBoardVO.setCollectBytesDay();
         //TODO：当前采集量
 //        dashBoardVO.setCurrentCollectBytes();
@@ -88,6 +91,18 @@ public class DashboardController {
 //        dashBoardVO.setCurrentCollectLogEvents();
 
         /*********************** part 2：占比 饼图 ***********************/
+        List<LogCollectTaskDO> redLogCollectTaskDOList = logCollectTaskManageService.getByHealthLevel(LogCollectTaskHealthLevelEnum.RED.getCode());
+        List<LogCollectTaskDO> yellowLogCollectTaskDOList = logCollectTaskManageService.getByHealthLevel(LogCollectTaskHealthLevelEnum.YELLOW.getCode());
+        List<Pair<String, Long>> redLogCollectTaskNameIdPairList = new ArrayList<>(redLogCollectTaskDOList.size());
+        for (LogCollectTaskDO logCollectTaskDO : redLogCollectTaskDOList) {
+            redLogCollectTaskNameIdPairList.add(new Pair<>(logCollectTaskDO.getLogCollectTaskName(), logCollectTaskDO.getId()));
+        }
+        List<Pair<String, Long>> yellowLogCollectTaskNameIdPairList = new ArrayList<>(yellowLogCollectTaskDOList.size());
+        for (LogCollectTaskDO logCollectTaskDO : yellowLogCollectTaskDOList) {
+            yellowLogCollectTaskNameIdPairList.add(new Pair<>(logCollectTaskDO.getLogCollectTaskName(), logCollectTaskDO.getId()));
+        }
+        dashBoardVO.setRedLogCollectTaskNameIdPairList(redLogCollectTaskNameIdPairList);
+        dashBoardVO.setYellowLogCollectTaskNameIdPairList(yellowLogCollectTaskNameIdPairList);
 
         /*********************** part 3：时序 图 指标 ***********************/
 
