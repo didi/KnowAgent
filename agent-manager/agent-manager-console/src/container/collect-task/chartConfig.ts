@@ -18,14 +18,13 @@ export const COLLECT_CONFIG = [
           },
           {
               "panelName": "数据最大延迟",
-              "title": '数据最大延迟 （ms）',
+              "title": '数据最大延迟 （s）',
               "metricList": [
                   {
                       "metricName": "数据最大延迟",
                       "metricPointList": []
                   }
               ],
-              'unit': 'ms',
               "api": 'HealthMaxDelay',
               "isPie": false,
               "isEachHost": false,
@@ -33,10 +32,10 @@ export const COLLECT_CONFIG = [
           },
           {
             "panelName": "最小采集业务时间",
-            "title": '最小采集业务时间（min）',
+            "title": '最小采集业务时间',
             "metricList": [
                 {
-                    "metricName": "最小采集业务时间（min）",
+                    "metricName": "最小采集业务时间",
                     "metricPointList": []
                 }
             ],
@@ -48,14 +47,13 @@ export const COLLECT_CONFIG = [
         },
           {
             "panelName": "限流时长",
-            "title": '限流时长（ms）',
+            "title": '限流时长（s）',
             "metricList": [
                 {
                     "metricName": "限流时长（ms）",
                     "metricPointList": []
                 }
             ],
-            'unit': 'ms',
             "api": 'HealthLimitTime',
             "isPie": false,
             "isEachHost": false,
@@ -136,7 +134,6 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'MB/分钟',
             "api": 'logReadBytes',
             "isPie": false,
             "selfHide": false
@@ -164,7 +161,6 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'ms',
             "api": 'logReadConsuming',
             "isPie": false,
             "selfHide": false
@@ -206,7 +202,6 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'MB',
             "api": 'logSendBytes',
             "isPie": false,
             "selfHide": false
@@ -234,7 +229,6 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'ms',
             "api": 'logSendConsuming',
             "isPie": false,
             "selfHide": false
@@ -262,7 +256,6 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'ms',
             "api": 'logFlushMaxConsuming',
             "isPie": false,
             "selfHide": false
@@ -276,7 +269,6 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'ms',
             "api": 'logFlushMeanConsuming',
             "isPie": false,
             "selfHide": false

@@ -148,3 +148,86 @@ export const dealPostMessage = (data: any) => {
       }, delay);
     }, dep)
   }
+
+
+/**
+ * @description: 字节转换单位
+ * @param {*} limit: number 字节
+ * @return {*} string 转换后的单位
+ */
+export function byteChange(limit: number){
+  let size = "";
+  if(limit < 0.1 * 1024){                            //小于0.1KB，则转化成B
+      size = limit.toFixed(2) + "B"
+  }else if(limit < 0.1 * 1024 * 1024){            //小于0.1MB，则转化成KB
+      size = (limit/1024).toFixed(2) + "KB"
+  }else if(limit < 0.1 * 1024 * 1024 * 1024){        //小于0.1GB，则转化成MB
+      size = (limit/(1024 * 1024)).toFixed(2) + "MB"
+  }else{                                            //其他转化成GB
+      size = (limit/(1024 * 1024 * 1024)).toFixed(2) + "GB"
+  }
+
+  let sizeStr = size + "";                        //转成字符串
+  let index = sizeStr.indexOf(".");                    //获取小数点处的索引
+  let dou = sizeStr.substr(index + 1 ,2)            //获取小数点后两位的值
+  if(dou == "00"){                                //判断后两位是否为00，如果是则删除00               
+      return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2)
+  }
+  return size;
+}
+
+/**
+ * @description: 字节转换成MB
+ * @param {number} limit
+ * @return {*}
+ */
+export function byteToMB(limit: number) {
+  let nums = limit / (1024 * 1024)
+  if (nums === 0) {
+    return 0;
+  }
+  if (nums < 0.01 && nums > 0) {
+    return 0.01;
+  }
+  return nums.toFixed(2);
+}
+
+/**
+ * @description: ms转成为最大为 月份的单位
+ * @param {*} second_time
+ * @return {*}
+ */
+export function timeStamp( mtime: number ){
+  let second_time: any = (mtime / 1000);
+  let time = (second_time).toFixed(2) + "秒";
+  if( parseInt(second_time)> 60){
+  
+    let second = parseInt(second_time) % 60;
+    let min: any = parseInt(second_time / 60);
+    time = min + "分" + second + "秒";
+    
+    if( min > 60 ){
+      min = parseInt(second_time / 60) % 60;
+      let hour = parseInt( parseInt(second_time / 60) /60 );
+      time = hour + "小时" + min + "分" + second + "秒";
+  
+      if( hour > 24 ){
+        hour = parseInt( parseInt(second_time / 60) /60 ) % 24;
+        let day = parseInt( parseInt( parseInt(second_time / 60) /60 ) / 24 );
+        time = day + "天" + hour + "小时" + min + "分" + second + "秒";
+        if (day > 30) {
+          let m = parseInt( parseInt( parseInt(second_time / 60) /60 ) / 24) % 30;
+          time = m + "月" + day + "天" + hour + "小时" + min + "分" + second + "秒";
+        }
+      }
+    }
+    
+  
+  }
+  
+  return time;		
+}
+
+export function msecondToSecond (m: number) {
+  return (m / 1000).toFixed(2);
+} 

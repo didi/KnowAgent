@@ -2,7 +2,7 @@ import { EChartOption } from 'echarts/lib/echarts';
 import { timeFormat } from '../../constants/time';
 import { IMetricPanels } from '../../interface/agent';
 import moment from 'moment';
-import { slice } from 'lodash';
+import { byteChange, byteToMB, timeStamp, msecondToSecond } from './../../lib/utils';
 
 export const LEGEND_HEIGHT = 18;
 export const defaultLegendPadding = 10;
@@ -13,9 +13,12 @@ export const AGENT_TITLE_HEIGHT = 40
 export const default_HEIGHT = 40
 
 export const booleanFormat = ['isExistCollectPathChaos', 'islogChopFault', 'isCollectPath'];
+export const byteFormat = ['memoryUsage', 'exitSendTraffic', 'inletCollectTraffic', 'logReadBytes', 'logSendBytes'];
 export const timesFormat = ['HealthMinCollectBusineTime'];
+export const toS = ['HealthMaxDelay', 'HealthLimitTime'];
+export const toolTime = ['HealthMaxDelay', 'HealthLimitTime', 'logReadConsuming', 'logSendConsuming', 'logFlushMaxConsuming', 'logFlushMeanConsuming', ]
 
-export const valueFormatFn = (value: any, ele: IMetricPanels) => {
+export const valueFormatFn = (value: any, ele: IMetricPanels, tool?: boolean) => {
   if (booleanFormat.includes(ele.api)) {
     if (value === 1) {
       return '存在'
@@ -27,6 +30,15 @@ export const valueFormatFn = (value: any, ele: IMetricPanels) => {
   } 
   if(timesFormat.includes(ele.api)) {
     return `${moment(value).format('YYYY-MM-DD')} \n${moment(value).format('HH:mm')}`
+  }
+  if(byteFormat.includes(ele.api)) {
+    return tool ? byteChange(value) : byteToMB(value)
+  }
+  if(toolTime.includes(ele.api) && tool) {
+    return timeStamp(value);
+  }
+  if (toS.includes(ele.api)) {
+    return msecondToSecond(value);
   }
   return value;
 }
@@ -70,7 +82,7 @@ export const pieOption = (ele: IMetricPanels, data: any) => {
           return params.name
         }
     },
-    // color: colorList,
+    color: ['#4382E9', '#D5DBE8'],
     grid: {
       ...baseLineGrid
     },
@@ -105,11 +117,11 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
   const timestamps = data?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)); // 对应的时间戳
   const series = [
     {
-      name: data.hostName, // 对应的单个折线标题
+      name: data.name || '', // 对应的单个折线标题
       type: 'line',
       // stack: '总量',
       data: data.metricPointList.map(p => ({
-        toolName: data.hostName,
+        toolName: data.name || '',
         unit: ele.unit,
         ...p
       })),  // 对应的单个折线数据
@@ -126,7 +138,7 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
         if (params != null && params.length > 0) {
           tip += params[0].name + '<br />';
           for (let i = 0; i < params.length; i++) {
-            tip += params[i].marker + params[i].data?.toolName + ': ' + valueFormatFn(params[i].value, ele) + ' ' +(params[i].data?.unit || '') + '<br />';
+            tip += params[i].marker + params[i].data?.toolName + ': ' + valueFormatFn(params[i].value, ele, true) + ' ' +(params[i].data?.unit || '') + '<br />';
           }
         }
         return tip
@@ -174,11 +186,11 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
   const timestamps = data?.length ? data[0]?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)) : []; // 对应的时间戳
   const series = data?.map(v => { // 对应的折线图数据
     return {
-      name: v.hostName, // 对应的单个折线标题
+      name: v.name || '', // 对应的单个折线标题
       type: 'line',
       // stack: '总量',
       data: v.metricPointList.map(p => ({
-        toolName: v.hostName,
+        toolName: v.name || '',
         unit: ele.unit,
         ...p
       })),  // 对应的单个折线数据
@@ -195,7 +207,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
         if (params != null && params.length > 0) {
           tip += params[0].name + '<br />';
           for (let i = 0; i < params.length; i++) {
-            tip += params[i].marker + params[i].data?.toolName + ': ' + valueFormatFn(params[i].value, ele) + ' ' +(params[i].data?.unit || '') + '<br />';
+            tip += params[i].marker + params[i].data?.toolName + ': ' + valueFormatFn(params[i].value, ele, true) + ' ' +(params[i].data?.unit || '') + '<br />';
           }
         }
         return tip
