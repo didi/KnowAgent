@@ -77,6 +77,11 @@ export class AgentOperationIndex extends React.Component<Props & IAgentOperation
     this.getConfig()
   }
 
+  public componentWillUnmount() {
+    console.log(1)
+    this.props.setChartMetrics([]);
+  }
+
   public render() {
     const { metrics } = this.state;
     return (
