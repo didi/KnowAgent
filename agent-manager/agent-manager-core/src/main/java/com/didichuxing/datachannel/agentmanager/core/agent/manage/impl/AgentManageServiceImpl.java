@@ -36,6 +36,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.HttpUtils;
+import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
@@ -67,6 +68,7 @@ import java.util.stream.Collectors;
 @org.springframework.stereotype.Service
 public class AgentManageServiceImpl implements AgentManageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentManageServiceImpl.class);
+    private static final int QUERY_STEP = 60000;
 
     @Autowired
     private AgentMapper agentDAO;
@@ -573,7 +575,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
         List<MetricPoint> graph = agentMetricsManageService.getAgentErrorLogCountPerMin(agentMetricQueryDO);
-        buildEmptyMetric(graph, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), 60000);
+        MetricUtils.buildEmptyMetric(graph, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), QUERY_STEP);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -1146,29 +1148,6 @@ public class AgentManageServiceImpl implements AgentManageService {
                 hostName
         );
         return heartbeatTimes > 0;
-    }
-
-    /**
-     * 把空缺的点用0补齐
-     *
-     * @param origin 原始图表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param step 粒度
-     */
-    private void buildEmptyMetric(List<MetricPoint> origin, Long startTime, Long endTime, int step) {
-        long startPoint = startTime / step;
-        long endPoint = endTime / step;
-        List<Long> timePoints = origin.stream().map(MetricPoint::getTimestamp).collect(Collectors.toList());
-        for (long i = startPoint; i < endPoint; ++i) {
-            if (timePoints.contains(i)) {
-                continue;
-            }
-            MetricPoint metricPoint = new MetricPoint();
-            metricPoint.setTimestamp(i * step);
-            metricPoint.setValue(0);
-            origin.add(metricPoint);
-        }
     }
 
     private MetricQueryDO convertToTaskQuery(AgentMetricQueryDO agentMetricQueryDO) {

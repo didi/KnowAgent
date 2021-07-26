@@ -36,4 +36,6 @@ public interface LogCollectTaskMapper {
 
     List<LogCollectTaskPO> getLogCollectTaskListByHealthLevel(Integer logCollectTaskHealthLevelCode);
 
+    List<LogCollectTaskPO> queryAll();
+
 }

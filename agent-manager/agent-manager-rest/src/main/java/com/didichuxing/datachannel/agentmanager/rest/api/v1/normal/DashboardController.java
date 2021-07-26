@@ -101,8 +101,8 @@ public class DashboardController {
         dashBoardVO.setYellowLogCollectTaskNameIdPairList(yellowLogCollectTaskNameIdPairList);
 
         /*********************** part 3：时序 图 指标 ***********************/
-
-
+        dashBoardVO.setLogCollectTaskListRelateHostsTop5(logCollectTaskManageService.getTop5HostCount(startTime, endTime));
+        dashBoardVO.setLogCollectTaskListRelateAgentsTop5(logCollectTaskManageService.getTop5AgentCount(startTime, endTime));
 
 
 

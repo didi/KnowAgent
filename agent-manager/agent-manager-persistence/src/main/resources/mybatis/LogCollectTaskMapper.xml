@@ -279,7 +279,7 @@
     from tb_log_collect_task
   </select>
 
-  <select id="getAllIds" >
+  <select id="getAllIds" resultType="java.lang.Long">
     select
       id
     from tb_log_collect_task
@@ -293,4 +293,9 @@
     WHERE t2.log_collect_task_health_level = #{logCollectTaskHealthLevelCode,jdbcType=TINYINT}
   </select>
 
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tb_log_collect_task;
+  </select>
 </mapper>
