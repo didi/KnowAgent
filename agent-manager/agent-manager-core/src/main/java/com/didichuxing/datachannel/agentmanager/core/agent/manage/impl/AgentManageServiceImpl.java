@@ -491,7 +491,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         MetricPointList metricPointList = new MetricPointList();
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
-        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.CPU_USAGE.name(), CalcFunction.AVG.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.CPU_USAGE.name(), CalcFunction.MAX.getValue());
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -502,7 +502,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         MetricPointList metricPointList = new MetricPointList();
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
-        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.MEMORY_USAGE.name(), CalcFunction.AVG.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.MEMORY_USAGE.name(), CalcFunction.MAX.getValue());
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -513,7 +513,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         MetricPointList metricPointList = new MetricPointList();
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
-        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.FD_COUNT.name(), CalcFunction.AVG.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.FD_COUNT.name(), CalcFunction.MAX.getValue());
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
