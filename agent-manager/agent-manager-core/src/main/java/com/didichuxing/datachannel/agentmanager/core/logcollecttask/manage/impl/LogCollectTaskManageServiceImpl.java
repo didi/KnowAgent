@@ -82,7 +82,6 @@ import java.util.stream.Collectors;
 public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogCollectTaskManageServiceImpl.class);
     private static final int HEARTBEAT_PERIOD = 30;
-    private static final int QUERY_STEP = 60000;
 
     @Autowired
     private LogCollectTaskMapper logCollectorTaskDAO;
