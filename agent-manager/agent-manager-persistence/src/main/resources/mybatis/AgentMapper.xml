@@ -234,7 +234,7 @@
     from tb_agent
   </select>
 
-  <select id="getAllHostNames" >
+  <select id="getAllHostNames" resultType="java.lang.String" >
     select
       host_name
     from tb_agent
@@ -243,7 +243,7 @@
   <select id="getByHealthLevel" resultMap="BaseResultMap" >
     select
     <include refid="Base_Column_List_Relate" />
-    from tb_agent t1 inner join tb_agent_health t2
+    from tb_agent t1 inner join tb_agent_health t2 on t1.id = t2.agent_id
     where t2.agent_health_level = #{agentHealthLevelCode,jdbcType=TINYINT}
   </select>
 

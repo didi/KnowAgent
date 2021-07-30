@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import org.apache.ibatis.annotations.Param;
@@ -42,4 +43,8 @@ public interface AgentMetricMapper {
     List<MetricPoint> selectGraph(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
 
     List<MetricPoint> selectAggregation(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+
+    List<DashBoardStatisticsDO> groupByKeyAndMinute(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("key") String key, @Param("function") String function, @Param("metric") String metric);
+
+    List<MetricPoint> selectAggregationByAgent(@Param("agentHostName") String agentHostName, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
 }

@@ -180,4 +180,11 @@ public interface AgentManageService {
      */
     List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode);
 
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回系统关联日志采集任务数最多 agent 指标集
+     */
+    List<MetricPointList> getTop5LogCollectTaskCount(Long startTime, Long endTime);
+
 }

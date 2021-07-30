@@ -24,6 +24,7 @@ public enum ErrorCodeEnum {
     SOCKET_CLOSE_FAILED(21002, "socket链接关闭失败"),
     METHOD_NOT_SUPPORTED(21003, "方法不支持"),
     HTTP_CONNECT_FAILED(21004, "http请求失败"),
+    UNSUPPORTED_CLASS_CAST_EXCEPTION(21005, "未知类型转换异常"),
     /*
      * Agent 相关 22000 ~ 22999
      */

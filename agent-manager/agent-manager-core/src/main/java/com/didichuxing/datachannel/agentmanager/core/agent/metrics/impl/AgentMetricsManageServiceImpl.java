@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.metrics.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
@@ -10,6 +11,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.Co
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
@@ -17,16 +19,19 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.CollectTaskMetricMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 public class AgentMetricsManageServiceImpl implements AgentMetricsManageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AgentMetricsManageServiceImpl.class);
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
@@ -37,8 +42,9 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     @Autowired
     private AgentMetricsDAO agentMetricsDAO;
 
-    @Autowired
-    private CollectTaskMetricMapper collectTaskMetricMapper;
+    private DashBoardStatisticsDOHeartbeatTimeComparator dashBoardStatisticsDOHeartbeatTimeComparator = new DashBoardStatisticsDOHeartbeatTimeComparator();
+
+    private DashBoardStatisticsDOValueComparator dashBoardStatisticsDOValueComparator = new DashBoardStatisticsDOValueComparator();
 
     @Override
     public boolean completeCollect(HostDO hostDO) {
@@ -400,15 +406,281 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
-    public Double queryAggregationForAll(Long startTime, Long endTime, String column, String method) {
-        AgentMetricField field = AgentMetricField.fromString(column);
-        CalcFunction function = CalcFunction.fromString(method);
-        if (field == null) {
-            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
-        }
-        if (function == null || function == CalcFunction.NORMAL) {
-            throw new ServiceException("仅支持聚合查询", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
-        }
-        return agentMetricsDAO.queryAggregationForAll(startTime, endTime, field, function);
+    public Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
+        return agentMetricsDAO.queryAggregationForAll(startTime, endTime, column, function);
     }
+
+    @Override
+    public List<MetricPointList> getLogCollectTaskListCollectBytesLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.LOG_MODE_ID.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_BYTE.getRdsValue());
+        List<DashBoardStatisticsDO> sendBytesTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(sendBytesTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendBytesTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            Long logCollectTaskId = (Long) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
+            if(null != logCollectTaskDO) {
+                metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
+            } else {
+                metricPointList.setName(StringUtils.EMPTY);
+                LOGGER.warn(
+                        "class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
+                            String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", dashBoardStatisticsDO.getKey())
+                        );
+            }
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    /**
+     * 根据给定DashBoardStatisticsDO对象集，获取各指标按 heartbeat time 倒序排序，根据指标值获取其最大 topN
+     * @param dashBoardStatisticsDOList DashBoardStatisticsDO 对象集
+     * @param topN top 数
+     * @return 返回根据给定DashBoardStatisticsDO对象集，获取到的各指标按 heartbeat time 倒序排序，根据指标值获取其最大 topN
+     */
+    private List<DashBoardStatisticsDO> getMetricPointListLastestTop5(List<DashBoardStatisticsDO> dashBoardStatisticsDOList, int topN) {
+        Map<Object, List<DashBoardStatisticsDO>> id2DashboardStatisticsDOMap = new HashMap<>();
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : dashBoardStatisticsDOList) {
+            List<DashBoardStatisticsDO> list = id2DashboardStatisticsDOMap.get(dashBoardStatisticsDO.getKey());
+            if(null == list) {
+                list = new ArrayList<>();
+                list.add(dashBoardStatisticsDO);
+                id2DashboardStatisticsDOMap.put(dashBoardStatisticsDO.getKey(), list);
+            } else {
+                list.add(dashBoardStatisticsDO);
+            }
+        }
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOLastest1MinList = new ArrayList<>(id2DashboardStatisticsDOMap.size());
+        for (Map.Entry<Object, List<DashBoardStatisticsDO>> entry : id2DashboardStatisticsDOMap.entrySet()) {
+            List<DashBoardStatisticsDO> list = entry.getValue();
+            Collections.sort(list, dashBoardStatisticsDOHeartbeatTimeComparator);
+            if(CollectionUtils.isNotEmpty(list)) {
+                dashBoardStatisticsDOLastest1MinList.add(list.get(0));
+            }
+        }
+        Collections.sort(dashBoardStatisticsDOLastest1MinList, dashBoardStatisticsDOValueComparator);
+        List<DashBoardStatisticsDO> sendBytesTop5List = new ArrayList<>(topN);
+        for (int i = 0, size = dashBoardStatisticsDOLastest1MinList.size() > topN ? topN : dashBoardStatisticsDOLastest1MinList.size(); i < size; i++) {
+            DashBoardStatisticsDO dashBoardStatisticsDO = dashBoardStatisticsDOLastest1MinList.get(i);
+            sendBytesTop5List.add(dashBoardStatisticsDO);
+        }
+        return sendBytesTop5List;
+    }
+
+
+    @Override
+    public List<MetricPointList> getLogCollectTaskListCollectCountLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.LOG_MODE_ID.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_COUNT.getRdsValue());
+        List<DashBoardStatisticsDO> sendCountTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(sendCountTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendCountTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            Long logCollectTaskId = (Long) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
+            if(null != logCollectTaskDO) {
+                metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
+            } else {
+                metricPointList.setName(StringUtils.EMPTY);
+                LOGGER.warn(
+                        "class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectCountLastest1MinTop5||msg={}",
+                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", dashBoardStatisticsDO.getKey())
+                );
+            }
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    @Override
+    public List<MetricPointList> getAgentListCollectBytesLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_BYTE.getRdsValue());
+        List<DashBoardStatisticsDO> sendBytesTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(sendBytesTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendBytesTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            String agentHostName = (String) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromLogCollectTaskMetrics(agentHostName, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            metricPointList.setName(agentHostName);
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    @Override
+    public List<MetricPointList> getAgentListCollectCountLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_COUNT.getRdsValue());
+        List<DashBoardStatisticsDO> sendBytesTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(sendBytesTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendBytesTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            String agentHostName = (String) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromLogCollectTaskMetrics(agentHostName, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            metricPointList.setName(agentHostName);
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    @Override
+    public List<MetricPointList> getAgentListCpuUsageLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.CPU_USAGE.getRdsValue());
+        List<DashBoardStatisticsDO> cpuUsageTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(cpuUsageTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : cpuUsageTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            String agentHostName = (String) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.CPU_USAGE, CalcFunction.MAX);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            metricPointList.setName(agentHostName);
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    @Override
+    public List<MetricPointList> getAgentListFdUsedLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.FD_COUNT.getRdsValue());
+        List<DashBoardStatisticsDO> fdUsedTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(fdUsedTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : fdUsedTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            String agentHostName = (String) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.FD_COUNT, CalcFunction.MAX);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            metricPointList.setName(agentHostName);
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    @Override
+    public List<MetricPointList> getAgentListMemoryUsedLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.MEMORY_USAGE.getRdsValue());
+        List<DashBoardStatisticsDO> fdUsedTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(fdUsedTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : fdUsedTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            String agentHostName = (String) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.MEMORY_USAGE, CalcFunction.MAX);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            metricPointList.setName(agentHostName);
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    @Override
+    public List<MetricPointList> getAgentListFullGcCountLastest1MinTop5(Long startTime, Long endTime) {
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.GC_COUNT.getRdsValue());
+        List<DashBoardStatisticsDO> fdUsedTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
+        List<MetricPointList> result = new ArrayList<>(fdUsedTopNList.size());
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : fdUsedTopNList) {
+            Object key = dashBoardStatisticsDO.getKey();
+            String agentHostName = (String) key;
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.GC_COUNT, CalcFunction.MAX);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(metricPoint);
+            metricPointList.setName(agentHostName);
+            result.add(metricPointList);
+        }
+        return result;
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
+        return agentMetricsDAO.queryAggregationByAgent(agentHostName, startTime, endTime, column, function);
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationGroupByHearttimeMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
+        return agentMetricsDAO.queryAggregationGroupByMinute(startTime, endTime, column, function);
+    }
+
+    class DashBoardStatisticsDOHeartbeatTimeComparator implements Comparator<DashBoardStatisticsDO> {
+        @Override
+        public int compare(DashBoardStatisticsDO o1, DashBoardStatisticsDO o2) {
+            long result = o1.getHeartbeatTime() - o2.getHeartbeatTime();
+            if(0L == result) {
+                return 0;
+            } else if(0 < result) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    class DashBoardStatisticsDOValueComparator implements Comparator<DashBoardStatisticsDO> {
+        @Override
+        public int compare(DashBoardStatisticsDO o1, DashBoardStatisticsDO o2) {
+            if(o1.getMetricValue() instanceof Long) {
+                Long o1Value = (Long) o1.getMetricValue();
+                Long o2Value = (Long )o2.getMetricValue();
+                Long result = o1Value - o2Value;
+                if(0L == result) {
+                    return 0;
+                } else if(0 < result) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else if(o1.getMetricValue() instanceof Integer) {
+                Integer o1Value = (Integer) o1.getMetricValue();
+                Integer o2Value = (Integer )o2.getMetricValue();
+                Integer result = o1Value - o2Value;
+                if(0L == result) {
+                    return 0;
+                } else if(0 < result) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else if(o1.getMetricValue() instanceof Float) {
+                Float o1Value = (Float) o1.getMetricValue();
+                Float o2Value = (Float )o2.getMetricValue();
+                Float result = o1Value - o2Value;
+                if(0L == result) {
+                    return 0;
+                } else if(0 < result) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else if(o1.getMetricValue() instanceof Double) {
+                Double o1Value = (Double) o1.getMetricValue();
+                Double o2Value = (Double )o2.getMetricValue();
+                Double result = o1Value - o2Value;
+                if(0L == result) {
+                    return 0;
+                } else if(0 < result) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            } else {
+                throw new ServiceException(
+                        String.format(
+                                "class=DashBoardStatisticsDOValueComparator||method=compare||msg={%s}",
+                                String.format("给定DashBoardStatisticsDO对象={%s}对应metricValue属性值类型={%s}系统不支持", JSON.toJSONString(o1), o1.getMetricValue().getClass().getName())
+                        ),
+                        ErrorCodeEnum.UNSUPPORTED_CLASS_CAST_EXCEPTION.getCode()
+                );
+            }
+        }
+    }
+
 }

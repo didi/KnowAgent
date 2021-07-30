@@ -1,7 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -81,4 +81,11 @@ public interface CollectTaskMetricMapper {
     CollectTaskMetricPO selectLatest(@Param("taskId") Long taskId);
 
     Double selectAggregationForAll(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+
+    List<DashBoardStatisticsDO> groupByKeyAndMinute(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("key") String key, @Param("function") String function, @Param("metric") String metric);
+
+    List<MetricPoint> selectAggregationByAgent(@Param("agentHostName") String agentHostName, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+
+    List<MetricPoint> selectAggregationGroupByMinute(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+
 }

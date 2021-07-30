@@ -40,7 +40,6 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
-import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
@@ -64,9 +63,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -113,9 +109,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     private KafkaClusterManageService kafkaClusterManageService;
 
     @Autowired
-    private KafkaClusterManageServiceExtension kafkaClusterManageServiceExtension;
-
-    @Autowired
     private HostManageService hostManageService;
 
     @Autowired
@@ -129,6 +122,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     @Autowired
     private K8sPodManageService k8sPodManageService;
+
+    private MetricPointComparator metricPointComparator = new MetricPointComparator();
 
     @Override
     @Transactional
@@ -711,8 +706,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         calendar.set(Calendar.SECOND, 0);
         Long startTime = calendar.getTimeInMillis();
         Long endTime = System.currentTimeMillis();
-        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
-        return value.longValue();
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM);
+        return null == value ? 0L : value.longValue();
     }
 
     @Override
@@ -723,23 +718,32 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         calendar.set(Calendar.SECOND, 0);
         Long startTime = calendar.getTimeInMillis();
         Long endTime = System.currentTimeMillis();
-        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
-        return value.longValue();
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM);
+        return null == value ? 0L : value.longValue();
     }
 
     @Override
     public Long getCurrentCollectBytes() {
         Long endTime = System.currentTimeMillis();
         Long startTime = endTime - HEARTBEAT_PERIOD * 1000;
-        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.name());
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM);
+        value = null == value ? 0 : value;
         return (long) Math.ceil(value / HEARTBEAT_PERIOD);
+    }
+
+    class MetricPointComparator implements java.util.Comparator<MetricPoint> {
+        @Override
+        public int compare(MetricPoint o1, MetricPoint o2) {
+            return o1.getTimestamp().compareTo(o2.getTimestamp());
+        }
     }
 
     @Override
     public Long getCurrentCollectCount() {
         Long endTime = System.currentTimeMillis();
         Long startTime = endTime - HEARTBEAT_PERIOD * 1000;
-        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.name());
+        Double value = agentMetricsManageService.queryAggregationForAll(startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM);
+        value = null == value ? 0 : value;
         return (long) Math.ceil(value / HEARTBEAT_PERIOD);
     }
 
@@ -755,7 +759,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         }).limit(limit).collect(Collectors.toList());
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
-            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.LOG_MODEL_HOST_NAME.name(), CalcFunction.COUNT.name());
+            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.LOG_MODEL_HOST_NAME.name(), CalcFunction.AVG.name());
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
@@ -776,7 +780,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         }).limit(limit).collect(Collectors.toList());
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
-            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.HOSTNAME.name(), CalcFunction.COUNT.name());
+            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.HOSTNAME.name(), CalcFunction.AVG.name());
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());

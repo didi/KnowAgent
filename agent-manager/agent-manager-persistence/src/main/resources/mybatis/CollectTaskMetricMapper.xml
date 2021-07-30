@@ -1001,4 +1001,35 @@
     select ${function}(${column}) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
   </select>
+
+  <resultMap id="DashBoardStatisticsDOResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO" >
+    <result column="key" property="id" jdbcType="BIGINT" />
+    <result column="heartbeat_time" property="heartbeatTime" jdbcType="BIGINT" />
+    <result column="metric_value" property="metricValue" jdbcType="BIGINT" />
+  </resultMap>
+
+  <select id="groupByKeyAndMinute" resultMap="DashBoardStatisticsDOResultMap">
+    SELECT ${key} as 'key', ${function}(${metric}) as metric_value, round(heartbeat_time / 60000) * 60000 as heartbeat_time
+    from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+    GROUP BY ${key}, round(heartbeat_time / 60000) * 60000
+  </select>
+
+  <select id="selectAggregationByAgent" resultMap="MetricPointMap">
+    select ${function}(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
+    where hostname = #{agentHostName}
+      and heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+    group by round(heartbeat_time / 60000) * 60000
+  </select>
+
+  <select id="selectAggregationGroupByMinute" resultMap="MetricPointMap">
+    select ${function}(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
+    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+    group by round(heartbeat_time / 60000) * 60000
+  </select>
+
 </mapper>
+
+
+
+

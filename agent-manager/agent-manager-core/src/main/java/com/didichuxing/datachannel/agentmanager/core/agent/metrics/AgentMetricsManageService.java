@@ -4,7 +4,10 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 
 import java.util.List;
@@ -431,6 +434,81 @@ public interface AgentMetricsManageService {
 
     CollectTaskMetricPO getLatestMetric(Long taskId);
 
-    Double queryAggregationForAll(Long startTime, Long endTime, String column, String method);
+    Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
+
+    /**
+     * @return 返回时间范围内最近日志采集量最大top5日志采集任务对应日志采集流量指标集
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     */
+    List<MetricPointList> getLogCollectTaskListCollectBytesLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @return 返回时间范围内最近日志采集条数最大top5日志采集任务对应日志采集条数指标集
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     */
+    List<MetricPointList> getLogCollectTaskListCollectCountLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回时间范围内最近日志采集量最大top5 agent 对应日志采集流量指标集
+     */
+    List<MetricPointList> getAgentListCollectBytesLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回时间范围内最近日志采集量最大top5 agent 对应日志采集条数指标集
+     */
+    List<MetricPointList> getAgentListCollectCountLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回时间范围内最近 cpu 使用率最大top5 agent 对应指标集
+     */
+    List<MetricPointList> getAgentListCpuUsageLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回时间范围内最近 fd 使用量最大 top5 agent 对应指标集
+     */
+    List<MetricPointList> getAgentListFdUsedLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回时间范围内最近内存使用量最大 top5 agent 对应指标集
+     */
+    List<MetricPointList> getAgentListMemoryUsedLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回时间范围内最近内存使用量最大 top5 agent 对应指标集
+     */
+    List<MetricPointList> getAgentListFullGcCountLastest1MinTop5(Long startTime, Long endTime);
+
+    /**
+     * @param agentHostName agent 对应宿主机主机名
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @param column 聚合字段名
+     * @param function 聚合函数
+     * @return 返回根据agent宿主机主机名聚合计算得到的指标集
+     */
+    List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @param column 聚合列列名
+     * @param function 聚合函数类型
+     * @return 返回时间范围内按分钟聚合值
+     */
+    List<MetricPoint> queryAggregationGroupByHearttimeMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
 
 }

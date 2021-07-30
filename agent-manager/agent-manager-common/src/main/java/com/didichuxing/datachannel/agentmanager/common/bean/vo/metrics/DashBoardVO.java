@@ -3,7 +3,6 @@ package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class DashBoardVO {
@@ -62,12 +61,6 @@ public class DashBoardVO {
     @ApiModelProperty(value = "近1分钟日志采集条数最大top5日志采集任务")
     private List<MetricPointList> logCollectTaskListCollectCountTop5;
 
-    @ApiModelProperty(value = "cpu占用核数最多top5日志采集任务集")
-    private List<MetricPointList> logCollectTaskListCpuUsageTop5;
-
-    @ApiModelProperty(value = "memory占用最多top5日志采集任务集")
-    private List<MetricPointList> logCollectTaskListMemoryUsageTop5;
-
     @ApiModelProperty(value = "关联主机数最多top5日志采集任务集")
     private List<MetricPointList> logCollectTaskListRelateHostsTop5;
 
@@ -83,8 +76,9 @@ public class DashBoardVO {
     @ApiModelProperty(value = "cpu占用核数最多top5agent集")
     private List<MetricPointList> agentListCpuUsageTop5;
 
-    @ApiModelProperty(value = "cpu load 最多top5agent集")
-    private List<MetricPointList> agentListCpuLoadTop5;
+    //TODO：后续 待 实现
+//    @ApiModelProperty(value = "cpu load 最多top5agent集")
+//    private List<MetricPointList> agentListCpuLoadTop5;
 
     @ApiModelProperty(value = "内存使用量最多top5agent集")
     private List<MetricPointList> agentListMemoryUsageTop5;
@@ -230,22 +224,6 @@ public class DashBoardVO {
         this.logCollectTaskListCollectCountTop5 = logCollectTaskListCollectCountTop5;
     }
 
-    public List<MetricPointList> getLogCollectTaskListCpuUsageTop5() {
-        return logCollectTaskListCpuUsageTop5;
-    }
-
-    public void setLogCollectTaskListCpuUsageTop5(List<MetricPointList> logCollectTaskListCpuUsageTop5) {
-        this.logCollectTaskListCpuUsageTop5 = logCollectTaskListCpuUsageTop5;
-    }
-
-    public List<MetricPointList> getLogCollectTaskListMemoryUsageTop5() {
-        return logCollectTaskListMemoryUsageTop5;
-    }
-
-    public void setLogCollectTaskListMemoryUsageTop5(List<MetricPointList> logCollectTaskListMemoryUsageTop5) {
-        this.logCollectTaskListMemoryUsageTop5 = logCollectTaskListMemoryUsageTop5;
-    }
-
     public List<MetricPointList> getLogCollectTaskListRelateHostsTop5() {
         return logCollectTaskListRelateHostsTop5;
     }
@@ -292,14 +270,6 @@ public class DashBoardVO {
 
     public void setAgentListFdUsedTop5(List<MetricPointList> agentListFdUsedTop5) {
         this.agentListFdUsedTop5 = agentListFdUsedTop5;
-    }
-
-    public List<MetricPointList> getAgentListCpuLoadTop5() {
-        return agentListCpuLoadTop5;
-    }
-
-    public void setAgentListCpuLoadTop5(List<MetricPointList> agentListCpuLoadTop5) {
-        this.agentListCpuLoadTop5 = agentListCpuLoadTop5;
     }
 
     public List<MetricPointList> getAgentListMemoryUsageTop5() {

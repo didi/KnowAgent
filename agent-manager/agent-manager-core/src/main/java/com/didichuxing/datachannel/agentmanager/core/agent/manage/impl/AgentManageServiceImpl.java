@@ -15,6 +15,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.http.PathRequest;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
@@ -964,6 +965,27 @@ public class AgentManageServiceImpl implements AgentManageService {
     public List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode) {
         List<AgentPO> agentPOList = agentDAO.getByHealthLevel(agentHealthLevelCode);
         return agentManageServiceExtension.agentPOList2AgentDOList(agentPOList);
+    }
+
+    @Override
+    public List<MetricPointList> getTop5LogCollectTaskCount(Long startTime, Long endTime) {
+        List<AgentPO> agentPOList = agentDAO.getAll();
+        int topN = 5;
+        int limit = Math.min(agentPOList.size(), topN);
+        List<MetricPointList> metricPointLists = new ArrayList<>();
+        List<AgentPO> sortedList = agentPOList.stream().sorted((i1, i2) -> {
+            int size1 = logCollectTaskManageService.getLogCollectTaskListByAgentId(i1.getId()).size();
+            int size2 = logCollectTaskManageService.getLogCollectTaskListByAgentId(i2.getId()).size();
+            return size2 - size1;
+        }).limit(limit).collect(Collectors.toList());
+        for (AgentPO agentPO : sortedList) {
+            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByAgent(agentPO.getHostName(), startTime, endTime, AgentMetricField.HOSTNAME, CalcFunction.AVG);
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(graph);
+            metricPointList.setName(agentPO.getHostName());
+            metricPointLists.add(metricPointList);
+        }
+        return metricPointLists;
     }
 
     /**

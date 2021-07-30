@@ -8,11 +8,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
