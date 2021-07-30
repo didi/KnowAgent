@@ -32,4 +32,9 @@ public interface KafkaClusterMapper {
 
     KafkaClusterPO selectByKafkaClusterBrokerConfiguration(String kafkaClusterBrokerConfiguration);
 
+    int getAgentErrorLogsTopicExistsNum();
+
+    int getAgentMetricsTopicExistsNum();
+
+    KafkaClusterPO getAgentErrorLogsTopicExistsKafkaCluster();
 }

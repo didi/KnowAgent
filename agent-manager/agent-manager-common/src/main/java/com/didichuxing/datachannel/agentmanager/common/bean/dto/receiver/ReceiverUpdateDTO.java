@@ -23,6 +23,28 @@ public class ReceiverUpdateDTO {
     @ApiModelProperty(value = "kafka集群对应生产端初始化配置 必填")
     private String kafkaClusterProducerInitConfiguration;
 
+    @ApiModelProperty(value = "agent errorlogs 流对应 topic 名")
+    private String agentErrorLogsTopic;
+
+    @ApiModelProperty(value = "agent metrics 流对应 topic 名")
+    private String agentMetricsTopic;
+
+    public String getAgentErrorLogsTopic() {
+        return agentErrorLogsTopic;
+    }
+
+    public void setAgentErrorLogsTopic(String agentErrorLogsTopic) {
+        this.agentErrorLogsTopic = agentErrorLogsTopic;
+    }
+
+    public String getAgentMetricsTopic() {
+        return agentMetricsTopic;
+    }
+
+    public void setAgentMetricsTopic(String agentMetricsTopic) {
+        this.agentMetricsTopic = agentMetricsTopic;
+    }
+
     public void setKafkaClusterName(String kafkaClusterName) {
         this.kafkaClusterName = kafkaClusterName;
     }

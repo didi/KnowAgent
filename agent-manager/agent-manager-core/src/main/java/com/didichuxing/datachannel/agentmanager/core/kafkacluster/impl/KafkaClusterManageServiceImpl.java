@@ -8,7 +8,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverPaginationQueryConditionDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
@@ -27,6 +26,7 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.KafkaClusterMa
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +119,28 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
                     ErrorCodeEnum.KAFKA_CLUSTER_NAME_DUPLICATE.getCode()
             );
         }
+
+        /*
+         * agent error logs 流对应 topic 不为空，须校验系统中是否已存在该 topic 配置有值
+         */
+        if(StringUtils.isNotBlank(kafkaClusterDO.getAgentErrorLogsTopic())) {
+            KafkaClusterPO agentErrorLogsTopicExistsKafkaCluster = kafkaClusterDAO.getAgentErrorLogsTopicExistsKafkaCluster();
+            if(null != agentErrorLogsTopicExistsKafkaCluster) {
+                throw new ServiceException(
+                        String.format("系统已存在配置agent errorlogs 流对应topic的kafkacluster={%s}", JSON.toJSONString(agentErrorLogsTopicExistsKafkaCluster)),
+                        ErrorCodeEnum.KAFKA_CLUSTER_CREATE_FAILED_CAUSE_BY_AGENT_ERROR_LOGS_TOPIC_EXISTS.getCode()
+                );
+            }
+        }
+        /*
+         * agent metrics 流对应 topic 不为空，须校验系统中是否已存在该 topic 配置有值
+         */
+        if(StringUtils.isNotBlank(kafkaClusterDO.getAgentMetricsTopic())) {
+
+            Integer agentMetricsTopicExistsNum = kafkaClusterDAO.getAgentMetricsTopicExistsNum();
+
+        }
+
 //        kafkaClusterPO = kafkaClusterDAO.selectByKafkaClusterBrokerConfiguration(kafkaClusterDO.getKafkaClusterBrokerConfiguration());
 //        if(null != kafkaClusterPO) {
 //            throw new ServiceException(

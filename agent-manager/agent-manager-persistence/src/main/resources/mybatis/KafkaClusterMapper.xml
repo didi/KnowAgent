@@ -198,4 +198,11 @@
     where kafka_cluster_broker_configuration = #{kafkaClusterBrokerConfiguration,jdbcType=VARCHAR}
   </select>
 
+  <select id="getAgentErrorLogsTopicExistsKafkaCluster" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_kafka_cluster
+    where kafka_cluster_name = #{kafkaClusterName,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

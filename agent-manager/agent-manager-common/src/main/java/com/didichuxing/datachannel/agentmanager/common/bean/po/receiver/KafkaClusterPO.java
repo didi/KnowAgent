@@ -34,6 +34,32 @@ public class KafkaClusterPO extends BasePO {
      */
     private Long kafkaClusterId;
 
+    /**
+     * agent errorlogs 流对应 topic 名
+     */
+    private String agentErrorLogsTopic;
+
+    /**
+     * agent metrics 流对应 topic 名
+     */
+    private String agentMetricsTopic;
+
+    public String getAgentErrorLogsTopic() {
+        return agentErrorLogsTopic;
+    }
+
+    public void setAgentErrorLogsTopic(String agentErrorLogsTopic) {
+        this.agentErrorLogsTopic = agentErrorLogsTopic;
+    }
+
+    public String getAgentMetricsTopic() {
+        return agentMetricsTopic;
+    }
+
+    public void setAgentMetricsTopic(String agentMetricsTopic) {
+        this.agentMetricsTopic = agentMetricsTopic;
+    }
+
     public Long getId() {
         return id;
     }

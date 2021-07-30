@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.BaseDO;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -33,6 +34,32 @@ public class ReceiverDO extends BaseDO {
      * kafka集群id
      */
     private Long kafkaClusterId;
+
+    /**
+     * agent errorlogs 流对应 topic 名
+     */
+    private String agentErrorLogsTopic;
+
+    /**
+     * agent metrics 流对应 topic 名
+     */
+    private String agentMetricsTopic;
+
+    public String getAgentErrorLogsTopic() {
+        return agentErrorLogsTopic;
+    }
+
+    public void setAgentErrorLogsTopic(String agentErrorLogsTopic) {
+        this.agentErrorLogsTopic = agentErrorLogsTopic;
+    }
+
+    public String getAgentMetricsTopic() {
+        return agentMetricsTopic;
+    }
+
+    public void setAgentMetricsTopic(String agentMetricsTopic) {
+        this.agentMetricsTopic = agentMetricsTopic;
+    }
 
     public Long getId() {
         return id;
