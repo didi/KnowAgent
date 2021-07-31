@@ -62,6 +62,11 @@ public class SystemUtils {
      * @return 返回获取到的当前进程对应内存使用量
      */
     public static long getCurrentMemoryUsage() {
+        if(LOGGER.isInfoEnabled()) {
+            LOGGER.info(
+                    String.format("SystemUtils||getCurrentMemoryUsage={%d}", "osResourceService.getCurrentProcessMemoryUsed()")
+            );
+        }
         return osResourceService.getCurrentProcessMemoryUsed();
     }
 
