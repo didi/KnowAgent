@@ -95,7 +95,7 @@
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_kafka_cluster (id, kafka_cluster_name, kafka_cluster_broker_configuration, 
-      kafka_cluster_producer_init_configuration, kafka_cluster_id, operator,agent_metrics_send_topic, agent_error_logs_send_topic
+      kafka_cluster_producer_init_configuration, kafka_cluster_id, operator,agent_metrics_send_topic, agent_error_logs_send_topic,
       create_time, modify_time)
     values (#{id,jdbcType=BIGINT}, #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaClusterBrokerConfiguration,jdbcType=VARCHAR}, 
       #{kafkaClusterProducerInitConfiguration,jdbcType=VARCHAR}, #{kafkaClusterId, jdbcType=BIGINT}, #{operator,jdbcType=VARCHAR},
