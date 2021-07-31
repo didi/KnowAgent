@@ -127,8 +127,8 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
             KafkaClusterPO agentErrorLogsTopicExistsKafkaCluster = kafkaClusterDAO.getAgentErrorLogsTopicExistsKafkaCluster();
             if(null != agentErrorLogsTopicExistsKafkaCluster) {
                 throw new ServiceException(
-                        String.format("系统已存在配置agent errorlogs 流对应topic的kafkacluster={%s}", JSON.toJSONString(agentErrorLogsTopicExistsKafkaCluster)),
-                        ErrorCodeEnum.KAFKA_CLUSTER_CREATE_FAILED_CAUSE_BY_AGENT_ERROR_LOGS_TOPIC_EXISTS.getCode()
+                        String.format("系统已存在配置 agent errorlogs 流对应 topic 的 kafkacluster={%s}", JSON.toJSONString(agentErrorLogsTopicExistsKafkaCluster)),
+                        ErrorCodeEnum.KAFKA_CLUSTER_CREATE_OR_UPDATE_FAILED_CAUSE_BY_AGENT_ERROR_LOGS_TOPIC_EXISTS.getCode()
                 );
             }
         }
@@ -136,9 +136,13 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
          * agent metrics 流对应 topic 不为空，须校验系统中是否已存在该 topic 配置有值
          */
         if(StringUtils.isNotBlank(kafkaClusterDO.getAgentMetricsTopic())) {
-
-            Integer agentMetricsTopicExistsNum = kafkaClusterDAO.getAgentMetricsTopicExistsNum();
-
+            KafkaClusterPO agentMetricsTopicExistsKafkaCluster = kafkaClusterDAO.getAgentMetricsTopicExistsKafkaCluster();
+            if(null != agentMetricsTopicExistsKafkaCluster) {
+                throw new ServiceException(
+                        String.format("系统已存在配置 agent metrics 流对应 topic 的 kafkacluster={%s}", JSON.toJSONString(agentMetricsTopicExistsKafkaCluster)),
+                        ErrorCodeEnum.KAFKA_CLUSTER_CREATE_OR_UPDATE_FAILED_CAUSE_BY_AGENT_METRICS_TOPIC_EXISTS.getCode()
+                );
+            }
         }
 
 //        kafkaClusterPO = kafkaClusterDAO.selectByKafkaClusterBrokerConfiguration(kafkaClusterDO.getKafkaClusterBrokerConfiguration());
@@ -212,6 +216,32 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
                 );
             }
         }
+
+        /*
+         * agent error logs 流对应 topic 不为空，须校验系统中是否已存在该 topic 配置有值
+         */
+        if(StringUtils.isNotBlank(kafkaClusterDO.getAgentErrorLogsTopic())) {
+            KafkaClusterPO agentErrorLogsTopicExistsKafkaCluster = kafkaClusterDAO.getAgentErrorLogsTopicExistsKafkaCluster();
+            if(null != agentErrorLogsTopicExistsKafkaCluster && !agentErrorLogsTopicExistsKafkaCluster.getId().equals(kafkaClusterDO.getId())) {
+                throw new ServiceException(
+                        String.format("系统已存在配置 agent errorlogs 流对应 topic 的 kafkacluster={%s}", JSON.toJSONString(agentErrorLogsTopicExistsKafkaCluster)),
+                        ErrorCodeEnum.KAFKA_CLUSTER_CREATE_OR_UPDATE_FAILED_CAUSE_BY_AGENT_ERROR_LOGS_TOPIC_EXISTS.getCode()
+                );
+            }
+        }
+        /*
+         * agent metrics 流对应 topic 不为空，须校验系统中是否已存在该 topic 配置有值
+         */
+        if(StringUtils.isNotBlank(kafkaClusterDO.getAgentMetricsTopic())) {
+            KafkaClusterPO agentMetricsTopicExistsKafkaCluster = kafkaClusterDAO.getAgentMetricsTopicExistsKafkaCluster();
+            if(null != agentMetricsTopicExistsKafkaCluster && !agentMetricsTopicExistsKafkaCluster.getId().equals(kafkaClusterDO.getId())) {
+                throw new ServiceException(
+                        String.format("系统已存在配置 agent metrics 流对应 topic 的 kafkacluster={%s}", JSON.toJSONString(agentMetricsTopicExistsKafkaCluster)),
+                        ErrorCodeEnum.KAFKA_CLUSTER_CREATE_OR_UPDATE_FAILED_CAUSE_BY_AGENT_METRICS_TOPIC_EXISTS.getCode()
+                );
+            }
+        }
+
 //        if(!sourceReceiverDO.getKafkaClusterBrokerConfiguration().equals(kafkaClusterDO.getKafkaClusterBrokerConfiguration())) {
 //            KafkaClusterPO kafkaClusterPO = kafkaClusterDAO.selectByKafkaClusterBrokerConfiguration(kafkaClusterDO.getKafkaClusterBrokerConfiguration());
 //            if(null != kafkaClusterPO) {
@@ -527,6 +557,26 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
          */
         boolean topicExists = checkTopicExists(receiverDO, topic);
         return topicExists && kafkaBrokerConnectivityCheckResult;
+    }
+
+    @Override
+    public ReceiverDO getAgentErrorLogsTopicExistsReceiver() {
+        KafkaClusterPO kafkaClusterPO = kafkaClusterDAO.getAgentErrorLogsTopicExistsKafkaCluster();
+        if(null != kafkaClusterPO) {
+            return kafkaClusterManageServiceExtension.kafkaClusterPO2KafkaCluster(kafkaClusterPO);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public ReceiverDO getAgentMetricsTopicExistsReceiver() {
+        KafkaClusterPO kafkaClusterPO = kafkaClusterDAO.getAgentMetricsTopicExistsKafkaCluster();
+        if(null != kafkaClusterPO) {
+            return kafkaClusterManageServiceExtension.kafkaClusterPO2KafkaCluster(kafkaClusterPO);
+        } else {
+            return null;
+        }
     }
 
     class ReceiverDOComparator implements Comparator<ReceiverDO, Long> {

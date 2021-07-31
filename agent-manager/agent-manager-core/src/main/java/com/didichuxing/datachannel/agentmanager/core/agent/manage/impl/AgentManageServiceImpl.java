@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
@@ -45,11 +46,13 @@ import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentO
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
+import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +100,9 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     @Autowired
     private K8sPodManageService k8sPodManageService;
+
+    @Autowired
+    private KafkaClusterManageService kafkaClusterManageService;
 
     /**
      * 远程请求 agent url
@@ -152,6 +158,26 @@ public class AgentManageServiceImpl implements AgentManageService {
                     ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
             );
         }
+        /*
+         * 系统是否存在 agent errorlogs & metrics 流 对应 全局 接收端 配置，如存在 & 用户未设置待添加 agent 对应 errorlogs & metrcis 流 对应 topic，则 设置
+         */
+        if(StringUtils.isBlank(agentDO.getErrorLogsSendTopic())) {
+            ReceiverDO receiverDO = kafkaClusterManageService.getAgentErrorLogsTopicExistsReceiver();
+            if(null != receiverDO) {
+                agentDO.setErrorLogsSendReceiverId(receiverDO.getId());
+                agentDO.setErrorLogsSendTopic(receiverDO.getAgentErrorLogsTopic());
+                agentDO.setErrorLogsProducerConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            }
+        }
+        if(StringUtils.isBlank(agentDO.getMetricsSendTopic())) {
+            ReceiverDO receiverDO = kafkaClusterManageService.getAgentMetricsTopicExistsReceiver();
+            if(null != receiverDO) {
+                agentDO.setMetricsSendReceiverId(receiverDO.getId());
+                agentDO.setMetricsSendTopic(receiverDO.getAgentErrorLogsTopic());
+                agentDO.setMetricsProducerConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            }
+        }
+
         /*
          * 持久化待创建Agent对象
          */

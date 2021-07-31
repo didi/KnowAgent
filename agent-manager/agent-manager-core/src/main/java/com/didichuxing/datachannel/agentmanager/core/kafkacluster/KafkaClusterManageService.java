@@ -99,4 +99,15 @@ public interface KafkaClusterManageService {
      */
     boolean checkConnectivity(Long kafkaClusterId, String topic);
 
+    /**
+     *
+     * @return 返回系统全局 agent error logs 流对应接收端
+     */
+    ReceiverDO getAgentErrorLogsTopicExistsReceiver();
+
+    /**
+     * @return 返回系统全局 agent metrics 流对应接收端
+     */
+    ReceiverDO getAgentMetricsTopicExistsReceiver();
+
 }

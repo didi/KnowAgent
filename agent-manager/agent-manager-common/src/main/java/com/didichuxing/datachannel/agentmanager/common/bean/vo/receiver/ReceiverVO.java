@@ -21,8 +21,30 @@ public class ReceiverVO {
     @ApiModelProperty(value = "接收端创建时间", notes="")
     private Long createTime;
 
+    @ApiModelProperty(value = "agent errorlogs 流对应 topic 名")
+    private String agentErrorLogsTopic;
+
+    @ApiModelProperty(value = "agent metrics 流对应 topic 名")
+    private String agentMetricsTopic;
+
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAgentErrorLogsTopic() {
+        return agentErrorLogsTopic;
+    }
+
+    public void setAgentErrorLogsTopic(String agentErrorLogsTopic) {
+        this.agentErrorLogsTopic = agentErrorLogsTopic;
+    }
+
+    public String getAgentMetricsTopic() {
+        return agentMetricsTopic;
+    }
+
+    public void setAgentMetricsTopic(String agentMetricsTopic) {
+        this.agentMetricsTopic = agentMetricsTopic;
     }
 
     public void setKafkaClusterName(String kafkaClusterName) {

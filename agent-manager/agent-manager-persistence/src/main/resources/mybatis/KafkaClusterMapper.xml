@@ -10,10 +10,12 @@
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="agent_error_logs_send_topic" property="agentErrorLogsTopic" jdbcType="VARCHAR" />
+    <result column="agent_metrics_send_topic" property="agentMetricsTopic" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, kafka_cluster_name, kafka_cluster_broker_configuration, kafka_cluster_producer_init_configuration, kafka_cluster_id,
-    operator, create_time, modify_time
+    operator, agent_metrics_send_topic, agent_error_logs_send_topic, create_time, modify_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -93,85 +95,14 @@
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_kafka_cluster (id, kafka_cluster_name, kafka_cluster_broker_configuration, 
-      kafka_cluster_producer_init_configuration, kafka_cluster_id, operator,
+      kafka_cluster_producer_init_configuration, kafka_cluster_id, operator,agent_metrics_send_topic, agent_error_logs_send_topic
       create_time, modify_time)
     values (#{id,jdbcType=BIGINT}, #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaClusterBrokerConfiguration,jdbcType=VARCHAR}, 
       #{kafkaClusterProducerInitConfiguration,jdbcType=VARCHAR}, #{kafkaClusterId, jdbcType=BIGINT}, #{operator,jdbcType=VARCHAR},
+      #{agentMetricsTopic,jdbcType=VARCHAR}, #{agentErrorLogsTopic,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO" >
-    insert into tb_kafka_cluster
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="kafkaClusterName != null" >
-        kafka_cluster_name,
-      </if>
-      <if test="kafkaClusterBrokerConfiguration != null" >
-        kafka_cluster_broker_configuration,
-      </if>
-      <if test="kafkaClusterProducerInitConfiguration != null" >
-        kafka_cluster_producer_init_configuration,
-      </if>
-      <if test="operator != null" >
-        operator,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="modifyTime != null" >
-        modify_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="kafkaClusterName != null" >
-        #{kafkaClusterName,jdbcType=VARCHAR},
-      </if>
-      <if test="kafkaClusterBrokerConfiguration != null" >
-        #{kafkaClusterBrokerConfiguration,jdbcType=VARCHAR},
-      </if>
-      <if test="kafkaClusterProducerInitConfiguration != null" >
-        #{kafkaClusterProducerInitConfiguration,jdbcType=VARCHAR},
-      </if>
-      <if test="operator != null" >
-        #{operator,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyTime != null" >
-        #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO" >
-    update tb_kafka_cluster
-    <set >
-      <if test="kafkaClusterName != null" >
-        kafka_cluster_name = #{kafkaClusterName,jdbcType=VARCHAR},
-      </if>
-      <if test="kafkaClusterBrokerConfiguration != null" >
-        kafka_cluster_broker_configuration = #{kafkaClusterBrokerConfiguration,jdbcType=VARCHAR},
-      </if>
-      <if test="kafkaClusterProducerInitConfiguration != null" >
-        kafka_cluster_producer_init_configuration = #{kafkaClusterProducerInitConfiguration,jdbcType=VARCHAR},
-      </if>
-      <if test="operator != null" >
-        operator = #{operator,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyTime != null" >
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO" >
     update tb_kafka_cluster
     set kafka_cluster_name = #{kafkaClusterName,jdbcType=VARCHAR},
@@ -179,6 +110,8 @@
       kafka_cluster_producer_init_configuration = #{kafkaClusterProducerInitConfiguration,jdbcType=VARCHAR},
       kafka_cluster_id = #{kafkaClusterId,jdbcType=BIGINT},
       operator = #{operator,jdbcType=VARCHAR},
+      agent_metrics_send_topic = #{agentMetricsTopic,jdbcType=VARCHAR},
+      agent_error_logs_send_topic = #{agentErrorLogsTopic,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
@@ -202,7 +135,17 @@
     select
     <include refid="Base_Column_List" />
     from tb_kafka_cluster
-    where kafka_cluster_name = #{kafkaClusterName,jdbcType=VARCHAR}
+    where agent_error_logs_send_topic != ''
+    limit 1
+  </select>
+
+  <select id="getAgentMetricsTopicExistsKafkaCluster" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_kafka_cluster
+    where agent_metrics_send_topic != ''
+    limit 1
   </select>
 
 </mapper>
+

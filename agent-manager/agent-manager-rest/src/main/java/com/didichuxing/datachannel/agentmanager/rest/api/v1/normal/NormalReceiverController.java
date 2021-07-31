@@ -118,6 +118,8 @@ public class NormalReceiverController {
             receiverVO.setKafkaClusterBrokerConfiguration(receiverDO.getKafkaClusterBrokerConfiguration());
             receiverVO.setKafkaClusterName(receiverDO.getKafkaClusterName());
             receiverVO.setKafkaClusterProducerInitConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            receiverVO.setAgentErrorLogsTopic(receiverDO.getAgentErrorLogsTopic());
+            receiverVO.setAgentMetricsTopic(receiverDO.getAgentMetricsTopic());
             receiverVOList.add(receiverVO);
         }
         return receiverVOList;

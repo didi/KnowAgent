@@ -12,11 +12,7 @@ public interface KafkaClusterMapper {
 
     int insert(KafkaClusterPO record);
 
-    int insertSelective(KafkaClusterPO record);
-
     KafkaClusterPO selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(KafkaClusterPO record);
 
     int updateByPrimaryKey(KafkaClusterPO record);
 
@@ -32,9 +28,8 @@ public interface KafkaClusterMapper {
 
     KafkaClusterPO selectByKafkaClusterBrokerConfiguration(String kafkaClusterBrokerConfiguration);
 
-    int getAgentErrorLogsTopicExistsNum();
-
-    int getAgentMetricsTopicExistsNum();
-
     KafkaClusterPO getAgentErrorLogsTopicExistsKafkaCluster();
+
+    KafkaClusterPO getAgentMetricsTopicExistsKafkaCluster();
+
 }
