@@ -24,12 +24,6 @@ public class SystemUtils {
     private final static String          startTime;
     private static long                  preFullGcCount    = 0L;
 
-    /**
-     * 用于获取 OS 信息 bean
-     */
-    private static OperatingSystemMXBean osMxBean          = ManagementFactory
-                                                               .getOperatingSystemMXBean();
-
     static {
         startTime = new Date().toString();
     }
@@ -60,7 +54,7 @@ public class SystemUtils {
      * @return 返回当前 log-agent 进程对应 fd 使用量
      */
     public static long getFdCount() {
-        return osResourceService.getPid();
+        return osResourceService.getCurrentProcessFdUsed();
     }
 
     /**
