@@ -80,6 +80,8 @@ public interface CollectTaskMetricMapper {
 
     CollectTaskMetricPO selectLatest(@Param("taskId") Long taskId);
 
+    List<CollectTaskMetricPO> selectLatestMetrics(@Param("time") Long time, @Param("step") Integer step);
+
     Double selectAggregationForAll(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
 
     List<DashBoardStatisticsDO> groupByKeyAndMinute(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("key") String key, @Param("function") String function, @Param("metric") String metric);

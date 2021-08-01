@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
@@ -450,6 +451,16 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public CollectTaskMetricPO selectLatestMetric(Long taskId) {
+        return null;
+    }
+
+    @Override
+    public List<CollectTaskMetricPO> queryLatestMetrics(Long time, int step) {
+        return null;
+    }
+
+    @Override
+    public List<AgentMetricPO> queryLatestAgentMetrics(Long time, int step) {
         return null;
     }
 

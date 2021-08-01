@@ -271,6 +271,12 @@
     from agent_metric where hostname = #{hostname}
     order by heartbeat_time limit 1
   </select>
+  <select id="selectLatestMetrics" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from agent_metric
+    where heartbeat_time &gt; #{time} - #{step} and heartbeat_time &lt;= #{time}
+  </select>
   <select id="selectSum" resultType="java.lang.Long">
     select sum(${column})
     from agent_metric

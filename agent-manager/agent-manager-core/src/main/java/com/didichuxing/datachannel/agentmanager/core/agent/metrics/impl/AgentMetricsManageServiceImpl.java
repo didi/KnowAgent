@@ -1,13 +1,16 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.metrics.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -27,7 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class AgentMetricsManageServiceImpl implements AgentMetricsManageService {
@@ -363,9 +368,9 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         for (MetricPoint metricPoint : graph) {
             Object value = metricPoint.getValue();
             if (value.getClass() == Boolean.class) {
-                metricPoint.setValue((Boolean)value ? 1 : 0);
+                metricPoint.setValue((Boolean) value ? 1 : 0);
             } else if (value.getClass() == boolean.class) {
-                metricPoint.setValue((boolean)value ? 1 : 0);
+                metricPoint.setValue((boolean) value ? 1 : 0);
             }
         }
         return graph;
@@ -407,92 +412,70 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
+    public List<CollectTaskMetricPO> queryLatest(Long time) {
+        return agentMetricsDAO.queryLatestMetrics(time, MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
+    public List<AgentMetricPO> queryAgentLatest(Long time) {
+        return agentMetricsDAO.queryLatestAgentMetrics(time, MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
     public Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
         return agentMetricsDAO.queryAggregationForAll(startTime, endTime, column, function);
     }
 
     @Override
     public List<MetricPointList> getLogCollectTaskListCollectBytesLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.LOG_MODE_ID.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_BYTE.getRdsValue());
-        List<DashBoardStatisticsDO> sendBytesTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(sendBytesTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendBytesTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            Long logCollectTaskId = (Long) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
+        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+        Map<Long, Integer> idValueMap = new HashMap<>();
+        for (CollectTaskMetricPO metric : metrics) {
+            idValueMap.merge(metric.getLogModeId(), metric.getReadByte(), (a, b) -> a + b);
+        }
+        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+        List<Long> topTaskIds = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (Long taskId : topTaskIds) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.READ_BYTE, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
+            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(taskId);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
-            if(null != logCollectTaskDO) {
+            if (logCollectTaskDO != null) {
                 metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
             } else {
                 metricPointList.setName(StringUtils.EMPTY);
-                LOGGER.warn(
-                        "class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
-                            String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", dashBoardStatisticsDO.getKey())
-                        );
+                LOGGER.warn("class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
+                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", taskId));
             }
             result.add(metricPointList);
         }
         return result;
     }
 
-    /**
-     * 根据给定DashBoardStatisticsDO对象集，获取各指标按 heartbeat time 倒序排序，根据指标值获取其最大 topN
-     * @param dashBoardStatisticsDOList DashBoardStatisticsDO 对象集
-     * @param topN top 数
-     * @return 返回根据给定DashBoardStatisticsDO对象集，获取到的各指标按 heartbeat time 倒序排序，根据指标值获取其最大 topN
-     */
-    private List<DashBoardStatisticsDO> getMetricPointListLastestTop5(List<DashBoardStatisticsDO> dashBoardStatisticsDOList, int topN) {
-        Map<Object, List<DashBoardStatisticsDO>> id2DashboardStatisticsDOMap = new HashMap<>();
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : dashBoardStatisticsDOList) {
-            List<DashBoardStatisticsDO> list = id2DashboardStatisticsDOMap.get(dashBoardStatisticsDO.getKey());
-            if(null == list) {
-                list = new ArrayList<>();
-                list.add(dashBoardStatisticsDO);
-                id2DashboardStatisticsDOMap.put(dashBoardStatisticsDO.getKey(), list);
-            } else {
-                list.add(dashBoardStatisticsDO);
-            }
-        }
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOLastest1MinList = new ArrayList<>(id2DashboardStatisticsDOMap.size());
-        for (Map.Entry<Object, List<DashBoardStatisticsDO>> entry : id2DashboardStatisticsDOMap.entrySet()) {
-            List<DashBoardStatisticsDO> list = entry.getValue();
-            Collections.sort(list, dashBoardStatisticsDOHeartbeatTimeComparator);
-            if(CollectionUtils.isNotEmpty(list)) {
-                dashBoardStatisticsDOLastest1MinList.add(list.get(0));
-            }
-        }
-        Collections.sort(dashBoardStatisticsDOLastest1MinList, dashBoardStatisticsDOValueComparator);
-        List<DashBoardStatisticsDO> sendBytesTop5List = new ArrayList<>(topN);
-        for (int i = 0, size = dashBoardStatisticsDOLastest1MinList.size() > topN ? topN : dashBoardStatisticsDOLastest1MinList.size(); i < size; i++) {
-            DashBoardStatisticsDO dashBoardStatisticsDO = dashBoardStatisticsDOLastest1MinList.get(i);
-            sendBytesTop5List.add(dashBoardStatisticsDO);
-        }
-        return sendBytesTop5List;
-    }
-
-
     @Override
     public List<MetricPointList> getLogCollectTaskListCollectCountLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.LOG_MODE_ID.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_COUNT.getRdsValue());
-        List<DashBoardStatisticsDO> sendCountTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(sendCountTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendCountTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            Long logCollectTaskId = (Long) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
+        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+        Map<Long, Integer> idValueMap = new HashMap<>();
+        for (CollectTaskMetricPO metric : metrics) {
+            idValueMap.merge(metric.getLogModeId(), metric.getReadCount(), (a, b) -> a + b);
+        }
+        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+        List<Long> topTaskIds = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (Long taskId : topTaskIds) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.READ_COUNT, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
+            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(taskId);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
-            if(null != logCollectTaskDO) {
+            if (logCollectTaskDO != null) {
                 metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
             } else {
                 metricPointList.setName(StringUtils.EMPTY);
-                LOGGER.warn(
-                        "class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectCountLastest1MinTop5||msg={}",
-                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", dashBoardStatisticsDO.getKey())
-                );
+                LOGGER.warn("class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
+                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", taskId));
             }
             result.add(metricPointList);
         }
@@ -501,16 +484,20 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPointList> getAgentListCollectBytesLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_BYTE.getRdsValue());
-        List<DashBoardStatisticsDO> sendBytesTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(sendBytesTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendBytesTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            String agentHostName = (String) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromLogCollectTaskMetrics(agentHostName, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM);
+        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+        Map<String, Integer> idValueMap = new HashMap<>();
+        for (CollectTaskMetricPO metric : metrics) {
+            idValueMap.merge(metric.getHostname(), metric.getReadByte(), (a, b) -> a + b);
+        }
+        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+        List<Map.Entry<String, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+        List<String> hostnames = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (String hostname : hostnames) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByLogModel(null, null, hostname, startTime, endTime, AgentMetricField.READ_BYTE, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(agentHostName);
+            metricPointList.setName(hostname);
             result.add(metricPointList);
         }
         return result;
@@ -518,16 +505,20 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPointList> getAgentListCollectCountLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteLogCollectTaskMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.SUM.getValue(), AgentMetricField.SEND_COUNT.getRdsValue());
-        List<DashBoardStatisticsDO> sendBytesTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(sendBytesTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : sendBytesTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            String agentHostName = (String) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromLogCollectTaskMetrics(agentHostName, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM);
+        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+        Map<String, Integer> idValueMap = new HashMap<>();
+        for (CollectTaskMetricPO metric : metrics) {
+            idValueMap.merge(metric.getHostname(), metric.getReadCount(), (a, b) -> a + b);
+        }
+        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+        List<Map.Entry<String, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+        List<String> hostnames = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (String hostname : hostnames) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByLogModel(null, null, hostname, startTime, endTime, AgentMetricField.READ_COUNT, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(agentHostName);
+            metricPointList.setName(hostname);
             result.add(metricPointList);
         }
         return result;
@@ -535,16 +526,15 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPointList> getAgentListCpuUsageLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.CPU_USAGE.getRdsValue());
-        List<DashBoardStatisticsDO> cpuUsageTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(cpuUsageTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : cpuUsageTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            String agentHostName = (String) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.CPU_USAGE, CalcFunction.MAX);
+        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+        int limit = 5 < metrics.size() ? 5 : metrics.size();
+        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getCpuUsage().compareTo(o1.getCpuUsage())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (String hostname : hostnames) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.CPU_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(agentHostName);
+            metricPointList.setName(hostname);
             result.add(metricPointList);
         }
         return result;
@@ -552,16 +542,15 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPointList> getAgentListFdUsedLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.FD_COUNT.getRdsValue());
-        List<DashBoardStatisticsDO> fdUsedTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(fdUsedTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : fdUsedTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            String agentHostName = (String) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.FD_COUNT, CalcFunction.MAX);
+        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+        int limit = 5 < metrics.size() ? 5 : metrics.size();
+        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getFdCount().compareTo(o1.getFdCount())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (String hostname : hostnames) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.FD_COUNT, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(agentHostName);
+            metricPointList.setName(hostname);
             result.add(metricPointList);
         }
         return result;
@@ -569,16 +558,15 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPointList> getAgentListMemoryUsedLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.MEMORY_USAGE.getRdsValue());
-        List<DashBoardStatisticsDO> fdUsedTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(fdUsedTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : fdUsedTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            String agentHostName = (String) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.MEMORY_USAGE, CalcFunction.MAX);
+        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+        int limit = 5 < metrics.size() ? 5 : metrics.size();
+        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getMemoryUsage().compareTo(o1.getMemoryUsage())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (String hostname : hostnames) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.MEMORY_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(agentHostName);
+            metricPointList.setName(hostname);
             result.add(metricPointList);
         }
         return result;
@@ -586,16 +574,15 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPointList> getAgentListFullGcCountLastest1MinTop5(Long startTime, Long endTime) {
-        List<DashBoardStatisticsDO> dashBoardStatisticsDOList = agentMetricsDAO.groupByKeyAndMinuteAgentMetric(startTime, endTime, AgentMetricField.HOSTNAME.getRdsValue(), CalcFunction.MAX.getValue(), AgentMetricField.GC_COUNT.getRdsValue());
-        List<DashBoardStatisticsDO> fdUsedTopNList = getMetricPointListLastestTop5(dashBoardStatisticsDOList, 5);
-        List<MetricPointList> result = new ArrayList<>(fdUsedTopNList.size());
-        for (DashBoardStatisticsDO dashBoardStatisticsDO : fdUsedTopNList) {
-            Object key = dashBoardStatisticsDO.getKey();
-            String agentHostName = (String) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByAgentFromAgentMetrics(agentHostName, startTime, endTime, AgentMetricField.GC_COUNT, CalcFunction.MAX);
+        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+        int limit = 5 < metrics.size() ? 5 : metrics.size();
+        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getGcCount().compareTo(o1.getGcCount())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        List<MetricPointList> result = new ArrayList<>();
+        for (String hostname : hostnames) {
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.GC_COUNT, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(agentHostName);
+            metricPointList.setName(hostname);
             result.add(metricPointList);
         }
         return result;
@@ -611,72 +598,82 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         return agentMetricsDAO.queryAggregationGroupByMinute(startTime, endTime, column, function);
     }
 
+    /**
+     * 根据给定DashBoardStatisticsDO对象集，获取各指标按 heartbeat time 倒序排序，根据指标值获取其最大 topN
+     *
+     * @param dashBoardStatisticsDOList DashBoardStatisticsDO 对象集
+     * @param topN                      top 数
+     * @return 返回根据给定DashBoardStatisticsDO对象集，获取到的各指标按 heartbeat time 倒序排序，根据指标值获取其最大 topN
+     */
+    private List<DashBoardStatisticsDO> getMetricPointListLastestTop5(List<DashBoardStatisticsDO> dashBoardStatisticsDOList, int topN) {
+        Map<Object, List<DashBoardStatisticsDO>> id2DashboardStatisticsDOMap = new HashMap<>();
+        for (DashBoardStatisticsDO dashBoardStatisticsDO : dashBoardStatisticsDOList) {
+            List<DashBoardStatisticsDO> list = id2DashboardStatisticsDOMap.get(dashBoardStatisticsDO.getKey());
+            if (null == list) {
+                list = new ArrayList<>();
+                list.add(dashBoardStatisticsDO);
+                id2DashboardStatisticsDOMap.put(dashBoardStatisticsDO.getKey(), list);
+            } else {
+                list.add(dashBoardStatisticsDO);
+            }
+        }
+        List<DashBoardStatisticsDO> dashBoardStatisticsDOLastest1MinList = new ArrayList<>(id2DashboardStatisticsDOMap.size());
+        for (Map.Entry<Object, List<DashBoardStatisticsDO>> entry : id2DashboardStatisticsDOMap.entrySet()) {
+            List<DashBoardStatisticsDO> list = entry.getValue();
+            if (CollectionUtils.isNotEmpty(list)) {
+                list.sort(dashBoardStatisticsDOHeartbeatTimeComparator);
+                dashBoardStatisticsDOLastest1MinList.add(list.get(0));
+            }
+        }
+        dashBoardStatisticsDOLastest1MinList.sort(dashBoardStatisticsDOValueComparator);
+        List<DashBoardStatisticsDO> sendBytesTop5List = new ArrayList<>(topN);
+        for (int i = 0, size = dashBoardStatisticsDOLastest1MinList.size() > topN ? topN : dashBoardStatisticsDOLastest1MinList.size(); i < size; i++) {
+            DashBoardStatisticsDO dashBoardStatisticsDO = dashBoardStatisticsDOLastest1MinList.get(i);
+            sendBytesTop5List.add(dashBoardStatisticsDO);
+        }
+        return sendBytesTop5List;
+    }
+
     class DashBoardStatisticsDOHeartbeatTimeComparator implements Comparator<DashBoardStatisticsDO> {
         @Override
         public int compare(DashBoardStatisticsDO o1, DashBoardStatisticsDO o2) {
-            long result = o1.getHeartbeatTime() - o2.getHeartbeatTime();
-            if(0L == result) {
-                return 0;
-            } else if(0 < result) {
-                return 1;
-            } else {
-                return -1;
-            }
+            return o1.getHeartbeatTime().compareTo(o2.getHeartbeatTime());
         }
     }
 
     class DashBoardStatisticsDOValueComparator implements Comparator<DashBoardStatisticsDO> {
         @Override
         public int compare(DashBoardStatisticsDO o1, DashBoardStatisticsDO o2) {
-            if(o1.getMetricValue() instanceof Long) {
-                Long o1Value = (Long) o1.getMetricValue();
-                Long o2Value = (Long )o2.getMetricValue();
-                Long result = o1Value - o2Value;
-                if(0L == result) {
-                    return 0;
-                } else if(0 < result) {
-                    return 1;
-                } else {
-                    return -1;
+            if (o1.getMetricValue() instanceof Number && o2.getMetricValue() instanceof Number) {
+                Number n1 = ((Number) o1.getMetricValue());
+                Number n2 = ((Number) o2.getMetricValue());
+                if (n1 instanceof Long && n2 instanceof Long) {
+                    return ((Long) n1).compareTo((Long) n2);
                 }
-            } else if(o1.getMetricValue() instanceof Integer) {
-                Integer o1Value = (Integer) o1.getMetricValue();
-                Integer o2Value = (Integer )o2.getMetricValue();
-                Integer result = o1Value - o2Value;
-                if(0L == result) {
-                    return 0;
-                } else if(0 < result) {
-                    return 1;
-                } else {
-                    return -1;
+                if (n1 instanceof Integer && n2 instanceof Integer) {
+                    return ((Integer) n1).compareTo((Integer) n2);
                 }
-            } else if(o1.getMetricValue() instanceof Float) {
-                Float o1Value = (Float) o1.getMetricValue();
-                Float o2Value = (Float )o2.getMetricValue();
-                Float result = o1Value - o2Value;
-                if(0L == result) {
-                    return 0;
-                } else if(0 < result) {
-                    return 1;
-                } else {
-                    return -1;
+                if (n1 instanceof Float && n2 instanceof Float) {
+                    return ((Float) n1).compareTo((Float) n2);
                 }
-            } else if(o1.getMetricValue() instanceof Double) {
-                Double o1Value = (Double) o1.getMetricValue();
-                Double o2Value = (Double )o2.getMetricValue();
-                Double result = o1Value - o2Value;
-                if(0L == result) {
-                    return 0;
-                } else if(0 < result) {
-                    return 1;
-                } else {
-                    return -1;
+                if (n1 instanceof Double && n2 instanceof Double) {
+                    return ((Double) n1).compareTo((Double) n2);
                 }
-            } else {
+                if (n1 instanceof BigDecimal && n2 instanceof BigDecimal) {
+                    return ((BigDecimal) n1).compareTo((BigDecimal) n2);
+                }
                 throw new ServiceException(
                         String.format(
                                 "class=DashBoardStatisticsDOValueComparator||method=compare||msg={%s}",
                                 String.format("给定DashBoardStatisticsDO对象={%s}对应metricValue属性值类型={%s}系统不支持", JSON.toJSONString(o1), o1.getMetricValue().getClass().getName())
+                        ),
+                        ErrorCodeEnum.UNSUPPORTED_CLASS_CAST_EXCEPTION.getCode()
+                );
+            } else {
+                throw new ServiceException(
+                        String.format(
+                                "class=DashBoardStatisticsDOValueComparator||method=compare||msg={%s}",
+                                String.format("metric value不为数字, o1 class=%s, o2 class=%s", o1.getMetricValue().getClass().getCanonicalName(), o2.getMetricValue().getClass().getCanonicalName())
                         ),
                         ErrorCodeEnum.UNSUPPORTED_CLASS_CAST_EXCEPTION.getCode()
                 );

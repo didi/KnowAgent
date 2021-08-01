@@ -316,6 +316,16 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public List<CollectTaskMetricPO> queryLatestMetrics(Long time, int step) {
+        return collectTaskMetricMapper.selectLatestMetrics(time, step);
+    }
+
+    @Override
+    public List<AgentMetricPO> queryLatestAgentMetrics(Long time, int step) {
+        return agentMetricMapper.selectLatestMetrics(time, step);
+    }
+
+    @Override
     public List<DashBoardStatisticsDO> groupByKeyAndMinuteLogCollectTaskMetric(Long startTime, Long endTime, String key, String function, String metric) {
         return collectTaskMetricMapper.groupByKeyAndMinute(startTime, endTime, key, function, metric);
     }
