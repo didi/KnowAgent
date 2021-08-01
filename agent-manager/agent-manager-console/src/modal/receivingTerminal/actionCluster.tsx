@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as actions from '../../actions';
 import '../../container/agent-management/index.less';
-import { Modal, Form, Input, message } from 'antd';
+import { Modal, Form, Input, message, Checkbox } from 'antd';
 import { connect } from "react-redux";
 import { IFormProps } from '../../interface/common';
 import { addReceive, modifyReceive } from '../../api/receivingTerminal'
@@ -12,7 +12,6 @@ import TextArea from "antd/lib/input/TextArea";
 const mapStateToProps = (state: any) => ({
   params: state.modal.params,
 });
-
 const ActionCluster = (props: { dispatch: any, params: any }) => {
   const ref = React.createRef();
 
@@ -27,6 +26,8 @@ const ActionCluster = (props: { dispatch: any, params: any }) => {
           kafkaClusterName: values.kafkaClusterName,
           kafkaClusterBrokerConfiguration: values.kafkaClusterBrokerConfiguration,
           kafkaClusterProducerInitConfiguration: values.kafkaClusterProducerInitConfiguration,
+          metricsReceiveTopic: values.metricsReceiveTopic,
+          errorLogsReceiveTopic: values.errorLogsReceiveTopic
         } as unknown as IReceivingTerminal;
         return modifyReceive(params).then((res: any) => {
           message.success('修改成功！');
@@ -40,6 +41,8 @@ const ActionCluster = (props: { dispatch: any, params: any }) => {
           kafkaClusterName: values.kafkaClusterName,
           kafkaClusterBrokerConfiguration: values.kafkaClusterBrokerConfiguration,
           kafkaClusterProducerInitConfiguration: values.kafkaClusterProducerInitConfiguration,
+          metricsReceiveTopic: values.metricsReceiveTopic,
+          errorLogsReceiveTopic: values.errorLogsReceiveTopic
         } as unknown as IReceivingTerminal;
         return addReceive(params).then((res: any) => {
 
@@ -63,6 +66,7 @@ const ActionCluster = (props: { dispatch: any, params: any }) => {
       visible={true}
       onOk={handleModifyOk}
       onCancel={handleModifyCancel}
+      width={550}
     >
       <WrappedClusterForm ref={ref} params={props.params} />
     </Modal>
@@ -70,7 +74,7 @@ const ActionCluster = (props: { dispatch: any, params: any }) => {
 }
 
 const actionClusterLayout = {
-  labelCol: { span: 6 },
+  labelCol: { span: 7 },
   wrapperCol: { span: 16 },
 };
 
@@ -79,7 +83,25 @@ const ActionClusterForm = (props: IFormProps) => {
   const { getFieldDecorator } = props.form;
   let { formData } = props;
   const [cluster, setHcluster] = useState(formData.record);
-
+  const [checkValue, setCheckValue] = useState<any[]>([])
+  const checkOption = [
+    {
+      label: '设置为默认指标流接受集群',
+      value: 1
+    },
+    {
+      label: '设置为默认错误日志流接受集群',
+      value: 2
+    }
+  ]
+  const handleChange = (e: any[]) => {
+    setCheckValue(e)
+  }
+  useEffect(() => {
+    if (cluster) {
+      setCheckValue([cluster.kafkaClusterName ? 1 : 0, cluster.kafkaClusterName ? 2 : 0])
+    }
+  }, [])
   return (
     <Form
       className="new-host"
@@ -131,6 +153,41 @@ const ActionClusterForm = (props: IFormProps) => {
           <TextArea placeholder="请输入" />,
         )}
       </Form.Item>
+      {/* 设置默认接受集群 需要做判断是否存在禁用按钮 */}
+      <div className='metricsCheck' style={{ marginBottom: '20px' }}>
+        <Checkbox.Group value={[...checkValue]} style={{ width: '100%', display: 'flex', justifyContent: 'center' }} onChange={handleChange} >
+          <Checkbox value={1}>设置为默认指标流接受2群</Checkbox>
+          <Checkbox value={2}>设置为默认错误日志流接受集群</Checkbox>
+        </Checkbox.Group>
+      </div>
+      {checkValue.includes(1) && <Form.Item label='指标流接收Topic'>
+        {getFieldDecorator('metricsReceiveTopic', {
+          initialValue: cluster && cluster.metricsReceiveTopic,
+          rules: [{
+            required: true,
+            message: '请输入',
+            validator: (rule: any, value: string) => {
+              return !!value && new RegExp(regAdress).test(value);
+            },
+          }],
+        })(
+          <Input placeholder="请输入" />,
+        )}
+      </Form.Item>}
+      {checkValue.includes(2) && <Form.Item label='错误日志流接收Topic'>
+        {getFieldDecorator('errorLogsReceiveTopic', {
+          initialValue: cluster && cluster.errorLogsReceiveTopic,
+          rules: [{
+            required: true,
+            message: '请输入',
+            validator: (rule: any, value: string) => {
+              return !!value && new RegExp(regAdress).test(value);
+            },
+          }],
+        })(
+          <Input placeholder="请输入" />,
+        )}
+      </Form.Item>}
     </Form>
   )
 }

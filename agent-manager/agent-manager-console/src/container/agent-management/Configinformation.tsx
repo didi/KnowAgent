@@ -34,6 +34,7 @@ export const AgentConfigInfo = (props: any) => {
   React.useEffect(() => {
     try {
       getAgentDetails(hostDetail?.agentId).then(res => {
+        console.log(res, 'res')
         setAgentDetail(res)
       })
     } catch (error) {

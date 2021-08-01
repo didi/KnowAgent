@@ -36,6 +36,7 @@ export const apiMap = {
   deleteHosts: getApi('/op/hosts'), // 删除主机 0：删除成功 10000：参数错误 23000：待删除主机在系统不存在 23004：主机存在关联的容器导致主机删除失败 22001：Agent存在未采集完的日志
   getHostDetail: getApi('/rd/host'), // 根据host对象id获取Host&Agent对象信息
   getAgentMetrics: getApi('/rd/agent'),// 根据id获取Agent对象信息
+  getAgentCollectList: getApi('/normal/agent/metrics/collect-tasks'), //获取Agent详情采集任务列表
   // collect
   getCollectMetrics: getApi('/normal/collect-task'),// 获取运行指标图表 根据给定LogCollectTask对象id，获取给定时间范围（startTime ~ endTime）内的LogCollectTask运行指标集
   getCollectTaskList: getApi('/normal/collect-task/paging'),// 查询日志采集任务列表
@@ -46,7 +47,7 @@ export const apiMap = {
   getCollectDetail: getApi('/normal/collect-task'), // 查看日志采集任务详情
   getHostCollectTask: getApi('/normal/host/collect-task'), // 查询给定日志采集任务关联的主机信息
   getHostCollectTaskDetail: getApi('/normal/host'), // 根据id获取Host对象信息
-  getCollectPathList:getApi('/rd/agent/path'), // 获取日志路径下的所有文件列表
+  getCollectPathList: getApi('/rd/agent/path'), // 获取日志路径下的所有文件列表
 
   // version
   getVersionList: getApi('/op/version/paging'),
@@ -69,4 +70,7 @@ export const apiMap = {
   // Operate Record 
   getRecordList: getApi('/op/record/list'),
   getRecordModules: getApi('/op/record/listModules'),
+
+  // 工作台 指标流和错误日志流集群校验接口
+  getMetricsErrorlogs: getApi('/normal/receivers/global-agent-errorlogs-metrics-receiver-exists')
 };

@@ -23,16 +23,21 @@ interface ILoopAddLogFileType extends FormComponentProps {
 const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
   // console.log(props,'props=====');
   const editUrl = window.location.pathname.includes('/edit-task');
-  const { list, remove, getKey, push, resetList } = useDynamicList(['']);
+  const { list, remove, getKey, push, resetList, replace } = useDynamicList<any>([]);
   const { getFieldDecorator, validateFieldsAndScroll, resetFields, getFieldValue } = props.form;
   const [addFileLog, setAddFileLog] = useState({} as any);
   const [suffixfiles, setSuffixfiles] = useState(0);
   const [slicingRuleLog, setSlicingRuleLog] = useState(0);
 
-  const handlelogSuffixfiles = (key: number) => {
+  const handlelogSuffixfiles = async (key: number) => {
+    // console.log(list, key, "key")
+
     const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular`)
     const logFilePath = getFieldValue(`step2_file_path_${key}`)
     const hostName = getFieldValue(`step2_hostName`)
+    // console.log(logFilePath, 'logFilePath')
+    // replace(key, logFilePath)
+
     const params = {
       path: logFilePath,
       suffixMatchRegular: logSuffixfilesValue,
@@ -52,12 +57,13 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
   // }
   const addPush = () => {
     validateFieldsAndScroll((errors: any, values: any) => {
+      // console.log(values, 'values')
       if (errors) {
         resetFields(Object.keys(errors));
       }
       const index = Math.max(...setIndexs(values));
       let filelog = {} as any;
-      const i = index + 1;
+      // const i = index + 1;
       // filelog[`step2_file_path_${i}`] = '';// 文件日志路径
       // filelog[`step2_file_suffixSeparationCharacter_${i}`] = values[`step2_file_suffixSeparationCharacter_${index}`]; // 文件名后缀分隔字符
       // filelog[`step2_file_suffixMatchType_${i}`] = values[`step2_file_suffixMatchType_${index}`]; // 采集文件后缀匹配 suffixfiles 0固定格式匹配 1正则匹配
@@ -77,12 +83,20 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
       //   logPath.push(values[`step2_file_path_${index}`])
 
       // }
+      // console.log(index, 'index')
       push(values[`step2_file_path_${index}`]);
+      // console.log(list, 'list')
       setSuffixfiles(values[`step2_file_suffixMatchType_${index}`]);
       setSlicingRuleLog(values[`step2_file_sliceType_${index}`]);
     });
   };
 
+  const reset = (index: any) => {
+    console.log(index)
+
+    remove(index)
+    console.log(list, 'resetList')
+  }
 
   const row = (index: any, item: any) => (
     <div key={getKey(index)}>
@@ -93,28 +107,24 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
           initialValue: item,
           rules: [{
             required: true,
-            massage: '请输入日志路径',
-            // validator: (rule: any, value: string, cb: any) => {
-            //   console.log(rule, 'rule')
-            //   console.log(value, 'value')
-            //   console.log(list, 'list')
-            //   console.log(logPath, 'logPath')
-            //   if (!value) {
-            //     rule.massage = '请输入日志路径'
-            //     cb('请输入日志路径')
-            //   } else if (logPath.includes(value)) {
-            //     rule.massage = '日志路径不可重复'
-            //     cb('日志路径不可重复')
-            //   } else {
-            //     cb()
-            //   }
-            //   // if (list.includes(value))
-            //   // return !!value && new RegExp(regName).test(value);
-            // },
+            // message: '请输入日志路径',
+            validator: (rule: any, value: string, cb: any) => {
+              console.log(rule, 'rule')
+              console.log(value, 'value')
+              console.log(list, 'list')
+              if (!value) {
+                rule.message = '请输入日志路径'
+                cb(`请输入日志路径${index}`)
+              } else {
+                cb()
+              }
+              // if (list.includes(value))
+              // return !!value && new RegExp(regName).test(value);
+            },
           }],
-        })(<Input onChange={() => debouncedCallApi(getKey(index))} className={`w-300 step2_file_path_input${getKey(index)}`} placeholder="如：/home/xiaoju/changjiang/logs/app.log" />)}
+        })(<Input onInput={() => debouncedCallApi(getKey(index))} className={`w-300 step2_file_path_input${getKey(index)}`} placeholder="如：/home/xiaoju/changjiang/logs/app.log" />)}
         {list.length > 1 && (<Icon type="minus-circle-o" className='ml-10' onClick={() => {
-          remove(index)
+          reset(index)
         }} />)}
         {list.length < 10 && (<Icon type="plus-circle-o" className='ml-10' onClick={() => addPush()} />)}
       </Form.Item>

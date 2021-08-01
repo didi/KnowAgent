@@ -4,7 +4,7 @@ import { Modal, Form, Input, Select, Tooltip, Button, Row, AutoComplete, message
 import { connect } from "react-redux";
 import { hostTypes } from '../../constants/common';
 import { IFormProps } from '../../interface/common';
-import { regName, regIp } from '../../constants/reg';
+import { regName, regIp, regString128 } from '../../constants/reg';
 import { addOpHosts, testHost, getHosts, getHostMachineZone } from '../../api/agent'
 import { IAddOpHostsParams, IHosts } from '../../interface/agent';
 import { judgeEmpty } from '../../lib/utils';
@@ -186,7 +186,17 @@ const NewHostForm = (props: IFormProps) => {
         : null}
       <Form.Item label="所属机房">
         {getFieldDecorator('machineZone', {
-          rules: [{ required: false }],
+          rules: [{
+            required: false,
+            validator: (rule: any, value: string, cb: any) => {
+              if (!new RegExp(regString128).test(value)) {
+                rule.message = '最大长度限制128位'
+                cb('最大长度限制128位')
+              } else {
+                cb()
+              }
+            },
+          }],
         })(
           <AutoComplete
             placeholder="请选择或输入"

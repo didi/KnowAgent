@@ -78,6 +78,8 @@ export class ClusterList extends React.Component<Props> {
 
   public handleNewCluster = () => {
     this.props.setModalId('ActionCluster', {
+      metricsReceiveTopic: false,
+      errorLogsReceiveTopic: true,
       cb: () => this.getReceivingTerminalList(this.state.receivingParams),
     });
   }
@@ -101,6 +103,7 @@ export class ClusterList extends React.Component<Props> {
       const data = res?.resultSet.map(item => {
         return { key: item.id, ...item }
       });
+      // 处理 默认指标流 默认错误日志流 是否存在
       this.setState({
         clusterList: data,
         loading: false,
@@ -145,6 +148,8 @@ export class ClusterList extends React.Component<Props> {
                 onClick={() => {
                   this.props.setModalId('ActionCluster', {
                     record,
+                    metricsReceiveTopic: false,
+                    errorLogsReceiveTopic: true,
                     cb: () => this.getReceivingTerminalList(this.state.receivingParams),
                   });
                 }}

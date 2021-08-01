@@ -15,8 +15,9 @@ const mapStateToProps = (state: any) => ({
 });
 
 const MetricDetail = (props: { dispatch: any, params: any }) => {
-  const { lastMetricDetail } = props.params
-  let str = JSON.stringify(lastMetricDetail, null, 2)
+  console.log(props, 'MetricDetail')
+  const lastMetricDetail = props.params
+  let metricDetail = JSON.stringify(lastMetricDetail, null, 2)
   const handleAssociateCancel = () => {
     props.dispatch(actions.setDrawerId(''));
   }
@@ -33,7 +34,7 @@ const MetricDetail = (props: { dispatch: any, params: any }) => {
     >
       {
         <pre>
-          {str}
+          {metricDetail}
         </pre>
       }
     </Drawer>

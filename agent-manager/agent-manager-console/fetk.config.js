@@ -42,7 +42,7 @@ module.exports = {
       //   changeOrigin: true,
       // },
       '/api/v1': {
-        target: 'http://116.85.23.35',
+        target: 'http://116.85.23.35:80',
         changeOrigin: true,
       },
       '/bigdata_cloud_agent_manager_test/': {

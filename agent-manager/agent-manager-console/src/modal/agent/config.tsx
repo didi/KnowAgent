@@ -101,32 +101,32 @@ export const getCollectFileInfo = (info: any) => {
   const CollectFileInfoList = [
     {
       label: '采集文件名',
-      key: 'collectFileName',
+      key: 'fileName',
     },
     {
       label: '切片时间戳配置是否合理',
-      key: 'sliceLogTimeStamp',
+      key: 'validTimeConfig',
     },
     {
       label: '日志待采集时间',
-      key: 'logStayCollectTime',
+      key: 'logTime',
     },
-    {
-      label: '是否为顺序文件',
-      key: 'whetherSequentialFile',
-    },
+    // {
+    //   label: '是否为顺序文件',
+    //   key: 'whetherSequentialFile',
+    // },
     {
       label: '是否采集至文件末尾',
-      key: 'whetherCollectFileLast',
+      key: 'fileEnd',
     },
     {
       label: '文件最新修改时间',
-      key: 'fileNewModifyTime',
+      key: 'lastModifyTime',
     },
-    {
-      label: '采集进度',
-      key: 'collectProgress',
-    },
+    // {
+    //   label: '采集进度',
+    //   key: 'collectProgress',
+    // },
   ]
   return CollectFileInfoList
 }

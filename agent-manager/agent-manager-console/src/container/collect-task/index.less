@@ -25,3 +25,54 @@
     display: none;
   }
 }
+
+.agentConfigInfo {
+  padding: 0 20px;
+
+  .agentConfigInfoLeft {
+    .ant-descriptions-item-label {
+      margin-left: 50px;
+    }
+  }
+
+  .ant-descriptions-view {
+    border: 1px solid #7e7e7e;
+    border-radius: 10px;
+  }
+
+  .descriptionsBox{
+    .collectLogConfig{
+      border: 1px solid #7e7e7e;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 20px;
+      .ant-descriptions-view {
+        border: none;
+        border-radius: 0;
+      }
+    }
+  }
+
+  tr {
+    display: flex;
+    font-size: 16px !important;
+    padding: 10 0 0;
+
+    td {
+      flex: 1;
+      display: flex;
+      padding: 10px;
+
+      // margin-left: 20px;
+      .ant-descriptions-item-content {
+        width: 60%;
+      }
+    }
+  }
+
+  tr:nth-child(odd) {
+    background: #f2faff;
+  }
+
+  // background: #cccccc !important;
+}

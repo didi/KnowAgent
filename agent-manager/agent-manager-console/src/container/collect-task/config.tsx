@@ -42,80 +42,81 @@ export const collectEditTaskBreadcrumb = [{
 }];
 
 export const getCollectFormColumns = (collectRef: any, healthRef: any, form: any) => {
-  const collectFormColumns = [{
-    type: 'custom',
-    title: '采集模式',
-    dataIndex: 'logCollectTaskTypeList',
-    component: (
-      <Select
-        mode="multiple"
-        placeholder='请选择'
-        ref={collectRef}
-        allowClear={true}
-        showArrow={true}
-        onInputKeyDown={() => {
-          form.resetFields(['logCollectTaskTypeList']);
-          collectRef.current.blur();
-        }}
-        maxTagCount={0}
-        maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
-      >
-        {collectModes.map((d, index) =>
-          <Option value={d.value} key={index}>{d.label}</Option>
-        )}
-      </Select>
-    ),
-  },
-  {
-    type: 'custom',
-    title: '健康度',
-    dataIndex: 'logCollectTaskHealthLevelList',
-    component: (
-      <Select
-        mode="multiple"
-        placeholder='请选择'
-        ref={healthRef}
-        allowClear={true}
-        showArrow={true}
-        onInputKeyDown={() => {
-          form.resetFields(['logCollectTaskHealthLevelList']);
-          healthRef.current.blur();
-        }}
-        maxTagCount={0}
-        maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
-      >
-        {taskhealthTypes.map((d, index) =>
-          <Option value={d.value} key={index}>{d.label}</Option>
-        )}
-      </Select>
-    ),
-  },
-  {
-    type: 'custom',
-    title: '任务ID',
-    dataIndex: 'logCollectTaskId',
-    component: (
-      <InputNumber className='logCollectTaskId' maxLength={12} min={0} placeholder='请输入任务ID' precision={0} />
-    ),
-  },
-  {
-    type: 'custom',
-    title: '任务名',
-    dataIndex: 'logCollectTaskName',
-    component: (
-      <Input placeholder='请输入' />
-    ),
-  },
-  {
-    type: 'custom',
-    title: '创建时间',
-    dataIndex: 'locCollectTaskCreateTime', // locCollectTaskCreateTimeStart locCollectTaskCreateTimeEnd
-    component: (
-      <RangePicker showTime={{
-        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-      }} style={{ width: '100%' }} />
-    ),
-  }];
+  const collectFormColumns = [
+    //   {
+    //   type: 'custom',
+    //   title: '采集模式',
+    //   dataIndex: 'logCollectTaskTypeList',
+    //   component: (
+    //     <Select
+    //       mode="multiple"
+    //       placeholder='请选择'
+    //       ref={collectRef}
+    //       allowClear={true}
+    //       showArrow={true}
+    //       onInputKeyDown={() => {
+    //         form.resetFields(['logCollectTaskTypeList']);
+    //         collectRef.current.blur();
+    //       }}
+    //       maxTagCount={0}
+    //       maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+    //     >
+    //       {collectModes.map((d, index) =>
+    //         <Option value={d.value} key={index}>{d.label}</Option>
+    //       )}
+    //     </Select>
+    //   ),
+    // },
+    {
+      type: 'custom',
+      title: '健康度',
+      dataIndex: 'logCollectTaskHealthLevelList',
+      component: (
+        <Select
+          mode="multiple"
+          placeholder='请选择'
+          ref={healthRef}
+          allowClear={true}
+          showArrow={true}
+          onInputKeyDown={() => {
+            form.resetFields(['logCollectTaskHealthLevelList']);
+            healthRef.current.blur();
+          }}
+          maxTagCount={0}
+          maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+        >
+          {taskhealthTypes.map((d, index) =>
+            <Option value={d.value} key={index}>{d.label}</Option>
+          )}
+        </Select>
+      ),
+    },
+    {
+      type: 'custom',
+      title: '任务ID',
+      dataIndex: 'logCollectTaskId',
+      component: (
+        <InputNumber className='logCollectTaskId' maxLength={12} min={0} placeholder='请输入任务ID' precision={0} />
+      ),
+    },
+    {
+      type: 'custom',
+      title: '任务名',
+      dataIndex: 'logCollectTaskName',
+      component: (
+        <Input placeholder='请输入' />
+      ),
+    },
+    {
+      type: 'custom',
+      title: '创建时间',
+      dataIndex: 'locCollectTaskCreateTime', // locCollectTaskCreateTimeStart locCollectTaskCreateTimeEnd
+      component: (
+        <RangePicker showTime={{
+          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+        }} style={{ width: '100%' }} />
+      ),
+    }];
   return collectFormColumns;
 }
 

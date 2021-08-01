@@ -74,17 +74,18 @@ export class VerSionList extends React.Component<Props> {
         component: (
           <Select
             className="searchWidth"
-            mode="multiple"
+            // mode="multiple"
             placeholder="请选择"
             ref={versionRef}
             allowClear={true}
             showArrow={true}
-            onInputKeyDown={() => {
-              form.resetFields(['agentVersionList']);
-              versionRef.current.blur();
-            }}
-            maxTagCount={0}
-            maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}>
+          // onInputKeyDown={() => {
+          //   form.resetFields(['agentVersionList']);
+          //   versionRef.current.blur();
+          // }}
+          // maxTagCount={0}
+          // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+          >
             {/* <Option value="">请选择</Option> */}
             {this.state.version.map((d: any) =>
               <Option value={d.agentVersion} key={d.agentVersionId}>{d.agentVersion}</Option>
@@ -163,7 +164,7 @@ export class VerSionList extends React.Component<Props> {
       versionParams: {
         pageNo,
         pageSize,
-        agentVersionList: values.agentVersionList,
+        agentVersionList: values.agentVersionList ? [values.agentVersionList] : [],
         agentPackageName: values.agentPackageName,
         agentVersionCreateTimeStart: values.agentVersionCreateTimeStart?.length ? values.agentVersionCreateTimeStart[0]?.valueOf() : '',
         agentVersionCreateTimeEnd: values.agentVersionCreateTimeStart?.length ? values.agentVersionCreateTimeStart[1]?.valueOf() : '',

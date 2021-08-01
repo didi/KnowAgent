@@ -103,6 +103,17 @@ export const getHostListbyServiceId = (appId: number) => {
   return fetch(`${apiMap.getServiceDetail}/${appId}`);
 }
 
+// Agent管理采集日志列表
+export const getAgentCollectList = (hostname: string) => {
+  return fetch(`${apiMap.getAgentCollectList}` + `?hostname=${hostname}`)
+}
+
+// getMetricsErrorlogs  工作台 指标流和错误日志流集群校验接口
+export const getMetricsErrorlogs = () => {
+  return fetch(`${apiMap.getMetricsErrorlogs}`, {
+    needCode: true
+  })
+}
 
 //  饼图通用请求方法
 export const getAgentPieData = (type: string, params: IAgentPieParams) => {
