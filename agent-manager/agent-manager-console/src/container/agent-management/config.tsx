@@ -391,6 +391,7 @@ export const getCollectTaskConfig = (drawer: any, recoud: any) => {
       dataIndex: 'sendByte',
       key: 'sendByte',
       align: 'center',
+      width: 160,
       render: (text: any, record: any) => {
         return `${text}&${record.sendCount}`
       }

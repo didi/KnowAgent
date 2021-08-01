@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as actions from '../../actions';
 import '../../container/agent-management/index.less';
-import { Modal, Form, Input, message, Checkbox } from 'antd';
+import { Modal, Form, Input, message, Checkbox, Tooltip } from 'antd';
 import { connect } from "react-redux";
 import { IFormProps } from '../../interface/common';
 import { addReceive, modifyReceive } from '../../api/receivingTerminal'
@@ -84,6 +84,8 @@ const ActionClusterForm = (props: IFormProps) => {
   let { formData } = props;
   const [cluster, setHcluster] = useState(formData.record);
   const [checkValue, setCheckValue] = useState<any[]>([])
+  const [agentMetricsTopic, setAgentMetricsTopic] = useState<any>(formData.agentMetricsTopic)
+  const [agentErrorLogsTopic, setAgentErrorLogsTopic] = useState<any>(formData.agentErrorLogsTopic)
   const checkOption = [
     {
       label: '设置为默认指标流接受集群',
@@ -94,12 +96,13 @@ const ActionClusterForm = (props: IFormProps) => {
       value: 2
     }
   ]
-  const handleChange = (e: any[]) => {
+  const handleChange = (e: any) => {
     setCheckValue(e)
   }
   useEffect(() => {
     if (cluster) {
-      setCheckValue([cluster.kafkaClusterName ? 1 : 0, cluster.kafkaClusterName ? 2 : 0])
+      console.log(cluster, 'cluster')
+      setCheckValue([cluster.agentMetricsTopic && agentMetricsTopic.length ? 1 : 0, cluster.agentErrorLogsTopic && agentErrorLogsTopic.length ? 2 : 0])
     }
   }, [])
   return (
@@ -156,8 +159,12 @@ const ActionClusterForm = (props: IFormProps) => {
       {/* 设置默认接受集群 需要做判断是否存在禁用按钮 */}
       <div className='metricsCheck' style={{ marginBottom: '20px' }}>
         <Checkbox.Group value={[...checkValue]} style={{ width: '100%', display: 'flex', justifyContent: 'center' }} onChange={handleChange} >
-          <Checkbox value={1}>设置为默认指标流接受2群</Checkbox>
-          <Checkbox value={2}>设置为默认错误日志流接受集群</Checkbox>
+          <Tooltip title={agentMetricsTopic.length && !cluster?.agentMetricsTopic ? `当前存在默认指标流接收集群：${agentMetricsTopic[0]?.agentMetricsTopic || '-'}，请取消选定后再设置新集群。` : null}>
+            <Checkbox style={{ marginRight: '30px' }} disabled={agentMetricsTopic.length && !cluster?.agentMetricsTopic} value={1}>设置为默认指标流接受集群</Checkbox>
+          </Tooltip>
+          <Tooltip title={agentErrorLogsTopic.length && !cluster?.agentErrorLogsTopic ? `当前存在默认错误日志流接受集群：${agentErrorLogsTopic[0]?.agentErrorLogsTopic || '-'}，请取消选定后再设置新集群。` : null}>
+            <Checkbox disabled={agentErrorLogsTopic.length && !cluster?.agentMetricsTopic} value={2}>设置为默认错误日志流接受集群</Checkbox>
+          </Tooltip>
         </Checkbox.Group>
       </div>
       {checkValue.includes(1) && <Form.Item label='指标流接收Topic'>

@@ -32,11 +32,9 @@ const MetricDetail = (props: { dispatch: any, params: any }) => {
       width={600}
       className='metricDetail'
     >
-      {
-        <pre>
-          {metricDetail}
-        </pre>
-      }
+      <pre>
+        {metricDetail}
+      </pre>
     </Drawer>
   )
 

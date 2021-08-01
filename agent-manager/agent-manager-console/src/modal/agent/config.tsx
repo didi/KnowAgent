@@ -111,10 +111,10 @@ export const getCollectFileInfo = (info: any) => {
       label: '日志待采集时间',
       key: 'logTime',
     },
-    // {
-    //   label: '是否为顺序文件',
-    //   key: 'whetherSequentialFile',
-    // },
+    {
+      label: '是否为顺序文件',
+      key: 'isFileOrder',
+    },
     {
       label: '是否采集至文件末尾',
       key: 'fileEnd',
@@ -123,10 +123,10 @@ export const getCollectFileInfo = (info: any) => {
       label: '文件最新修改时间',
       key: 'lastModifyTime',
     },
-    // {
-    //   label: '采集进度',
-    //   key: 'collectProgress',
-    // },
+    {
+      label: '采集进度',
+      key: 'rate',
+    },
   ]
   return CollectFileInfoList
 }

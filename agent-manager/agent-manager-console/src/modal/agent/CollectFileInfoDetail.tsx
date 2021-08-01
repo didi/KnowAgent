@@ -38,7 +38,7 @@ const CollectFileInfoDetail = (props: { dispatch: any, params: any }) => {
               typeof info[item.key] == 'boolean' ?
                 info[item.key] ? '是' : '否'
                 :
-                (info[item.key] || '')
+                (info[item.key] || '否')
           }</span>
         </Col>
       </Row>

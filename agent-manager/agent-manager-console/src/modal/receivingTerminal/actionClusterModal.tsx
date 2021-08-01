@@ -8,11 +8,10 @@ const ActionClusterModal = (props: any) => {
   const [isVisible, setIsVisble] = React.useState(false)
   React.useEffect(() => {
     getMetricsErrorlogs().then(res => {
-      console.log(res, 'res')
-      if (res.code == 0 || res.code == 200) {
+      if (res) {
         setIsVisble(false)
       } else {
-        setIsVisble(true)
+        setIsVisble(false)
       }
     })
     // normal/receivers/global-agent-errorlogs-metrics-receiver-exists

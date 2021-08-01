@@ -110,9 +110,7 @@ export const getAgentCollectList = (hostname: string) => {
 
 // getMetricsErrorlogs  工作台 指标流和错误日志流集群校验接口
 export const getMetricsErrorlogs = () => {
-  return fetch(`${apiMap.getMetricsErrorlogs}`, {
-    needCode: true
-  })
+  return fetch(`${apiMap.getMetricsErrorlogs}`)
 }
 
 //  饼图通用请求方法
