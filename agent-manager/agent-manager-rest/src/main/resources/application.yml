@@ -19,9 +19,9 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: org.mariadb.jdbc.Driver
-      url: jdbc:mysql://10.178.24.87:8099/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
-      username: root
-      password: Work2019
+      url: jdbc:mysql://localhost:8099/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+      username:
+      password:
       initialSize: 10
       validationQueryTimeout: 5000
       transactionQueryTimeout: 60000
@@ -53,9 +53,9 @@ spring:
       max-file-size: 600MB
       max-request-size: 600MB
   auv-job:
-    jdbc-url: jdbc:mysql://10.178.24.87:8099/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
-    username: root
-    password: Work2019
+    jdbc-url: jdbc:mysql://localhost:8099/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+    username:
+    password:
     driver-class-name: org.mariadb.jdbc.Driver
     max-lifetime: 60000
     init-sql: true

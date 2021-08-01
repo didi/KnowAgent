@@ -9,7 +9,7 @@
 # logs
 /stacktrace.log
 /test/reports
-/logs
+logs/
 *.log
 *.log.*
 
