@@ -419,7 +419,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
         return null;
     }
 
@@ -429,7 +429,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
         return null;
     }
 
@@ -439,7 +439,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
         return null;
     }
 

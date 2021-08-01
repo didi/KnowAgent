@@ -44,11 +44,11 @@ public interface CollectTaskMetricMapper {
 
     List<MetricPoint> selectByTask(@Param("taskId") Long logCollectTaskId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
 
-    List<MetricPoint> selectAggregationByTask(@Param("taskId") Long logCollectTaskId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+    List<MetricPoint> selectAggregationByTask(@Param("taskId") Long logCollectTaskId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function, @Param("step") Integer step);
 
     List<MetricPoint> selectByLogModel(@Param("taskId") Long logCollectTaskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
 
-    List<MetricPoint> selectAggregationByLogModel(@Param("taskId") Long logCollectTaskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+    List<MetricPoint> selectAggregationByLogModel(@Param("taskId") Long logCollectTaskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function, @Param("step") Integer step);
 
     int deleteBeforeTime(@Param("time") Long time);
 

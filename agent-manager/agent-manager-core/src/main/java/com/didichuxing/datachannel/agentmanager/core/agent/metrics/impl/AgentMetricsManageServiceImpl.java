@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunct
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
+import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
@@ -319,7 +320,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method) {
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method, int step) {
         AgentMetricField field = AgentMetricField.fromString(column);
         CalcFunction function = CalcFunction.fromString(method);
         if (field == null) {
@@ -331,7 +332,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (function == CalcFunction.NORMAL) {
             return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field);
         }
-        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, field, function);
+        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, field, function, step);
     }
 
     @Override
@@ -344,7 +345,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByLogModel(MetricQueryDO metricQueryDO, String column, String method) {
+    public List<MetricPoint> queryAggregationByLogModel(MetricQueryDO metricQueryDO, String column, String method, int step) {
         AgentMetricField field = AgentMetricField.fromString(column);
         CalcFunction function = CalcFunction.fromString(method);
         if (field == null) {
@@ -357,7 +358,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (function == CalcFunction.NORMAL) {
             graph = agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
         } else {
-            graph = agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field, function);
+            graph = agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field, function, step);
         }
         for (MetricPoint metricPoint : graph) {
             Object value = metricPoint.getValue();
@@ -385,7 +386,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
-    public List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method) {
+    public List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method, int step) {
         AgentMetricField field = AgentMetricField.fromString(column);
         CalcFunction function = CalcFunction.fromString(method);
         if (field == null) {
@@ -397,7 +398,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (function == CalcFunction.NORMAL) {
             return agentMetricsDAO.queryAgent(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field);
         }
-        return agentMetricsDAO.queryAgentAggregation(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field, function);
+        return agentMetricsDAO.queryAgentAggregation(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field, function, step);
     }
 
     @Override
@@ -418,7 +419,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         for (DashBoardStatisticsDO dashBoardStatisticsDO : sendBytesTopNList) {
             Object key = dashBoardStatisticsDO.getKey();
             Long logCollectTaskId = (Long) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM);
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
             LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
@@ -480,7 +481,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         for (DashBoardStatisticsDO dashBoardStatisticsDO : sendCountTopNList) {
             Object key = dashBoardStatisticsDO.getKey();
             Long logCollectTaskId = (Long) key;
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM);
+            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(metricPoint);
             LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);

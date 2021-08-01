@@ -418,19 +418,70 @@ public interface AgentMetricsManageService {
 
     List<MetricPoint> getAgentErrorLogCountPerMin(AgentMetricQueryDO agentMetricQueryDO);
 
+    /**
+     * 通用查询
+     *
+     * @param logCollectTaskId
+     * @param startTime
+     * @param endTime
+     * @param column
+     * @return
+     */
     List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, String column);
 
-    List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method);
+    /**
+     * 通用聚合查询
+     *
+     * @param logCollectTaskId
+     * @param startTime
+     * @param endTime
+     * @param column 聚合字段
+     * @param method 聚合函数名
+     * @param step 每个聚合的时间间隔
+     * @return
+     */
+    List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method, int step);
 
+    /**
+     * 通用查询
+     *
+     * @param metricQueryDO
+     * @param column
+     * @return
+     */
     List<MetricPoint> queryByLogModel(MetricQueryDO metricQueryDO, String column);
 
-    List<MetricPoint> queryAggregationByLogModel(MetricQueryDO metricQueryDO, String column, String method);
+    /**
+     * 通用聚合查询
+     *
+     * @param metricQueryDO
+     * @param column 聚合字段
+     * @param method 聚合函数名
+     * @param step 每个聚合的时间间隔
+     * @return
+     */
+    List<MetricPoint> queryAggregationByLogModel(MetricQueryDO metricQueryDO, String column, String method, int step);
 
     List<MetricPoint> queryCollectDelay(MetricQueryDO metricQueryDO);
 
+    /**
+     * agent维度通用查询
+     * @param agentMetricQueryDO
+     * @param column
+     * @return
+     */
     List<MetricPoint> queryAgent(AgentMetricQueryDO agentMetricQueryDO, String column);
 
-    List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method);
+    /**
+     * agent维度通用聚合查询
+     *
+     * @param agentMetricQueryDO
+     * @param column 聚合字段
+     * @param method 聚合函数名
+     * @param step 每个聚合的时间间隔
+     * @return
+     */
+    List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method, int step);
 
     CollectTaskMetricPO getLatestMetric(Long taskId);
 

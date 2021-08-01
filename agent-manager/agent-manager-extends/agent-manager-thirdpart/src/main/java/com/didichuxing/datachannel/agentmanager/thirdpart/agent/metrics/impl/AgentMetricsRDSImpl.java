@@ -281,8 +281,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
-        return collectTaskMetricMapper.selectAggregationByTask(logCollectTaskId, startTime, endTime, column.getRdsValue(), method.getValue());
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
+        return collectTaskMetricMapper.selectAggregationByTask(logCollectTaskId, startTime, endTime, column.getRdsValue(), method.getValue(), step);
     }
 
     @Override
@@ -291,8 +291,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
-        return collectTaskMetricMapper.selectAggregationByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column.getRdsValue(), method.getValue());
+    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
+        return collectTaskMetricMapper.selectAggregationByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column.getRdsValue(), method.getValue(), step);
     }
 
     @Override
@@ -301,8 +301,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
-        return agentMetricMapper.selectAggregation(hostname, startTime, endTime, column.getRdsValue(), method.getValue());
+    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
+        return agentMetricMapper.selectAggregation(hostname, startTime, endTime, column.getRdsValue(), method.getValue(), step);
     }
 
     @Override
