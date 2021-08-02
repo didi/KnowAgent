@@ -21,7 +21,6 @@ const CollectFileInfoDetail = (props: { dispatch: any, params: any }) => {
   const handleAssociateCancel = () => {
     props.dispatch(actions.setDrawerId(''));
   }
-  console.log(props.params)
 
   const collectFileConfig = (info: any) => {
     return getCollectFileInfo(info).map((item, index) => {
@@ -31,14 +30,7 @@ const CollectFileInfoDetail = (props: { dispatch: any, params: any }) => {
         </Col>
         <Col span={12}>
           <span>{
-            item.key === 'logTime' || item.key === 'lastModifyTime'
-              ?
-              moment(info[item.key] * 1).format(timeFormat)
-              :
-              typeof info[item.key] == 'boolean' ?
-                info[item.key] ? '是' : '否'
-                :
-                (info[item.key] || '否')
+            item.render ? item.render(item.key) : info[item.key]
           }</span>
         </Col>
       </Row>

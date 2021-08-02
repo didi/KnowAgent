@@ -368,8 +368,7 @@ export const hostDetailBaseInfo = (info: IAgentHostSet) => {
   }];
   return hostDetailList;
 }
-export const getCollectTaskConfig = (drawer: any, recoud: any) => {
-  console.log(recoud, 'recoud')
+export const getCollectTaskConfig = (drawer: any) => {
   const collectTaskConfig: any = [
     {
       title: '采集任务ID',
@@ -387,13 +386,13 @@ export const getCollectTaskConfig = (drawer: any, recoud: any) => {
       key: 'masterFile',
       align: 'center',
     }, {
-      title: '当前采集流量 & 条数/30s-',
+      title: '当前采集流量 & 条数/30s',
       dataIndex: 'sendByte',
       key: 'sendByte',
       align: 'center',
       width: 160,
       render: (text: any, record: any) => {
-        return `${text}&${record.sendCount}`
+        return `${text} & ${record.sendCount}`
       }
     }, {
       title: '当前最大延迟',
@@ -445,7 +444,7 @@ export const getCollectTaskConfig = (drawer: any, recoud: any) => {
         return isFileOrder ? '是' : '否'
       },
     }, {
-      title: '文件是否存在日志切片错误-',
+      title: '文件是否存在日志切片错误',
       dataIndex: 'validTimeConfig',
       key: 'validTimeConfig',
       align: 'center',
@@ -486,7 +485,6 @@ export const getCollectTaskConfig = (drawer: any, recoud: any) => {
       align: 'center',
       width: 120,
       render: (text: any, record: any) => {
-        console.log(text, 'test')
         return <div>
           <span>共{text.length}个</span><a style={{ display: 'inline-block', marginLeft: '15px' }} onClick={() => {
             drawer('CollectFileInfoDetail', text)

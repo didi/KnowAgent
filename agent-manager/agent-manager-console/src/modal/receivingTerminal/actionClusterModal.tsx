@@ -11,11 +11,9 @@ const ActionClusterModal = (props: any) => {
       if (res) {
         setIsVisble(false)
       } else {
-        setIsVisble(false)
+        setIsVisble(true)
       }
     })
-    // normal/receivers/global-agent-errorlogs-metrics-receiver-exists
-    console.log('ActionClusterModal')
   }, [])
 
   const letsGoClick = () => {

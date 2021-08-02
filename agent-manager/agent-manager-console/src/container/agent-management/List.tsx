@@ -128,7 +128,6 @@ export class AgentList extends React.Component<Props> {
           // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
           >
             {servicesList.map((d: any, index) => {
-              console.log(d)
               return <Select.Option value={d.id} key={index}>{d.servicename}</ Select.Option>
             })}
           </Select>
@@ -501,7 +500,6 @@ export class AgentList extends React.Component<Props> {
             }
           />
         </div>
-        <ActionClusterModal />
       </>
     );
   }

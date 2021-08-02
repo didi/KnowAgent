@@ -63,16 +63,16 @@ const dataSource = [
 type Props = ReturnType<typeof mapDispatchToProps>;
 // @connect(mapStateToProps, mapDispatchToProps)
 const CollectTask = (props: any) => {
-  console.log(props, 'props')
+  // console.log(props, 'props')
   const { hostDetail } = props
   const [collectTastData, setCollectTastData] = React.useState<any>([])
   const [loading, setLoading] = React.useState(true)
-  console.log(hostDetail.hostName)
+  // console.log(hostDetail.hostName)
   React.useEffect(() => {
     getAgentCollectList(hostDetail?.hostName).then(res => {
       setCollectTastData(res)
       setLoading(false)
-      console.log(res, 'res')
+      // console.log(res, 'res')
     })
     // try {
     //   getAgentDetails(hostDetail?.agentId).then(res => {
@@ -88,7 +88,7 @@ const CollectTask = (props: any) => {
       <Table
         dataSource={collectTastData}
         bordered
-        columns={getCollectTaskConfig(props.setDrawerId, collectTastData)}
+        columns={getCollectTaskConfig(props.setDrawerId)}
         scroll={{ x: 2100 }}
         pagination={false}
       />

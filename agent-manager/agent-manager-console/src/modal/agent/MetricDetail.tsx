@@ -15,7 +15,6 @@ const mapStateToProps = (state: any) => ({
 });
 
 const MetricDetail = (props: { dispatch: any, params: any }) => {
-  console.log(props, 'MetricDetail')
   const lastMetricDetail = props.params
   let metricDetail = JSON.stringify(lastMetricDetail, null, 2)
   const handleAssociateCancel = () => {

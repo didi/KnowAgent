@@ -92,10 +92,10 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
   };
 
   const reset = (index: any) => {
-    console.log(index)
+    // console.log(index)
 
     remove(index)
-    console.log(list, 'resetList')
+    // console.log(list, 'resetList')
   }
 
   const row = (index: any, item: any) => (
@@ -109,9 +109,9 @@ const LoopAddLogFileType = (props: ILoopAddLogFileType | any) => {
             required: true,
             // message: '请输入日志路径',
             validator: (rule: any, value: string, cb: any) => {
-              console.log(rule, 'rule')
-              console.log(value, 'value')
-              console.log(list, 'list')
+              // console.log(rule, 'rule')
+              // console.log(value, 'value')
+              // console.log(list, 'list')
               if (!value) {
                 rule.message = '请输入日志路径'
                 cb(`请输入日志路径${index}`)

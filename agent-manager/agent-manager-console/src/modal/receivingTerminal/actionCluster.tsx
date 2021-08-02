@@ -26,8 +26,8 @@ const ActionCluster = (props: { dispatch: any, params: any }) => {
           kafkaClusterName: values.kafkaClusterName,
           kafkaClusterBrokerConfiguration: values.kafkaClusterBrokerConfiguration,
           kafkaClusterProducerInitConfiguration: values.kafkaClusterProducerInitConfiguration,
-          metricsReceiveTopic: values.metricsReceiveTopic,
-          errorLogsReceiveTopic: values.errorLogsReceiveTopic
+          agentMetricsTopic: values.agentMetricsTopic,
+          agentErrorLogsTopic: values.agentErrorLogsTopic
         } as unknown as IReceivingTerminal;
         return modifyReceive(params).then((res: any) => {
           message.success('修改成功！');
@@ -41,8 +41,8 @@ const ActionCluster = (props: { dispatch: any, params: any }) => {
           kafkaClusterName: values.kafkaClusterName,
           kafkaClusterBrokerConfiguration: values.kafkaClusterBrokerConfiguration,
           kafkaClusterProducerInitConfiguration: values.kafkaClusterProducerInitConfiguration,
-          metricsReceiveTopic: values.metricsReceiveTopic,
-          errorLogsReceiveTopic: values.errorLogsReceiveTopic
+          agentMetricsTopic: values.agentMetricsTopic,
+          agentErrorLogsTopic: values.agentErrorLogsTopic
         } as unknown as IReceivingTerminal;
         return addReceive(params).then((res: any) => {
 
@@ -101,7 +101,6 @@ const ActionClusterForm = (props: IFormProps) => {
   }
   useEffect(() => {
     if (cluster) {
-      console.log(cluster, 'cluster')
       setCheckValue([cluster.agentMetricsTopic && agentMetricsTopic.length ? 1 : 0, cluster.agentErrorLogsTopic && agentErrorLogsTopic.length ? 2 : 0])
     }
   }, [])
@@ -163,13 +162,13 @@ const ActionClusterForm = (props: IFormProps) => {
             <Checkbox style={{ marginRight: '30px' }} disabled={agentMetricsTopic.length && !cluster?.agentMetricsTopic} value={1}>设置为默认指标流接受集群</Checkbox>
           </Tooltip>
           <Tooltip title={agentErrorLogsTopic.length && !cluster?.agentErrorLogsTopic ? `当前存在默认错误日志流接受集群：${agentErrorLogsTopic[0]?.agentErrorLogsTopic || '-'}，请取消选定后再设置新集群。` : null}>
-            <Checkbox disabled={agentErrorLogsTopic.length && !cluster?.agentMetricsTopic} value={2}>设置为默认错误日志流接受集群</Checkbox>
+            <Checkbox disabled={agentErrorLogsTopic.length && !cluster?.agentErrorLogsTopic} value={2}>设置为默认错误日志流接受集群</Checkbox>
           </Tooltip>
         </Checkbox.Group>
       </div>
       {checkValue.includes(1) && <Form.Item label='指标流接收Topic'>
-        {getFieldDecorator('metricsReceiveTopic', {
-          initialValue: cluster && cluster.metricsReceiveTopic,
+        {getFieldDecorator('agentMetricsTopic', {
+          initialValue: cluster && cluster.agentMetricsTopic,
           rules: [{
             required: true,
             message: '请输入',
@@ -182,8 +181,8 @@ const ActionClusterForm = (props: IFormProps) => {
         )}
       </Form.Item>}
       {checkValue.includes(2) && <Form.Item label='错误日志流接收Topic'>
-        {getFieldDecorator('errorLogsReceiveTopic', {
-          initialValue: cluster && cluster.errorLogsReceiveTopic,
+        {getFieldDecorator('agentErrorLogsTopic', {
+          initialValue: cluster && cluster.agentErrorLogsTopic,
           rules: [{
             required: true,
             message: '请输入',

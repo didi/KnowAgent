@@ -20,7 +20,6 @@ interface IAcquisitionConfiguration {
 export class AcquisitionConfiguration extends React.Component<IAcquisitionConfiguration> {
 
   public renderCollectObj = (detail: ILogCollectTaskDetail) => {
-    console.log(detail, 'detail1')
 
     const cataFile = !!detail?.directoryLogCollectPathList?.length;
     const cataLog = [] as IDirectoryLogCollectPath[];
@@ -170,7 +169,6 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
 
   public render() {
     const { detail, loading } = this.props;
-    console.log(detail, 'detail')
     return (
       <Spin spinning={loading}>{Object.keys(detail).length !== 0 &&
 
