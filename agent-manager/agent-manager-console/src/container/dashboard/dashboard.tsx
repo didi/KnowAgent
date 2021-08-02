@@ -4,6 +4,7 @@ import { getDashboard } from './../../api/agent';
 import { HeaderCard } from './headerCard';
 import { PieCharts } from './pieCharts';
 import { LineCharts } from './LineCharts';
+import ActionClusterModal from './../../modal/receivingTerminal/actionClusterModal';
 import moment from 'moment';
 import './dashboard.less';
 
@@ -46,6 +47,7 @@ export class Dashboard extends React.Component {
     const { data, loading } = this.state;
     return (
       <div className="dashboard">
+        <ActionClusterModal />
         <Spin spinning={loading}>
           <HeaderCard dataSouce={data}/>
           <PieCharts dataSouce={data} />
