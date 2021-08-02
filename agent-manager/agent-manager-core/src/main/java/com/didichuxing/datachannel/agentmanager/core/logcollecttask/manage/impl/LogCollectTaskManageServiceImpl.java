@@ -359,6 +359,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     }
 
     @Override
+    public MetricList getReadTimeMin(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.READ_TIME_MIN.name(), CalcFunction.MIN.name(), MetricConstant.QUERY_INTERVAL);
+    }
+
+    @Override
     public MetricList getSendBytes(MetricQueryDO metricQueryDO) {
         return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.name(), MetricConstant.HEARTBEAT_PERIOD);
     }
@@ -394,6 +399,21 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     }
 
     @Override
+    public MetricList getSendTimeMax(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_TIME_MAX.name(), CalcFunction.MAX.name(), MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
+    public MetricList getSendTimeMean(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_TIME_MEAN.name(), CalcFunction.MAX.name(), MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
+    public MetricList getSendTimeMin(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_TIME_MIN.name(), CalcFunction.MIN.name(), MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
     public MetricList getFlushCount(MetricQueryDO metricQueryDO) {
         return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_COUNT.name(), CalcFunction.SUM.name(), MetricConstant.HEARTBEAT_PERIOD);
     }
@@ -406,6 +426,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public MetricList getFlushTimeMean(MetricQueryDO metricQueryDO) {
         return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.MAX.name(), MetricConstant.QUERY_INTERVAL);
+    }
+
+    @Override
+    public MetricList getFlushTimeMin(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_TIME_MIN.name(), CalcFunction.MIN.name(), MetricConstant.QUERY_INTERVAL);
     }
 
     @Override

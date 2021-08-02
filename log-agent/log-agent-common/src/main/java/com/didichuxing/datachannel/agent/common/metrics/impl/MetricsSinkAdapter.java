@@ -52,11 +52,7 @@ public class MetricsSinkAdapter {
     private final MetricMutableCounterInt  dropped;
     private final MetricMutableGaugeInt    qsize;
 
-    private final Consumer<MetricsBuffer>  consumer = new Consumer<MetricsBuffer>() {
-                                                        public void consume(MetricsBuffer buffer) {
-                                                            publishMetrics(buffer);
-                                                        }
-                                                    };
+    private final Consumer<MetricsBuffer>  consumer = this::publishMetrics;
 
     MetricsSinkAdapter(String name, String description, MetricsSink sink, String context,
                        MetricsFilter sourceFilter, MetricsFilter recordFilter,
