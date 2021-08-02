@@ -2,7 +2,7 @@ import { EChartOption } from 'echarts/lib/echarts';
 import { timeFormat } from '../../constants/time';
 import { IMetricPanels } from '../../interface/agent';
 import moment from 'moment';
-import { byteChange, byteToMB, timeStamp, msecondToSecond } from './../../lib/utils';
+import { byteChange, byteToMB, timeStamp, msecondToSecond, nsTo } from './../../lib/utils';
 
 export const LEGEND_HEIGHT = 18;
 export const defaultLegendPadding = 10;
@@ -17,6 +17,8 @@ export const byteFormat = ['memoryUsage', 'exitSendTraffic', 'inletCollectTraffi
 export const timesFormat = ['HealthMinCollectBusineTime'];
 export const toS = ['HealthMaxDelay', 'HealthLimitTime'];
 export const toolTime = ['HealthMaxDelay', 'HealthLimitTime', 'logReadConsuming', 'logSendConsuming', 'logFlushMaxConsuming', 'logFlushMeanConsuming', ]
+export const Yformat = ['HealthAbnormTrunca', 'logFlushFailTimes', 'DataFilterTimes']
+export const nsToFormat = ['logEventMaxConsuming', 'logEventMeanConsuming']
 
 export const valueFormatFn = (value: any, ele: IMetricPanels, tool?: boolean) => {
   if (booleanFormat.includes(ele.api)) {
@@ -39,6 +41,9 @@ export const valueFormatFn = (value: any, ele: IMetricPanels, tool?: boolean) =>
   }
   if (toS.includes(ele.api)) {
     return msecondToSecond(value);
+  }
+  if (nsToFormat.includes(ele.api) && tool) {
+    return nsTo(value);
   }
   return value;
 }
@@ -244,6 +249,16 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
   if (booleanFormat.includes(ele.api)) {
     option.yAxis.splitNumber = 1;
     option.yAxis.interval = 1;
+  }
+  if (Yformat.includes(ele.api)) {
+    option.yAxis = {
+      ...option.yAxis,
+      minInterval: 1,
+      splitNumber: 5,
+      min: 0,
+      max: 5,
+      interval: 1
+    }
   }
   return option;
 };

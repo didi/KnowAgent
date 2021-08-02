@@ -1,0 +1,40 @@
+.dashboard-lineCard{
+  padding: 24px;
+  width: 1220px;
+  background: #fff;
+  margin-top: 10px;
+  &-title {
+    font-size: 16px;
+    color: rgba(0,0,0,0.85);
+    line-height: 24px;
+    margin-bottom: 12px;
+  }
+  &-content {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: space-between;
+    &-linebox{
+      flex: 0 0 581px;
+      height: 303px;
+      padding: 20px;
+      border-radius: 2px;
+      border: 1px solid #E8E8E8;
+      position: relative;
+      margin-bottom: 12px;
+      &-title {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 14px;
+        color: rgba(0,0,0,0.65);
+        line-height: 22px;
+      }
+      &-line {
+        width: 541px;
+        height: 263px
+      }
+    }
+  }
+}

@@ -23,6 +23,7 @@ import { OperationRecord } from './pages/operationRecord';
 import { Collect } from './pages/collect';
 import { AgentVersion } from './pages/agentVersion';
 import { OperationTasks } from './pages/operationTasks';
+import { Dashboards } from './pages/dashboard';
 interface ILocaleMap {
   [index: string]: any;
 }
@@ -93,6 +94,7 @@ const App = () => {
                           <Route path="/operationTasks/taskDetail" exact={true} component={OperationTasks} />
                           <Route path="/collect/add-task" exact={true} component={Collect} />
                           <Route path="/collect/edit-task" exact={true} component={Collect} />
+                          <Route path="/dashboard" exact={true} component={Dashboards} />
                         </Switch>
                       </LayoutMain>
                     </LayoutHeaderNav>

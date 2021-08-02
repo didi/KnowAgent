@@ -3,6 +3,7 @@ import { systemKey } from '../constants/menu';
 
 export default {
   ...zh,
+  [`menu.${systemKey}.dashboard`]: '我的工作台',
   [`menu.${systemKey}.main`]: 'Agent中心',
   [`menu.${systemKey}.main.list`]: 'Agent管理',
   [`menu.${systemKey}.main.agentVersion`]: 'Agent版本',

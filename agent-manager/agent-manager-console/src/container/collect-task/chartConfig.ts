@@ -39,7 +39,7 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'min',
+            // 'unit': 'min',
             "api": 'HealthMinCollectBusineTime',
             "isPie": false,
             "isEachHost": false,
@@ -174,7 +174,7 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'ns',
+            // 'unit': 'ns',
             "api": 'logEventMaxConsuming',
             "isPie": false,
             "selfHide": false
@@ -188,7 +188,7 @@ export const COLLECT_CONFIG = [
                     "metricPointList": []
                 }
             ],
-            'unit': 'ns',
+            // 'unit': 'ns',
             "api": 'logEventMeanConsuming',
             "isPie": false,
             "selfHide": false

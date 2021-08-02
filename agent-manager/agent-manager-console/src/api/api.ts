@@ -69,4 +69,7 @@ export const apiMap = {
   // Operate Record 
   getRecordList: getApi('/op/record/list'),
   getRecordModules: getApi('/op/record/listModules'),
+  //获取大盘数据接口
+  getDashboard: getApi('/normal/dashboard'),
+  getAgentHostId: getApi('/normal/host'),
 };

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Breadcrumb, Popconfirm, Dropdown, Tooltip, Descriptions, PageHeader, Spin, Tag } from 'antd';
 import { withRouter, Link } from 'react-router-dom';
 import { IBaseInfo } from '../interface/common';
+import { cutString } from './../lib/utils';
 
 const { Item } = Descriptions;
 
@@ -173,6 +174,7 @@ interface INavRouterLinkProps {
   needToolTip?: boolean;
   state?: any;
   key?: any;
+  textLength?: number;
 }
 
 export const NavRouterLink = withRouter<any, any>((props: INavRouterLinkProps) => {
@@ -243,3 +245,20 @@ export const renderTooltip = (text: string, num?: number) => {
     </>
   )
 }
+
+export const TextRouterLink = withRouter<any, any>((props: INavRouterLinkProps) => {
+  return (
+    <Link to={
+      {
+        pathname: props.href,
+        state: props.state,
+      }
+    } style={{ color: 'rgba(0,0,0,0.65)' }}>
+      {props.needToolTip ? <Tooltip key={props.key} placement="bottomLeft" title={props.element}>
+        {typeof (props.element) === 'string' ?
+          cutString(props.element, props.textLength || 15)
+          : props.element}
+      </Tooltip> : props.element}
+    </Link>
+  );
+});

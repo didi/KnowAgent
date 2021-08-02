@@ -119,3 +119,13 @@ export const getAgentLineData = (type: string, params: IAgentLineParams) => {
     body: JSON.stringify(params),
   });
 }
+
+// 大盘请求暂时放置在agent
+
+export const getDashboard = (startTime: number, endTime: number) => {
+  return fetch(`${apiMap.getDashboard}/${startTime}/${endTime}`);
+}
+
+export const getAgentHostId = (hostName: string) => {
+  return fetch(`${apiMap.getAgentHostId}?hostname=${hostName}`);
+}

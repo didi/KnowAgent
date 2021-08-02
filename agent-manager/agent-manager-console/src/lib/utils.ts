@@ -157,11 +157,11 @@ export const dealPostMessage = (data: any) => {
  */
 export function byteChange(limit: number){
   let size = "";
-  if(limit < 0.1 * 1024){                            //小于0.1KB，则转化成B
+  if(limit < 1 * 1024){                            //小于0.1KB，则转化成B
       size = limit.toFixed(2) + "B"
-  }else if(limit < 0.1 * 1024 * 1024){            //小于0.1MB，则转化成KB
+  }else if(limit < 1 * 1024 * 1024){            //小于0.1MB，则转化成KB
       size = (limit/1024).toFixed(2) + "KB"
-  }else if(limit < 0.1 * 1024 * 1024 * 1024){        //小于0.1GB，则转化成MB
+  }else if(limit < 1 * 1024 * 1024 * 1024){        //小于0.1GB，则转化成MB
       size = (limit/(1024 * 1024)).toFixed(2) + "MB"
   }else{                                            //其他转化成GB
       size = (limit/(1024 * 1024 * 1024)).toFixed(2) + "GB"
@@ -192,12 +192,28 @@ export function byteToMB(limit: number) {
   return nums.toFixed(2);
 }
 
+export function nsTo(ns: number) {
+  if (ns < 1000) {
+    return ns + 'ns'
+  }
+  if (ns < 1000 * 10000) {
+    return Number(ns / 1000).toFixed(2) + 'μs'
+  }
+  if (ns < 1000 * 1000 * 10000) {
+    return timeStamp(Number((ns / 1000) / 1000));
+  }
+  return ns + 'ns'
+}
+
 /**
  * @description: ms转成为最大为 月份的单位
  * @param {*} second_time
  * @return {*}
  */
 export function timeStamp( mtime: number ){
+  if (mtime < 1000) {
+    return mtime + 'MS'
+  }
   let second_time: any = (mtime / 1000);
   let time = (second_time).toFixed(2) + "秒";
   if( parseInt(second_time)> 60){
@@ -228,6 +244,89 @@ export function timeStamp( mtime: number ){
   return time;		
 }
 
+export function PercentageConversion (value: number, isTool: string): number | string {
+  if (isTool) return value + '%'
+  return value * 100
+}
+
 export function msecondToSecond (m: number) {
   return (m / 1000).toFixed(2);
 } 
+
+/**参数说明： 
+ 
+* 根据长度截取先使用字符串，超长部分追加… 
+
+* str 对象字符串 
+
+* len 目标字节长度 
+
+* 返回值： 处理结果字符串 
+
+*/
+
+export function cutString(str: string, len: number) { 
+
+  //length属性读出来的汉字长度为1 
+
+  if(str.length*2 <= len) { 
+
+    return str; 
+
+  } 
+
+  var strlen = 0; 
+
+  var s = ""; 
+
+  for(var i = 0;i < str.length; i++) { 
+
+    s = s + str.charAt(i); 
+
+    if (str.charCodeAt(i) > 128) { 
+
+      strlen = strlen + 2; 
+
+      if(strlen >= len){ 
+
+        return s.substring(0,s.length-1) + "..."; 
+
+      } 
+
+    } else { 
+
+      strlen = strlen + 1; 
+
+      if(strlen >= len){ 
+
+        return s.substring(0,s.length-2) + "..."; 
+
+      } 
+
+    } 
+
+  } 
+
+  return s; 
+
+} 
+
+
+export function countChange(limit: number){
+  let size = "";
+  if(limit < 100 * 1024){                            //小于0.1KB，则转化成B
+      size = limit + ""
+  }else if(limit < 100 * 1024 * 1024){            //小于0.1MB，则转化成KB
+      size = (limit/1024).toFixed(1) + "K"
+  }else if(limit < 100 * 1024 * 1024 * 1024){        //小于0.1GB，则转化成MB
+      size = (limit/(1024 * 1024)).toFixed(1) + "M"
+  }
+
+  let sizeStr = size + "";                        //转成字符串
+  let index = sizeStr.indexOf(".");                    //获取小数点处的索引
+  let dou = sizeStr.substr(index + 1 ,2)            //获取小数点后两位的值
+  if(dou == "00"){                                //判断后两位是否为00，如果是则删除00               
+      return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2)
+  }
+  return size;
+}

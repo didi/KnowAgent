@@ -13,6 +13,7 @@ export interface IEchartsProps {
   width?: number;
   height?: number;
   options?: EChartOption;
+  isResize?: boolean;
 }
 
 export const hasData = (options: EChartOption) => {
@@ -46,7 +47,7 @@ export default class Echarts extends React.Component<IEchartsProps> {
   }
 
   public resize = () => {
-    this.myChart.resize();
+    this.props.isResize ? console.log('已设置不执行resize') : this.myChart.resize();
   }
 
   public render() {

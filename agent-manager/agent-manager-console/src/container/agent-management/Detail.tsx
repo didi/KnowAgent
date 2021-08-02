@@ -6,7 +6,7 @@ import { AgentOperationIndex } from './OperationIndex';
 import { healthMap } from '../../constants/common';
 import Url from '../../lib/url-parser';
 import { IAgentHostSet } from '../../interface/agent';
-import { getHostDetails } from '../../api/agent'
+import { getHostDetails, getAgentHostId } from '../../api/agent'
 import { Tabs, Tag } from 'antd';
 import './index.less';
 
@@ -15,6 +15,7 @@ const { TabPane } = Tabs;
 export class AgentDetail extends React.Component<any> {
   public agentId: number;
   public hostId: number;
+  public hostName: string;
   public node: any;
 
   public state = {
@@ -26,11 +27,13 @@ export class AgentDetail extends React.Component<any> {
     super(props);
     const url = Url();
     this.hostId = Number(props.location.state?.hostId);
+    this.hostName = props.location.state?.hostName;
     this.agentId = Number(props.location.state?.agentId);
   }
 
-  public getDetail = () => {
-    getHostDetails(this.hostId).then((res: IAgentHostSet) => {
+  public getDetail = async () => {
+    const hostId = await getAgentHostId(this.hostName as string);
+    getHostDetails(this.hostId || hostId.id).then((res: IAgentHostSet) => {
       this.setState({ loading: false, hostDetail: res });
     }).catch((err: any) => {
       this.setState({ loading: false });

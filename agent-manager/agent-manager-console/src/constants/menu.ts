@@ -6,6 +6,11 @@ export const leftMenus = {
   icon: '#icon-jiqun',
   children: [
     {
+      name: 'dashboard',
+      path: 'dashboard',
+      icon: '#icon-jiqun1',
+    },
+    {
       name: 'main',
       path: '',
       icon: '#icon-jiqun1',
