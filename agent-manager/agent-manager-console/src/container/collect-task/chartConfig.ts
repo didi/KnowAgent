@@ -153,15 +153,15 @@ export const COLLECT_CONFIG = [
             "selfHide": false
         },
         {
-            "panelName": "日志读取耗时",
-            "title": '日志读取耗时 （ms）',
+            "panelName": "单logevent读取最小耗时",
+            "title": '单logevent读取最小耗时',
             "metricList": [
                 {
-                    "metricName": "日志读取耗时 （ms）",
+                    "metricName": "单logevent读取最小耗时",
                     "metricPointList": []
                 }
             ],
-            "api": 'logReadConsuming',
+            "api": 'logeventMinConsuming',
             "isPie": false,
             "selfHide": false
         },
@@ -220,16 +220,55 @@ export const COLLECT_CONFIG = [
             "isPie": false,
             "selfHide": false
         },
+        // {
+        //     "panelName": "日志发送耗时",
+        //     "title": '日志发送耗时 （ms）',
+        //     "metricList": [
+        //         {
+        //             "metricName": "日志发送耗时 （ms）",
+        //             "metricPointList": []
+        //         }
+        //     ],
+        //     "api": 'logSendConsuming',
+        //     "isPie": false,
+        //     "selfHide": false
+        // },
         {
-            "panelName": "日志发送耗时",
-            "title": '日志发送耗时 （ms）',
+            "panelName": "日志发送最小耗时",
+            "title": '日志发送最小耗时 （ms）',
             "metricList": [
                 {
                     "metricName": "日志发送耗时 （ms）",
                     "metricPointList": []
                 }
             ],
-            "api": 'logSendConsuming',
+            "api": 'logSendMinConsuming',
+            "isPie": false,
+            "selfHide": false
+        },
+        {
+            "panelName": "日志发送平均耗时",
+            "title": '日志发送平均耗时 （ms）',
+            "metricList": [
+                {
+                    "metricName": "日志发送耗时 （ms）",
+                    "metricPointList": []
+                }
+            ],
+            "api": 'logSendMeanConsuming',
+            "isPie": false,
+            "selfHide": false
+        },
+        {
+            "panelName": "日志发送最大耗时",
+            "title": '日志发送最大耗时 （ms）',
+            "metricList": [
+                {
+                    "metricName": "日志发送耗时 （ms）",
+                    "metricPointList": []
+                }
+            ],
+            "api": 'logSendMaxConsuming',
             "isPie": false,
             "selfHide": false
         },
@@ -270,6 +309,19 @@ export const COLLECT_CONFIG = [
                 }
             ],
             "api": 'logFlushMeanConsuming',
+            "isPie": false,
+            "selfHide": false
+        },
+        {
+            "panelName": "日志flush最小耗时",
+            "title": '日志flush最小耗时 （ms）',
+            "metricList": [
+                {
+                    "metricName": "日志flush平均耗时 （s）",
+                    "metricPointList": []
+                }
+            ],
+            "api": 'logflushMinConsuming',
             "isPie": false,
             "selfHide": false
         },
