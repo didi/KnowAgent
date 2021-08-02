@@ -70,8 +70,6 @@ export class CollectTaskList extends React.Component<Props> {
   }
 
   public onApplyChange = (targetKeys: any, direction: any) => {
-    console.log(targetKeys, 'targetKeys')
-    console.log(direction, 'direction')
     this.setState({ targetKeys: [targetKeys] })
     // this.setState({ applyInput: `已选择${targetKeys?.length}项`, hidefer: true, targetKeys, direction, });
   };
@@ -123,7 +121,6 @@ export class CollectTaskList extends React.Component<Props> {
           >
             {
               servicesList.map((v: any) => {
-                console.log(v)
                 return <Select.Option key={v.id} value={v.id}>{v?.servicename}</Select.Option>
               })
             }
@@ -150,8 +147,6 @@ export class CollectTaskList extends React.Component<Props> {
     const { servicesList, targetKeys } = this.state;
     const serviceIds = [] as number[];
     servicesList.map((ele: IService, index) => {
-      console.log(targetKeys?.includes(index as never), 'targetKeys?.includes(index as never)')
-      console.log(ele, 'targetKeys?.includes(index as never)')
       if (targetKeys?.includes(index as never)) {
         serviceIds.push(ele.id);
       }
