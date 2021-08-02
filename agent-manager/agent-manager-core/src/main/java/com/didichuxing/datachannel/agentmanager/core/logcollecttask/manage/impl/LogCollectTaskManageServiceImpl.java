@@ -350,7 +350,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     @Override
     public MetricList getReadTimeMean(MetricQueryDO metricQueryDO) {
-        return handleAggregationQuery(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.AVG.name(), MetricConstant.QUERY_INTERVAL);
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.READ_TIME_MEAN.name(), CalcFunction.MAX.name(), MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
@@ -405,7 +405,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     @Override
     public MetricList getFlushTimeMean(MetricQueryDO metricQueryDO) {
-        return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.AVG.name(), MetricConstant.QUERY_INTERVAL);
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.MAX.name(), MetricConstant.QUERY_INTERVAL);
     }
 
     @Override

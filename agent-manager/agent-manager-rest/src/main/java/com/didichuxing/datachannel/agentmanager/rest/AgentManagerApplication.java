@@ -21,7 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableScheduling
 @ServletComponentScan
-@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager"})
+@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager", "com.didiglobal.logi.auvjob"})
 public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);

@@ -20,6 +20,7 @@ import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,6 +75,17 @@ public class NormalHostController {
         }
     }
 
+    @ApiOperation(value = "根据id获取Host对象信息", notes = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<HostVO> getByHostname(@RequestParam String hostname) {
+        if (StringUtils.isBlank(hostname)) {
+            return Result.buildFail("hostname为空");
+        }
+        HostDO hostDO = hostManageService.getHostByHostName(hostname);
+        return Result.buildSucc(ConvertUtil.obj2Obj(hostDO, HostVO.class));
+    }
+
     @ApiOperation(value = "获取系统中已存在的全量machineZone", notes = "")
     @RequestMapping(value = "/machine-zones", method = RequestMethod.GET)
     @ResponseBody
@@ -99,9 +111,9 @@ public class NormalHostController {
             hostAgentVO.setServiceList(serviceVOList);
             //set agent info
             AgentDO relationAgentDO = agentManageService.getAgentByHostName(hostDO.getHostName());
-            if(null != relationAgentDO) {
+            if (null != relationAgentDO) {
                 AgentHealthDO agentHealthDO = agentHealthManageService.getByAgentId(relationAgentDO.getId());
-                if(null == agentHealthDO) {
+                if (null == agentHealthDO) {
                     throw new ServiceException(
                             String.format("AgentHealth={agentId=%d}在系统中不存在", relationAgentDO.getId()),
                             ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
