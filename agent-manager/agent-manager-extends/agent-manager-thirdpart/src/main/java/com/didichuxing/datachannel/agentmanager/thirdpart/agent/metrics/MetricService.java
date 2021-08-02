@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MetricService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class);
-    
+
     @Autowired
     private AgentMetricMapper agentMetricMapper;
 
@@ -114,7 +114,7 @@ public class MetricService {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
                 for (ConsumerRecord<String, String> record : records) {
                     JSONObject object = JSON.parseObject(record.value());
-                    if (object.getInteger(AgentMetricField.LOG_MODE_ID.getValue()) == -1) {
+                    if (object.getInteger(AgentMetricField.LOG_MODE_ID.getEsValue()) < 0) {
                         AgentMetricDO agentMetric = JSON.parseObject(record.value(), AgentMetricDO.class);
                         AgentMetricPO agentMetricPO = ConvertUtil.obj2Obj(agentMetric, AgentMetricPO.class);
                         agentMetricMapper.insertSelective(agentMetricPO);

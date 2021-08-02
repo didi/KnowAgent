@@ -34,4 +34,6 @@ public interface ServiceMapper {
 
     List<ServicePO> selectByProjectId(@Param(value = "projectId") Long projectId);
 
+    Long countAll();
+
 }

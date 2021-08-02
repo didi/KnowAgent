@@ -24,6 +24,7 @@ public enum ErrorCodeEnum {
     SOCKET_CLOSE_FAILED(21002, "socket链接关闭失败"),
     METHOD_NOT_SUPPORTED(21003, "方法不支持"),
     HTTP_CONNECT_FAILED(21004, "http请求失败"),
+    UNSUPPORTED_CLASS_CAST_EXCEPTION(21005, "未知类型转换异常"),
     /*
      * Agent 相关 22000 ~ 22999
      */
@@ -55,6 +56,8 @@ public enum ErrorCodeEnum {
     KAFKA_CLUSTER_BROKER_CONFIGURATION_DUPLICATE(26004, "系统中已存在相同KafkaClusterBrokerConfiguration的KafkaCluster对象"),
     KAFKA_CLUSTER_NOT_ORIGINATED_FROM_KAFKA_MANAGER(26005, "KafkaCluster非源于kafka-manager系统"),
     KAFKA_CLUSTER_PRODUCER_INIT_CONFIGURATION_IS_NULL(26006, "KafkaCluster客户端配置参数kafkaClusterProducerInitConfiguration为空"),
+    KAFKA_CLUSTER_CREATE_OR_UPDATE_FAILED_CAUSE_BY_AGENT_ERROR_LOGS_TOPIC_EXISTS(26007, "KafkaCluster创建或更新失败，原因为：系统已存在配置agent errorlogs 流对应topic的kafkacluster"),
+    KAFKA_CLUSTER_CREATE_OR_UPDATE_FAILED_CAUSE_BY_AGENT_METRICS_TOPIC_EXISTS(26008, "KafkaCluster创建或更新失败，原因为：系统已存在配置agent metrics 流对应topic的kafkacluster"),
     /*
      * Service 相关 27000 ~ 27999
      */

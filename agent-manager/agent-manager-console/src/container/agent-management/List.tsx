@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as actions from '../../actions';
 import './index.less';
 import '../../index.less';
-import { Modal, Button, Input, Transfer, Tooltip } from 'antd';
+import { Modal, Button, Input, Transfer, Tooltip, Select } from 'antd';
 import { CustomBreadcrumb, CommonHead } from '../../component/CustomComponent';
 import { getAgentListColumns, agentBreadcrumb, getQueryFormColumns } from './config';
 import { IAgentHostVo, IAgentHostParams, IAgentVersion, IService, IAgentQueryFormColumns, IAgentHostSet, IOperationTasksParams } from '../../interface/agent';
@@ -14,6 +14,8 @@ import { BasicTable } from 'antd-advanced';
 import { regIp } from '../../constants/reg';
 import { Dispatch } from 'redux';
 import { findDOMNode } from 'react-dom';
+import ActionClusterModal from '../../modal/receivingTerminal/actionClusterModal'
+
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setModalId: (modalId: string, params?: any) => dispatch(actions.setModalId(modalId, params)),
@@ -112,7 +114,24 @@ export class AgentList extends React.Component<Props> {
       dataIndex: 'serviceIdList',
       component: (
         <div className='apply-box'>
-          <Input value={applyInput} placeholder='请选择' onClick={this.onInputClick} />
+          <Select
+            // mode="multiple"
+            placeholder='请选择'
+            // ref={containerRef}
+            allowClear={true}
+            showArrow={true}
+          // onInputKeyDown={() => {
+          //   form.resetFields(['containerList']);
+          //   containerRef.current.blur();
+          // }}
+          // maxTagCount={0}
+          // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+          >
+            {servicesList.map((d: any, index) => {
+              return <Select.Option value={d.id} key={index}>{d.servicename}</ Select.Option>
+            })}
+          </Select>
+          {/* <Input value={applyInput} placeholder='请选择' onClick={this.onInputClick} />
           {hidefer && <div className='apply' ref="refTest">
             <Transfer
               dataSource={servicesList}
@@ -124,7 +143,7 @@ export class AgentList extends React.Component<Props> {
               render={item => item.servicename}
               className="customTransfer"
             />
-          </div>}
+          </div>} */}
         </div>
       ),
     };
@@ -159,8 +178,8 @@ export class AgentList extends React.Component<Props> {
         pageNo,
         pageSize,
         agentHealthLevelList: values?.agentHealthLevelList || [],
-        agentVersionIdList: values?.agentVersionIdList || [],
-        containerList: values?.containerList || [],
+        agentVersionIdList: values?.agentVersionIdList ? [values.agentVersionIdList] : [],
+        containerList: values?.containerList ? [values?.containerList] : [],
         hostCreateTimeStart: values?.hostCreateTime?.length ? values?.hostCreateTime[0]?.valueOf() : '',
         hostCreateTimeEnd: values?.hostCreateTime?.length ? values?.hostCreateTime[1]?.valueOf() : '',
         serviceIdList: this.setServiceIdList(),
@@ -172,8 +191,15 @@ export class AgentList extends React.Component<Props> {
 
   public onSearchParams = () => {  // 点击查询按钮的回调
     const { queryParams, targetKeys } = this.state;
-    if (!queryParams.serviceIdList?.length && targetKeys?.length) {
+    if (targetKeys?.length > 0) {
       queryParams.serviceIdList = this.setServiceIdList();
+    } else {
+      queryParams.serviceIdList = []
+      this.setState({
+        targetKeys: [],
+        applyInput: '',
+        direction: 'left',
+      });
     }
     this.getAgentData(this.state.queryParams);
   }
@@ -425,7 +451,7 @@ export class AgentList extends React.Component<Props> {
           <BasicTable
             rowKey='hostId'
             showReloadBtn={false}
-            showQueryCollapseButton={true}
+            // showQueryCollapseButton={true}
             loading={loading}
             reloadBtnPos="left"
             reloadBtnType="btn"
@@ -437,6 +463,7 @@ export class AgentList extends React.Component<Props> {
             dataSource={agentList}
             isQuerySearchOnChange={false}
             queryFormColumns={this.queryFormColumns()}
+            showQueryCollapseButton={this.queryFormColumns().length > 2 ? true : false}
             pagination={{
               current: pageNo,
               pageSize: pageSize,

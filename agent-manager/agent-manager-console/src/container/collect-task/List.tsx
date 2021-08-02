@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as actions from '../../actions';
 import './index.less';
-import { Button, Input, Transfer } from 'antd';
+import { Button, Input, Transfer, Select } from 'antd';
 import { CustomBreadcrumb, CommonHead, NavRouterLink } from '../../component/CustomComponent';
 import { getCollectListColumns, collectBreadcrumb, getCollectFormColumns } from './config';
 import { collectHead, empty } from '../../constants/common';
@@ -70,7 +70,8 @@ export class CollectTaskList extends React.Component<Props> {
   }
 
   public onApplyChange = (targetKeys: any, direction: any) => {
-    this.setState({ applyInput: `已选择${targetKeys?.length}项`, hidefer: true, targetKeys, direction, });
+    this.setState({ targetKeys: [targetKeys] })
+    // this.setState({ applyInput: `已选择${targetKeys?.length}项`, hidefer: true, targetKeys, direction, });
   };
 
   public onApplySearch = (dir: any, value: any) => {
@@ -112,9 +113,19 @@ export class CollectTaskList extends React.Component<Props> {
       dataIndex: 'serviceIdList',
       component: (
         <div className='apply-box'>
-          <Input value={applyInput} placeholder='请选择' onClick={this.onInputClick} />
-          {hidefer && <div className='apply' ref="refTest">
-            <Transfer
+          {/* <Input value={applyInput} placeholder='请选择' onClick={this.onInputClick} /> */}
+          <Select
+            // mode="multiple"
+            onChange={this.onApplyChange}
+          // onSearch={this.onApplyChange}
+          >
+            {
+              servicesList.map((v: any) => {
+                return <Select.Option key={v.id} value={v.id}>{v?.servicename}</Select.Option>
+              })
+            }
+          </Select>
+          {/* <Transfer
               dataSource={servicesList}
               showSearch
               filterOption={this.filterApplyOption}
@@ -123,13 +134,12 @@ export class CollectTaskList extends React.Component<Props> {
               onSearch={this.onApplySearch}
               render={item => item.servicename}
               className="customTransfer"
-            />
-          </div>}
+            /> */}
         </div>
       ),
     };
     const collectColumns = getCollectFormColumns(this.collectRef, this.healthRef, form);
-    collectColumns.splice(1, 0, applyObj);
+    collectColumns.splice(0, 0, applyObj);
     return collectColumns;
   }
 
@@ -151,7 +161,7 @@ export class CollectTaskList extends React.Component<Props> {
       colectParams: {
         pageNo,
         pageSize,
-        serviceIdList: this.setServiceIdList(), // number[] 服务id
+        serviceIdList: this.state.targetKeys, // number[] 服务id
         logCollectTaskTypeList: values?.logCollectTaskTypeList || [], //  number[] 采集任务类型 0：常规流式采集 1：按指定时间范围采集
         logCollectTaskHealthLevelList: values?.logCollectTaskHealthLevelList || [], //number[] 日志采集任务健康度  0:红 1：黄 2：绿色
         logCollectTaskId: judgeEmpty(values?.logCollectTaskId), // 日志采集任务id
@@ -165,7 +175,7 @@ export class CollectTaskList extends React.Component<Props> {
   public onSearchParams = () => {
     const { colectParams, targetKeys } = this.state;
     if (!colectParams.serviceIdList?.length && targetKeys?.length) {
-      colectParams.serviceIdList = this.setServiceIdList();
+      colectParams.serviceIdList = targetKeys;
     }
     this.getCollectData(this.state.colectParams);
   }
@@ -192,9 +202,9 @@ export class CollectTaskList extends React.Component<Props> {
   }
 
   public onPageChange = (current: number, size: number | undefined) => {
-    const { colectParams } = this.state;
+    const { colectParams, targetKeys } = this.state;
     const pageParams = {
-      serviceIdList: this.setServiceIdList(),
+      serviceIdList: targetKeys,
       logCollectTaskTypeList: colectParams?.logCollectTaskTypeList || [],
       logCollectTaskHealthLevelList: colectParams?.logCollectTaskHealthLevelList || [],
       logCollectTaskId: colectParams?.logCollectTaskId,

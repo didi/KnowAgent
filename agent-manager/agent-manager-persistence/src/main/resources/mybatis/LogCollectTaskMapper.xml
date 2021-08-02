@@ -273,4 +273,29 @@
     WHERE kafka_cluster_id = #{kafkaClusterId,jdbcType=BIGINT}
   </select>
 
+  <select id="countAll" resultType="java.lang.Long" >
+    select
+    count (*)
+    from tb_log_collect_task
+  </select>
+
+  <select id="getAllIds" resultType="java.lang.Long">
+    select
+      id
+    from tb_log_collect_task
+  </select>
+
+  <select id="getLogCollectTaskListByHealthLevel" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    SELECT
+    <include refid="Base_Column_List_getLogCollectTaskListByHostId" />
+    from tb_log_collect_task as t1
+    INNER JOIN tb_log_collect_task_health as t2 ON t1.id = t2.log_collect_task_id
+    WHERE t2.log_collect_task_health_level = #{logCollectTaskHealthLevelCode,jdbcType=TINYINT}
+  </select>
+
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tb_log_collect_task;
+  </select>
 </mapper>

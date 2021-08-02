@@ -54,6 +54,8 @@ export class ClusterList extends React.Component<Props> {
     deleteTip: false,
     total: 0,
     clusterList: [],
+    agentMetricsTopic: false,
+    agentErrorLogsTopic: false,
     receivingParams: {
       pageNo: 1,
       pageSize: 20,
@@ -78,6 +80,8 @@ export class ClusterList extends React.Component<Props> {
 
   public handleNewCluster = () => {
     this.props.setModalId('ActionCluster', {
+      agentMetricsTopic: this.state.agentMetricsTopic,
+      agentErrorLogsTopic: this.state.agentErrorLogsTopic,
       cb: () => this.getReceivingTerminalList(this.state.receivingParams),
     });
   }
@@ -97,12 +101,15 @@ export class ClusterList extends React.Component<Props> {
   public getReceivingTerminalList = (params: IReceivingTerminalParams, current?: number, size?: number) => {
     params.pageNo = current ? current : this.state.receivingParams.pageNo;
     params.pageSize = size ? size : this.state.receivingParams.pageSize;
-    getReceivingList(params).then((res: IReceivingTerminalVo) => {
-      const data = res?.resultSet.map(item => {
+    getReceivingList(params).then((res: IReceivingTerminalVo | any) => {
+      const data = res?.resultSet.map((item: { id: any; }) => {
         return { key: item.id, ...item }
       });
+      // 处理 默认指标流 默认错误日志流 是否存在
       this.setState({
         clusterList: data,
+        agentMetricsTopic: data.filter((item: { agentMetricsTopic: any; }) => item.agentMetricsTopic),
+        agentErrorLogsTopic: data.filter((item: { agentErrorLogsTopic: any; }) => item.agentErrorLogsTopic),
         loading: false,
         total: res.total,
       });
@@ -145,6 +152,8 @@ export class ClusterList extends React.Component<Props> {
                 onClick={() => {
                   this.props.setModalId('ActionCluster', {
                     record,
+                    agentMetricsTopic: this.state.agentMetricsTopic,
+                    agentErrorLogsTopic: this.state.agentErrorLogsTopic,
                     cb: () => this.getReceivingTerminalList(this.state.receivingParams),
                   });
                 }}

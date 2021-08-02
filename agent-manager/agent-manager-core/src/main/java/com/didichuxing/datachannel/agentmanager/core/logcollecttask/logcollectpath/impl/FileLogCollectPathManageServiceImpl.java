@@ -65,6 +65,11 @@ public class FileLogCollectPathManageServiceImpl implements FileLogCollectPathMa
         fileLogCollectPathDAO.deleteByLogCollectTaskId(logCollectTaskId);
     }
 
+    @Override
+    public Long countAll() {
+        return fileLogCollectPathDAO.countAll();
+    }
+
     /**
      * 创建文件型日志采集路径对象流程
      * @param fileLogCollectPath 待创建文件型日志采集路径对象

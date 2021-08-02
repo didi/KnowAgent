@@ -141,4 +141,9 @@ public class AgentConstant {
      */
     public static final String AGENT_METRIC_PANEL_GROUP_NAME_SOURCE_PERFORMANCE = "Agent source 端性能相关指标";
 
+    public static final String AGENT_ACTIVE_COLLECTS = "开启状态采集任务数";
+    public static final String AGENT_INACTIVE_COLLECTS = "未开启状态采集任务数";
+    public static final String AGENT_ACTIVE_PATHS = "开启状态采集路径数";
+    public static final String AGENT_INACTIVE_PATHS = "未开启状态采集路径数";
+
 }

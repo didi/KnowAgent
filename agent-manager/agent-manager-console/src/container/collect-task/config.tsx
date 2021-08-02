@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Input, Modal, Tag, Popconfirm, DatePicker, Select, InputNumber } from 'antd';
 import { IBaseInfo } from '../../interface/common';
 import { renderOperationBtns, IBtn, NavRouterLink, renderTooltip } from '../../component/CustomComponent';
-import { taskHealthMap, collectModes, healthTypes, hostTypeMap, collectModeMap, healthMap } from '../../constants/common';
+import { taskHealthMap, collectModes, taskhealthTypes, hostTypeMap, collectModeMap, healthMap } from '../../constants/common';
 import { ISwitchCollectTask, ICollectTask, IReceiverVO, ILogCollectTaskDetail } from '../../interface/collect';
 import { switchCollectTask, deleteCollectTask } from '../../api/collect'
 import { IService, IAgentHostSet } from '../../interface/agent';
@@ -42,80 +42,81 @@ export const collectEditTaskBreadcrumb = [{
 }];
 
 export const getCollectFormColumns = (collectRef: any, healthRef: any, form: any) => {
-  const collectFormColumns = [{
-    type: 'custom',
-    title: '采集模式',
-    dataIndex: 'logCollectTaskTypeList',
-    component: (
-      <Select
-        mode="multiple"
-        placeholder='请选择'
-        ref={collectRef}
-        allowClear={true}
-        showArrow={true}
-        onInputKeyDown={() => {
-          form.resetFields(['logCollectTaskTypeList']);
-          collectRef.current.blur();
-        }}
-        maxTagCount={0}
-        maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
-      >
-        {collectModes.map((d, index) =>
-          <Option value={d.value} key={index}>{d.label}</Option>
-        )}
-      </Select>
-    ),
-  },
-  {
-    type: 'custom',
-    title: '健康度',
-    dataIndex: 'logCollectTaskHealthLevelList',
-    component: (
-      <Select
-        mode="multiple"
-        placeholder='请选择'
-        ref={healthRef}
-        allowClear={true}
-        showArrow={true}
-        onInputKeyDown={() => {
-          form.resetFields(['logCollectTaskHealthLevelList']);
-          healthRef.current.blur();
-        }}
-        maxTagCount={0}
-        maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
-      >
-        {healthTypes.map((d, index) =>
-          <Option value={d.value} key={index}>{d.label}</Option>
-        )}
-      </Select>
-    ),
-  },
-  {
-    type: 'custom',
-    title: '任务ID',
-    dataIndex: 'logCollectTaskId',
-    component: (
-      <InputNumber placeholder='请输入' />
-    ),
-  },
-  {
-    type: 'custom',
-    title: '任务名',
-    dataIndex: 'logCollectTaskName',
-    component: (
-      <Input placeholder='请输入' />
-    ),
-  },
-  {
-    type: 'custom',
-    title: '创建时间',
-    dataIndex: 'locCollectTaskCreateTime', // locCollectTaskCreateTimeStart locCollectTaskCreateTimeEnd
-    component: (
-      <RangePicker showTime={{
-        defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-      }} style={{ width: '100%' }} />
-    ),
-  }];
+  const collectFormColumns = [
+    //   {
+    //   type: 'custom',
+    //   title: '采集模式',
+    //   dataIndex: 'logCollectTaskTypeList',
+    //   component: (
+    //     <Select
+    //       mode="multiple"
+    //       placeholder='请选择'
+    //       ref={collectRef}
+    //       allowClear={true}
+    //       showArrow={true}
+    //       onInputKeyDown={() => {
+    //         form.resetFields(['logCollectTaskTypeList']);
+    //         collectRef.current.blur();
+    //       }}
+    //       maxTagCount={0}
+    //       maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+    //     >
+    //       {collectModes.map((d, index) =>
+    //         <Option value={d.value} key={index}>{d.label}</Option>
+    //       )}
+    //     </Select>
+    //   ),
+    // },
+    {
+      type: 'custom',
+      title: '健康度',
+      dataIndex: 'logCollectTaskHealthLevelList',
+      component: (
+        <Select
+          mode="multiple"
+          placeholder='请选择'
+          ref={healthRef}
+          allowClear={true}
+          showArrow={true}
+          onInputKeyDown={() => {
+            form.resetFields(['logCollectTaskHealthLevelList']);
+            healthRef.current.blur();
+          }}
+          maxTagCount={0}
+          maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+        >
+          {taskhealthTypes.map((d, index) =>
+            <Option value={d.value} key={index}>{d.label}</Option>
+          )}
+        </Select>
+      ),
+    },
+    {
+      type: 'custom',
+      title: '任务ID',
+      dataIndex: 'logCollectTaskId',
+      component: (
+        <InputNumber className='logCollectTaskId' maxLength={12} min={0} placeholder='请输入任务ID' precision={0} />
+      ),
+    },
+    {
+      type: 'custom',
+      title: '任务名',
+      dataIndex: 'logCollectTaskName',
+      component: (
+        <Input placeholder='请输入' />
+      ),
+    },
+    {
+      type: 'custom',
+      title: '创建时间',
+      dataIndex: 'locCollectTaskCreateTime', // locCollectTaskCreateTimeStart locCollectTaskCreateTimeEnd
+      component: (
+        <RangePicker showTime={{
+          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+        }} style={{ width: '100%' }} />
+      ),
+    }];
   return collectFormColumns;
 }
 
@@ -180,14 +181,15 @@ export const getCollectListColumns = (drawer: any, getData: any) => {
     width: '10%',
     sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskCreateTime - a.logCollectTaskCreateTime,
     render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
-  }, {
-    title: '结束时间',
-    dataIndex: 'logCollectTaskFinishTime',
-    key: 'logCollectTaskFinishTime',
-    width: '10%',
-    sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskFinishTime - a.logCollectTaskFinishTime,
-    render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
   },
+  // {
+  //   title: '结束时间',
+  //   dataIndex: 'logCollectTaskFinishTime',
+  //   key: 'logCollectTaskFinishTime',
+  //   width: '10%',
+  //   sorter: (a: ICollectTask, b: ICollectTask) => b.logCollectTaskFinishTime - a.logCollectTaskFinishTime,
+  //   render: (t: number) => t ? moment(t).format(timeFormat) : <Tag />,
+  // },
   {
     title: '操作',
     width: '11%',
@@ -288,12 +290,12 @@ export const collectTaskDetailBaseInfo = (detail: ILogCollectTaskDetail) => {
   }, {
     label: '创建时间',
     key: 'collectStartBusinessTime',
-    invisible: !detail.collectStartBusinessTime,
+    // invisible: !detail.collectStartBusinessTime,
     render: (t: number) => moment(t).format(timeFormat),
   }, {
     label: '结束时间',
     key: 'collectEndBusinessTime',
-    invisible: !detail.collectEndBusinessTime,
+    // invisible: !detail.collectEndBusinessTime,
     render: (t: number) => moment(t).format(timeFormat),
   }, {
     label: '创建人',

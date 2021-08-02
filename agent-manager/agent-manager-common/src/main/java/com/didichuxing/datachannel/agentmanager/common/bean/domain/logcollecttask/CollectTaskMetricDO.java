@@ -3,8 +3,6 @@ package com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollectta
 import com.alibaba.fastjson.annotation.JSONField;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.BaseDO;
 
-import java.util.Date;
-
 public class CollectTaskMetricDO extends BaseDO {
     private Long id;
 
@@ -112,7 +110,7 @@ public class CollectTaskMetricDO extends BaseDO {
 
     private Boolean validTimeConfig;
 
-    private Boolean isFileDisorder;
+    private Integer taskStatus;
 
     public Long getId() {
         return id;
@@ -530,12 +528,11 @@ public class CollectTaskMetricDO extends BaseDO {
         this.validTimeConfig = validTimeConfig;
     }
 
-    public Boolean getIsFileDisorder() {
-        return isFileDisorder;
+    public Integer getTaskStatus() {
+        return taskStatus;
     }
 
-    public void setIsFileDisorder(Boolean fileDisorder) {
-        isFileDisorder = fileDisorder;
+    public void setTaskStatus(Integer taskStatus) {
+        this.taskStatus = taskStatus;
     }
-
 }

@@ -30,4 +30,12 @@ public interface LogCollectTaskMapper {
 
     List<LogCollectTaskPO> getLogCollectTaskListByKafkaClusterId(Long kafkaClusterId);
 
+    Long countAll();
+
+    List<Long> getAllIds();
+
+    List<LogCollectTaskPO> getLogCollectTaskListByHealthLevel(Integer logCollectTaskHealthLevelCode);
+
+    List<LogCollectTaskPO> queryAll();
+
 }

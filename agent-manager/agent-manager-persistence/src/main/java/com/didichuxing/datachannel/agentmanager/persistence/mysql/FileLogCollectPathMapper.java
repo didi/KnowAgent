@@ -19,4 +19,6 @@ public interface FileLogCollectPathMapper {
 
     List<FileLogCollectPathPO> selectByLogCollectTaskId(Long logCollectTaskId);
 
+    Long countAll();
+
 }

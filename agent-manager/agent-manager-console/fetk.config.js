@@ -37,8 +37,12 @@ module.exports = {
   devServer: {
     inline: true,
     proxy: {
+      // '/api/v1': {
+      //   target: 'http://10.190.32.213:8080/',
+      //   changeOrigin: true,
+      // },
       '/api/v1': {
-        target: 'http://116.85.23.35/',
+        target: 'http://116.85.23.35:80',
         changeOrigin: true,
       },
       '/bigdata_cloud_agent_manager_test/': {

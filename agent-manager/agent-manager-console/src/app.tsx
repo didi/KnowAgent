@@ -90,8 +90,8 @@ const App = () => {
                           <Route path="/collect" exact={true} component={Collect} />
                           <Route path="/collect/detail" exact={true} component={Collect} />
                           <Route path="/agentVersion" exact={true} component={AgentVersion} />
-                          <Route path="/operationTasks" exact={true} component={OperationTasks} />
-                          <Route path="/operationTasks/taskDetail" exact={true} component={OperationTasks} />
+                          {/* <Route path="/operationTasks" exact={true} component={OperationTasks} /> */}
+                          {/* <Route path="/operationTasks/taskDetail" exact={true} component={OperationTasks} /> */}
                           <Route path="/collect/add-task" exact={true} component={Collect} />
                           <Route path="/collect/edit-task" exact={true} component={Collect} />
                           <Route path="/dashboard" exact={true} component={Dashboards} />

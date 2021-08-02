@@ -1,6 +1,8 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+drop database logi_agent_manager;
+
 create database logi_agent_manager;
 use logi_agent_manager;
 
@@ -453,6 +455,8 @@ CREATE TABLE `tb_kafka_cluster` (
   `kafka_cluster_producer_init_configuration` varchar(4096) DEFAULT '' COMMENT 'kafka 集群对应生产端初始化配置',
   `kafka_cluster_id` bigint(20) DEFAULT NULL COMMENT '外部kafka集群表id字段',
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
+  `agent_metrics_send_topic` varchar(255) DEFAULT '' COMMENT 'Agent指标信息发往的topic名',
+  `agent_error_logs_send_topic` varchar(255) DEFAULT '' COMMENT 'Agent错误日志信息发往的topic名',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE,

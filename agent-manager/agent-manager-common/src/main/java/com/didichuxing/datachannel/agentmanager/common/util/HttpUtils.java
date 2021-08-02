@@ -73,7 +73,7 @@ public class HttpUtils {
         String response = "";
         try {
 
-            if (!ValidateUtils.isEmptyMap(headers)) {
+            if (headers != null && !headers.isEmpty()) {
                 for (Map.Entry<String, String> e : headers.entrySet()) {
                     post.addHeader(e.getKey(), e.getValue());
                 }
@@ -93,7 +93,7 @@ public class HttpUtils {
                     multipartFile.getOriginalFilename()
             );
 
-            if (!ValidateUtils.isNull(bodies)) {
+            if (bodies != null) {
                 for (Map.Entry<String, String> e : bodies.entrySet()) {
                     builder.addTextBody(e.getKey(), e.getValue());
                 }

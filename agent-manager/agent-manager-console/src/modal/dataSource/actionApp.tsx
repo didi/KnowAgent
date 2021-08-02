@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import * as actions from '../../actions';
 import '../../container/data-source/index.less';
-import { Modal, Form, Input, Transfer, Tooltip, message } from 'antd';
+import { Modal, Form, Input, Transfer, Tooltip, message, Select } from 'antd';
 import { connect } from "react-redux";
 import { IFormProps } from '../../interface/common';
 import { addService, modifyService, getServiceDetail } from '../../api/dataSource'
 import { IDataSource, IApp } from '../../interface/dataSource';
 import { getHosts } from '../../api/agent';
 import { regName } from '../../constants/reg';
+
+const { Option } = Select;
 
 const mapStateToProps = (state: any) => ({
   params: state.modal.params,
@@ -31,9 +33,10 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
           message.success('修改成功！');
           props.params?.cb();
           props.dispatch(actions.setModalId(''));
-        }).catch((err: any) => {
-          message.error(err.message);
-        });
+        })
+        // .catch((err: any) => {
+        //   message.error(err.message);
+        // });
       } else {
         const params = {
           hostIdList: values.hostIdList,
@@ -43,9 +46,10 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
           message.success('新增成功！');
           props.params?.cb();
           props.dispatch(actions.setModalId(''));
-        }).catch((err: any) => {
-          message.error(err.message);
-        });
+        })
+        // .catch((err: any) => {
+        //   message.error(err.message);
+        // });
       }
     });
   }
@@ -57,9 +61,10 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
     <Modal
       title={(props.params?.id ? "修改" : "新增") + "应用"}
       visible={true}
-      width={728}
+      width={800}
       onOk={handleModifyOk}
       onCancel={handleModifyCancel}
+      okText='确认'
     >
       <WrappedAppForm ref={ref} params={props.params} />
     </Modal>
@@ -67,8 +72,8 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
 }
 
 const actionAppLayout = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 16 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 },
 };
 
 const ActionAppForm = (props: IFormProps) => {
@@ -129,7 +134,7 @@ const ActionAppForm = (props: IFormProps) => {
             },
           }],
         })(
-          <Input placeholder="请输入" />,
+          <Input style={{ width: '590px' }} placeholder="请输入" />,
         )}
       </Form.Item>
       <Form.Item label="关联主机：">
@@ -137,6 +142,17 @@ const ActionAppForm = (props: IFormProps) => {
           initialValue: appForm.targetKeys.length > 0 ? appForm.targetKeys : [],
           rules: [{ required: true, message: '请选择' }],
         })(
+          // <Select
+          //   mode="multiple"
+          //   onChange={handleChange}
+          // >
+          //   {
+          //     hostList.map((v: any) => {
+          //       console.log(v)
+          //       return <Option key={v.id} value={v.id}>{v?.hostName}</Option>
+          //     })
+          //   }
+          // </Select>
           <Transfer
             dataSource={hostList}
             showSearch

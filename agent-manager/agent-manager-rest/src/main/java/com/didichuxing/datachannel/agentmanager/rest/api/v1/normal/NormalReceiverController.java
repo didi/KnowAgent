@@ -104,6 +104,19 @@ public class NormalReceiverController {
         }
     }
 
+    @ApiOperation(value = "校验是否已配置系统全局 agent errorlogs & metrics 流对应配置 true：是 false：否", notes = "")
+    @RequestMapping(value = "/global-agent-errorlogs-metrics-receiver-exists", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<Boolean> globalAgentErrorlogsAndMetricsReceiverExists() {
+        ReceiverDO agentErrorLogsTopicExistsReceiver = kafkaClusterManageService.getAgentErrorLogsTopicExistsReceiver();
+        ReceiverDO agentMetricsTopicExistsReceiver = kafkaClusterManageService.getAgentMetricsTopicExistsReceiver();
+        if(null != agentErrorLogsTopicExistsReceiver && null != agentMetricsTopicExistsReceiver) {
+            return Result.buildSucc(Boolean.TRUE);
+        } else {
+            return Result.buildSucc(Boolean.FALSE);
+        }
+    }
+
     /**
      * 将ReceiverDO对象集转化为ReceiverVO对象集
      * @param receiverDOList 待转化ReceiverDO对象集
@@ -118,6 +131,8 @@ public class NormalReceiverController {
             receiverVO.setKafkaClusterBrokerConfiguration(receiverDO.getKafkaClusterBrokerConfiguration());
             receiverVO.setKafkaClusterName(receiverDO.getKafkaClusterName());
             receiverVO.setKafkaClusterProducerInitConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            receiverVO.setAgentErrorLogsTopic(receiverDO.getAgentErrorLogsTopic());
+            receiverVO.setAgentMetricsTopic(receiverDO.getAgentMetricsTopic());
             receiverVOList.add(receiverVO);
         }
         return receiverVOList;

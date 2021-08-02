@@ -10,6 +10,7 @@ import { DataSourceItemType } from '../../interface/common';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
 import MonacoEditor from '../../component/editor/monacoEditor';
 import TextArea from 'antd/lib/input/TextArea';
+import { regLogSliceTimestampPrefixString } from '../../constants/reg';
 
 const { Panel } = Collapse;
 interface IClientClearSelfMonitorProps extends FormComponentProps {
@@ -105,7 +106,17 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
         </Form.Item>
         <Form.Item label="生产端属性">
           {getFieldDecorator('step3_productionSide', {
-            rules: [{ message: '请输入' }],
+            rules: [{
+              // required: true,
+              validator: (rule: any, value: string, cb) => {
+                if (!new RegExp(/^[\s\S]{1,1024}$/).test(value)) {
+                  rule.message = '生产端属性最大长度为1024位'
+                  cb('生产端属性最大长度为1024位')
+                } else {
+                  cb()
+                }
+              },
+            }],
           })(
             <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />,
           )}
@@ -150,9 +161,23 @@ const ClientClearSelfMonitor = (props: Props & IClientClearSelfMonitorProps) => 
                   该任务下Agent客户端延迟超过&nbsp;
                 {getFieldDecorator('step3_collectDelayThresholdMs', {
                   initialValue: '3',
-                  rules: [{ required: true, message: '请输入' }],
+
+                  rules: [{
+                    required: true,
+                    validator: (rule: any, value: string, cb) => {
+                      if (!value) {
+                        rule.message = '请输入'
+                        cb('请输入')
+                      } else if (!new RegExp(regLogSliceTimestampPrefixString).test(value)) {
+                        rule.message = '最大长度限制8位'
+                        cb('最大长度限制8位')
+                      } else {
+                        cb()
+                      }
+                    },
+                  }],
                 })(
-                  <InputNumber min={1} />,
+                  <InputNumber min={1} max={99999999} precision={0} />,
                 )}&nbsp;分钟，则视为异常
               </Form.Item>
               }

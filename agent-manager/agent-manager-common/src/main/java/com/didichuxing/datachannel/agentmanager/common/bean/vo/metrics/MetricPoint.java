@@ -8,10 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "指标点")
 public class MetricPoint {
 
-    @ApiModelProperty(value = "Agent指标的某个数据点对应时间戳")
+    @ApiModelProperty(value = "指标的某个数据点对应时间戳")
     private Long timestamp;
 
-    @ApiModelProperty(value = "Agent指标的某个数据点对应值")
+    @ApiModelProperty(value = "指标的某个数据点对应值")
     private Object value;
 
     public Long getTimestamp() {

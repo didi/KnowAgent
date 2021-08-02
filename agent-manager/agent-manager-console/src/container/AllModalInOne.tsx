@@ -6,6 +6,8 @@ import ActionApp from '../modal/dataSource/actionApp';
 import ActionCluster from '../modal/receivingTerminal/actionCluster';
 import DiagnosisReport from '../modal/agent/DiagnosisReport';
 import AssociateHostDetail from '../modal/agent/AssociateHostDetail';
+import CollectFileInfoDetail from '../modal/agent/CollectFileInfoDetail';
+import MetricDetail from '../modal/agent/MetricDetail';
 import InstallHost from '../modal/agent/InstallHost';
 import ActionVersion from '../modal/agentVersion/actionVersion';
 
@@ -40,7 +42,9 @@ const modalMap = {
 
 const drawerMap = {
   DiagnosisReport: <DiagnosisReport />,
-  AssociateHostDetail: <AssociateHostDetail />
+  AssociateHostDetail: <AssociateHostDetail />,
+  CollectFileInfoDetail: <CollectFileInfoDetail />,
+  MetricDetail: <MetricDetail />
 } as {
   [key: string]: JSX.Element;
 };

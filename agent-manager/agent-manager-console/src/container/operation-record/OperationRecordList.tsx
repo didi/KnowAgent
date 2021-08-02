@@ -33,12 +33,16 @@ export class OperationRecordList extends React.Component<Props> {
     recordParams: {
       pageNo: 1,
       pageSize: 20,
-      moduleId: '',
-      operateId: '',
-      operator: '',
-      beginTime: '',
-      endTime: '',
-      operateTime: ''
+      // moduleId: '',
+      // operateId: '',
+      // operator: '',
+      // beginTime: '',
+      // endTime: '',
+      // operateTime: ''
+      beginTime: "",
+      endTime: "",
+      moduleId: "",
+      operateId: "",
     } as unknown as IOperationRecordParams,
   }
   public handleOk() {
@@ -73,7 +77,7 @@ export class OperationRecordList extends React.Component<Props> {
           // maxTagCount={0}
           // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
           >
-            <Option value={''} key={''}>请选择</Option>
+            {/* <Option value={''} key={''}>请选择</Option> */}
             {this.state.modulesList?.map((d: any) =>
               <Option value={d.code} key={d.code}> {d.desc}</Option>
             )}
@@ -87,8 +91,8 @@ export class OperationRecordList extends React.Component<Props> {
         component: (
           <Select
             className="searchWidth"
-            // mode="multiple"
             placeholder='请选择'
+          // mode="multiple"
           // ref={versionRef}
           // allowClear={true}
           // showArrow={true}
@@ -99,7 +103,7 @@ export class OperationRecordList extends React.Component<Props> {
           // maxTagCount={0}
           // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
           >
-            <Option value={''} key={''}>请选择</Option>
+            {/* <Option value={''} key={''}>请选择</Option> */}
             <Option value={1} key={1}>新增</Option>
             <Option value={2} key={2}>删除</Option>
             <Option value={3} key={3}>编辑</Option>
@@ -129,10 +133,10 @@ export class OperationRecordList extends React.Component<Props> {
       pageSize: 20,
       moduleId: '',
       operateId: '',
-      operator: '',
+      // operator: '',
       beginTime: '',
       endTime: '',
-      operateTime: ''
+      // operateTime: ''
     };
     this.setState({ recordParams: resetParams });
     this.getOperationRecordList(resetParams);
@@ -173,15 +177,15 @@ export class OperationRecordList extends React.Component<Props> {
   }
 
   public onChangeParams = (values: IOperationRecordParams, form: any) => {
-    // const { pageNo, pageSize } = this.state.recordParams;
+    const { pageNo, pageSize } = this.state.recordParams;
     this.setState({
       form,
       recordParams: {
-        // pageNo,
-        // pageSize,
+        pageNo,
+        pageSize,
         moduleId: values.moduleId,
         operateId: values.operateId,
-        operator: values.operator,
+        [`${values.operator?.length > 0 && 'operator'}`]: values.operator,
         // operateTime: values.beginTime?.length ? values.beginTime[0]?.valueOf() : '',
         beginTime: values.beginTime?.length ? values.beginTime[0]?.valueOf() : '',
         endTime: values.beginTime?.length ? values.beginTime[1]?.valueOf() : '',

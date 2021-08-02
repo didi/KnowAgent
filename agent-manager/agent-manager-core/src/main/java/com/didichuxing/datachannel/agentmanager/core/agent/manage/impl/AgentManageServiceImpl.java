@@ -7,16 +7,29 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.operationtask.AgentOperationTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.http.PathRequest;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricsDashBoard;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
+import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
@@ -26,6 +39,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.HttpUtils;
+import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
@@ -33,11 +47,13 @@ import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentO
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
+import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +61,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author huqidong
@@ -83,6 +101,9 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Autowired
     private K8sPodManageService k8sPodManageService;
 
+    @Autowired
+    private KafkaClusterManageService kafkaClusterManageService;
+
     /**
      * 远程请求 agent url
      */
@@ -103,7 +124,8 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 创建Agent对象处理流程
-     * @param agentDO 待创建Agent对象
+     *
+     * @param agentDO  待创建Agent对象
      * @param operator 操作人
      * @return 创建成功的Agent对象id
      * @throws ServiceException 执行该函数过程中出现的异常
@@ -113,14 +135,14 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验待创建 AgentPO 对象参数信息是否合法
          */
         CheckResult checkResult = agentManageServiceExtension.checkCreateParameterAgent(agentDO);
-        if(!checkResult.getCheckResult()) {//agent对象信息不合法
+        if (!checkResult.getCheckResult()) {//agent对象信息不合法
             throw new ServiceException(checkResult.getMessage(), checkResult.getCode());
         }
         /*
          * 校验待创建Agent在系统中是否已存在（已存在判断条件为：系统中是否已存在主机名为待创建Agent对应主机名的Agent）？如不存在，表示合法，如已存在，表示非法
          */
         boolean agentExists = agentExists(agentDO.getHostName());
-        if(agentExists) {
+        if (agentExists) {
             throw new ServiceException(
                     String.format("Agent对象{%s}创建失败，原因为：系统中已存在主机名与待创建Agent主机名{%s}相同的Agent", JSON.toJSONString(agentDO), agentDO.getHostName()),
                     ErrorCodeEnum.AGENT_EXISTS_IN_HOST_WHEN_AGENT_CREATE.getCode()
@@ -130,12 +152,32 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验主机名为待添加Agent对象对应主机名的主机是否存在？如存在，表示合法，如不存在，表示非法，不能在一个在系统中不存在的主机安装Agent
          */
         boolean hostExists = hostExists(agentDO.getHostName());
-        if(!hostExists) {
+        if (!hostExists) {
             throw new ServiceException(
                     String.format("Agent对象{%s}创建失败，原因为：不能基于一个系统中不存在的主机创建Agent对象，系统中已不存在主机名为待创建Agent对应主机名{%s}的主机对象", JSON.toJSONString(agentDO), agentDO.getHostName()),
                     ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
             );
         }
+        /*
+         * 系统是否存在 agent errorlogs & metrics 流 对应 全局 接收端 配置，如存在 & 用户未设置待添加 agent 对应 errorlogs & metrcis 流 对应 topic，则 设置
+         */
+        if(StringUtils.isBlank(agentDO.getErrorLogsSendTopic())) {
+            ReceiverDO receiverDO = kafkaClusterManageService.getAgentErrorLogsTopicExistsReceiver();
+            if(null != receiverDO) {
+                agentDO.setErrorLogsSendReceiverId(receiverDO.getId());
+                agentDO.setErrorLogsSendTopic(receiverDO.getAgentErrorLogsTopic());
+                agentDO.setErrorLogsProducerConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            }
+        }
+        if(StringUtils.isBlank(agentDO.getMetricsSendTopic())) {
+            ReceiverDO receiverDO = kafkaClusterManageService.getAgentMetricsTopicExistsReceiver();
+            if(null != receiverDO) {
+                agentDO.setMetricsSendReceiverId(receiverDO.getId());
+                agentDO.setMetricsSendTopic(receiverDO.getAgentErrorLogsTopic());
+                agentDO.setMetricsProducerConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            }
+        }
+
         /*
          * 持久化待创建Agent对象
          */
@@ -164,6 +206,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验系统中是否已存在给定主机名的主机对象
+     *
      * @param hostName 主机名
      * @return true：存在 false：不存在
      * @throws ServiceException 执行 "校验系统中是否已存在给定主机名的主机对象" 过程中出现的异常
@@ -175,6 +218,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验系统中是否已存在给定主机名的Agent对象
+     *
      * @param hostName 主机名
      * @return true：存在 false：不存在
      * @throws ServiceException 执行 "校验系统中是否已存在给定主机名的Agent对象" 过程中出现的异常
@@ -182,7 +226,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     private boolean agentExists(String hostName) throws ServiceException {
         try {
             AgentPO agentPO = agentDAO.selectByHostName(hostName);
-            if(null == agentPO) {
+            if (null == agentPO) {
                 return false;
             } else {
                 return true;
@@ -207,12 +251,13 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 删除指定Agent对象
-     * @param hostName 待删除Agent对象所在主机主机名
+     *
+     * @param hostName                  待删除Agent对象所在主机主机名
      * @param checkAgentCompleteCollect 是否检查待删除Agent是否已采集完其需要采集的所有日志
      *                                  true：将会校验待删除Agent所采集的所有日志采集任务是否都已采集完其所有的待采集文件，如未采集完，将导致删除该Agent对象失败，直到采集完其所有的待采集文件
      *                                  false：将会忽略待删除Agent所采集的所有日志采集任务是否都已采集完其所有的待采集文件，直接删除Agent对象（注意：将导致日志采集不完整情况，请谨慎使用）
-     * @param uninstall 是否卸载Agent true：卸载 false：不卸载
-     * @param operator 操作人
+     * @param uninstall                 是否卸载Agent true：卸载 false：不卸载
+     * @param operator                  操作人
      * @throws ServiceException 执行"删除指定Agent对象"过程种出现的异常
      */
     private void handleDeleteAgentByHostName(String hostName, boolean checkAgentCompleteCollect, boolean uninstall, String operator) throws ServiceException {
@@ -220,7 +265,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验待删除Agent对象在系统中是否存在
          */
         AgentDO agentDO = getAgentByHostName(hostName);
-        if(null == agentDO) {
+        if (null == agentDO) {
             throw new ServiceException(
                     String.format("根据hostName删除Agent对象失败，原因为：系统中不存在hostName为{%s}的Agent对象", hostName),
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
@@ -243,32 +288,33 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 删除指定Agent对象
-     * @param agentDO 待删除agent对象
+     *
+     * @param agentDO                   待删除agent对象
      * @param checkAgentCompleteCollect 是否检查待删除Agent是否已采集完其需要采集的所有日志
-     *                                   true：将会校验待删除Agent所采集的所有日志采集任务是否都已采集完其所有的待采集文件，如未采集完，将导致删除该Agent对象失败，直到采集完其所有的待采集文件
-     *                                   false：将会忽略待删除Agent所采集的所有日志采集任务是否都已采集完其所有的待采集文件，直接删除Agent对象（注意：将导致日志采集不完整情况，请谨慎使用）
-     * @param uninstall 是否卸载Agent true：卸载 false：不卸载
-     * @param operator 操作人
+     *                                  true：将会校验待删除Agent所采集的所有日志采集任务是否都已采集完其所有的待采集文件，如未采集完，将导致删除该Agent对象失败，直到采集完其所有的待采集文件
+     *                                  false：将会忽略待删除Agent所采集的所有日志采集任务是否都已采集完其所有的待采集文件，直接删除Agent对象（注意：将导致日志采集不完整情况，请谨慎使用）
+     * @param uninstall                 是否卸载Agent true：卸载 false：不卸载
+     * @param operator                  操作人
      * @throws ServiceException 执行"删除指定Agent对象"过程种出现的异常
      */
     private void deleteAgent(AgentDO agentDO, boolean checkAgentCompleteCollect, boolean uninstall, String operator) throws ServiceException {
         CheckResult checkResult = agentManageServiceExtension.checkDeleteParameterAgent(agentDO);
-        if(!checkResult.getCheckResult()) {//agent对象信息不合法
+        if (!checkResult.getCheckResult()) {//agent对象信息不合法
             throw new ServiceException(checkResult.getMessage(), checkResult.getCode());
         }
         /*
          * 检查待删除 Agent 对象是否存在未被采集完的日志信息，如存在，则抛异常，终止 Agent 删除操作
          */
-        if(checkAgentCompleteCollect) {
+        if (checkAgentCompleteCollect) {
             CheckResult agentCompleteCollectCheckResult = this.checkAgentCompleteCollect(agentDO);
-            if(!agentCompleteCollectCheckResult.getCheckResult()) {//agent存在未被采集完的日志，暂不可删除
+            if (!agentCompleteCollectCheckResult.getCheckResult()) {//agent存在未被采集完的日志，暂不可删除
                 throw new ServiceException(
                         agentCompleteCollectCheckResult.getMessage(),
                         agentCompleteCollectCheckResult.getCode()
                 );
             }
         }
-        if(uninstall) {
+        if (uninstall) {
             /*
              * 添加一条Agent卸载任务记录
              */
@@ -288,7 +334,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Override
     public AgentDO getAgentByHostName(String hostName) {
         AgentPO agentPO = agentDAO.selectByHostName(hostName);
-        if(null == agentPO) return null;
+        if (null == agentPO) return null;
         return agentManageServiceExtension.agentPO2AgentDO(agentPO);
     }
 
@@ -301,7 +347,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Override
     public AgentDO getById(Long id) {
         AgentPO agentPO = agentDAO.selectByPrimaryKey(id);
-        if(null == agentPO) {
+        if (null == agentPO) {
             return null;
         } else {
             return agentManageServiceExtension.agentPO2AgentDO(agentPO);
@@ -325,7 +371,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Override
     public List<AgentDO> getAgentsByAgentVersionId(Long agentVersionId) {
         List<AgentPO> agentPOList = agentDAO.selectByAgentVersionId(agentVersionId);
-        if(CollectionUtils.isEmpty(agentPOList)) {
+        if (CollectionUtils.isEmpty(agentPOList)) {
             return new ArrayList<>();
         }
         return agentManageServiceExtension.agentPOList2AgentDOList(agentPOList);
@@ -338,9 +384,10 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 根据 agent id 获取给定时间范围内对应 agent 运行时指标信息
-     * @param agentId agent id
+     *
+     * @param agentId   agent id
      * @param startTime 开始时间
-     * @param endTime 结束时间
+     * @param endTime   结束时间
      * @return 返回根据 agent id 获取到的给定时间范围内对应 agent 运行时指标信息
      */
     private List<MetricPanelGroup> handleListAgentMetrics(Long agentId, Long startTime, Long endTime) {
@@ -348,7 +395,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取agent信息
          */
         AgentDO agentDO = getById(agentId);
-        if(null == agentDO) {
+        if (null == agentDO) {
             throw new ServiceException(
                     String.format("待获取Agent指标信息的Agent={id=%d}在系统中不存在", agentId),
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
@@ -417,7 +464,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Override
     public List<AgentDO> list() {
         List<AgentPO> agentPOList = agentDAO.getAll();
-        if(CollectionUtils.isEmpty(agentPOList)) {
+        if (CollectionUtils.isEmpty(agentPOList)) {
             return new ArrayList<>();
         }
         return agentManageServiceExtension.agentPOList2AgentDOList(agentPOList);
@@ -426,7 +473,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Override
     public List<AgentDO> getAgentListByKafkaClusterId(Long kafkaClusterId) {
         List<AgentPO> agentPOList = agentDAO.selectByKafkaClusterId(kafkaClusterId);
-        if(CollectionUtils.isEmpty(agentPOList)) {
+        if (CollectionUtils.isEmpty(agentPOList)) {
             return new ArrayList<>();
         }
         return agentManageServiceExtension.agentPOList2AgentDOList(agentPOList);
@@ -439,20 +486,20 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         String realPath = path;
         HostDO hostDO = hostManageService.getHostByHostName(hostName);
-        if(null == hostDO) {
+        if (null == hostDO) {
             throw new ServiceException(
                     String.format("待获取文件名集的主机hostName={%s}在系统中不存在对应agent", hostName),
                     ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
             );
         }
         AgentDO agentDO = getAgentByHostName(hostName);
-        if(null == agentDO) {
+        if (null == agentDO) {
             throw new ServiceException(
                     String.format("待获取文件名集的主机hostName={%s}在系统中不存在", hostName),
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
             );
         }
-        if(hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
+        if (hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
             K8sPodDO k8sPodDO = k8sPodManageService.getByContainerId(hostDO.getId());
             String logMountPath = k8sPodDO.getLogMountPath();
             String logHostPath = k8sPodDO.getLogHostPath();
@@ -465,8 +512,181 @@ public class AgentManageServiceImpl implements AgentManageService {
         return fileNameList;
     }
 
+    @Override
+    public MetricPointList getCpuUsage(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        agentMetricQueryDO.setHostname(agentHostname);
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.CPU_USAGE.name(), CalcFunction.MAX.getValue(), MetricConstant.QUERY_INTERVAL);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(agentHostname);
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getMemoryUsage(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        agentMetricQueryDO.setHostname(agentHostname);
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.MEMORY_USAGE.name(), CalcFunction.MAX.getValue(), MetricConstant.QUERY_INTERVAL);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(agentHostname);
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getFdUsage(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        agentMetricQueryDO.setHostname(agentHostname);
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.FD_COUNT.name(), CalcFunction.MAX.getValue(), MetricConstant.QUERY_INTERVAL);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(agentHostname);
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getGcCount(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        agentMetricQueryDO.setHostname(agentHostname);
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.GC_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(agentHostname);
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getSendByte(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(metricQueryDO.getHostName());
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getSendCount(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(metricQueryDO.getHostName());
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getReadByte(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(metricQueryDO.getHostName());
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getReadCount(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(metricQueryDO.getHostName());
+        return metricPointList;
+    }
+
+    @Override
+    public MetricPointList getErrorLogCount(AgentMetricQueryDO agentMetricQueryDO) {
+        MetricPointList metricPointList = new MetricPointList();
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        agentMetricQueryDO.setHostname(agentHostname);
+        List<MetricPoint> graph = agentMetricsManageService.getAgentErrorLogCountPerMin(agentMetricQueryDO);
+        MetricUtils.buildEmptyMetric(graph, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), MetricConstant.QUERY_INTERVAL);
+        metricPointList.setMetricPointList(graph);
+        metricPointList.setName(agentHostname);
+        return metricPointList;
+    }
+
+    @Override
+    public List<MetricAggregate> getCollectTaskCount(AgentMetricQueryDO agentMetricQueryDO) {
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        HostDO hostDO = hostManageService.getHostByHostName(agentHostname);
+        List<LogCollectTaskDO> collectTaskList = logCollectTaskManageService.getLogCollectTaskListByHost(hostDO);
+        int active = 0;
+        int inactive = 0;
+        MetricAggregate activeTask = new MetricAggregate();
+        MetricAggregate inactiveTask = new MetricAggregate();
+        activeTask.setName(AgentConstant.AGENT_ACTIVE_COLLECTS);
+        inactiveTask.setName(AgentConstant.AGENT_INACTIVE_COLLECTS);
+        for (LogCollectTaskDO logCollectTaskDO : collectTaskList) {
+            if (logCollectTaskDO.getLogCollectTaskStatus() == 1) {
+                active++;
+            } else {
+                inactive++;
+            }
+        }
+        activeTask.setValue(active);
+        inactiveTask.setValue(inactive);
+        return Arrays.asList(activeTask, inactiveTask);
+    }
+
+    @Override
+    public List<MetricAggregate> getCollectPathCount(AgentMetricQueryDO agentMetricQueryDO) {
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        HostDO hostDO = hostManageService.getHostByHostName(agentHostname);
+        List<LogCollectTaskDO> collectTaskList = logCollectTaskManageService.getLogCollectTaskListByHost(hostDO);
+        int active = 0;
+        int inactive = 0;
+        MetricAggregate activePath = new MetricAggregate();
+        MetricAggregate inactivePath = new MetricAggregate();
+        activePath.setName(AgentConstant.AGENT_ACTIVE_PATHS);
+        inactivePath.setName(AgentConstant.AGENT_INACTIVE_PATHS);
+        for (LogCollectTaskDO logCollectTaskDO : collectTaskList) {
+            List<FileLogCollectPathDO> fileLogCollectPathList = logCollectTaskDO.getFileLogCollectPathList();
+            List<DirectoryLogCollectPathDO> directoryLogCollectPathList = logCollectTaskDO.getDirectoryLogCollectPathList();
+            if (fileLogCollectPathList != null) {
+                if (logCollectTaskDO.getLogCollectTaskStatus() == 1) {
+                    active += fileLogCollectPathList.size();
+                } else {
+                    inactive += fileLogCollectPathList.size();
+                }
+            }
+            if (directoryLogCollectPathList != null) {
+                if (logCollectTaskDO.getLogCollectTaskStatus() == 1) {
+                    active += directoryLogCollectPathList.size();
+                } else {
+                    inactive += directoryLogCollectPathList.size();
+                }
+            }
+        }
+        activePath.setValue(active);
+        inactivePath.setValue(inactive);
+        return Arrays.asList(activePath, inactivePath);
+    }
+
+    @Override
+    public List<CollectTaskMetricDO> getRelatedTaskMetrics(String hostname) {
+        HostDO hostDO = hostManageService.getHostByHostName(hostname);
+        List<LogCollectTaskDO> taskList = logCollectTaskManageService.getLogCollectTaskListByHost(hostDO);
+        List<CollectTaskMetricDO> list = new ArrayList<>();
+        for (LogCollectTaskDO logCollectTaskDO : taskList) {
+            CollectTaskMetricPO collectTaskMetricPO = agentMetricsManageService.getLatestMetric(logCollectTaskDO.getId());
+            CollectTaskMetricDO collectTaskMetricDO = ConvertUtil.obj2Obj(collectTaskMetricPO, CollectTaskMetricDO.class);
+            collectTaskMetricDO.setTaskStatus(logCollectTaskDO.getLogCollectTaskStatus());
+            list.add(collectTaskMetricDO);
+        }
+        return list;
+    }
+
+    @Override
+    public Long countAll() {
+        return agentDAO.countAll();
+    }
+
     /**
      * 校验给定Agent是否需要被健康巡检
+     *
      * @param agentDO 待校验 AgentDO 对象
      * @return true：须巡检 false：不须巡检
      * @throws ServiceException
@@ -478,15 +698,16 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 根据id删除对应agent对象
-     * @param id 待删除agent对象 id
+     *
+     * @param id                        待删除agent对象 id
      * @param checkAgentCompleteCollect 删除agent时，是否检测该agent是否存在未被采集完的日志，如该参数值设置为true，当待删除agent存在未被采集完的日志时，将会抛出异常，不会删除该agent
-     * @param uninstall 是否卸载 agent，该参数设置为true，将添加一个该agent的卸载任务
-     * @param operator 操作人
+     * @param uninstall                 是否卸载 agent，该参数设置为true，将添加一个该agent的卸载任务
+     * @param operator                  操作人
      * @throws ServiceException 执行该函数过程中出现的异常
      */
     private void handleDeleteAgentById(Long id, boolean checkAgentCompleteCollect, boolean uninstall, String operator) throws ServiceException {
         AgentDO agentDO = getById(id);
-        if(null == agentDO) {
+        if (null == agentDO) {
             throw new ServiceException(
                     String.format("系统中不存在id={%d}的Agent对象", id),
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
@@ -507,8 +728,9 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 更新给定AgentDO对象
+     *
      * @param agentDOTarget 待更新AgentDO对象
-     * @param operator 操作者
+     * @param operator      操作者
      * @throws ServiceException 执行该函数过程中出现的异常
      */
     private void handleUpdateAgent(AgentDO agentDOTarget, String operator) throws ServiceException {
@@ -516,14 +738,14 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验待创建 AgentPO 对象参数信息是否合法
          */
         CheckResult checkResult = agentManageServiceExtension.checkUpdateParameterAgent(agentDOTarget);
-        if(!checkResult.getCheckResult()) {//待更新AgentDO对象信息不合法
+        if (!checkResult.getCheckResult()) {//待更新AgentDO对象信息不合法
             throw new ServiceException(checkResult.getMessage(), checkResult.getCode());
         }
         /*
          * 校验待更新AgentDO对象在系统中是否存在
          */
         AgentDO agentDOExists = getById(agentDOTarget.getId());
-        if(null == agentDOExists) {
+        if (null == agentDOExists) {
             throw new ServiceException(
                     String.format("待更新Agent对象={id=%d}在系统中不存在", agentDOTarget.getId()),
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
@@ -533,7 +755,8 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 更新 Agent
          */
         AgentDO agentDO = agentManageServiceExtension.updateAgent(agentDOExists, agentDOTarget);
-        AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);;
+        AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);
+        ;
         agentPO.setOperator(CommonConstant.getOperator(operator));
         agentDAO.updateByPrimaryKeySelective(agentPO);
         /*
@@ -550,6 +773,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验给定Agent是否已采集完所需采集的所有日志信息
+     *
      * @param agentDO 待校验是否采集完毕的 agentDO 对象
      * @return true：已采集完 false：未采集完
      * @throws ServiceException
@@ -564,7 +788,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         for (HostDO checkHost : checkHostList) {
             boolean completeCollect = agentMetricsManageService.completeCollect(checkHost);
-            if(completeCollect) {//已采集完
+            if (completeCollect) {//已采集完
                 // do nothing
                 continue;
             } else {//未采集完
@@ -576,6 +800,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 检查给定 Agent 健康度，返回并将检查结果信息更新至表 tb_agent
+     *
      * @param agentDO 待检查 AgentDO 对象
      * @return 返回给定 agent 健康度检查结果
      */
@@ -593,7 +818,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验在距当前时间的心跳存活判定周期内，agent 是否存在心跳
          */
         boolean alive = checkAliveByHeartbeat(agentDO.getHostName());
-        if(!alive) {//不存活
+        if (!alive) {//不存活
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_HEART_BEAT_NOT_EXISTS.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -611,7 +836,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         Long agentHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //Agent健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
         boolean errorLogsExists = checkErrorLogsExists(agentDO.getHostName(), agentHealthDO, agentHealthCheckTimeEnd);
-        if(errorLogsExists) {//agent 存在错误日志输出
+        if (errorLogsExists) {//agent 存在错误日志输出
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_EXISTS.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -631,7 +856,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验是否存在 agent 非人工启动过频
          */
         boolean agentStartupFrequentlyExists = checkAgentStartupFrequentlyExists(agentDO.getHostName(), agentHealthDO);
-        if(agentStartupFrequentlyExists) {//存在 agent 非人工启动过频
+        if (agentStartupFrequentlyExists) {//存在 agent 非人工启动过频
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_STARTUP_FREQUENTLY.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -648,7 +873,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验是否存在 agent 进程 gc 指标异常
          */
         boolean agentGcMetricExceptionExists = checkAgentGcMetricExceptionExists(agentDO.getHostName());
-        if(agentGcMetricExceptionExists) {//存在 agent 进程 gc 指标异常
+        if (agentGcMetricExceptionExists) {//存在 agent 进程 gc 指标异常
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_GC_METRIC_EXCEPTION.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -665,7 +890,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验是否存在 agent 进程 cpu 使用率指标异常
          */
         boolean agentCpuUageMetricExceptionExists = checkAgentCpuUageMetricExceptionExists(agentDO.getHostName(), agentDO.getCpuLimitThreshold());
-        if(agentCpuUageMetricExceptionExists) {//存在 agent 进程 cpu 使用率指标异常
+        if (agentCpuUageMetricExceptionExists) {//存在 agent 进程 cpu 使用率指标异常
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_CPU_USAGE_METRIC_EXCEPTION.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -682,7 +907,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验是否存在 agent 进程 fd 使用量指标异常
          */
         boolean agentFdUsageMetricExceptionExists = checkAgentFdUsageMetricExceptionExists(agentDO.getHostName());
-        if(agentFdUsageMetricExceptionExists) {
+        if (agentFdUsageMetricExceptionExists) {
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_FD_USAGE_METRIC_EXCEPTION.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -699,7 +924,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验 agent 端是否存在出口限流
          */
         boolean byteLimitOnAgentExists = checkByteLimitOnAgentExists(agentDO.getHostName());
-        if(byteLimitOnAgentExists) {
+        if (byteLimitOnAgentExists) {
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -716,7 +941,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验 agent 端是否未关联任何日志采集任务
          */
         boolean notRelateAnyLogCollectTask = checkAgentNotRelateAnyLogCollectTask(agentDO.getHostName());
-        if(notRelateAnyLogCollectTask) {
+        if (notRelateAnyLogCollectTask) {
             agentHealthLevelEnum = AgentHealthInspectionResultEnum.NOT_RELATE_ANY_LOGCOLLECTTASK.getAgentHealthLevel();
             agentHealthDescription = String.format(
                     "%s:AgentId={%d}, HostName={%s}",
@@ -736,17 +961,12 @@ public class AgentManageServiceImpl implements AgentManageService {
         return agentHealthLevelEnum;
     }
 
-    /**
-     * 校验给定主机名的Agent是否不关联任何日志采集任务
-     * @param hostName 主机名
-     * @return true：不关联任何日志采集任务 false：存在关联的日志采集任务
-     */
-    private boolean checkAgentNotRelateAnyLogCollectTask(String hostName) {
+    public boolean checkAgentNotRelateAnyLogCollectTask(String hostName) {
         /*
          * 根据 hostName 获取其对应 agent
          */
         AgentDO agentDO = getAgentByHostName(hostName);
-        if(null == agentDO) {
+        if (null == agentDO) {
             throw new ServiceException(
                     String.format("Agent={hostName=%s}在系统中不存在", hostName),
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
@@ -762,8 +982,42 @@ public class AgentManageServiceImpl implements AgentManageService {
         return CollectionUtils.isEmpty(logCollectTaskDOList);
     }
 
+    @Override
+    public List<String> getAllHostNames() {
+        return agentDAO.getAllHostNames();
+    }
+
+    @Override
+    public List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode) {
+        List<AgentPO> agentPOList = agentDAO.getByHealthLevel(agentHealthLevelCode);
+        return agentManageServiceExtension.agentPOList2AgentDOList(agentPOList);
+    }
+
+    @Override
+    public List<MetricPointList> getTop5LogCollectTaskCount(Long startTime, Long endTime) {
+        List<AgentPO> agentPOList = agentDAO.getAll();
+        int topN = 5;
+        int limit = Math.min(agentPOList.size(), topN);
+        List<MetricPointList> metricPointLists = new ArrayList<>();
+        List<AgentPO> sortedList = agentPOList.stream().sorted((i1, i2) -> {
+            int size1 = logCollectTaskManageService.getLogCollectTaskListByAgentId(i1.getId()).size();
+            int size2 = logCollectTaskManageService.getLogCollectTaskListByAgentId(i2.getId()).size();
+            return size2 - size1;
+        }).limit(limit).collect(Collectors.toList());
+        for (AgentPO agentPO : sortedList) {
+            List<MetricPoint> graph = new ArrayList<>();
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, logCollectTaskManageService.getLogCollectTaskListByAgentId(agentPO.getId()).size());
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(graph);
+            metricPointList.setName(agentPO.getHostName());
+            metricPointLists.add(metricPointList);
+        }
+        return metricPointLists;
+    }
+
     /**
      * 校验 agent 端是否存在 cpu 阈值限流
+     *
      * @param hostName agent 主机名
      * @return true：存在限流 false：不存在限流
      */
@@ -779,7 +1033,7 @@ public class AgentManageServiceImpl implements AgentManageService {
                 endTime,
                 hostName
         );//主机cpu限流时长 单位：ms
-        if(hostCpuLimiDturationMs > AgentHealthCheckConstant.HOST_CPU_LIMIT_MS_THRESHOLD) {
+        if (hostCpuLimiDturationMs > AgentHealthCheckConstant.HOST_CPU_LIMIT_MS_THRESHOLD) {
             return true;
         } else {
             return false;
@@ -788,6 +1042,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验 agent 端是否存在出口流量阈值限流
+     *
      * @param hostName agent 主机名
      * @return true：存在限流 false：不存在限流
      */
@@ -808,6 +1063,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验是否存在 agent 进程 fd 使用量指标异常
+     *
      * @param hostName agent 主机名
      * @return true：存在异常 false：不存在异常
      */
@@ -821,7 +1077,8 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验是否存在 agent 进程 cpu 使用率指标异常
-     * @param hostName agent 主机名
+     *
+     * @param hostName          agent 主机名
      * @param cpuLimitThreshold agent cpu 限流阈值
      * @return true：存在异常 false：不存在异常
      */
@@ -838,6 +1095,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验是否存在 agent 进程 gc 指标异常
+     *
      * @param hostName agent 主机名
      * @return true：存在 agent 进程 gc 指标异常 false：不存在 agent 进程 gc 指标异常
      */
@@ -858,7 +1116,8 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验是否存在 agent 非人工启动过频
-     * @param hostName agent 主机名
+     *
+     * @param hostName      agent 主机名
      * @param agentHealthDO AgentHealthDO 对象
      * @return true：存在启动过频 false：不存在启动过频
      */
@@ -873,21 +1132,21 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         Long lastestAgentStartupTime = agentMetricsManageService.getLastestAgentStartupTime(hostName);//agent心跳上报最近一次启动时间
         Long agentStartupTime = agentHealthDO.getAgentStartupTime();//系统记录的agent最近一次启动时间
-        if(null == agentStartupTime || agentStartupTime <= 0) {//agent初次启动上报
+        if (null == agentStartupTime || agentStartupTime <= 0) {//agent初次启动上报
             agentHealthDO.setAgentStartupTime(lastestAgentStartupTime);
             return false;
         } else {//agent非初次启动上报
-            if(lastestAgentStartupTime.equals(agentStartupTime)) {//表示 agent 自系统记录的启动时间以来未有启动行为
-               //do nothing
+            if (lastestAgentStartupTime.equals(agentStartupTime)) {//表示 agent 自系统记录的启动时间以来未有启动行为
+                //do nothing
             } else {//表示 agent 自系统记录的启动时间以来存在启动行为，将系统记录的 agent 启动时间记为上一次启动时间，将最近一次心跳对应 agent 启动时间记为系统记录的 agent 启动时间
                 agentHealthDO.setAgentStartupTimeLastTime(agentStartupTime);
                 agentHealthDO.setAgentStartupTime(lastestAgentStartupTime);
             }
             Long agentStartupTimeLastTime = agentHealthDO.getAgentStartupTimeLastTime();//agent上一次启动时间
-            if(null == agentStartupTimeLastTime) {//表示agent处于初次启动
+            if (null == agentStartupTimeLastTime) {//表示agent处于初次启动
                 return false;
             } else {//表示agent非初次启动
-                if(agentHealthDO.getAgentStartupTime() - agentHealthDO.getAgentStartupTimeLastTime() > AgentHealthCheckConstant.AGENT_STARTUP_FREQUENTLY_THRESHOLD) {
+                if (agentHealthDO.getAgentStartupTime() - agentHealthDO.getAgentStartupTimeLastTime() > AgentHealthCheckConstant.AGENT_STARTUP_FREQUENTLY_THRESHOLD) {
 
                     //TODO：判断 "系统记录的 agent 启动时间" 是否由人工触发（人工触发判断条件为："系统记录的 agent 启动时间" 对应 agent 是否存在对应安装、升级类型 AgentOperationTask 执行）
 
@@ -901,8 +1160,9 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验 agent 是否存在错误日志输出
-     * @param hostName agent 主机名
-     * @param agentHealthDO AgentHealthDO对象
+     *
+     * @param hostName                agent 主机名
+     * @param agentHealthDO           AgentHealthDO对象
      * @param agentHealthCheckTimeEnd Agent健康度检查流程获取agent心跳数据右边界时间
      * @return true：存在错误日志输出 false：不存在错误日志输出
      */
@@ -911,7 +1171,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 获取自上次"错误日志输出存在"健康点 ~ 当前时间，agent 是否存在错误日志输出
          */
         Long lastestCheckTime = agentHealthDO.getLastestErrorLogsExistsCheckHealthyTime();
-        if(null == lastestCheckTime) {
+        if (null == lastestCheckTime) {
             throw new ServiceException(
                     String.format("Agent={hostName=%s}对应lastestErrorLogsExistsCheckHealthyTime不存在", hostName),
                     ErrorCodeEnum.AGENT_HEALTH_ERROR_LOGS_EXISTS_CHECK_HEALTHY_TIME_NOT_EXISTS.getCode()
@@ -927,6 +1187,7 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     /**
      * 校验在距当前时间的心跳存活判定周期内，agent 是否存或
+     *
      * @param hostName agent 主机名
      * @return true：存活 false：不存活
      */
@@ -942,6 +1203,15 @@ public class AgentManageServiceImpl implements AgentManageService {
                 hostName
         );
         return heartbeatTimes > 0;
+    }
+
+    private MetricQueryDO convertToTaskQuery(AgentMetricQueryDO agentMetricQueryDO) {
+        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        MetricQueryDO metricQueryDO = new MetricQueryDO();
+        metricQueryDO.setHostName(agentHostname);
+        metricQueryDO.setStartTime(agentMetricQueryDO.getStartTime());
+        metricQueryDO.setEndTime(agentMetricQueryDO.getEndTime());
+        return metricQueryDO;
     }
 
 }

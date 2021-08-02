@@ -34,4 +34,6 @@ public interface HostMapper {
 
     HostPO selectByIp(String ip);
 
+    Long countByHostType(Integer hostType);
+
 }

@@ -6,15 +6,30 @@ import com.didichuxing.datachannel.agentmanager.common.annotation.CheckPermissio
 import com.didichuxing.datachannel.agentmanager.common.bean.common.PaginationResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.*;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.*;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.DirectoryLogCollectPathCreateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.DirectoryLogCollectPathUpdateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.FileLogCollectPathCreateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.FileLogCollectPathUpdateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskCreateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskPaginationRequestDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskUpdateDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostFilterRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.*;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.Metric;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.DirectoryLogCollectPathVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.FileLogCollectPathVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.FileNameSuffixMatchRuleVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskPaginationRecordVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogContentFilterRuleVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -32,14 +47,18 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,7 +115,6 @@ public class NormalLogCollectTaskController {
     @ResponseBody
     // @CheckPermission(permission = AGENT_TASK_LIST)
     public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
-        //TODO：获取 projectId
         String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
         Long projectId = null;
         if (StringUtils.isNotBlank(projectIdStr)) {
@@ -131,28 +149,6 @@ public class NormalLogCollectTaskController {
     @ResponseBody
     public Result<List<MetricPanelGroup>> listLogCollectTaskMetrics(@PathVariable Long logCollectTaskId, @PathVariable Long startTime, @PathVariable Long endTime) {
         return Result.buildSucc(logCollectTaskManageService.listLogCollectTaskMetrics(logCollectTaskId, startTime, endTime));
-    }
-
-    @ApiOperation(value = "获取指定条件下，给定时间范围（startTime ~ endTime）内，给定指标项的值", notes = "")
-    @RequestMapping(value = "/metric", method = RequestMethod.GET)
-    @ResponseBody
-    public Result<List<MetricPoint>> getMetric(@RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("logCollectTaskId") Long logCollectTaskId, @RequestParam("logModelHostName") String logModelHostName, @RequestParam("fileLogCollectPathId") Long fileLogCollectPathId, @RequestParam("metricName") String metricName, @RequestParam("function") String function) {
-        if (logCollectTaskId == null) {
-            return Result.buildFail("采集任务的task id不存在");
-        }
-        if (startTime == null) {
-            return Result.buildFail("采集任务的起始时间不存在");
-        }
-        if (endTime == null) {
-            return Result.buildFail("采集任务的结束时间不存在");
-        }
-        if (metricName == null) {
-            return Result.buildFail("采集任务的指标名称不存在");
-        }
-        if (function == null) {
-            return Result.buildFail("采集任务的指标名称不存在");
-        }
-        return Result.buildSucc(logCollectTaskManageService.getMetricByName(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId));
     }
 
     /**

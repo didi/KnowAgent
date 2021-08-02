@@ -30,6 +30,8 @@ export interface IReceivingTerminalVo {
   resultSet: IReceivingTerminal[];
   total: number;
   id?: number;
+  agentErrorLogsTopic?: any;
+  agentMetricsTopic?: any;
 }
 
 export interface IReceivingTerminal {

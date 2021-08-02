@@ -25,12 +25,13 @@ export const leftMenus = {
           path: 'agentVersion',
           icon: '#icon-jiqun1',
           permissionPoint: 'Agent_agent_version_page',
-        }, {
-          name: 'operationTasks',
-          path: 'operationTasks',
-          icon: '#icon-jiqun1',
-          permissionPoint: 'Agent_operational_tasks_page',
         },
+        // {
+        //   name: 'operationTasks',
+        //   path: 'operationTasks',
+        //   icon: '#icon-jiqun1',
+        //   permissionPoint: 'Agent_operational_tasks_page',
+        // },
         // {
         //   name: 'hola',
         //   path: 'hola',

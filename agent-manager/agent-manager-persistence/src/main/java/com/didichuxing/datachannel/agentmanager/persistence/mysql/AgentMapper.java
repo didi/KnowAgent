@@ -31,4 +31,10 @@ public interface AgentMapper {
 
     List<AgentPO> selectByKafkaClusterId(Long kafkaClusterId);
 
+    Long countAll();
+
+    List<String> getAllHostNames();
+
+    List<AgentPO> getByHealthLevel(Integer agentHealthLevelCode);
+
 }

@@ -62,4 +62,10 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <select id="countAll" resultType="java.lang.Long" >
+    select
+      count (*)
+    from tb_file_log_collect_path
+  </select>
+
 </mapper>

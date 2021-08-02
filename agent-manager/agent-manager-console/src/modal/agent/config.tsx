@@ -2,6 +2,8 @@
 import { IBaseInfo } from '../../interface/common';
 import { hostTypeMap } from '../../constants/common';
 import { IHostDetail } from '../../interface/collect';
+import { timeFormat } from '../../constants/time';
+import moment from 'moment';
 
 export const reportInfo: IBaseInfo[] = [{
   label: '主机名',
@@ -95,4 +97,56 @@ export const hostBaseInfo = (info: IHostDetail) => {
     key: 'machineZone',
   }];
   return hostBaseList;
+}
+
+export const getCollectFileInfo = (info?: any) => {
+  const CollectFileInfoList = [
+    {
+      label: '采集文件名',
+      key: 'fileName',
+    },
+    {
+      label: '切片时间戳配置是否合理',
+      key: 'validTimeConfig',
+      render: (t: any) => {
+        return info[t] ? '是' : '否'
+      }
+    },
+    {
+      label: '日志待采集时间',
+      key: 'logTime',
+      render: (t: any) => {
+        return moment(info[t] * 1).format(timeFormat)
+      }
+    },
+    {
+      label: '是否为顺序文件',
+      key: 'isFileOrder',
+      render: (t: any) => {
+        return info[t] ? '是' : '否'
+      }
+    },
+    {
+      label: '是否采集至文件末尾',
+      key: 'fileEnd',
+      render: (t: any) => {
+        return info[t] ? '是' : '否'
+      }
+    },
+    {
+      label: '文件最新修改时间',
+      key: 'lastModifyTime',
+      render: (t: any) => {
+        return moment(info[t] * 1).format(timeFormat)
+      }
+    },
+    {
+      label: '采集进度',
+      key: 'rate',
+      render: (t: any) => {
+        return info[t] + "%"
+      }
+    },
+  ]
+  return CollectFileInfoList
 }

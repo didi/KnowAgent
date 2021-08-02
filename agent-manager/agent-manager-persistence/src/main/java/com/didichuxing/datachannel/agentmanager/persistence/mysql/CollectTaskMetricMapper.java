@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import org.apache.ibatis.annotations.Param;
@@ -39,6 +40,16 @@ public interface CollectTaskMetricMapper {
 
     List<MetricPoint> selectMinPerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("column") String column);
 
+    List<MetricPoint> selectDelayTimePerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId);
+
+    List<MetricPoint> selectByTask(@Param("taskId") Long logCollectTaskId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
+
+    List<MetricPoint> selectAggregationByTask(@Param("taskId") Long logCollectTaskId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function, @Param("step") Integer step);
+
+    List<MetricPoint> selectByLogModel(@Param("taskId") Long logCollectTaskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
+
+    List<MetricPoint> selectAggregationByLogModel(@Param("taskId") Long logCollectTaskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function, @Param("step") Integer step);
+
     int deleteBeforeTime(@Param("time") Long time);
 
     Long selectContainerCountEqualsZero(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("containerName") String containerName, @Param("column") String column);
@@ -66,5 +77,17 @@ public interface CollectTaskMetricMapper {
     Object selectSingleMax(@Param("taskId") Long taskId, @Param("hostName") String hostName, @Param("pathId") Long pathId, @Param("column") String column);
 
     Object selectMaxByHostname(@Param("hostName") String hostName, @Param("column") String column);
+
+    CollectTaskMetricPO selectLatest(@Param("taskId") Long taskId);
+
+    List<CollectTaskMetricPO> selectLatestMetrics(@Param("time") Long time, @Param("step") Integer step);
+
+    Double selectAggregationForAll(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+
+    List<DashBoardStatisticsDO> groupByKeyAndMinute(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("key") String key, @Param("function") String function, @Param("metric") String metric);
+
+    List<MetricPoint> selectAggregationByAgent(@Param("agentHostName") String agentHostName, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
+
+    List<MetricPoint> selectAggregationGroupByMinute(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
 
 }

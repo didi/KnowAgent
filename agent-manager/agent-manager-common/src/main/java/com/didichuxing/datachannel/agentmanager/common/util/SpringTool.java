@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.util;
 
 import com.didichuxing.datachannel.agentmanager.common.constant.LoginConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -95,7 +96,7 @@ public class SpringTool implements ApplicationContextAware, DisposableBean {
                 ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute(LoginConstant.SESSION_USERNAME_KEY);
-        if (ValidateUtils.isNull(username)) {
+        if (StringUtils.isBlank(username)) {
             return "";
         }
         return username;
