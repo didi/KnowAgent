@@ -67,7 +67,7 @@ const LogFileType = (props: any | ILogFileTypeProps) => {
     }
     if (logFilePath && logSuffixfilesValue && hostName) {
       getCollectPathList(params).then((res) => {
-        // logArr[key] = res.massage.split()
+        // logArr[key] = res.message.split()
         setFileArrList(res)
       })
     }

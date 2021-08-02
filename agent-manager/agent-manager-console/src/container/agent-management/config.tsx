@@ -43,17 +43,17 @@ export const getQueryFormColumns = (agentVersions: IAgentVersion[], versionRef: 
       dataIndex: 'agentVersionIdList',
       component: (
         <Select
-          mode="multiple"
+          // mode="multiple"
           placeholder='请选择'
           ref={versionRef}
           allowClear={true}
           showArrow={true}
-          onInputKeyDown={() => {
-            form.resetFields(['agentVersionIdList']);
-            versionRef.current.blur();
-          }}
-          maxTagCount={0}
-          maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+        // onInputKeyDown={() => {
+        //   form.resetFields(['agentVersionIdList']);
+        //   versionRef.current.blur();
+        // }}
+        // maxTagCount={0}
+        // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
         >
           {agentVersions.map((d: IAgentVersion, index: number) =>
             <Option value={d.agentVersionId} key={index}>{d.agentVersion}</Option>
@@ -91,17 +91,17 @@ export const getQueryFormColumns = (agentVersions: IAgentVersion[], versionRef: 
       dataIndex: 'containerList',
       component: (
         <Select
-          mode="multiple"
+          // mode="multiple"
           placeholder='请选择'
           ref={containerRef}
           allowClear={true}
           showArrow={true}
-          onInputKeyDown={() => {
-            form.resetFields(['containerList']);
-            containerRef.current.blur();
-          }}
-          maxTagCount={0}
-          maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
+        // onInputKeyDown={() => {
+        //   form.resetFields(['containerList']);
+        //   containerRef.current.blur();
+        // }}
+        // maxTagCount={0}
+        // maxTagPlaceholder={(values) => values?.length ? `已选择${values?.length}项` : '请选择'}
         >
           {hostTypes.map((d, index) =>
             <Option value={d.value} key={index}>{d.label}</Option>
@@ -372,83 +372,131 @@ export const getCollectTaskConfig = (drawer: any) => {
   const collectTaskConfig: any = [
     {
       title: '采集任务ID',
-      dataIndex: 'collectTaskId',
-      key: 'collectTaskId',
+      dataIndex: 'clusterId',
+      key: 'clusterId',
+      align: 'center',
     }, {
       title: '采集路径ID',
-      dataIndex: 'collectPathId',
-      key: 'collectPathId',
+      dataIndex: 'pathId',
+      key: 'pathId',
+      align: 'center',
     }, {
       title: '主文件名',
-      dataIndex: 'fileName',
-      key: 'fileName',
+      dataIndex: 'masterFile',
+      key: 'masterFile',
+      align: 'center',
     }, {
       title: '当前采集流量 & 条数/30s',
-      dataIndex: 'currentCollectTraffic',
-      key: 'currentCollectTraffic',
+      dataIndex: 'sendByte',
+      key: 'sendByte',
+      align: 'center',
+      width: 160,
+      render: (text: any, record: any) => {
+        return `${text} & ${record.sendCount}`
+      }
     }, {
       title: '当前最大延迟',
-      dataIndex: 'currentMaxDelay',
-      key: 'currentMaxDelay',
+      dataIndex: 'maxTimeGap',
+      key: 'maxTimeGap',
+      align: 'center',
     }, {
       title: '当前采集时间',
-      dataIndex: 'currentCollectTime',
-      key: 'currentCollectTime',
+      dataIndex: 'logTime',
+      key: 'logTime',
+      align: 'center',
+      width: 160,
+      render: (t: number) => moment(t).format(timeFormat),
     }, {
       title: '文件最近修改时间',
-      dataIndex: 'fileModifyTime',
-      key: 'fileModifyTime',
+      dataIndex: 'lastModifyTime',
+      key: 'lastModifyTime',
+      width: 160,
+      align: 'center',
+      render: (text: any, record: any) => {
+        const collectFilesSort = record?.collectFiles.sort((a: any, b: any) => b.lastModifyTime - a.lastModifyTime)
+        return moment(collectFilesSort[0].lastModifyTime).format(timeFormat)
+      }
     }, {
       title: '限流时长/30s',
-      dataIndex: 'currentLimitTime',
-      key: 'currentLimitTime',
+      dataIndex: 'limitTime',
+      key: 'limitTime',
+      align: 'center',
     }, {
       title: '异常截断条数/30s',
-      dataIndex: 'abnormalTruncationBar',
-      key: 'abnormalTruncationBar',
+      dataIndex: 'filterTooLargeCount',
+      key: 'filterTooLargeCount',
+      align: 'center',
     }, {
       title: '文件是否存在',
-      dataIndex: 'fileExists',
-      key: 'fileExists',
+      dataIndex: 'fileExist',
+      key: 'fileExist',
+      align: 'center',
+      render: (t: any) => {
+        return t ? '是' : '否'
+      },
     }, {
       title: '文件是否存在乱序',
-      dataIndex: 'fileExistsOutofOrder',
-      key: 'fileExistsOutofOrder',
+      dataIndex: 'isFileOrder',
+      key: 'isFileOrder',
+      align: 'center',
+      render: (t: any, recoud: any) => {
+        const isFileOrder = recoud?.collectFiles && recoud?.collectFiles.filter((item: any) => !item.isFileOrder).length
+        return isFileOrder ? '是' : '否'
+      },
     }, {
       title: '文件是否存在日志切片错误',
-      dataIndex: 'fileExistsLogSectionError',
-      key: 'fileExistsLogSectionError',
+      dataIndex: 'validTimeConfig',
+      key: 'validTimeConfig',
+      align: 'center',
+      render: (t: any, recoud: any) => {
+        const validTimeConfig = recoud?.validTimeConfig && recoud?.validTimeConfig.filter((item: any) => !item.validTimeConfig).length
+        return validTimeConfig ? '是' : '否'
+      }
     }, {
       title: '文件过滤量/30s',
-      dataIndex: 'fileFilter',
-      key: 'fileFilter',
+      dataIndex: 'filterOut',
+      key: 'filterOut',
+      align: 'center',
     }, {
       title: '近一次心跳时间',
-      dataIndex: 'lastHeartbeatTime',
-      key: 'lastHeartbeatTime',
+      dataIndex: 'heartbeatTime',
+      key: 'heartbeatTime',
+      align: 'center',
+      width: 160,
+      render: (t: number) => moment(t).format(timeFormat),
     }, {
       title: '采集状态',
-      dataIndex: 'collectStatus',
-      key: 'collectStatus',
+      dataIndex: 'taskStatus',
+      key: 'taskStatus',
+      align: 'center',
+      render: (text: any) => {
+        const status: any = {
+          0: '停止',
+          1: '运行中',
+          2: '完成'
+        }
+        return status[text]
+      }
     }, {
       title: '采集文件信息',
-      dataIndex: 'collectFileInfo',
-      key: 'collectFileInfo',
-      fixed: 'right',
+      dataIndex: 'collectFiles',
+      key: 'collectFiles',
+      // fixed: 'right',
       align: 'center',
       width: 120,
       render: (text: any, record: any) => {
         return <div>
-          <span>共7个</span><a style={{ display: 'inline-block', marginLeft: '15px' }} onClick={() => {
-            drawer('CollectFileInfoDetail', record)
+          <span>共{text.length}个</span><a style={{ display: 'inline-block', marginLeft: '15px' }} onClick={() => {
+            drawer('CollectFileInfoDetail', text)
           }}>查看</a>
         </div>
       }
     }, {
       title: '近一次指标详情',
-      dataIndex: 'lastMetricDetail',
-      key: 'lastMetricDetail',
-      fixed: 'right',
+      dataIndex: 'MetricDetail',
+      key: 'MetricDetail',
+      align: 'center',
+      // fixed: 'right',
       width: 120,
       render: (text: any, record: any) => {
         return <div>

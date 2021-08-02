@@ -61,7 +61,7 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
     <Modal
       title={(props.params?.id ? "修改" : "新增") + "应用"}
       visible={true}
-      width={728}
+      width={800}
       onOk={handleModifyOk}
       onCancel={handleModifyCancel}
       okText='确认'
@@ -72,8 +72,8 @@ const ActionApp = (props: { dispatch: any, params: any }) => {
 }
 
 const actionAppLayout = {
-  labelCol: { span: 7 },
-  wrapperCol: { span: 13 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 20 },
 };
 
 const ActionAppForm = (props: IFormProps) => {
@@ -134,7 +134,7 @@ const ActionAppForm = (props: IFormProps) => {
             },
           }],
         })(
-          <Input placeholder="请输入" />,
+          <Input style={{ width: '590px' }} placeholder="请输入" />,
         )}
       </Form.Item>
       <Form.Item label="关联主机：">
@@ -142,26 +142,25 @@ const ActionAppForm = (props: IFormProps) => {
           initialValue: appForm.targetKeys.length > 0 ? appForm.targetKeys : [],
           rules: [{ required: true, message: '请选择' }],
         })(
-          <Select
-            mode="multiple"
-            onChange={handleChange}
-          >
-            {
-              hostList.map((v: any) => {
-                console.log(v)
-                return <Option key={v.id} value={v.id}>{v?.hostName}</Option>
-              })
-            }
-          </Select>
-          // <Transfer
-          //   dataSource={hostList}
-          //   showSearch
-          //   filterOption={filterOption}
-          //   targetKeys={appForm.targetKeys}
+          // <Select
+          //   mode="multiple"
           //   onChange={handleChange}
-          //   render={item => item.hostName}
-          // />
-          //-----
+          // >
+          //   {
+          //     hostList.map((v: any) => {
+          //       console.log(v)
+          //       return <Option key={v.id} value={v.id}>{v?.hostName}</Option>
+          //     })
+          //   }
+          // </Select>
+          <Transfer
+            dataSource={hostList}
+            showSearch
+            filterOption={filterOption}
+            targetKeys={appForm.targetKeys}
+            onChange={handleChange}
+            render={item => item.hostName}
+          />
         )}
       </Form.Item>
     </Form>

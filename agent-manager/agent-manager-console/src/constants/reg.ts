@@ -4,7 +4,9 @@ export const regName = /^([-_.a-zA-Z0-9\u4e00-\u9fa5]{1,32})$/; // 支持中英�
 
 export const regProducerName = /^[\s\S]{1,1024}$/; // 任意字符最大输入长度为1024位
 
-export const regLogSliceTimestampPrefixString = /^[\s\S]{1,128}$/ // 任意字符最大输入长度128位
+export const regLogSliceTimestampPrefixString = /^[\s\S]{1,8}$/ // 任意字符最大输入长度128位
+
+export const regString128 = /^[\s\S]{0,128}$/ // 任意字符最大输入长度128位
 
 export const regAdress = /^([-_.:,a-zA-Z0-9\u4e00-\u9fa5]{1,32})$/; // 支持中英文字母、大小写、数字、下划线、点、短横线。32位限制
 

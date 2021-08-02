@@ -17,9 +17,24 @@ const mapStateToProps = (state: any) => ({
 });
 
 const CollectFileInfoDetail = (props: { dispatch: any, params: any }) => {
-  const { collectFileInfo } = props.params
+  const collectFileInfo = props.params
   const handleAssociateCancel = () => {
     props.dispatch(actions.setDrawerId(''));
+  }
+
+  const collectFileConfig = (info: any) => {
+    return getCollectFileInfo(info).map((item, index) => {
+      return <Row type='flex' key={'info' + index} >
+        <Col span={8}>
+          <span style={{ fontWeight: "bold" }}>{item.label + ":"}</span>
+        </Col>
+        <Col span={12}>
+          <span>{
+            item.render ? item.render(item.key) : info[item.key]
+          }</span>
+        </Col>
+      </Row>
+    })
   }
 
   return (
@@ -33,21 +48,8 @@ const CollectFileInfoDetail = (props: { dispatch: any, params: any }) => {
       className='collectFileInfoDrawer'
     >
       {
-        getCollectFileInfo("in").map((item, index) => {
-          return <Row type='flex' key={'info' + index} >
-            <Col span={8}>
-              <span style={{ fontWeight: "bold" }}>{item.label + ":"}</span>
-            </Col>
-            <Col span={12}>
-              <span>{
-                item.key === 'logStayCollectTime' || item.key === 'fileNewModifyTime'
-                  ?
-                  moment(collectFileInfo[item.key] * 1).format(timeFormat)
-                  :
-                  (collectFileInfo[item.key] || '-')
-              }</span>
-            </Col>
-          </Row>
+        collectFileInfo && collectFileInfo.map((item: any, index: number) => {
+          return collectFileConfig(item)
         })
       }
     </Drawer>

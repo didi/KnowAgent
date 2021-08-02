@@ -39,7 +39,7 @@ const filter = (init: IInit) => (res: IRes) => {
   }
 
   if (res.code !== 0 && res.code !== 200) {
-    if(res.code === 21001) return 
+    if (res.code === 21001) return
     if (!init.errorNoTips) {
       notification.error({
         message: '错误',
@@ -57,6 +57,7 @@ const filter = (init: IInit) => (res: IRes) => {
 interface IInit extends RequestInit {
   errorNoTips?: boolean;
   body?: BodyInit | null | any;
+  query?: any;
   needCode?: boolean;
   needDuration?: boolean;
 }

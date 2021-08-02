@@ -12,7 +12,6 @@ import { getHostDetails } from '../../api/agent'
 import { Tabs, Tag } from 'antd';
 import './index.less';
 
-
 const { TabPane } = Tabs;
 
 export class AgentDetail extends React.Component<any> {

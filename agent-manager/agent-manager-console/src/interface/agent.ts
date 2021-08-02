@@ -4,8 +4,8 @@ import { EChartOption } from 'echarts';
 
 export interface IAgentHostParams extends IAgentParam {
   agentHealthLevelList: number[]; // 健康度 0:红 1：黄 2：绿色
-  agentVersionIdList: number[]; // Agent版本id
-  containerList: number[]; // 主机类型 0：主机 1：容器
+  agentVersionIdList: any[]; // Agent版本id
+  containerList: any[]; // 主机类型 0：主机 1：容器
   hostCreateTimeEnd: number; // 主机创建时间结束检索时间
   hostCreateTimeStart: number; // 主机创建时间起始检索时间
   serviceIdList: number[]; // 服务Id
@@ -72,7 +72,7 @@ export interface IEditOpHostsParams {
 
 export interface IOpAgent {
   metricsProducerConfiguration: string; // 指标流接收Topic生产端属性
-  errorLogsProducerConfiguration:string; // 错误日志接收Topic生产端属性
+  errorLogsProducerConfiguration: string; // 错误日志接收Topic生产端属性
   advancedConfigurationJsonString: string; // 采集端高级配置项集，为json形式字符串
   byteLimitThreshold: number; // Agent限流流量阈值 单位：字节
   collectType: number; // Agent采集方式 0：采集宿主机日志 1：采集宿主机挂载的所有容器日志 2：采集宿主机日志 & 宿主机挂载的所有容器日志
@@ -148,7 +148,7 @@ export interface IMetricOptions {
   title: string;
   selfHide: boolean;
   metricOptions: EChartOption;
-  metricPanelGroupName:string;
+  metricPanelGroupName: string;
 }
 
 export interface IAgentPieParams {

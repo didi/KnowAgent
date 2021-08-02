@@ -10,6 +10,7 @@ import { getHostDetails, getHostMachineZone, editOpHosts, getAgentDetails, editO
 import MonacoEditor from '../../component/editor/monacoEditor';
 import { setLimitUnit, judgeEmpty } from '../../lib/utils';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
+import { regString128 } from '../../constants/reg';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -149,7 +150,17 @@ const HostConfigurationForm = (props: IFormProps & IDispatch) => {
       <Form.Item label="所属机房">
         {getFieldDecorator('machineZone', {
           initialValue: hostDetail?.machineZone,
-          rules: [{ required: false }],
+          rules: [{
+            required: false,
+            validator: (rule: any, value: string, cb: any) => {
+              if (!new RegExp(regString128).test(value)) {
+                rule.message = '最大长度限制128位'
+                cb('最大长度限制128位')
+              } else {
+                cb()
+              }
+            },
+          }],
         })(
           <AutoComplete
             placeholder="请选择或输入"

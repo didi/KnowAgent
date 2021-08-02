@@ -20,8 +20,38 @@ interface IAcquisitionConfiguration {
 export class AcquisitionConfiguration extends React.Component<IAcquisitionConfiguration> {
 
   public renderCollectObj = (detail: ILogCollectTaskDetail) => {
-    return (<>
-      <Descriptions className='mt-10'>
+
+    const cataFile = !!detail?.directoryLogCollectPathList?.length;
+    const cataLog = [] as IDirectoryLogCollectPath[];
+    const log = cataFile ? cataLog : detail?.fileLogCollectPathList as any;
+    const collectDelay = (detail?.collectDelayThresholdMs || 0) / 60 / 1000;
+    return (<div className='agentConfigInfo'>
+      <Descriptions column={2} title={<h3 style={{ color: '#7e7e7e', padding: '10px 0', borderBottom: '2px solid #7e7e7e' }}>采集对象配置</h3>}>
+        <Item className='agentConfigInfoLeft' label="采集任务名">{renderTooltip(detail?.logCollectTaskName) || '-'}</Item>
+        <Item label="采集应用">{'-'}</Item>
+      </Descriptions>
+      <div className="descriptionsBox">
+        <h3 style={{ color: '#7e7e7e', padding: '30px 0 10px', fontSize: '17px', borderBottom: '2px solid #7e7e7e' }}>采集日志配置</h3>
+        <div className='collectLogConfig'>
+          {log?.map((ele: any, index: number) => {
+            return <Descriptions key={index} column={2}>
+              {/* {index > 0 && <Divider />} */}
+              <Item className='agentConfigInfoLeft' label="日志路径">{renderTooltip(ele?.path || '-', 60)}</Item>
+              <Item label="采集文件后缀匹配样式">{detail?.fileNameSuffixMatchRule?.suffixMatchRegular || '-'}</Item>
+              <Item className='agentConfigInfoLeft' label="日志切片规则">{`左起第${detail?.logContentSliceRule?.sliceTimestampPrefixStringIndex || 0}个匹配 ${detail?.logContentSliceRule?.sliceTimestampPrefixString || ''} ${detail?.logContentSliceRule?.sliceTimestampFormat || ''}`}</Item>
+            </Descriptions>
+          })}
+        </div>
+      </div>
+      <Descriptions column={2} title={<h3 style={{ color: '#7e7e7e', padding: '30px 0 10px', borderBottom: '2px solid #7e7e7e' }}>接收端配置与监控</h3>}>
+        <Item className='agentConfigInfoLeft' label="Kafka集群">{renderTooltip(detail?.receiver?.kafkaClusterName || '-', 60) || '-'}</Item>
+        <Item label="生产端属性">{detail.kafkaProducerConfiguration || '-'}</Item>
+        <Item className='agentConfigInfoLeft' label="Topic">{renderTooltip(detail?.sendTopic || '-', 60)}</Item>
+        <Item label="采集延迟监控">{collectDelay ? `该任务下Agent客户端延迟超过 ${collectDelay} 分钟，则视为异常 注：仅支持对按业务时间顺序进行输出的日志进行延迟监控` : '关闭'}</Item>
+        <Item className='agentConfigInfoLeft' label="任务保障等级">{limitType[detail?.limitPriority] || "-"}</Item>
+        <Item label="配置信息"><pre>{detail?.advancedConfigurationJsonString || '-'}</pre></Item>
+      </Descriptions>
+      {/* <Descriptions className='mt-10'>
         <Item label="采集任务名">{renderTooltip(detail?.logCollectTaskName)}</Item>
         <Item label="采集应用">{renderTooltip(detail?.services[0]?.servicename)}</Item>
         <Item label="采集模式">{collectModeMap[detail?.logCollectTaskType]}</Item>
@@ -41,11 +71,11 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
               <Item label="主机名">{detail?.hostFilterRuleVO?.hostNames}</Item>
             </>}
         </>}
-      </Descriptions>
+      </Descriptions> */}
       {/* <Descriptions column={1}>
         <Item label="采集任务描述">{detail?.logCollectTaskRemark}</Item>
       </Descriptions> */}
-    </>)
+    </div>)
   }
 
   public renderCollectLog = (detail: ILogCollectTaskDetail) => {
@@ -141,26 +171,27 @@ export class AcquisitionConfiguration extends React.Component<IAcquisitionConfig
     const { detail, loading } = this.props;
     return (
       <Spin spinning={loading}>{Object.keys(detail).length !== 0 &&
-        <div>
-          <Tabs type='card' defaultActiveKey="object">
+
+        this.renderCollectObj(detail)
+
+      } {/* <Tabs type='card' defaultActiveKey="object">
             <TabPane tab="采集对象配置" key="object">
-              {this.renderCollectObj(detail)}
+              
             </TabPane>
             <TabPane tab="采集日志配置" key="journal">
               {this.renderCollectLog(detail)}
             </TabPane>
-            {/* <TabPane tab="客户端清理与自监控" key="client">
+            <TabPane tab="客户端清理与自监控" key="client">
               {this.renderClientMonitor(detail)}
-            </TabPane> */}
+            </TabPane>
             <TabPane tab="接收端配置与监控" key="receive">
               {this.renderReceiveEnd(detail)}
             </TabPane>
-            {/* <TabPane tab="高级配置" key="senior">
+            <TabPane tab="高级配置" key="senior">
               {this.renderAdvancedConfig(detail)}
-            </TabPane> */}
-          </Tabs>
-        </div>
-      }</Spin>
+            </TabPane>
+          </Tabs> */}</Spin>
+
     );
   }
 }

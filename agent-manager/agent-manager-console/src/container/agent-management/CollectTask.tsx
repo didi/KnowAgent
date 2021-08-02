@@ -7,7 +7,7 @@ import { Spin, Descriptions, Table } from 'antd';
 import { IRdAgentMetrics } from '../../interface/agent';
 import moment from 'moment';
 import './index.less';
-import { getAgentDetails } from '../../api/agent';
+import { getAgentCollectList, getAgentDetails } from '../../api/agent';
 import { getCollectTaskConfig } from './config';
 
 interface IAgentOperationIndex {
@@ -63,9 +63,17 @@ const dataSource = [
 type Props = ReturnType<typeof mapDispatchToProps>;
 // @connect(mapStateToProps, mapDispatchToProps)
 const CollectTask = (props: any) => {
+  // console.log(props, 'props')
   const { hostDetail } = props
-  const [collectTastData, setCollectTastData] = React.useState<any>(dataSource)
+  const [collectTastData, setCollectTastData] = React.useState<any>([])
+  const [loading, setLoading] = React.useState(true)
+  // console.log(hostDetail.hostName)
   React.useEffect(() => {
+    getAgentCollectList(hostDetail?.hostName).then(res => {
+      setCollectTastData(res)
+      setLoading(false)
+      // console.log(res, 'res')
+    })
     // try {
     //   getAgentDetails(hostDetail?.agentId).then(res => {
     //     setAgentDetail(res)
@@ -76,13 +84,15 @@ const CollectTask = (props: any) => {
     // }
   }, [])
   return <div className='collectTask'>
-    <Table
-      dataSource={collectTastData}
-      bordered
-      columns={getCollectTaskConfig(props.setDrawerId)}
-      scroll={{ x: 2000 }}
-      pagination={false}
-    />
+    <Spin spinning={loading}>
+      <Table
+        dataSource={collectTastData}
+        bordered
+        columns={getCollectTaskConfig(props.setDrawerId)}
+        scroll={{ x: 2100 }}
+        pagination={false}
+      />
+    </Spin>
   </div>
 }
 
