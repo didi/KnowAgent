@@ -39,7 +39,11 @@ export const collectApiMap: IAgentApi = {
   //  日志读取条数
   logReadBar: getApi('/performance/log-read-bar', 'v2'),
   // 日志读取耗时
-  logReadConsuming: getApi('/performance/log-read-consuming', 'v2'),
+  // logeventMinConsuming: getApi('/performance/logevent-min-consuming', 'v2'),
+  logeventMinConsuming: getApi('/performance/logevent-min-consuming', 'v2'),
+  logSendMaxConsuming: getApi('/performance/log-send-max-consuming', 'v2'),
+  logSendMeanConsuming: getApi('/performance/log-send-mean-consuming', 'v2'),
+  logSendMinConsuming: getApi('/performance/log-send-min-consuming', 'v2'),
   //  单logevent读取最大耗时 （ns）(折线图)
   logEventMaxConsuming: getApi('/performance/logevent-max-consuming', 'v2'),
   // 单logevent读取平均耗时 （ns）(折线图)
@@ -56,6 +60,8 @@ export const collectApiMap: IAgentApi = {
   logFlushMaxConsuming: getApi('/performance/logflush-max-consuming', 'v2'),
   //  日志flush平均耗时 （ms）(折线图)
   logFlushMeanConsuming: getApi('/performance/logflush-mean-consuming', 'v2'),
+  //  日志flush最小耗时 （ms）(折线图)
+  logflushMinConsuming: getApi('/performance/logflush-min-consuming', 'v2'),
   //  日志flush失败次数（次）(折线图)
   logFlushFailTimes: getApi('/performance/logflush-fail-times', 'v2'),
   //  数据过滤条数 （条）(折线图)
