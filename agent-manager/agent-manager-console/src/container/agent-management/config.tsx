@@ -414,7 +414,7 @@ export const getCollectTaskConfig = (drawer: any) => {
       align: 'center',
       render: (text: any, record: any) => {
         const collectFilesSort = record?.collectFiles.sort((a: any, b: any) => b.lastModifyTime - a.lastModifyTime)
-        return moment(collectFilesSort[0].lastModifyTime).format(timeFormat)
+        return moment(collectFilesSort[0]?.lastModifyTime).format(timeFormat)
       }
     }, {
       title: '限流时长/30s',
