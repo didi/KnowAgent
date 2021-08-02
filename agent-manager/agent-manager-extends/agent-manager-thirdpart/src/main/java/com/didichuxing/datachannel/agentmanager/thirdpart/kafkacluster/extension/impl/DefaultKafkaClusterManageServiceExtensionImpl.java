@@ -167,6 +167,8 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
         if (targetKafkaClusterDO.getKafkaClusterId() != null && !sourceReceiverDO.getKafkaClusterId().equals(targetKafkaClusterDO.getKafkaClusterId())) {
             sourceReceiverDO.setKafkaClusterId(targetKafkaClusterDO.getKafkaClusterId());
         }
+        sourceReceiverDO.setAgentErrorLogsTopic(targetKafkaClusterDO.getAgentErrorLogsTopic());
+        sourceReceiverDO.setAgentMetricsTopic(targetKafkaClusterDO.getAgentMetricsTopic());
         return sourceReceiverDO;
     }
 

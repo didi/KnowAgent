@@ -32,4 +32,10 @@ public interface LogCollectTaskMapper {
 
     Long countAll();
 
+    List<Long> getAllIds();
+
+    List<LogCollectTaskPO> getLogCollectTaskListByHealthLevel(Integer logCollectTaskHealthLevelCode);
+
+    List<LogCollectTaskPO> queryAll();
+
 }

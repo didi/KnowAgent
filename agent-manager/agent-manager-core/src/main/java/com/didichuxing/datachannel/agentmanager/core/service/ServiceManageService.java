@@ -94,4 +94,9 @@ public interface ServiceManageService {
      */
     ServiceDO getByExtenalServiceId(Long extenalServiceId);
 
+    /**
+     * @return 返回系统全量服务数
+     */
+    Long countAll();
+
 }

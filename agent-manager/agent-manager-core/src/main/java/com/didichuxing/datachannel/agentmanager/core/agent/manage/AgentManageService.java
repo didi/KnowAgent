@@ -157,4 +157,34 @@ public interface AgentManageService {
 
     List<CollectTaskMetricDO> getRelatedTaskMetrics(String hostname);
 
+    /**
+     * @return 返回系统全量 agent 数
+     */
+    Long countAll();
+
+    /**
+     * 校验给定主机名的Agent是否不关联任何日志采集任务
+     * @param hostName agent 对应 主机名
+     * @return true：不关联任何日志采集任务 false：存在关联的日志采集任务
+     */
+    boolean checkAgentNotRelateAnyLogCollectTask(String hostName);
+
+    /**
+     * @return 返回系统全量 agent 主机名集
+     */
+    List<String> getAllHostNames();
+
+    /**
+     * @param agentHealthLevelCode agent 健康度对应 code（对应枚举类 AgentHealthLevelEnum）
+     * @return 返回系统中给定健康度的 agent 对象集
+     */
+    List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode);
+
+    /**
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回系统关联日志采集任务数最多 agent 指标集
+     */
+    List<MetricPointList> getTop5LogCollectTaskCount(Long startTime, Long endTime);
+
 }

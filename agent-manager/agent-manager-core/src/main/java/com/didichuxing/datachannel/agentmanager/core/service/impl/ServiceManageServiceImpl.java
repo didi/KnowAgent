@@ -247,6 +247,11 @@ public class ServiceManageServiceImpl implements ServiceManageService {
         }
     }
 
+    @Override
+    public Long countAll() {
+        return serviceDAO.countAll();
+    }
+
     /**
      * 删除服务
      * @param serviceId 待删除服务对象id

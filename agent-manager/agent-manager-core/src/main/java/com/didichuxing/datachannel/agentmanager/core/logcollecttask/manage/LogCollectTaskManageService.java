@@ -8,8 +8,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
+
 import java.util.List;
 
 /**
@@ -139,6 +140,18 @@ public interface LogCollectTaskManageService {
 
     MetricList getFilterCount(MetricQueryDO metricQueryDO);
 
+    Long getCollectBytesToday();
+
+    Long getCollectCountToday();
+
+    Long getCurrentCollectBytes();
+
+    Long getCurrentCollectCount();
+
+    List<MetricPointList> getTop5HostCount(Long startTime, Long endTime);
+
+    List<MetricPointList> getTop5AgentCount(Long startTime, Long endTime);
+
     /**
      * 检查给定日志采集任务健康度，具体包括如下操作：
      *  1.）检查给定日志采集任务健康度，并将检查结果信息存入对应 LogCollectTaskHealth 记录表
@@ -187,5 +200,23 @@ public interface LogCollectTaskManageService {
      * @return 返回系统日志采集任务总数
      */
     Long countAll();
+
+    /**
+     * @return 返回系统全量日志采集任务 id 集
+     */
+    List<Long> getAllIds();
+
+    /**
+     * 校验 logcollecttask 是否未关联主机
+     * @param logCollectTaskId logcollecttask 对象 id
+     * @return true：logcollecttask 未关联任何主机 false：logcollecttask 存在关联主机
+     */
+    boolean checkNotRelateAnyHost(Long logCollectTaskId);
+
+    /**
+     * @param logCollectTaskHealthLevelCode 日志采集任务健康度对应 code（对应枚举类 LogCollectTaskHealthLevelEnum）
+     * @return 返回系统中给定健康度的日志采集任务对象集
+     */
+    List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode);
 
 }

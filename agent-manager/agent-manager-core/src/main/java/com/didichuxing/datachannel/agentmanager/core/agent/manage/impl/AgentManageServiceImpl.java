@@ -13,8 +13,10 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.http.PathRequest;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
@@ -27,6 +29,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricsDa
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
+import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
@@ -36,6 +39,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.HttpUtils;
+import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
@@ -43,11 +47,13 @@ import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentO
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
+import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +100,9 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     @Autowired
     private K8sPodManageService k8sPodManageService;
+
+    @Autowired
+    private KafkaClusterManageService kafkaClusterManageService;
 
     /**
      * 远程请求 agent url
@@ -149,6 +158,26 @@ public class AgentManageServiceImpl implements AgentManageService {
                     ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
             );
         }
+        /*
+         * 系统是否存在 agent errorlogs & metrics 流 对应 全局 接收端 配置，如存在 & 用户未设置待添加 agent 对应 errorlogs & metrcis 流 对应 topic，则 设置
+         */
+        if(StringUtils.isBlank(agentDO.getErrorLogsSendTopic())) {
+            ReceiverDO receiverDO = kafkaClusterManageService.getAgentErrorLogsTopicExistsReceiver();
+            if(null != receiverDO) {
+                agentDO.setErrorLogsSendReceiverId(receiverDO.getId());
+                agentDO.setErrorLogsSendTopic(receiverDO.getAgentErrorLogsTopic());
+                agentDO.setErrorLogsProducerConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            }
+        }
+        if(StringUtils.isBlank(agentDO.getMetricsSendTopic())) {
+            ReceiverDO receiverDO = kafkaClusterManageService.getAgentMetricsTopicExistsReceiver();
+            if(null != receiverDO) {
+                agentDO.setMetricsSendReceiverId(receiverDO.getId());
+                agentDO.setMetricsSendTopic(receiverDO.getAgentErrorLogsTopic());
+                agentDO.setMetricsProducerConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
+            }
+        }
+
         /*
          * 持久化待创建Agent对象
          */
@@ -488,7 +517,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         MetricPointList metricPointList = new MetricPointList();
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
-        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.CPU_USAGE.name(), CalcFunction.AVG.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.CPU_USAGE.name(), CalcFunction.AVG.getValue(), MetricConstant.QUERY_INTERVAL);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -499,7 +528,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         MetricPointList metricPointList = new MetricPointList();
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
-        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.MEMORY_USAGE.name(), CalcFunction.AVG.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.MEMORY_USAGE.name(), CalcFunction.AVG.getValue(), MetricConstant.QUERY_INTERVAL);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -510,7 +539,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         MetricPointList metricPointList = new MetricPointList();
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
-        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.FD_COUNT.name(), CalcFunction.AVG.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.FD_COUNT.name(), CalcFunction.AVG.getValue(), MetricConstant.QUERY_INTERVAL);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -521,7 +550,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         MetricPointList metricPointList = new MetricPointList();
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
-        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.GC_COUNT.name(), CalcFunction.SUM.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAgentAggregation(agentMetricQueryDO, AgentMetricField.GC_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -531,7 +560,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getSendByte(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;
@@ -541,7 +570,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getSendCount(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;
@@ -551,7 +580,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getReadByte(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;
@@ -561,7 +590,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getReadCount(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.getValue());
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;
@@ -573,7 +602,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
         agentMetricQueryDO.setHostname(agentHostname);
         List<MetricPoint> graph = agentMetricsManageService.getAgentErrorLogCountPerMin(agentMetricQueryDO);
-        buildEmptyMetric(graph, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), 60000);
+        MetricUtils.buildEmptyMetric(graph, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), MetricConstant.QUERY_INTERVAL);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(agentHostname);
         return metricPointList;
@@ -648,6 +677,11 @@ public class AgentManageServiceImpl implements AgentManageService {
             list.add(collectTaskMetricDO);
         }
         return list;
+    }
+
+    @Override
+    public Long countAll() {
+        return agentDAO.countAll();
     }
 
     /**
@@ -927,13 +961,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         return agentHealthLevelEnum;
     }
 
-    /**
-     * 校验给定主机名的Agent是否不关联任何日志采集任务
-     *
-     * @param hostName 主机名
-     * @return true：不关联任何日志采集任务 false：存在关联的日志采集任务
-     */
-    private boolean checkAgentNotRelateAnyLogCollectTask(String hostName) {
+    public boolean checkAgentNotRelateAnyLogCollectTask(String hostName) {
         /*
          * 根据 hostName 获取其对应 agent
          */
@@ -952,6 +980,39 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 日志采集任务集是否为空？true：false
          */
         return CollectionUtils.isEmpty(logCollectTaskDOList);
+    }
+
+    @Override
+    public List<String> getAllHostNames() {
+        return agentDAO.getAllHostNames();
+    }
+
+    @Override
+    public List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode) {
+        List<AgentPO> agentPOList = agentDAO.getByHealthLevel(agentHealthLevelCode);
+        return agentManageServiceExtension.agentPOList2AgentDOList(agentPOList);
+    }
+
+    @Override
+    public List<MetricPointList> getTop5LogCollectTaskCount(Long startTime, Long endTime) {
+        List<AgentPO> agentPOList = agentDAO.getAll();
+        int topN = 5;
+        int limit = Math.min(agentPOList.size(), topN);
+        List<MetricPointList> metricPointLists = new ArrayList<>();
+        List<AgentPO> sortedList = agentPOList.stream().sorted((i1, i2) -> {
+            int size1 = logCollectTaskManageService.getLogCollectTaskListByAgentId(i1.getId()).size();
+            int size2 = logCollectTaskManageService.getLogCollectTaskListByAgentId(i2.getId()).size();
+            return size2 - size1;
+        }).limit(limit).collect(Collectors.toList());
+        for (AgentPO agentPO : sortedList) {
+            List<MetricPoint> graph = new ArrayList<>();
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, logCollectTaskManageService.getLogCollectTaskListByAgentId(agentPO.getId()).size());
+            MetricPointList metricPointList = new MetricPointList();
+            metricPointList.setMetricPointList(graph);
+            metricPointList.setName(agentPO.getHostName());
+            metricPointLists.add(metricPointList);
+        }
+        return metricPointLists;
     }
 
     /**
@@ -1142,29 +1203,6 @@ public class AgentManageServiceImpl implements AgentManageService {
                 hostName
         );
         return heartbeatTimes > 0;
-    }
-
-    /**
-     * 把空缺的点用0补齐
-     *
-     * @param origin 原始图表
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param step 粒度
-     */
-    private void buildEmptyMetric(List<MetricPoint> origin, Long startTime, Long endTime, int step) {
-        long startPoint = startTime / step;
-        long endPoint = endTime / step;
-        List<Long> timePoints = origin.stream().map(MetricPoint::getTimestamp).collect(Collectors.toList());
-        for (long i = startPoint; i < endPoint; ++i) {
-            if (timePoints.contains(i)) {
-                continue;
-            }
-            MetricPoint metricPoint = new MetricPoint();
-            metricPoint.setTimestamp(i * step);
-            metricPoint.setValue(0);
-            origin.add(metricPoint);
-        }
     }
 
     private MetricQueryDO convertToTaskQuery(AgentMetricQueryDO agentMetricQueryDO) {

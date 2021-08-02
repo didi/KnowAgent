@@ -487,4 +487,14 @@ public class HostManageServiceImpl implements HostManageService {
         return relationHostList;
     }
 
+    @Override
+    public Long countAllHost() {
+        return hostDAO.countByHostType(HostTypeEnum.HOST.getCode());
+    }
+
+    @Override
+    public Long countAllContainer() {
+        return hostDAO.countByHostType(HostTypeEnum.CONTAINER.getCode());
+    }
+
 }

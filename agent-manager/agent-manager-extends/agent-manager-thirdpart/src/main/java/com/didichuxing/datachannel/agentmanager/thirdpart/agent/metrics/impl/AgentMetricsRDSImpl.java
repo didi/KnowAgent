@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
 import com.alibaba.fastjson.util.TypeUtils;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
@@ -280,8 +281,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
-        return collectTaskMetricMapper.selectAggregationByTask(logCollectTaskId, startTime, endTime, column.getRdsValue(), method.getValue());
+    public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
+        return collectTaskMetricMapper.selectAggregationByTask(logCollectTaskId, startTime, endTime, column.getRdsValue(), method.getValue(), step);
     }
 
     @Override
@@ -290,8 +291,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
-        return collectTaskMetricMapper.selectAggregationByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column.getRdsValue(), method.getValue());
+    public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
+        return collectTaskMetricMapper.selectAggregationByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column.getRdsValue(), method.getValue(), step);
     }
 
     @Override
@@ -300,12 +301,58 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
-        return agentMetricMapper.selectAggregation(hostname, startTime, endTime, column.getRdsValue(), method.getValue());
+    public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
+        return agentMetricMapper.selectAggregation(hostname, startTime, endTime, column.getRdsValue(), method.getValue(), step);
+    }
+
+    @Override
+    public Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
+        return collectTaskMetricMapper.selectAggregationForAll(startTime, endTime, column.getRdsValue(), method.getValue());
     }
 
     @Override
     public CollectTaskMetricPO selectLatestMetric(Long taskId) {
         return collectTaskMetricMapper.selectLatest(taskId);
     }
+
+    @Override
+    public List<CollectTaskMetricPO> queryLatestMetrics(Long time, int step) {
+        return collectTaskMetricMapper.selectLatestMetrics(time, step);
+    }
+
+    @Override
+    public List<AgentMetricPO> queryLatestAgentMetrics(Long time, int step) {
+        return agentMetricMapper.selectLatestMetrics(time, step);
+    }
+
+    @Override
+    public List<DashBoardStatisticsDO> groupByKeyAndMinuteLogCollectTaskMetric(Long startTime, Long endTime, String key, String function, String metric) {
+        return collectTaskMetricMapper.groupByKeyAndMinute(startTime, endTime, key, function, metric);
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByAgentFromLogCollectTaskMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
+        return collectTaskMetricMapper.selectAggregationByAgent(agentHostName, startTime, endTime, column.getRdsValue(), function.getValue());
+    }
+
+    @Override
+    public List<DashBoardStatisticsDO> groupByKeyAndMinuteAgentMetric(Long startTime, Long endTime, String key, String function, String metric) {
+        return agentMetricMapper.groupByKeyAndMinute(startTime, endTime, key, function, metric);
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByAgentFromAgentMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
+        return agentMetricMapper.selectAggregationByAgent(agentHostName, startTime, endTime, column.getRdsValue(), function.getValue());
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
+        return collectTaskMetricMapper.selectAggregationByAgent(agentHostName, startTime, endTime, column.getRdsValue(), function.getValue());
+    }
+
+    @Override
+    public List<MetricPoint> queryAggregationGroupByMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
+        return collectTaskMetricMapper.selectAggregationGroupByMinute(startTime, endTime, column.getRdsValue(), function.getValue());
+    }
+
 }
