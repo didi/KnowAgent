@@ -315,12 +315,11 @@ $123$33$2018-01-08 sqrwqrq
                 // initialValue: contents,
                 initialValue: '',
                 rules: [{
-                  required: true,
+                  // required: true,
                   //  message: '请输入',
                   validator: (rule: any, value: string, cb) => {
                     if (!value) {
-                      rule.message = '请输入切片时间戳前缀字符串'
-                      cb('请输入切片时间戳前缀字符串')
+                      cb()
                     } else if (!new RegExp(regLogSliceTimestampPrefixString).test(value)) {
                       rule.message = '前缀字符串最大长度为8位'
                       cb('前缀字符串最大长度为8位')
