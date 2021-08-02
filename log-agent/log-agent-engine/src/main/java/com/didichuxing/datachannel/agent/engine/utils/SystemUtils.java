@@ -64,7 +64,7 @@ public class SystemUtils {
     public static long getCurrentMemoryUsage() {
         if(LOGGER.isInfoEnabled()) {
             LOGGER.info(
-                    String.format("SystemUtils||getCurrentMemoryUsage={%d}", "osResourceService.getCurrentProcessMemoryUsed()")
+                    String.format("SystemUtils||getCurrentMemoryUsage={%d}", osResourceService.getCurrentProcessMemoryUsed())
             );
         }
         return osResourceService.getCurrentProcessMemoryUsed();
