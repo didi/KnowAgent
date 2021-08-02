@@ -337,7 +337,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (function == CalcFunction.NORMAL) {
             return agentMetricsDAO.queryByTask(logCollectTaskId, startTime, endTime, field);
         }
-        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, field, function, step);
+        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, trimTimestamp(startTime), endTime, field, function, step);
     }
 
     @Override
@@ -363,7 +363,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (function == CalcFunction.NORMAL) {
             graph = agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
         } else {
-            graph = agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field, function, step);
+            graph = agentMetricsDAO.queryAggregationByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), trimTimestamp(metricQueryDO.getStartTime()), metricQueryDO.getEndTime(), field, function, step);
         }
         for (MetricPoint metricPoint : graph) {
             Object value = metricPoint.getValue();
@@ -403,7 +403,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (function == CalcFunction.NORMAL) {
             return agentMetricsDAO.queryAgent(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field);
         }
-        return agentMetricsDAO.queryAgentAggregation(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), field, function, step);
+        return agentMetricsDAO.queryAgentAggregation(agentMetricQueryDO.getHostname(), trimTimestamp(agentMetricQueryDO.getStartTime()), agentMetricQueryDO.getEndTime(), field, function, step);
     }
 
     @Override
@@ -423,7 +423,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return agentMetricsDAO.queryAggregationForAll(startTime, endTime, column, function);
+        return agentMetricsDAO.queryAggregationForAll(trimTimestamp(startTime), endTime, column, function);
     }
 
     @Override
@@ -632,6 +632,16 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
             sendBytesTop5List.add(dashBoardStatisticsDO);
         }
         return sendBytesTop5List;
+    }
+
+    /**
+     * 将时间修整为整分钟，解决聚合查询时开头和结尾可能出现的缺数据情况
+     *
+     * @param timestamp
+     * @return
+     */
+    private static long trimTimestamp(long timestamp) {
+        return timestamp / 60000 * 60000;
     }
 
     class DashBoardStatisticsDOHeartbeatTimeComparator implements Comparator<DashBoardStatisticsDO> {
