@@ -36,7 +36,7 @@ public class Contracts {
      */
     public static <T> T checkNotNull(T ref, Object msg) {
         if (ref == null) {
-            throw new NullPointerException(String.valueOf(msg) + ": " + ref.getClass().getName());
+            throw new NullPointerException(String.valueOf(msg));
         }
         return ref;
     }

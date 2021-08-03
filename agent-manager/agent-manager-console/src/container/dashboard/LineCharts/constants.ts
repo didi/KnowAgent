@@ -3,7 +3,7 @@ import { cutString } from './../../../lib/utils'
 import { byteChange, byteToMB } from '../../../lib/utils';
 import moment from 'moment';
 
-export const color = ['#5B73F0', '#5998FF', '#3DDCDC', '#21CAB8', '#89D9CA', '#CBD681', '#FFEE8F', '#F3D930', '#F0BC18', '#FF8686']
+export const color = ['#5B73F0', '#3DDCDC', '#F0BC18', '#FF8686', '#b88efa', '#5998FF', '#21CAB8', '#89D9CA', '#CBD681']
 export const baiFormat = ['agentListCpuUsageTop5', 'agentListCpuLoadTop5'];
 export const byteFormat = ['logCollectTaskListMemoryUsageTop5', 'logCollectTaskListCollectBytesTop5', 'agentListMemoryUsageTop5', 'agentListCollectBytesTop5']
 export const YFormat = ['agentListFullGcCountTop5', 'agentListRelateLogCollectTasksTop5']

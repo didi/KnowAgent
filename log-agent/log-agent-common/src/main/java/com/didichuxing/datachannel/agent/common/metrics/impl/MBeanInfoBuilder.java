@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Helper class to build MBeanInfo from metrics records
  */
-class MBeanInfoBuilder implements MetricsVisitor {
+public class MBeanInfoBuilder implements MetricsVisitor {
 
     private final String                name, description;
     private List<MBeanAttributeInfo>    attrs;

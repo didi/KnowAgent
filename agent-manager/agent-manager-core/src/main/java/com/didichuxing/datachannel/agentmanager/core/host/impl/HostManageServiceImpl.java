@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author huqidong
@@ -371,12 +372,19 @@ public class HostManageServiceImpl implements HostManageService {
         for (ServiceDO serviceDO : serviceDOList) {
             List<HostDO> hostDOList = getHostsByServiceId(serviceDO.getId());
             for (HostDO hostDO : hostDOList) {
-                if(agentCollectConfigurationManageServiceExtension.need2Deploy(logCollectTaskDO, hostDO)) {//根据日志采集任务设置的主机过滤规则进行对应主机过滤
+                //根据日志采集任务设置的主机过滤规则进行对应主机过滤
+                if(agentCollectConfigurationManageServiceExtension.need2Deploy(logCollectTaskDO, hostDO)) {
                     relationHostDOList.add(hostDO);
                 }
             }
         }
         return relationHostDOList;
+    }
+
+    @Override
+    public List<HostDO> getHostListContainsAgentByLogCollectTaskId(Long logCollectTaskId) {
+        List<HostDO> hosts = getHostListByLogCollectTaskId(logCollectTaskId);
+        return hosts.stream().filter(e -> agentManageService.getAgentByHostName(e.getHostName()) != null).collect(Collectors.toList());
     }
 
     @Override

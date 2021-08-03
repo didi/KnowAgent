@@ -171,7 +171,7 @@ public class MetricsConfig extends SubsetConfiguration {
         try {
             Class<?> pluginClass = Class.forName(pluginClassName);
             @SuppressWarnings("unchecked")
-            T plugin = (T) pluginClass.newInstance();
+            T plugin = (T) pluginClass.getConstructor().newInstance();
             plugin.init(name.isEmpty() ? this : subset(name));
             return plugin;
         } catch (Exception e) {

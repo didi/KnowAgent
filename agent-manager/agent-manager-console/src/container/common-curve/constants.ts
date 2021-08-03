@@ -2,7 +2,7 @@ import { EChartOption } from 'echarts/lib/echarts';
 import { timeFormat } from '../../constants/time';
 import { IMetricPanels } from '../../interface/agent';
 import moment from 'moment';
-import { byteChange, byteToMB, timeStamp, msecondToSecond, nsTo } from './../../lib/utils';
+import { byteChange, byteToMB, timeStamp, msecondToSecond, nsTo, ToMs, Tous } from './../../lib/utils';
 
 export const LEGEND_HEIGHT = 18;
 export const defaultLegendPadding = 10;
@@ -15,10 +15,11 @@ export const default_HEIGHT = 40
 export const booleanFormat = ['isExistCollectPathChaos', 'islogChopFault', 'isCollectPath'];
 export const byteFormat = ['memoryUsage', 'exitSendTraffic', 'inletCollectTraffic', 'logReadBytes', 'logSendBytes'];
 export const timesFormat = ['HealthMinCollectBusineTime'];
-export const toS = ['HealthMaxDelay', 'HealthLimitTime'];
-export const toolTime = ['HealthMaxDelay', 'HealthLimitTime', 'logReadConsuming', 'logSendConsuming', 'logFlushMaxConsuming', 'logFlushMeanConsuming', ]
+export const toS = ['HealthMaxDelay'];
+export const toolTime = ['logReadConsuming', 'logSendConsuming', 'logFlushMaxConsuming', 'logFlushMeanConsuming', 'logflushMinConsuming', 'logSendMinConsuming', 'logSendMeanConsuming', 'logSendMaxConsuming']
 export const Yformat = ['HealthAbnormTrunca', 'logFlushFailTimes', 'DataFilterTimes']
-export const nsToFormat = ['logEventMaxConsuming', 'logEventMeanConsuming']
+export const nsToFormat = ['logEventMaxConsuming', 'logEventMeanConsuming', 'logeventMinConsuming']
+export const toUs = ['logSendMinConsuming', 'logSendMeanConsuming', 'logSendMaxConsuming']
 
 export const valueFormatFn = (value: any, ele: IMetricPanels, tool?: boolean) => {
   if (booleanFormat.includes(ele.api)) {
@@ -37,13 +38,22 @@ export const valueFormatFn = (value: any, ele: IMetricPanels, tool?: boolean) =>
     return tool ? byteChange(value) : byteToMB(value)
   }
   if(toolTime.includes(ele.api) && tool) {
-    return timeStamp(value);
+    return nsTo(value);
+  }
+  if(toUs.includes(ele.api)) {
+    return Tous(value);
+  }
+  if(toolTime.includes(ele.api)) {
+    return ToMs(value);
   }
   if (toS.includes(ele.api)) {
-    return msecondToSecond(value);
+    return tool ? timeStamp(value) : msecondToSecond(value);
   }
   if (nsToFormat.includes(ele.api) && tool) {
     return nsTo(value);
+  }
+  if (ele.api === 'HealthLimitTime' && tool) {
+    return value + '秒'
   }
   return value;
 }
