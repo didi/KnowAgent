@@ -26,6 +26,7 @@ type Props = ReturnType<typeof mapDispatchToProps>;
 @connect(null, mapDispatchToProps)
 export class CollectTaskDetail extends React.Component<Props> {
   public taskId: number;
+  public tabs: number;
 
   public state = {
     loading: true,
@@ -36,6 +37,7 @@ export class CollectTaskDetail extends React.Component<Props> {
     super(props);
     const url = Url();
     this.taskId = Number(props.location.state?.taskId);
+    this.tabs = Number(props.location.state?.tabs);
   }
 
   public getDetail = () => {
@@ -67,7 +69,7 @@ export class CollectTaskDetail extends React.Component<Props> {
           baseData={collectDetail}
         />
         <div className="detail-wrapper">
-          <Tabs animated={false} defaultActiveKey="1">
+          <Tabs animated={false} defaultActiveKey={`${this.tabs}` || '1'}>
             <TabPane tab="采集配置" key="1">
               <AcquisitionConfiguration detail={collectDetail} loading={loading} />
             </TabPane>

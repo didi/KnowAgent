@@ -54,7 +54,8 @@ export class PieChart extends React.Component<IProps> {
             {list.map((item: any, index: any) => {
               return <li className={`${this.className}-faulttask-content-li`} key={index}>
                   <TextRouterLink textLength={this.props.type === 'collect' ? 12 : 26} needToolTip element={item.key} href={`${this.props.type === 'collect' ? '/collect/detail' : '/detail'}`} state={this.props.type === 'collect' ? {
-                    taskId: `${item.value || ''}`
+                    taskId: `${item.value || ''}`,
+                    tabs: 2,
                   } : {
                     agentId: `${item.value || ''}`,
                     hostName: `${item.key || ''}`,
@@ -81,7 +82,8 @@ export class PieChart extends React.Component<IProps> {
             {list.map((item: any, index: any) => {
               return <li className={`${this.className}-faulttask-content-li`} key={index}>
                   <TextRouterLink textLength={this.props.type === 'collect' ? 12 : 26} needToolTip element={item.key} href={`${this.props.type === 'collect' ? '/collect/detail' : '/detail'}`} state={this.props.type === 'collect' ? {
-                    taskId: `${item.value || ''}`
+                    taskId: `${item.value || ''}`,
+                    tabs: 2,
                   } : {
                     agentId: `${item.value || ''}`,
                     hostName: `${item.key || ''}`,

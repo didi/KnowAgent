@@ -329,12 +329,12 @@ export function cutString(str: string, len: number) {
 
 export function countChange(limit: number){
   let size = "";
-  if(limit < 100 * 1024){                            //小于0.1KB，则转化成B
+  if(limit < 100 * 1000){                            //小于0.1KB，则转化成B
       size = limit + ""
-  }else if(limit < 100 * 1024 * 1024){            //小于0.1MB，则转化成KB
-      size = (limit/1024).toFixed(1) + "K"
-  }else if(limit < 100 * 1024 * 1024 * 1024){        //小于0.1GB，则转化成MB
-      size = (limit/(1024 * 1024)).toFixed(1) + "M"
+  }else if(limit < 100 * 1000 * 1000){            //小于0.1MB，则转化成KB
+      size = (limit/1000).toFixed(1) + "K"
+  }else if(limit < 100 * 1000 * 1000 * 1000){        //小于0.1GB，则转化成MB
+      size = (limit/(1000 * 1000)).toFixed(1) + "M"
   }
 
   let sizeStr = size + "";                        //转成字符串
