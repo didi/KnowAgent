@@ -505,7 +505,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
             List<MetricPoint> graph = new ArrayList<>();
-            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListByLogCollectTaskId(logCollectTaskPO.getId()));
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListByLogCollectTaskId(logCollectTaskPO.getId()).size());
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
@@ -527,7 +527,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
             List<MetricPoint> graph = new ArrayList<>();
-            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListContainsAgentByLogCollectTaskId(logCollectTaskPO.getId()));
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListContainsAgentByLogCollectTaskId(logCollectTaskPO.getId()).size());
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
