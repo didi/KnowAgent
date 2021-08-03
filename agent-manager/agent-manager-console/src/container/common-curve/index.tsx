@@ -40,6 +40,7 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     data: {} as any,
     eachHost: false,
     loading: false,
+    show: false,
   }
   public getLoading = () => {
     return this.state.loading;
@@ -55,7 +56,7 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
         right: '2%',
       },
     });
-    this.props.showContent(this.renderCurve(options, loading, true));
+    this.props.showContent(this.renderCurve(options, loading, true, Math.random()));
   }
 
   public renderOpBtns = (options: EChartOption, expand?: boolean) => {
@@ -68,8 +69,14 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
   }
 
   public renderExpand = (expand?: boolean) => {
-    if (expand) return <Icon type="close" onClick={this.props.closeContent} key="close" />;
-    return <Icon type="fullscreen" className="ml-17" onClick={this.expandChange} key="full-screen" />;
+    if (expand) return <Icon type="close" onClick={() => {
+      this.props.closeContent();
+      this.setState({ show: false }) 
+    }} key="close" />;
+    return <Icon type="fullscreen" className="ml-17" onClick={() => {
+      this.expandChange();
+      this.setState({ show: true });
+    }} key="full-screen" />;
   }
 
   public eachHostChange = () => {
@@ -110,12 +117,9 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     return <div className="no-data-info" style={{ ...style }} key="loading"><Spin /></div>;
   }
 
-  public renderEchart = (options: EChartOption, loading: boolean, expand?: boolean, isShow?: boolean) => {
+  public renderEchart = (options: EChartOption, loading: boolean, expand?: boolean) => {
     const width = expand ? undefined : 350;
     let height = getHeight(options);
-    if (isShow) {
-      height = Math.floor(document.getElementsByTagName('body')[0].clientHeight * 0.6)
-    }
     // todo：后面根据线条做优化
     // const height = 300;
     // console.log(options)
@@ -125,13 +129,13 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     return <LineChart width={width} height={height} options={options} key="chart" />;
   }
 
-  public renderCurve = (options: EChartOption, loading: boolean, expand?: boolean, isShow?: boolean) => {
+  public renderCurve = (options: EChartOption, loading: boolean, expand?: boolean, key?: number) => {
     const data = hasData(options);
     return (
-      <div className="common-chart-wrapper" >
+      <div className="common-chart-wrapper" key={key}>
         {this.renderTitle()}
         {this.renderEachHost()}
-        {this.renderEchart(options, loading, expand, isShow)}
+        {this.renderEchart(options, loading, expand)}
         {this.renderOpBtns(options, expand)}
         {data ? this.renderOthers() : null}
       </div>
@@ -168,7 +172,7 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
       })
     }).catch((err: any) => {
       this.setState({
-        loading: false,
+        loaing: false,
       })
     });
   }
@@ -208,6 +212,11 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
       this.setState({
         data,
         loading: false,
+      }, () => {
+        if (this.state.show) {
+          this.expandChange();
+          this.forceUpdate();
+        }
       })
     }).catch((err: any) => {
       this.setState({
