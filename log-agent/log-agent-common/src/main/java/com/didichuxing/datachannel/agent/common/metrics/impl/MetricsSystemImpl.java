@@ -18,6 +18,7 @@
 
 package com.didichuxing.datachannel.agent.common.metrics.impl;
 
+import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsBuilder;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsException;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsFilter;
@@ -28,7 +29,6 @@ import com.didichuxing.datachannel.agent.common.metrics.MetricsSystem;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsTag;
 import com.didichuxing.datachannel.agent.common.metrics.lib.MetricMutableCounterLong;
 import com.didichuxing.datachannel.agent.common.metrics.lib.MetricMutableStat;
-import com.didichuxing.datachannel.agent.common.metrics.util.Contracts;
 import com.didichuxing.datachannel.agent.common.metrics.util.MBeans;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.math.util.MathUtils;
@@ -55,34 +55,33 @@ import java.util.TimerTask;
  */
 public class MetricsSystemImpl implements MetricsSystem {
 
-    private static final Logger                     LOGGER             = LoggerFactory
-                                                                           .getLogger(MetricsSystemImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsSystemImpl.class);
 
-    static final String                             MS_CONTEXT         = "metricssystem";
+    private static final String MS_CONTEXT         = "metricssystem";
 
-    static final String                             NUM_SOURCES_KEY    = "num_sources";
+    private static final String NUM_SOURCES_KEY    = "num_sources";
 
-    static final String                             NUM_SOURCES_DESC   = "Number of metrics sources";
+    private static final String NUM_SOURCES_DESC   = "Number of metrics sources";
 
-    static final String                             NUM_SINKS_KEY      = "num_sinks";
+    private static final String NUM_SINKS_KEY      = "num_sinks";
 
-    static final String                             NUM_SINKS_DESC     = "Number of metrics sinks";
+    private static final String NUM_SINKS_DESC     = "Number of metrics sinks";
 
-    static final String                             MS_NAME            = "MetricsSystem";
+    private static final String MS_NAME            = "MetricsSystem";
 
-    static final String                             MS_STATS_NAME      = MS_NAME + ",sub=Stats";
+    private static final String MS_STATS_NAME      = MS_NAME + ",sub=Stats";
 
-    static final String                             MS_STATS_DESC      = "Metrics system metrics";
+    private static final String MS_STATS_DESC      = "Metrics system metrics";
 
-    static final String                             MS_CONTROL_NAME    = MS_NAME + ",sub=Control";
+    private static final String MS_CONTROL_NAME    = MS_NAME + ",sub=Control";
 
-    private final Map<String, MetricsSourceAdapter> sources;
+    private final Map<String, MetricsSourceAdapter> sources = new LinkedHashMap<>();
 
-    private final Map<String, MetricsSinkAdapter>   sinks;
+    private final Map<String, MetricsSinkAdapter> sinks = new LinkedHashMap<>();
 
-    private final List<Callback>                    callbacks;
+    private final List<Callback> callbacks = new ArrayList<>();
 
-    private final MetricsBuilderImpl                metricsBuilder;
+    private final MetricsBuilderImpl metricsBuilder = new MetricsBuilderImpl();
 
     private final MetricMutableStat                 snapshotStat       = new MetricMutableStat(
                                                                            "snapshot",
@@ -99,7 +98,7 @@ public class MetricsSystemImpl implements MetricsSystem {
                                                                            "number of dropped updates by all sinks",
                                                                            0L);
 
-    private final List<MetricsTag>                  injectedTags;
+    private final List<MetricsTag> injectedTags = new ArrayList<>();
 
     // Things that are changed by init()/start()/stop()
     private String                                  prefix;
@@ -108,40 +107,22 @@ public class MetricsSystemImpl implements MetricsSystem {
 
     private MetricsConfig                           config;
 
-    private Map<String, MetricsConfig>              sourceConfigs, sinkConfigs;
+    private Map<String, MetricsConfig> sourceConfigs = new HashMap<>();
+    private Map<String, MetricsConfig> sinkConfigs = new HashMap<>();
 
-    private boolean                                 monitoring         = false;
+    private boolean monitoring = false;
 
-    private Timer                                   timer;
+    private Timer timer;
 
-    private int                                     period;                                                    // seconds
+    private int period; // seconds
 
-    private long                                    logicalTime;                                               // number of timer invocations * period
+    private long logicalTime; // number of timer invocations * period
 
     private ObjectName                              mbeanName;
 
     private boolean                                 publishSelfMetrics = false;
 
     private MetricsSourceAdapter                    sysSource;
-
-    /**
-     * Construct the metrics system
-     * @param prefix  for the system
-     */
-    public MetricsSystemImpl(String prefix) {
-        this.prefix = prefix;
-        sources = new LinkedHashMap<String, MetricsSourceAdapter>();
-        sinks = new LinkedHashMap<String, MetricsSinkAdapter>();
-        sourceConfigs = new HashMap<String, MetricsConfig>();
-        sinkConfigs = new HashMap<String, MetricsConfig>();
-        callbacks = new ArrayList<Callback>();
-        injectedTags = new ArrayList<MetricsTag>();
-        metricsBuilder = new MetricsBuilderImpl();
-        if (prefix != null) {
-            // prefix could be null for default ctor, which requires init later
-            initSystemMBean();
-        }
-    }
 
     /**
      * Construct the system but not initializing (read config etc.) it.
@@ -151,15 +132,31 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     /**
+     * Construct the metrics system
+     * @param prefix  for the system
+     */
+    public MetricsSystemImpl(String prefix) {
+        if (prefix != null) {
+            // prefix could be null for default ctor, which requires init later
+            initSystemMBean();
+        }
+        this.prefix = prefix;
+    }
+
+    /**
      * Initialized the metrics system with a prefix.
      * @param prefix  the system will look for configs with the prefix
      */
     public synchronized void init(String prefix) {
+        if (prefix == null) {
+            LogGather.recordErrorLog("MetricsSystem error", "prefix is null");
+            throw new NullPointerException("prefix is null");
+        }
         if (monitoring) {
             LOGGER.warn(this.prefix + " metrics system already initialized!");
             return;
         }
-        this.prefix = Contracts.checkNotNull(prefix, "prefix");
+        this.prefix = prefix;
         try {
             start();
         } catch (MetricsConfigException e) {
@@ -173,7 +170,10 @@ public class MetricsSystemImpl implements MetricsSystem {
 
     @Override
     public synchronized void start() {
-        Contracts.checkNotNull(prefix, "prefix");
+        if (prefix == null) {
+            LogGather.recordErrorLog("MetricsSystem error", "prefix is null");
+            throw new NullPointerException("prefix is null");
+        }
         if (monitoring) {
             LOGGER.warn(prefix + " metrics system already started!", new MetricsException(
                 "Illegal start"));
@@ -192,8 +192,7 @@ public class MetricsSystemImpl implements MetricsSystem {
     @Override
     public synchronized void stop() {
         if (!monitoring) {
-            LOGGER.warn(prefix + " metrics system not yet started!", new MetricsException(
-                "Illegal stop"));
+            LOGGER.warn(prefix + " metrics system not yet started!", new MetricsException("Illegal stop"));
             return;
         }
         for (Callback cb : callbacks)
@@ -250,7 +249,10 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     synchronized void registerSource(String name, String desc, MetricsSource source) {
-        Contracts.checkNotNull(config, "config");
+        if (config == null) {
+            LogGather.recordErrorLog("MetricsSystem error", "config is null");
+            throw new NullPointerException("config is null");
+        }
         MetricsSourceAdapter sa = sources.get(name);
         if (sa != null) {
             LOGGER.warn("Source name " + name + " already exists!");
@@ -266,7 +268,10 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     synchronized MetricsSource unRegisterSource(String name) {
-        Contracts.checkNotNull(config, "config");
+        if (config == null) {
+            LogGather.recordErrorLog("MetricsSystem error", "config is null");
+            throw new NullPointerException("config is null");
+        }
         MetricsSourceAdapter sa = sources.get(name);
         if (sa == null) {
             LOGGER.warn("Source name " + name + " not exists!");
@@ -299,7 +304,10 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     synchronized void registerSink(String name, String desc, MetricsSink sink) {
-        Contracts.checkNotNull(config, "config");
+        if (config == null) {
+            LogGather.recordErrorLog("MetricsSystem error", "config is null");
+            throw new NullPointerException("config is null");
+        }
         MetricsSinkAdapter sa = sinks.get(name);
         if (sa != null) {
             LOGGER.warn("Sink name " + name + " already exists!");
@@ -368,7 +376,7 @@ public class MetricsSystemImpl implements MetricsSystem {
         LOGGER.info("Scheduled snapshot period at " + period + " second(s).");
     }
 
-    synchronized void onTimerEvent() {
+    private synchronized void onTimerEvent() {
         logicalTime += period;
         if (sinks.size() > 0) {
             publishMetrics(snapshotMetrics());
@@ -379,7 +387,7 @@ public class MetricsSystemImpl implements MetricsSystem {
      * snapshot all the sources for a snapshot of metrics/tags
      * @return the metrics buffer containing the snapshot
      */
-    synchronized MetricsBuffer snapshotMetrics() {
+    private synchronized MetricsBuffer snapshotMetrics() {
         metricsBuilder.clear();
         MetricsBufferBuilder bufferBuilder = new MetricsBufferBuilder();
 
@@ -407,7 +415,7 @@ public class MetricsSystemImpl implements MetricsSystem {
      * Publish a metrics snapshot to all the sinks
      * @param buffer  the metrics snapshot to publish
      */
-    synchronized void publishMetrics(MetricsBuffer buffer) {
+    private synchronized void publishMetrics(MetricsBuffer buffer) {
         int dropped = 0;
         for (MetricsSinkAdapter sa : sinks.values()) {
             long startTime = System.currentTimeMillis();
@@ -483,7 +491,7 @@ public class MetricsSystemImpl implements MetricsSystem {
             MetricsConfig.PERIOD_DEFAULT);
     }
 
-    static MetricsSinkAdapter newSink(String name, String desc, MetricsSink sink, MetricsConfig conf) {
+    private static MetricsSinkAdapter newSink(String name, String desc, MetricsSink sink, MetricsConfig conf) {
         return new MetricsSinkAdapter(name, desc, sink, conf.getString(MetricsConfig.CONTEXT_KEY),
             conf.getFilter(MetricsConfig.SOURCE_FILTER_KEY),
             conf.getFilter(MetricsConfig.RECORD_FILTER_KEY),
@@ -495,7 +503,7 @@ public class MetricsSystemImpl implements MetricsSystem {
                 MetricsConfig.RETRY_COUNT_DEFAULT));
     }
 
-    static MetricsSinkAdapter newSink(String name, String desc, MetricsConfig conf) {
+    private static MetricsSinkAdapter newSink(String name, String desc, MetricsConfig conf) {
         MetricsSink sink = conf.getPlugin("");
         if (sink == null)
             return null;
@@ -555,7 +563,10 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     private void initSystemMBean() {
-        Contracts.checkNotNull(prefix, "prefix should not be null here!");
+        if (prefix == null) {
+            LogGather.recordErrorLog("MetricsSystem error", "prefix is null");
+            throw new NullPointerException("prefix is null");
+        }
         mbeanName = MBeans.register(prefix, MS_CONTROL_NAME, this);
     }
 

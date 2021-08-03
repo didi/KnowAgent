@@ -41,7 +41,7 @@ import java.util.HashMap;
 /**
  * An adapter class for metrics source and associated filter and jmx impl
  */
-class MetricsSourceAdapter implements DynamicMBean {
+public class MetricsSourceAdapter implements DynamicMBean {
 
     private static final Logger              LOGGER = LoggerFactory
                                                         .getLogger(MetricsSourceAdapter.class);
