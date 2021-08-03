@@ -14,7 +14,6 @@ import { BasicTable } from 'antd-advanced';
 import { regIp } from '../../constants/reg';
 import { Dispatch } from 'redux';
 import { findDOMNode } from 'react-dom';
-import ActionClusterModal from '../../modal/receivingTerminal/actionClusterModal'
 
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
