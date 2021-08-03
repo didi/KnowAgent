@@ -205,6 +205,14 @@ export function nsTo(ns: number) {
   return ns + 'ns'
 }
 
+export function ToMs(value: number) {
+    return Number.parseInt((value / 1000) / 1000);
+}
+
+export function Tous(value: number) {
+    return Number.parseInt((value / 1000));
+}
+
 /**
  * @description: ms转成为最大为 月份的单位
  * @param {*} second_time
@@ -212,7 +220,7 @@ export function nsTo(ns: number) {
  */
 export function timeStamp( mtime: number ){
   if (mtime < 1000) {
-    return mtime + 'MS'
+    return mtime.toFixed(2) + 'MS'
   }
   let second_time: any = (mtime / 1000);
   let time = (second_time).toFixed(2) + "秒";

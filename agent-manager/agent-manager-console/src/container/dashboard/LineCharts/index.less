@@ -1,6 +1,7 @@
 .dashboard-lineCard{
   padding: 24px;
-  width: 1220px;
+  min-width: 1220px;
+  width: 100%;
   background: #fff;
   margin-top: 10px;
   &-title {
@@ -16,7 +17,7 @@
     justify-content: space-between;
     align-content: space-between;
     &-linebox{
-      flex: 0 0 581px;
+      flex: 0 0 calc(~"50% - 5px");
       height: 303px;
       padding: 20px;
       border-radius: 2px;
@@ -32,8 +33,8 @@
         line-height: 22px;
       }
       &-line {
-        width: 541px;
-        height: 263px
+        width: 100%;
+        height: 100%
       }
     }
   }

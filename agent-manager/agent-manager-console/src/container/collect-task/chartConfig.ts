@@ -154,7 +154,7 @@ export const COLLECT_CONFIG = [
         },
         {
             "panelName": "单logevent读取最小耗时",
-            "title": '单logevent读取最小耗时',
+            "title": '单logevent读取最小耗时 (ns)',
             "metricList": [
                 {
                     "metricName": "单logevent读取最小耗时",
@@ -235,7 +235,7 @@ export const COLLECT_CONFIG = [
         // },
         {
             "panelName": "日志发送最小耗时",
-            "title": '日志发送最小耗时 （ms）',
+            "title": '日志发送最小耗时 （μs）',
             "metricList": [
                 {
                     "metricName": "日志发送耗时 （ms）",
@@ -248,7 +248,7 @@ export const COLLECT_CONFIG = [
         },
         {
             "panelName": "日志发送平均耗时",
-            "title": '日志发送平均耗时 （ms）',
+            "title": '日志发送平均耗时 （μs）',
             "metricList": [
                 {
                     "metricName": "日志发送耗时 （ms）",
@@ -261,7 +261,7 @@ export const COLLECT_CONFIG = [
         },
         {
             "panelName": "日志发送最大耗时",
-            "title": '日志发送最大耗时 （ms）',
+            "title": '日志发送最大耗时 （μs）',
             "metricList": [
                 {
                     "metricName": "日志发送耗时 （ms）",
