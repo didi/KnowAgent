@@ -18,6 +18,7 @@
 
 package com.didichuxing.datachannel.agent.common.metrics.impl;
 
+import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.common.metrics.Metric;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsFilter;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsSource;
@@ -49,7 +50,7 @@ public class MetricsSourceAdapter implements DynamicMBean {
     private final String                     prefix, name;
     private final MetricsSource              source;
     private final MetricsFilter              recordFilter, metricFilter;
-    private final HashMap<String, Attribute> attrCache;
+    private final HashMap<String, Attribute> attrCache = new HashMap<>();
     private final MBeanInfoBuilder           infoBuilder;
     private final Iterable<MetricsTag>       injectedTags;
 
@@ -62,22 +63,27 @@ public class MetricsSourceAdapter implements DynamicMBean {
     MetricsSourceAdapter(String prefix, String name, String description, MetricsSource source,
                          Iterable<MetricsTag> injectedTags, MetricsFilter recordFilter,
                          MetricsFilter metricFilter, int jmxCacheTTL) {
-        this.prefix = Contracts.checkNotNull(prefix, "prefix");
-        this.name = Contracts.checkNotNull(name, "name");
-        this.source = Contracts.checkNotNull(source, "source");
-        attrCache = new HashMap<String, Attribute>();
+        if (prefix == null || name == null || source == null) {
+            LogGather.recordErrorLog("MetricsSourceAdapter error", "constructor param is null");
+            throw new NullPointerException();
+        }
+        if (jmxCacheTTL <= 0) {
+            LogGather.recordErrorLog("MetricsSourceAdapter error", "jmxCacheTTL <= 0");
+            throw new IllegalArgumentException("jmxCacheTTL must be greater than 0");
+        }
+        this.prefix = prefix;
+        this.name = name;
+        this.source = source;
         infoBuilder = new MBeanInfoBuilder(name, description);
         this.injectedTags = injectedTags;
         this.recordFilter = recordFilter;
         this.metricFilter = metricFilter;
-        this.jmxCacheTTL = Contracts.checkArg(jmxCacheTTL, jmxCacheTTL > 0, "jmxCacheTTL");
+        this.jmxCacheTTL = jmxCacheTTL;
     }
 
     MetricsSourceAdapter(String prefix, String name, String description, MetricsSource source,
                          Iterable<MetricsTag> injectedTags, int period, MetricsConfig conf) {
-        this(prefix, name, description, source, injectedTags, conf
-            .getFilter(MetricsConfig.RECORD_FILTER_KEY), conf
-            .getFilter(MetricsConfig.METRIC_FILTER_KEY), period);
+        this(prefix, name, description, source, injectedTags, conf.getFilter(MetricsConfig.RECORD_FILTER_KEY), conf.getFilter(MetricsConfig.METRIC_FILTER_KEY), period);
     }
 
     void start() {

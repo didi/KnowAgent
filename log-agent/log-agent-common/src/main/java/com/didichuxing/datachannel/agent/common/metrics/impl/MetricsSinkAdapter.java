@@ -18,6 +18,7 @@
 
 package com.didichuxing.datachannel.agent.common.metrics.impl;
 
+import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsFilter;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsRecordBuilder;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsSink;
@@ -58,6 +59,23 @@ public class MetricsSinkAdapter {
                        MetricsFilter sourceFilter, MetricsFilter recordFilter,
                        MetricsFilter metricFilter, int period, int queueCapacity, int retryDelay,
                        float retryBackoff, int retryCount) {
+        if (period <= 0) {
+            LogGather.recordErrorLog("MetricsSinkAdapter error", "period <= 0");
+            throw new IllegalArgumentException("period must be greater than 0");
+        }
+        if (retryDelay <= 0) {
+            LogGather.recordErrorLog("MetricsSinkAdapter error", "retryDelay <= 0");
+            throw new IllegalArgumentException("retryDelay must be greater than 0");
+        }
+        if (retryBackoff <= 1) {
+            LogGather.recordErrorLog("MetricsSinkAdapter error", "retryBackoff <= 1");
+            throw new IllegalArgumentException("retryBackoff must be greater than 1");
+        }
+        if (queueCapacity <= 0) {
+            LogGather.recordErrorLog("MetricsSinkAdapter error", "queueCapacity <= 0");
+            throw new IllegalArgumentException("queueCapacity must be greater than 0");
+        }
+
         this.name = Contracts.checkNotNull(name, "name");
         this.description = description;
         this.sink = Contracts.checkNotNull(sink, "sink object");
@@ -65,12 +83,11 @@ public class MetricsSinkAdapter {
         this.sourceFilter = sourceFilter;
         this.recordFilter = recordFilter;
         this.metricFilter = metricFilter;
-        this.period = Contracts.checkArg(period, period > 0, "period");
-        firstRetryDelay = Contracts.checkArg(retryDelay, retryDelay > 0, "retry delay");
-        this.retryBackoff = Contracts.checkArg(retryBackoff, retryBackoff > 1, "backoff factor");
+        this.period = period;
+        firstRetryDelay = retryDelay;
+        this.retryBackoff = retryBackoff;
         this.retryCount = retryCount;
-        this.queue = new SinkQueue<MetricsBuffer>(Contracts.checkArg(queueCapacity,
-            queueCapacity > 0, "queue capacity"));
+        this.queue = new SinkQueue<MetricsBuffer>(queueCapacity);
         latency = registry.newStat("sink." + name + ".latency", "Sink end to end latency", "ops",
             "time");
         dropped = registry.newCounter("sink." + name + ".dropped", "Dropped updates per sink", 0);

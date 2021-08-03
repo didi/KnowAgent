@@ -122,6 +122,8 @@ public interface HostManageService {
      */
     List<HostDO> getHostListByLogCollectTaskId(Long logCollectTaskId);
 
+    List<HostDO> getHostListContainsAgentByLogCollectTaskId(Long logCollectTaskId);
+
     /**
      * 获取给定agent关联的主机列表
      *

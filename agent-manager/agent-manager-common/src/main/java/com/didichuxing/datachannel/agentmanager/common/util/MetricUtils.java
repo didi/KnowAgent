@@ -7,12 +7,13 @@ import java.util.stream.Collectors;
 
 public class MetricUtils {
     /**
-     * 把空缺的点用0补齐
+     * 把空缺的点用指定value补齐
      *
-     * @param origin    原始图表
-     * @param startTime 开始时间
-     * @param endTime   结束时间
-     * @param step      粒度
+     * @param origin       原始图表
+     * @param startTime    开始时间
+     * @param endTime      结束时间
+     * @param step         粒度
+     * @param defaultValue 默认值
      */
     public static void buildEmptyMetric(List<MetricPoint> origin, Long startTime, Long endTime, int step, Object defaultValue) {
         long startPoint = startTime / step;

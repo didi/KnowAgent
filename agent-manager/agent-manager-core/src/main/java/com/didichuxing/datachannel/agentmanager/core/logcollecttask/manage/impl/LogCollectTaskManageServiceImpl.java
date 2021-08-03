@@ -504,7 +504,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         }).limit(limit).collect(Collectors.toList());
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
-            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.LOG_MODEL_HOST_NAME.name(), CalcFunction.COUNT.name(), MetricConstant.HEARTBEAT_PERIOD);
+            List<MetricPoint> graph = new ArrayList<>();
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListByLogCollectTaskId(logCollectTaskPO.getId()));
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
@@ -519,13 +520,14 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         int limit = Math.min(taskList.size(), 5);
         List<MetricPointList> metricPointLists = new ArrayList<>();
         List<LogCollectTaskPO> sortedList = taskList.stream().sorted((i1, i2) -> {
-            int size1 = hostManageService.getHostListByLogCollectTaskId(i1.getId()).size();
-            int size2 = hostManageService.getHostListByLogCollectTaskId(i2.getId()).size();
+            int size1 = hostManageService.getHostListContainsAgentByLogCollectTaskId(i1.getId()).size();
+            int size2 = hostManageService.getHostListContainsAgentByLogCollectTaskId(i2.getId()).size();
             return size2 - size1;
         }).limit(limit).collect(Collectors.toList());
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
-            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.HOSTNAME.name(), CalcFunction.COUNT.name(), MetricConstant.HEARTBEAT_PERIOD);
+            List<MetricPoint> graph = new ArrayList<>();
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListContainsAgentByLogCollectTaskId(logCollectTaskPO.getId()));
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
