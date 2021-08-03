@@ -14,6 +14,11 @@ const lineClassName = 'dashboard-lineCard';
 
 export class LineChart extends React.Component<IProps> {
 
+  public state = {
+    width: document.querySelector(`.dashboard-lineCard-content-linebox-line`)?.clientWidth,
+    height: 263,
+  }
+
   public renderLine = (config: any) => {
     const options = createOptions(config, this.props.dataSouce[config.api]);
     return (
@@ -22,7 +27,7 @@ export class LineChart extends React.Component<IProps> {
           {config.title}
         </div> */}
         <div className={`${lineClassName}-content-linebox-line`}>
-          <Line width={541} height={263} options={options} key={config.title} />
+          <Line width={this.state.width} height={this.state.height} options={options} key={config.title} />
         </div>
       </div>
     );
