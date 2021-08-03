@@ -115,6 +115,7 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
           <Radio.Group
             onChange={this.timeChange}
             defaultValue={60}
+            value={(this.props.timeRange[1].valueOf() - this.props.timeRange[0].valueOf()) / (60 * 1000)}
           >
             {
               tiemOptions.map(option => (
@@ -127,7 +128,8 @@ export class DataCurveFilter extends React.Component<Props & IDataCurveFilter> {
             style={{ width: 330 }}
             defaultValue={this.props.timeRange}
             showTime
-            // value={this.props.timeRange}
+            value={this.props.timeRange}
+            onChange={this.handleRangeChange}
             allowClear={false}
             format={timeFormat}
             onOk={this.handleRangeChange}

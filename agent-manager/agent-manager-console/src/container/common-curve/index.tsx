@@ -134,7 +134,7 @@ export class CommonCurve extends React.Component<ICommonCurveProps & Props> {
     return (
       <div className="common-chart-wrapper" key={key}>
         {this.renderTitle()}
-        {this.renderEachHost()}
+        {this.props.hostName ? null : this.renderEachHost()}
         {this.renderEchart(options, loading, expand)}
         {this.renderOpBtns(options, expand)}
         {data ? this.renderOthers() : null}

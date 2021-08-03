@@ -1,6 +1,6 @@
 import React from 'react';
 import { cardList } from './config';
-import { data } from './LineCharts/mock';
+import { Tooltip } from "antd";
 
 interface IProps {
   dataSouce: any,
@@ -20,7 +20,11 @@ export class HeaderCard extends React.Component<IProps> {
             </div>
             <div className={`${heeaderStyle}-item-content`}>
               <div className={`${heeaderStyle}-item-content-title`}>{item.title}</div>
-              <div className={`${heeaderStyle}-item-content-context`}><span className={`${heeaderStyle}-item-content-context-num`}>{dataSouce[item.api] && item.format ? item.format(dataSouce[item.api]) : dataSouce[item.api] }</span><span className={`${heeaderStyle}-item-content-context-span`}>{item.unit ? item.unit : '个'}</span></div>
+              <div className={`${heeaderStyle}-item-content-context`}>
+                <Tooltip title={dataSouce[item.api] + item.tip}>
+                  <span className={`${heeaderStyle}-item-content-context-num`}>{dataSouce[item.api] && item.format ? item.format(dataSouce[item.api]) : dataSouce[item.api] }</span><span className={`${heeaderStyle}-item-content-context-span`}>{item.unit ? item.unit : '个'}</span>
+                </Tooltip>
+              </div>
               {item.text ? 
                 <div className={`${heeaderStyle}-item-content-text`}>
                   {item.text}: <span className={`${heeaderStyle}-item-content-text-span`}>{dataSouce[item.textApi as string]}个</span>

@@ -206,11 +206,18 @@ export function nsTo(ns: number) {
 }
 
 export function ToMs(value: number) {
-    return Number.parseInt((value / 1000) / 1000);
+  let size = ((value / 1000) / 1000).toFixed(2);
+  let sizeStr = size + "";                        //转成字符串
+  let index = sizeStr.indexOf(".");                    //获取小数点处的索引
+  let dou = sizeStr.substr(index + 1 ,2)            //获取小数点后两位的值
+  if(dou == "00"){                                //判断后两位是否为00，如果是则删除00               
+      return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2)
+  }
+  return sizeStr;
 }
 
 export function Tous(value: number) {
-    return Number.parseInt((value / 1000));
+    return Number((value / 1000)).toFixed(2);
 }
 
 /**
@@ -322,12 +329,12 @@ export function cutString(str: string, len: number) {
 
 export function countChange(limit: number){
   let size = "";
-  if(limit < 100 * 1024){                            //小于0.1KB，则转化成B
+  if(limit < 100 * 1000){                            //小于0.1KB，则转化成B
       size = limit + ""
-  }else if(limit < 100 * 1024 * 1024){            //小于0.1MB，则转化成KB
-      size = (limit/1024).toFixed(1) + "K"
-  }else if(limit < 100 * 1024 * 1024 * 1024){        //小于0.1GB，则转化成MB
-      size = (limit/(1024 * 1024)).toFixed(1) + "M"
+  }else if(limit < 100 * 1000 * 1000){            //小于0.1MB，则转化成KB
+      size = (limit/1000).toFixed(1) + "K"
+  }else if(limit < 100 * 1000 * 1000 * 1000){        //小于0.1GB，则转化成MB
+      size = (limit/(1000 * 1000)).toFixed(1) + "M"
   }
 
   let sizeStr = size + "";                        //转成字符串
@@ -336,5 +343,5 @@ export function countChange(limit: number){
   if(dou == "00"){                                //判断后两位是否为00，如果是则删除00               
       return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2)
   }
-  return size;
+  return sizeStr;
 }

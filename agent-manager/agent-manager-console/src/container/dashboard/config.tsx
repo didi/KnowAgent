@@ -55,6 +55,7 @@ const cardList = [
     api: 'collectBytesDay',
     icon: daycollect,
     unit: 'M',
+    tip: 'byte',
     format: byteToMB,
   },
   {
@@ -63,6 +64,7 @@ const cardList = [
     api: 'currentCollectBytes',
     icon: nowCollect,
     unit: 'M',
+    tip: 'byte',
     format: byteToMB,
   },
   {
@@ -71,6 +73,7 @@ const cardList = [
     api:  'collectLogEventsDay',
     icon: dayCollectCount,
     unit: '条',
+    tip: '条',
     format: countChange,
   },
   {
@@ -79,6 +82,7 @@ const cardList = [
     api: 'currentCollectLogEvents',
     icon: nowCollectCount,
     unit: '条',
+    tip: '条',
     format: countChange,
   },
 ]
