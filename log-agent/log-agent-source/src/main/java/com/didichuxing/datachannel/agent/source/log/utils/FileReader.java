@@ -185,10 +185,10 @@ public class FileReader {
         }
         byte[] bytes = lineContent.getBytes("ISO-8859-1");
         encodeString = new String(bytes, commonConfig.getEncodeType());
-        suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-            this.logSource.getLogSourceConfig());
-        timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource.getLogSourceConfig()
-            .getTimeFormat());
+        suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString, this.logSource.getLogSourceConfig());
+        if (StringUtils.isNotBlank(suspectTimeString) && !suspectTimeString.equals(timeString)) {
+            timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource.getLogSourceConfig().getTimeFormat());
+        }
         timeString = suspectTimeString;
         if (timeStamp == null) {
             timeStamp = System.currentTimeMillis();
@@ -220,6 +220,7 @@ public class FileReader {
         long currentOffSet = 0L;
         long preOffset = 0L;
         boolean isFirstLine = true;
+        Long longTimeStamp;
 
         // 标记sb里是否有有效行的数据
         boolean isVaild = false;
@@ -271,9 +272,13 @@ public class FileReader {
             byte[] bytes = lineContent.getBytes("ISO-8859-1");
             encodeString = new String(bytes, commonConfig.getEncodeType());
             suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-                this.logSource.getLogSourceConfig());
-            Long longTimeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, this.logSource
-                .getLogSourceConfig().getTimeFormat());
+                    this.logSource.getLogSourceConfig());
+            if (StringUtils.isNotBlank(suspectTimeString) && suspectTimeString.equals(timeString)) {
+                longTimeStamp = timeStamp;
+            } else {
+                longTimeStamp = TimeUtils.getLongTimeStamp(suspectTimeString,
+                        this.logSource.getLogSourceConfig().getTimeFormat());
+            }
             if (longTimeStamp != null) {
                 long tmpTimeStamp = longTimeStamp;
                 if (tmpTimeStamp > 0) {
