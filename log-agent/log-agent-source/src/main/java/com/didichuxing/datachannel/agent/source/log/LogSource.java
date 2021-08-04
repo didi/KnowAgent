@@ -509,7 +509,7 @@ public class LogSource extends AbstractSource {
                         // 则设置为从0开始采集，保护数据;
                         File file = new File(node.getAbsolutePath());
                         if (file.length() < 1024 * 1024 * 1024
-                            && System.currentTimeMillis() - file.lastModified() < 3 * 60 * 60 * 1000L) {
+                                && System.currentTimeMillis() - file.lastModified() < 3 * 60 * 60 * 1000L) {
                             LOGGER.info("file is less than 1G. set fileNode's offset to 0. fileNode is " + node);
                             node.getFileOffSet().setOffSet(0L);
                         } else {
@@ -522,7 +522,7 @@ public class LogSource extends AbstractSource {
                     node.setOffset(0L);
                     if (fileNodeList.size() >= 2) {
                         LOGGER.info("This is a new task that is collected on the ddcloud and requires one more file to be collected forward！fileNode is"
-                                    + node);
+                                + node);
                         FileNode preNode = fileNodeList.get(1);
                         preNode.setNeedCollect(true);
                         preNode.getFileOffSet().setOffSet(0L);
