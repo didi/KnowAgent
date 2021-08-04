@@ -106,8 +106,8 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
                     break;
                 }
             }
-        } catch (Exception e) {
-            LogGather.recordErrorLog("AbstractTask error", "unexpected error, task is " + this, e);
+        } catch (Throwable t) {
+            LogGather.recordErrorLog("AbstractTask error", "unexpected error, task is " + this, t);
         } finally {
             stop(true);
         }
