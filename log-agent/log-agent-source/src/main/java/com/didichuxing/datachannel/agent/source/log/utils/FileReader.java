@@ -331,7 +331,9 @@ public class FileReader {
             // 连续n次无法读取到日志，说明日志配置失效，或者日志文件时间戳变更
             if (errorLine != 0
                 && errorLine >= this.logSource.getLogSourceConfig().getMaxErrorLineNum()) {
-                LOGGER.warn("wfn's timestamp is not vaild. wfn is " + wfn);
+                LOGGER.warn("wfn's timestamp is not vaild. wfn is " + wfn + ";errorLine:" + errorLine
+                        + ";currentOffSet:" + in.getFilePointer() + ";preOffset:" + in.preOffset() + ";content:"
+                        + sb + ";nextContent:" + nextContent);
                 // 标记为错误的配置
                 wfn.setIsVaildTimeConfig(false);
                 currentOffSet = in.getFilePointer();
