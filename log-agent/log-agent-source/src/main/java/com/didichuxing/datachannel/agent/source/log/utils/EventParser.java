@@ -72,9 +72,6 @@ public class EventParser {
             if (lastTimestamp != null && timeStamp != null
                 && lastWFNKey.equals(workingFileNode.getUniqueKey())
                 && lastTimestamp - timeStamp > logSource.getLogSourceConfig().getOrderTimeMaxGap()) {
-                LOGGER.info("OutOfOrderFile!OutOfOrderFile:" + lastTimeString + ",curTimeString:"
-                            + timeString + ",fileName:" + logEvent.getFileName() + ",content:"
-                            + logEvent.getContent());
                 workingFileNode.setIsFileOrder(OrderFile.OutOfOrderFile.getStatus());
             }
 
