@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -387,25 +386,24 @@ public class MetricsSystemImpl implements MetricsSystem {
      * snapshot all the sources for a snapshot of metrics/tags
      * @return the metrics buffer containing the snapshot
      */
-    private synchronized MetricsBuffer snapshotMetrics() {
+    private synchronized List<MetricsEntry> snapshotMetrics() {
         metricsBuilder.clear();
-        MetricsBufferBuilder bufferBuilder = new MetricsBufferBuilder();
+        List<MetricsEntry> buffers = new ArrayList<>();
 
-        for (Entry<String, MetricsSourceAdapter> entry : sources.entrySet()) {
+        for (Map.Entry<String, MetricsSourceAdapter> entry : sources.entrySet()) {
             if (sourceFilter == null || sourceFilter.accepts(entry.getKey())) {
-                snapshotMetrics(entry.getValue(), bufferBuilder);
+                snapshotMetrics(entry.getValue(), buffers);
             }
         }
         if (publishSelfMetrics) {
-            snapshotMetrics(sysSource, bufferBuilder);
+            snapshotMetrics(sysSource, buffers);
         }
-        MetricsBuffer buffer = bufferBuilder.get();
-        return buffer;
+        return buffers;
     }
 
-    private void snapshotMetrics(MetricsSourceAdapter sa, MetricsBufferBuilder bufferBuilder) {
+    private void snapshotMetrics(MetricsSourceAdapter sa, List<MetricsEntry> entries) {
         long startTime = System.currentTimeMillis();
-        bufferBuilder.add(sa.name(), sa.getMetrics(metricsBuilder, false));
+        entries.add(new MetricsEntry(sa.name(), sa.getMetrics(metricsBuilder, false)));
         metricsBuilder.clear();
         snapshotStat.add(System.currentTimeMillis() - startTime);
         LOGGER.debug("Snapshotted source " + sa.name());
@@ -413,13 +411,13 @@ public class MetricsSystemImpl implements MetricsSystem {
 
     /**
      * Publish a metrics snapshot to all the sinks
-     * @param buffer  the metrics snapshot to publish
+     * @param entries  the metrics snapshot to publish
      */
-    private synchronized void publishMetrics(MetricsBuffer buffer) {
+    private synchronized void publishMetrics(List<MetricsEntry> entries) {
         int dropped = 0;
         for (MetricsSinkAdapter sa : sinks.values()) {
             long startTime = System.currentTimeMillis();
-            dropped += sa.putMetrics(buffer, logicalTime) ? 0 : 1;
+            dropped += sa.putMetrics(entries, logicalTime) ? 0 : 1;
             publishStat.add(System.currentTimeMillis() - startTime);
         }
         dropStat.incr(dropped);
@@ -435,7 +433,7 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     private synchronized void stopSources() {
-        for (Entry<String, MetricsSourceAdapter> entry : sources.entrySet()) {
+        for (Map.Entry<String, MetricsSourceAdapter> entry : sources.entrySet()) {
             MetricsSourceAdapter sa = entry.getValue();
             LOGGER.info("Stopping metrics source " + entry.getKey() + "("
                         + sa.source().getClass().getName() + ")");
@@ -446,7 +444,7 @@ public class MetricsSystemImpl implements MetricsSystem {
     }
 
     private synchronized void stopSinks() {
-        for (Entry<String, MetricsSinkAdapter> entry : sinks.entrySet()) {
+        for (Map.Entry<String, MetricsSinkAdapter> entry : sinks.entrySet()) {
             MetricsSinkAdapter sa = entry.getValue();
             LOGGER.info("Stopping metrics sink " + entry.getKey() + "("
                         + sa.sink().getClass().getName() + ")");
@@ -469,7 +467,7 @@ public class MetricsSystemImpl implements MetricsSystem {
     private synchronized void configureSinks() {
         sinkConfigs = config.getInstanceConfigs(MetricsConfig.SINK_KEY);
         int confPeriod = 0;
-        for (Entry<String, MetricsConfig> entry : sinkConfigs.entrySet()) {
+        for (Map.Entry<String, MetricsConfig> entry : sinkConfigs.entrySet()) {
             MetricsConfig conf = entry.getValue();
             int sinkPeriod = conf.getInt(MetricsConfig.PERIOD_KEY, MetricsConfig.PERIOD_DEFAULT);
             confPeriod = confPeriod == 0 ? sinkPeriod : MathUtils.gcd(confPeriod, sinkPeriod);
@@ -514,7 +512,7 @@ public class MetricsSystemImpl implements MetricsSystem {
         sourceFilter = config.getFilter(MetricsConfig.PREFIX_DEFAULT
                                         + MetricsConfig.SOURCE_FILTER_KEY);
         Map<String, MetricsConfig> confs = config.getInstanceConfigs(MetricsConfig.SOURCE_KEY);
-        for (Entry<String, MetricsConfig> entry : confs.entrySet()) {
+        for (Map.Entry<String, MetricsConfig> entry : confs.entrySet()) {
             sourceConfigs.put(entry.getKey(), entry.getValue());
         }
         registerSystemSource();

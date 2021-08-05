@@ -14,8 +14,7 @@ import java.lang.reflect.Method;
  */
 public class DefaultOSResourceService implements IOSResourceService {
 
-    private static final Logger         LOGGER   = LoggerFactory
-                                                     .getLogger(DefaultOSResourceService.class);
+    private static final Logger         LOGGER   = LoggerFactory.getLogger(DefaultOSResourceService.class);
 
     /**
      * 当前agent进程id
@@ -66,8 +65,7 @@ public class DefaultOSResourceService implements IOSResourceService {
      */
     private Method getUnixMethod(String methodName) {
         try {
-            return Class.forName("com.sun.management.UnixOperatingSystemMXBean").getMethod(
-                methodName);
+            return Class.forName("com.sun.management.UnixOperatingSystemMXBean").getMethod(methodName);
         } catch (Exception t) {
             // not available
             return null;
@@ -117,8 +115,7 @@ public class DefaultOSResourceService implements IOSResourceService {
     @Override
     public float getCurrentProcessCpuUsageTotalPercent() {
         Float currentCpuUsageTotalPercent = invoke(getProcessCpuLoad, osMxBean);
-        return null != currentCpuUsageTotalPercent ? currentCpuUsageTotalPercent.floatValue() * 100
-            : 0;
+        return null != currentCpuUsageTotalPercent ? currentCpuUsageTotalPercent.floatValue() * 100 : 0;
     }
 
     @Override

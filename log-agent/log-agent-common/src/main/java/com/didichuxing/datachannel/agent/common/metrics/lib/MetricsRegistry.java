@@ -26,6 +26,7 @@ import com.didichuxing.datachannel.agent.common.metrics.MetricsTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,6 +35,8 @@ import java.util.Set;
 /**
  * An optional metrics registry class for creating and maintaining a
  * collection of MetricsMutables, making writing metrics source easier.
+ *
+ * @see com.didichuxing.datachannel.agent.common.metrics.impl.MetricsSystemImpl
  */
 public class MetricsRegistry {
     private static final Logger              LOGGER          = LoggerFactory
@@ -61,7 +64,7 @@ public class MetricsRegistry {
 
     private final Map<String, MetricMutable> metricsMap      = new LinkedHashMap<String, MetricMutable>();
 
-    private final Map<String, MetricsTag>    tagsMap         = new LinkedHashMap<String, MetricsTag>();
+    private final HashMap<String, MetricsTag> tagsMap = new HashMap<>();
 
     private final String                     name;
 
@@ -417,18 +420,14 @@ public class MetricsRegistry {
      * @return  the registry (for keep adding tags)
      */
     public MetricsRegistry tag(String name, String description, String value, boolean override) {
-        if (!override)
+        if (name == null) {
+            throw new MetricsException("metric name is null");
+        }
+        if (!override) {
             checkTagName(name);
+        }
         tagsMap.put(name, new MetricsTag(name, description, value));
         return this;
-    }
-
-    /**
-     * Get the tags
-     * @return  the tags set
-     */
-    public Set<Entry<String, MetricsTag>> tags() {
-        return tagsMap.entrySet();
     }
 
     /**
@@ -457,8 +456,7 @@ public class MetricsRegistry {
      * @param all get all the metrics even if the values are not changed.
      */
     public void snapshot(MetricsRecordBuilder builder, boolean all) {
-        LOGGER.info("agent statistics: {}", JSON.toJSONString(tagsMap));
-        for (Entry<String, MetricsTag> entry : tags()) {
+        for (Entry<String, MetricsTag> entry : tagsMap.entrySet()) {
             builder.add(entry.getValue());
         }
         for (Entry<String, MetricMutable> entry : metrics()) {

@@ -63,7 +63,6 @@ public class AbstractStatistics implements MetricsSource {
         AbstractStatistics other = (AbstractStatistics) obj;
         if (name == null) {
             return other.name == null;
-        } else
-            return name.equals(other.name);
+        } else return name.equals(other.name);
     }
 }

@@ -185,11 +185,9 @@ public class FileReader {
         }
         byte[] bytes = lineContent.getBytes("ISO-8859-1");
         encodeString = new String(bytes, commonConfig.getEncodeType());
-        suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-            this.logSource.getLogSourceConfig());
+        suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString, this.logSource.getLogSourceConfig());
         if (StringUtils.isNotBlank(suspectTimeString) && !suspectTimeString.equals(timeString)) {
-            timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource
-                .getLogSourceConfig().getTimeFormat());
+            timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource.getLogSourceConfig().getTimeFormat());
         }
         timeString = suspectTimeString;
         if (timeStamp == null) {

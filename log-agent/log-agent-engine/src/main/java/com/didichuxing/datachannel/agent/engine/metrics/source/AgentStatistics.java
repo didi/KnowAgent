@@ -38,10 +38,8 @@ public class AgentStatistics extends AbstractStatistics {
         try {
             settings = CommonUtils.readSettings();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
         }
         if (settings == null) {
-            LOGGER.error("setting is null");
             LogGather.recordErrorLog("AgentStatistics error", "get local settings error.");
             throw new NullPointerException();
         }
