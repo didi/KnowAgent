@@ -13,7 +13,7 @@ export const valueFormatFn = (value: any, config: any, tool?: boolean) => {
     return tool ? byteChange(value) : byteToMB(value)
   }
   if (baiFormat.includes(config.api)) {
-    return tool ? value * 100 + '%' : value * 100;
+    return tool ? value + '%' : value;
   }
   return value;
 }
@@ -27,7 +27,10 @@ export const createOptions = (config: any, data: any[]) => {
       name: v.name || '', // 对应的单个折线标题
       type: 'line',
       // stack: '总量',
-      data: v.metricPointList,  // 对应的单个折线数据
+      data: v.metricPointList.map(p => ({
+        unit: config.unit,
+        ...p
+      })),  // 对应的单个折线数据
     };
   });
   const option: any = {
@@ -40,7 +43,6 @@ export const createOptions = (config: any, data: any[]) => {
     tooltip: {
         trigger: 'axis',
         formatter: (params: any) => {
-          // console.log(params)
           let tip = '';
           if (params != null && params.length > 0) {
             tip += params[0].name + '<br />';
