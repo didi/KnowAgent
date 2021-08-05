@@ -18,10 +18,13 @@
 
 package com.didichuxing.datachannel.agent.common.metrics.lib;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.metrics.Metric;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsException;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsRecordBuilder;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsTag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,6 +36,7 @@ import java.util.Set;
  * collection of MetricsMutables, making writing metrics source easier.
  */
 public class MetricsRegistry {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsRegistry.class);
 
     /** key for the context tag */
     public static final String               CONTEXT_KEY     = "context";
@@ -452,6 +456,7 @@ public class MetricsRegistry {
      * @param all get all the metrics even if the values are not changed.
      */
     public void snapshot(MetricsRecordBuilder builder, boolean all) {
+        LOGGER.info("agent statistics: {}", JSON.toJSONString(tagsMap));
         for (Entry<String, MetricsTag> entry : tags()) {
             builder.add(entry.getValue());
         }
