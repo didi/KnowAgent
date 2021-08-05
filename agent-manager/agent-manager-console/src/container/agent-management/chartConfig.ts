@@ -62,6 +62,7 @@ export const AGENT_CONFIG = [
                       "metricPointList": []
                   }
               ],
+              "unit": '/min',
               "api": 'exitSendTraffic',
               "selfHide": false
           },
@@ -87,6 +88,7 @@ export const AGENT_CONFIG = [
                       "metricPointList": []
                   }
               ],
+              "unit": '/min',
               "api": 'inletCollectTraffic',
               "selfHide": false
           },
