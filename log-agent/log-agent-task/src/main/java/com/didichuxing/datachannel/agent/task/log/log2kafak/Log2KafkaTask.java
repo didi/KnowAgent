@@ -159,6 +159,7 @@ public class Log2KafkaTask extends AbstractTask {
     @Override
     public void rollback() {
         // flush失败, 同步发送时，需等待flush完成；异步时，需要移动offset，实现重放，只有异步过程才存在失败的case
+        LOGGER.info("Log2MqTask:begin to rollback !uniqueKey is " + getUniqueKey());
         Map<String, Long> failedOffsetMap = new ConcurrentHashMap<>();
         for (AbstractSink sink : sinkers.values()) {
             Map<String, Long> offsetMap = ((KafkaSink) sink).getFailedRateMapS1();

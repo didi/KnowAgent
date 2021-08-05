@@ -463,6 +463,9 @@ public class LogSource extends AbstractSource {
             return fileNodeList;
         }
 
+        // 判断offsetMap中是否存在offset信息、宿主机采集需要hostname,offset信息存在代表不是新任务
+        boolean isNewTask = !OffsetManager.checkOffsetInfoExit(modelId, logPathId, logPath.getRealPath());
+
         // 按照最新修改时间倒叙排列
         OffsetManager.getOffsetInfo(modelId, logPathId, logPath.getRealPath(), fileNodeList);
 
@@ -500,32 +503,34 @@ public class LogSource extends AbstractSource {
                 FileNode node = fileNodeList.get(0);
                 node.setNeedCollect(true);
                 // 判断采集是在宿主机上进行还是容器中进行
-                if (modelConfig.getCollectType() == CollectType.COLLECT_IN_NORMAL_SERVER.getStatus()) {
-                    if (logSourceConfig.getCollectLocation() == CollectLocation.Earliest.getLocation()) {
-                        node.getFileOffSet().setOffSet(0L);
-                    } else {
-                        // 若文件大小为1G,
-                        // 且文件的最新更新时间为30小时以内
-                        // 则设置为从0开始采集，保护数据;
-                        File file = new File(node.getAbsolutePath());
-                        if (file.length() < 1024 * 1024 * 1024
-                            && System.currentTimeMillis() - file.lastModified() < 3 * 60 * 60 * 1000L) {
-                            LOGGER.info("file is less than 1G. set fileNode's offset to 0. fileNode is " + node);
+                if (isNewTask) {
+                    if (modelConfig.getCollectType() == CollectType.COLLECT_IN_NORMAL_SERVER.getStatus()) {
+                        if (logSourceConfig.getCollectLocation() == CollectLocation.Earliest.getLocation()) {
                             node.getFileOffSet().setOffSet(0L);
                         } else {
-                            node.getFileOffSet().setOffSet(file.length());
+                            // 若文件大小为1G,
+                            // 且文件的最新更新时间为30小时以内
+                            // 则设置为从0开始采集，保护数据;
+                            File file = new File(node.getAbsolutePath());
+                            if (file.length() < 1024 * 1024 * 1024
+                                    && System.currentTimeMillis() - file.lastModified() < 3 * 60 * 60 * 1000L) {
+                                LOGGER.info("file is less than 1G. set fileNode's offset to 0. fileNode is " + node);
+                                node.getFileOffSet().setOffSet(0L);
+                            } else {
+                                node.getFileOffSet().setOffSet(file.length());
+                            }
                         }
-                    }
-                } else {
-                    // 在宿主机上采集，存在容器漂移后跨整点，导致上个时间点文件无法采集问题
-                    // 因此在宿主机上采集的新任务默认往前多采一个文件，并且当前文件从offset为0的位置开始采集
-                    node.setOffset(0L);
-                    if (fileNodeList.size() >= 2) {
-                        LOGGER.info("This is a new task that is collected on the ddcloud and requires one more file to be collected forward！fileNode is"
+                    } else {
+                        // 在宿主机上采集，存在容器漂移后跨整点，导致上个时间点文件无法采集问题
+                        // 因此在宿主机上采集的新任务默认往前多采一个文件，并且当前文件从offset为0的位置开始采集
+                        node.setOffset(0L);
+                        if (fileNodeList.size() >= 2) {
+                            LOGGER.info("This is a new task that is collected on the ddcloud and requires one more file to be collected forward！fileNode is"
                                     + node);
-                        FileNode preNode = fileNodeList.get(1);
-                        preNode.setNeedCollect(true);
-                        preNode.getFileOffSet().setOffSet(0L);
+                            FileNode preNode = fileNodeList.get(1);
+                            preNode.setNeedCollect(true);
+                            preNode.getFileOffSet().setOffSet(0L);
+                        }
                     }
                 }
             }

@@ -185,10 +185,10 @@ public class FileReader {
         }
         byte[] bytes = lineContent.getBytes("ISO-8859-1");
         encodeString = new String(bytes, commonConfig.getEncodeType());
-        suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-            this.logSource.getLogSourceConfig());
-        timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource.getLogSourceConfig()
-            .getTimeFormat());
+        suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString, this.logSource.getLogSourceConfig());
+        if (StringUtils.isNotBlank(suspectTimeString) && !suspectTimeString.equals(timeString)) {
+            timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource.getLogSourceConfig().getTimeFormat());
+        }
         timeString = suspectTimeString;
         if (timeStamp == null) {
             timeStamp = System.currentTimeMillis();
@@ -220,6 +220,7 @@ public class FileReader {
         long currentOffSet = 0L;
         long preOffset = 0L;
         boolean isFirstLine = true;
+        Long longTimeStamp;
 
         // 标记sb里是否有有效行的数据
         boolean isVaild = false;
@@ -271,9 +272,13 @@ public class FileReader {
             byte[] bytes = lineContent.getBytes("ISO-8859-1");
             encodeString = new String(bytes, commonConfig.getEncodeType());
             suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-                this.logSource.getLogSourceConfig());
-            Long longTimeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, this.logSource
-                .getLogSourceConfig().getTimeFormat());
+                    this.logSource.getLogSourceConfig());
+            if (StringUtils.isNotBlank(suspectTimeString) && suspectTimeString.equals(timeString)) {
+                longTimeStamp = timeStamp;
+            } else {
+                longTimeStamp = TimeUtils.getLongTimeStamp(suspectTimeString,
+                        this.logSource.getLogSourceConfig().getTimeFormat());
+            }
             if (longTimeStamp != null) {
                 long tmpTimeStamp = longTimeStamp;
                 if (tmpTimeStamp > 0) {
@@ -331,7 +336,9 @@ public class FileReader {
             // 连续n次无法读取到日志，说明日志配置失效，或者日志文件时间戳变更
             if (errorLine != 0
                 && errorLine >= this.logSource.getLogSourceConfig().getMaxErrorLineNum()) {
-                LOGGER.warn("wfn's timestamp is not vaild. wfn is " + wfn);
+                LOGGER.warn("wfn's timestamp is not vaild. wfn is " + wfn + ";errorLine:" + errorLine
+                        + ";currentOffSet:" + in.getFilePointer() + ";preOffset:" + in.preOffset() + ";content:"
+                        + sb + ";nextContent:" + nextContent);
                 // 标记为错误的配置
                 wfn.setIsVaildTimeConfig(false);
                 currentOffSet = in.getFilePointer();

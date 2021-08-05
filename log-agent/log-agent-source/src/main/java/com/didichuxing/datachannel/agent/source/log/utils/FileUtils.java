@@ -1177,14 +1177,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         if (!file.exists()) {
             return LogConfigConstants.MD5_FAILED_TAG;
         }
-
-        BufferedReader bufferedReader = null;
+        BufferedRandomAccessFile bufferedRandomAccessFile = null;
         String result = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            //获取MD5时兼容文件开头为空格以及换行符的情况
+            bufferedRandomAccessFile = new BufferedRandomAccessFile(file, "r");
+            // 获取MD5时兼容文件开头为空格以及换行符的情况
             if (file.length() > 0) {
-                while ((result = bufferedReader.readLine()) != null) {
+                while ((result = bufferedRandomAccessFile.readNewLine(5L)) != null) {
                     if (StringUtils.isNotBlank(result)) {
                         break;
                     }
@@ -1192,23 +1191,23 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
             }
         } catch (Exception e) {
             LogGather.recordErrorLog("FileUtil error!",
-                                     "getFileNodeHeadMd5 error! filePath is " + file.getAbsolutePath(), e);
+                    "getFileNodeHeadMd5 error! filePath is " + file.getAbsolutePath(), e);
         } finally {
             try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
+                if (bufferedRandomAccessFile != null) {
+                    bufferedRandomAccessFile.close();
                 }
             } catch (IOException e) {
                 LogGather.recordErrorLog("FileUtil error!",
-                                         "getFileNodeHeadMd5: BufferedReader close failed, filePath is "
-                                                            + file.getAbsolutePath(),
-                                         e);
+                        "getFileNodeHeadMd5: BufferedReader close failed, filePath is "
+                                + file.getAbsolutePath(),
+                        e);
             }
         }
         // 如果第一行日志长度大于1k，截取1K做MD5,如果拿不到日志返回MD5获取失败标志
         if (StringUtils.isNotBlank(result)) {
             String Md5 = result.length() > LogConfigConstants.FILE_HEAD_LENGTH ? CommonUtils.getMd5(result.substring(0,
-                                                                                                                     LogConfigConstants.FILE_HEAD_LENGTH)) : CommonUtils.getMd5(result);
+                    LogConfigConstants.FILE_HEAD_LENGTH)) : CommonUtils.getMd5(result);
             return StringUtils.isBlank(Md5) ? LogConfigConstants.MD5_FAILED_TAG : Md5;
         } else {
             return LogConfigConstants.MD5_FAILED_TAG;
