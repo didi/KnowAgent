@@ -41,6 +41,8 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
+import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
+import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
@@ -81,6 +83,9 @@ public class NormalLogCollectTaskController {
 
     @Autowired
     private LogCollectTaskHealthManageService logCollectTaskHealthManageService;
+
+    @Autowired
+    private HostManageService hostManageService;
 
     @ApiOperation(value = "新增日志采集任务", notes = "")
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -420,6 +425,7 @@ public class NormalLogCollectTaskController {
         logCollectTaskVO.setLogContentSliceRule(JSON.parseObject(logCollectTaskDO.getLogContentSliceRuleLogicJsonString(), LogSliceRuleVO.class));
         logCollectTaskVO.setFileNameSuffixMatchRule(JSON.parseObject(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString(), FileNameSuffixMatchRuleVO.class));
         logCollectTaskVO.setCollectDelayThresholdMs(logCollectTaskDO.getCollectDelayThresholdMs());
+        logCollectTaskVO.setRelateAgentNum(hostManageService.getHostListContainsAgentByLogCollectTaskId(logCollectTaskDO.getId()).size());
         return logCollectTaskVO;
     }
 
