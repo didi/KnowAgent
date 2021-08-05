@@ -23,7 +23,6 @@ import com.didichuxing.datachannel.agent.common.metrics.Metric;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsFilter;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsSource;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsTag;
-import com.didichuxing.datachannel.agent.common.metrics.util.Contracts;
 import com.didichuxing.datachannel.agent.common.metrics.util.MBeans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -227,8 +226,8 @@ public class MetricsSourceAdapter implements DynamicMBean {
     }
 
     private void setAttrCacheTag(MetricsTag tag, int recNo) {
-        String key = tagName(tag.name(), recNo);
-        attrCache.put(key, new Attribute(key, tag.value()));
+        String key = tagName(tag.getName(), recNo);
+        attrCache.put(key, new Attribute(key, tag.getValue()));
     }
 
     private static String metricName(String name, int recNo) {

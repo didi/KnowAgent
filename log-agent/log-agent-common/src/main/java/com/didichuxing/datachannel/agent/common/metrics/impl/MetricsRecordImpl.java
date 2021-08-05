@@ -59,8 +59,8 @@ public class MetricsRecordImpl implements MetricsRecord {
     public String context() {
         // usually the first tag
         for (MetricsTag t : tags) {
-            if (t.name().equals(CONTEXT_KEY)) {
-                return String.valueOf(t.value());
+            if (t.getName().equals(CONTEXT_KEY)) {
+                return String.valueOf(t.getValue());
             }
         }
         return DEFAULT_CONTEXT;

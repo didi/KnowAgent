@@ -36,7 +36,8 @@ import java.util.Set;
  * collection of MetricsMutables, making writing metrics source easier.
  */
 public class MetricsRegistry {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsRegistry.class);
+    private static final Logger              LOGGER          = LoggerFactory
+                                                                 .getLogger(MetricsRegistry.class);
 
     /** key for the context tag */
     public static final String               CONTEXT_KEY     = "context";

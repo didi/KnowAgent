@@ -62,10 +62,14 @@ public class AgentStatistics extends AbstractStatistics {
             String.valueOf(limiter.getCpuThreshold()), true);
         metricsRegistry.tag(MetricsFields.CPU_USAGE, null,
             String.valueOf(limiter.getCurrentCpuUsage()), true);
-        metricsRegistry.tag(MetricsFields.LIMIT_TPS, null, String.valueOf(limiter.getAllQps()), true);
-        metricsRegistry.tag(MetricsFields.GC_COUNT, null, String.valueOf(SystemUtils.getFullGcCount()), true);
-        metricsRegistry.tag(MetricsFields.FD_COUNT, null, String.valueOf(SystemUtils.getFdCount()), true);
-        metricsRegistry.tag(MetricsFields.MEMORY_USAGE, null, String.valueOf(SystemUtils.getCurrentMemoryUsage()), true);
+        metricsRegistry.tag(MetricsFields.LIMIT_TPS, null, String.valueOf(limiter.getAllQps()),
+            true);
+        metricsRegistry.tag(MetricsFields.GC_COUNT, null,
+            String.valueOf(SystemUtils.getFullGcCount()), true);
+        metricsRegistry.tag(MetricsFields.FD_COUNT, null, String.valueOf(SystemUtils.getFdCount()),
+            true);
+        metricsRegistry.tag(MetricsFields.MEMORY_USAGE, null,
+            String.valueOf(SystemUtils.getCurrentMemoryUsage()), true);
         super.getMetrics(builder, all);
     }
 }

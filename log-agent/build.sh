@@ -6,7 +6,6 @@ cd $workspace
 app=log-collector
 
 gitversion=.gitversion
-startagent=bin/999-startagent.optional.sh
 ## function
 function build() {
     # 进行编译
@@ -41,7 +40,6 @@ function make_output() {
     mkdir -p $output/ddcloud/init &>/dev/null
     # 填充output目录, output内的内容 即为 线上部署内容
     (
-        cp -rf $startagent $output/ddcloud/init/  &&
         cp -rf bin/* $output &&         # 拷贝至output目录
         tar -zxf log-agent-node/target/${app}.tar.gz -C ${output} &&     # 解压war包到output目录
         cp -rf properties/*.properties ${output}/properties &&  
@@ -73,4 +71,3 @@ make_output
 # 编译成功
 echo -e "build done."
 exit 0
-
