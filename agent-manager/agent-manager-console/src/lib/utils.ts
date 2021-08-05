@@ -230,7 +230,7 @@ export function timeStamp( mtime: number ){
     return mtime.toFixed(2) + 'ms'
   }
   let second_time: any = (mtime / 1000);
-  let time = (second_time).toFixed(2) + "秒";
+  let time = (second_time).toFixed(2) + "s";
   if( parseInt(second_time)> 60){
   
     let second = parseInt(second_time) % 60;
