@@ -60,7 +60,7 @@ export class CollectTaskDetail extends React.Component<Props> {
         <CustomBreadcrumb btns={collectTaskDetailBreadcrumb} />
         <DescriptionsItems
           loading={loading}
-          title={`${collectDetail.logCollectTaskName}应用采集任务`}
+          title={`${collectDetail.logCollectTaskName}`}
           column={4}
           subTitle={health ? <Tag color={health}>{health}</Tag> : ''}
           baseInfo={collectTaskDetailBaseInfo(collectDetail)}

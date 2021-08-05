@@ -269,35 +269,18 @@ export const collectTaskDetailBaseInfo = (detail: ILogCollectTaskDetail) => {
     label: '采集任务ID',
     key: 'id',
   },
-  // {
-  //   label: '所属项目',
-  //   key: 'project',
-  // }, 
   {
-    label: '采集应用名',
-    key: 'logCollectTaskName',
-  }, {
-    label: '采集模式',
-    key: 'logCollectTaskType',
-    render: (t: number) => collectModeMap[t],
-  }, {
-    label: '接收端集群',
-    key: 'receiver', // kafkaClusterName
-    render: (record: IReceiverVO) => renderTooltip(record?.kafkaClusterName),
-  }, {
-    label: '接收端Topic',
-    key: 'sendTopic',
-  }, {
+    label: '关联Agent数',
+    key: 'relateAgentNum',
+    // invisible: !detail.collectStartBusinessTime,
+  },
+  {
     label: '创建时间',
     key: 'collectStartBusinessTime',
     // invisible: !detail.collectStartBusinessTime,
     render: (t: number) => moment(t).format(timeFormat),
-  }, {
-    label: '结束时间',
-    key: 'collectEndBusinessTime',
-    // invisible: !detail.collectEndBusinessTime,
-    render: (t: number) => moment(t).format(timeFormat),
-  }, {
+  },
+  {
     label: '创建人',
     key: 'logCollectTaskCreator',
   }];

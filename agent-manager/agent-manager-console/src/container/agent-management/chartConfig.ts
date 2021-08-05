@@ -24,7 +24,6 @@ export const AGENT_CONFIG = [
                       "metricPointList": []
                   }
               ],
-              'unit': 'MB',
               "api": 'memoryUsage',
               "selfHide": false
           },

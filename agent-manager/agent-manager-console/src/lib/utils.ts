@@ -187,7 +187,7 @@ export function byteToMB(limit: number) {
     return 0;
   }
   if (nums < 0.01 && nums > 0) {
-    return 0.01;
+    return limit
   }
   return nums.toFixed(2);
 }
@@ -227,7 +227,7 @@ export function Tous(value: number) {
  */
 export function timeStamp( mtime: number ){
   if (mtime < 1000) {
-    return mtime.toFixed(2) + 'MS'
+    return mtime.toFixed(2) + 'ms'
   }
   let second_time: any = (mtime / 1000);
   let time = (second_time).toFixed(2) + "秒";
@@ -247,7 +247,8 @@ export function timeStamp( mtime: number ){
         let day = parseInt( parseInt( parseInt(second_time / 60) /60 ) / 24 );
         time = day + "天" + hour + "小时" + min + "分" + second + "秒";
         if (day > 30) {
-          let m = parseInt( parseInt( parseInt(second_time / 60) /60 ) / 24) % 30;
+          day = parseInt( parseInt( parseInt(second_time / 60) /60 ) / 24) % 30;
+          let m = parseInt( parseInt( parseInt(second_time / 60) /60 ) / 24 / 30 );
           time = m + "月" + day + "天" + hour + "小时" + min + "分" + second + "秒";
         }
       }
