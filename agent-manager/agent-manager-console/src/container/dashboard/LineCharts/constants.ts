@@ -21,7 +21,21 @@ export const valueFormatFn = (value: any, config: any, tool?: boolean) => {
 
 export const createOptions = (config: any, data: any[]) => {
   const title = data?.map(item => item.name);
-  const timestamps = !!data ? data[0]?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)) : []; // 对应的时间戳
+  let timestamps: any = [];
+  let isMax = true;
+  if (data && data.length) {
+    data.forEach((item: any) => {
+      item.metricPointList.forEach((p) => {
+        if (p.value >= 5) {
+          isMax = false;
+        }
+        if (!timestamps.includes(p.timestamp)) {
+          timestamps.push(p.timestamp)
+        }
+      })
+    })
+  }
+  // const timestamps = !!data ? data[0]?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)) : []; // 对应的时间戳
   const series = data?.map(v => { // 对应的折线图数据
     return {
       name: v.name || '', // 对应的单个折线标题
@@ -45,7 +59,7 @@ export const createOptions = (config: any, data: any[]) => {
         formatter: (params: any) => {
           let tip = '';
           if (params != null && params.length > 0) {
-            tip += params[0].name + '<br />';
+            tip += moment(Number(params[0].name)).format(timeFormat) + '<br />';
             for (let i = 0; i < params.length; i++) {
               tip += params[i].marker + params[i]?.seriesName + ': ' + valueFormatFn(params[i].value, config, true) + ' ' +(params[i].data?.unit || '') + '<br />';
             }
@@ -83,7 +97,7 @@ export const createOptions = (config: any, data: any[]) => {
       data: timestamps, // 对应的时间戳
       axisLabel: {
         formatter: (value: any) => {
-          return moment(value).format('HH:mm')
+          return moment(Number(value)).format('HH:mm')
         },
         color: 'rgba(0,0,0,0.45)',
       },
@@ -121,6 +135,8 @@ export const createOptions = (config: any, data: any[]) => {
         axisTick: {
           show: false
         },
+        min: 0,
+        max: isMax ? 5 : null,
     },
     series,
     animation: false,
@@ -131,7 +147,6 @@ export const createOptions = (config: any, data: any[]) => {
       ...option.yAxis,
       minInterval: 1,
       splitNumber: 5,
-      min: 0,
     }
   }
   // try {

@@ -211,7 +211,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
   if (ele.isPie) {
     return pieOption(ele, data)
   }
-  let timestamps: any = []
+  let timestamps: any = [];
   let isMax = true;
   if (data && data.length) {
     data.forEach((item: any) => {
