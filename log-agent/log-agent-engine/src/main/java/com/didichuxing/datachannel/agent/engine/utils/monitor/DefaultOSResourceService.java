@@ -115,7 +115,8 @@ public class DefaultOSResourceService implements IOSResourceService {
     @Override
     public float getCurrentProcessCpuUsageTotalPercent() {
         Float currentCpuUsageTotalPercent = invoke(getProcessCpuLoad, osMxBean);
-        return null != currentCpuUsageTotalPercent ? currentCpuUsageTotalPercent.floatValue() * 100 : 0;
+        return null != currentCpuUsageTotalPercent ? currentCpuUsageTotalPercent.floatValue() * 100
+            : 0;
     }
 
     @Override

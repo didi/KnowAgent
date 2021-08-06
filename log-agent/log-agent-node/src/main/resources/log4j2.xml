@@ -36,7 +36,7 @@
       </Policies>
       <DefaultRolloverStrategy max="5"/>
     </RollingFile>
-    <RollingFile name="configAppender" fileName="${baselog}/config.log"
+    <RollingFile name="config" fileName="${baselog}/config.log"
                  filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
       <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
       <PatternLayout pattern="${pattern}"/>
@@ -81,7 +81,7 @@
       </Policies>
       <DefaultRolloverStrategy max="5"/>
     </RollingFile>
-    <RollingFile name="monitorAppender" fileName="${baselog}/monitor.log"
+    <RollingFile name="monitor" fileName="${baselog}/monitor.log"
                  filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
       <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
       <PatternLayout pattern="${pattern}"/>
@@ -97,15 +97,20 @@
     <root level="INFO">
       <appender-ref ref="Console"/>
       <appender-ref ref="log-agent"/>
-      <!--<appender-ref ref="channelAppender"/>-->
-      <!--<appender-ref ref="kafkaAppender"/>-->
-      <!--<appender-ref ref="configAppender"/>-->
-      <!--<appender-ref ref="sysLogger"/>-->
-      <!--<appender-ref ref="errorAppender"/>-->
-      <!--<appender-ref ref="perf"/>-->
-      <!--<appender-ref ref="statics"/>-->
-      <!--<appender-ref ref="monitorAppender"/>-->
     </root>
+    <logger name="perfLogger">
+      <appender-ref ref="perf"/>
+    </logger>
+    <logger name="statics">
+      <appender-ref ref="statics"/>
+    </logger>
+    <logger name="monitor">
+      <appender-ref ref="monitor"/>
+    </logger>
+    <logger name="config">
+      <appender-ref ref="config"/>
+    </logger>
+
   </Loggers>
 
 </configuration>

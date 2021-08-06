@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SystemUtils {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SystemUtils.class);
+    private static final Logger       LOGGER            = LoggerFactory.getLogger(SystemUtils.class);
 
     private static IOSResourceService osResourceService = new DefaultOSResourceService();
 
