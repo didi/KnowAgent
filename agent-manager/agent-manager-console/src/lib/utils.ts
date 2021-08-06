@@ -266,7 +266,7 @@ export function PercentageConversion (value: number, isTool: string): number | s
 }
 
 export function msecondToSecond (m: number) {
-  return (m / 1000).toFixed(2);
+  return parseInt((m / 1000));
 } 
 
 /**参数说明： 

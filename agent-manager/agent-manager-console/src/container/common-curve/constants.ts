@@ -130,16 +130,20 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
     return pieOption(ele, data)
   }
   const timestamps = data?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)); // 对应的时间戳
+  let isMax = true;
   const series = [
     {
       name: data.name || '', // 对应的单个折线标题
       type: 'line',
       // stack: '总量',
-      data: data.metricPointList.map(p => ({
-        toolName: data.name || '',
-        unit: ele.unit,
-        ...p
-      })),  // 对应的单个折线数据
+      data: data.metricPointList.map(p => {
+        if (p.value >= 5 || booleanFormat.includes(ele.api)) {isMax = false;}
+        return {
+          toolName: data.name || '',
+          unit: ele.unit,
+          ...p
+        }
+      }),  // 对应的单个折线数据
     },
   ];
   const option: any = {
@@ -183,6 +187,7 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
         }
       },
       min: 0,
+      [isMax? 'max' : '']: 5,
       data: series
     },
     series,
@@ -207,9 +212,13 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
     return pieOption(ele, data)
   }
   let timestamps: any = []
+  let isMax = true;
   if (data && data.length) {
     data.forEach((item: any) => {
       item.metricPointList.forEach((p) => {
+        if (p.value >= 5 || booleanFormat.includes(ele.api)) {
+          isMax = false;
+        }
         if (!timestamps.includes(p.timestamp)) {
           timestamps.push(p.timestamp)
         }
@@ -271,6 +280,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
         }
       },
       min: 0,
+      [isMax? 'max' : '']: 5,
       data: series
     },
     series,
@@ -279,6 +289,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
   if (booleanFormat.includes(ele.api)) {
     option.yAxis.splitNumber = 1;
     option.yAxis.interval = 1;
+    delete option.yAxis.min;
   }
   if (Yformat.includes(ele.api)) {
     option.yAxis = {
