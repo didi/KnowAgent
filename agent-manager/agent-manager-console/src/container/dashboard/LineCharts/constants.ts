@@ -132,8 +132,6 @@ export const createOptions = (config: any, data: any[]) => {
       minInterval: 1,
       splitNumber: 5,
       min: 0,
-      max: 5,
-      interval: 1
     }
   }
   // try {

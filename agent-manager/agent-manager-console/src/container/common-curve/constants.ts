@@ -182,6 +182,7 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
           return valueFormatFn(value, ele)
         }
       },
+      min: 0,
       data: series
     },
     series,
@@ -192,14 +193,10 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
     option.yAxis.interval = 1;
   }
   if (Yformat.includes(ele.api)) {
-    console.log(ele.api)
     option.yAxis = {
       ...option.yAxis,
       minInterval: 1,
-      splitNumber: 5,
-      min: 0,
-      max: 5,
-      interval: 1
+      // interval: 1
     }
   }
   return option;
@@ -273,6 +270,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
           return valueFormatFn(value, ele)
         }
       },
+      min: 0,
       data: series
     },
     series,
@@ -286,10 +284,6 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
     option.yAxis = {
       ...option.yAxis,
       minInterval: 1,
-      splitNumber: 5,
-      min: 0,
-      max: 5,
-      interval: 1
     }
   }
   return option;
