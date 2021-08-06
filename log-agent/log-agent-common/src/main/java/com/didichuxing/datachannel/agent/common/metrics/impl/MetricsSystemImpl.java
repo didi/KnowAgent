@@ -406,7 +406,7 @@ public class MetricsSystemImpl implements MetricsSystem {
         entries.add(new MetricsEntry(sa.name(), sa.getMetrics(metricsBuilder, false)));
         metricsBuilder.clear();
         snapshotStat.add(System.currentTimeMillis() - startTime);
-        LOGGER.debug("Snapshotted source " + sa.name());
+        LOGGER.debug("Snapshot source " + sa.name());
     }
 
     /**
