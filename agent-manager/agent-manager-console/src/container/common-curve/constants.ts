@@ -17,7 +17,7 @@ export const byteFormat = ['memoryUsage', 'exitSendTraffic', 'inletCollectTraffi
 export const timesFormat = ['HealthMinCollectBusineTime'];
 export const toS = ['HealthMaxDelay'];
 export const toolTime = ['logReadConsuming', 'logSendConsuming', 'logFlushMaxConsuming', 'logFlushMeanConsuming', 'logflushMinConsuming', 'logSendMinConsuming', 'logSendMeanConsuming', 'logSendMaxConsuming']
-export const Yformat = ['HealthAbnormTrunca', 'logFlushFailTimes', 'DataFilterTimes']
+export const Yformat = ['HealthAbnormTrunca', 'logFlushFailTimes', 'DataFilterTimes', 'memoryUsage', 'logFaultOutPutBar', 'fullGcTimes']
 export const nsToFormat = ['logEventMaxConsuming', 'logEventMeanConsuming', 'logeventMinConsuming']
 export const toUs = ['logSendMinConsuming', 'logSendMeanConsuming', 'logSendMaxConsuming']
 
@@ -191,6 +191,17 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
     option.yAxis.splitNumber = 1;
     option.yAxis.interval = 1;
   }
+  if (Yformat.includes(ele.api)) {
+    console.log(ele.api)
+    option.yAxis = {
+      ...option.yAxis,
+      minInterval: 1,
+      splitNumber: 5,
+      min: 0,
+      max: 5,
+      interval: 1
+    }
+  }
   return option;
 }
 
@@ -198,7 +209,18 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
   if (ele.isPie) {
     return pieOption(ele, data)
   }
-  const timestamps = data?.length ? data[0]?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)) : []; // 对应的时间戳
+  let timestamps: any = []
+  if (data && data.length) {
+    data.forEach((item: any) => {
+      item.metricPointList.forEach((p) => {
+        if (!timestamps.includes(p.timestamp)) {
+          timestamps.push(p.timestamp)
+        }
+      })
+    })
+    // timestamps = timestamps.map((p) => moment(p).format(timeFormat))
+  }
+  // data?.length ? data[0]?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)) : []; // 对应的时间戳
   const series = data?.map(v => { // 对应的折线图数据
     return {
       name: v.name || '', // 对应的单个折线标题
@@ -220,7 +242,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
       formatter: (params: any) => {
         let tip = '';
         if (params != null && params.length > 0) {
-          tip += params[0].name + '<br />';
+          tip += moment(Number(params[0].name)).format(timeFormat) + '<br />';
           for (let i = 0; i < params.length; i++) {
             tip += params[i].marker + params[i].data?.toolName + ': ' + valueFormatFn(params[i].value, ele, true) + ' ' +(params[i].data?.unit || '') + '<br />';
           }
@@ -239,7 +261,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
       axisLabel: {
         rotate: -55,
         formatter: (value: any) => {
-          return moment(value).format('HH:mm')
+          return moment(Number(value)).format('HH:mm')
         }
       }
     },

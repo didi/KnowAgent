@@ -99,10 +99,12 @@ const collectList = [
   {
     title: '关联主机数 (个)',
     api: 'logCollectTaskListRelateHostsTop5',
+    unit: '个',
   },
   {
     title: '关联Agent数 (个)',
     api: 'logCollectTaskListRelateAgentsTop5',
+    unit: '个',
   },
   {
     title: '出口流量 (MB)',
@@ -111,6 +113,7 @@ const collectList = [
   {
     title: '出口条数 (条)',
     api: 'logCollectTaskListCollectCountTop5',
+    unit: '条',
   },
 ]
 
@@ -130,18 +133,22 @@ const agentList = [
   {
     title: '出口条数 (条)',
     api: 'agentListCollectCountTop5',
+    unit: '条',
   },
   {
     title: 'Full gc (次)',
     api: 'agentListFullGcCountTop5',
+    unit: '次',
   },
   {
     title: 'FD (个)',
     api: 'agentListFdUsedTop5',
+    unit: '个',
   },
   {
     title: '关联日志采集任务数 (个）',
     api: 'agentListRelateLogCollectTasksTop5',
+    unit: '个',
   },
 ]
 

@@ -30,6 +30,7 @@ import com.didichuxing.datachannel.agent.common.metrics.util.Contracts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -42,7 +43,7 @@ public class MetricsSinkAdapter {
     private final String                   name, description, context;
     private final MetricsSink              sink;
     private final MetricsFilter            sourceFilter, recordFilter, metricFilter;
-    private final SinkQueue<MetricsBuffer> queue;
+    private final SinkQueue<List<MetricsEntry>> queue;
     private final Thread                   sinkThread;
     private volatile boolean               stopping = false;
     private volatile boolean               inError  = false;
@@ -53,7 +54,7 @@ public class MetricsSinkAdapter {
     private final MetricMutableCounterInt  dropped;
     private final MetricMutableGaugeInt    qsize;
 
-    private final Consumer<MetricsBuffer>  consumer = this::publishMetrics;
+    private final Consumer<List<MetricsEntry>>  consumer = this::publishMetrics;
 
     MetricsSinkAdapter(String name, String description, MetricsSink sink, String context,
                        MetricsFilter sourceFilter, MetricsFilter recordFilter,
@@ -87,7 +88,7 @@ public class MetricsSinkAdapter {
         firstRetryDelay = retryDelay;
         this.retryBackoff = retryBackoff;
         this.retryCount = retryCount;
-        this.queue = new SinkQueue<MetricsBuffer>(queueCapacity);
+        this.queue = new SinkQueue<>(queueCapacity);
         latency = registry.newStat("sink." + name + ".latency", "Sink end to end latency", "ops",
             "time");
         dropped = registry.newCounter("sink." + name + ".dropped", "Dropped updates per sink", 0);
@@ -107,10 +108,10 @@ public class MetricsSinkAdapter {
         sinkThread.setDaemon(true);
     }
 
-    boolean putMetrics(MetricsBuffer buffer, long logicalTime) {
+    boolean putMetrics(List<MetricsEntry> entries, long logicalTime) {
         if (logicalTime % period == 0) {
             LOGGER.debug("enqueue, logicalTime=" + logicalTime);
-            if (queue.enqueue(buffer))
+            if (queue.enqueue(entries))
                 return true;
             dropped.incr();
             return false;
@@ -156,16 +157,16 @@ public class MetricsSinkAdapter {
         }
     }
 
-    void publishMetrics(MetricsBuffer buffer) {
+    void publishMetrics(List<MetricsEntry> entries) {
         long ts = 0;
-        for (MetricsBuffer.Entry entry : buffer) {
+        for (MetricsEntry entry : entries) {
             LOGGER.debug("sourceFilter=" + sourceFilter);
-            if (sourceFilter == null || sourceFilter.accepts(entry.name())) {
-                for (MetricsRecordImpl record : entry.records()) {
+            if (sourceFilter == null || sourceFilter.accepts(entry.getSourceName())) {
+                for (MetricsRecordImpl record : entry.getRecords()) {
                     if ((context == null || context.equals(record.context()))
                         && (recordFilter == null || recordFilter.accepts(record))) {
                         if (LOGGER.isDebugEnabled()) {
-                            LOGGER.debug("Pushing record " + entry.name() + "." + record.context()
+                            LOGGER.debug("Pushing record " + entry.getSourceName() + "." + record.context()
                                          + "." + record.name() + " to " + name);
                         }
                         sink.putMetrics(metricFilter == null ? record : new MetricsRecordFiltered(

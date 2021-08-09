@@ -21,9 +21,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractSink<T extends Event> extends TaskComponent implements Runnable,
                                                                          Configurable {
 
-    private static final Logger     LOGGER                       = LoggerFactory
-                                                                     .getLogger(AbstractSink.class
-                                                                         .getName());
+    private static final Logger     LOGGER                       = LoggerFactory.getLogger(AbstractSink.class.getName());
 
     AbstractChannel                 channel;
 
@@ -34,7 +32,7 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
 
     protected Thread                thread;
 
-    protected volatile boolean               isRunning                    = false;
+    protected volatile boolean      isRunning                    = false;
     protected boolean               isInited                     = false;
 
     protected final Object          lock                         = new Object();
