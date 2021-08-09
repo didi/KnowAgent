@@ -113,24 +113,10 @@ public class AixOSResourceService implements IOSResourceService {
     @Override
     public float getCurrentProcessCpuUsage() {
         String osName = osMxBean.getName().toLowerCase();
-        if (osName.contains("mac")) {
-            return 0;
-        } else if(osName.contains("linux")) {
-            try {
-                LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime();
-                float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
-                lastLinuxCpuTime = curLinuxCpuTime;
-                return cpuUsage;
-            } catch (Exception e) {
-                LOGGER.error("class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed", e);
-                return 0;
-            }
-        } else {
-            throw new ServiceException(
-                    String.format("class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support", osName),
-                    ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode()
-            );
-        }
+        throw new ServiceException(
+                String.format("class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support", osName),
+                ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode()
+        );
     }
 
     @Override
@@ -271,83 +257,41 @@ public class AixOSResourceService implements IOSResourceService {
 
     @Override
     public int getCurrentProcessFdUsed() {
-        if (osMxBean.getName().toLowerCase().contains("aix")) {
-            Process process = null;
-            BufferedReader br = null;
-            String procFDShell = "svmon -P $pid | wc -l";
+        Process process = null;
+        BufferedReader br = null;
+        String procFDShell = "svmon -P $pid | wc -l";
+        try {
+            procFDShell = procFDShell.replaceAll("\\$pid", PID + "");
+            String[] cmd = new String[]{"/bin/sh", "-c", procFDShell};
+            process = Runtime.getRuntime().exec(cmd);
+            int resultCode = process.waitFor();
+            br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                int fdThreshold = Integer.parseInt(line.trim());
+                return fdThreshold;
+            }
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[文件句柄数使用率]失败", ex);
+            return 0;
+        } finally {
             try {
-                procFDShell = procFDShell.replaceAll("\\$pid", PID + "");
-                String[] cmd = new String[] { "/bin/sh", "-c", procFDShell };
-                process = Runtime.getRuntime().exec(cmd);
-                int resultCode = process.waitFor();
-                br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    int fdThreshold = Integer.parseInt(line.trim());
-                    return fdThreshold;
+                if (br != null) {
+                    br.close();
                 }
             } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[文件句柄数使用率]失败", ex);
-                return 0;
-            } finally {
-                try {
-                    if (br != null) {
-                        br.close();
-                    }
-                } catch (Exception ex) {
-                    LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程对应输入流失败", ex);
-                }
-                try {
-                    if (process != null) {
-                        process.destroy();
-                    }
-                } catch (Exception ex) {
-                    LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程失败", ex);
-                }
+                LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程对应输入流失败", ex);
             }
-            LOGGER.error("获取系统资源项[文件句柄数使用率]失败");
-            return 0;
-        } else if (osMxBean.getName().toLowerCase().contains("mac")) {
-            //TODO：
-            return -1;
-        } else {
-            //linux 获取 fd 使用量
-            Process process = null;
-            BufferedReader br = null;
-            String procFDShell = "ls /proc/%d/fd | wc -l";
             try {
-                procFDShell = String.format(procFDShell, PID);
-                String[] cmd = new String[] { "sh", "-c", procFDShell };
-                process = Runtime.getRuntime().exec(cmd);
-                int resultCode = process.waitFor();
-                br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    int fdNum = Integer.parseInt(line.trim());
-                    return fdNum;
+                if (process != null) {
+                    process.destroy();
                 }
             } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[文件句柄数使用率]失败", ex);
-                return 0;
-            } finally {
-                try {
-                    if (br != null) {
-                        br.close();
-                    }
-                } catch (Exception ex) {
-                    LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程对应输入流失败", ex);
-                }
-                try {
-                    if (process != null) {
-                        process.destroy();
-                    }
-                } catch (Exception ex) {
-                    LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程失败", ex);
-                }
+                LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程失败", ex);
             }
-            LOGGER.error("获取系统资源项[文件句柄数使用率]失败");
-            return 0;
         }
+        LOGGER.error("获取系统资源项[文件句柄数使用率]失败");
+        return 0;
     }
 
     @Override
