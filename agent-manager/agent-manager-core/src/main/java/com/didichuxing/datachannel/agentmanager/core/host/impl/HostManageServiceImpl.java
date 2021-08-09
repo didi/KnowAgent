@@ -30,6 +30,7 @@ import com.didichuxing.datachannel.agentmanager.remote.host.RemoteHostManageServ
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.AgentCollectConfigurationManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.host.extension.HostManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,15 +125,19 @@ public class HostManageServiceImpl implements HostManageService {
                     ErrorCodeEnum.HOST_NAME_DUPLICATE.getCode()
             );
         }
-        if (host.getContainer() == 0 && host.getParentHostName() == null) {
-            host.setParentHostName("");
+        if (!host.isContainer()) {//主机
+            host.setParentHostName(StringUtils.EMPTY);
+            /*
+             * 主机ip不可与其他主机ip重复
+             */
+            if(null != getHostByIp(host.getIp())) {
+                throw new ServiceException(
+                        String.format("待创建主机对应 ip={%s} 在系统中已存在", host.getIp()),
+                        ErrorCodeEnum.HOST_IP_DUPLICATE.getCode()
+                );
+            }
         }
-//        if(null != getHostByIp(host.getIp())) {
-//            throw new ServiceException(
-//                    String.format("待创建主机对应 ip={%s} 在系统中已存在", host.getIp()),
-//                    ErrorCodeEnum.HOST_IP_DUPLICATE.getCode()
-//            );
-//        }
+
         /*
          * 持久化 host 对象
          */

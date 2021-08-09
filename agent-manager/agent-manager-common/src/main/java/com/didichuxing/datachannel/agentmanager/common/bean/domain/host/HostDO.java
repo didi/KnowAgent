@@ -1,7 +1,9 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.domain.host;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.BaseDO;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -110,6 +112,10 @@ public class HostDO extends BaseDO {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public boolean isContainer() {
+        return this.getContainer().equals(HostTypeEnum.CONTAINER.getCode());
     }
 
 }
