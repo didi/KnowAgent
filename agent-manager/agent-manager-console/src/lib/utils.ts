@@ -330,11 +330,11 @@ export function cutString(str: string, len: number) {
 
 export function countChange(limit: number){
   let size = "";
-  if(limit < 100 * 1000){                            //小于0.1KB，则转化成B
+  if(limit < 100 * 1000){                            //小于100KB
       size = limit + ""
-  }else if(limit < 100 * 1000 * 1000){            //小于0.1MB，则转化成KB
+  }else if(limit < 100 * 1000 * 1000){            //小于100M，则转化成K
       size = (limit/1000).toFixed(1) + "K"
-  }else if(limit < 100 * 1000 * 1000 * 1000){        //小于0.1GB，则转化成MB
+  }else if(limit < 100 * 1000 * 1000 * 1000){        //小于100G，则转化成MB
       size = (limit/(1000 * 1000)).toFixed(1) + "M"
   }
 

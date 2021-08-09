@@ -147,9 +147,6 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
     },
   ];
   const option: any = {
-    // title: {
-    //   text: ''
-    // },
     tooltip: {
       trigger: 'axis',
       formatter: (params: any) => {
@@ -165,7 +162,6 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
     },
     grid: {
       ...baseLineGrid,
-      // top: AGENT_TITLE_HEIGHT
     },
     xAxis: {
       type: 'category',
@@ -201,7 +197,6 @@ export const dealMetricPanel = (ele: IMetricPanels, data: any) => {
     option.yAxis = {
       ...option.yAxis,
       minInterval: 1,
-      // interval: 1
     }
   }
   return option;
@@ -224,9 +219,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
         }
       })
     })
-    // timestamps = timestamps.map((p) => moment(p).format(timeFormat))
   }
-  // data?.length ? data[0]?.metricPointList?.map((p) => moment(p.timestamp).format(timeFormat)) : []; // 对应的时间戳
   const series = data?.map(v => { // 对应的折线图数据
     return {
       name: v.name || '', // 对应的单个折线标题
