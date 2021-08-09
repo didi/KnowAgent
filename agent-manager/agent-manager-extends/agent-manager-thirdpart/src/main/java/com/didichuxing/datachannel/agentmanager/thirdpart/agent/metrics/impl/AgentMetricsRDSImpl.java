@@ -130,21 +130,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public Integer getLatestFdUsage(String hostName) {
-        AgentMetricPO agentMetricPO = agentMetricMapper.selectLatestByHostname(hostName);
-        return agentMetricPO.getFdCount();
-    }
-
-    @Override
-    public Double getLatestCpuUsage(String hostName) {
-        AgentMetricPO agentMetricPO = agentMetricMapper.selectLatestByHostname(hostName);
-        return agentMetricPO.getCpuUsage();
-    }
-
-    @Override
-    public Long getLatestMemoryUsage(String hostName) {
-        AgentMetricPO agentMetricPO = agentMetricMapper.selectLatestByHostname(hostName);
-        return agentMetricPO.getMemoryUsage();
+    public AgentMetricPO selectLatestByHostname(String hostname) {
+        return agentMetricMapper.selectLatestByHostname(hostname);
     }
 
     @Override

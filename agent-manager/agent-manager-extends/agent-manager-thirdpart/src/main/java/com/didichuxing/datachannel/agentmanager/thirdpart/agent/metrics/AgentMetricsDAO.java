@@ -231,11 +231,7 @@ public interface AgentMetricsDAO {
 
     Integer getErrorLogCount(Long startTime, Long endTime, String hostName);
 
-    Integer getLatestFdUsage(String hostName);
-
-    Double getLatestCpuUsage(String hostName);
-
-    Long getLatestMemoryUsage(String hostName);
+    AgentMetricPO selectLatestByHostname(String hostname);
 
     Long getGCCount(Long startTime, Long endTime, String hostName);
 

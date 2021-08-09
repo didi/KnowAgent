@@ -24,8 +24,6 @@ public interface AgentMetricMapper {
 
     List<MetricPoint> selectSinglePerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
 
-    AgentMetricPO selectLatestByHostname(@Param("hostname") String hostName);
-
     List<AgentMetricPO> selectLatestMetrics(@Param("time") Long time, @Param("step") Integer step);
 
     Long selectSum(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
@@ -41,6 +39,8 @@ public interface AgentMetricMapper {
     Long selectHeartbeatCount(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName);
 
     List<MetricPoint> selectAgentErrorLogCountPerMin(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
+
+    AgentMetricPO selectLatestByHostname(@Param("hostname") String hostName);
 
     List<MetricPoint> selectGraph(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column);
 

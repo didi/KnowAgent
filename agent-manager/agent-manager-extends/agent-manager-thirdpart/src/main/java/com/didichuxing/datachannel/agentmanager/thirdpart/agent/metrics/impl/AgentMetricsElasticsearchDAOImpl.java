@@ -257,66 +257,8 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public Integer getLatestFdUsage(String hostName) {
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.FD_COUNT.getEsValue()));
-        builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-        SearchHit[] hits = searchResponse.getHits().getHits();
-        if (hits.length == 0) {
-            return 0;
-        }
-        SearchHit hit = hits[0];
-        return TypeUtils.castToInt(hit.getSourceAsMap().get(AgentMetricField.FD_COUNT.getEsValue()));
-    }
-
-    @Override
-    public Double getLatestCpuUsage(String hostName) {
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.CPU_USAGE.getEsValue()));
-        builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-        SearchHit[] hits = searchResponse.getHits().getHits();
-        if (hits.length == 0) {
-            return 0D;
-        }
-        SearchHit hit = hits[0];
-        return TypeUtils.castToDouble(hit.getSourceAsMap().get(AgentMetricField.CPU_USAGE.getEsValue()));
-    }
-
-    @Override
-    public Long getLatestMemoryUsage(String hostName) {
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.MEMORY_USAGE.getEsValue()));
-        builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-        SearchHit[] hits = searchResponse.getHits().getHits();
-        if (hits.length == 0) {
-            return 0L;
-        }
-        SearchHit hit = hits[0];
-        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.MEMORY_USAGE.getEsValue()));
+    public AgentMetricPO selectLatestByHostname(String hostname) {
+        return null;
     }
 
     @Override

@@ -245,6 +245,8 @@ public interface AgentMetricsManageService {
      */
     Integer getLastestCpuUsage(String hostName);
 
+    Long getLatestMemoryUsage(String hostName);
+
     /**
      * 获取 agent 最近一次启动时间，sql 形式 如下：
      * SELECT MAX(agent_startup_time)
