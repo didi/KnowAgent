@@ -130,7 +130,7 @@ public class HostManageServiceImpl implements HostManageService {
             /*
              * 主机ip不可与其他主机ip重复
              */
-            if(null != getHostByIp(host.getIp())) {
+            if(CollectionUtils.isNotEmpty(getHostByIp(host.getIp()))) {
                 throw new ServiceException(
                         String.format("待创建主机对应 ip={%s} 在系统中已存在", host.getIp()),
                         ErrorCodeEnum.HOST_IP_DUPLICATE.getCode()
@@ -421,13 +421,13 @@ public class HostManageServiceImpl implements HostManageService {
     }
 
     @Override
-    public HostDO getHostByIp(String ip) {
-        HostPO hostPO = hostDAO.selectByIp(ip);
-        if(null == hostPO) {
-            return null;
+    public List<HostDO> getHostByIp(String ip) {
+        List<HostPO> hostPOList = hostDAO.selectByIp(ip);
+        if(CollectionUtils.isEmpty(hostPOList)) {
+            return new ArrayList<>();
         }
-        HostDO host = hostManageServiceExtension.hostPO2HostDO(hostPO);
-        return host;
+        List<HostDO> hostDOList = hostManageServiceExtension.hostPOList2HostDOList(hostPOList);
+        return hostDOList;
     }
 
     @Override

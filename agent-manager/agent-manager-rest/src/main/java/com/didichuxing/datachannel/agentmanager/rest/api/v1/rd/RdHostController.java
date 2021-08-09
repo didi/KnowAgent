@@ -124,6 +124,7 @@ public class RdHostController {
             hostAgentVO.setMachineZone(hostAgentDO.getHostMachineZone());
             hostAgentVO.setHostCreateTime(hostAgentDO.getHostCreateTime().getTime());
             hostAgentVO.setAgentId(hostAgentDO.getAgentId());
+            hostAgentVO.setParentHostName(hostAgentDO.getParentHostName());
             resultSet.add(hostAgentVO);
         }
         return resultSet;

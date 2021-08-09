@@ -52,9 +52,21 @@ public class HostAgentPO extends BasePO {
      * Agent对象id
      */
     private Long agentId;
+    /**
+     * 宿主机 名
+     */
+    private String parentHostName;
 
     public Long getAgentId() {
         return agentId;
+    }
+
+    public String getParentHostName() {
+        return parentHostName;
+    }
+
+    public void setParentHostName(String parentHostName) {
+        this.parentHostName = parentHostName;
     }
 
     public void setAgentId(Long agentId) {

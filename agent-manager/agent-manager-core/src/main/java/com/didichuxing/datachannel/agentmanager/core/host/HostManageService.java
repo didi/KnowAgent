@@ -55,12 +55,12 @@ public interface HostManageService {
     HostDO getHostByHostName(String hostName);
 
     /**
-     * 根据 ip 获取对应主机对象
+     * 根据 ip 获取对应主机对象集
      *
      * @param ip 主机 ip
-     * @return ip 对应的主机对象
+     * @return ip 对应的主机对象集
      */
-    HostDO getHostByIp(String ip);
+    List<HostDO> getHostByIp(String ip);
 
     /**
      * 根据主机名获取对应主机上所有容器对象集

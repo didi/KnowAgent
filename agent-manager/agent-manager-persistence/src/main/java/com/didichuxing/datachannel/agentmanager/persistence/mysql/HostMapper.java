@@ -32,7 +32,7 @@ public interface HostMapper {
 
     List<String> selectAllMachineZones();
 
-    HostPO selectByIp(String ip);
+    List<HostPO> selectByIp(String ip);
 
     Long countByHostType(Integer hostType);
 

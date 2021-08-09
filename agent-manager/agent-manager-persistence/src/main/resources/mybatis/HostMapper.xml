@@ -78,11 +78,12 @@
     <result column="host_create_time" jdbcType="TIMESTAMP" property="hostCreateTime" />
     <result column="agent_version_id" jdbcType="BIGINT" property="agentVersionId" />
     <result column="agent_id" jdbcType="BIGINT" property="agentId" />
+    <result column="parent_host_name" jdbcType="VARCHAR" property="parentHostName" />
   </resultMap>
   <select id="paginationQueryByConditon" resultMap="PaginationQueryByConditonResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostPaginationQueryConditionDO" >
     SELECT
     DISTINCT t1.id AS host_id, t1.host_name as host_name, t1.ip as host_ip, t1.container as host_type,
-    t5.agent_health_level as agent_health_level, t3.agent_version_id as agent_version_id, t1.machine_zone as host_machine_zone, t1.create_time as host_create_time, t3.id as agent_id
+    t5.agent_health_level as agent_health_level, t3.agent_version_id as agent_version_id, t1.machine_zone as host_machine_zone, t1.create_time as host_create_time, t3.id as agent_id, t1.parent_host_name as parent_host_name
     FROM tb_host as t1
     LEFT JOIN tb_service_host as t2 ON t2.host_id = t1.id
     LEFT JOIN tb_agent as t3 ON t3.host_name = t1.host_name

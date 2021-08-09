@@ -654,7 +654,7 @@ public class AgentOperationTaskManageServiceImpl implements AgentOperationTaskMa
                         if(AgentOperationTaskStateEnum.FINISHED.getCode().equals(agentOperationTaskStateEnum.getCode())) {//任务已执行完
                             //根据任务类型 添加、删除、更新对应 agent 记录
                             //TODO：电科院场景 hostName 为 ip
-                            HostDO hostDO = hostManageService.getHostByIp(hostName);
+                            HostDO hostDO = hostManageService.getHostByIp(hostName).get(0);
                             if(null == hostDO) {
                                 throw new ServiceException(
                                         String.format("Host={ip=%s}在系统中不存在", hostName),

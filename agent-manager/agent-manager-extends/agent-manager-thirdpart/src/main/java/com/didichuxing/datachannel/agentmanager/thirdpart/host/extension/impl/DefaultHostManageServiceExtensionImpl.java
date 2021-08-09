@@ -95,7 +95,9 @@ public class DefaultHostManageServiceExtensionImpl implements HostManageServiceE
     @Override
     public HostPO host2HostPO(HostDO host) throws ServiceException {
         try {
-            return ConvertUtil.obj2Obj(host, HostPO.class);
+            HostPO hostPO = ConvertUtil.obj2Obj(host, HostPO.class);
+            hostPO.setContainer(host.getContainer());
+            return hostPO;
         } catch (Exception ex) {
             throw new ServiceException(
                     String.format(
