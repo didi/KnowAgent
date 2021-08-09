@@ -2,9 +2,9 @@ package com.didichuxing.datachannel.agent.engine.limit.tune.thread;
 
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
-import com.didichuxing.datachannel.agent.engine.limit.cpu.CpuTime;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 
+import com.didichuxing.datachannel.agent.engine.utils.ProcessUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +22,6 @@ public class LimitCpuThread implements Runnable {
 
     private long                allQps;                                                   // 当前整体的限制阀值
     private float               currentCpuUsage;                                          // 当前cpu利用率
-    private CpuTime             lastCpuTime;                                              // 记录上次的cpu耗时
 
     private String              peroid     = "cpu.period";
     private long                interval   = 30 * 1000;
@@ -30,7 +29,6 @@ public class LimitCpuThread implements Runnable {
     public LimitCpuThread(LimitService limiter, long qps) throws Exception {
         this.limiter = limiter;
         this.allQps = qps;
-        this.lastCpuTime = new CpuTime();
         this.interval = Long.parseLong(CommonUtils.readSettings().get(peroid));
     }
 
@@ -48,7 +46,7 @@ public class LimitCpuThread implements Runnable {
                 float threshold = limiter.getCpuThreshold();
 
                 // 2. 获得cpu利用率
-                float cpuUsage = getCpuUsage();
+                float cpuUsage = ProcessUtils.getInstance().getCurrentCpuUsage();
 
                 // 3. 根据cpu利用率调整qps阀值
                 if (cpuUsage > (threshold * (FACTOR + 1))) {
@@ -95,12 +93,4 @@ public class LimitCpuThread implements Runnable {
         allQps = tps;
     }
 
-    // 获得上次周期的cpu耗时
-    private float getCpuUsage() throws Exception {
-        CpuTime curCpuTime = new CpuTime();
-        float cpuUsage = curCpuTime.getUsage(lastCpuTime);
-        lastCpuTime = curCpuTime;
-
-        return cpuUsage;
-    }
 }

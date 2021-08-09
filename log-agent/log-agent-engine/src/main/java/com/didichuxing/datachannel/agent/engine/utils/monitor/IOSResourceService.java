@@ -10,6 +10,11 @@ public interface IOSResourceService {
      */
     long getPid();
 
+    /**
+     * @return 返回jvm进程启动时间
+     */
+    long getProcessStartTime();
+
     /*********************************** about cpu ***********************************/
 
     /**

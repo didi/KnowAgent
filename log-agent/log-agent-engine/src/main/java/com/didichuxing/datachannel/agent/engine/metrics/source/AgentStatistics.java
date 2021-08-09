@@ -8,7 +8,7 @@ import com.didichuxing.datachannel.agent.common.api.MetricsFields;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
-import com.didichuxing.datachannel.agent.engine.utils.SystemUtils;
+import com.didichuxing.datachannel.agent.engine.utils.ProcessUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,9 +63,9 @@ public class AgentStatistics extends AbstractStatistics {
         metricsRegistry.tag(MetricsFields.CPU_USAGE, null,
             String.valueOf(limiter.getCurrentCpuUsage()), true);
         metricsRegistry.tag(MetricsFields.LIMIT_TPS, null, String.valueOf(limiter.getAllQps()), true);
-        metricsRegistry.tag(MetricsFields.GC_COUNT, null, String.valueOf(SystemUtils.getFullGcCount()), true);
-        metricsRegistry.tag(MetricsFields.FD_COUNT, null, String.valueOf(SystemUtils.getFdCount()), true);
-        metricsRegistry.tag(MetricsFields.MEMORY_USAGE, null, String.valueOf(SystemUtils.getCurrentMemoryUsage()), true);
+        metricsRegistry.tag(MetricsFields.GC_COUNT, null, String.valueOf(ProcessUtils.getInstance().getFullGcCount()), true);
+        metricsRegistry.tag(MetricsFields.FD_COUNT, null, String.valueOf(ProcessUtils.getInstance().getFdCount()), true);
+        metricsRegistry.tag(MetricsFields.MEMORY_USAGE, null, String.valueOf(ProcessUtils.getInstance().getCurrentMemoryUsage()), true);
         super.getMetrics(builder, all);
     }
 }

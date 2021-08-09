@@ -1,5 +1,8 @@
 package com.didichuxing.datachannel.agent.engine.utils.monitor;
 
+import com.didichuxing.datachannel.agent.engine.limit.cpu.LinuxCpuTime;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +15,10 @@ import java.lang.reflect.Method;
 /**
  * 默认系统资源服务
  */
-public class DefaultOSResourceService implements IOSResourceService {
+public class AixOSResourceService implements IOSResourceService {
 
     private static final Logger         LOGGER   = LoggerFactory
-                                                     .getLogger(DefaultOSResourceService.class);
+                                                     .getLogger(AixOSResourceService.class);
 
     /**
      * 当前agent进程id
@@ -29,22 +32,17 @@ public class DefaultOSResourceService implements IOSResourceService {
      * 用于获取操作系统相关属性bean
      */
     private final OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
-    /**
-     * 用于获取agent宿主机最大fd数量方法，供反射调用
-     */
-    private final Method                getMaxFileDescriptorCountField;
-    /**
-     * 用于获取agent宿主机已使用fd数量方法，供反射调用
-     */
-    private final Method                getOpenFileDescriptorCountField;
-    private final Method                getProcessCpuLoad;
 
-    public DefaultOSResourceService() {
+    private LinuxCpuTime lastLinuxCpuTime;
+
+    public AixOSResourceService() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
-        getMaxFileDescriptorCountField = getUnixMethod("getMaxFileDescriptorCount");
-        getOpenFileDescriptorCountField = getUnixMethod("getOpenFileDescriptorCount");
-        getProcessCpuLoad = getMethod("getProcessCpuLoad");
+        try {
+            lastLinuxCpuTime = new LinuxCpuTime();// 记录上次的cpu耗时
+        } catch (Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed", e);
+        }
     }
 
     /**
@@ -108,17 +106,36 @@ public class DefaultOSResourceService implements IOSResourceService {
     }
 
     @Override
+    public long getProcessStartTime() {
+        return 0;
+    }
+
+    @Override
     public float getCurrentProcessCpuUsage() {
-        float currentCpuUsageTotalPercent = getCurrentProcessCpuUsageTotalPercent();
-        float currentCpuUsage = currentCpuUsageTotalPercent * CPU_NUM;
-        return currentCpuUsage;
+        String osName = osMxBean.getName().toLowerCase();
+        if (osName.contains("mac")) {
+            return 0;
+        } else if(osName.contains("linux")) {
+            try {
+                LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime();
+                float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
+                lastLinuxCpuTime = curLinuxCpuTime;
+                return cpuUsage;
+            } catch (Exception e) {
+                LOGGER.error("class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed", e);
+                return 0;
+            }
+        } else {
+            throw new ServiceException(
+                    String.format("class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support", osName),
+                    ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode()
+            );
+        }
     }
 
     @Override
     public float getCurrentProcessCpuUsageTotalPercent() {
-        Float currentCpuUsageTotalPercent = invoke(getProcessCpuLoad, osMxBean);
-        return null != currentCpuUsageTotalPercent ? currentCpuUsageTotalPercent.floatValue() * 100
-            : 0;
+        return 0;
     }
 
     @Override
@@ -290,6 +307,9 @@ public class DefaultOSResourceService implements IOSResourceService {
             }
             LOGGER.error("获取系统资源项[文件句柄数使用率]失败");
             return 0;
+        } else if (osMxBean.getName().toLowerCase().contains("mac")) {
+            //TODO：
+            return -1;
         } else {
             //linux 获取 fd 使用量
             Process process = null;
