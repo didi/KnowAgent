@@ -15,8 +15,11 @@ import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
+import com.didiglobal.logi.auvjob.core.WorkerSingleton;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,8 @@ import java.util.List;
 @RestController
 @RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "dashboard")
 public class DashboardController {
+
+    private static final Logger logger = LoggerFactory.getLogger(DashboardController.class);
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
@@ -50,6 +55,8 @@ public class DashboardController {
     @RequestMapping(value = "/{startTime}/{endTime}", method = RequestMethod.GET)
     @ResponseBody
     public Result<DashBoardVO> dashboard(@PathVariable Long startTime, @PathVariable Long endTime) {
+
+        long invokeStarttime = System.currentTimeMillis();
 
         if (null == startTime) {
             return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "入参startTime不可为空");
@@ -128,6 +135,8 @@ public class DashboardController {
         dashBoardVO.setAgentListMemoryUsageTop5(agentMetricsManageService.getAgentListMemoryUsedLastest1MinTop5(startTime, endTime));
         dashBoardVO.setAgentListFullGcCountTop5(agentMetricsManageService.getAgentListFullGcCountLastest1MinTop5(startTime, endTime));
         dashBoardVO.setAgentListRelateLogCollectTasksTop5(agentManageService.getTop5LogCollectTaskCount(startTime, endTime));
+
+        logger.info(String.format("dashboard interface invoke spend %d ms.", System.currentTimeMillis() - invokeStarttime));
 
         return Result.buildSucc(dashBoardVO);
 
