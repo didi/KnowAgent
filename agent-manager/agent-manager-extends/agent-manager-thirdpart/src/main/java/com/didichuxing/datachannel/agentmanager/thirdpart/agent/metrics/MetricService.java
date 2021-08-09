@@ -131,6 +131,7 @@ public class MetricService {
             } catch (Throwable e) {
                 LOGGER.error(e.getMessage());
                 consumer.close();
+                break;
             }
         }
     }
