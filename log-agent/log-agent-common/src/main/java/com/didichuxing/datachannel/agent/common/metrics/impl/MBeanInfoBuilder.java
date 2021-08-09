@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Helper class to build MBeanInfo from metrics records
  */
-class MBeanInfoBuilder implements MetricsVisitor {
+public class MBeanInfoBuilder implements MetricsVisitor {
 
     private final String                name, description;
     private List<MBeanAttributeInfo>    attrs;
@@ -91,7 +91,8 @@ class MBeanInfoBuilder implements MetricsVisitor {
         curRecNo = 0;
         for (MetricsRecordImpl rec : recs) {
             for (MetricsTag t : rec.tags()) {
-                attrs.add(newAttrInfo("tag." + t.name(), t.description(), "java.lang.String"));
+                attrs
+                    .add(newAttrInfo("tag." + t.getName(), t.getDescription(), "java.lang.String"));
             }
             for (Metric m : rec.metrics()) {
                 m.visit(this);

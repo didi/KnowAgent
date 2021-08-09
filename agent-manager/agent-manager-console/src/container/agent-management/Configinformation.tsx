@@ -31,6 +31,9 @@ type Props = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchT
 export const AgentConfigInfo = (props: any) => {
   const { hostDetail } = props
   const [agentDetail, setAgentDetail] = React.useState<any>({})
+  const labelStyle: any = {
+    fontWeight: 'bold',
+  }
   React.useEffect(() => {
     try {
       getAgentDetails(hostDetail?.agentId).then(res => {
@@ -41,19 +44,19 @@ export const AgentConfigInfo = (props: any) => {
     }
   }, [])
   return <div className='agentConfigInfo'>
-    <Descriptions column={2} title={<h3 style={{ color: '#7e7e7e', padding: '10px 0', borderBottom: '2px solid #7e7e7e' }}>基础配置信息</h3>}>
-      <Descriptions.Item className='agentConfigInfoLeft' label="Agent版本号">{agentDetail.version || '-'}</Descriptions.Item>
-      <Descriptions.Item label="版本描述">{agentDetail.described || '-'}</Descriptions.Item>
-      <Descriptions.Item className='agentConfigInfoLeft' label="CPU核数上限">{agentDetail.cpuLimitThreshold || '-'}</Descriptions.Item>
+    <Descriptions column={2} title={<h3 style={{ fontSize: '14px', padding: '10px 0', borderBottom: '1px solid #dbe0e4' }}>基础配置信息</h3>}>
+      <Descriptions.Item className='agentConfigInfoLeft' label={<span style={labelStyle}>Agent版本号</span>}>{agentDetail.version || '-'}</Descriptions.Item>
+      <Descriptions.Item label={<span style={labelStyle}>版本描述</span>}>{agentDetail.described || '-'}</Descriptions.Item>
+      <Descriptions.Item className='agentConfigInfoLeft' label={<span style={labelStyle}>CPU核数上限</span>}>{agentDetail.cpuLimitThreshold || '-'}</Descriptions.Item>
     </Descriptions>
-    <Descriptions column={2} title={<h3 style={{ color: '#7e7e7e', padding: '30px 0 10px', borderBottom: '2px solid #7e7e7e' }}>高级配置信息</h3>}>
-      <Descriptions.Item className='agentConfigInfoLeft' label="指标流接收集群">{agentDetail.metricsSendReceiverId || '-'}</Descriptions.Item>
-      <Descriptions.Item label="错误日志接收集群">{agentDetail.errorLogsSendReceiverId || '-'}</Descriptions.Item>
-      <Descriptions.Item className='agentConfigInfoLeft' label="指标流接收Topic">{agentDetail.cpuLimitThreshold || '-'}</Descriptions.Item>
-      <Descriptions.Item label="错误日志接收Topic">{agentDetail.errorLogsSendTopic || '-'}</Descriptions.Item>
-      <Descriptions.Item className='agentConfigInfoLeft' label="指标流生产端属性">{agentDetail.metricsProducerConfiguration || '-'}</Descriptions.Item>
-      <Descriptions.Item label="错误日志生产端属性">{agentDetail.errorLogsProducerConfiguration || '-'}</Descriptions.Item>
-      <Descriptions.Item className='agentConfigInfoLeft' label="配置信息"><pre>{agentDetail.advancedConfigurationJsonString || '-'}</pre></Descriptions.Item>
+    <Descriptions column={2} title={<h3 style={{ fontSize: '14px', padding: '30px 0 10px', borderBottom: '1px solid #dbe0e4' }}>高级配置信息</h3>}>
+      <Descriptions.Item className='agentConfigInfoLeft' label={<span style={labelStyle}>指标流接收集群</span>}>{agentDetail.metricsSendReceiverId || '-'}</Descriptions.Item>
+      <Descriptions.Item label={<span style={labelStyle}>错误日志接收集群</span>}>{agentDetail.errorLogsSendReceiverId || '-'}</Descriptions.Item>
+      <Descriptions.Item className='agentConfigInfoLeft' label={<span style={labelStyle}>指标流接收Topic</span>}>{agentDetail.cpuLimitThreshold || '-'}</Descriptions.Item>
+      <Descriptions.Item label={<span style={labelStyle}>错误日志接收Topic</span>}>{agentDetail.errorLogsSendTopic || '-'}</Descriptions.Item>
+      <Descriptions.Item className='agentConfigInfoLeft' label={<span style={labelStyle}>指标流生产端属性</span>}>{agentDetail.metricsProducerConfiguration || '-'}</Descriptions.Item>
+      <Descriptions.Item label={<span style={labelStyle}>错误日志生产端属性</span>}>{agentDetail.errorLogsProducerConfiguration || '-'}</Descriptions.Item>
+      <Descriptions.Item className='agentConfigInfoLeft' label={<span style={labelStyle}>配置信息</span>}><pre>{agentDetail.advancedConfigurationJsonString || '-'}</pre></Descriptions.Item>
     </Descriptions>
   </div>
 }

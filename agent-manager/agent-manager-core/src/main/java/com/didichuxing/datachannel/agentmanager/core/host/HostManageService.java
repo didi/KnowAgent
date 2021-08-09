@@ -29,7 +29,7 @@ public interface HostManageService {
      * 删除一个主机对象
      *
      * @param hostId                     待删除主机对象id
-     * @param ignoreUncompleteCollect    是否忽略待删除主机上是否存在未被采完日志或待删除主机存在未采集完日志的Agent，
+     * @param ignoreUncompleteCollect    是否忽略待删除主机N上是否存在未被采完日志或待删除主机存在未采集完日志的Agent，
      *                                   如该参数设置为true，表示即使待删除主机上存在未被采完日志或待删除主机存在未采集完日志的Agent，也会卸载Agent & 删除该主机对象
      *                                   如该参数设置为true，表示当待删除主机上存在未被采完日志或待删除主机存在未采集完日志的Agent，将终止删除操作，返回对应错误信息 & 错误码
      * @param cascadeDeleteAgentIfExists 待删除主机对象存在关联Agent对象时，是否级联删除关联Agent对象，true：删除 false：不删除（并抛出异常）
@@ -121,6 +121,8 @@ public interface HostManageService {
      * @return 返回根据给定日志采集任务对象 id 获取到的该日志采集任务待采集的主机对象集
      */
     List<HostDO> getHostListByLogCollectTaskId(Long logCollectTaskId);
+
+    List<HostDO> getHostListContainsAgentByLogCollectTaskId(Long logCollectTaskId);
 
     /**
      * 获取给定agent关联的主机列表

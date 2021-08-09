@@ -27,39 +27,21 @@ public class MetricsTag {
     private final String description;
     private final String value;
 
-    /**
-     * Construct the tag with name, description and value
-     * @param name  of the tag
-     * @param description of the tag
-     * @param value of the tag
-     */
     public MetricsTag(String name, String description, String value) {
         this.name = name;
         this.description = description;
         this.value = value;
     }
 
-    /**
-     * Get the name of the tag
-     * @return  the name
-     */
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    /**
-     * Get the description of the tag
-     * @return  the description
-     */
-    public String description() {
+    public String getDescription() {
         return description;
     }
 
-    /**
-     * Get the value of the tag
-     * @return  the value
-     */
-    public String value() {
+    public String getValue() {
         return value;
     }
 
@@ -72,21 +54,17 @@ public class MetricsTag {
             return false;
         }
         final MetricsTag other = (MetricsTag) obj;
-        if (!this.name.equals(other.name())) {
+        if (!this.name.equals(other.name)) {
             return false;
         }
-        if (!this.description.equals(other.description())) {
+        if (!this.description.equals(other.description)) {
             return false;
         }
-        if (this.value == null || other.value() == null) {
-            if (this.value == null && other.value() == null)
-                return true;
-            return false;
+        if (this.value == null) {
+            return other.value == null;
+        } else {
+            return this.value.equals(other.value);
         }
-        if (!this.value.equals(other.value())) {
-            return false;
-        }
-        return true;
     }
 
     @Override

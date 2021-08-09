@@ -115,7 +115,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getSliceError(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "读取字节数MB", notes = "")
+    @ApiOperation(value = "读取字节数byte", notes = "")
     @RequestMapping(value = "/performance/log-read-bytes", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readByte(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -137,7 +137,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getReadCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "读取总耗时ms", notes = "")
+    @ApiOperation(value = "读取总耗时ns", notes = "")
     @RequestMapping(value = "/performance/log-read-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeConsuming(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -148,7 +148,18 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getTotalReadTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "读取最大耗时ms", notes = "")
+    @ApiOperation(value = "读取最小耗时ns", notes = "")
+    @RequestMapping(value = "/performance/logevent-min-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> readTimeMin(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getReadTimeMin(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "读取最大耗时ns", notes = "")
     @RequestMapping(value = "/performance/logevent-max-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -159,7 +170,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getReadTimeMax(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "读取平均耗时ms", notes = "")
+    @ApiOperation(value = "读取平均耗时ns", notes = "")
     @RequestMapping(value = "/performance/logevent-mean-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> readTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -170,7 +181,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getReadTimeMean(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "发送字节数MB", notes = "")
+    @ApiOperation(value = "发送字节数byte", notes = "")
     @RequestMapping(value = "/performance/log-send-bytes", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendBytes(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -192,7 +203,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getSendCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "发送总时间ms", notes = "")
+    @ApiOperation(value = "发送总时间ns", notes = "")
     @RequestMapping(value = "/performance/log-send-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> sendTimeConsuming(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -202,6 +213,40 @@ public class NormalLogCollectTaskMetricsController {
         }
         return Result.buildSucc(logCollectTaskManageService.getTotalSendTime(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
+
+    @ApiOperation(value = "发送最大耗时", notes = "")
+    @RequestMapping(value = "/performance/log-send-max-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> sendTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getSendTimeMax(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "发送平均耗时", notes = "")
+    @RequestMapping(value = "/performance/log-send-mean-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> sendTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getSendTimeMean(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
+    @ApiOperation(value = "发送最小耗时", notes = "")
+    @RequestMapping(value = "/performance/log-send-min-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> sendTimeMin(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getSendTimeMin(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
 
     @ApiOperation(value = "flush次数", notes = "")
     @RequestMapping(value = "/performance/logflush-times", method = RequestMethod.POST)
@@ -214,7 +259,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getFlushCount(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "flush最大耗时ms", notes = "")
+    @ApiOperation(value = "flush最大耗时ns", notes = "")
     @RequestMapping(value = "/performance/logflush-max-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> flushTimeMax(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -225,7 +270,7 @@ public class NormalLogCollectTaskMetricsController {
         return Result.buildSucc(logCollectTaskManageService.getFlushTimeMax(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
 
-    @ApiOperation(value = "flush平均耗时ms", notes = "")
+    @ApiOperation(value = "flush平均耗时ns", notes = "")
     @RequestMapping(value = "/performance/logflush-mean-consuming", method = RequestMethod.POST)
     @ResponseBody
     public Result<MetricList> flushTimeMean(@RequestBody MetricQueryDTO metricQueryDTO) {
@@ -235,6 +280,18 @@ public class NormalLogCollectTaskMetricsController {
         }
         return Result.buildSucc(logCollectTaskManageService.getFlushTimeMean(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
     }
+
+    @ApiOperation(value = "flush最小耗时ns", notes = "")
+    @RequestMapping(value = "/performance/logflush-min-consuming", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<MetricList> flushTimeMin(@RequestBody MetricQueryDTO metricQueryDTO) {
+        Result result = checkMetricQueryParam(metricQueryDTO);
+        if (result.failed()) {
+            return result;
+        }
+        return Result.buildSucc(logCollectTaskManageService.getFlushTimeMin(ConvertUtil.obj2Obj(metricQueryDTO, MetricQueryDO.class)));
+    }
+
 
     @ApiOperation(value = "flush失败次数", notes = "")
     @RequestMapping(value = "/performance/logflush-fail-times", method = RequestMethod.POST)

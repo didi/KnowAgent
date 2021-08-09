@@ -890,4 +890,17 @@ private static final Logger LOGGER = LoggerFactory.getLogger(OffsetManager.class
                     + file.getAbsolutePath() + ",fileKey:" + fileKey + ",newMd5:" + newMd5 + ",oldMd5:" + oldMd5);
         return false;
     }
+
+    /**
+     * 判断是否存在offset信息
+     * @param logID
+     * @param pathID
+     * @param masterFilePath
+     * @return
+     */
+    public static boolean checkOffsetInfoExit(Long logID, Long pathID, String masterFilePath) {
+        String key = getLogMod4PathKey(logID, pathID, masterFilePath);
+        return offsetMap.containsKey(key);
+    }
+
 }

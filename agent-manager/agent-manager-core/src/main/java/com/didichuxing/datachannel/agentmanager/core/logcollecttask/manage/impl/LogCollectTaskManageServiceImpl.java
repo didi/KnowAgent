@@ -359,6 +359,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     }
 
     @Override
+    public MetricList getReadTimeMin(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.READ_TIME_MIN.name(), CalcFunction.MIN.name(), MetricConstant.QUERY_INTERVAL);
+    }
+
+    @Override
     public MetricList getSendBytes(MetricQueryDO metricQueryDO) {
         return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.name(), MetricConstant.HEARTBEAT_PERIOD);
     }
@@ -394,6 +399,21 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     }
 
     @Override
+    public MetricList getSendTimeMax(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_TIME_MAX.name(), CalcFunction.MAX.name(), MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
+    public MetricList getSendTimeMean(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_TIME_MEAN.name(), CalcFunction.MAX.name(), MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
+    public MetricList getSendTimeMin(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.SEND_TIME_MIN.name(), CalcFunction.MIN.name(), MetricConstant.HEARTBEAT_PERIOD);
+    }
+
+    @Override
     public MetricList getFlushCount(MetricQueryDO metricQueryDO) {
         return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_COUNT.name(), CalcFunction.SUM.name(), MetricConstant.HEARTBEAT_PERIOD);
     }
@@ -406,6 +426,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public MetricList getFlushTimeMean(MetricQueryDO metricQueryDO) {
         return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_TIME_MEAN.name(), CalcFunction.MAX.name(), MetricConstant.QUERY_INTERVAL);
+    }
+
+    @Override
+    public MetricList getFlushTimeMin(MetricQueryDO metricQueryDO) {
+        return handleAggregationQuery(metricQueryDO, AgentMetricField.FLUSH_TIME_MIN.name(), CalcFunction.MIN.name(), MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
@@ -479,7 +504,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         }).limit(limit).collect(Collectors.toList());
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
-            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.LOG_MODEL_HOST_NAME.name(), CalcFunction.COUNT.name(), MetricConstant.HEARTBEAT_PERIOD);
+            List<MetricPoint> graph = new ArrayList<>();
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListByLogCollectTaskId(logCollectTaskPO.getId()).size());
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());
@@ -494,13 +520,14 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         int limit = Math.min(taskList.size(), 5);
         List<MetricPointList> metricPointLists = new ArrayList<>();
         List<LogCollectTaskPO> sortedList = taskList.stream().sorted((i1, i2) -> {
-            int size1 = hostManageService.getHostListByLogCollectTaskId(i1.getId()).size();
-            int size2 = hostManageService.getHostListByLogCollectTaskId(i2.getId()).size();
+            int size1 = hostManageService.getHostListContainsAgentByLogCollectTaskId(i1.getId()).size();
+            int size2 = hostManageService.getHostListContainsAgentByLogCollectTaskId(i2.getId()).size();
             return size2 - size1;
         }).limit(limit).collect(Collectors.toList());
 
         for (LogCollectTaskPO logCollectTaskPO : sortedList) {
-            List<MetricPoint> graph = agentMetricsManageService.queryAggregationByTask(logCollectTaskPO.getId(), startTime, endTime, AgentMetricField.HOSTNAME.name(), CalcFunction.COUNT.name(), MetricConstant.HEARTBEAT_PERIOD);
+            List<MetricPoint> graph = new ArrayList<>();
+            MetricUtils.buildEmptyMetric(graph, startTime, endTime, MetricConstant.QUERY_INTERVAL, hostManageService.getHostListContainsAgentByLogCollectTaskId(logCollectTaskPO.getId()).size());
             MetricPointList metricPointList = new MetricPointList();
             metricPointList.setMetricPointList(graph);
             metricPointList.setName(logCollectTaskPO.getLogCollectTaskName());

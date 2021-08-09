@@ -66,10 +66,8 @@ public class AgentStatistics extends AbstractStatistics {
             true);
         metricsRegistry.tag(MetricsFields.GC_COUNT, null,
             String.valueOf(SystemUtils.getFullGcCount()), true);
-        //TODO：添加 fd 使用量
         metricsRegistry.tag(MetricsFields.FD_COUNT, null, String.valueOf(SystemUtils.getFdCount()),
             true);
-        //TODO：添加 内存 使用量
         metricsRegistry.tag(MetricsFields.MEMORY_USAGE, null,
             String.valueOf(SystemUtils.getCurrentMemoryUsage()), true);
         super.getMetrics(builder, all);

@@ -88,6 +88,9 @@ public class LogCollectTaskVO {
     @ApiModelProperty(value = "采集延迟监控阈值", notes="")
     private Long collectDelayThresholdMs;
 
+    @ApiModelProperty(value = "日志采集任务关联 agent 数", notes="")
+    private Integer relateAgentNum;
+
     public Integer getLogCollectTaskHealthLevel() {
         return logCollectTaskHealthLevel;
     }
@@ -102,6 +105,14 @@ public class LogCollectTaskVO {
 
     public void setLogCollectTaskCreator(String logCollectTaskCreator) {
         this.logCollectTaskCreator = logCollectTaskCreator;
+    }
+
+    public Integer getRelateAgentNum() {
+        return relateAgentNum;
+    }
+
+    public void setRelateAgentNum(Integer relateAgentNum) {
+        this.relateAgentNum = relateAgentNum;
     }
 
     public Long getLogCollectTaskExecuteTimeoutMs() {

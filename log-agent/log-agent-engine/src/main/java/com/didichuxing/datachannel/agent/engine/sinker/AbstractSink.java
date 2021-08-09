@@ -34,7 +34,7 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
 
     protected Thread                thread;
 
-    protected boolean               isRunning                    = false;
+    protected volatile boolean      isRunning                    = false;
     protected boolean               isInited                     = false;
 
     protected final Object          lock                         = new Object();
@@ -99,6 +99,7 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
         while (isRunning) {
             sendMsg();
         }
+        LOGGER.info("Sink thread exit！key is " + getUniqueKey() + ";isRunning :" + isRunning);
     }
 
     public void sendMsg() {
@@ -127,8 +128,9 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
             } else {
                 eventIsNullTimes = 0;
             }
-        } catch (Exception e) {
-            LogGather.recordErrorLog("AbstractSink error", "sendMsg error!", e);
+        } catch (Throwable t) {
+            LogGather.recordErrorLog("AbstractSink error", "sendMsg error! key is "
+                                                           + getUniqueKey(), t);
         }
     }
 

@@ -100,35 +100,35 @@ public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
         // tag
         if (tags != null) {
             for (MetricsTag loopTag : record.tags()) {
-                if (loopTag.value() != null) {
-                    if (loopTag.name().equals(FileMetricsFields.COLLECT_FILE_NAMES_STR)) {
-                        List<FileStatistic> list = JSON.parseArray(loopTag.value().replace("\\", ""),
+                if (loopTag.getValue() != null) {
+                    if (loopTag.getName().equals(FileMetricsFields.COLLECT_FILE_NAMES_STR)) {
+                        List<FileStatistic> list = JSON.parseArray(loopTag.getValue().replace("\\", ""),
                                 FileStatistic.class);
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
+                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
                         result.put(name, list);
-                    } else if (loopTag.name().equals(FileMetricsFields.RELATED_FILES)
-                            && StringUtils.isNotBlank(loopTag.value())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
-                        result.put(name, Long.parseLong(loopTag.value()));
-                    } else if (loopTag.name().equals(FileMetricsFields.MAX_TIME_GAP_STR)
-                            && StringUtils.isNotBlank(loopTag.value())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
-                        result.put(name, Long.parseLong(loopTag.value()));
-                    } else if (loopTag.name().equals(FileMetricsFields.LATEST_LOG_TIME)
-                            && StringUtils.isNotBlank(loopTag.value())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
-                        result.put(name, Long.parseLong(loopTag.value()));
-                    } else if (loopTag.name().equals(ModelMetricsFields.MODEL_VERSION)
-                            && StringUtils.isNotBlank(loopTag.value())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
-                        result.put(name, Long.parseLong(loopTag.value()));
-                    } else if (loopTag.name().equals(FileMetricsFields.LATEST_MODIFY_TIME)
-                            && StringUtils.isNotBlank(loopTag.value())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
-                        result.put(name, Long.parseLong(loopTag.value()));
+                    } else if (loopTag.getName().equals(FileMetricsFields.RELATED_FILES)
+                            && StringUtils.isNotBlank(loopTag.getValue())) {
+                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
+                        result.put(name, Long.parseLong(loopTag.getValue()));
+                    } else if (loopTag.getName().equals(FileMetricsFields.MAX_TIME_GAP_STR)
+                            && StringUtils.isNotBlank(loopTag.getValue())) {
+                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
+                        result.put(name, Long.parseLong(loopTag.getValue()));
+                    } else if (loopTag.getName().equals(FileMetricsFields.LATEST_LOG_TIME)
+                            && StringUtils.isNotBlank(loopTag.getValue())) {
+                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
+                        result.put(name, Long.parseLong(loopTag.getValue()));
+                    } else if (loopTag.getName().equals(ModelMetricsFields.MODEL_VERSION)
+                            && StringUtils.isNotBlank(loopTag.getValue())) {
+                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
+                        result.put(name, Long.parseLong(loopTag.getValue()));
+                    } else if (loopTag.getName().equals(FileMetricsFields.LATEST_MODIFY_TIME)
+                            && StringUtils.isNotBlank(loopTag.getValue())) {
+                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
+                        result.put(name, Long.parseLong(loopTag.getValue()));
                     } else {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.name()) : loopTag.name();
-                        result.put(name, loopTag.value());
+                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
+                        result.put(name, loopTag.getValue());
                     }
                 }
             }

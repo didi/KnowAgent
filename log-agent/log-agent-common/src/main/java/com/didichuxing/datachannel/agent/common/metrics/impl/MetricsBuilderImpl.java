@@ -24,7 +24,8 @@ import com.didichuxing.datachannel.agent.common.metrics.MetricsRecordBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-class MetricsBuilderImpl extends ArrayList<MetricsRecordBuilderImpl> implements MetricsBuilder {
+public class MetricsBuilderImpl extends ArrayList<MetricsRecordBuilderImpl> implements
+                                                                           MetricsBuilder {
     private static final long serialVersionUID = 1L;
     private MetricsFilter     recordFilter, metricFilter;
 

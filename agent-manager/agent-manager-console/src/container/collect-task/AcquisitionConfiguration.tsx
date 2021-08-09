@@ -20,36 +20,38 @@ interface IAcquisitionConfiguration {
 export class AcquisitionConfiguration extends React.Component<IAcquisitionConfiguration> {
 
   public renderCollectObj = (detail: ILogCollectTaskDetail) => {
-
+    const labelStyle: any = {
+      fontWeight: 'bold',
+    }
     const cataFile = !!detail?.directoryLogCollectPathList?.length;
     const cataLog = [] as IDirectoryLogCollectPath[];
     const log = cataFile ? cataLog : detail?.fileLogCollectPathList as any;
     const collectDelay = (detail?.collectDelayThresholdMs || 0) / 60 / 1000;
     return (<div className='agentConfigInfo'>
-      <Descriptions column={2} title={<h3 style={{ color: '#7e7e7e', padding: '10px 0', borderBottom: '2px solid #7e7e7e' }}>采集对象配置</h3>}>
-        <Item className='agentConfigInfoLeft' label="采集任务名">{renderTooltip(detail?.logCollectTaskName) || '-'}</Item>
-        <Item label="采集应用">{'-'}</Item>
+      <Descriptions column={2} title={<h3 style={{ fontSize: '14px', padding: '10px 0', borderBottom: '1px solid #dbe0e4' }}>采集对象配置</h3>}>
+        <Item className='agentConfigInfoLeft' label={<span style={labelStyle}>采集任务名</span>}>{renderTooltip(detail?.logCollectTaskName || '-')}</Item>
+        <Item label={<span style={labelStyle}>采集应用</span>}>{renderTooltip(detail?.services[0]?.servicename || '-')}</Item>
       </Descriptions>
       <div className="descriptionsBox">
-        <h3 style={{ color: '#7e7e7e', padding: '30px 0 10px', fontSize: '17px', borderBottom: '2px solid #7e7e7e' }}>采集日志配置</h3>
+        <h3 style={{ padding: '30px 0 10px', fontSize: '14px', borderBottom: '1px solid #dbe0e4' }}>采集日志配置</h3>
         <div className='collectLogConfig'>
           {log?.map((ele: any, index: number) => {
             return <Descriptions key={index} column={2}>
               {/* {index > 0 && <Divider />} */}
-              <Item className='agentConfigInfoLeft' label="日志路径">{renderTooltip(ele?.path || '-', 60)}</Item>
-              <Item label="采集文件后缀匹配样式">{detail?.fileNameSuffixMatchRule?.suffixMatchRegular || '-'}</Item>
-              <Item className='agentConfigInfoLeft' label="日志切片规则">{`左起第${detail?.logContentSliceRule?.sliceTimestampPrefixStringIndex || 0}个匹配 ${detail?.logContentSliceRule?.sliceTimestampPrefixString || ''} ${detail?.logContentSliceRule?.sliceTimestampFormat || ''}`}</Item>
+              <Item className='agentConfigInfoLeft' label={<span style={labelStyle}>日志路径</span>}>{renderTooltip(ele?.path || '-', 60)}</Item>
+              <Item label={<span style={labelStyle}>采集文件后缀匹配样式</span>}>{detail?.fileNameSuffixMatchRule?.suffixMatchRegular || '-'}</Item>
+              <Item className='agentConfigInfoLeft' label={<span style={labelStyle}>日志切片规则</span>}>{`左起第${detail?.logContentSliceRule?.sliceTimestampPrefixStringIndex || 0}个匹配 ${detail?.logContentSliceRule?.sliceTimestampPrefixString || ''} ${detail?.logContentSliceRule?.sliceTimestampFormat || ''}`}</Item>
             </Descriptions>
           })}
         </div>
       </div>
-      <Descriptions column={2} title={<h3 style={{ color: '#7e7e7e', padding: '30px 0 10px', borderBottom: '2px solid #7e7e7e' }}>接收端配置与监控</h3>}>
-        <Item className='agentConfigInfoLeft' label="Kafka集群">{renderTooltip(detail?.receiver?.kafkaClusterName || '-', 60) || '-'}</Item>
-        <Item label="生产端属性">{detail.kafkaProducerConfiguration || '-'}</Item>
-        <Item className='agentConfigInfoLeft' label="Topic">{renderTooltip(detail?.sendTopic || '-', 60)}</Item>
-        <Item label="采集延迟监控">{collectDelay ? `该任务下Agent客户端延迟超过 ${collectDelay} 分钟，则视为异常 注：仅支持对按业务时间顺序进行输出的日志进行延迟监控` : '关闭'}</Item>
-        <Item className='agentConfigInfoLeft' label="任务保障等级">{limitType[detail?.limitPriority] || "-"}</Item>
-        <Item label="配置信息"><pre>{detail?.advancedConfigurationJsonString || '-'}</pre></Item>
+      <Descriptions column={2} title={<h3 style={{ fontSize: '14px', padding: '10px 0', borderBottom: '1px solid #dbe0e4' }}>接收端配置与监控</h3>}>
+        <Item className='agentConfigInfoLeft' label={<span style={labelStyle}>Kafka集群</span>}>{renderTooltip(detail?.receiver?.kafkaClusterName || '-', 60) || '-'}</Item>
+        <Item label={<span style={labelStyle}>生产端属性</span>}>{detail.kafkaProducerConfiguration || '-'}</Item>
+        <Item className='agentConfigInfoLeft' label={<span style={labelStyle}>Topic</span>}>{renderTooltip(detail?.sendTopic || '-', 60)}</Item>
+        <Item label={<span style={labelStyle}>采集延迟监控</span>}>{collectDelay ? `该任务下Agent客户端延迟超过 ${collectDelay} 分钟，则视为异常` : '关闭'}</Item>
+        <Item className='agentConfigInfoLeft' label={<span style={labelStyle}>任务保障等级</span>}>{limitType[detail?.limitPriority] || "-"}</Item>
+        <Item label={<span style={labelStyle}>配置信息</span>}><pre>{detail?.advancedConfigurationJsonString || '-'}</pre></Item>
       </Descriptions>
       {/* <Descriptions className='mt-10'>
         <Item label="采集任务名">{renderTooltip(detail?.logCollectTaskName)}</Item>

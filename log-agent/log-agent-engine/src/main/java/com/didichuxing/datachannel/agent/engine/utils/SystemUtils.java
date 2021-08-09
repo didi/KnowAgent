@@ -16,13 +16,13 @@ import org.slf4j.LoggerFactory;
  */
 public class SystemUtils {
 
-    private static final Logger          LOGGER            = LoggerFactory
-                                                               .getLogger(SystemUtils.class);
+    private static final Logger       LOGGER            = LoggerFactory
+                                                            .getLogger(SystemUtils.class);
 
-    private static IOSResourceService    osResourceService = new DefaultOSResourceService();
+    private static IOSResourceService osResourceService = new DefaultOSResourceService();
 
-    private final static String          startTime;
-    private static long                  preFullGcCount    = 0L;
+    private final static String       startTime;
+    private static long               preFullGcCount    = 0L;
 
     static {
         startTime = new Date().toString();
@@ -62,11 +62,6 @@ public class SystemUtils {
      * @return 返回获取到的当前进程对应内存使用量
      */
     public static long getCurrentMemoryUsage() {
-        if(LOGGER.isInfoEnabled()) {
-            LOGGER.info(
-                    String.format("SystemUtils||getCurrentMemoryUsage={%d}", osResourceService.getCurrentProcessMemoryUsed())
-            );
-        }
         return osResourceService.getCurrentProcessMemoryUsed();
     }
 

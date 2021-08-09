@@ -233,7 +233,7 @@ public class DefaultOSResourceService implements IOSResourceService {
     public long getFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();

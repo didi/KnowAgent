@@ -346,7 +346,14 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         if (field == null) {
             throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
         }
-        return agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
+        List<MetricPoint> graph = agentMetricsDAO.queryByLogModel(metricQueryDO.getTaskId(), metricQueryDO.getLogCollectPathId(), metricQueryDO.getHostName(), metricQueryDO.getStartTime(), metricQueryDO.getEndTime(), field);
+        for (MetricPoint metricPoint : graph) {
+            Object value = metricPoint.getValue();
+            if (value.getClass() == Boolean.class) {
+                metricPoint.setValue((Boolean) value ? 1 : 0);
+            }
+        }
+        return graph;
     }
 
     @Override
@@ -369,8 +376,6 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
             Object value = metricPoint.getValue();
             if (value.getClass() == Boolean.class) {
                 metricPoint.setValue((Boolean) value ? 1 : 0);
-            } else if (value.getClass() == boolean.class) {
-                metricPoint.setValue((boolean) value ? 1 : 0);
             }
         }
         return graph;

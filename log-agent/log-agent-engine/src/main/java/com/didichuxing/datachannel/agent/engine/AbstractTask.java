@@ -88,13 +88,10 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
 
     @Override
     public void run() {
-        // task线程名称：task-Executor-3-1-（modelConfigKey）
-        String threadNamePrefix = StringUtils.ordinalIndexOf(Thread.currentThread().getName(), "-",
-                4) != -1 ? Thread.currentThread().getName().substring(0,
-                StringUtils.ordinalIndexOf(Thread.currentThread().getName(),
-                        "-",
-                        4)) : Thread.currentThread().getName();
-        Thread.currentThread().setName(threadNamePrefix + "-" + modelConfig.getModelConfigKey());
+        // task线程名称：task-Executor-4-logModeId-(path + host)
+        String threadNamePrefix = getThreadNamePrefix(Thread.currentThread().getName());
+        Thread.currentThread().setName(threadNamePrefix + "-" + modelConfig.getCommonConfig().getModelId() + "-"
+                + source.getUniqueKey());
         try {
             prepare();
             source.start();
@@ -106,10 +103,23 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
                     break;
                 }
             }
-        } catch (Exception e) {
-            LogGather.recordErrorLog("AbstractTask error", "unexpected error, task is " + this, e);
+        } catch (Throwable t) {
+            LogGather.recordErrorLog("AbstractTask error", "unexpected error, task is " + this, t);
         } finally {
             stop(true);
+        }
+    }
+
+    /**
+     * 获取当前task线程名称前缀：默认线程名：task-Executor-3-1-1
+     * @param currentThreadName：线程初始名称
+     * @return：
+     */
+    private String getThreadNamePrefix(String currentThreadName) {
+        if (StringUtils.ordinalIndexOf(currentThreadName, "-", 4) != -1) {
+            return currentThreadName.substring(0, StringUtils.ordinalIndexOf(currentThreadName, "-", 4));
+        } else {
+            return currentThreadName;
         }
     }
 

@@ -124,17 +124,27 @@ public interface LogCollectTaskManageService {
 
     MetricList getReadTimeMax(MetricQueryDO metricQueryDO);
 
+    MetricList getReadTimeMin(MetricQueryDO metricQueryDO);
+
     MetricList getSendBytes(MetricQueryDO metricQueryDO);
 
     MetricList getSendCount(MetricQueryDO metricQueryDO);
 
     MetricList getTotalSendTime(MetricQueryDO metricQueryDO);
 
+    MetricList getSendTimeMax(MetricQueryDO metricQueryDO);
+
+    MetricList getSendTimeMean(MetricQueryDO metricQueryDO);
+
+    MetricList getSendTimeMin(MetricQueryDO metricQueryDO);
+
     MetricList getFlushCount(MetricQueryDO metricQueryDO);
 
     MetricList getFlushTimeMax(MetricQueryDO metricQueryDO);
 
     MetricList getFlushTimeMean(MetricQueryDO metricQueryDO);
+
+    MetricList getFlushTimeMin(MetricQueryDO metricQueryDO);
 
     MetricList getFlushFailedCount(MetricQueryDO metricQueryDO);
 
