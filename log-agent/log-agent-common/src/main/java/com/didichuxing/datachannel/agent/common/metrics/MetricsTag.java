@@ -58,7 +58,9 @@ public class MetricsTag {
             return false;
         }
         if (this.description == null) {
-            return other.description == null;
+            if (other.description != null) {
+                return false;
+            }
         } else if (!this.description.equals(other.description)) {
             return false;
         }
