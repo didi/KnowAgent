@@ -14,6 +14,7 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.service.extension.Serv
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -79,7 +80,9 @@ public class DefaultHostManageServiceExtensionImpl implements HostManageServiceE
     @Override
     public HostDO hostPO2HostDO(HostPO hostPO) throws ServiceException {
         try {
-            return ConvertUtil.obj2Obj(hostPO, HostDO.class);
+            HostDO hostDO = ConvertUtil.obj2Obj(hostPO, HostDO.class);
+            hostDO.setContainer(hostPO.getContainer());
+            return hostDO;
         } catch (Exception ex) {
             throw new ServiceException(
                     String.format(
@@ -126,7 +129,11 @@ public class DefaultHostManageServiceExtensionImpl implements HostManageServiceE
 
     @Override
     public List<HostDO> hostPOList2HostDOList(List<HostPO> hostPOList) {
-        return ConvertUtil.list2List(hostPOList, HostDO.class);
+        List<HostDO> hostDOList = new ArrayList<>(hostPOList.size());
+        for (HostPO hostPO : hostPOList) {
+            hostDOList.add(hostPO2HostDO(hostPO));
+        }
+        return hostDOList;
     }
 
     @Override

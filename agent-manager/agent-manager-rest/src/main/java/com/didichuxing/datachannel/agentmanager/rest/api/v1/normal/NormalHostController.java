@@ -60,7 +60,13 @@ public class NormalHostController {
     @ResponseBody
     public Result<List<HostVO>> listHosts() {
         List<HostDO> hostDOList = hostManageService.list();
-        return Result.buildSucc(ConvertUtil.list2List(hostDOList, HostVO.class));
+        List<HostVO> hostVOList = new ArrayList<>(hostDOList.size());
+        for (HostDO hostDO : hostDOList) {
+            HostVO hostVO = ConvertUtil.obj2Obj(hostDO, HostVO.class);
+            hostVO.setContainer(hostDO.getContainer());
+            hostVOList.add(hostVO);
+        }
+        return Result.buildSucc(hostVOList);
     }
 
     @ApiOperation(value = "根据id获取Host对象信息", notes = "")
