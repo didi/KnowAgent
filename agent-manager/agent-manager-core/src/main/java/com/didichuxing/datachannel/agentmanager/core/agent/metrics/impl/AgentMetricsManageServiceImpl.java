@@ -196,7 +196,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Integer getLastestFdUsage(String hostName) {
-        return agentMetricsDAO.getLatestFdUsage(hostName);
+        return agentMetricsDAO.selectLatestByHostname(hostName).getFdCount();
     }
 
     @Override
@@ -213,11 +213,11 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Integer getLastestCpuUsage(String hostName) {
-        return agentMetricsDAO.getLatestCpuUsage(hostName).intValue();
+        return agentMetricsDAO.selectLatestByHostname(hostName).getCpuUsage().intValue();
     }
 
     public Long getLatestMemoryUsage(String hostName) {
-        return agentMetricsDAO.getLatestMemoryUsage(hostName);
+        return agentMetricsDAO.selectLatestByHostname(hostName).getMemoryUsage();
     }
 
     @Override

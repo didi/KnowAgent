@@ -230,7 +230,7 @@ export function timeStamp( mtime: number ){
     return mtime.toFixed(2) + 'ms'
   }
   let second_time: any = (mtime / 1000);
-  let time = (second_time).toFixed(2) + "秒";
+  let time = (second_time).toFixed(2) + "s";
   if( parseInt(second_time)> 60){
   
     let second = parseInt(second_time) % 60;
@@ -266,7 +266,7 @@ export function PercentageConversion (value: number, isTool: string): number | s
 }
 
 export function msecondToSecond (m: number) {
-  return (m / 1000).toFixed(2);
+  return parseInt((m / 1000));
 } 
 
 /**参数说明： 
@@ -330,11 +330,11 @@ export function cutString(str: string, len: number) {
 
 export function countChange(limit: number){
   let size = "";
-  if(limit < 100 * 1000){                            //小于0.1KB，则转化成B
+  if(limit < 100 * 1000){                            //小于100KB
       size = limit + ""
-  }else if(limit < 100 * 1000 * 1000){            //小于0.1MB，则转化成KB
+  }else if(limit < 100 * 1000 * 1000){            //小于100M，则转化成K
       size = (limit/1000).toFixed(1) + "K"
-  }else if(limit < 100 * 1000 * 1000 * 1000){        //小于0.1GB，则转化成MB
+  }else if(limit < 100 * 1000 * 1000 * 1000){        //小于100G，则转化成MB
       size = (limit/(1000 * 1000)).toFixed(1) + "M"
   }
 

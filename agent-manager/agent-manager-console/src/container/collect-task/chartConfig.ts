@@ -135,6 +135,7 @@ export const COLLECT_CONFIG = [
                 }
             ],
             "api": 'logReadBytes',
+            "unit": '/分钟',
             "isPie": false,
             "selfHide": false
         },
