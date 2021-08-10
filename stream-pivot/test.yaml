@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: log-collect
+  namespace: default
+  annotations:
+    servicename: k8s_test
+spec:
+  containers:
+    - name: file1
+      image: zy:1.0
+      volumeMounts:
+        - mountPath: /workspace/info/
+          name: logpath
+  volumes:
+    - name: logpath
+      hostPath:
+        path: /data
+        type: Directory

@@ -1,0 +1,3 @@
+10.179.149.164:7093,10.179.149.201:7093,10.179.149.194:7093
+acks=-1,key.serializer=org.apache.kafka.common.serialization.StringSerializer,value.serializer=org.apache.kafka.common.serialization.StringSerializer,max.in.flight.requests.per.connection=1
+acks=-1,key.serializer=org.apache.kafka.common.serialization.StringSerializer,value.serializer=org.apache.kafka.common.serialization.StringSerializer,max.in.flight.requests.per.connection=1,security.protocol=SASL_PLAINTEXT,sasl.mechanism=PLAIN,sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="1.logi_appId_000411" password="iL0S45BrOWr4";

@@ -1,0 +1,9 @@
+{
+  "heartbeatTime": 1624540377400,
+  "hostname": "10.190.32.213",
+  "hostIp": "10.190.32.213",
+  "logCode": "LogSource error",
+  "throwable": "null",
+  "count": 1,
+  "logMsg": "collectingFileNodeMap'size is too large [2] which means collection delay. logId is 1092, pathId is 1193"
+}

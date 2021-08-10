@@ -1,0 +1,233 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    cni.projectcalico.org/podIP: 100.76.19.233/32
+  creationTimestamp: "2021-05-26T03:42:34Z"
+  generateName: calico-kube-controllers-84445dd79f-
+  labels:
+    k8s-app: calico-kube-controllers
+    pod-template-hash: 84445dd79f
+  managedFields:
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:generateName: {}
+          f:labels:
+            .: {}
+            f:k8s-app: {}
+            f:pod-template-hash: {}
+          f:ownerReferences:
+            .: {}
+            k:{"uid":"0c56621f-e005-4a56-a8cf-9a09e2c6d55d"}:
+              .: {}
+              f:apiVersion: {}
+              f:blockOwnerDeletion: {}
+              f:controller: {}
+              f:kind: {}
+              f:name: {}
+              f:uid: {}
+        f:spec:
+          f:containers:
+            k:{"name":"calico-kube-controllers"}:
+              .: {}
+              f:env:
+                .: {}
+                k:{"name":"DATASTORE_TYPE"}:
+                  .: {}
+                  f:name: {}
+                  f:value: {}
+                k:{"name":"ENABLED_CONTROLLERS"}:
+                  .: {}
+                  f:name: {}
+                  f:value: {}
+              f:image: {}
+              f:imagePullPolicy: {}
+              f:name: {}
+              f:readinessProbe:
+                .: {}
+                f:exec:
+                  .: {}
+                  f:command: {}
+                f:failureThreshold: {}
+                f:periodSeconds: {}
+                f:successThreshold: {}
+                f:timeoutSeconds: {}
+              f:resources: {}
+              f:terminationMessagePath: {}
+              f:terminationMessagePolicy: {}
+          f:dnsPolicy: {}
+          f:enableServiceLinks: {}
+          f:nodeSelector:
+            .: {}
+            f:beta.kubernetes.io/os: {}
+          f:priorityClassName: {}
+          f:restartPolicy: {}
+          f:schedulerName: {}
+          f:securityContext: {}
+          f:serviceAccount: {}
+          f:serviceAccountName: {}
+          f:terminationGracePeriodSeconds: {}
+          f:tolerations: {}
+      manager: kube-controller-manager
+      operation: Update
+      time: "2021-06-01T09:07:24Z"
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:cni.projectcalico.org/podIP: {}
+      manager: calico
+      operation: Update
+      time: "2021-06-02T09:02:39Z"
+    - apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:status:
+          f:conditions:
+            k:{"type":"ContainersReady"}:
+              .: {}
+              f:lastProbeTime: {}
+              f:lastTransitionTime: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Initialized"}:
+              .: {}
+              f:lastProbeTime: {}
+              f:lastTransitionTime: {}
+              f:status: {}
+              f:type: {}
+            k:{"type":"Ready"}:
+              .: {}
+              f:lastProbeTime: {}
+              f:lastTransitionTime: {}
+              f:status: {}
+              f:type: {}
+          f:containerStatuses: {}
+          f:hostIP: {}
+          f:phase: {}
+          f:podIP: {}
+          f:podIPs:
+            .: {}
+            k:{"ip":"100.76.19.233"}:
+              .: {}
+              f:ip: {}
+          f:startTime: {}
+      manager: kubelet
+      operation: Update
+      time: "2021-06-02T09:02:41Z"
+  name: calico-kube-controllers-84445dd79f-xhbxq
+  namespace: kube-system
+  ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: calico-kube-controllers-84445dd79f
+      uid: 0c56621f-e005-4a56-a8cf-9a09e2c6d55d
+  resourceVersion: "2159710"
+  selfLink: /api/v1/namespaces/kube-system/pods/calico-kube-controllers-84445dd79f-xhbxq
+  uid: 3b12349f-d071-418c-b8aa-387a8539a76d
+spec:
+  containers:
+    - env:
+        - name: ENABLED_CONTROLLERS
+          value: node
+        - name: DATASTORE_TYPE
+          value: kubernetes
+      image: calico/kube-controllers:v3.8.2
+      imagePullPolicy: IfNotPresent
+      name: calico-kube-controllers
+      readinessProbe:
+        exec:
+          command:
+            - /usr/bin/check-status
+            - -r
+        failureThreshold: 3
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: calico-kube-controllers-token-hlhpg
+          readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: cs-ecmc-k8s01-01.py
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+  priority: 2000000000
+  priorityClassName: system-cluster-critical
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: calico-kube-controllers
+  serviceAccountName: calico-kube-controllers
+  terminationGracePeriodSeconds: 30
+  tolerations:
+    - key: CriticalAddonsOnly
+      operator: Exists
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+  volumes:
+    - name: calico-kube-controllers-token-hlhpg
+      secret:
+        defaultMode: 420
+        secretName: calico-kube-controllers-token-hlhpg
+status:
+  conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2021-05-26T03:42:34Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2021-06-02T09:02:41Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2021-06-02T09:02:41Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2021-05-26T03:42:34Z"
+      status: "True"
+      type: PodScheduled
+  containerStatuses:
+    - containerID: docker://b738b2edcdc6f6ce9586c492ed99e2d75557ef57d4a643f8998ca341517ca7f0
+      image: calico/kube-controllers:v3.8.2
+      imageID: docker://sha256:de959d4e36388f219d748a46a83da9c154bd25b4fa824914e68cf76397f7dc13
+      lastState:
+        terminated:
+          containerID: docker://bbc806222ee2d3c2689744a4adc60d376cb84de16514cd280d7afc005a30b328
+          exitCode: 255
+          finishedAt: "2021-06-01T09:05:23Z"
+          reason: Error
+          startedAt: "2021-05-26T03:42:35Z"
+      name: calico-kube-controllers
+      ready: true
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2021-06-02T09:02:39Z"
+  hostIP: 10.178.25.74
+  phase: Running
+  podIP: 100.76.19.233
+  podIPs:
+    - ip: 100.76.19.233
+  qosClass: BestEffort
+  startTime: "2021-05-26T03:42:34Z"

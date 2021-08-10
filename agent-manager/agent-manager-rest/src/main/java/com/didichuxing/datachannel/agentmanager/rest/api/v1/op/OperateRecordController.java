@@ -36,10 +36,8 @@ public class OperateRecordController {
     @RequestMapping(path = "/list", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "查询操作记录接口", notes = "")
-    // @CheckPermission(permission = AGENT_TASK_OPERATION_RECORD_LIST)
     public Result<List<OperateRecordVO>> list(@RequestBody OperateRecordDTO query) {
         List<OperateRecordVO> records = ConvertUtil.list2List(operateRecordService.list(query), OperateRecordVO.class);
-
         fillVOField(records);
         return Result.buildSucc(records);
     }

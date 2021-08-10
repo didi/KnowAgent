@@ -1,0 +1,278 @@
+class V1Pod {
+    apiVersion: null
+    kind: null
+    metadata: class V1ObjectMeta {
+        annotations: {kubernetes.io/config.hash=cd8810d28a75a412d8393e2b0e63f8d4, kubernetes.io/config.mirror=cd8810d28a75a412d8393e2b0e63f8d4, kubernetes.io/config.seen=2021-05-18T18:54:48.260059582+08:00, kubernetes.io/config.source=file}
+        clusterName: null
+        creationTimestamp: 2021-05-18T10:54:48Z
+        deletionGracePeriodSeconds: null
+        deletionTimestamp: null
+        finalizers: null
+        generateName: null
+        generation: null
+        labels: {component=kube-scheduler, tier=control-plane}
+        managedFields: [class V1ManagedFieldsEntry {
+            apiVersion: v1
+            fieldsType: FieldsV1
+            fieldsV1: {f:metadata={f:annotations={.={}, f:kubernetes.io/config.hash={}, f:kubernetes.io/config.mirror={}, f:kubernetes.io/config.seen={}, f:kubernetes.io/config.source={}}, f:labels={.={}, f:component={}, f:tier={}}, f:ownerReferences={.={}, k:{"uid":"e45391cb-aab5-4114-aae5-fc20c5a30749"}={.={}, f:apiVersion={}, f:controller={}, f:kind={}, f:name={}, f:uid={}}}}, f:spec={f:containers={k:{"name":"kube-scheduler"}={.={}, f:command={}, f:image={}, f:imagePullPolicy={}, f:livenessProbe={.={}, f:failureThreshold={}, f:httpGet={.={}, f:host={}, f:path={}, f:port={}, f:scheme={}}, f:initialDelaySeconds={}, f:periodSeconds={}, f:successThreshold={}, f:timeoutSeconds={}}, f:name={}, f:resources={.={}, f:requests={.={}, f:cpu={}}}, f:terminationMessagePath={}, f:terminationMessagePolicy={}, f:volumeMounts={.={}, k:{"mountPath":"/etc/kubernetes/scheduler.conf"}={.={}, f:mountPath={}, f:name={}, f:readOnly={}}, k:{"mountPath":"/etc/localtime"}={.={}, f:mountPath={}, f:name={}, f:readOnly={}}}}}, f:dnsPolicy={}, f:enableServiceLinks={}, f:hostNetwork={}, f:nodeName={}, f:priorityClassName={}, f:restartPolicy={}, f:schedulerName={}, f:securityContext={}, f:terminationGracePeriodSeconds={}, f:tolerations={}, f:volumes={.={}, k:{"name":"kubeconfig"}={.={}, f:hostPath={.={}, f:path={}, f:type={}}, f:name={}}, k:{"name":"localtime"}={.={}, f:hostPath={.={}, f:path={}, f:type={}}, f:name={}}}}, f:status={f:conditions={.={}, k:{"type":"ContainersReady"}={.={}, f:lastProbeTime={}, f:lastTransitionTime={}, f:status={}, f:type={}}, k:{"type":"Initialized"}={.={}, f:lastProbeTime={}, f:lastTransitionTime={}, f:status={}, f:type={}}, k:{"type":"PodScheduled"}={.={}, f:lastProbeTime={}, f:lastTransitionTime={}, f:status={}, f:type={}}, k:{"type":"Ready"}={.={}, f:lastProbeTime={}, f:lastTransitionTime={}, f:status={}, f:type={}}}, f:containerStatuses={}, f:hostIP={}, f:phase={}, f:podIP={}, f:podIPs={.={}, k:{"ip":"10.178.25.74"}={.={}, f:ip={}}}, f:startTime={}}}
+            manager: kubelet
+            operation: Update
+            time: 2021-05-18T10:55:08Z
+        }]
+        name: kube-scheduler-cs-ecmc-k8s01-01.py
+        namespace: kube-system
+        ownerReferences: [class V1OwnerReference {
+            apiVersion: v1
+            blockOwnerDeletion: null
+            controller: true
+            kind: Node
+            name: cs-ecmc-k8s01-01.py
+            uid: e45391cb-aab5-4114-aae5-fc20c5a30749
+        }]
+        resourceVersion: 500
+        selfLink: /api/v1/namespaces/kube-system/pods/kube-scheduler-cs-ecmc-k8s01-01.py
+        uid: 50a2038b-7931-43cd-becf-174fa2569863
+    }
+    spec: class V1PodSpec {
+        activeDeadlineSeconds: null
+        affinity: null
+        automountServiceAccountToken: null
+        containers: [class V1Container {
+            args: null
+            command: [kube-scheduler, --authentication-kubeconfig=/etc/kubernetes/scheduler.conf, --authorization-kubeconfig=/etc/kubernetes/scheduler.conf, --bind-address=127.0.0.1, --feature-gates=TTLAfterFinished=true, --kubeconfig=/etc/kubernetes/scheduler.conf, --leader-elect=true]
+            env: null
+            envFrom: null
+            image: k8s.gcr.io/kube-scheduler:v1.18.2
+            imagePullPolicy: IfNotPresent
+            lifecycle: null
+            livenessProbe: class V1Probe {
+                exec: null
+                failureThreshold: 8
+                httpGet: class V1HTTPGetAction {
+                    host: 127.0.0.1
+                    httpHeaders: null
+                    path: /healthz
+                    port: 10259
+                    scheme: HTTPS
+                }
+                initialDelaySeconds: 15
+                periodSeconds: 10
+                successThreshold: 1
+                tcpSocket: null
+                timeoutSeconds: 15
+            }
+            name: kube-scheduler
+            ports: null
+            readinessProbe: null
+            resources: class V1ResourceRequirements {
+                limits: null
+                requests: {cpu=Quantity{number=0.100, format=DECIMAL_SI}}
+            }
+            securityContext: null
+            startupProbe: null
+            stdin: null
+            stdinOnce: null
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+            tty: null
+            volumeDevices: null
+            volumeMounts: [class V1VolumeMount {
+                mountPath: /etc/kubernetes/scheduler.conf
+                mountPropagation: null
+                name: kubeconfig
+                readOnly: true
+                subPath: null
+                subPathExpr: null
+            }, class V1VolumeMount {
+                mountPath: /etc/localtime
+                mountPropagation: null
+                name: localtime
+                readOnly: true
+                subPath: null
+                subPathExpr: null
+            }]
+            workingDir: null
+        }]
+        dnsConfig: null
+        dnsPolicy: ClusterFirst
+        enableServiceLinks: true
+        ephemeralContainers: null
+        hostAliases: null
+        hostIPC: null
+        hostNetwork: true
+        hostPID: null
+        hostname: null
+        imagePullSecrets: null
+        initContainers: null
+        nodeName: cs-ecmc-k8s01-01.py
+        nodeSelector: null
+        overhead: null
+        preemptionPolicy: null
+        priority: 2000000000
+        priorityClassName: system-cluster-critical
+        readinessGates: null
+        restartPolicy: Always
+        runtimeClassName: null
+        schedulerName: default-scheduler
+        securityContext: class V1PodSecurityContext {
+            fsGroup: null
+            fsGroupChangePolicy: null
+            runAsGroup: null
+            runAsNonRoot: null
+            runAsUser: null
+            seLinuxOptions: null
+            seccompProfile: null
+            supplementalGroups: null
+            sysctls: null
+            windowsOptions: null
+        }
+        serviceAccount: null
+        serviceAccountName: null
+        setHostnameAsFQDN: null
+        shareProcessNamespace: null
+        subdomain: null
+        terminationGracePeriodSeconds: 30
+        tolerations: [class V1Toleration {
+            effect: NoExecute
+            key: null
+            operator: Exists
+            tolerationSeconds: null
+            value: null
+        }]
+        topologySpreadConstraints: null
+        volumes: [class V1Volume {
+            awsElasticBlockStore: null
+            azureDisk: null
+            azureFile: null
+            cephfs: null
+            cinder: null
+            configMap: null
+            csi: null
+            downwardAPI: null
+            emptyDir: null
+            ephemeral: null
+            fc: null
+            flexVolume: null
+            flocker: null
+            gcePersistentDisk: null
+            gitRepo: null
+            glusterfs: null
+            hostPath: class V1HostPathVolumeSource {
+                path: /etc/kubernetes/scheduler.conf
+                type: FileOrCreate
+            }
+            iscsi: null
+            name: kubeconfig
+            nfs: null
+            persistentVolumeClaim: null
+            photonPersistentDisk: null
+            portworxVolume: null
+            projected: null
+            quobyte: null
+            rbd: null
+            scaleIO: null
+            secret: null
+            storageos: null
+            vsphereVolume: null
+        }, class V1Volume {
+            awsElasticBlockStore: null
+            azureDisk: null
+            azureFile: null
+            cephfs: null
+            cinder: null
+            configMap: null
+            csi: null
+            downwardAPI: null
+            emptyDir: null
+            ephemeral: null
+            fc: null
+            flexVolume: null
+            flocker: null
+            gcePersistentDisk: null
+            gitRepo: null
+            glusterfs: null
+            hostPath: class V1HostPathVolumeSource {
+                path: /etc/localtime
+                type: File
+            }
+            iscsi: null
+            name: localtime
+            nfs: null
+            persistentVolumeClaim: null
+            photonPersistentDisk: null
+            portworxVolume: null
+            projected: null
+            quobyte: null
+            rbd: null
+            scaleIO: null
+            secret: null
+            storageos: null
+            vsphereVolume: null
+        }]
+    }
+    status: class V1PodStatus {
+        conditions: [class V1PodCondition {
+            lastProbeTime: null
+            lastTransitionTime: 2021-05-18T10:54:48Z
+            message: null
+            reason: null
+            status: True
+            type: Initialized
+        }, class V1PodCondition {
+            lastProbeTime: null
+            lastTransitionTime: 2021-05-18T10:54:48Z
+            message: null
+            reason: null
+            status: True
+            type: Ready
+        }, class V1PodCondition {
+            lastProbeTime: null
+            lastTransitionTime: 2021-05-18T10:54:48Z
+            message: null
+            reason: null
+            status: True
+            type: ContainersReady
+        }, class V1PodCondition {
+            lastProbeTime: null
+            lastTransitionTime: 2021-05-18T10:54:48Z
+            message: null
+            reason: null
+            status: True
+            type: PodScheduled
+        }]
+        containerStatuses: [class V1ContainerStatus {
+            containerID: docker://752f2c74dbc9cffd2aed610824f2856d61c5a0ec6726f4c6352ebc9a7cf55f91
+            image: k8s.gcr.io/kube-scheduler:v1.18.2
+            imageID: docker://sha256:a3099161e1375a2c8678e97ff8ed9e58c9664883f5db6b24e517ca98daef6915
+            lastState: class V1ContainerState {
+                running: null
+                terminated: null
+                waiting: null
+            }
+            name: kube-scheduler
+            ready: true
+            restartCount: 0
+            started: true
+            state: class V1ContainerState {
+                running: class V1ContainerStateRunning {
+                    startedAt: 2021-05-18T10:54:42Z
+                }
+                terminated: null
+                waiting: null
+            }
+        }]
+        ephemeralContainerStatuses: null
+        hostIP: 10.178.25.74
+        initContainerStatuses: null
+        message: null
+        nominatedNodeName: null
+        phase: Running
+        podIP: 10.178.25.74
+        podIPs: [class V1PodIP {
+            ip: 10.178.25.74
+        }]
+        qosClass: Burstable
+        reason: null
+        startTime: 2021-05-18T10:54:48Z
+    }
+}
