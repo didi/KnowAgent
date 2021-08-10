@@ -187,7 +187,8 @@ CREATE TABLE `collect_task_metric` (
   `operator` varchar(64) NOT NULL DEFAULT '',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_heartbeat_time` (`heartbeat_time`) USING BTREE COMMENT '指标心跳时间索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `error_log`;
@@ -410,7 +411,9 @@ CREATE TABLE `tb_host` (
   `extend_field` varchar(4096) DEFAULT '' COMMENT '扩展字段，json格式',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_host_name` (`host_name`) COMMENT '主机名唯一索引',
-  KEY `idx_ip` (`ip`) USING BTREE COMMENT '主机 ip 索引'
+  KEY `idx_ip` (`ip`) USING BTREE COMMENT '主机 ip 索引',
+  KEY `idx_container` (`container`) USING BTREE COMMENT '主机类型索引',
+  KEY `idx_parent_host_name` (`parent_host_name`) USING BTREE COMMENT '宿主机名索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主机表：表示一台主机，可表示物理机、虚拟机、容器';
 
 -- ----------------------------

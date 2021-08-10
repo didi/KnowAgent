@@ -56,8 +56,6 @@ public class DashboardController {
     @ResponseBody
     public Result<DashBoardVO> dashboard(@PathVariable Long startTime, @PathVariable Long endTime) {
 
-        long invokeStarttime = System.currentTimeMillis();
-
         if (null == startTime) {
             return Result.build(ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "入参startTime不可为空");
         }
@@ -135,8 +133,6 @@ public class DashboardController {
         dashBoardVO.setAgentListMemoryUsageTop5(agentMetricsManageService.getAgentListMemoryUsedLastest1MinTop5(startTime, endTime));
         dashBoardVO.setAgentListFullGcCountTop5(agentMetricsManageService.getAgentListFullGcCountLastest1MinTop5(startTime, endTime));
         dashBoardVO.setAgentListRelateLogCollectTasksTop5(agentManageService.getTop5LogCollectTaskCount(startTime, endTime));
-
-        logger.info(String.format("dashboard interface invoke spend %d ms.", System.currentTimeMillis() - invokeStarttime));
 
         return Result.buildSucc(dashBoardVO);
 
