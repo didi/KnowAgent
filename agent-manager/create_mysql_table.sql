@@ -179,7 +179,7 @@ CREATE TABLE `collect_task_metric` (
   `flush_failed_count` int(11) NOT NULL DEFAULT '0',
   `channel_size` int(11) NOT NULL DEFAULT '0',
   `filter_total_too_large_count` int(11) NOT NULL DEFAULT '0',
-  `collect_files` varchar(1024) NOT NULL DEFAULT '',
+  `collect_files` varchar(4096) NOT NULL DEFAULT '',
   `control_time_min` bigint(20) NOT NULL DEFAULT '0',
   `read_byte` int(11) NOT NULL DEFAULT '0',
   `read_time_max` int(11) NOT NULL DEFAULT '0',
