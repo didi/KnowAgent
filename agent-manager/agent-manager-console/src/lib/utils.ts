@@ -266,7 +266,11 @@ export function PercentageConversion (value: number, isTool: string): number | s
 }
 
 export function msecondToSecond (m: number) {
-  return parseInt((m / 1000));
+  const s = (m / 1000).toFixed(2) + '';
+  const arr = s.split('.');
+  if (arr[1] === '00') return arr[0];
+  if (arr[1] === '50') return arr[0] + '.5';
+  return s
 } 
 
 /**参数说明： 

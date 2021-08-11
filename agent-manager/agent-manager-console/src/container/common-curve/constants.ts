@@ -272,7 +272,7 @@ export const newdealMetricPanel = (ele: IMetricPanels, data: any, judgeUrl: bool
           return valueFormatFn(value, ele)
         }
       },
-      min: 0,
+      [timesFormat.includes(ele.api) ? '' : 'min']: 0,
       [isMax? 'max' : '']: 5,
       data: series
     },
