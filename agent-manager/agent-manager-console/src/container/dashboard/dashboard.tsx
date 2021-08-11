@@ -7,7 +7,7 @@ import moment from 'moment';
 import './dashboard.less';
 
 const timeNum = 60;
-const upDataTime = 1;
+const upDataTime = 5;
 
 export class Dashboard extends React.Component {
   public state = {
