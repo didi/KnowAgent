@@ -44,7 +44,7 @@ export class HeaderCard extends React.Component<IProps, Istate> {
   }
 
   public componentDidUpdate(prevProps: IProps) {
-    console.log(prevProps, this.props)
+    // console.log(prevProps, this.props)
     if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
       this.getData();
     }
