@@ -40,9 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Api(tags = "Rd-Host维度相关接口(REST)")
 @RestController
@@ -80,8 +78,23 @@ public class RdHostController {
     @RequestMapping(value = "/connectivity/{hostname}", method = RequestMethod.GET)
     @ResponseBody
     public Result connect(@PathVariable String hostname) {
-        boolean result = NetworkUtil.ping(hostname);
-        return result ? Result.buildSucc() : Result.buildFail();
+        /*
+         * TODO：加入白名单限制集，主要用于安全漏洞，仅滴滴云体验环境使用
+         */
+        Set<String> whiteHostNameSet = new HashSet<>();
+        whiteHostNameSet.add("10-255-1-147");
+        whiteHostNameSet.add("10-255-1-24");
+        whiteHostNameSet.add("10-255-1-55");
+        whiteHostNameSet.add("10-255-1-144");
+        if(whiteHostNameSet.contains(hostname)) {
+            boolean result = NetworkUtil.ping(hostname);
+            return result ? Result.buildSucc() : Result.buildFail();
+        } else {
+            return Result.build(
+                    ErrorCodeEnum.ILLEGAL_PARAMS.getCode(),
+                    String.format("hostName={%s}不在系统白名单中，仅支持白名单中主机列表={%s}", hostname, JSON.toJSONString(whiteHostNameSet))
+            );
+        }
     }
 
     @ApiOperation(value = "查询主机&Agent列表", notes = "")
