@@ -1,5 +1,5 @@
 import React from 'react';
-import LineChart, { hasData } from '../../../component/echarts';
+import LineChart from '../../../component/echarts';
 import { TextRouterLink } from '../../../component/CustomComponent';
 import { createOption } from './constants';
 import OneAlart from '../../../assets/onealart.png';
@@ -8,7 +8,7 @@ import './index.less';
 
 interface IProps {
   type: string;
-  dataSouce: any;
+  dataSource: any;
 }
 
 export class PieChart extends React.Component<IProps> {
@@ -19,17 +19,17 @@ export class PieChart extends React.Component<IProps> {
   } 
   
   public renderChart = () => {
-    const { dataSouce } = this.props;
+    const { dataSource } = this.props;
     let data = [
-      {value: ((dataSouce?.logCollectTaskNum - dataSouce?.yellowLogCollectTaskNameIdPairList?.length) - dataSouce?.redLogCollectTaskNameIdPairList?.length ) || 0, name: '健康率', oldValue: dataSouce?.logCollectTaskNum},
-      {value: dataSouce?.yellowLogCollectTaskNameIdPairList?.length || 0, name: '预警率'},
-      {value: dataSouce?.redLogCollectTaskNameIdPairList?.length || 0, name: '故障率'},
+      {value: ((dataSource?.logCollectTaskNum - dataSource?.yellowLogCollectTaskNameIdPairList?.length) - dataSource?.redLogCollectTaskNameIdPairList?.length ) || 0, name: '健康率', oldValue: dataSource?.logCollectTaskNum},
+      {value: dataSource?.yellowLogCollectTaskNameIdPairList?.length || 0, name: '预警率'},
+      {value: dataSource?.redLogCollectTaskNameIdPairList?.length || 0, name: '故障率'},
     ]
     if (this.props.type !== 'collect') {
       data = [
-        {value: ((dataSouce?.agentNum - dataSouce?.yellowAgentHostNameIdPairList?.length) - dataSouce?.redAgentHostNameIdPairList?.length ) || 0, name: '健康率', oldValue: dataSouce?.agentNum},
-        {value: dataSouce?.yellowAgentHostNameIdPairList?.length || 0, name: '预警率'},
-        {value: dataSouce?.redAgentHostNameIdPairList?.length || 0, name: '故障率'},
+        {value: ((dataSource?.agentNum - dataSource?.yellowAgentHostNameIdPairList?.length) - dataSource?.redAgentHostNameIdPairList?.length ) || 0, name: '健康率', oldValue: dataSource?.agentNum},
+        {value: dataSource?.yellowAgentHostNameIdPairList?.length || 0, name: '预警率'},
+        {value: dataSource?.redAgentHostNameIdPairList?.length || 0, name: '故障率'},
       ]
     }
     const options = createOption(data);
@@ -41,8 +41,8 @@ export class PieChart extends React.Component<IProps> {
   }
 
   public renderFaultTask = () => {
-    const { dataSouce } = this.props;
-    const list = (this.props.type === 'collect' ? dataSouce.redLogCollectTaskNameIdPairList : dataSouce.redAgentHostNameIdPairList) || [];
+    const { dataSource } = this.props;
+    const list = (this.props.type === 'collect' ? dataSource.redLogCollectTaskNameIdPairList : dataSource.redAgentHostNameIdPairList) || [];
     return (
       <div className={`${this.className}-faulttask`}>
         <div className={`${this.className}-faulttask-icon`}>
@@ -68,8 +68,8 @@ export class PieChart extends React.Component<IProps> {
   }
 
   public rendeRearlyWarningTask = () => {
-    const { dataSouce } = this.props;
-    const list = (this.props.type === 'collect' ? dataSouce.yellowLogCollectTaskNameIdPairList : dataSouce.yellowAgentHostNameIdPairList) || [];
+    const { dataSource } = this.props;
+    const list = (this.props.type === 'collect' ? dataSource.yellowLogCollectTaskNameIdPairList : dataSource.yellowAgentHostNameIdPairList) || [];
     return (
       <div className={`${this.className}-faulttask`} style={{ marginLeft: this.props.type === 'collect' ? 60 : 37}}>
         <div className={`${this.className}-faulttask-icon`}>

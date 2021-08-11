@@ -131,8 +131,16 @@ export const getAgentLineData = (type: string, params: IAgentLineParams) => {
 
 // 大盘请求暂时放置在agent
 
-export const getDashboard = (startTime: number, endTime: number) => {
-  return fetch(`${apiMap.getDashboard}/${startTime}/${endTime}`);
+export const getDashboard = (startTime: number, endTime: number, dashboardMetricsCodes: number[]) => {
+  // return fetch(`${apiMap.getDashboard}/${startTime}/${endTime}`);
+  return fetch(apiMap.getDashboard, {
+    method: csrfTokenMethod[0],
+    body: JSON.stringify({
+      startTime,
+      endTime,
+      dashboardMetricsCodes
+    }),
+  });
 }
 
 export const getAgentHostId = (hostName: string) => {

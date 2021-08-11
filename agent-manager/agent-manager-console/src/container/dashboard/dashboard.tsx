@@ -1,6 +1,4 @@
 import React from 'react';
-import { Spin } from 'antd';
-import { getDashboard } from './../../api/agent';
 import { HeaderCard } from './headerCard';
 import { PieCharts } from './pieCharts';
 import { LineCharts } from './LineCharts';
@@ -9,31 +7,25 @@ import moment from 'moment';
 import './dashboard.less';
 
 const timeNum = 60;
-const upDataTime = 5;
+const upDataTime = 1;
 
 export class Dashboard extends React.Component {
   public state = {
-    data: {},
-    loading: true,
+    startTime: moment().subtract(timeNum, 'minute').valueOf(),
+    endTime: moment().valueOf(),
   }
   mainElement: any
   timer: any;
 
-  getData = () => {
-    getDashboard(moment().subtract(timeNum, 'minute').valueOf(), moment().valueOf())
-      .then(res => {
-        this.setState({data: res, loading: false});
-      }).catch((err) => {
-        this.setState({loading: false});
-      })
-  }
   public componentDidMount() {
     this.mainElement = document.querySelector('#ecmc-layout-main');
     this.mainElement.style.backgroundColor = '#F0F2F5';
     this.mainElement.style.padding = '0px';
-    this.getData();
     this.timer = setInterval(() => {
-      this.getData()
+      this.setState({
+        startTime: moment().subtract(timeNum, 'minute').valueOf(),
+        endTime: moment().valueOf(),
+      })
     }, upDataTime * 60 * 1000)
   }
 
@@ -44,15 +36,13 @@ export class Dashboard extends React.Component {
   }
 
   public render() {
-    const { data, loading } = this.state;
+    const { startTime, endTime } = this.state;
     return (
       <div className="dashboard">
         <ActionClusterModal />
-        <Spin spinning={loading}>
-          <HeaderCard dataSouce={data}/>
-          <PieCharts dataSouce={data} />
-          <LineCharts dataSouce={data} />
-        </Spin>
+        <HeaderCard startTime={startTime} endTime={endTime}/>
+        <PieCharts startTime={startTime} endTime={endTime}/>
+        <LineCharts startTime={startTime} endTime={endTime}/>
       </div>
     )
   }
