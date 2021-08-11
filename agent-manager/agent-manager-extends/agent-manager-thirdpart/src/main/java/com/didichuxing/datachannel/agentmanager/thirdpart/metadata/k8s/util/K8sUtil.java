@@ -69,7 +69,7 @@ public class K8sUtil {
      * @throws Exception 获取给定 k8s 集群所有 pod 配置信息时出现的异常
      */
     private static V1PodList listPods() throws Exception {
-        return K8sUtil.getK8sApi().listPodForAllNamespaces(null, null, null, null, null, null, null, null, null, null);
+        return K8sUtil.getK8sApi().listPodForAllNamespaces(null, null, null, null, null, null, null, null, 30, null);
     }
 
     /**
