@@ -130,14 +130,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @param listCompareResult 远程 & 本地 K8sPodHostPO 对象对比结果集
      */
     private void handleK8sPodHostPOListCompareResult(ListCompareResult<K8sPodHostPO> listCompareResult) {
-        //处理待创建对象集
-        List<K8sPodHostPO> createList = listCompareResult.getCreateList();
-        k8sPodContainerManageService.createK8sPodContainerList(createList);
         //处理待删除对象集
         List<K8sPodHostPO> removeList = listCompareResult.getRemoveList();
         for (K8sPodHostPO k8sPodContainerPO : removeList) {
             k8sPodContainerManageService.deleteById(k8sPodContainerPO.getId());
         }
+        //处理待创建对象集
+        List<K8sPodHostPO> createList = listCompareResult.getCreateList();
+        k8sPodContainerManageService.createK8sPodContainerList(createList);
     }
 
     /**
@@ -145,14 +145,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @param listCompareResult
      */
     private void handleServiceHostPOListCompareResult(ListCompareResult<ServiceHostPO> listCompareResult) {
-        //处理待创建对象集
-        List<ServiceHostPO> createServiceHostPOList = listCompareResult.getCreateList();
-        serviceHostManageService.createServiceHostList(createServiceHostPOList);
         //处理待删除对象集
         List<ServiceHostPO> removeServiceHostPOList = listCompareResult.getRemoveList();
         for (ServiceHostPO serviceHostPO : removeServiceHostPOList) {
             serviceHostManageService.deleteById(serviceHostPO.getId());
         }
+        //处理待创建对象集
+        List<ServiceHostPO> createServiceHostPOList = listCompareResult.getCreateList();
+        serviceHostManageService.createServiceHostList(createServiceHostPOList);
     }
 
     /**
@@ -160,18 +160,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @param listCompareResult 远程 & 本地 ServiceDO 对象对比结果集
      */
     private void handleHostDOListCompareResult(ListCompareResult<HostDO> listCompareResult) {
-        //处理待创建对象集
-        List<HostDO> createList = listCompareResult.getCreateList();
-        for (HostDO hostDO : createList) {
-            //创建主机对象
-            hostManageService.createHost(hostDO, null);
-        }
-        //处理待修改对象集
-        List<HostDO> modifyList = listCompareResult.getModifyList();
-        for (HostDO hostDO : modifyList) {
-            //更新主机信息
-            hostManageService.updateHost(hostDO, null);
-        }
         //处理待删除对象集
         List<HostDO> removeList = listCompareResult.getRemoveList();
         //由于待删除主机集可能存在主机 & 容器，须先删除容器再删除主机
@@ -195,6 +183,18 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                 }
             }
         }
+        //处理待修改对象集
+        List<HostDO> modifyList = listCompareResult.getModifyList();
+        for (HostDO hostDO : modifyList) {
+            //更新主机信息
+            hostManageService.updateHost(hostDO, null);
+        }
+        //处理待创建对象集
+        List<HostDO> createList = listCompareResult.getCreateList();
+        for (HostDO hostDO : createList) {
+            //创建主机对象
+            hostManageService.createHost(hostDO, null);
+        }
     }
 
     /**
@@ -202,20 +202,20 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @param listCompareResult 远程 & 本地 ServiceDO 对象对比结果集
      */
     private void handleServiceDOListCompareResult(ListCompareResult<ServiceDO> listCompareResult) {
-        //处理待创建对象集
-        List<ServiceDO> createList = listCompareResult.getCreateList();
-        for (ServiceDO serviceDO : createList) {
-            serviceManageService.createService(serviceDO, null);
+        //处理待删除对象集
+        List<ServiceDO> removeList = listCompareResult.getRemoveList();
+        for (ServiceDO serviceDO : removeList) {
+            serviceManageService.deleteService(serviceDO.getId(), true,null);
         }
         //处理待修改对象集
         List<ServiceDO> modifyList = listCompareResult.getModifyList();
         for (ServiceDO serviceDO : modifyList) {
             serviceManageService.updateService(serviceDO, null);
         }
-        //处理待删除对象集
-        List<ServiceDO> removeList = listCompareResult.getRemoveList();
-        for (ServiceDO serviceDO : removeList) {
-            serviceManageService.deleteService(serviceDO.getId(), true,null);
+        //处理待创建对象集
+        List<ServiceDO> createList = listCompareResult.getCreateList();
+        for (ServiceDO serviceDO : createList) {
+            serviceManageService.createService(serviceDO, null);
         }
     }
 
@@ -224,20 +224,20 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @param listCompareResult
      */
     private void handleK8sPodDOListCompareResult(ListCompareResult<K8sPodDO> listCompareResult) {
-        //处理待创建对象集
-        List<K8sPodDO> createList = listCompareResult.getCreateList();
-        for (K8sPodDO k8sPodDO : createList) {
-            k8sPodManageService.createK8sPod(k8sPodDO, null);
+        //处理待删除对象集
+        List<K8sPodDO> removeList = listCompareResult.getRemoveList();
+        for (K8sPodDO k8sPodDO : removeList) {
+            k8sPodManageService.deleteK8sPod(k8sPodDO.getId(),null);
         }
         //处理待修改对象集
         List<K8sPodDO> modifyList = listCompareResult.getModifyList();
         for (K8sPodDO k8sPodDO : modifyList) {
             k8sPodManageService.updateK8sPod(k8sPodDO, null);
         }
-        //处理待删除对象集
-        List<K8sPodDO> removeList = listCompareResult.getRemoveList();
-        for (K8sPodDO k8sPodDO : removeList) {
-            k8sPodManageService.deleteK8sPod(k8sPodDO.getId(),null);
+        //处理待创建对象集
+        List<K8sPodDO> createList = listCompareResult.getCreateList();
+        for (K8sPodDO k8sPodDO : createList) {
+            k8sPodManageService.createK8sPod(k8sPodDO, null);
         }
     }
 

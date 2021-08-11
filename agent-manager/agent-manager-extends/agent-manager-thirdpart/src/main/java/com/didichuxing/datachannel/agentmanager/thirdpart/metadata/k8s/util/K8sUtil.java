@@ -52,7 +52,7 @@ public class K8sUtil {
             Resource resource;
             resource = new FileSystemResource("config");
             if (!resource.exists()) {
-                resource = new ClassPathResource("config");
+                throw new ServiceException("找不到k8s集群对应的config文件", ErrorCodeEnum.K8S_POD_CONFIG_PULL_FAILED.getCode());
             }
             BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()));
             ApiClient client = ClientBuilder.kubeconfig(KubeConfig.loadKubeConfig(br)).build();
