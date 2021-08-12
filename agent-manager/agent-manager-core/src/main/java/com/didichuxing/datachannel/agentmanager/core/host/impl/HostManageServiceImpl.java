@@ -148,7 +148,7 @@ public class HostManageServiceImpl implements HostManageService {
          * 添加对应操作记录
          */
         operateRecordService.save(
-                ModuleEnum.HOST,
+                ModuleEnum.AGENT,
                 OperationEnum.ADD,
                 hostPO.getId(),
                 String.format("创建Host={%s}，创建成功的Host对象id={%d}", JSON.toJSONString(host), hostPO.getId()),
@@ -247,7 +247,7 @@ public class HostManageServiceImpl implements HostManageService {
          * 添加对应操作记录
          */
         operateRecordService.save(
-                ModuleEnum.HOST,
+                ModuleEnum.AGENT,
                 OperationEnum.DELETE,
                 hostId,
                 String.format("删除Host对象={id={%d}}", hostId),
@@ -305,7 +305,7 @@ public class HostManageServiceImpl implements HostManageService {
          * 添加对应操作记录
          */
         operateRecordService.save(
-                ModuleEnum.HOST,
+                ModuleEnum.AGENT,
                 OperationEnum.EDIT,
                 targetHost.getId(),
                 String.format("修改Host={%s}，修改成功的Host对象id={%d}", JSON.toJSONString(targetHost), targetHost.getId()),

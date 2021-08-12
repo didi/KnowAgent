@@ -194,13 +194,13 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         /*
          * 添加对应操作记录
          */
-        operateRecordService.save(
+        /*operateRecordService.save(
                 ModuleEnum.AGENT_VERSION,
                 OperationEnum.DELETE,
                 agentVersionId,
                 String.format("删除KafkaCluster对象={id={%d}}", agentVersionId),
                 operator
-        );
+        );*/
     }
 
     @Override
@@ -258,13 +258,13 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         /*
          * 添加对应操作记录
          */
-        operateRecordService.save(
+        /*operateRecordService.save(
                 ModuleEnum.AGENT_VERSION,
                 OperationEnum.ADD,
                 agentVersionPO.getId(),
                 String.format("创建AgentVersion={%s}，创建成功的AgentVersion对象id={%d}", JSON.toJSONString(agentVersionPO), agentVersionPO.getId()),
                 operator
-        );
+        );*/
         return agentVersionPO.getId();
     }
 
@@ -314,13 +314,13 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         /*
          * 添加对应操作记录
          */
-        operateRecordService.save(
+        /*operateRecordService.save(
                 ModuleEnum.AGENT_VERSION,
                 OperationEnum.EDIT,
                 agentVersionDTO.getId(),
                 String.format("修改AgentVersion={%s}，修改成功的AgentVersion对象id={%d}", JSON.toJSONString(agentVersionPO), agentVersionDTO.getId()),
                 operator
-        );
+        );*/
     }
 
 }

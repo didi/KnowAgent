@@ -9,11 +9,11 @@ import java.util.Map;
  */
 public enum ModuleEnum {
 
-    SERVICE(1, "服务"),
-    LOG_COLLECT_TASK(2,"日志采集任务"),
-    RECEIVER(3, "接收端"),
-    HOST(4, "主机"),
-//    AGENT(5, "Agent"),
+    SERVICE(1, "应用管理"),
+    LOG_COLLECT_TASK(2,"采集任务"),
+    RECEIVER(3, "Kafka集群"),
+    AGENT(4, "Agent管理"),
+//    HOST(5, "主机"),
 //    AGENT_VERSION(6, "AgentVersion"),
     UNKNOWN(-1, "unknown");
 

@@ -356,6 +356,7 @@ export const hostDetailBaseInfo = (info: IAgentHostSet) => {
     label: '最近 agent 启动时间',
     key: 'lastestAgentStartupTime',
     render: (t: number) => moment(t).format(timeFormat),
+    invisible: !(info.agentId !== null),
   },
   // {
   //   label: '所属机房',
