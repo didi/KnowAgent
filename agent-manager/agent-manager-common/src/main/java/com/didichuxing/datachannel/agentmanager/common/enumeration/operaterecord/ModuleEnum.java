@@ -13,8 +13,8 @@ public enum ModuleEnum {
     LOG_COLLECT_TASK(2,"日志采集任务"),
     RECEIVER(3, "接收端"),
     HOST(4, "主机"),
-    AGENT(5, "Agent"),
-    AGENT_VERSION(6, "AgentVersion"),
+//    AGENT(5, "Agent"),
+//    AGENT_VERSION(6, "AgentVersion"),
     UNKNOWN(-1, "unknown");
 
     ModuleEnum(int code, String desc) {

@@ -11,13 +11,13 @@ public enum OperationEnum {
 
     DELETE(2, "删除"),
 
-    EDIT(3, "修改"),
+    EDIT(3, "编辑"),
 
-    ENABLE(4, "启用"),
+//    ENABLE(4, "启用"),
 
-    DISABLE(5, "禁用"),
+//    DISABLE(5, "禁用"),
 
-    EXE(6, "执行"),
+//    EXE(6, "执行"),
 
     UNKNOWN(-1, "unknown"),
     ;

@@ -48,6 +48,9 @@ public class OperateRecordController {
     public Result<List<Map<String, Object>>> listModules() {
         List<Map<String, Object>> objects = Lists.newArrayList();
         for (ModuleEnum moduleEnum : ModuleEnum.values()) {
+            if (moduleEnum == ModuleEnum.UNKNOWN) {
+                continue;
+            }
             objects.add(moduleEnum.toMap());
         }
         return Result.buildSucc(objects);
