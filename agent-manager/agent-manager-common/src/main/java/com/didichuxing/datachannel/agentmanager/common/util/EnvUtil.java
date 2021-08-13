@@ -1,12 +1,8 @@
 package com.didichuxing.datachannel.agentmanager.common.util;
 
-import com.didichuxing.datachannel.agentmanager.common.enumeration.DataCenterEnum;
-
 public class EnvUtil {
 
     private static EnvType        type = EnvType.TEST;
-
-    private static DataCenterEnum dc   = DataCenterEnum.CN;
 
     public static boolean isOnline() {
         return type == EnvType.ONLINECN;
@@ -28,23 +24,7 @@ public class EnvUtil {
         return type == EnvType.STABLE;
     }
 
-    public static boolean isCN() {
-        return dc == DataCenterEnum.CN;
-    }
-
-    public static boolean isUS01() {
-        return dc == DataCenterEnum.US01;
-    }
-
-    public static DataCenterEnum getDC() {
-        return dc;
-    }
-
     public static EnvType getType(){return type;}
-
-    public static String getStr() {
-        return type.getStr() + "-" + dc.getCode();
-    }
 
     /**
      * 设置加载的活跃的profile文件
@@ -65,12 +45,6 @@ public class EnvUtil {
                 type = EnvType.PRECN;
             } else if (profile.contains("online")) {
                 type = EnvType.ONLINECN;
-            }
-
-            if (profile.contains("us01")) {
-                dc = DataCenterEnum.US01;
-            } else if (profile.contains("ru01")) {
-                dc = DataCenterEnum.RU01;
             }
         }
     }
