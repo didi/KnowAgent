@@ -172,8 +172,10 @@ public class K8sUtil {
      * @return 日志文件的主机路径
      */
     public static String getRealPath(String mountPath, String hostPath, String filePath) {
+        if (!hostPath.endsWith("/")) {
+            hostPath += "/";
+        }
         return filePath.replaceFirst(mountPath, hostPath);
     }
 
 }
-

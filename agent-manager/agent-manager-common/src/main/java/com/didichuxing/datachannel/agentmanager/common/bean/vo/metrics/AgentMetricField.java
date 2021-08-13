@@ -30,7 +30,7 @@ public enum AgentMetricField {
 
     MESSAGE_VERSION("message_version", "messageVersion"),
 
-    // 采集任务维
+    // 采集任务维度
     READ_TIME_MEAN("read_time_mean", "readTimeMean"),
 
     FILTER_REMAINED("filter_remained", "filterRemained"),
