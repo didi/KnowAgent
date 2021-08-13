@@ -274,6 +274,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         /*
          * 删除 agent
          */
+        deleteAgent(agentDO, checkAgentCompleteCollect, uninstall, operator);
         /*
          * 添加对应操作记录
          */
