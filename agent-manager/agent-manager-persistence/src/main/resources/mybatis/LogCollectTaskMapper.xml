@@ -76,11 +76,10 @@
       distinct t1.id as log_collect_task_id, t1.log_collect_task_name, t1.log_collect_task_type,
       t3.log_collect_task_health_level,t1.create_time create_time, t1.send_topic, t1.log_collect_task_status, t1.kafka_cluster_id, t1.log_collect_task_finish_time log_collect_task_finish_time
       FROM tb_log_collect_task as t1
-	INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id
-	INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
-    <if test="projectId != null">
-      INNER JOIN tb_service_project t5 ON t5.service_id = t2.service_id
+    <if test="serviceIdList != null">
+      INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id
     </if>
+	INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
     <where>
       1 = 1
       <if test="logCollectTaskName != null">
@@ -106,9 +105,6 @@
         <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
           #{serviceId}
         </foreach>
-      </if>
-      <if test="projectId != null">
-        and t5.project_id = #{projectId}
       </if>
       <if test="createTimeStart != null">
         and t1.create_time >= #{createTimeStart}
@@ -141,11 +137,10 @@
     select count(t4.c) from (
     SELECT distinct t1.id as c
     FROM tb_log_collect_task as t1
-    INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id
-    INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
-    <if test="projectId != null">
-      INNER JOIN tb_service_project t5 ON t5.service_id = t2.service_id
+    <if test="serviceIdList != null">
+        INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id
     </if>
+    INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
     <where>
       1 = 1
       <if test="logCollectTaskName != null">
@@ -171,9 +166,6 @@
         <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
           #{serviceId}
         </foreach>
-      </if>
-      <if test="projectId != null">
-        and t5.project_id = #{projectId}
       </if>
       <if test="createTimeStart != null">
         and t1.create_time >= #{createTimeStart}
