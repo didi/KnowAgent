@@ -37,7 +37,7 @@ public class WindowsOSResourceService implements IOSResourceService {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {
-            lastLinuxCpuTime = new LinuxCpuTime(PID, getCpuNum());// 记录上次的cpu耗时
+            lastLinuxCpuTime = new LinuxCpuTime(getPid(), getCpuNum());// 记录上次的cpu耗时
         } catch (Exception e) {
             LOGGER
                 .error(

@@ -109,7 +109,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     @Override
     public float getCurrentProcessCpuUsage() {
         try {
-            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(PID, getCpuNum());
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getPid(), getCpuNum());
             float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
             lastLinuxCpuTime = curLinuxCpuTime;
             return cpuUsage;

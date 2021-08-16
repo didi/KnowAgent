@@ -78,7 +78,7 @@ public class ProcessUtils {
         } else if (osName.contains(OSTypeEnum.WINDOWS.getDesc())) {
             return new WindowsOSResourceService();
         } else if (osName.contains(OSTypeEnum.MAC_OS.getDesc())) {
-            return new LinuxOSResourceService();
+            return new MacOSResourceService();
         } else {
             throw new ServiceException(String.format(
                 "class=ProcessUtils||method=getOSResourceService||msg=system={%s} not support",

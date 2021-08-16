@@ -15,16 +15,20 @@ public class LinuxCpuTime {
     // 获得整个系统从启动到现在的cpu耗时
     private final String ALL_PATH = "/proc/stat";
 
+    //cpu 核 数
+    private int cpuNum;
+
     // 获得当前的耗时
     public LinuxCpuTime(long pid, int cpuNum) throws Exception {
         this.all = getAllTime();
         this.process = getProcessTime();
+        this.cpuNum = cpuNum;
         PROCESS_PATH = "/proc/" + pid + "/stat";
     }
 
     // 根据计算cpu耗时的差值，计算这段时间中的cpu耗时
     public float getUsage(LinuxCpuTime before) {
-        float cpuUsage = ((float) (all - before.all)) / ProcessUtils.getInstance().getCpuNum();
+        float cpuUsage = ((float) (all - before.all)) / cpuNum;
         float proUsage = process - before.process;
         return proUsage * 100 / cpuUsage;
     }
