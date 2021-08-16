@@ -73,7 +73,10 @@ public class LimitCpuThread implements Runnable {
                 // 4. 记录cpu耗时
                 this.currentCpuUsage = (float) (Math.round(cpuUsage * 100)) / 100;
             } catch (Throwable t) {
-                LOGGER.error("Limiter.cpuThread process cpuUsage error, {}", t.getCause());
+                LOGGER.error(
+                        String.format("Limiter.cpuThread process cpuUsage error, {%s}", t.getMessage()),
+                        t
+                );
             }
         }
     }
