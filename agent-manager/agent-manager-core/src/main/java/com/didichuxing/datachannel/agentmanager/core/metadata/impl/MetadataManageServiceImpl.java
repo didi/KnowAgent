@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareRe
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodHostPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
@@ -65,7 +66,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     private HostContainerComparator hostContainerComparator = new HostContainerComparator();
 
     @Override
-    public void sync() {
+    public MetadataSyncResult sync() {
 
         MetadataResult metadataResult = metadataManageServiceExtension.pullMetadataResultFromRemote();
         if(null == metadataResult) {
@@ -74,7 +75,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                             "远程获取k8s元信息pod实例集为空"
                     )
             );
-            return;
+            return null;
         }
 
         /*
@@ -122,6 +123,8 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         List<K8sPodHostPO> k8sPodContainerPOListFromLocal = k8sPodContainerManageService.list();
         ListCompareResult<K8sPodHostPO> k8sPodContainerPOListCompareResult = ListCompareUtil.compare(k8sPodContainerPOListFromLocal, k8sPodContainerPOListFromRemote, k8sPodContainerPOComparator);//对比服务 & 主机关联关系
         handleK8sPodHostPOListCompareResult(k8sPodContainerPOListCompareResult);
+
+        return null;
 
     }
 

@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.metadata;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResult;
+
 /**
  * 元数据管理服务
  */
@@ -20,6 +22,6 @@ public interface MetadataManageService {
      *  3.）同步容器 - pod 关联关系
      *
      */
-    void sync();
+    MetadataSyncResult sync();
 
 }
