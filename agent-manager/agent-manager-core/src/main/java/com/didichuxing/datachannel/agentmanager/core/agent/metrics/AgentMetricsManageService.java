@@ -446,6 +446,19 @@ public interface AgentMetricsManageService {
     List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, String column, String method, int step);
 
     /**
+     * 通用聚合查询，根据宿主机来查询
+     *
+     * @param hostname
+     * @param startTime
+     * @param endTime
+     * @param column 聚合字段
+     * @param method 聚合函数名
+     * @param step 每个聚合的时间间隔
+     * @return
+     */
+    List<MetricPoint> queryAggregationByHost(String hostname, Long startTime, Long endTime, String column, String method, int step);
+
+    /**
      * 通用查询
      *
      * @param metricQueryDO

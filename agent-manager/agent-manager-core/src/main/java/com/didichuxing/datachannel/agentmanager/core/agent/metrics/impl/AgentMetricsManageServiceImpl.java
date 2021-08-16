@@ -341,6 +341,22 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
+    public List<MetricPoint> queryAggregationByHost(String hostname, Long startTime, Long endTime, String column, String method, int step) {
+        AgentMetricField field = AgentMetricField.fromString(column);
+        CalcFunction function = CalcFunction.fromString(method);
+        if (field == null) {
+            throw new ServiceException("字段不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == null) {
+            throw new ServiceException("聚合方法名不合法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        if (function == CalcFunction.NORMAL) {
+            throw new ServiceException("根据主机查询时需要提供聚合方法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        return agentMetricsDAO.queryAggregationByHostname(hostname, trimTimestamp(startTime), endTime, field, function, step);
+    }
+
+    @Override
     public List<MetricPoint> queryByLogModel(MetricQueryDO metricQueryDO, String column) {
         AgentMetricField field = AgentMetricField.fromString(column);
         if (field == null) {

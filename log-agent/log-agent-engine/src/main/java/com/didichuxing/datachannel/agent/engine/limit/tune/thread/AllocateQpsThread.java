@@ -20,12 +20,12 @@ public class AllocateQpsThread implements Runnable {
     private boolean             isStop          = false;
     private LimitService        limiter;
 
-    private String              peroid          = "tps.period";
+    private String period = "tps.period";
     private long                interval;
 
     public AllocateQpsThread(LimitService limiter) throws Exception {
         this.limiter = limiter;
-        this.interval = Long.parseLong(CommonUtils.readSettings().get(peroid));
+        this.interval = Long.parseLong(CommonUtils.readSettings().get(period));
     }
 
     @Override

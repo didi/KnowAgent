@@ -962,6 +962,13 @@
       and heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
       group by round(heartbeat_time / #{step}) * #{step}
   </select>
+  <select id="selectAggregationByHostname" resultMap="MetricPointMap">
+    select ${function}(${column}) ${column}, round(heartbeat_time / #{step}) * #{step} heartbeat_time from collect_task_metric
+      where hostname = #{hostname}
+      and heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
+      group by round(heartbeat_time / #{step}) * #{step}
+  </select>
+
   <select id="selectByLogModel" resultMap="MetricPointMap">
     select ${column}, heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}

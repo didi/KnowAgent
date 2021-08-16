@@ -561,7 +561,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getSendByte(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;
@@ -571,7 +571,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getSendCount(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;
@@ -581,7 +581,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getReadByte(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;
@@ -591,7 +591,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     public MetricPointList getReadCount(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
         MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByLogModel(metricQueryDO, AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
         metricPointList.setName(metricQueryDO.getHostName());
         return metricPointList;

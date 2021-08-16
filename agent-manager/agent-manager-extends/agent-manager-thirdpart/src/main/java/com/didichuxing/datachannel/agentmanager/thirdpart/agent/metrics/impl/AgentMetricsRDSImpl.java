@@ -273,6 +273,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
+    public List<MetricPoint> queryAggregationByHostname(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
+        return null;
+    }
+
+    @Override
     public List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column) {
         return collectTaskMetricMapper.selectByLogModel(logCollectTaskId, logModelHostName, fileLogCollectPathId, startTime, endTime, column.getRdsValue());
     }
