@@ -48,7 +48,7 @@ public class LimitCpuThread implements Runnable {
 
                 // 2. 获得cpu利用率
                 float cpuUsage = ProcessUtils.getInstance().getCurrentCpuUsage();
-                LOGGER.info(String.format("cpuUsage=%d", cpuUsage));
+                LOGGER.info("cpuUsage=" + cpuUsage);
 
                 // 3. 根据cpu利用率调整qps阀值
                 if (cpuUsage > (threshold * (FACTOR + 1))) {
