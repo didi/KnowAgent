@@ -33,15 +33,18 @@ public class AixOSResourceService implements IOSResourceService {
      */
     private final OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
 
-    private LinuxCpuTime lastLinuxCpuTime;
+    private LinuxCpuTime                lastLinuxCpuTime;
 
     public AixOSResourceService() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {
-            lastLinuxCpuTime = new LinuxCpuTime();// 记录上次的cpu耗时
+            lastLinuxCpuTime = new LinuxCpuTime(PID, getCpuNum());// 记录上次的cpu耗时
         } catch (Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed", e);
+            LOGGER
+                .error(
+                    "class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed",
+                    e);
         }
     }
 
@@ -114,9 +117,9 @@ public class AixOSResourceService implements IOSResourceService {
     public float getCurrentProcessCpuUsage() {
         String osName = osMxBean.getName().toLowerCase();
         throw new ServiceException(
-                String.format("class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support", osName),
-                ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode()
-        );
+            String.format(
+                "class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support",
+                osName), ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
     }
 
     @Override
@@ -236,7 +239,7 @@ public class AixOSResourceService implements IOSResourceService {
     public long getFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();
@@ -262,7 +265,7 @@ public class AixOSResourceService implements IOSResourceService {
         String procFDShell = "svmon -P $pid | wc -l";
         try {
             procFDShell = procFDShell.replaceAll("\\$pid", PID + "");
-            String[] cmd = new String[]{"/bin/sh", "-c", procFDShell};
+            String[] cmd = new String[] { "/bin/sh", "-c", procFDShell };
             process = Runtime.getRuntime().exec(cmd);
             int resultCode = process.waitFor();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));

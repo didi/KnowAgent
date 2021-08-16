@@ -15,14 +15,13 @@ import org.slf4j.LoggerFactory;
  */
 public class ProcessUtils {
 
-    private static final Logger          LOGGER            = LoggerFactory
-                                                               .getLogger(ProcessUtils.class);
+    private static final Logger       LOGGER         = LoggerFactory.getLogger(ProcessUtils.class);
 
-    private static ProcessUtils instance = new ProcessUtils();
+    private static ProcessUtils       instance       = new ProcessUtils();
 
-    private static IOSResourceService    osResourceService;
+    private static IOSResourceService osResourceService;
 
-    private long                  preFullGcCount    = 0L;
+    private long                      preFullGcCount = 0L;
 
     public static ProcessUtils getInstance() {
         return instance;
@@ -72,19 +71,18 @@ public class ProcessUtils {
     private IOSResourceService getOSResourceService() {
         //根据 os 类型进行对应实例化
         String osName = ManagementFactory.getOperatingSystemMXBean().getName().toLowerCase();
-        if(osName.contains(OSTypeEnum.LINUX.getDesc())) {
+        if (osName.contains(OSTypeEnum.LINUX.getDesc())) {
             return new LinuxOSResourceService();
-        } else if(osName.contains(OSTypeEnum.AIX.getDesc())) {
+        } else if (osName.contains(OSTypeEnum.AIX.getDesc())) {
             return new AixOSResourceService();
-        } else if(osName.contains(OSTypeEnum.WINDOWS.getDesc())) {
+        } else if (osName.contains(OSTypeEnum.WINDOWS.getDesc())) {
             return new WindowsOSResourceService();
-        } else if(osName.contains(OSTypeEnum.MAC_OS.getDesc())) {
-            return new MacOSResourceService();
+        } else if (osName.contains(OSTypeEnum.MAC_OS.getDesc())) {
+            return new LinuxOSResourceService();
         } else {
-            throw new ServiceException(
-                    String.format("class=ProcessUtils||method=getOSResourceService||msg=system={%s} not support", osName),
-                    ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode()
-            );
+            throw new ServiceException(String.format(
+                "class=ProcessUtils||method=getOSResourceService||msg=system={%s} not support",
+                osName), ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
         }
     }
 

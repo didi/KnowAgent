@@ -109,14 +109,14 @@ public class MacOSResourceService implements IOSResourceService {
             procCpuShell = String.format(procCpuShell, PID);
             String[] cmd = new String[] { "sh", "-c", procCpuShell };
             process = Runtime.getRuntime().exec(cmd);
-//            int resultCode = process.waitFor();
+            //            int resultCode = process.waitFor();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             int lineNum = 1;
             String line = null;
             while ((line = br.readLine()) != null) {
-                if(13 == lineNum) {
+                if (13 == lineNum) {
                     String[] kpiArray = line.trim().split(" ");
-                    if(null != kpiArray && kpiArray.length == 97) {
+                    if (null != kpiArray && kpiArray.length == 97) {
                         String cpuUsageStr = kpiArray[6];
                         try {
                             float cpuUsage = Float.valueOf(cpuUsageStr);
@@ -271,7 +271,7 @@ public class MacOSResourceService implements IOSResourceService {
     public long getFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();
@@ -294,12 +294,13 @@ public class MacOSResourceService implements IOSResourceService {
     public int getCurrentProcessFdUsed() {
         Process process = null;
         BufferedReader br = null;
-        String procCpuShell = String.format("lsof -n|awk '{print $2}'|sort|uniq -c |sort -nr|grep %d", getPid());
+        String procCpuShell = String.format(
+            "lsof -n|awk '{print $2}'|sort|uniq -c |sort -nr|grep %d", getPid());
         try {
             procCpuShell = String.format(procCpuShell, PID);
             String[] cmd = new String[] { "sh", "-c", procCpuShell };
             process = Runtime.getRuntime().exec(cmd);
-//            int resultCode = process.waitFor();
+            //            int resultCode = process.waitFor();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = null;
             while ((line = br.readLine()) != null) {

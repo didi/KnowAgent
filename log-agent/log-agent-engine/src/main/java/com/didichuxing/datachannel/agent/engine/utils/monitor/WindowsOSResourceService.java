@@ -7,8 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.lang.management.*;
 import java.lang.reflect.Method;
 
@@ -33,15 +31,18 @@ public class WindowsOSResourceService implements IOSResourceService {
      */
     private final OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
 
-    private LinuxCpuTime lastLinuxCpuTime;
+    private LinuxCpuTime                lastLinuxCpuTime;
 
     public WindowsOSResourceService() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {
-            lastLinuxCpuTime = new LinuxCpuTime();// 记录上次的cpu耗时
+            lastLinuxCpuTime = new LinuxCpuTime(PID, getCpuNum());// 记录上次的cpu耗时
         } catch (Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed", e);
+            LOGGER
+                .error(
+                    "class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed",
+                    e);
         }
     }
 
@@ -113,9 +114,8 @@ public class WindowsOSResourceService implements IOSResourceService {
     @Override
     public float getCurrentProcessCpuUsage() {
         throw new ServiceException(
-                "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support",
-                ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode()
-        );
+            "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support",
+            ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
     }
 
     @Override
@@ -235,7 +235,7 @@ public class WindowsOSResourceService implements IOSResourceService {
     public long getFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();
@@ -257,9 +257,8 @@ public class WindowsOSResourceService implements IOSResourceService {
     @Override
     public int getCurrentProcessFdUsed() {
         throw new ServiceException(
-                "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's fd used get failed, windows system not support",
-                ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode()
-        );
+            "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's fd used get failed, windows system not support",
+            ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
     }
 
     @Override

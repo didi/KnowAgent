@@ -5,11 +5,7 @@ package com.didichuxing.datachannel.agent.engine.utils;
  */
 public enum OSTypeEnum {
 
-    LINUX("linux", 0),
-    MAC_OS("mac", 1),
-    WINDOWS("windows", 2),
-    AIX("aix", 3)
-    ;
+    LINUX("linux", 0), MAC_OS("mac", 1), WINDOWS("windows", 2), AIX("aix", 3);
 
     private String desc;
 

@@ -4,15 +4,10 @@ import com.didichuxing.datachannel.agent.engine.utils.FileUtils;
 import com.didichuxing.datachannel.agent.engine.utils.ProcessUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class LinuxCpuTime {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxCpuTime.class);
-
-    public long                 all;                                            // 整个系统从启动到现在的cpu耗时
-    public long                 process;                                        // 当前进程从启动到现在的cpu耗时
+    public long          all;                    // 整个系统从启动到现在的cpu耗时
+    public long          process;                // 当前进程从启动到现在的cpu耗时
 
     // 获得当前进程从启动到现在的cpu耗时
     private final String PROCESS_PATH;
@@ -21,17 +16,16 @@ public class LinuxCpuTime {
     private final String ALL_PATH = "/proc/stat";
 
     // 获得当前的耗时
-    public LinuxCpuTime() throws Exception {
+    public LinuxCpuTime(long pid, int cpuNum) throws Exception {
         this.all = getAllTime();
         this.process = getProcessTime();
-        PROCESS_PATH = "/proc/" + ProcessUtils.getInstance().getPid().trim() + "/stat";
+        PROCESS_PATH = "/proc/" + pid + "/stat";
     }
 
     // 根据计算cpu耗时的差值，计算这段时间中的cpu耗时
     public float getUsage(LinuxCpuTime before) {
         float cpuUsage = ((float) (all - before.all)) / ProcessUtils.getInstance().getCpuNum();
         float proUsage = process - before.process;
-
         return proUsage * 100 / cpuUsage;
     }
 

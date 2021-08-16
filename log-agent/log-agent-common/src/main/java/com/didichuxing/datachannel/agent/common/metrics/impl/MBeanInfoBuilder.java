@@ -91,7 +91,8 @@ public class MBeanInfoBuilder implements MetricsVisitor {
         curRecNo = 0;
         for (MetricsRecordImpl rec : recs) {
             for (MetricsTag t : rec.tags()) {
-                attrs.add(newAttrInfo("tag." + t.getName(), t.getDescription(), "java.lang.String"));
+                attrs
+                    .add(newAttrInfo("tag." + t.getName(), t.getDescription(), "java.lang.String"));
             }
             for (Metric m : rec.metrics()) {
                 m.visit(this);

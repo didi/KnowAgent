@@ -1,8 +1,6 @@
 package com.didichuxing.datachannel.agent.engine.utils.monitor;
 
 import com.didichuxing.datachannel.agent.engine.limit.cpu.LinuxCpuTime;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,31 +15,29 @@ import java.lang.reflect.Method;
  */
 public class LinuxOSResourceService implements IOSResourceService {
 
-    private static final Logger         LOGGER   = LoggerFactory
-                                                     .getLogger(LinuxOSResourceService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxOSResourceService.class);
 
     /**
      * 当前agent进程id
      */
-    private final long                  PID;
+    private final long          PID;
     /**
      * agent宿主机cpu核（逻辑核）
      */
-    private final int                   CPU_NUM;
-    /**
-     * 用于获取操作系统相关属性bean
-     */
-    private final OperatingSystemMXBean osMxBean = ManagementFactory.getOperatingSystemMXBean();
+    private final int           CPU_NUM;
 
-    private LinuxCpuTime lastLinuxCpuTime;
+    private LinuxCpuTime        lastLinuxCpuTime;
 
     public LinuxOSResourceService() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {
-            lastLinuxCpuTime = new LinuxCpuTime();// 记录上次的cpu耗时
+            lastLinuxCpuTime = new LinuxCpuTime(getPid(), getCpuNum());// 记录上次的cpu耗时
         } catch (Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed", e);
+            LOGGER
+                .error(
+                    "class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed",
+                    e);
         }
     }
 
@@ -113,12 +109,15 @@ public class LinuxOSResourceService implements IOSResourceService {
     @Override
     public float getCurrentProcessCpuUsage() {
         try {
-            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime();
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(PID, getCpuNum());
             float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
             lastLinuxCpuTime = curLinuxCpuTime;
             return cpuUsage;
         } catch (Exception e) {
-            LOGGER.error("class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed", e);
+            LOGGER
+                .error(
+                    "class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed",
+                    e);
             return 0;
         }
     }
@@ -240,7 +239,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     public long getFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();
@@ -267,7 +266,7 @@ public class LinuxOSResourceService implements IOSResourceService {
         String procFDShell = "ls /proc/%d/fd | wc -l";
         try {
             procFDShell = String.format(procFDShell, PID);
-            String[] cmd = new String[]{"sh", "-c", procFDShell};
+            String[] cmd = new String[] { "sh", "-c", procFDShell };
             process = Runtime.getRuntime().exec(cmd);
             int resultCode = process.waitFor();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));

@@ -21,7 +21,9 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractSink<T extends Event> extends TaskComponent implements Runnable,
                                                                          Configurable {
 
-    private static final Logger     LOGGER                       = LoggerFactory.getLogger(AbstractSink.class.getName());
+    private static final Logger     LOGGER                       = LoggerFactory
+                                                                     .getLogger(AbstractSink.class
+                                                                         .getName());
 
     AbstractChannel                 channel;
 
@@ -127,7 +129,8 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
                 eventIsNullTimes = 0;
             }
         } catch (Throwable t) {
-            LogGather.recordErrorLog("AbstractSink error", "sendMsg error! key is " + getUniqueKey(), t);
+            LogGather.recordErrorLog("AbstractSink error", "sendMsg error! key is "
+                                                           + getUniqueKey(), t);
         }
     }
 
