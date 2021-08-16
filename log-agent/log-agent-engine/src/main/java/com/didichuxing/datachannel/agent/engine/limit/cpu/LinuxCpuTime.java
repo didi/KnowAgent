@@ -20,10 +20,10 @@ public class LinuxCpuTime {
 
     // 获得当前的耗时
     public LinuxCpuTime(long pid, int cpuNum) throws Exception {
-        this.all = getAllTime();
-        this.process = getProcessTime();
         this.cpuNum = cpuNum;
         PROCESS_PATH = "/proc/" + pid + "/stat";
+        this.all = getAllTime();
+        this.process = getProcessTime();
     }
 
     // 根据计算cpu耗时的差值，计算这段时间中的cpu耗时
