@@ -7,17 +7,14 @@ import store from '../store';
 export const Agent = (props: any) => {
   const perPoints = store?.getState().permPoints
   // const [perPoints, setPerPoints] = React.useState(null);
-  const pageRoute: IPageRouteItem[] = [{
-    path: '/',
-    exact: true,
-    component: () => <AgentList {...props} />,
-    isNoPermission: !perPoints.points?.Agent_agent_management_page,
-  }, {
+  const pageRoute: IPageRouteItem[] = [
+    {
     path: '/list',
     exact: true,
     component: () => <AgentList {...props} />,
     isNoPermission: !perPoints.points?.Agent_agent_management_page,
-  }, {
+    },
+    {
     path: '/detail',
     exact: true,
     component: () => <AgentDetail {...props} />,

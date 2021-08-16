@@ -79,7 +79,7 @@ const App = () => {
                         menus={leftMenus}
                       >
                         <Switch>
-                          <Route path="/" exact={true} component={Agent} />
+                          <Route path="/" exact={true} component={Dashboards} />
                           <Route path="/list" exact={true} component={Agent} />
                           <Route path="/detail" exact={true} component={Agent} />
                           <Route path="/dataSource" exact={true} component={DataSource} />

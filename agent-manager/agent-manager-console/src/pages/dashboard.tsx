@@ -6,12 +6,20 @@ import store from '../store';
 
 export const Dashboards = (props: any) => {
   const perPoints = store?.getState().permPoints
-  const pageRoute: IPageRouteItem[] = [{
-    path: '/dashboard',
+  const pageRoute: IPageRouteItem[] = [
+    {
+    path: '/',
     exact: true,
     component: () => <Dashboard {...props} />,
     isNoPermission: !perPoints.points?.Agent_collect_page,
-  }];
+    },
+    {
+      path: '/dashboard',
+      exact: true,
+      component: () => <Dashboard {...props} />,
+      isNoPermission: !perPoints.points?.Agent_collect_page,
+    }
+  ];
 
   return (
     <CommonRoutePage pageRoute={pageRoute} />
