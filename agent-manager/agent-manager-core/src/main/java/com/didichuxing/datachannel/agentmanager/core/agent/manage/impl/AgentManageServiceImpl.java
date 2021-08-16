@@ -1206,13 +1206,4 @@ public class AgentManageServiceImpl implements AgentManageService {
         return heartbeatTimes > 0;
     }
 
-    private MetricQueryDO convertToTaskQuery(AgentMetricQueryDO agentMetricQueryDO) {
-        String agentHostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
-        MetricQueryDO metricQueryDO = new MetricQueryDO();
-        metricQueryDO.setHostName(agentHostname);
-        metricQueryDO.setStartTime(agentMetricQueryDO.getStartTime());
-        metricQueryDO.setEndTime(agentMetricQueryDO.getEndTime());
-        return metricQueryDO;
-    }
-
 }
