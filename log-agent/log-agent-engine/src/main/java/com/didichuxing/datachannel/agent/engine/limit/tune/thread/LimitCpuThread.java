@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agent.engine.limit.tune.thread;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
@@ -73,6 +74,8 @@ public class LimitCpuThread implements Runnable {
                 // 4. 记录cpu耗时
                 this.currentCpuUsage = (float) (Math.round(cpuUsage * 100)) / 100;
             } catch (Throwable t) {
+                LOGGER.error(JSON.toJSONString(t));
+                LOGGER.error(JSON.toJSONString(t.getStackTrace()));
                 LOGGER.error(
                         String.format("Limiter.cpuThread process cpuUsage error, message={%s}", t.getMessage()),
                         t
