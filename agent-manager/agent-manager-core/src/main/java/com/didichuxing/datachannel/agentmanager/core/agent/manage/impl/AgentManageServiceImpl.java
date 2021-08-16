@@ -560,40 +560,40 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Override
     public MetricPointList getSendByte(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
-        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        String hostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(hostname, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.SEND_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
-        metricPointList.setName(metricQueryDO.getHostName());
+        metricPointList.setName(hostname);
         return metricPointList;
     }
 
     @Override
     public MetricPointList getSendCount(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
-        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        String hostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(hostname, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.SEND_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
-        metricPointList.setName(metricQueryDO.getHostName());
+        metricPointList.setName(hostname);
         return metricPointList;
     }
 
     @Override
     public MetricPointList getReadByte(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
-        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        String hostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(hostname, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.READ_BYTE.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
-        metricPointList.setName(metricQueryDO.getHostName());
+        metricPointList.setName(hostname);
         return metricPointList;
     }
 
     @Override
     public MetricPointList getReadCount(AgentMetricQueryDO agentMetricQueryDO) {
         MetricPointList metricPointList = new MetricPointList();
-        MetricQueryDO metricQueryDO = convertToTaskQuery(agentMetricQueryDO);
-        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(agentMetricQueryDO.getHostname(), agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
+        String hostname = getById(agentMetricQueryDO.getAgentId()).getHostName();
+        List<MetricPoint> graph = agentMetricsManageService.queryAggregationByHost(hostname, agentMetricQueryDO.getStartTime(), agentMetricQueryDO.getEndTime(), AgentMetricField.READ_COUNT.name(), CalcFunction.SUM.getValue(), MetricConstant.HEARTBEAT_PERIOD);
         metricPointList.setMetricPointList(graph);
-        metricPointList.setName(metricQueryDO.getHostName());
+        metricPointList.setName(hostname);
         return metricPointList;
     }
 
