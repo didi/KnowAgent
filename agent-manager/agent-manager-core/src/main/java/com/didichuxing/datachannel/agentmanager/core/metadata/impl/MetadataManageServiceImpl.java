@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.HostInfo;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResultPerService;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodHostPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
@@ -107,8 +109,27 @@ public class MetadataManageServiceImpl implements MetadataManageService {
          * 同步服务 - 主机关联关系
          */
         Map<String, String> containerName2ServiceNameMap = metadataResult.getContainerName2ServiceNameMap();
-        Map<String, HostDO> hostName2HostDOMap = parse2HostMap(hostManageService.list());
-        Map<String, ServiceDO> serviceName2ServiceDOMap = parse2ServiceMap(serviceManageService.list());
+        Map<String, HostDO> hostName2HostDOMap = new HashMap<>();
+        Map<Long, HostDO> hostIdMapFromLocal = new HashMap<>();
+        if(CollectionUtils.isNotEmpty(hostAndContainerListFromLocal)) {
+            for (HostDO hostDO : hostAndContainerListFromLocal) {
+                hostName2HostDOMap.put(hostDO.getHostName(), hostDO);
+                hostIdMapFromLocal.put(hostDO.getId(), hostDO);
+            }
+        }
+        Map<Long, HostDO> hostIdMapFromRemote = new HashMap<>();
+        if(CollectionUtils.isNotEmpty(hostAndContainerListFromRemote)) {
+            for (HostDO hostDO : hostAndContainerListFromRemote) {
+                hostIdMapFromRemote.put(hostDO.getId(), hostDO);
+            }
+        }
+        List<ServiceDO> serviceListFromLocal = serviceManageService.list();
+        Map<String, ServiceDO> serviceName2ServiceDOMap = new HashMap<>();
+        if(CollectionUtils.isNotEmpty(serviceListFromLocal)) {
+            for (ServiceDO serviceDO : serviceListFromLocal) {
+                serviceName2ServiceDOMap.put(serviceDO.getServicename(), serviceDO);
+            }
+        }
         List<ServiceHostPO> serviceHostPOListFromRemote = parse2ServiceHostPOList(containerName2ServiceNameMap, serviceName2ServiceDOMap, hostName2HostDOMap);
         List<ServiceHostPO> serviceHostPOListFromLocal = serviceHostManageService.list();
         ListCompareResult<ServiceHostPO> serviceHostPOListCompareResult = ListCompareUtil.compare(serviceHostPOListFromLocal, serviceHostPOListFromRemote, serviceHostPOComparator);//对比服务 & 主机关联关系
@@ -124,7 +145,46 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         ListCompareResult<K8sPodHostPO> k8sPodContainerPOListCompareResult = ListCompareUtil.compare(k8sPodContainerPOListFromLocal, k8sPodContainerPOListFromRemote, k8sPodContainerPOComparator);//对比服务 & 主机关联关系
         handleK8sPodHostPOListCompareResult(k8sPodContainerPOListCompareResult);
 
-        return null;
+        MetadataSyncResult result = new MetadataSyncResult();
+        List<MetadataSyncResultPerService> list = new ArrayList<>();
+        for (ServiceDO remoteService : serviceDOListFromRemote) {
+            List<Long> hosts = remoteService.getHostIdList();
+            Long serviceId = remoteService.getId();
+            List<HostInfo> hostInfoListForName = new ArrayList<>();
+            List<HostInfo> hostInfoListForIp = new ArrayList<>();
+            MetadataSyncResultPerService syncResult = new MetadataSyncResultPerService();
+            syncResult.setServiceName(remoteService.getServicename());
+            syncResult.setRelateHostNum(remoteService.getHostIdList().size());
+            syncResult.setSyncSuccess(1);
+            for (Long hostId : hosts) {
+                HostDO remoteHost = hostIdMapFromRemote.get(hostId);
+                for (Map.Entry<Long, HostDO> entry : hostIdMapFromLocal.entrySet()) {
+                    HostDO hostDO = entry.getValue();
+                    if (remoteHost.getHostName().equals(hostDO.getHostName())) {
+                        HostInfo hostInfo = new HostInfo();
+                        hostInfo.setHostName(hostDO.getHostName());
+                        hostInfo.setHostType(hostDO.getContainer());
+                        hostInfo.setIp(remoteHost.getIp());
+                        hostInfoListForName.add(hostInfo);
+                    }
+                }
+                for (Map.Entry<Long, HostDO> entry : hostIdMapFromLocal.entrySet()) {
+                    HostDO hostDO = entry.getValue();
+                    if (remoteHost.getIp().equals(hostDO.getIp())) {
+                        HostInfo hostInfo = new HostInfo();
+                        hostInfo.setHostName(hostDO.getHostName());
+                        hostInfo.setHostType(hostDO.getContainer());
+                        hostInfo.setIp(remoteHost.getIp());
+                        hostInfoListForIp.add(hostInfo);
+                    }
+                }
+            }
+            syncResult.setDuplicateHostNameHostList(hostInfoListForName);
+            syncResult.setDuplicateIpHostList(hostInfoListForIp);
+            list.add(syncResult);
+        }
+        result.setMetadataSyncResultPerServiceList(list);
+        return result;
 
     }
 
@@ -323,35 +383,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             }
         }
         return k8sPodUuid2K8sPodDOMap;
-    }
-
-    /**
-     *
-     * @param serviceDOList ServiceDO对象集
-     * @return 返回 key：serviceName value：serviceDO 对象 map
-     */
-    private Map<String, ServiceDO> parse2ServiceMap(List<ServiceDO> serviceDOList) {
-        Map<String, ServiceDO> serviceName2ServiceDOMap = new HashMap<>();
-        if(CollectionUtils.isNotEmpty(serviceDOList)) {
-            for (ServiceDO serviceDO : serviceDOList) {
-                serviceName2ServiceDOMap.put(serviceDO.getServicename(), serviceDO);
-            }
-        }
-        return serviceName2ServiceDOMap;
-    }
-
-    /**
-     * @param hostDOList HostDO对象集
-     * @return 返回 key：hostName value：hostDO 对象 map
-     */
-    private Map<String, HostDO> parse2HostMap(List<HostDO> hostDOList) {
-        Map<String, HostDO> hostName2HostDOMap = new HashMap<>();
-        if(CollectionUtils.isNotEmpty(hostDOList)) {
-            for (HostDO hostDO : hostDOList) {
-                hostName2HostDOMap.put(hostDO.getHostName(), hostDO);
-            }
-        }
-        return hostName2HostDOMap;
     }
 
     /**
