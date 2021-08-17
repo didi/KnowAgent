@@ -149,11 +149,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         List<MetadataSyncResultPerService> list = new ArrayList<>();
         for (ServiceDO remoteService : serviceDOListFromRemote) {
             List<Long> hosts = remoteService.getHostIdList();
+            if (hosts == null || hosts.size() == 0) {
+                continue;
+            }
             List<HostInfo> hostInfoListForName = new ArrayList<>();
             List<HostInfo> hostInfoListForIp = new ArrayList<>();
             MetadataSyncResultPerService syncResult = new MetadataSyncResultPerService();
             syncResult.setServiceName(remoteService.getServicename());
-            syncResult.setRelateHostNum(remoteService.getHostIdList().size());
+            syncResult.setRelateHostNum(hosts.size());
             syncResult.setSyncSuccess(1);
             for (Long hostId : hosts) {
                 HostDO remoteHost = hostIdMapFromRemote.get(hostId);
