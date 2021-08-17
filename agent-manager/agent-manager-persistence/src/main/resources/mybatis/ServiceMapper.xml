@@ -27,11 +27,11 @@
     from tb_service
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <select id="selectByExtenalServiceId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByExternalServiceId" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from tb_service
-    where extenal_service_id = #{extenalServiceId,jdbcType=BIGINT}
+    where extenal_service_id = #{externalServiceId,jdbcType=BIGINT}
   </select>
   <select id="list" resultMap="BaseResultMap">
     select

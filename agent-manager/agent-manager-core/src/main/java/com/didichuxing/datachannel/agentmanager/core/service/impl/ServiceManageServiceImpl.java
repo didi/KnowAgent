@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServicePaginationQueryConditionDO;
@@ -157,6 +158,11 @@ public class ServiceManageServiceImpl implements ServiceManageService {
         return serviceDAO.queryCountByCondition(servicePaginationQueryConditionDO);
     }
 
+    @Override
+    public Long countAll() {
+        return serviceDAO.countAll();
+    }
+
     /**
      * @param serviceName2ProjectServiceNameMap 服务节点名 ~ 服务节点所属项目节点名关联关系集
      * @param serviceDOListInLocal 系统全量服务节点对象集
@@ -235,21 +241,6 @@ public class ServiceManageServiceImpl implements ServiceManageService {
                 return null;
             }
         }
-    }
-
-    @Override
-    public ServiceDO getByExtenalServiceId(Long extenalServiceId) {
-        ServicePO servicePO = serviceDAO.selectByExtenalServiceId(extenalServiceId);
-        if(null == servicePO) {
-            return null;
-        } else {
-            return ConvertUtil.obj2Obj(servicePO, ServiceDO.class);
-        }
-    }
-
-    @Override
-    public Long countAll() {
-        return serviceDAO.countAll();
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.service;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
+
 import java.util.List;
 
 public interface ServiceHostManageService {
@@ -39,5 +40,14 @@ public interface ServiceHostManageService {
      * @param id 服务 ~ 主机关联关系对象id
      */
     void deleteById(Long id);
+
+    /**
+     * 批量增加某个service和host的关联
+     *
+     * @param serviceId
+     * @param hostIds
+     * @return
+     */
+    Integer batchAdd(Long serviceId, List<Long> hostIds);
 
 }

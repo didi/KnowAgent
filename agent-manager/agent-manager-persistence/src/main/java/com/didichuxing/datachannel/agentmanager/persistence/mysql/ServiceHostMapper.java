@@ -12,7 +12,7 @@ public interface ServiceHostMapper {
 
     int insert(ServiceHostPO record);
 
-    int insertSelective(ServiceHostPO record);
+    int batchInsert(List<ServiceHostPO> records);
 
     ServiceHostPO selectByPrimaryKey(Long id);
 

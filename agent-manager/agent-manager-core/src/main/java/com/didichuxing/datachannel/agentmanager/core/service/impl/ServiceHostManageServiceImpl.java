@@ -5,12 +5,13 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHo
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
+import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.ServiceHostMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.service.extension.ServiceHostManageServiceExtension;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -22,23 +23,22 @@ public class ServiceHostManageServiceImpl implements ServiceHostManageService {
     @Autowired
     private ServiceHostManageServiceExtension serviceHostManageServiceExtension;
 
+    @Autowired
+    private ServiceManageService serviceManageService;
+
     @Override
     @Transactional
     public void createServiceHostList(List<ServiceHostPO> serviceHostPOList) {
         handleCreateServiceHostList(serviceHostPOList);
     }
 
-    @Override
-    @Transactional
-    public void deleteServiceHostByServiceId(Long id) {
-        deleteRemoveServiceHostByServiceId(id);
-    }
-
     /**
      * 根据服务对象id删除其与主机的关联关系集
      * @param serviceId 服务对象 id 值
      */
-    private void deleteRemoveServiceHostByServiceId(Long serviceId) {
+    @Override
+    @Transactional
+    public void deleteServiceHostByServiceId(Long serviceId) {
         serviceHostDAO.deleteByServiceId(serviceId);
     }
 
@@ -61,6 +61,24 @@ public class ServiceHostManageServiceImpl implements ServiceHostManageService {
     @Override
     public void deleteById(Long id) {
         serviceHostDAO.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public Integer batchAdd(Long serviceId, List<Long> hostIds) {
+        List<ServiceHostPO> serviceHostList = new ArrayList<>();
+        if (serviceId == null || serviceId <= 0) {
+            throw new ServiceException("service id非法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        for (Long hostId : hostIds) {
+            if (hostId == null || hostId <= 0) {
+                throw new ServiceException("host id非法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+            }
+            ServiceHostPO serviceHostPO = new ServiceHostPO();
+            serviceHostPO.setServiceId(serviceId);
+            serviceHostPO.setHostId(hostId);
+            serviceHostList.add(serviceHostPO);
+        }
+        return serviceHostDAO.batchInsert(serviceHostList);
     }
 
     /**

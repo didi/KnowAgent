@@ -30,7 +30,7 @@ public interface ServiceMapper {
 
     Integer queryCountByCondition(ServicePaginationQueryConditionDO servicePaginationQueryConditionDO);
 
-    ServicePO selectByExtenalServiceId(Long extenalServiceId);
+    ServicePO selectByExternalServiceId(Long externalServiceId);
 
     List<ServicePO> selectByProjectId(@Param(value = "projectId") Long projectId);
 

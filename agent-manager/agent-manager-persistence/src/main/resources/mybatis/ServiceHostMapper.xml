@@ -31,40 +31,24 @@
     delete from tb_service_host
     where host_id = #{hostId,jdbcType=BIGINT}
   </delete>
+  <select id="selectHostIdsByServiceId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from tb_service_host
+    where service_id = #{serviceId}
+  </select>
   <delete id="deleteByServiceId" parameterType="java.lang.Long" >
     delete from tb_service_host
     where service_id = #{serviceId,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
-    insert into tb_service_host (id, service_id, host_id
-      )
-    values (#{id,jdbcType=BIGINT}, #{serviceId,jdbcType=BIGINT}, #{hostId,jdbcType=BIGINT}
-      )
+    insert into tb_service_host (service_id, host_id)
+    values (#{serviceId,jdbcType=BIGINT}, #{hostId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
-    insert into tb_service_host
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="serviceId != null" >
-        service_id,
-      </if>
-      <if test="hostId != null" >
-        host_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="serviceId != null" >
-        #{serviceId,jdbcType=BIGINT},
-      </if>
-      <if test="hostId != null" >
-        #{hostId,jdbcType=BIGINT},
-      </if>
-    </trim>
+  <insert id="batchInsert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO">
+    insert into tb_service_host (service_id, host_id) values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.serviceId}, #{item.hostId})
+    </foreach>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
     update tb_service_host

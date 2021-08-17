@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.service;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServicePaginationQueryConditionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
@@ -86,13 +87,6 @@ public interface ServiceManageService {
      * @return 返回根据给定参数查询到的满足条件的结果集总数量
      */
     Integer queryCountByCondition(ServicePaginationQueryConditionDO servicePaginationQueryConditionDO);
-
-    /**
-     * 根据外部 service 节点 id 获取对应 Service 对象
-     * @param extenalServiceId 外部 service 节点 id
-     * @return 返回根据外部 service 节点 id 获取到的对应 Service dx
-     */
-    ServiceDO getByExtenalServiceId(Long extenalServiceId);
 
     /**
      * @return 返回系统全量服务数
