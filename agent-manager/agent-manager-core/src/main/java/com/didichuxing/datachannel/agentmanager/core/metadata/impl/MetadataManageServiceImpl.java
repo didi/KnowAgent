@@ -149,7 +149,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         List<MetadataSyncResultPerService> list = new ArrayList<>();
         for (ServiceDO remoteService : serviceDOListFromRemote) {
             List<Long> hosts = remoteService.getHostIdList();
-            Long serviceId = remoteService.getId();
             List<HostInfo> hostInfoListForName = new ArrayList<>();
             List<HostInfo> hostInfoListForIp = new ArrayList<>();
             MetadataSyncResultPerService syncResult = new MetadataSyncResultPerService();
@@ -158,24 +157,24 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             syncResult.setSyncSuccess(1);
             for (Long hostId : hosts) {
                 HostDO remoteHost = hostIdMapFromRemote.get(hostId);
-                for (Map.Entry<Long, HostDO> entry : hostIdMapFromLocal.entrySet()) {
-                    HostDO hostDO = entry.getValue();
+                for (HostDO hostDO : hostAndContainerListFromLocal) {
                     if (remoteHost.getHostName().equals(hostDO.getHostName())) {
                         HostInfo hostInfo = new HostInfo();
                         hostInfo.setHostName(hostDO.getHostName());
                         hostInfo.setHostType(hostDO.getContainer());
                         hostInfo.setIp(remoteHost.getIp());
                         hostInfoListForName.add(hostInfo);
+                        syncResult.setSyncSuccess(0);
                     }
                 }
-                for (Map.Entry<Long, HostDO> entry : hostIdMapFromLocal.entrySet()) {
-                    HostDO hostDO = entry.getValue();
-                    if (remoteHost.getIp().equals(hostDO.getIp())) {
+                for (HostDO hostDO : hostAndContainerListFromLocal) {
+                    if (remoteHost.getIp().equals(hostDO.getIp()) && hostDO.getContainer() == 0) {
                         HostInfo hostInfo = new HostInfo();
                         hostInfo.setHostName(hostDO.getHostName());
                         hostInfo.setHostType(hostDO.getContainer());
                         hostInfo.setIp(remoteHost.getIp());
                         hostInfoListForIp.add(hostInfo);
+                        syncResult.setSyncSuccess(0);
                     }
                 }
             }
