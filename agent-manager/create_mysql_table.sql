@@ -557,7 +557,7 @@ CREATE TABLE `tb_service` (
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  `extenal_service_id` bigint(20) DEFAULT NULL COMMENT '外部系统服务id，如：夜莺服务节点 id',
+  `extenal_service_id` bigint(20) DEFAULT 0 COMMENT '外部系统服务id，如：夜莺服务节点 id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_service_name` (`service_name`) COMMENT '服务名唯一索引'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='服务表：表示一个服务';

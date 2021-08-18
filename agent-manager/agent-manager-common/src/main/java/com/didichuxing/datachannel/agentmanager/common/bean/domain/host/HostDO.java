@@ -46,6 +46,9 @@ public class HostDO extends BaseDO {
      */
     private String department;
 
+    /**
+     * 外部id
+     */
     private Long externalId;
     /**
      * 扩展字段，json格式

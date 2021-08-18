@@ -39,6 +39,7 @@ public class ServiceDO extends BaseDO {
 
     /**
      * 服务节点对应父节点id
+     * 保留字段
      */
     private Long pid;
     /**
@@ -49,6 +50,7 @@ public class ServiceDO extends BaseDO {
      *  模块：module *
      *  集群：cluster *
      *  资源：resource * -- 带 * 表示具备项目节点的节点
+     * 保留字段
      */
     private String cate;
 

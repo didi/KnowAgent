@@ -380,7 +380,7 @@ public class ServiceManageServiceImpl implements ServiceManageService {
          */
         ServicePO servicePO = serviceManageServiceExtension.serviceDO2Service(serviceDO);
         servicePO.setOperator(CommonConstant.getOperator(operator));
-        serviceDAO.insert(servicePO);
+        serviceDAO.insertSelective(servicePO);
         Long serviceId = servicePO.getId();
         /*
          * 构建 service & host 关联关系

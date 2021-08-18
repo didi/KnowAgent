@@ -12,12 +12,12 @@ import java.util.List;
 public interface ServiceMapper {
     int deleteByPrimaryKey(Long id);
 
-    //已测
     int insert(ServicePO record);
+
+    int insertSelective(ServicePO record);
 
     ServicePO selectByPrimaryKey(Long id);
 
-    //已测
     ServicePO selectByServiceName(String serviceName);
 
     List<ServicePO> list();
