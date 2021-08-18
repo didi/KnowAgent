@@ -15,6 +15,9 @@ public class MetadataSyncResultPerService {
     @ApiModelProperty(value = "同步状态 0：失败 1：成功")
     private Integer syncSuccess;
 
+    @ApiModelProperty(value = "名称是否重复 0：否 1：是")
+    private Integer nameDuplicate;
+
     @ApiModelProperty(value = "ip重复主机信息集")
     private List<HostInfo> duplicateIpHostList;
 
@@ -43,6 +46,14 @@ public class MetadataSyncResultPerService {
 
     public void setSyncSuccess(Integer syncSuccess) {
         this.syncSuccess = syncSuccess;
+    }
+
+    public Integer getNameDuplicate() {
+        return nameDuplicate;
+    }
+
+    public void setNameDuplicate(Integer nameDuplicate) {
+        this.nameDuplicate = nameDuplicate;
     }
 
     public List<HostInfo> getDuplicateIpHostList() {

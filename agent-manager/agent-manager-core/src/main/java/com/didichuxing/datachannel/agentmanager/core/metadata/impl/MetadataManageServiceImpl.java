@@ -122,15 +122,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             }
         }
         Map<String, ServiceDO> serviceName2ServiceDOMap = new HashMap<>();
-        List<String> duplicateServices = new ArrayList<>();
         if(CollectionUtils.isNotEmpty(serviceDOListFromLocal)) {
             for (ServiceDO serviceDO : serviceDOListFromLocal) {
                 serviceName2ServiceDOMap.put(serviceDO.getServicename(), serviceDO);
-                for (ServiceDO remote : serviceDOListFromRemote) {
-                    if (remote.getServicename().equals(serviceDO.getServicename()) && serviceDO.getExtenalServiceId() == 0L) {
-                        duplicateServices.add(remote.getServicename());
-                    }
-                }
             }
         }
         List<ServiceHostPO> serviceHostPOListFromRemote = parse2ServiceHostPOList(containerName2ServiceNameMap, serviceName2ServiceDOMap, hostName2HostDOMap);
@@ -160,7 +154,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             MetadataSyncResultPerService syncResult = new MetadataSyncResultPerService();
             syncResult.setServiceName(remoteService.getServicename());
             syncResult.setRelateHostNum(hosts.size());
+            syncResult.setNameDuplicate(0);
             syncResult.setSyncSuccess(1);
+            for (ServiceDO serviceDO : serviceDOListFromLocal) {
+                if (serviceDO.getServicename().equals(remoteService.getServicename()) && serviceDO.getExtenalServiceId() == 0) {
+                    syncResult.setNameDuplicate(1);
+                    break;
+                }
+            }
             for (Long hostId : hosts) {
                 HostDO remoteHost = hostIdMapFromRemote.get(hostId);
                 for (HostDO hostDO : hostAndContainerListFromLocal) {
@@ -189,7 +190,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             list.add(syncResult);
         }
         result.setMetadataSyncResultPerServiceList(list);
-        result.setDuplicateServiceNames(duplicateServices);
         return result;
 
     }
