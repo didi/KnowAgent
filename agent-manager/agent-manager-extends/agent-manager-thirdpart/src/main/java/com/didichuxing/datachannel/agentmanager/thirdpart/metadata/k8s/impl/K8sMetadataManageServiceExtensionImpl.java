@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.MetadataManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodConfig;
@@ -55,7 +56,7 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
             host.setIp(podConfig.getNodeIp());
             host.setHostName(podConfig.getNodeName());
             host.setContainer(HostTypeEnum.HOST.getCode());
-            host.setExternalId(1L);
+            host.setExternalId(SourceEnum.K8S.getCode());
             hostList.add(host);
             ServiceDO service = new ServiceDO();
             if (podConfig.getAnnotations() == null) {
@@ -68,7 +69,7 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
                 continue;
             }
             service.setServicename(servicename);
-            service.setExtenalServiceId(1L);
+            service.setExtenalServiceId(SourceEnum.K8S.getCode());
             services.add(service);
             List<String> containerNames = podConfig.getContainerNames();
             String namespace = podConfig.getNamespace();

@@ -224,67 +224,6 @@
         #{extendField,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO" useGeneratedKeys="true" keyProperty="id">
-    insert into tb_host
-    <trim prefix="(" suffix="}" suffixOverrides=",">
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="hostName != null" >
-        host_name,
-      </if>
-      <if test="ip != null" >
-        ip,
-      </if>
-      <if test="container != null" >
-        container,
-      </if>
-      <if test="parentHostName != null" >
-        parent_host_name,
-      </if>
-      <if test="machineZone != null" >
-        machine_zone,
-      </if>
-      <if test="department != null" >
-        department,
-      </if>
-      <if test="operator != null" >
-        operator,
-      </if>
-      <if test="extendField != null" >
-        extend_field,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id},
-      </if>
-      <if test="hostName != null" >
-        #{hostName},
-      </if>
-      <if test="ip != null" >
-        #{ip},
-      </if>
-      <if test="container != null" >
-        #{container},
-      </if>
-      <if test="parentHostName != null" >
-        #{parentHostName},
-      </if>
-      <if test="machineZone != null" >
-        #{machineZone},
-      </if>
-      <if test="department != null" >
-        #{department},
-      </if>
-      <if test="operator != null" >
-        #{operator},
-      </if>
-      <if test="extendField != null" >
-        #{extendField},
-      </if>
-    </trim>
-  </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO">
     update tb_host

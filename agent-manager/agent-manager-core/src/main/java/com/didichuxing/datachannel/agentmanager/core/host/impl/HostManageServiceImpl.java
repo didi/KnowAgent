@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentCollectTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
@@ -143,7 +144,8 @@ public class HostManageServiceImpl implements HostManageService {
          */
         HostPO hostPO = hostManageServiceExtension.host2HostPO(host);
         hostPO.setOperator(CommonConstant.getOperator(operator));
-        hostDAO.insertSelective(hostPO);
+        hostPO.setExternalId(SourceEnum.K8S.getCode());
+        hostDAO.insert(hostPO);
         /*
          * 添加对应操作记录
          */

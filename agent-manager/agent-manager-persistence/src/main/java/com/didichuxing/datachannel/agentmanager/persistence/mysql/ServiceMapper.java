@@ -14,8 +14,6 @@ public interface ServiceMapper {
 
     int insert(ServicePO record);
 
-    int insertSelective(ServicePO record);
-
     ServicePO selectByPrimaryKey(Long id);
 
     ServicePO selectByServiceName(String serviceName);

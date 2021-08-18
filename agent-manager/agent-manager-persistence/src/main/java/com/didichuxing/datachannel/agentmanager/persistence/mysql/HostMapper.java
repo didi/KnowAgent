@@ -14,8 +14,6 @@ public interface HostMapper {
 
     int insert(HostPO record);
 
-    int insertSelective(HostPO record);
-
     HostPO selectByPrimaryKey(Long id);
 
     int updateByPrimaryKey(HostPO record);

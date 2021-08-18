@@ -12,6 +12,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.Servi
 import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodHostPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
@@ -157,7 +158,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             syncResult.setNameDuplicate(0);
             syncResult.setSyncSuccess(1);
             for (ServiceDO serviceDO : serviceDOListFromLocal) {
-                if (serviceDO.getServicename().equals(remoteService.getServicename()) && serviceDO.getExtenalServiceId() == 0) {
+                if (serviceDO.getServicename().equals(remoteService.getServicename()) && serviceDO.getExtenalServiceId() == SourceEnum.MANUAL.getCode()) {
                     syncResult.setNameDuplicate(1);
                     break;
                 }
@@ -165,7 +166,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             for (Long hostId : hosts) {
                 HostDO remoteHost = hostIdMapFromRemote.get(hostId);
                 for (HostDO hostDO : hostAndContainerListFromLocal) {
-                    if (remoteHost.getHostName().equals(hostDO.getHostName()) && hostDO.getExternalId() == 0L) {
+                    if (remoteHost.getHostName().equals(hostDO.getHostName()) && hostDO.getExternalId() == SourceEnum.MANUAL.getCode()) {
                         HostInfo hostInfo = new HostInfo();
                         hostInfo.setHostName(hostDO.getHostName());
                         hostInfo.setHostType(hostDO.getContainer());
@@ -175,7 +176,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     }
                 }
                 for (HostDO hostDO : hostAndContainerListFromLocal) {
-                    if (remoteHost.getIp().equals(hostDO.getIp()) && hostDO.getContainer() == 0 && hostDO.getExternalId() == 0L) {
+                    if (remoteHost.getIp().equals(hostDO.getIp()) && hostDO.getContainer() == 0 && hostDO.getExternalId() == SourceEnum.MANUAL.getCode()) {
                         HostInfo hostInfo = new HostInfo();
                         hostInfo.setHostName(hostDO.getHostName());
                         hostInfo.setHostType(hostDO.getContainer());

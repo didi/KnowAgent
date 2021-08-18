@@ -11,6 +11,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHo
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceProjectPO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.service.ServiceTypeEnum;
@@ -380,7 +381,8 @@ public class ServiceManageServiceImpl implements ServiceManageService {
          */
         ServicePO servicePO = serviceManageServiceExtension.serviceDO2Service(serviceDO);
         servicePO.setOperator(CommonConstant.getOperator(operator));
-        serviceDAO.insertSelective(servicePO);
+        servicePO.setExtenalServiceId(SourceEnum.MANUAL.getCode());
+        serviceDAO.insert(servicePO);
         Long serviceId = servicePO.getId();
         /*
          * 构建 service & host 关联关系
