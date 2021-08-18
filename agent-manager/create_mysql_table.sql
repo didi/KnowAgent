@@ -405,6 +405,7 @@ CREATE TABLE `tb_host` (
   `parent_host_name` varchar(128) NOT NULL DEFAULT '-1' COMMENT '针对容器场景，表示容器对应宿主机id',
   `machine_zone` varchar(64) DEFAULT '' COMMENT '主机所属机器单元',
   `department` varchar(64) DEFAULT '' COMMENT '机器所属部门',
+  `external_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '外部id',
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',

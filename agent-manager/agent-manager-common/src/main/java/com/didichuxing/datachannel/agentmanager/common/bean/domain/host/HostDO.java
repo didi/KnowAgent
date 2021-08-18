@@ -45,18 +45,12 @@ public class HostDO extends BaseDO {
      * 主机所属部门
      */
     private String department;
+
+    private Long externalId;
     /**
      * 扩展字段，json格式
      */
     private String extendField;
-
-    public String getExtendField() {
-        return extendField;
-    }
-
-    public void setExtendField(String extendField) {
-        this.extendField = extendField;
-    }
 
     public Long getId() {
         return id;
@@ -112,6 +106,22 @@ public class HostDO extends BaseDO {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public Long getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(Long externalId) {
+        this.externalId = externalId;
+    }
+
+    public String getExtendField() {
+        return extendField;
+    }
+
+    public void setExtendField(String extendField) {
+        this.extendField = extendField;
     }
 
     public boolean isContainer() {

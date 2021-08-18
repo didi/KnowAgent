@@ -143,7 +143,7 @@ public class HostManageServiceImpl implements HostManageService {
          */
         HostPO hostPO = hostManageServiceExtension.host2HostPO(host);
         hostPO.setOperator(CommonConstant.getOperator(operator));
-        hostDAO.insert(hostPO);
+        hostDAO.insertSelective(hostPO);
         /*
          * 添加对应操作记录
          */

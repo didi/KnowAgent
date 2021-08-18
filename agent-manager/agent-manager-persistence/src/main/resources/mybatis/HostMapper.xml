@@ -9,13 +9,14 @@
     <result column="parent_host_name" jdbcType="VARCHAR" property="parentHostName" />
     <result column="machine_zone" jdbcType="VARCHAR" property="machineZone" />
     <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="external_id" jdbcType="BIGINT" property="externalId" />
     <result column="operator" jdbcType="VARCHAR" property="operator" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="extend_field" jdbcType="VARCHAR" property="extendField" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, host_name, ip, container, parent_host_name, machine_zone, department, operator, create_time, modify_time, extend_field
+    id, host_name, ip, container, parent_host_name, machine_zone, department, external_id, operator, create_time, modify_time, extend_field
   </sql>
   <sql id="Base_Column_List_selectByServiceId">
     t1.id, t1.host_name, t1.ip, t1.container, t1.parent_host_name, t1.machine_zone, t1.department, t1.operator, t1.create_time, t1.modify_time, t1.extend_field
@@ -210,7 +211,7 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO" useGeneratedKeys="true" keyProperty="id">
-    insert into tb_host (host_name, ip, container, parent_host_name, machine_zone, department, operator, extend_field)
+    insert into tb_host (host_name, ip, container, parent_host_name, machine_zone, department, external_id, operator, extend_field)
     values (
         #{hostName,jdbcType=VARCHAR},
         #{ip,jdbcType=VARCHAR},
@@ -218,10 +219,73 @@
         #{parentHostName,jdbcType=VARCHAR},
         #{machineZone,jdbcType=VARCHAR},
         #{department,jdbcType=VARCHAR},
+        #{externalId,jdbcType=VARCHAR},
         #{operator,jdbcType=VARCHAR},
         #{extendField,jdbcType=VARCHAR}
       )
   </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_host
+    <trim prefix="(" suffix="}" suffixOverrides=",">
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hostName != null" >
+        host_name,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="container != null" >
+        container,
+      </if>
+      <if test="parentHostName != null" >
+        parent_host_name,
+      </if>
+      <if test="machineZone != null" >
+        machine_zone,
+      </if>
+      <if test="department != null" >
+        department,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="extendField != null" >
+        extend_field,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="hostName != null" >
+        #{hostName},
+      </if>
+      <if test="ip != null" >
+        #{ip},
+      </if>
+      <if test="container != null" >
+        #{container},
+      </if>
+      <if test="parentHostName != null" >
+        #{parentHostName},
+      </if>
+      <if test="machineZone != null" >
+        #{machineZone},
+      </if>
+      <if test="department != null" >
+        #{department},
+      </if>
+      <if test="operator != null" >
+        #{operator},
+      </if>
+      <if test="extendField != null" >
+        #{extendField},
+      </if>
+    </trim>
+  </insert>
+
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO">
     update tb_host
     set machine_zone = #{machineZone,jdbcType=VARCHAR},
