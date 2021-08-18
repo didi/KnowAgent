@@ -22,6 +22,8 @@ public class PodConfig {
 
     private String nodeIp;
 
+    private String podName;
+
     private String podIp;
 
     public Map<String, String> getAnnotations() {
@@ -78,6 +80,14 @@ public class PodConfig {
 
     public void setNodeIp(String nodeIp) {
         this.nodeIp = nodeIp;
+    }
+
+    public String getPodName() {
+        return podName;
+    }
+
+    public void setPodName(String podName) {
+        this.podName = podName;
     }
 
     public String getPodIp() {

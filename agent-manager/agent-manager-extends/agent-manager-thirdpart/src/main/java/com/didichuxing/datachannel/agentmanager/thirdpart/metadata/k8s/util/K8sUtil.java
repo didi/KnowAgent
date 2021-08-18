@@ -109,6 +109,8 @@ public class K8sUtil {
         }
         config.setNodeIp(status.getHostIP());
         config.setPodIp(status.getPodIP());
+        config.setPodName(meta.getName());
+        config.setNamespace(meta.getNamespace());
 
         List<V1Volume> volumes = spec.getVolumes();
         if (volumes == null) {

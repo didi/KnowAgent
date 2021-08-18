@@ -110,11 +110,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
          */
         Map<String, String> containerName2ServiceNameMap = metadataResult.getContainerName2ServiceNameMap();
         Map<String, HostDO> hostName2HostDOMap = new HashMap<>();
-        Map<Long, HostDO> hostIdMapFromLocal = new HashMap<>();
         if(CollectionUtils.isNotEmpty(hostAndContainerListFromLocal)) {
             for (HostDO hostDO : hostAndContainerListFromLocal) {
                 hostName2HostDOMap.put(hostDO.getHostName(), hostDO);
-                hostIdMapFromLocal.put(hostDO.getId(), hostDO);
             }
         }
         Map<Long, HostDO> hostIdMapFromRemote = new HashMap<>();
@@ -123,11 +121,16 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                 hostIdMapFromRemote.put(hostDO.getId(), hostDO);
             }
         }
-        List<ServiceDO> serviceListFromLocal = serviceManageService.list();
         Map<String, ServiceDO> serviceName2ServiceDOMap = new HashMap<>();
-        if(CollectionUtils.isNotEmpty(serviceListFromLocal)) {
-            for (ServiceDO serviceDO : serviceListFromLocal) {
+        List<String> duplicateServices = new ArrayList<>();
+        if(CollectionUtils.isNotEmpty(serviceDOListFromLocal)) {
+            for (ServiceDO serviceDO : serviceDOListFromLocal) {
                 serviceName2ServiceDOMap.put(serviceDO.getServicename(), serviceDO);
+                for (ServiceDO remote : serviceDOListFromRemote) {
+                    if (remote.getServicename().equals(serviceDO.getServicename()) && serviceDO.getExtenalServiceId() == 0L) {
+                        duplicateServices.add(remote.getServicename());
+                    }
+                }
             }
         }
         List<ServiceHostPO> serviceHostPOListFromRemote = parse2ServiceHostPOList(containerName2ServiceNameMap, serviceName2ServiceDOMap, hostName2HostDOMap);
@@ -161,7 +164,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             for (Long hostId : hosts) {
                 HostDO remoteHost = hostIdMapFromRemote.get(hostId);
                 for (HostDO hostDO : hostAndContainerListFromLocal) {
-                    if (remoteHost.getHostName().equals(hostDO.getHostName())) {
+                    if (remoteHost.getHostName().equals(hostDO.getHostName()) && hostDO.getExternalId() == 0L) {
                         HostInfo hostInfo = new HostInfo();
                         hostInfo.setHostName(hostDO.getHostName());
                         hostInfo.setHostType(hostDO.getContainer());
@@ -171,7 +174,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     }
                 }
                 for (HostDO hostDO : hostAndContainerListFromLocal) {
-                    if (remoteHost.getIp().equals(hostDO.getIp()) && hostDO.getContainer() == 0) {
+                    if (remoteHost.getIp().equals(hostDO.getIp()) && hostDO.getContainer() == 0 && hostDO.getExternalId() == 0L) {
                         HostInfo hostInfo = new HostInfo();
                         hostInfo.setHostName(hostDO.getHostName());
                         hostInfo.setHostType(hostDO.getContainer());
@@ -186,6 +189,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             list.add(syncResult);
         }
         result.setMetadataSyncResultPerServiceList(list);
+        result.setDuplicateServiceNames(duplicateServices);
         return result;
 
     }

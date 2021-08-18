@@ -11,6 +11,8 @@ public class MetadataSyncResult {
     @ApiModelProperty(value = "各服务对应元数据同步结果集")
     private List<MetadataSyncResultPerService> metadataSyncResultPerServiceList;
 
+    private List<String> duplicateServiceNames;
+
     public List<MetadataSyncResultPerService> getMetadataSyncResultPerServiceList() {
         return metadataSyncResultPerServiceList;
     }
@@ -19,4 +21,11 @@ public class MetadataSyncResult {
         this.metadataSyncResultPerServiceList = metadataSyncResultPerServiceList;
     }
 
+    public List<String> getDuplicateServiceNames() {
+        return duplicateServiceNames;
+    }
+
+    public void setDuplicateServiceNames(List<String> duplicateServiceNames) {
+        this.duplicateServiceNames = duplicateServiceNames;
+    }
 }

@@ -55,6 +55,7 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
             host.setIp(podConfig.getNodeIp());
             host.setHostName(podConfig.getNodeName());
             host.setContainer(HostTypeEnum.HOST.getCode());
+            host.setExternalId(1L);
             hostList.add(host);
             ServiceDO service = new ServiceDO();
             if (podConfig.getAnnotations() == null) {
@@ -67,8 +68,11 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
                 continue;
             }
             service.setServicename(servicename);
+            service.setExtenalServiceId(1L);
             services.add(service);
             List<String> containerNames = podConfig.getContainerNames();
+            String namespace = podConfig.getNamespace();
+            String podName = podConfig.getPodName();
             for (String containerName : containerNames) {
                 containerServiceMap.put(containerName, servicename);
                 containerHostMap.put(containerName, podConfig.getNodeName());
@@ -76,9 +80,10 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
 
                 HostDO container = new HostDO();
                 container.setIp(podConfig.getPodIp());
-                container.setHostName(containerName);
+                container.setHostName(String.join(":", namespace, podName, containerName));
                 container.setContainer(HostTypeEnum.CONTAINER.getCode());
                 container.setParentHostName(podConfig.getNodeName());
+                container.setExternalId(1L);
                 containerList.add(container);
             }
         }

@@ -15,6 +15,51 @@
   <!--<sql id="paginationQueryList_Base_Column_List">
     t1.id,t1.service_name,t1.,count(t2.host_id) as relation_host_num
   </sql>-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_service
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServicePO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_service (id, service_name, operator, extenal_service_id)
+    values (#{id,jdbcType=BIGINT}, #{servicename,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{extenalServiceId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServicePO" useGeneratedKeys="true" keyProperty="id">
+    insert into
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null">
+        id,
+      </if>
+      <if test="servicename != null">
+        service_name,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="extenalServiceId != null">
+        extenal_service_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null">
+        id,
+      </if>
+      <if test="servicename != null">
+        #{servicename},
+      </if>
+      <if test="operator != null">
+        #{operator},
+      </if>
+      <if test="extenalServiceId != null">
+        #{extenalServiceId},
+      </if>
+    </trim>
+  </insert>
+  <select id="countAll" resultType="java.lang.Long" >
+    select
+      count (*)
+    from tb_service
+  </select>
+
   <resultMap id="paginationQueryListResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServicePaginationRecordVO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
@@ -164,52 +209,5 @@
     </where>
     ) as t3
   </select>
-
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from tb_service
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServicePO" useGeneratedKeys="true" keyProperty="id">
-    insert into tb_service (id, service_name, operator, extenal_service_id)
-    values (#{id,jdbcType=BIGINT}, #{servicename,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{extenalServiceId,jdbcType=BIGINT})
-  </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServicePO" useGeneratedKeys="true" keyProperty="id">
-    insert into
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null">
-        id,
-      </if>
-      <if test="serviceName != null">
-        service_name,
-      </if>
-      <if test="operator != null">
-        operator,
-      </if>
-      <if test="externalServiceId != null">
-        extenal_service_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null">
-        id,
-      </if>
-      <if test="serviceName != null">
-        #{serviceName},
-      </if>
-      <if test="operator != null">
-        #{operator},
-      </if>
-      <if test="externalServiceId != null">
-        #{externalServiceId},
-      </if>
-    </trim>
-  </insert>
-
-  <select id="countAll" resultType="java.lang.Long" >
-    select
-      count (*)
-    from tb_service
-  </select>
-
 </mapper>
 
