@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodHostPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
@@ -176,7 +177,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     }
                 }
                 for (HostDO hostDO : hostAndContainerListFromLocal) {
-                    if (remoteHost.getIp().equals(hostDO.getIp()) && hostDO.getContainer() == 0 && hostDO.getExternalId() == SourceEnum.MANUAL.getCode()) {
+                    if (remoteHost.getIp().equals(hostDO.getIp()) && HostTypeEnum.HOST.getCode().equals(hostDO.getContainer()) && hostDO.getExternalId() == SourceEnum.MANUAL.getCode()) {
                         HostInfo hostInfo = new HostInfo();
                         hostInfo.setHostName(hostDO.getHostName());
                         hostInfo.setHostType(hostDO.getContainer());
