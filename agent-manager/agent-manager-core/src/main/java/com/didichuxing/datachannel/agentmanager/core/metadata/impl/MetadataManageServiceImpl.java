@@ -24,20 +24,24 @@ import com.didichuxing.datachannel.agentmanager.core.metadata.MetadataManageServ
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.MetadataManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodConfig;
+import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 public class MetadataManageServiceImpl implements MetadataManageService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetadataManageServiceImpl.class);
+
+    @Value("${metadata.sync.request.k8s.service-key}")
+    private String serviceKey;
 
     @Autowired
     private MetadataManageServiceExtension metadataManageServiceExtension;
@@ -71,133 +75,134 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     @Override
     public MetadataSyncResult sync() {
+        List<PodConfig> podConfigs = K8sUtil.filterWithServices(K8sUtil.getAllPodConfig());
+        List<HostDO> localHosts = hostManageService.list();
+        MetadataSyncResult metadataSyncResult = new MetadataSyncResult();
+        List<MetadataSyncResultPerService> resultList = new ArrayList<>();
+        Map<String, List<PodConfig>> configServiceMap = new HashMap<>();
 
-        MetadataResult metadataResult = metadataManageServiceExtension.pullMetadataResultFromRemote();
-        if(null == metadataResult) {
-            LOGGER.warn(
-                    String.format("class=MetadataManageServiceImpl||method=sync||msg={%s}",
-                            "远程获取k8s元信息pod实例集为空"
-                    )
-            );
-            return null;
-        }
-
-        /*
-         * 同步全量 service 信息
-         */
-        List<ServiceDO> serviceDOListFromRemote = metadataResult.getServiceDOListFromRemote();
-        List<ServiceDO> serviceDOListFromLocal = serviceManageService.list();
-        ListCompareResult<ServiceDO> serviceDOListCompareResult = ListCompareUtil.compare(serviceDOListFromLocal, serviceDOListFromRemote, serviceDOComparator);//对比服务
-        handleServiceDOListCompareResult(serviceDOListCompareResult);
-
-        /*
-         * 同步全量 container、host 信息
-         */
-        List<HostDO> hostAndContainerListFromRemote = metadataResult.getHostDOList();
-        hostAndContainerListFromRemote.addAll(metadataResult.getContainerList());
-        List<HostDO> hostAndContainerListFromLocal = hostManageService.list();
-        ListCompareResult<HostDO> hostDOListCompareResult = ListCompareUtil.compare(hostAndContainerListFromLocal, hostAndContainerListFromRemote, hostDOComparator);//对比主机
-        handleHostDOListCompareResult(hostDOListCompareResult);
-
-        /*
-         * 同步全量 pod 信息
-         */
-        List<K8sPodDO> k8sPodDOListFromRemote = metadataResult.getK8sPodDOList();
-        List<K8sPodDO> k8sPodDOListFromLocal = k8sPodManageService.list();
-        ListCompareResult<K8sPodDO> k8sPodDOListCompareResult = ListCompareUtil.compare(k8sPodDOListFromLocal, k8sPodDOListFromRemote, k8sPodDOComparator);//对比服务
-        handleK8sPodDOListCompareResult(k8sPodDOListCompareResult);
-
-        /*
-         * 同步服务 - 主机关联关系
-         */
-        Map<String, String> containerName2ServiceNameMap = metadataResult.getContainerName2ServiceNameMap();
-        Map<String, HostDO> hostName2HostDOMap = new HashMap<>();
-        if(CollectionUtils.isNotEmpty(hostAndContainerListFromLocal)) {
-            for (HostDO hostDO : hostAndContainerListFromLocal) {
-                hostName2HostDOMap.put(hostDO.getHostName(), hostDO);
-            }
-        }
-        Map<Long, HostDO> hostIdMapFromRemote = new HashMap<>();
-        if(CollectionUtils.isNotEmpty(hostAndContainerListFromRemote)) {
-            for (HostDO hostDO : hostAndContainerListFromRemote) {
-                hostIdMapFromRemote.put(hostDO.getId(), hostDO);
-            }
-        }
-        Map<String, ServiceDO> serviceName2ServiceDOMap = new HashMap<>();
-        if(CollectionUtils.isNotEmpty(serviceDOListFromLocal)) {
-            for (ServiceDO serviceDO : serviceDOListFromLocal) {
-                serviceName2ServiceDOMap.put(serviceDO.getServicename(), serviceDO);
-            }
-        }
-        List<ServiceHostPO> serviceHostPOListFromRemote = parse2ServiceHostPOList(containerName2ServiceNameMap, serviceName2ServiceDOMap, hostName2HostDOMap);
-        List<ServiceHostPO> serviceHostPOListFromLocal = serviceHostManageService.list();
-        ListCompareResult<ServiceHostPO> serviceHostPOListCompareResult = ListCompareUtil.compare(serviceHostPOListFromLocal, serviceHostPOListFromRemote, serviceHostPOComparator);//对比服务 & 主机关联关系
-        handleServiceHostPOListCompareResult(serviceHostPOListCompareResult);
-
-        /*
-         * 同步容器 - pod 关联关系
-         */
-        Map<String, String> containerName2PodUuidMap = metadataResult.getContainerName2PodUuidMap();
-        Map<String, K8sPodDO> k8sPodUuid2K8sPodDOMap = parse2K8sPodMap(k8sPodManageService.list());
-        List<K8sPodHostPO> k8sPodContainerPOListFromRemote = parse2K8sPodHostPOList(containerName2PodUuidMap, k8sPodUuid2K8sPodDOMap, hostName2HostDOMap);
-        List<K8sPodHostPO> k8sPodContainerPOListFromLocal = k8sPodContainerManageService.list();
-        ListCompareResult<K8sPodHostPO> k8sPodContainerPOListCompareResult = ListCompareUtil.compare(k8sPodContainerPOListFromLocal, k8sPodContainerPOListFromRemote, k8sPodContainerPOComparator);//对比服务 & 主机关联关系
-        handleK8sPodHostPOListCompareResult(k8sPodContainerPOListCompareResult);
-
-        MetadataSyncResult result = new MetadataSyncResult();
-        List<MetadataSyncResultPerService> list = new ArrayList<>();
-        for (ServiceDO remoteService : serviceDOListFromRemote) {
-            List<Long> hosts = remoteService.getHostIdList();
-            if (hosts == null || hosts.size() == 0) {
+        for (PodConfig podConfig : podConfigs) {
+            String serviceName = podConfig.getAnnotations().get(serviceKey);
+            if (StringUtils.isBlank(serviceName)) {
+                LOGGER.warn("pod has no service, uid: {}", podConfig.getUuid());
                 continue;
             }
-            List<HostInfo> hostInfoListForName = new ArrayList<>();
-            List<HostInfo> hostInfoListForIp = new ArrayList<>();
-            MetadataSyncResultPerService syncResult = new MetadataSyncResultPerService();
-            syncResult.setServiceName(remoteService.getServicename());
-            syncResult.setRelateHostNum(hosts.size());
-            syncResult.setNameDuplicate(0);
-            syncResult.setSyncSuccess(1);
-            for (ServiceDO serviceDO : serviceDOListFromLocal) {
-                if (serviceDO.getServicename().equals(remoteService.getServicename()) && serviceDO.getExtenalServiceId() == SourceEnum.MANUAL.getCode()) {
-                    syncResult.setNameDuplicate(1);
-                    break;
-                }
-            }
-            for (Long hostId : hosts) {
-                HostDO remoteHost = hostIdMapFromRemote.get(hostId);
-                for (HostDO hostDO : hostAndContainerListFromLocal) {
-                    if (remoteHost.getHostName().equals(hostDO.getHostName()) && hostDO.getExternalId() == SourceEnum.MANUAL.getCode()) {
-                        HostInfo hostInfo = new HostInfo();
-                        hostInfo.setHostName(hostDO.getHostName());
-                        hostInfo.setHostType(hostDO.getContainer());
-                        hostInfo.setIp(remoteHost.getIp());
-                        hostInfoListForName.add(hostInfo);
-                        syncResult.setSyncSuccess(0);
-                    }
-                }
-                for (HostDO hostDO : hostAndContainerListFromLocal) {
-                    if (remoteHost.getIp().equals(hostDO.getIp()) && HostTypeEnum.HOST.getCode().equals(hostDO.getContainer()) && hostDO.getExternalId() == SourceEnum.MANUAL.getCode()) {
-                        HostInfo hostInfo = new HostInfo();
-                        hostInfo.setHostName(hostDO.getHostName());
-                        hostInfo.setHostType(hostDO.getContainer());
-                        hostInfo.setIp(remoteHost.getIp());
-                        hostInfoListForIp.add(hostInfo);
-                        syncResult.setSyncSuccess(0);
-                    }
-                }
-            }
-            syncResult.setDuplicateHostNameHostList(hostInfoListForName);
-            syncResult.setDuplicateIpHostList(hostInfoListForIp);
-            list.add(syncResult);
+            configServiceMap.putIfAbsent(serviceName, new ArrayList<>());
+            configServiceMap.get(serviceName).add(podConfig);
         }
-        result.setMetadataSyncResultPerServiceList(list);
-        return result;
+        int relatedHosts = 0;
+        for (Map.Entry<String, List<PodConfig>> entry : configServiceMap.entrySet()) {
+            MetadataSyncResultPerService metadataSyncResultPerService = new MetadataSyncResultPerService();
+            metadataSyncResultPerService.setSyncSuccess(1);
+            metadataSyncResultPerService.setNameDuplicate(0);
+            String serviceName = entry.getKey();
+            List<PodConfig> configList = entry.getValue();
+            ServiceDO oldService = serviceManageService.getServiceByServiceName(serviceName);
+            Long serviceId;
+            if (oldService != null && oldService.getExtenalServiceId() == SourceEnum.MANUAL.getCode()) {
+                metadataSyncResultPerService.setNameDuplicate(1);
+                metadataSyncResultPerService.setSyncSuccess(0);
+                resultList.add(metadataSyncResultPerService);
+                continue;
+            } else if (oldService == null) {
+                ServiceDO serviceDO = new ServiceDO();
+                serviceDO.setServicename(serviceName);
+                serviceDO.setExtenalServiceId(SourceEnum.K8S.getCode());
+                serviceId = serviceManageService.createService(serviceDO, null);
+            } else {
+                serviceId = oldService.getId();
+            }
+            List<HostInfo> duplicateHostnames = new ArrayList<>();
+            List<HostInfo> duplicateIps = new ArrayList<>();
+            for (PodConfig podConfig : configList) {
+                String hostName = podConfig.getNodeName();
+                String hostIp = podConfig.getNodeIp();
+                List<String> containerNames = podConfig.getContainerNames();
+                for (HostDO localHost : localHosts) {
+                    if (localHost.getContainer() == 0) {
+                        if (localHost.getHostName().equals(hostName)) {
+                            HostInfo hostInfo = new HostInfo();
+                            hostInfo.setHostName(hostName);
+                            hostInfo.setIp(hostIp);
+                            hostInfo.setHostType(0);
+                            duplicateHostnames.add(hostInfo);
+                        }
+                        if (localHost.getIp().equals(hostIp)) {
+                            HostInfo hostInfo = new HostInfo();
+                            hostInfo.setHostName(hostName);
+                            hostInfo.setIp(hostIp);
+                            hostInfo.setHostType(0);
+                            duplicateIps.add(hostInfo);
+                        }
+                    } else if (localHost.getContainer() == 1) {
+                        for (String containerName : containerNames) {
+                            if (localHost.getHostName().equals(containerName)) {
+                                HostInfo hostInfo = new HostInfo();
+                                hostInfo.setHostName(containerName);
+                                hostInfo.setIp(podConfig.getPodIp());
+                                hostInfo.setHostType(1);
+                                duplicateHostnames.add(hostInfo);
+                            }
+                        }
+                    } else {
+                        // 通常不可能出现
+                        throw new ServiceException(String.format("本地主机类型异常，主机id: %d", localHost.getId()), ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode());
+                    }
+                }
+                // 容器数量加上主机数
+                relatedHosts += podConfig.getContainerNames().size() + 1;
+            }
+            if (CollectionUtils.isEmpty(duplicateIps) && CollectionUtils.isEmpty(duplicateHostnames)) {
+                for (PodConfig podConfig : podConfigs) {
+                    handleCreateHostsFromPod(podConfig, serviceId);
+                }
+                metadataSyncResultPerService.setDuplicateHostNameHostList(Collections.emptyList());
+                metadataSyncResultPerService.setDuplicateIpHostList(Collections.emptyList());
+            } else {
+                metadataSyncResultPerService.setSyncSuccess(0);
+                metadataSyncResultPerService.setDuplicateHostNameHostList(duplicateHostnames);
+                metadataSyncResultPerService.setDuplicateIpHostList(duplicateIps);
+            }
+            resultList.add(metadataSyncResultPerService);
+        }
+        metadataSyncResult.setMetadataSyncResultPerServiceList(resultList);
+        return metadataSyncResult;
+    }
 
+    private void handleCreateHostsFromPod(PodConfig podConfig, Long serviceId) {
+        List<ServiceHostPO> serviceHostList = new ArrayList<>();
+        String hostname = podConfig.getNodeName();
+        HostDO hostDO = new HostDO();
+        hostDO.setHostName(hostname);
+        hostDO.setIp(podConfig.getNodeIp());
+        hostDO.setParentHostName(hostname);
+        hostDO.setContainer(0);
+        hostDO.setExternalId(SourceEnum.K8S.getCode());
+        Long id = hostManageService.createHost(hostDO, null);
+        ServiceHostPO serviceHostPO = new ServiceHostPO();
+        serviceHostPO.setServiceId(serviceId);
+        serviceHostPO.setHostId(id);
+        serviceHostList.add(serviceHostPO);
+        List<String> containerNames = podConfig.getContainerNames();
+        for (String containerName : containerNames) {
+            HostDO container = new HostDO();
+            container.setHostName(containerName);
+            container.setIp(podConfig.getPodIp());
+            container.setParentHostName(hostname);
+            container.setContainer(1);
+            container.setExternalId(SourceEnum.K8S.getCode());
+            Long id1 = hostManageService.createHost(container, null);
+            ServiceHostPO serviceHostPO1 = new ServiceHostPO();
+            serviceHostPO1.setServiceId(serviceId);
+            serviceHostPO1.setHostId(id1);
+            serviceHostList.add(serviceHostPO1);
+        }
+        serviceHostManageService.createServiceHostList(serviceHostList);
     }
 
     /**
      * 处理 listCompareResult 结果集，对 K8sPodHostPO 对象进行对应增、删、修改
+     *
      * @param listCompareResult 远程 & 本地 K8sPodHostPO 对象对比结果集
      */
     private void handleK8sPodHostPOListCompareResult(ListCompareResult<K8sPodHostPO> listCompareResult) {
@@ -212,7 +217,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     }
 
     /**
-     *
      * @param listCompareResult
      */
     private void handleServiceHostPOListCompareResult(ListCompareResult<ServiceHostPO> listCompareResult) {
@@ -228,6 +232,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     /**
      * 处理 listCompareResult 结果集，对 HostDO 对象进行对应增、删、修改
+     *
      * @param listCompareResult 远程 & 本地 ServiceDO 对象对比结果集
      */
     private void handleHostDOListCompareResult(ListCompareResult<HostDO> listCompareResult) {
@@ -270,13 +275,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     /**
      * 处理 listCompareResult 结果集，对 ServiceDO 对象进行对应增、删、修改
+     *
      * @param listCompareResult 远程 & 本地 ServiceDO 对象对比结果集
      */
     private void handleServiceDOListCompareResult(ListCompareResult<ServiceDO> listCompareResult) {
         //处理待删除对象集
         List<ServiceDO> removeList = listCompareResult.getRemoveList();
         for (ServiceDO serviceDO : removeList) {
-            serviceManageService.deleteService(serviceDO.getId(), true,null);
+            serviceManageService.deleteService(serviceDO.getId(), true, null);
         }
         //处理待修改对象集
         List<ServiceDO> modifyList = listCompareResult.getModifyList();
@@ -292,13 +298,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     /**
      * 处理 listCompareResult 结果集，对 K8sPodDO 对象进行对应增、删、修改
+     *
      * @param listCompareResult
      */
     private void handleK8sPodDOListCompareResult(ListCompareResult<K8sPodDO> listCompareResult) {
         //处理待删除对象集
         List<K8sPodDO> removeList = listCompareResult.getRemoveList();
         for (K8sPodDO k8sPodDO : removeList) {
-            k8sPodManageService.deleteK8sPod(k8sPodDO.getId(),null);
+            k8sPodManageService.deleteK8sPod(k8sPodDO.getId(), null);
         }
         //处理待修改对象集
         List<K8sPodDO> modifyList = listCompareResult.getModifyList();
@@ -314,27 +321,27 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     /**
      * @param containerName2PodUuidMap 全量容器-pod关联关系 key：containerName value：pod uuid map
-     * @param k8sPodUuid2K8sPodDOMap 全量pod uuid-pod对象关联关系 key：pod uuid value：K8sPodDO 对象
-     * @param hostName2HostDOMap 全量服务名-服务对象关联关系 key：serviceName value：ServiceDO 对象
+     * @param k8sPodUuid2K8sPodDOMap   全量pod uuid-pod对象关联关系 key：pod uuid value：K8sPodDO 对象
+     * @param hostName2HostDOMap       全量服务名-服务对象关联关系 key：serviceName value：ServiceDO 对象
      * @return 返回
      * 根据给定 containerName2PodUuidMap k8sPodUuid2K8sPodDOMap hostName2HostDOMap 构建podId & HostId关联关系集
      */
     private List<K8sPodHostPO> parse2K8sPodHostPOList(Map<String, String> containerName2PodUuidMap,
-                                                                Map<String, K8sPodDO> k8sPodUuid2K8sPodDOMap,
-                                                                Map<String, HostDO> hostName2HostDOMap) {
+                                                      Map<String, K8sPodDO> k8sPodUuid2K8sPodDOMap,
+                                                      Map<String, HostDO> hostName2HostDOMap) {
         List<K8sPodHostPO> k8sPodContainerPOList = new ArrayList<>(containerName2PodUuidMap.size());
         for (Map.Entry<String, String> entry : containerName2PodUuidMap.entrySet()) {
             String containerName = entry.getKey();
             String podUuid = entry.getValue();
             K8sPodDO k8sPodDO = k8sPodUuid2K8sPodDOMap.get(podUuid);
             HostDO hostDO = hostName2HostDOMap.get(containerName);
-            if(null == k8sPodDO) {
+            if (null == k8sPodDO) {
                 throw new ServiceException(
                         String.format("k8s集群同步的元数据={%s}中不存在uuid={%s}的k8sPod", JSON.toJSONString(k8sPodUuid2K8sPodDOMap), podUuid),
                         ErrorCodeEnum.K8S_META_DATA_SYNC_ERROR.getCode()
                 );
             }
-            if(null == hostDO) {
+            if (null == hostDO) {
                 throw new ServiceException(
                         String.format("k8s集群同步的元数据={%s}中不存在hostName={%s}的container", JSON.toJSONString(hostName2HostDOMap), containerName),
                         ErrorCodeEnum.K8S_META_DATA_SYNC_ERROR.getCode()
@@ -348,8 +355,8 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     /**
      * @param containerName2ServiceNameMap 全量容器-服务关联关系 key：containerName value：serviceName map
-     * @param serviceName2ServiceDOMap 全量服务名-服务对象关联关系 key：serviceName value：ServiceDO 对象
-     * @param hostName2HostDOMap 全量服务名-服务对象关联关系 key：serviceName value：ServiceDO 对象
+     * @param serviceName2ServiceDOMap     全量服务名-服务对象关联关系 key：serviceName value：ServiceDO 对象
+     * @param hostName2HostDOMap           全量服务名-服务对象关联关系 key：serviceName value：ServiceDO 对象
      * @return 返回根据给定 containerName2ServiceNameMap serviceName2ServiceDOMap hostName2HostDOMap 构建serviceId & HostId关联关系集
      */
     private List<ServiceHostPO> parse2ServiceHostPOList(Map<String, String> containerName2ServiceNameMap,
@@ -361,13 +368,13 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             String serviceName = entry.getValue();
             ServiceDO serviceDO = serviceName2ServiceDOMap.get(serviceName);
             HostDO hostDO = hostName2HostDOMap.get(containerName);
-            if(null == serviceDO) {
+            if (null == serviceDO) {
                 throw new ServiceException(
                         String.format("k8s集群同步的元数据={%s}中不存在serviceName={%s}的service", JSON.toJSONString(serviceName2ServiceDOMap), serviceName),
                         ErrorCodeEnum.K8S_META_DATA_SYNC_ERROR.getCode()
                 );
             }
-            if(null == hostDO) {
+            if (null == hostDO) {
                 throw new ServiceException(
                         String.format("k8s集群同步的元数据={%s}中不存在hostName={%s}的container", JSON.toJSONString(hostName2HostDOMap), containerName),
                         ErrorCodeEnum.K8S_META_DATA_SYNC_ERROR.getCode()
@@ -385,7 +392,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      */
     private Map<String, K8sPodDO> parse2K8sPodMap(List<K8sPodDO> k8sPodDOList) {
         Map<String, K8sPodDO> k8sPodUuid2K8sPodDOMap = new HashMap<>();
-        if(CollectionUtils.isNotEmpty(k8sPodDOList)) {
+        if (CollectionUtils.isNotEmpty(k8sPodDOList)) {
             for (K8sPodDO k8sPodDO : k8sPodDOList) {
                 k8sPodUuid2K8sPodDOMap.put(k8sPodDO.getUuid(), k8sPodDO);
             }
@@ -401,12 +408,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         public String getKey(HostDO host) {
             return host.getHostName();
         }
+
         @Override
         public boolean compare(HostDO t1, HostDO t2) {
             return t1.getContainer().equals(t2.getContainer()) &&
                     t1.getIp().equals(t2.getIp()) &&
                     t1.getParentHostName().equals(t2.getParentHostName());
         }
+
         @Override
         public HostDO getModified(HostDO source, HostDO target) {
             source.setContainer(target.getContainer());
@@ -424,10 +433,12 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         public String getKey(ServiceDO serviceDO) {
             return serviceDO.getServicename();
         }
+
         @Override
         public boolean compare(ServiceDO t1, ServiceDO t2) {
             return t1.getServicename().equals(t2.getServicename());
         }
+
         @Override
         public ServiceDO getModified(ServiceDO source, ServiceDO target) {
             source.setServicename(target.getServicename());
@@ -443,6 +454,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         public String getKey(K8sPodDO k8sPodDO) {
             return k8sPodDO.getUuid();
         }
+
         @Override
         public boolean compare(K8sPodDO t1, K8sPodDO t2) {
 
@@ -454,6 +466,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     t1.getPodIp().equals(t2.getPodIp()) &&
                     t1.getServiceName().equals(t2.getServiceName());
         }
+
         @Override
         public K8sPodDO getModified(K8sPodDO source, K8sPodDO target) {
             source.setContainerNames(target.getContainerNames());
@@ -473,13 +486,15 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     class ServiceHostPOComparator implements Comparator<ServiceHostPO, String> {
         @Override
         public String getKey(ServiceHostPO serviceHostPO) {
-            return serviceHostPO.getServiceId()+"_"+serviceHostPO.getHostId();
+            return serviceHostPO.getServiceId() + "_" + serviceHostPO.getHostId();
         }
+
         @Override
         public boolean compare(ServiceHostPO t1, ServiceHostPO t2) {
             return t1.getServiceId().equals(t2.getServiceId()) &&
                     t1.getHostId().equals(t2.getHostId());
         }
+
         @Override
         public ServiceHostPO getModified(ServiceHostPO source, ServiceHostPO target) {
             return source;
@@ -492,13 +507,15 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     class K8sPodHostPOComparator implements Comparator<K8sPodHostPO, String> {
         @Override
         public String getKey(K8sPodHostPO k8sPodContainerPO) {
-            return k8sPodContainerPO.getK8sPodId()+"_"+k8sPodContainerPO.getHostId();
+            return k8sPodContainerPO.getK8sPodId() + "_" + k8sPodContainerPO.getHostId();
         }
+
         @Override
         public boolean compare(K8sPodHostPO t1, K8sPodHostPO t2) {
             return t1.getK8sPodId().equals(t2.getK8sPodId()) &&
                     t1.getHostId().equals(t2.getHostId());
         }
+
         @Override
         public K8sPodHostPO getModified(K8sPodHostPO source, K8sPodHostPO target) {
             return source;

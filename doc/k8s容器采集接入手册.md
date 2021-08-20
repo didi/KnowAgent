@@ -40,7 +40,7 @@
      nodeName: hostname
    ```
 
-
+   **注：namespace不可以命名为kube-system（k8s系统空间），agent-manager读取时默认忽略该namespace**
 
 ### 导入k8s config
 
