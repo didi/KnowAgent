@@ -5,7 +5,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareRe
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.HostInfo;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResultPerService;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
@@ -13,10 +12,8 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodHostPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
-import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodContainerManageService;
 import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
@@ -152,6 +149,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                 // 容器数量加上主机数
                 relatedHosts += podConfig.getContainerNames().size() + 1;
             }
+            metadataSyncResultPerService.setRelateHostNum(relatedHosts);
             if (CollectionUtils.isEmpty(duplicateIps) && CollectionUtils.isEmpty(duplicateHostnames)) {
                 for (PodConfig podConfig : podConfigs) {
                     handleCreateHostsFromPod(podConfig, serviceId);

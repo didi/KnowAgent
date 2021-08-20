@@ -42,12 +42,6 @@ public class EventParser {
             if (null != logEvent.getContent()) {
                 logEvent.setLogId(logSource.getCurWFileNode().getFileNode().getModelId());
                 if (timeStamp == null || StringUtils.isEmpty(timeString)) {
-                    LOGGER
-                        .warn("the timeStamp or timeString is null.set timeStamp with now!path is "
-                              + logSource.getCurWFileNode().getFileNode().getAbsolutePath()
-                              + ", logId is "
-                              + logSource.getCurWFileNode().getFileNode().getModelId()
-                              + ",offset is " + logEvent.getOffset());
                     // 若timeStamp从未读取过，则使用当前时间戳表示其时间戳
                     timeStamp = System.currentTimeMillis();
                     timeString = timeStamp.toString();
