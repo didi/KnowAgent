@@ -19,6 +19,8 @@ public class LogSourceConfig extends SourceConfig {
     /** 日志内容中时间的格式 */
     private String        timeFormat         = "yyyy-MM-dd HH:mm:ss";
 
+    private int           timeFormatLength   = timeFormat.length();
+
     /** 日志内容开始标示 */
     private String        timeStartFlag      = "";
 
@@ -194,7 +196,13 @@ public class LogSourceConfig extends SourceConfig {
     public void setMaxErrorLineNum(Integer maxErrorLineNum) {
         this.maxErrorLineNum = maxErrorLineNum;
     }
+    public int getTimeFormatLength() {
+        return timeFormatLength;
+    }
 
+    public void setTimeFormatLength(int timeFormatLength) {
+        this.timeFormatLength = timeFormatLength;
+    }
     public Boolean getValidTimeConfig() {
         return isValidTimeConfig;
     }

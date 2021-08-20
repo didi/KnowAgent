@@ -76,7 +76,7 @@ public class EventParser {
             workingFileNode.setLatestLogTimeStr(lastTimeString);
 
             // 设置maxGap
-            logSource.setMaxGap(timeStamp);
+            logSource.setMaxGapLogTime(timeStamp);
         }
     }
 

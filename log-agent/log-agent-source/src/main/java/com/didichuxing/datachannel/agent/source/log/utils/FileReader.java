@@ -79,7 +79,7 @@ public class FileReader {
                     }
                 } else {
                     // 多行日志聚合读取
-                    result = readMutilRowNew(wfn);
+                    result = readMultiRowNew(wfn);
                     lastWFNKey = wfn.getUniqueKey();
                     if (result != null) {
                         filterResult(result, start);
@@ -211,7 +211,7 @@ public class FileReader {
      * @return result of read line
      * @throws Exception read error
      */
-    private LogEvent readMutilRowNew(WorkingFileNode wfn) throws Exception {
+    private LogEvent readMultiRowNew(WorkingFileNode wfn) throws Exception {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         CommonConfig commonConfig = this.logSource.getModelConfig().getCommonConfig();
         BufferedRandomAccessFile in = wfn.getIn();

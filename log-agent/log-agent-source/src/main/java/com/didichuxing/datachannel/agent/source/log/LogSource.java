@@ -74,7 +74,7 @@ public class LogSource extends AbstractSource {
     /**
      * 一个心跳周期内的最大延迟量
      */
-    private volatile long            maxTimeGap       = 0L;
+    private volatile long            maxLogTime         = 0L;
 
     /**
      * 是否匹配标准日志
@@ -1006,13 +1006,13 @@ public class LogSource extends AbstractSource {
 
         ret.put(FileMetricsFields.COLLECT_FILE_NAMES_STR, collectFiles);
         ret.put(FileMetricsFields.LATEST_FILE_NAME_STR, latestFileName);
-        ret.put(FileMetricsFields.MAX_TIME_GAP_STR, maxTimeGap);
+        ret.put(FileMetricsFields.MAX_TIME_GAP_STR, System.currentTimeMillis() - maxLogTime);
         ret.put(FileMetricsFields.LATEST_LOG_TIME_STR, logTimeStr);
         ret.put(FileMetricsFields.LATEST_LOG_TIME, latestLogTime);
         ret.put(FileMetricsFields.RELATED_FILES, relatedFileNodeMap.size());
         ret.put(FileMetricsFields.LOG_PATH_KEY, logPath.getLogPathKey());
 
-        resetMaxGap();
+        resetMaxLogTime();
 
         return ret;
     }
@@ -1093,8 +1093,8 @@ public class LogSource extends AbstractSource {
         return eventParser.getLastTimestamp();
     }
 
-    public void resetMaxGap() {
-        this.maxTimeGap = 0;
+    public void resetMaxLogTime() {
+        this.maxLogTime = 0;
     }
 
     public Map<String, FileNode> getRelatedFileNodeMap() {
@@ -1113,13 +1113,13 @@ public class LogSource extends AbstractSource {
         this.collectingFileNodeList = collectingFileNodeList;
     }
 
-    public void setMaxGap(Long logTime) {
+    public void setMaxGapLogTime(Long logTime) {
         if (logTime == null) {
             return;
         }
-        Long gap = System.currentTimeMillis() - logTime;
-        if (gap > maxTimeGap) {
-            maxTimeGap = gap;
+        if (logTime > maxLogTime) {
+            maxLogTime = logTime;
         }
     }
+
 }
