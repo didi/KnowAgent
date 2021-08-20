@@ -5,10 +5,7 @@ package com.didichuxing.datachannel.agent.source.log.utils;
  * @author: huangjw
  * @Date: 19/7/5 17:39
  */
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +20,8 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
     private int             seekTimes       = 0;
     private int             seekTimesThread = 5;
 
+    private final int             maxLineSize     = BuffSz_ * seekTimesThread;
+
     /*
      * This implementation is based on the buffer implementation in Modula-3's "Rd", "Wr", "RdClass", and "WrClass"
      * interfaces.
@@ -36,6 +35,9 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
     private long            maxHi_;                                    // this.lo + this.buff.length
     private boolean         hitEOF_;                                   // buffer contains last file block?
     private long            diskPos_;                                  // disk position
+
+    private byte[]                indexBuffer;
+    private ByteArrayOutputStream out;
 
     /*
      * To describe the above fields, we introduce the following abstractions for the file "f": len(f) the length of the
@@ -92,6 +94,8 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
         this.maxHi_ = (long) BuffSz_;
         this.hitEOF_ = false;
         this.diskPos_ = 0L;
+        this.indexBuffer = new byte[128];
+        this.out = new ByteArrayOutputStream(4096);
     }
 
     public String getPath() {
@@ -276,59 +280,60 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
     //        }
     //    }
 
-    public String readNewLine(Long timeout) throws IOException, InterruptedException {
+    public byte[] readNewLine(Long timeout) throws IOException, InterruptedException {
         preOffset = this.curr_;
-        StringBuffer input = new StringBuffer(4096);
+        out.reset();
+        //StringBuffer input = new StringBuffer(4096);
         seekTimes = 0;
-        int c = -1;
+        //int c = -1;
         long size = 0L;
         boolean eol = false;
         boolean isEndFlag = false;
-        String bigLine = null;
+        //boolean bigLine = false;
         // 长度最长为1M(不考虑中文字符的影响)
         while (!eol) {
-            c = read();
-            if (c >= 0) {
-                if (c == '\n') {
+            int length = read(indexBuffer);
+            if (length >= 0) {
+                int crIndex = FileUtils.getLineDelimiterIndex(indexBuffer,
+                        FileUtils.CR_LINE_DELIMITER, length);
+                int lfIndex;
+                if (crIndex >= 0) {
+                    secureWriteBuffer(indexBuffer, 0, crIndex);
                     eol = true;
-                } else if (c == '\r') {
-                    eol = true;
-                    long cur = getFilePointer();
+                    long curr = getFilePointer();
+                    seek(curr - length + crIndex + 1);
                     if ((read()) != '\n') {
-                        seek(cur);
+                        seek(curr_ - 1);
                     }
+                } else if ((lfIndex = FileUtils.getLineDelimiterIndex(indexBuffer,
+                        FileUtils.LF_LINE_DELIMITER, length)) >= 0) {
+                    secureWriteBuffer(indexBuffer, 0, lfIndex);
+                    eol = true;
+                    long curr = getFilePointer();
+                    seek(curr - length + lfIndex + 1);
                 } else {
-                    input.append((char) c);
-                    size++;
+                    secureWriteBuffer(indexBuffer, 0, length);
                 }
-            } else {
-                if (c == -1) {
-                    if (!isEndFlag) {
-                        isEndFlag = true;
-                        TimeUnit.MILLISECONDS.sleep(timeout);
-                    } else {
-                        eol = true;
-                    }
-                } else if (c == -2) {
-                    // 此时表示seek了seekTimesThread次，其中seek1次是1M，此时表示超出大小
-                    if (bigLine == null) {
-                        // 只需要第一行
-                        bigLine = input.toString();
-                    }
-                    // 清空input
-                    input.setLength(0);
+            } else if (length == -1) {
+                if (!isEndFlag) {
+                    isEndFlag = true;
+                    TimeUnit.MILLISECONDS.sleep(timeout);
+                } else {
+                    eol = true;
                 }
             }
         }
 
-        if ((c == -1) && (input.length() == 0)) {
+        if (out.size() == 0) {
             return null;
-        }
-
-        if (bigLine != null) {
-            return bigLine;
         } else {
-            return input.toString();
+            return out.toByteArray();
+        }
+    }
+
+    private void secureWriteBuffer(byte[] value, int off, int len) {
+        if (out.size() < maxLineSize) {
+            out.write(value, off, len);
         }
     }
 

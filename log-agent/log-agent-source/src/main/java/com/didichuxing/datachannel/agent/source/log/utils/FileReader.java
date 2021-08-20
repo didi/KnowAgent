@@ -150,21 +150,21 @@ public class FileReader {
     private LogEvent readNoTimeRow(WorkingFileNode wfn) throws Exception {
         String encodeString;
         BufferedRandomAccessFile in = wfn.getIn();
-        String lineContent = in.readNewLine(getReadTimeOut());
+        byte[] lineContent = in.readNewLine(getReadTimeOut());
         if (lineContent == null) {
             return null;
         }
-        byte[] bytes = lineContent.getBytes("ISO-8859-1");
-        encodeString = new String(bytes, this.logSource.getModelConfig().getCommonConfig()
-            .getEncodeType());
+        //byte[] bytes = lineContent.getBytes(StandardCharsets.ISO_8859_1);
+        encodeString = new String(lineContent, this.logSource.getModelConfig().getCommonConfig()
+                .getEncodeType());
         timeStamp = System.currentTimeMillis();
         timeString = timeStamp.toString();
         long currentOffSet = in.getFilePointer();
         long preOffset = in.preOffset();
-        return new LogEvent(encodeString, bytes, currentOffSet, timeStamp, timeString, preOffset,
-            wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), logSource.getParentPath(), wfn
-                .getFileNode().getFileName(), logSource.getMasterFileName(),
-            logSource.getDockerParentPath());
+        return new LogEvent(encodeString, lineContent, currentOffSet, timeStamp, timeString,
+                preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn.getFileNode()
+                .getParentPath(), wfn.getFileNode().getFileName(), logSource.getMasterFileName(),
+                logSource.getDockerParentPath(), wfn.getFileNode().getFileOffSet().getFileHeadMd5());
     }
 
     /**
@@ -179,17 +179,17 @@ public class FileReader {
         BufferedRandomAccessFile in = wfn.getIn();
         String suspectTimeString;
         String encodeString;
-        String lineContent = in.readNewLine(getReadTimeOut());
+        byte[] lineContent = in.readNewLine(getReadTimeOut());
         if (lineContent == null) {
             return null;
         }
-        byte[] bytes = lineContent.getBytes("ISO-8859-1");
-        encodeString = new String(bytes, commonConfig.getEncodeType());
+        //byte[] bytes = lineContent.getBytes(StandardCharsets.ISO_8859_1);
+        encodeString = new String(lineContent, commonConfig.getEncodeType());
         suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-            this.logSource.getLogSourceConfig());
+                this.logSource.getLogSourceConfig());
         if (StringUtils.isNotBlank(suspectTimeString) && !suspectTimeString.equals(timeString)) {
             timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource
-                .getLogSourceConfig().getTimeFormat());
+                    .getLogSourceConfig().getTimeFormat());
         }
         timeString = suspectTimeString;
         if (timeStamp == null) {
@@ -198,10 +198,10 @@ public class FileReader {
         }
         long currentOffSet = in.getFilePointer();
         long preOffset = in.preOffset();
-        return new LogEvent(encodeString, bytes, currentOffSet, timeStamp, timeString, preOffset,
-            wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), logSource.getParentPath(), wfn
-                .getFileNode().getFileName(), logSource.getMasterFileName(),
-            logSource.getDockerParentPath());
+        return new LogEvent(encodeString, lineContent, currentOffSet, timeStamp, timeString,
+                preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn.getFileNode()
+                .getParentPath(), wfn.getFileNode().getFileName(), logSource.getMasterFileName(),
+                logSource.getDockerParentPath(), wfn.getFileNode().getFileOffSet().getFileHeadMd5());
     }
 
     /**
@@ -259,7 +259,7 @@ public class FileReader {
             }
 
             // 读当前行
-            String lineContent = in.readNewLine(getReadTimeOut());
+            byte[] lineContent = in.readNewLine(getReadTimeOut());
             firstPreOffset = in.preOffset();
             if (isFirstLine) {
                 preOffset = firstPreOffset;
@@ -271,15 +271,15 @@ public class FileReader {
                 break;
             }
 
-            byte[] bytes = lineContent.getBytes("ISO-8859-1");
-            encodeString = new String(bytes, commonConfig.getEncodeType());
+            //byte[] bytes = lineContent.getBytes(StandardCharsets.ISO_8859_1);
+            encodeString = new String(lineContent, commonConfig.getEncodeType());
             suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-                this.logSource.getLogSourceConfig());
+                    this.logSource.getLogSourceConfig());
             if (StringUtils.isNotBlank(suspectTimeString) && suspectTimeString.equals(timeString)) {
                 longTimeStamp = timeStamp;
             } else {
                 longTimeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, this.logSource
-                    .getLogSourceConfig().getTimeFormat());
+                        .getLogSourceConfig().getTimeFormat());
             }
             if (longTimeStamp != null) {
                 long tmpTimeStamp = longTimeStamp;
@@ -292,7 +292,7 @@ public class FileReader {
                         nextTimeStampStr = suspectTimeString;
                         nextOffset = in.getFilePointer();
                         nextContent = encodeString;
-                        nextBytes = bytes;
+                        nextBytes = lineContent;
                         break;
                     } else {
                         // 上一行不存在，当前行解析正常【继续读取】
@@ -300,7 +300,7 @@ public class FileReader {
                         nextTimeStampStr = suspectTimeString;
                         nextOffset = in.getFilePointer();
                         nextContent = encodeString;
-                        nextBytes = bytes;
+                        nextBytes = lineContent;
                     }
                 } else {
                     // 解析时间戳异常
@@ -309,11 +309,11 @@ public class FileReader {
                         sb.append(LINE_SEPARATOR).append(encodeString);
                         nextOffset = in.getFilePointer();
                         byteStream.write(LogConfigConstants.CTRL_BYTES);
-                        byteStream.write(bytes);
+                        byteStream.write(lineContent);
                     } else {
                         // 上一行不存在，当前行解析异常【忽略或者拼装】
                         sb.append(encodeString).append(LINE_SEPARATOR);
-                        byteStream.write(bytes);
+                        byteStream.write(lineContent);
                         byteStream.write(LogConfigConstants.CTRL_BYTES);
                     }
                     errorLine++;
@@ -325,11 +325,11 @@ public class FileReader {
                     sb.append(LINE_SEPARATOR).append(encodeString);
                     nextOffset = in.getFilePointer();
                     byteStream.write(LogConfigConstants.CTRL_BYTES);
-                    byteStream.write(bytes);
+                    byteStream.write(lineContent);
                 } else {
                     // 上一行不存在，当前行解析异常【忽略或者拼装】
                     sb.append(encodeString).append(LINE_SEPARATOR);
-                    byteStream.write(bytes);
+                    byteStream.write(lineContent);
                     byteStream.write(LogConfigConstants.CTRL_BYTES);
                 }
                 errorLine++;
@@ -337,10 +337,8 @@ public class FileReader {
 
             // 连续n次无法读取到日志，说明日志配置失效，或者日志文件时间戳变更
             if (errorLine != 0
-                && errorLine >= this.logSource.getLogSourceConfig().getMaxErrorLineNum()) {
-                LOGGER.warn("wfn's timestamp is not vaild. wfn is " + wfn + ";errorLine:"
-                            + errorLine + ";currentOffSet:" + in.getFilePointer() + ";preOffset:"
-                            + in.preOffset() + ";content:" + sb + ";nextContent:" + nextContent);
+                    && errorLine >= this.logSource.getLogSourceConfig().getMaxErrorLineNum()) {
+                LOGGER.warn("wfn's timestamp is not vaild. wfn is " + wfn);
                 // 标记为错误的配置
                 wfn.setIsVaildTimeConfig(false);
                 currentOffSet = in.getFilePointer();
@@ -354,9 +352,10 @@ public class FileReader {
         }
         String content = sb.toString();
         return new LogEvent(content, byteStream.toByteArray(), currentOffSet, timeStamp,
-            timeString, preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(),
-            logSource.getParentPath(), wfn.getFileNode().getFileName(),
-            logSource.getMasterFileName(), logSource.getDockerParentPath());
+                timeString, preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn
+                .getFileNode().getParentPath(), wfn.getFileNode().getFileName(),
+                logSource.getMasterFileName(), logSource.getDockerParentPath(), wfn.getFileNode()
+                .getFileOffSet().getFileHeadMd5());
     }
 
     private Long getReadTimeOut() {
@@ -394,8 +393,8 @@ public class FileReader {
     private void filterResult(LogEvent logEvent, long startTime) {
         // TODO: 2021-01-15 这里以后需要设置个public日志预估过滤开关，目前所有public log都过滤
         if (logSource.getLogSourceConfig().getMatchConfig().getBusinessType()
-            .equals(StandardLogType.Public.getType())
-            && logEvent != null) {
+                .equals(StandardLogType.Public.getType())
+                && logEvent != null) {
             boolean filter = isNeedFilter(logEvent.getContent());
             if (filter && (logEvent.getOffset() != null)) {
                 this.logSource.getCurWFileNode().setCurOffset(logEvent.getOffset());
@@ -404,8 +403,9 @@ public class FileReader {
             }
             if (this.logSource.getTaskPatternStatistics() != null) {
                 this.logSource.getTaskPatternStatistics().filterOneRecord(
-                    TimeUtils.getNanoTime() - startTime, !filter);
+                        TimeUtils.getNanoTime() - startTime, !filter);
             }
         }
     }
+
 }

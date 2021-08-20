@@ -2,6 +2,9 @@ package com.didichuxing.datachannel.agent.source.log.utils;
 
 import java.io.*;
 import java.io.FileReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,11 +64,23 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
     private static final String ROLL_DAY1             = "\\d{4}-\\d{2}-\\d{2}";
     private static final String ROLL_DAY2             = "\\d{4}\\d{2}\\d{2}";
 
+    private static final Method indexOfMethod;
+    public static final byte[] CR_LINE_DELIMITER = {'\r'};
+    public static final byte[] LF_LINE_DELIMITER = {'\n'};
+    public static final byte[] CRLF_LINE_DELIMITER = {'\r', '\n'};
+
     static {
         defaultRollingSamples.add(ROLL_HOUR1);
         defaultRollingSamples.add(ROLL_HOUR2);
         defaultRollingSamples.add(ROLL_DAY1);
         defaultRollingSamples.add(ROLL_DAY2);
+        try {
+            Class<?> stringLatin1 = Class.forName("java.lang.StringLatin1");
+            indexOfMethod = stringLatin1.getMethod("indexOf", byte[].class, int.class, byte[].class, int.class, int.class);
+            indexOfMethod.setAccessible(true);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -337,6 +352,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         if (StringUtils.isEmpty(line)) {
             return null;
         }
+        //todo
         String timeFormat = logSourceConfig.getTimeFormat();
         if (StringUtils.isNotBlank(timeFormat)) {
             timeFormat = timeFormat.replaceAll("'", "");
@@ -1178,13 +1194,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
             return LogConfigConstants.MD5_FAILED_TAG;
         }
         BufferedRandomAccessFile bufferedRandomAccessFile = null;
-        String result = null;
+        byte[] result = null;
+        String resultString = null;
         try {
             bufferedRandomAccessFile = new BufferedRandomAccessFile(file, "r");
             // 获取MD5时兼容文件开头为空格以及换行符的情况
             if (file.length() > 0) {
                 while ((result = bufferedRandomAccessFile.readNewLine(5L)) != null) {
-                    if (StringUtils.isNotBlank(result)) {
+                    resultString = new String(result, StandardCharsets.ISO_8859_1);
+                    if (StringUtils.isNotBlank(resultString)) {
                         break;
                     }
                 }
@@ -1205,9 +1223,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
             }
         }
         // 如果第一行日志长度大于1k，截取1K做MD5,如果拿不到日志返回MD5获取失败标志
-        if (StringUtils.isNotBlank(result)) {
-            String Md5 = result.length() > LogConfigConstants.FILE_HEAD_LENGTH ? CommonUtils.getMd5(result.substring(0,
-                    LogConfigConstants.FILE_HEAD_LENGTH)) : CommonUtils.getMd5(result);
+        if (StringUtils.isNotBlank(resultString)) {
+            String Md5 = resultString.length() > LogConfigConstants.FILE_HEAD_LENGTH ? CommonUtils.getMd5(resultString.substring(0,
+                    LogConfigConstants.FILE_HEAD_LENGTH)) : CommonUtils.getMd5(resultString);
             return StringUtils.isBlank(Md5) ? LogConfigConstants.MD5_FAILED_TAG : Md5;
         } else {
             return LogConfigConstants.MD5_FAILED_TAG;
@@ -1222,4 +1240,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
     public static String getFileNodeHeadMd5(String path) {
         return getFileNodeHeadMd5(new File(path));
     }
+
+
+    /**
+     *
+     * @param value input
+     * @param delimiter 换行符
+     * @param length 输入长度
+     * @return 换行符位置, -1未找到
+     */
+    public static int getLineDelimiterIndex(byte[] value, byte[] delimiter, int length) {
+        try {
+            return (int) indexOfMethod.invoke(null, value, length, delimiter, 1, 0);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

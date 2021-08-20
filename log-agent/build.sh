@@ -19,7 +19,7 @@ function build() {
         export JAVA_HOME=/usr/local/jdk1.8.0_65  #(使用jdk8请设置)
         export PATH=$JAVA_HOME/bin:$PATH
     fi
-    mvn clean install -P online -Dmaven.test.skip
+    ~/bin/mvn11 clean install -P online -Dmaven.test.skip
 
     local sc=$?
     if [ $sc -ne 0 ];then

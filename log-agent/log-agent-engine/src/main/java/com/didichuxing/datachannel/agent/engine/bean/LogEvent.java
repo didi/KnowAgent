@@ -88,13 +88,18 @@ public class LogEvent extends Event {
      */
     private Long    fileModifyTime = -1L;
 
+    /**
+     * 文件头部MD5值
+     */
+    private String  fileHeadMd5;
+
     public LogEvent() {
         super("", new byte[1]);
     }
 
-    public LogEvent(String content, byte[] bytes, Long offset, Long timestamp, String timeString,
-                    Long preOffset, String fileNodeKey, String fileKey, String filePath,
-                    String fileName, String masterFileName, String dockerParentPath) {
+    public LogEvent(String content, byte[] bytes, Long offset, Long timestamp, String timeString, Long preOffset,
+                    String fileNodeKey, String fileKey, String filePath, String fileName, String masterFileName,
+                    String dockerParentPath, String fileHeadMd5){
         super(content, bytes);
         this.offset = offset;
         this.timestamp = timeString;
@@ -108,6 +113,7 @@ public class LogEvent extends Event {
         this.fileName = fileName;
         this.masterFileName = masterFileName;
         this.dockerParentPath = dockerParentPath;
+        this.fileHeadMd5 = fileHeadMd5;
     }
 
     public String getTimestamp() {
