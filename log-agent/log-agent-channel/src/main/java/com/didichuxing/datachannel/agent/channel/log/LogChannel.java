@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -50,6 +48,8 @@ public class LogChannel extends AbstractChannel {
     private volatile boolean isStop = false;
 
     private final Object lock = new Object();
+
+    private volatile CompletableFuture<?> availableFuture = new CompletableFuture<>();
 
     public LogChannel(LogSource logSource, ChannelConfig channelConfig) {
         this.logSource = logSource;
@@ -114,13 +114,10 @@ public class LogChannel extends AbstractChannel {
                         && storage.get() + logEvent.length() <= this.channelConfig.getMaxBytes()) {
                     // size add 和 queue add 顺序不可乱，涉及到多线程问题
                     size.incrementAndGet();
-                    queue.add(logEvent);
+                    queue.offer(logEvent);
                     storage.addAndGet(logEvent.length());
                     break;
                 }
-                WARN_LOGGER.warn("tryAppend error for queue is full. queue size is " + queue.size() + ", storage is "
-                        + storage + ", event's length is " + event.length() + ",logModeId: "
-                        + logSource.getModelConfig().getModelConfigKey());
                 if (logEvent.length() > this.channelConfig.getMaxBytes()) {
                     byte[] newBytes = new byte[(this.channelConfig.getMaxBytes().intValue() - (int) storage.get()) / 2];
                     System.arraycopy(logEvent.getBytes(), 0, newBytes, 0,
@@ -128,7 +125,11 @@ public class LogChannel extends AbstractChannel {
                     logEvent.setBytes(newBytes);
                 }
                 // 休眠等待
-                //Thread.sleep(50);
+                resetUnavailable();
+                try {
+                    availableFuture.get(50, TimeUnit.MILLISECONDS);
+                } catch (TimeoutException ignore) {
+                }
             } catch (Exception e) {
                 LogGather.recordErrorLog("LogChannel error", "tryAppend error!", e);
             }
@@ -141,6 +142,9 @@ public class LogChannel extends AbstractChannel {
             LogEvent event = queue.poll(timeout, TimeUnit.MICROSECONDS);
             if (event != null) {
                 storage.addAndGet(0L - event.length());
+                if(!availableFuture.isDone()) {
+                    availableFuture.complete(null);
+                }
             }
             return event;
         } catch (Exception e) {
@@ -152,9 +156,12 @@ public class LogChannel extends AbstractChannel {
     @Override
     public Event tryGet() {
         try {
-            LogEvent event = queue.poll();
+            LogEvent event = queue.poll(10, TimeUnit.MILLISECONDS);
             if (event != null) {
                 storage.addAndGet(0L - event.length());
+                if(!availableFuture.isDone()) {
+                    availableFuture.complete(null);
+                }
             }
             return event;
         } catch (Exception e) {
@@ -264,6 +271,12 @@ public class LogChannel extends AbstractChannel {
         ret.put(LogChannelMetricsFields.PREFIX_SIZE, size);
         ret.put(LogChannelMetricsFields.PREFIX_CAPACITY, storage);
         return ret;
+    }
+
+    private void resetUnavailable() {
+        if (availableFuture.isDone()) {
+            this.availableFuture = new CompletableFuture<>();
+        }
     }
 
     public ChannelConfig getChannelConfig() {
