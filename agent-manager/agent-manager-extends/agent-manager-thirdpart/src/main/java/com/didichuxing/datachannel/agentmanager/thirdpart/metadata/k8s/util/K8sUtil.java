@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * k8s 工具类
@@ -96,9 +97,12 @@ public class K8sUtil {
         }
         List<V1Container> containers = spec.getContainers();
         List<String> containerNames = new ArrayList<>();
+        String namespace = meta.getNamespace();
+        String podName = meta.getName();
 
         for (V1Container container : containers) {
-            containerNames.add(container.getName());
+            String containerName = String.join(":", namespace, podName, container.getName());
+            containerNames.add(containerName);
         }
         config.setContainerNames(containerNames);
         config.setNodeName(spec.getNodeName());
@@ -109,8 +113,8 @@ public class K8sUtil {
         }
         config.setNodeIp(status.getHostIP());
         config.setPodIp(status.getPodIP());
-        config.setPodName(meta.getName());
-        config.setNamespace(meta.getNamespace());
+        config.setPodName(podName);
+        config.setNamespace(namespace);
 
         List<V1Volume> volumes = spec.getVolumes();
         if (volumes == null) {
@@ -163,6 +167,23 @@ public class K8sUtil {
                     ErrorCodeEnum.K8S_POD_CONFIG_PULL_FAILED.getCode()
             );
         }
+    }
+
+    /**
+     * 过滤掉所有系统pod，不含service的pod，以及其他不合法的pod
+     * @param podConfigs
+     * @return
+     */
+    public static List<PodConfig> filterWithServices(List<PodConfig> podConfigs) {
+        return podConfigs.stream().filter(p -> {
+            if ("kube-system".equals(p.getNamespace())) {
+                return false;
+            }
+            if (p.getAnnotations() == null) {
+                return false;
+            }
+            return true;
+        }).collect(Collectors.toList());
     }
 
     /**

@@ -16,7 +16,7 @@ public class LinuxCpuTime {
     private final String ALL_PATH = "/proc/stat";
 
     //cpu 核 数
-    private int cpuNum;
+    private int          cpuNum;
 
     // 获得当前的耗时
     public LinuxCpuTime(long pid, int cpuNum) throws Exception {

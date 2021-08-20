@@ -81,7 +81,7 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
 
                 HostDO container = new HostDO();
                 container.setIp(podConfig.getPodIp());
-                container.setHostName(String.join(":", namespace, podName, containerName));
+                container.setHostName(containerName);
                 container.setContainer(HostTypeEnum.CONTAINER.getCode());
                 container.setParentHostName(podConfig.getNodeName());
                 container.setExternalId(1L);
@@ -107,7 +107,7 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
             return null;
         }
         if (config.getAnnotations().get(serviceKey) == null) {
-            LOGGER.error("servicename is null, pod uid: {}", config.getUuid());
+            LOGGER.error("service name is null, pod uid: {}", config.getUuid());
             return null;
         }
         K8sPodDO pod = new K8sPodDO();

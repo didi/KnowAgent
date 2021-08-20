@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.service;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
 
 import java.util.List;
@@ -50,4 +51,7 @@ public interface ServiceHostManageService {
      */
     Integer batchAdd(Long serviceId, List<Long> hostIds);
 
+    List<Long> getRelatedHostIds(Long serviceId);
+
+    void replaceHosts(Long serviceId, List<HostDO> hosts);
 }

@@ -24,7 +24,7 @@ public class LimitCpuThread implements Runnable {
     private long                allQps;                                                   // 当前整体的限制阀值
     private float               currentCpuUsage;                                          // 当前cpu利用率
 
-    private String period = "cpu.period";
+    private String              period     = "cpu.period";
     private long                interval   = 30 * 1000;
 
     public LimitCpuThread(LimitService limiter, long qps) throws Exception {
@@ -75,7 +75,9 @@ public class LimitCpuThread implements Runnable {
             } catch (Throwable t) {
                 LOGGER.error(JSON.toJSONString(t));
                 LOGGER.error(JSON.toJSONString(t.getStackTrace()));
-                LOGGER.error(String.format("Limiter.cpuThread process cpuUsage error, message={%s}", t.getMessage()), t);
+                LOGGER.error(
+                    String.format("Limiter.cpuThread process cpuUsage error, message={%s}",
+                        t.getMessage()), t);
             }
         }
     }
