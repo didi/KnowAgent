@@ -51,7 +51,7 @@ public class FileTest {
     @Before
     public void before() {
         try {
-            initFile(baseFilePath);
+            initMultiLineFile(baseFilePath);
             Thread.sleep(500);
             initFile(baseFilePath_1);
             Thread.sleep(500);
@@ -153,7 +153,29 @@ public class FileTest {
             String bigLine = "bigline";
             for (int i = 0; i < MAX_LINE; i++) {
                 lines.add("timestamp=" + System.currentTimeMillis() + ",line=" + i + "," + bigLine + " from file:"
-                          + path);
+                        + path);
+            }
+
+            FileUtils.writeFileContent(file, lines);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void initMultiLineFile(String path) {
+        File file = new File(path);
+        createFiles(path);
+        try {
+            List<String> lines = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            String bigLine = "bigline";
+            for (int i = 0; i < MAX_LINE; i++) {
+                lines.add("timestamp=" + System.currentTimeMillis() + ",line=" + i + "," + bigLine + " from file:"
+                        + path);
+                StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+                for (StackTraceElement element : stackTrace) {
+                    lines.add(element.toString());
+                }
             }
 
             FileUtils.writeFileContent(file, lines);
