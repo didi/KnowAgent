@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agent.integration.test.datasource;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -118,11 +119,11 @@ public class BasicDataSource implements Runnable {
      * @throws Exception
      */
     private String readLine(BufferedRandomAccessFile in) throws Exception {
-        String lineContent = in.readNewLine(100L);
+        byte[] lineContent = in.readNewLine(100L);
         if (lineContent == null) {
             return null;
         }
-        return new String(lineContent.getBytes("ISO-8859-1"), "UTF-8");
+        return new String(lineContent, StandardCharsets.UTF_8);
     }
 
     public ConcurrentHashMap<String, String> getMap() {

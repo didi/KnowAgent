@@ -128,7 +128,7 @@ public class LogChannel extends AbstractChannel {
                     logEvent.setBytes(newBytes);
                 }
                 // 休眠等待
-                Thread.sleep(50);
+                //Thread.sleep(50);
             } catch (Exception e) {
                 LogGather.recordErrorLog("LogChannel error", "tryAppend error!", e);
             }
