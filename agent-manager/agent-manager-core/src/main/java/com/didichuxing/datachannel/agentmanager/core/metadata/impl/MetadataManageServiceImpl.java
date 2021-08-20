@@ -94,6 +94,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             metadataSyncResultPerService.setNameDuplicate(0);
             String serviceName = entry.getKey();
             List<PodConfig> configList = entry.getValue();
+            metadataSyncResultPerService.setServiceName(serviceName);
             ServiceDO oldService = serviceManageService.getServiceByServiceName(serviceName);
             Long serviceId;
             if (oldService != null && oldService.getExtenalServiceId() == SourceEnum.MANUAL.getCode()) {
@@ -117,7 +118,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                 List<String> containerNames = podConfig.getContainerNames();
                 for (HostDO localHost : localHosts) {
                     if (localHost.getContainer() == 0) {
-                        if (localHost.getHostName().equals(hostName)) {
+                        if (localHost.getHostName().equals(hostName) && localHost.getExternalId() == SourceEnum.MANUAL.getCode()) {
                             HostInfo hostInfo = new HostInfo();
                             hostInfo.setHostName(hostName);
                             hostInfo.setIp(hostIp);
@@ -133,7 +134,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                         }
                     } else if (localHost.getContainer() == 1) {
                         for (String containerName : containerNames) {
-                            if (localHost.getHostName().equals(containerName)) {
+                            if (localHost.getHostName().equals(containerName) && localHost.getExternalId() == SourceEnum.MANUAL.getCode()) {
                                 HostInfo hostInfo = new HostInfo();
                                 hostInfo.setHostName(containerName);
                                 hostInfo.setIp(podConfig.getPodIp());
@@ -169,6 +170,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     private void handleCreateHostsFromPod(PodConfig podConfig, Long serviceId) {
         List<ServiceHostPO> serviceHostList = new ArrayList<>();
+        List<Long> hostIds = serviceHostManageService.getRelatedHostIds(serviceId);
+        for (Long hostId : hostIds) {
+            HostDO hostDO = hostManageService.getById(hostId);
+            if (hostDO.getExternalId() == SourceEnum.K8S.getCode()) {
+                hostManageService.deleteHost(hostId, true, true, null);
+                serviceHostManageService.deleteByHostId(hostId);
+            }
+        }
         String hostname = podConfig.getNodeName();
         HostDO hostDO = new HostDO();
         hostDO.setHostName(hostname);
