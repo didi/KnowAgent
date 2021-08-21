@@ -381,7 +381,6 @@ public class ServiceManageServiceImpl implements ServiceManageService {
          */
         ServicePO servicePO = serviceManageServiceExtension.serviceDO2Service(serviceDO);
         servicePO.setOperator(CommonConstant.getOperator(operator));
-        servicePO.setExtenalServiceId(SourceEnum.MANUAL.getCode());
         serviceDAO.insert(servicePO);
         Long serviceId = servicePO.getId();
         /*
