@@ -237,6 +237,7 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
                 String timeFormat = logSliceRuleDTO.getSliceTimestampFormat();
                 if (timeFormat != null && !timeFormat.equals("")) {
                     logSourceConfig.setTimeFormat(timeFormat);  //时间戳格式
+                    logSourceConfig.setTimeFormatLength(timeFormat.replace("'", "").length());
                 }
                 String timeStartFlag = logSliceRuleDTO.getSliceTimestampPrefixString();
                 if (timeStartFlag != null && !timeStartFlag.equals("")) {

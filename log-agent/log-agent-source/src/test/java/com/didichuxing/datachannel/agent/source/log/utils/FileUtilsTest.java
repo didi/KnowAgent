@@ -8,14 +8,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.didichuxing.datachannel.agent.common.api.StandardLogType;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
+import com.didichuxing.datachannel.agent.engine.utils.TimeUtils;
+import com.didichuxing.datachannel.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.agent.source.log.config.MatchConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
@@ -762,4 +763,33 @@ public class FileUtilsTest {
         }
         assertTrue(result == true);
     }
+
+
+    @Test
+    public void testParseTimestamp() throws Exception {
+
+        List<String> formats = Arrays.asList(
+                "yyyy-MM-dd'T'HH:mm:ss",
+                "yyyy-MM-dd HH:mm:ss",
+                LogConfigConstants.LONG_TIMESTAMP);
+        for (String format : formats) {
+            Long current = System.currentTimeMillis() / 1000 * 1000;
+            String timeString;
+            if (format.equals(LogConfigConstants.LONG_TIMESTAMP)) {
+                timeString = String.valueOf(current);
+            } else {
+                timeString = new SimpleDateFormat(format).format(new Date(current));
+            }
+            String log = String.format("[INFO][LOGGER]mylog||a=123||b=456||timestamp=wrongtime||timestamp=%s", timeString);
+            LogSourceConfig config = new LogSourceConfig();
+            config.setTimeFormat(format);
+            config.setTimeFormatLength(format.replace("'", "").length());
+            config.setTimeStartFlag("timestamp=");
+            config.setTimeStartFlagIndex(1);
+            String parsedString = FileUtils.getTimeStringFormLineByIndex(log, config);
+            Long timeStamp = TimeUtils.getLongTimeStamp(parsedString, format);
+            assertEquals(current, timeStamp);
+        }
+    }
+
 }

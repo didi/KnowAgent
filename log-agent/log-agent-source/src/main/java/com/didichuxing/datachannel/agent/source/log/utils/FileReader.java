@@ -2,6 +2,8 @@ package com.didichuxing.datachannel.agent.source.log.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.didichuxing.datachannel.agent.common.api.FileReadType;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
@@ -14,6 +16,7 @@ import com.didichuxing.datachannel.agent.source.log.LogSource;
 import com.didichuxing.datachannel.agent.source.log.beans.WorkingFileNode;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +82,7 @@ public class FileReader {
                     }
                 } else {
                     // 多行日志聚合读取
-                    result = readMutilRowNew(wfn);
+                    result = readMultiRowNew(wfn);
                     lastWFNKey = wfn.getUniqueKey();
                     if (result != null) {
                         filterResult(result, start);
@@ -211,11 +214,12 @@ public class FileReader {
      * @return result of read line
      * @throws Exception read error
      */
-    private LogEvent readMutilRowNew(WorkingFileNode wfn) throws Exception {
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+    private LogEvent readMultiRowNew(WorkingFileNode wfn) throws Exception {
+        //ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        List<Pair<String, byte[]>> multiRows = new ArrayList<>();
         CommonConfig commonConfig = this.logSource.getModelConfig().getCommonConfig();
         BufferedRandomAccessFile in = wfn.getIn();
-        StringBuffer sb = new StringBuffer();
+        //StringBuffer sb = new StringBuffer();
         String suspectTimeString;
         String encodeString;
         int errorLine = 0;
@@ -245,8 +249,9 @@ public class FileReader {
         while (true) {
             // 若上一行存在，则直接拼接上一有效行
             if (nextContent != null) {
-                sb.append(nextContent);
-                byteStream.write(nextBytes);
+                //sb.append(nextContent);
+                multiRows.add(Pair.of(nextContent, nextBytes));
+                //byteStream.write(nextBytes);
                 timeString = nextTimeStampStr;
                 timeStamp = nextTimeStamp;
                 nextContent = null;
@@ -306,15 +311,17 @@ public class FileReader {
                     // 解析时间戳异常
                     if (isVaild) {
                         // 上一行存在，当前行解析异常【拼接上一行】
-                        sb.append(LINE_SEPARATOR).append(encodeString);
+                        //sb.append(LINE_SEPARATOR).append(encodeString);
                         nextOffset = in.getFilePointer();
-                        byteStream.write(LogConfigConstants.CTRL_BYTES);
-                        byteStream.write(lineContent);
+                        multiRows.add(Pair.of(encodeString, lineContent));
+                        //byteStream.write(LogConfigConstants.CTRL_BYTES);
+                        //byteStream.write(lineContent);
                     } else {
                         // 上一行不存在，当前行解析异常【忽略或者拼装】
-                        sb.append(encodeString).append(LINE_SEPARATOR);
-                        byteStream.write(lineContent);
-                        byteStream.write(LogConfigConstants.CTRL_BYTES);
+                        //sb.append(encodeString).append(LINE_SEPARATOR);
+                        multiRows.add(Pair.of(encodeString, lineContent));
+                        //byteStream.write(lineContent);
+                        //byteStream.write(LogConfigConstants.CTRL_BYTES);
                     }
                     errorLine++;
                 }
@@ -322,15 +329,17 @@ public class FileReader {
                 // 解析时间戳异常
                 if (isVaild) {
                     // 上一行存在，当前行解析异常【拼接上一行】
-                    sb.append(LINE_SEPARATOR).append(encodeString);
+                    //sb.append(LINE_SEPARATOR).append(encodeString);
                     nextOffset = in.getFilePointer();
-                    byteStream.write(LogConfigConstants.CTRL_BYTES);
-                    byteStream.write(lineContent);
+                    multiRows.add(Pair.of(encodeString, lineContent));
+                    //byteStream.write(LogConfigConstants.CTRL_BYTES);
+                    //byteStream.write(lineContent);
                 } else {
                     // 上一行不存在，当前行解析异常【忽略或者拼装】
-                    sb.append(encodeString).append(LINE_SEPARATOR);
-                    byteStream.write(lineContent);
-                    byteStream.write(LogConfigConstants.CTRL_BYTES);
+                    multiRows.add(Pair.of(encodeString, lineContent));
+                    //sb.append(encodeString).append(LINE_SEPARATOR);
+                    //byteStream.write(lineContent);
+                    //byteStream.write(LogConfigConstants.CTRL_BYTES);
                 }
                 errorLine++;
             }
@@ -347,15 +356,31 @@ public class FileReader {
                 break;
             }
         }
-        if (sb.length() == 0) {
+        if (multiRows.size() == 0) {
             return null;
+        } else if (multiRows.size() == 1) {
+            Pair<String, byte[]> first = multiRows.get(0);
+            return new LogEvent(first.getLeft(), first.getRight(), currentOffSet, timeStamp,
+                    timeString, preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn
+                    .getFileNode().getParentPath(), wfn.getFileNode().getFileName(),
+                    logSource.getMasterFileName(), logSource.getDockerParentPath(), wfn.getFileNode()
+                    .getFileOffSet().getFileHeadMd5());
+        } else {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            for (int i = 0; i < multiRows.size(); i++) {
+                out.write(multiRows.get(i).getRight());
+                if (i < multiRows.size() - 1) {
+                    out.write(LogConfigConstants.CTRL_BYTES);
+                }
+            }
+            byte[] contentBytes = out.toByteArray();
+            return new LogEvent(new String(contentBytes, commonConfig.getEncodeType()), contentBytes, currentOffSet, timeStamp,
+                    timeString, preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn
+                    .getFileNode().getParentPath(), wfn.getFileNode().getFileName(),
+                    logSource.getMasterFileName(), logSource.getDockerParentPath(), wfn.getFileNode()
+                    .getFileOffSet().getFileHeadMd5());
         }
-        String content = sb.toString();
-        return new LogEvent(content, byteStream.toByteArray(), currentOffSet, timeStamp,
-                timeString, preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn
-                .getFileNode().getParentPath(), wfn.getFileNode().getFileName(),
-                logSource.getMasterFileName(), logSource.getDockerParentPath(), wfn.getFileNode()
-                .getFileOffSet().getFileHeadMd5());
+
     }
 
     private Long getReadTimeOut() {

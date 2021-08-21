@@ -352,42 +352,40 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         if (StringUtils.isEmpty(line)) {
             return null;
         }
-        //todo
         String timeFormat = logSourceConfig.getTimeFormat();
-        if (StringUtils.isNotBlank(timeFormat)) {
-            timeFormat = timeFormat.replaceAll("'", "");
-        }
+        int timeFormatLength = logSourceConfig.getTimeFormatLength();
         String startFlag = logSourceConfig.getTimeStartFlag();
         int startFlagIndex = logSourceConfig.getTimeStartFlagIndex();
 
         String timeString;
         if (StringUtils.isEmpty(startFlag) && startFlagIndex == 0) {
-            if (line.length() < timeFormat.length()) {
+            if (line.length() < timeFormatLength) {
                 return null;
             } else {
-                timeString = line.substring(0, timeFormat.length());
+                timeString = line.substring(0, timeFormatLength);
             }
         } else {
             try {
                 // startFlag不为空
-                // 对字符串进行切割，得到最终的字符串
+                // 对字符创进行切割，得到最终的字符创
                 if (!StringUtils.isEmpty(startFlag)) {
-                    boolean isValid = true;
+                    boolean isVaild = true;
+                    int currentIndex = 0;
                     for (int i = 0; i < startFlagIndex + 1; i++) {
-                        int startSubIndex = line.indexOf(startFlag);
+                        int startSubIndex = line.indexOf(startFlag, currentIndex);
                         if (startSubIndex >= 0) {
-                            line = line.substring(startSubIndex + startFlag.length());
+                            currentIndex = startSubIndex + startFlag.length();
                         } else {
                             // 此时说明line中不存在startFlag
-                            isValid = false;
+                            isVaild = false;
                             break;
                         }
                     }
-                    if (isValid) {
-                        if (line.length() < timeFormat.length()) {
+                    if (isVaild) {
+                        if (line.length() < timeFormatLength) {
                             return null;
                         } else {
-                            timeString = line.substring(0, timeFormat.length());
+                            timeString = line.substring(currentIndex, currentIndex + timeFormatLength);
                         }
                     } else {
                         // 此时说明line中不存在startFlag
@@ -399,7 +397,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
             } catch (Exception e) {
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.info("timeFormat=" + timeFormat + ", startFlag=" + startFlag + ", startFlagIndex="
-                                + startFlagIndex);
+                            + startFlagIndex);
                 }
                 return null;
             }
@@ -408,7 +406,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         if (StringUtils.isBlank(timeString)) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.info("timeFormat=" + timeFormat + ", startFlag=" + startFlag + ", startFlagIndex="
-                            + startFlagIndex);
+                        + startFlagIndex);
             }
         }
 

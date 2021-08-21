@@ -43,7 +43,7 @@ public class EventParser {
                 logEvent.setLogId(logSource.getCurWFileNode().getFileNode().getModelId());
                 if (timeStamp == null || StringUtils.isEmpty(timeString)) {
                     // 若timeStamp从未读取过，则使用当前时间戳表示其时间戳
-                    timeStamp = System.currentTimeMillis();
+                    timeStamp = logEvent.getTransTime();
                     timeString = timeStamp.toString();
                     logEvent.setLogTime(timeStamp);
                     logEvent.setTimestamp(timeString);
@@ -76,7 +76,7 @@ public class EventParser {
             workingFileNode.setLatestLogTimeStr(lastTimeString);
 
             // 设置maxGap
-            logSource.setMaxGap(timeStamp);
+            logSource.setMaxGapLogTime(timeStamp);
         }
     }
 

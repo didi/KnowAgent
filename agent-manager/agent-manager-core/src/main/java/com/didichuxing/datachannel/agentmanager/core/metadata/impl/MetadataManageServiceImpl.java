@@ -171,11 +171,11 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     private void handleCreateHostsFromPod(PodConfig podConfig, Long serviceId) {
         List<ServiceHostPO> serviceHostList = new ArrayList<>();
         List<Long> hostIds = serviceHostManageService.getRelatedHostIds(serviceId);
+        serviceHostManageService.deleteServiceHostByServiceId(serviceId);
         for (Long hostId : hostIds) {
             HostDO hostDO = hostManageService.getById(hostId);
             if (hostDO.getExternalId() == SourceEnum.K8S.getCode()) {
                 hostManageService.deleteHost(hostId, true, true, null);
-                serviceHostManageService.deleteByHostId(hostId);
             }
         }
         String hostname = podConfig.getNodeName();

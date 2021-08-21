@@ -98,12 +98,37 @@ public class LogSourceTest extends FileTest {
         logSource.getLogSourceConfig().setTimeFormat(LogConfigConstants.NO_LOG_TIME);
         logSource.getLogSourceConfig().setReadTimeOut(1L);
         logSource.getModelConfig().getCommonConfig()
-            .setModelType(LogConfigConstants.COLLECT_TYPE_TEMPORALITY);
+                .setModelType(LogConfigConstants.COLLECT_TYPE_TEMPORALITY);
 
         int num = 0;
         for (int i = 0; i < 3 * MAX_LINE; i++) {
             Event event = logSource.tryGetEvent();
-            System.out.println(event.toString());
+            if (event != null) {
+                num++;
+            }
+        }
+
+        assertTrue(num > MAX_LINE);
+        Map<String, Object> metrics = logSource.metric();
+        for (Map.Entry<String, Object> entry : metrics.entrySet()) {
+            System.out.println("key:" + entry.getKey() + ",\tvalue:" + entry.getValue());
+        }
+    }
+
+    @Test
+    public void tryGetMultiLineEvent() {
+        LogSource logSource = getLogSource();
+        logSource.getLogSourceConfig().setTimeFormat(LogConfigConstants.LONG_TIMESTAMP);
+        logSource.getLogSourceConfig().setTimeStartFlag("timestamp=");
+        logSource.getLogSourceConfig().setTimeFormatLength(LogConfigConstants.LONG_TIMESTAMP.length());
+        logSource.getLogSourceConfig().setReadTimeOut(1L);
+        logSource.getModelConfig().getCommonConfig()
+                .setModelType(LogConfigConstants.COLLECT_TYPE_TEMPORALITY);
+
+        int num = 0;
+        for (int i = 0; i < 3 * MAX_LINE; i++) {
+            Event event = logSource.tryGetEvent();
+            //System.out.println(event.toString());
             if (event != null) {
                 num++;
             }
@@ -496,7 +521,7 @@ public class LogSourceTest extends FileTest {
         Map<String, FileOffSet> fileOffSetMap = new HashMap<>();
         // 设置offset
         FileOffSet fileOffSet0 = getFileOffset(baseFilePath);
-        fileOffSet0.setOffSet(100L);
+//        fileOffSet0.setOffSet(100L);
         result.add(fileOffSet0.getFileKey());
 
         FileOffSet fileOffSet1 = getFileOffset(baseFilePath_1);
