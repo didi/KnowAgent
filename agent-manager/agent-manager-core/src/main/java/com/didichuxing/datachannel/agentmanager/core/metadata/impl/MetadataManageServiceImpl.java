@@ -186,10 +186,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         hostDO.setContainer(0);
         hostDO.setExternalId(SourceEnum.K8S.getCode());
         Long id = hostManageService.createHost(hostDO, null);
-        ServiceHostPO serviceHostPO = new ServiceHostPO();
-        serviceHostPO.setServiceId(serviceId);
-        serviceHostPO.setHostId(id);
-        serviceHostList.add(serviceHostPO);
         List<String> containerNames = podConfig.getContainerNames();
         for (String containerName : containerNames) {
             HostDO container = new HostDO();
