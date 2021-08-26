@@ -22,4 +22,6 @@ public interface K8sPodContainerManageService {
      */
     List<K8sPodHostPO> list();
 
+    int deleteByHostId(Long hostId);
+
 }

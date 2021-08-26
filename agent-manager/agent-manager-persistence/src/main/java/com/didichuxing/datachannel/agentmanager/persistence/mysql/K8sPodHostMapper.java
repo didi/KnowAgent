@@ -20,4 +20,6 @@ public interface K8sPodHostMapper {
     int batchInsertHost(List<K8sPodHostPO> records);
 
     List<K8sPodHostPO> queryAll();
+
+    int deleteByHostId(Long hostId);
 }

@@ -9,6 +9,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.Meta
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResultPerService;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodHostPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
@@ -22,6 +23,7 @@ import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageSe
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.MetadataManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodConfig;
+import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodReference;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,6 +41,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 
     @Value("${metadata.sync.request.k8s.service-key}")
     private String serviceKey;
+
+    @Value("${metadata.sync.request.k8s.path-name}")
+    private String logPath;
 
     @Autowired
     private MetadataManageServiceExtension metadataManageServiceExtension;
@@ -147,13 +152,12 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                         throw new ServiceException(String.format("本地主机类型异常，主机id: %d", localHost.getId()), ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode());
                     }
                 }
-                // 容器数量加上主机数
-                relatedHosts += podConfig.getContainerNames().size() + 1;
+                relatedHosts += podConfig.getContainerNames().size();
             }
             metadataSyncResultPerService.setRelateHostNum(relatedHosts);
             if (CollectionUtils.isEmpty(duplicateIps) && CollectionUtils.isEmpty(duplicateHostnames)) {
                 for (PodConfig podConfig : podConfigs) {
-                    handleCreateHostsFromPod(podConfig, serviceId);
+                    handleRefreshK8sMeta(podConfig, serviceId, serviceName);
                 }
                 metadataSyncResultPerService.setDuplicateHostNameHostList(Collections.emptyList());
                 metadataSyncResultPerService.setDuplicateIpHostList(Collections.emptyList());
@@ -168,7 +172,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         return metadataSyncResult;
     }
 
-    private void handleCreateHostsFromPod(PodConfig podConfig, Long serviceId) {
+    /**
+     * 当前的逻辑为全量删除然后新增，可以优化同步逻辑
+     *
+     * @param podConfig
+     * @param serviceId
+     * @param serviceName
+     */
+    private void handleRefreshK8sMeta(PodConfig podConfig, Long serviceId, String serviceName) {
         List<ServiceHostPO> serviceHostList = new ArrayList<>();
         List<Long> hostIds = serviceHostManageService.getRelatedHostIds(serviceId);
         serviceHostManageService.deleteServiceHostByServiceId(serviceId);
@@ -176,6 +187,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             HostDO hostDO = hostManageService.getById(hostId);
             if (hostDO.getExternalId() == SourceEnum.K8S.getCode()) {
                 hostManageService.deleteHost(hostId, true, true, null);
+                k8sPodContainerManageService.deleteByHostId(hostId);
             }
         }
         String hostname = podConfig.getNodeName();
@@ -187,6 +199,19 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         hostDO.setExternalId(SourceEnum.K8S.getCode());
         Long id = hostManageService.createHost(hostDO, null);
         List<String> containerNames = podConfig.getContainerNames();
+        K8sPodDO k8sPodDO = new K8sPodDO();
+        k8sPodDO.setUuid(podConfig.getUuid());
+        k8sPodDO.setPodIp(podConfig.getPodIp());
+        k8sPodDO.setServiceName(serviceName);
+        Map<String, PodReference> reference = podConfig.getReferenceMap();
+        k8sPodDO.setLogMountPath(reference.get(logPath).getMountPath());
+        k8sPodDO.setLogHostPath(reference.get(logPath).getHostPath());
+        k8sPodDO.setNodeName(podConfig.getNodeName());
+        k8sPodDO.setNodeIp(podConfig.getNodeIp());
+        k8sPodDO.setContainerNames(JSON.toJSONString(podConfig.getContainerNames()));
+        serviceHostManageService.createServiceHostList(serviceHostList);
+        Long podId = k8sPodManageService.createK8sPod(k8sPodDO, null);
+        List<K8sPodHostPO> k8sPodHostList = new ArrayList<>();
         for (String containerName : containerNames) {
             HostDO container = new HostDO();
             container.setHostName(containerName);
@@ -199,8 +224,11 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             serviceHostPO1.setServiceId(serviceId);
             serviceHostPO1.setHostId(id1);
             serviceHostList.add(serviceHostPO1);
+            K8sPodHostPO k8sPodHostPO = new K8sPodHostPO();
+            k8sPodHostPO.setHostId(id1);
+            k8sPodHostPO.setK8sPodId(podId);
         }
-        serviceHostManageService.createServiceHostList(serviceHostList);
+        k8sPodContainerManageService.createK8sPodContainerList(k8sPodHostList);
     }
 
     /**
