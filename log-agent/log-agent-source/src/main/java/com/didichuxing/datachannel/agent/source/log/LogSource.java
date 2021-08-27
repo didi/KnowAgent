@@ -74,7 +74,7 @@ public class LogSource extends AbstractSource {
     /**
      * 一个心跳周期内的最大延迟量
      */
-    private volatile long            maxLogTime         = 0L;
+    private volatile long            maxLogTime       = 0L;
 
     /**
      * 是否匹配标准日志

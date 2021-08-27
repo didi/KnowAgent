@@ -764,14 +764,11 @@ public class FileUtilsTest {
         assertTrue(result == true);
     }
 
-
     @Test
     public void testParseTimestamp() throws Exception {
 
-        List<String> formats = Arrays.asList(
-                "yyyy-MM-dd'T'HH:mm:ss",
-                "yyyy-MM-dd HH:mm:ss",
-                LogConfigConstants.LONG_TIMESTAMP);
+        List<String> formats = Arrays.asList("yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd HH:mm:ss",
+            LogConfigConstants.LONG_TIMESTAMP);
         for (String format : formats) {
             Long current = System.currentTimeMillis() / 1000 * 1000;
             String timeString;
@@ -780,7 +777,8 @@ public class FileUtilsTest {
             } else {
                 timeString = new SimpleDateFormat(format).format(new Date(current));
             }
-            String log = String.format("[INFO][LOGGER]mylog||a=123||b=456||timestamp=wrongtime||timestamp=%s", timeString);
+            String log = String.format(
+                "[INFO][LOGGER]mylog||a=123||b=456||timestamp=wrongtime||timestamp=%s", timeString);
             LogSourceConfig config = new LogSourceConfig();
             config.setTimeFormat(format);
             config.setTimeFormatLength(format.replace("'", "").length());

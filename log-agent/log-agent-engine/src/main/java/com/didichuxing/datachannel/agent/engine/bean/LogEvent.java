@@ -97,9 +97,10 @@ public class LogEvent extends Event {
         super("", new byte[1]);
     }
 
-    public LogEvent(String content, byte[] bytes, Long offset, Long timestamp, String timeString, Long preOffset,
-                    String fileNodeKey, String fileKey, String filePath, String fileName, String masterFileName,
-                    String dockerParentPath, String fileHeadMd5){
+    public LogEvent(String content, byte[] bytes, Long offset, Long timestamp, String timeString,
+                    Long preOffset, String fileNodeKey, String fileKey, String filePath,
+                    String fileName, String masterFileName, String dockerParentPath,
+                    String fileHeadMd5) {
         super(content, bytes);
         this.offset = offset;
         this.timestamp = timeString;

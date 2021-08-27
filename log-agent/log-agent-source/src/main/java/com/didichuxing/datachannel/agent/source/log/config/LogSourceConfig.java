@@ -196,6 +196,7 @@ public class LogSourceConfig extends SourceConfig {
     public void setMaxErrorLineNum(Integer maxErrorLineNum) {
         this.maxErrorLineNum = maxErrorLineNum;
     }
+
     public int getTimeFormatLength() {
         return timeFormatLength;
     }
@@ -203,6 +204,7 @@ public class LogSourceConfig extends SourceConfig {
     public void setTimeFormatLength(int timeFormatLength) {
         this.timeFormatLength = timeFormatLength;
     }
+
     public Boolean getValidTimeConfig() {
         return isValidTimeConfig;
     }
