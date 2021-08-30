@@ -121,7 +121,7 @@ public class Log2KafkaTask extends AbstractTask {
 
         long current = 0;
         if (sendNum > getKafkaTargetConfig().getFlushBatchSize()
-                || (current = System.currentTimeMillis()) - lastFlushTime > (getKafkaTargetConfig())
+            || (current = System.currentTimeMillis()) - lastFlushTime > (getKafkaTargetConfig())
                 .getFlushBatchTimeThreshold()) {
             lastFlushTime = current == 0 ? System.currentTimeMillis() : current;
             return true;

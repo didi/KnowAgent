@@ -11,14 +11,14 @@ import java.util.concurrent.TimeUnit;
 
 public class BufferedRandomAccessFile extends RandomAccessFile {
 
-    static final int        LogBuffSz_      = 20;                      // 64K buffer
-    public static final int BuffSz_         = (1 << LogBuffSz_);
-    static final long       BuffMask_       = ~(((long) BuffSz_) - 1L);
+    static final int              LogBuffSz_      = 20;                       // 64K buffer
+    public static final int       BuffSz_         = (1 << LogBuffSz_);
+    static final long             BuffMask_       = ~(((long) BuffSz_) - 1L);
 
-    private String          path_;
+    private String                path_;
 
-    private int             seekTimes       = 0;
-    private int             seekTimesThread = 5;
+    private int                   seekTimes       = 0;
+    private int                   seekTimesThread = 5;
 
     private final int             maxLineSize     = BuffSz_ * seekTimesThread;
 
@@ -26,15 +26,15 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
      * This implementation is based on the buffer implementation in Modula-3's "Rd", "Wr", "RdClass", and "WrClass"
      * interfaces.
      */
-    private boolean         dirty_;                                    // true iff unflushed bytes exist
-    private boolean         syncNeeded_;                               // dirty_ can be cleared by e.g. seek, so track
+    private boolean               dirty_;                                     // true iff unflushed bytes exist
+    private boolean               syncNeeded_;                                // dirty_ can be cleared by e.g. seek, so track
     // sync separately
-    private long            curr_;                                     // current position in file
-    private long            lo_, hi_;                                  // bounds on characters in "buff"
-    private byte[]          buff_;                                     // local buffer
-    private long            maxHi_;                                    // this.lo + this.buff.length
-    private boolean         hitEOF_;                                   // buffer contains last file block?
-    private long            diskPos_;                                  // disk position
+    private long                  curr_;                                      // current position in file
+    private long                  lo_, hi_;                                   // bounds on characters in "buff"
+    private byte[]                buff_;                                      // local buffer
+    private long                  maxHi_;                                     // this.lo + this.buff.length
+    private boolean               hitEOF_;                                    // buffer contains last file block?
+    private long                  diskPos_;                                   // disk position
 
     private byte[]                indexBuffer;
     private ByteArrayOutputStream out;
@@ -295,7 +295,7 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
             int length = read(indexBuffer);
             if (length >= 0) {
                 int crIndex = FileUtils.getLineDelimiterIndex(indexBuffer,
-                        FileUtils.CR_LINE_DELIMITER, length);
+                    FileUtils.CR_LINE_DELIMITER, length);
                 int lfIndex;
                 if (crIndex >= 0) {
                     secureWriteBuffer(indexBuffer, 0, crIndex);
@@ -306,7 +306,7 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
                         seek(curr_ - 1);
                     }
                 } else if ((lfIndex = FileUtils.getLineDelimiterIndex(indexBuffer,
-                        FileUtils.LF_LINE_DELIMITER, length)) >= 0) {
+                    FileUtils.LF_LINE_DELIMITER, length)) >= 0) {
                     secureWriteBuffer(indexBuffer, 0, lfIndex);
                     eol = true;
                     long curr = getFilePointer();

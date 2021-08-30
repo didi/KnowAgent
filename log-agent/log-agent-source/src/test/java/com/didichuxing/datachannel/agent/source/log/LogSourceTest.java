@@ -98,7 +98,7 @@ public class LogSourceTest extends FileTest {
         logSource.getLogSourceConfig().setTimeFormat(LogConfigConstants.NO_LOG_TIME);
         logSource.getLogSourceConfig().setReadTimeOut(1L);
         logSource.getModelConfig().getCommonConfig()
-                .setModelType(LogConfigConstants.COLLECT_TYPE_TEMPORALITY);
+            .setModelType(LogConfigConstants.COLLECT_TYPE_TEMPORALITY);
 
         int num = 0;
         for (int i = 0; i < 3 * MAX_LINE; i++) {
@@ -120,10 +120,11 @@ public class LogSourceTest extends FileTest {
         LogSource logSource = getLogSource();
         logSource.getLogSourceConfig().setTimeFormat(LogConfigConstants.LONG_TIMESTAMP);
         logSource.getLogSourceConfig().setTimeStartFlag("timestamp=");
-        logSource.getLogSourceConfig().setTimeFormatLength(LogConfigConstants.LONG_TIMESTAMP.length());
+        logSource.getLogSourceConfig().setTimeFormatLength(
+            LogConfigConstants.LONG_TIMESTAMP.length());
         logSource.getLogSourceConfig().setReadTimeOut(1L);
         logSource.getModelConfig().getCommonConfig()
-                .setModelType(LogConfigConstants.COLLECT_TYPE_TEMPORALITY);
+            .setModelType(LogConfigConstants.COLLECT_TYPE_TEMPORALITY);
 
         int num = 0;
         for (int i = 0; i < 3 * MAX_LINE; i++) {

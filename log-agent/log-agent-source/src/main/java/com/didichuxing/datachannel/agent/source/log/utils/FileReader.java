@@ -159,15 +159,15 @@ public class FileReader {
         }
         //byte[] bytes = lineContent.getBytes(StandardCharsets.ISO_8859_1);
         encodeString = new String(lineContent, this.logSource.getModelConfig().getCommonConfig()
-                .getEncodeType());
+            .getEncodeType());
         timeStamp = System.currentTimeMillis();
         timeString = timeStamp.toString();
         long currentOffSet = in.getFilePointer();
         long preOffset = in.preOffset();
         return new LogEvent(encodeString, lineContent, currentOffSet, timeStamp, timeString,
-                preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn.getFileNode()
+            preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn.getFileNode()
                 .getParentPath(), wfn.getFileNode().getFileName(), logSource.getMasterFileName(),
-                logSource.getDockerParentPath(), wfn.getFileNode().getFileOffSet().getFileHeadMd5());
+            logSource.getDockerParentPath(), wfn.getFileNode().getFileOffSet().getFileHeadMd5());
     }
 
     /**
@@ -189,10 +189,10 @@ public class FileReader {
         //byte[] bytes = lineContent.getBytes(StandardCharsets.ISO_8859_1);
         encodeString = new String(lineContent, commonConfig.getEncodeType());
         suspectTimeString = FileUtils.getTimeStringFormLineByIndex(encodeString,
-                this.logSource.getLogSourceConfig());
+            this.logSource.getLogSourceConfig());
         if (StringUtils.isNotBlank(suspectTimeString) && !suspectTimeString.equals(timeString)) {
             timeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, logSource
-                    .getLogSourceConfig().getTimeFormat());
+                .getLogSourceConfig().getTimeFormat());
         }
         timeString = suspectTimeString;
         if (timeStamp == null) {
@@ -202,9 +202,9 @@ public class FileReader {
         long currentOffSet = in.getFilePointer();
         long preOffset = in.preOffset();
         return new LogEvent(encodeString, lineContent, currentOffSet, timeStamp, timeString,
-                preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn.getFileNode()
+            preOffset, wfn.getUniqueKey(), wfn.getFileNode().getFileKey(), wfn.getFileNode()
                 .getParentPath(), wfn.getFileNode().getFileName(), logSource.getMasterFileName(),
-                logSource.getDockerParentPath(), wfn.getFileNode().getFileOffSet().getFileHeadMd5());
+            logSource.getDockerParentPath(), wfn.getFileNode().getFileOffSet().getFileHeadMd5());
     }
 
     /**
@@ -418,8 +418,8 @@ public class FileReader {
     private void filterResult(LogEvent logEvent, long startTime) {
         // TODO: 2021-01-15 这里以后需要设置个public日志预估过滤开关，目前所有public log都过滤
         if (logSource.getLogSourceConfig().getMatchConfig().getBusinessType()
-                .equals(StandardLogType.Public.getType())
-                && logEvent != null) {
+            .equals(StandardLogType.Public.getType())
+            && logEvent != null) {
             boolean filter = isNeedFilter(logEvent.getContent());
             if (filter && (logEvent.getOffset() != null)) {
                 this.logSource.getCurWFileNode().setCurOffset(logEvent.getOffset());
@@ -428,7 +428,7 @@ public class FileReader {
             }
             if (this.logSource.getTaskPatternStatistics() != null) {
                 this.logSource.getTaskPatternStatistics().filterOneRecord(
-                        TimeUtils.getNanoTime() - startTime, !filter);
+                    TimeUtils.getNanoTime() - startTime, !filter);
             }
         }
     }
