@@ -49,8 +49,13 @@ public class K8sPodContainerManageServiceImpl implements K8sPodContainerManageSe
     }
 
     @Override
-    public int deleteByHostId(Long hostId) {
-        return k8sPodhostDAO.deleteByHostId(hostId);
+    public List<K8sPodHostPO> listByPodId(Long hostId) {
+        return k8sPodhostDAO.selectByPodId(hostId);
+    }
+
+    @Override
+    public int deleteByPodId(Long podId) {
+        return k8sPodhostDAO.deleteByPodId(podId);
     }
 
     private CheckResult checkPodContainer(K8sPodHostPO k8sPodContainerPO) {

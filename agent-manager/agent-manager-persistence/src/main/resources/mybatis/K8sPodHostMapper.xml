@@ -55,7 +55,13 @@
     <include refid="Base_Column_List"/>
     from tb_k8s_pod_host
   </select>
-  <delete id="deleteByHostId" parameterType="java.lang.Long">
-    delete from tb_k8s_pod_host where host_id = #{hostId}
+  <select id="selectByPodId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tb_k8s_pod_host
+    where k8s_pod_id = #{podId}
+  </select>
+  <delete id="deleteByPodId" parameterType="java.lang.Long">
+    delete from tb_k8s_pod_host where k8s_pod_id = #{podId}
   </delete>
 </mapper>

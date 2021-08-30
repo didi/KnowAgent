@@ -424,6 +424,7 @@ DROP TABLE IF EXISTS `tb_k8s_pod`;
 CREATE TABLE `tb_k8s_pod` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(255) DEFAULT '' COMMENT ' pod 实例唯一键',
+  `namespace` varchar(255) DEFAULT '' COMMENT 'pod的namespace',
   `pod_ip` varchar(255) DEFAULT '' COMMENT ' pod ip 地址',
   `service_name` varchar(255) DEFAULT '' COMMENT ' pod 所属服务对应服务名',
   `log_mount_path` varchar(255) DEFAULT '' COMMENT ' 容器内路径',

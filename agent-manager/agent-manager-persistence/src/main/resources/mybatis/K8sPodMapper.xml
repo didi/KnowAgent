@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="namespace" jdbcType="VARCHAR" property="namespace" />
     <result column="pod_ip" jdbcType="VARCHAR" property="podIp" />
     <result column="service_name" jdbcType="VARCHAR" property="serviceName" />
     <result column="log_mount_path" jdbcType="VARCHAR" property="logMountPath" />
@@ -16,7 +17,7 @@
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, uuid, pod_ip, service_name, log_mount_path, log_host_path, node_name, node_ip,
+    id, uuid, namespace, pod_ip, service_name, log_mount_path, log_host_path, node_name, node_ip,
     container_names, operator, create_time, modify_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -30,12 +31,12 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO" useGeneratedKeys="true" keyProperty="id">
-    insert into tb_k8s_pod (id, uuid, pod_ip,
+    insert into tb_k8s_pod (id, uuid, namespace, pod_ip,
       service_name, log_mount_path, log_host_path,
       node_name, node_ip, container_names,
       operator
       )
-    values (#{id,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, #{podIp,jdbcType=VARCHAR},
+    values (#{id,jdbcType=BIGINT}, #{uuid,jdbcType=VARCHAR}, #{namespace,jdbcType=VARCHAR}, #{podIp,jdbcType=VARCHAR},
       #{serviceName,jdbcType=VARCHAR}, #{logMountPath,jdbcType=VARCHAR}, #{logHostPath,jdbcType=VARCHAR},
       #{nodeName,jdbcType=VARCHAR}, #{nodeIp,jdbcType=VARCHAR}, #{containerNames,jdbcType=VARCHAR},
       #{operator,jdbcType=VARCHAR}
@@ -49,6 +50,9 @@
       </if>
       <if test="uuid != null">
         uuid,
+      </if>
+      <if test="namespace != null">
+        namespace,
       </if>
       <if test="podIp != null">
         pod_ip,
@@ -88,6 +92,9 @@
       <if test="uuid != null">
         #{uuid,jdbcType=VARCHAR},
       </if>
+      <if test="namespace != null">
+        #{namespace,jdbcType=VARCHAR},
+      </if>
       <if test="podIp != null">
         #{podIp,jdbcType=VARCHAR},
       </if>
@@ -126,6 +133,9 @@
       <if test="uuid != null">
         uuid = #{uuid,jdbcType=VARCHAR},
       </if>
+      <if test="namespace != null">
+        namespace = #{namespace,jdbcType=VARCHAR},
+      </if>
       <if test="podIp != null">
         pod_ip = #{podIp,jdbcType=VARCHAR},
       </if>
@@ -162,6 +172,7 @@
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO">
     update tb_k8s_pod
     set uuid = #{uuid,jdbcType=VARCHAR},
+      namespace = #{namespace,jdbcType=VARCHAR},
       pod_ip = #{podIp,jdbcType=VARCHAR},
       service_name = #{serviceName,jdbcType=VARCHAR},
       log_mount_path = #{logMountPath,jdbcType=VARCHAR},
@@ -183,6 +194,12 @@
     t1.id, t1.uuid, t1.pod_ip, t1.service_name, t1.log_mount_path, t1.log_host_path, t1.node_name, t1.node_ip,
     t1.container_names, t1.operator, t1.create_time, t1.modify_time
   </sql>
+  <select id="selectByNameAndSpace" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tb_k8s_pod where namespace = #{namespace} and name = #{name}
+    where
+  </select>
   <select id="selectByContainerId" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
     <include refid="join_column"/>

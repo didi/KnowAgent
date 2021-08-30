@@ -6,6 +6,7 @@ public class K8sPodPO extends BasePO {
 
     private Long id;
     private String uuid;
+    private String namespace;
     private String podIp;
     private String serviceName;
     private String logMountPath;
@@ -28,6 +29,14 @@ public class K8sPodPO extends BasePO {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 
     public String getPodIp() {

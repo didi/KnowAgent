@@ -51,4 +51,9 @@ public class K8sPodManageServiceImpl implements K8sPodManageService {
         return ConvertUtil.obj2Obj(k8sPodPO, K8sPodDO.class);
     }
 
+    @Override
+    public K8sPodDO getByNameAndSpace(String namespace, String name) {
+        K8sPodPO k8sPodPO = k8sPodDAO.selectByNameAndSpace(namespace, name);
+        return ConvertUtil.obj2Obj(k8sPodPO, K8sPodDO.class);
+    }
 }

@@ -35,4 +35,13 @@ public interface K8sPodManageService {
 
     K8sPodDO getByContainerId(Long hostId);
 
+    /**
+     * 通过namespace和name查找pod，不用uuid的原因是pod变更后无法感知
+     *
+     * @param namespace
+     * @param name
+     * @return
+     */
+    K8sPodDO getByNameAndSpace(String namespace, String name);
+
 }

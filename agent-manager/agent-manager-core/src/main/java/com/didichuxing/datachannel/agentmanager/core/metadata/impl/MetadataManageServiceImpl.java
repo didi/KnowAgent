@@ -1,7 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.metadata.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.HostInfo;
@@ -63,6 +62,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     @Autowired
     private K8sPodContainerManageService k8sPodContainerManageService;//TODO：
 
+/*
     private HostDOComparator hostDOComparator = new HostDOComparator();
 
     private ServiceDOComparator serviceDOComparator = new ServiceDOComparator();
@@ -74,6 +74,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     private K8sPodHostPOComparator k8sPodContainerPOComparator = new K8sPodHostPOComparator();
 
     private HostContainerComparator hostContainerComparator = new HostContainerComparator();
+*/
 
     @Override
     public MetadataSyncResult sync() {
@@ -156,8 +157,24 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             }
             metadataSyncResultPerService.setRelateHostNum(relatedHosts);
             if (CollectionUtils.isEmpty(duplicateIps) && CollectionUtils.isEmpty(duplicateHostnames)) {
+                List<Long> hostIds = serviceHostManageService.getRelatedHostIds(serviceId);
+                serviceHostManageService.deleteServiceHostByServiceId(serviceId);
+                for (PodConfig podConfig : configList) {
+                    K8sPodDO k8sPodDO = k8sPodManageService.getByNameAndSpace(podConfig.getNamespace(), podConfig.getPodName());
+                    if (k8sPodDO != null) {
+                        Long podId = k8sPodDO.getId();
+                        k8sPodManageService.deleteK8sPod(podId, null);
+                        k8sPodContainerManageService.deleteByPodId(podId);
+                    }
+                }
+                for (Long hostId : hostIds) {
+                    HostDO hostDO = hostManageService.getById(hostId);
+                    if (hostDO.getExternalId() == SourceEnum.K8S.getCode()) {
+                        hostManageService.deleteHost(hostId, true, true, null);
+                    }
+                }
                 for (PodConfig podConfig : podConfigs) {
-                    handleRefreshK8sMeta(podConfig, serviceId, serviceName);
+                    handleCreateK8sMeta(podConfig, serviceId, serviceName);
                 }
                 metadataSyncResultPerService.setDuplicateHostNameHostList(Collections.emptyList());
                 metadataSyncResultPerService.setDuplicateIpHostList(Collections.emptyList());
@@ -179,17 +196,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @param serviceId
      * @param serviceName
      */
-    private void handleRefreshK8sMeta(PodConfig podConfig, Long serviceId, String serviceName) {
+    private void handleCreateK8sMeta(PodConfig podConfig, Long serviceId, String serviceName) {
         List<ServiceHostPO> serviceHostList = new ArrayList<>();
-        List<Long> hostIds = serviceHostManageService.getRelatedHostIds(serviceId);
-        serviceHostManageService.deleteServiceHostByServiceId(serviceId);
-        for (Long hostId : hostIds) {
-            HostDO hostDO = hostManageService.getById(hostId);
-            if (hostDO.getExternalId() == SourceEnum.K8S.getCode()) {
-                hostManageService.deleteHost(hostId, true, true, null);
-                k8sPodContainerManageService.deleteByHostId(hostId);
-            }
-        }
+
         String hostname = podConfig.getNodeName();
         HostDO hostDO = new HostDO();
         hostDO.setHostName(hostname);
@@ -209,7 +218,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         k8sPodDO.setNodeName(podConfig.getNodeName());
         k8sPodDO.setNodeIp(podConfig.getNodeIp());
         k8sPodDO.setContainerNames(JSON.toJSONString(podConfig.getContainerNames()));
-        serviceHostManageService.createServiceHostList(serviceHostList);
         Long podId = k8sPodManageService.createK8sPod(k8sPodDO, null);
         List<K8sPodHostPO> k8sPodHostList = new ArrayList<>();
         for (String containerName : containerNames) {
@@ -227,7 +235,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             K8sPodHostPO k8sPodHostPO = new K8sPodHostPO();
             k8sPodHostPO.setHostId(id1);
             k8sPodHostPO.setK8sPodId(podId);
+            k8sPodHostList.add(k8sPodHostPO);
         }
+        serviceHostManageService.createServiceHostList(serviceHostList);
         k8sPodContainerManageService.createK8sPodContainerList(k8sPodHostList);
     }
 
@@ -236,6 +246,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      *
      * @param listCompareResult 远程 & 本地 K8sPodHostPO 对象对比结果集
      */
+/*
     private void handleK8sPodHostPOListCompareResult(ListCompareResult<K8sPodHostPO> listCompareResult) {
         //处理待删除对象集
         List<K8sPodHostPO> removeList = listCompareResult.getRemoveList();
@@ -246,11 +257,12 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         List<K8sPodHostPO> createList = listCompareResult.getCreateList();
         k8sPodContainerManageService.createK8sPodContainerList(createList);
     }
+*/
 
     /**
      * @param listCompareResult
      */
-    private void handleServiceHostPOListCompareResult(ListCompareResult<ServiceHostPO> listCompareResult) {
+/*    private void handleServiceHostPOListCompareResult(ListCompareResult<ServiceHostPO> listCompareResult) {
         //处理待删除对象集
         List<ServiceHostPO> removeServiceHostPOList = listCompareResult.getRemoveList();
         for (ServiceHostPO serviceHostPO : removeServiceHostPOList) {
@@ -259,14 +271,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         //处理待创建对象集
         List<ServiceHostPO> createServiceHostPOList = listCompareResult.getCreateList();
         serviceHostManageService.createServiceHostList(createServiceHostPOList);
-    }
+    }*/
 
     /**
      * 处理 listCompareResult 结果集，对 HostDO 对象进行对应增、删、修改
      *
      * @param listCompareResult 远程 & 本地 ServiceDO 对象对比结果集
      */
-    private void handleHostDOListCompareResult(ListCompareResult<HostDO> listCompareResult) {
+/*    private void handleHostDOListCompareResult(ListCompareResult<HostDO> listCompareResult) {
         //处理待删除对象集
         List<HostDO> removeList = listCompareResult.getRemoveList();
         //由于待删除主机集可能存在主机 & 容器，须先删除容器再删除主机
@@ -302,14 +314,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             //创建主机对象
             hostManageService.createHost(hostDO, null);
         }
-    }
+    }*/
 
     /**
      * 处理 listCompareResult 结果集，对 ServiceDO 对象进行对应增、删、修改
      *
      * @param listCompareResult 远程 & 本地 ServiceDO 对象对比结果集
      */
-    private void handleServiceDOListCompareResult(ListCompareResult<ServiceDO> listCompareResult) {
+/*    private void handleServiceDOListCompareResult(ListCompareResult<ServiceDO> listCompareResult) {
         //处理待删除对象集
         List<ServiceDO> removeList = listCompareResult.getRemoveList();
         for (ServiceDO serviceDO : removeList) {
@@ -325,14 +337,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         for (ServiceDO serviceDO : createList) {
             serviceManageService.createService(serviceDO, null);
         }
-    }
+    }*/
 
     /**
      * 处理 listCompareResult 结果集，对 K8sPodDO 对象进行对应增、删、修改
      *
      * @param listCompareResult
      */
-    private void handleK8sPodDOListCompareResult(ListCompareResult<K8sPodDO> listCompareResult) {
+/*    private void handleK8sPodDOListCompareResult(ListCompareResult<K8sPodDO> listCompareResult) {
         //处理待删除对象集
         List<K8sPodDO> removeList = listCompareResult.getRemoveList();
         for (K8sPodDO k8sPodDO : removeList) {
@@ -348,7 +360,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         for (K8sPodDO k8sPodDO : createList) {
             k8sPodManageService.createK8sPod(k8sPodDO, null);
         }
-    }
+    }*/
 
     /**
      * @param containerName2PodUuidMap 全量容器-pod关联关系 key：containerName value：pod uuid map
@@ -357,7 +369,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @return 返回
      * 根据给定 containerName2PodUuidMap k8sPodUuid2K8sPodDOMap hostName2HostDOMap 构建podId & HostId关联关系集
      */
-    private List<K8sPodHostPO> parse2K8sPodHostPOList(Map<String, String> containerName2PodUuidMap,
+    /*private List<K8sPodHostPO> parse2K8sPodHostPOList(Map<String, String> containerName2PodUuidMap,
                                                       Map<String, K8sPodDO> k8sPodUuid2K8sPodDOMap,
                                                       Map<String, HostDO> hostName2HostDOMap) {
         List<K8sPodHostPO> k8sPodContainerPOList = new ArrayList<>(containerName2PodUuidMap.size());
@@ -382,7 +394,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             k8sPodContainerPOList.add(k8sPodContainerPO);
         }
         return k8sPodContainerPOList;
-    }
+    }*/
 
     /**
      * @param containerName2ServiceNameMap 全量容器-服务关联关系 key：containerName value：serviceName map
@@ -390,7 +402,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
      * @param hostName2HostDOMap           全量服务名-服务对象关联关系 key：serviceName value：ServiceDO 对象
      * @return 返回根据给定 containerName2ServiceNameMap serviceName2ServiceDOMap hostName2HostDOMap 构建serviceId & HostId关联关系集
      */
-    private List<ServiceHostPO> parse2ServiceHostPOList(Map<String, String> containerName2ServiceNameMap,
+    /*private List<ServiceHostPO> parse2ServiceHostPOList(Map<String, String> containerName2ServiceNameMap,
                                                         Map<String, ServiceDO> serviceName2ServiceDOMap,
                                                         Map<String, HostDO> hostName2HostDOMap) {
         List<ServiceHostPO> serviceHostPOList = new ArrayList<>(containerName2ServiceNameMap.size());
@@ -415,13 +427,13 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             serviceHostPOList.add(serviceHostPO);
         }
         return serviceHostPOList;
-    }
+    }*/
 
     /**
      * @param k8sPodDOList K8sPodDO对象集
-     * @return 返回 key：uuid value：k8sPodDO 对象 map
+     * @return 返回 key：uuid value：k8sPodDO 对象    map
      */
-    private Map<String, K8sPodDO> parse2K8sPodMap(List<K8sPodDO> k8sPodDOList) {
+    /*private Map<String, K8sPodDO> parse2K8sPodMap(List<K8sPodDO> k8sPodDOList) {
         Map<String, K8sPodDO> k8sPodUuid2K8sPodDOMap = new HashMap<>();
         if (CollectionUtils.isNotEmpty(k8sPodDOList)) {
             for (K8sPodDO k8sPodDO : k8sPodDOList) {
@@ -429,7 +441,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             }
         }
         return k8sPodUuid2K8sPodDOMap;
-    }
+    }*/
 
     /**
      * HostDO 对象比较器类
@@ -477,9 +489,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         }
     }
 
-    /**
+/*    *//**
      * K8sPodDO 对象比较器类
-     */
+     *//*
     class K8sPodDOComparator implements Comparator<K8sPodDO, String> {
         @Override
         public String getKey(K8sPodDO k8sPodDO) {
@@ -511,9 +523,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         }
     }
 
-    /**
+    *//**
      * ServiceHostPO 对象比较器类
-     */
+     *//*
     class ServiceHostPOComparator implements Comparator<ServiceHostPO, String> {
         @Override
         public String getKey(ServiceHostPO serviceHostPO) {
@@ -532,9 +544,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         }
     }
 
-    /**
+    *//**
      * K8sPodHostPO 对象比较器
-     */
+     *//*
     class K8sPodHostPOComparator implements Comparator<K8sPodHostPO, String> {
         @Override
         public String getKey(K8sPodHostPO k8sPodContainerPO) {
@@ -553,15 +565,15 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         }
     }
 
-    /**
+    *//**
      * 主机容器比较器 容器前 主机后
-     */
+     *//*
     class HostContainerComparator implements java.util.Comparator<HostDO> {
         @Override
         public int compare(HostDO o1, HostDO o2) {
             return o2.getContainer() - o1.getContainer();
         }
-    }
+    }*/
 
 }
 

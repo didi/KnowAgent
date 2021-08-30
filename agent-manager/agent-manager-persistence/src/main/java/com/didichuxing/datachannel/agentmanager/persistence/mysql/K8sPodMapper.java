@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.po.k8s.K8sPodPO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public interface K8sPodMapper {
     int updateByPrimaryKey(K8sPodPO record);
 
     List<K8sPodPO> queryAll();
+
+    K8sPodPO selectByNameAndSpace(@Param("namespace") String namespace, @Param("name") String name);
 
     K8sPodPO selectByContainerId(Long id);
 }

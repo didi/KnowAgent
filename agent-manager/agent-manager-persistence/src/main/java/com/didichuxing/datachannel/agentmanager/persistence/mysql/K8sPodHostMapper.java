@@ -21,5 +21,7 @@ public interface K8sPodHostMapper {
 
     List<K8sPodHostPO> queryAll();
 
-    int deleteByHostId(Long hostId);
+    List<K8sPodHostPO> selectByPodId(Long podId);
+
+    int deleteByPodId(Long podId);
 }
