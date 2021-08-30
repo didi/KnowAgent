@@ -123,8 +123,11 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                 String hostIp = podConfig.getNodeIp();
                 List<String> containerNames = podConfig.getContainerNames();
                 for (HostDO localHost : localHosts) {
+                    if (localHost.getExternalId() != SourceEnum.MANUAL.getCode()) {
+                        continue;
+                    }
                     if (localHost.getContainer() == 0) {
-                        if (localHost.getHostName().equals(hostName) && localHost.getExternalId() == SourceEnum.MANUAL.getCode()) {
+                        if (localHost.getHostName().equals(hostName)) {
                             HostInfo hostInfo = new HostInfo();
                             hostInfo.setHostName(hostName);
                             hostInfo.setIp(hostIp);
@@ -159,6 +162,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             if (CollectionUtils.isEmpty(duplicateIps) && CollectionUtils.isEmpty(duplicateHostnames)) {
                 List<Long> hostIds = serviceHostManageService.getRelatedHostIds(serviceId);
                 serviceHostManageService.deleteServiceHostByServiceId(serviceId);
+                // 清除所有旧数据和关联关系
                 for (PodConfig podConfig : configList) {
                     K8sPodDO k8sPodDO = k8sPodManageService.getByNameAndSpace(podConfig.getNamespace(), podConfig.getPodName());
                     if (k8sPodDO != null) {
@@ -173,7 +177,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                         hostManageService.deleteHost(hostId, true, true, null);
                     }
                 }
-                for (PodConfig podConfig : podConfigs) {
+                for (PodConfig podConfig : configList) {
                     handleCreateK8sMeta(podConfig, serviceId, serviceName);
                 }
                 metadataSyncResultPerService.setDuplicateHostNameHostList(Collections.emptyList());

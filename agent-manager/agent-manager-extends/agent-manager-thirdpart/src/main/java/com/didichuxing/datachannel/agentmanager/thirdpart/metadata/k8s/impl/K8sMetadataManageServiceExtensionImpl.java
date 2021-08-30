@@ -112,6 +112,7 @@ public class K8sMetadataManageServiceExtensionImpl implements MetadataManageServ
         }
         K8sPodDO pod = new K8sPodDO();
         pod.setUuid(uuid);
+        pod.setName(config.getPodName());
         pod.setNamespace(config.getNamespace());
         pod.setContainerNames(JSON.toJSONString(config.getContainerNames()));
         pod.setServiceName(config.getAnnotations().get(serviceKey));

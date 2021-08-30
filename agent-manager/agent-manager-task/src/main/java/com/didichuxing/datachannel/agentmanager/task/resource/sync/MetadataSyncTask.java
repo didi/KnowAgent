@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.task.resource.sync;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResultPerService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.metadata.MetadataManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
@@ -35,7 +37,12 @@ public class MetadataSyncTask implements Job {
     public Object execute(JobContext jobContext) {
         if(enabled) {
             LOGGER.info("class=MetadataSyncTask||method=execute||msg=start2sync");
-            metadataManageService.sync();
+            MetadataSyncResult result = metadataManageService.sync();
+            for (MetadataSyncResultPerService metadataSyncResultPerService : result.getMetadataSyncResultPerServiceList()) {
+                if (metadataSyncResultPerService.getSyncSuccess() != 1) {
+                    LOGGER.warn("class=MetadataSyncTask||method=execute||msg=metadata sync failed, service: {}", metadataSyncResultPerService.getServiceName());
+                }
+            }
             LOGGER.info("class=MetadataSyncTask||method=execute||msg=syncEnd");
         } else {
             LOGGER.info("class=MetadataSyncTask||method=execute||msg=元数据信息远程同步功能被关闭，将不进行同步");
