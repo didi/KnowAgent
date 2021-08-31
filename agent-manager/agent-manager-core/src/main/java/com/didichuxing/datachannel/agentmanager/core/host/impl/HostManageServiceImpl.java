@@ -408,6 +408,21 @@ public class HostManageServiceImpl implements HostManageService {
 
     @Override
     @Transactional
+    public void forceDeleteHost(Long hostId) {
+        HostDO hostDO = getHostById(hostId);
+        if (hostDO == null) {
+            return;
+        }
+        AgentDO agentDO = agentManageService.getAgentByHostName(hostDO.getHostName());
+        if (null != agentDO) {
+            agentManageService.deleteAgentByHostName(agentDO.getHostName(), true, true, null);
+        }
+        serviceHostManageService.deleteByHostId(hostDO.getId());
+        hostDAO.deleteByPrimaryKey(hostId);
+    }
+
+    @Override
+    @Transactional
     public void updateHost(HostDO host, String operator) {
         this.handleUpdateHost(host, operator);
     }

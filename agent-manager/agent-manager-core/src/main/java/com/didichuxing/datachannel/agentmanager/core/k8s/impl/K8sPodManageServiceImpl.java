@@ -28,7 +28,8 @@ public class K8sPodManageServiceImpl implements K8sPodManageService {
     public Long createK8sPod(K8sPodDO k8sPodDO, String operator) {
         k8sPodDO.setOperator(operator);
         K8sPodPO po = ConvertUtil.obj2Obj(k8sPodDO, K8sPodPO.class);
-        return (long) k8sPodDAO.insertSelective(po);
+        k8sPodDAO.insertSelective(po);
+        return po.getId();
     }
 
     @Override

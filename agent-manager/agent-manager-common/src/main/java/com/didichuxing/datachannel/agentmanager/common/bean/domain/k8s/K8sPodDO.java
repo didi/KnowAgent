@@ -13,6 +13,10 @@ public class K8sPodDO extends BaseDO {
      */
     private String uuid;
     /**
+     * pod名称
+     */
+    private String name;
+    /**
      * pod的namespace
      */
     private String namespace;
@@ -59,6 +63,14 @@ public class K8sPodDO extends BaseDO {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNamespace() {

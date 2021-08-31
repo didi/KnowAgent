@@ -1,5 +1,5 @@
 Configuration:
-  status: debug
+  status: info
   monitorInterval: 30
   Properties:
     Property:
