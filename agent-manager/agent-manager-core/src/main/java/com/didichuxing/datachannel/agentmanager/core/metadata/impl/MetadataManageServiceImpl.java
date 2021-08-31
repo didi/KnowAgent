@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -75,6 +76,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
 */
 
     @Override
+    @Transactional
     public MetadataSyncResult sync() {
         List<PodConfig> podConfigs = K8sUtil.filterWithServices(K8sUtil.getAllPodConfig());
         List<HostDO> localHosts = hostManageService.list();
@@ -170,7 +172,10 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                 }
                 for (HostDO hostDO : localHosts) {
                     if (hostDO.getExternalId() == SourceEnum.K8S.getCode()) {
-                        hostManageService.forceDeleteHost(hostDO.getId());
+                        try {
+                            hostManageService.deleteHost(hostDO.getId(), false, true, null);
+                        } catch (ServiceException e) {
+                        }
                     }
                 }
                 for (PodConfig podConfig : configList) {
@@ -207,7 +212,10 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         hostDO.setParentHostName(hostname);
         hostDO.setContainer(0);
         hostDO.setExternalId(SourceEnum.K8S.getCode());
-        Long id = hostManageService.createHost(hostDO, null);
+        try {
+            hostManageService.createHost(hostDO, null);
+        } catch (ServiceException e) {
+        }
         List<String> containerNames = podConfig.getContainerNames();
         List<K8sPodHostPO> k8sPodHostList = new ArrayList<>();
         for (String containerName : containerNames) {
@@ -217,7 +225,12 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             container.setParentHostName(hostname);
             container.setContainer(1);
             container.setExternalId(SourceEnum.K8S.getCode());
-            Long id1 = hostManageService.createHost(container, null);
+            Long id1;
+            try {
+                id1 = hostManageService.createHost(container, null);
+            } catch (ServiceException e) {
+                continue;
+            }
             ServiceHostPO serviceHostPO1 = new ServiceHostPO();
             serviceHostPO1.setServiceId(serviceId);
             serviceHostPO1.setHostId(id1);

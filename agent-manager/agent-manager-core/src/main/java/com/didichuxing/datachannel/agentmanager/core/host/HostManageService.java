@@ -38,14 +38,6 @@ public interface HostManageService {
     void deleteHost(Long hostId, boolean ignoreUncompleteCollect, boolean cascadeDeleteAgentIfExists, String operator);
 
     /**
-     * 删除主机对象，跳过任何检验逻辑
-     * 仅用于外部同步时的主机信息
-     *
-     * @param hostId
-     */
-    void forceDeleteHost(Long hostId);
-
-    /**
      * 更新一个主机对象
      *
      * @param host     待更新主机对象
