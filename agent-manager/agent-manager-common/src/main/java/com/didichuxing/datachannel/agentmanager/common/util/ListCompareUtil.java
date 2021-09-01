@@ -3,7 +3,6 @@ package com.didichuxing.datachannel.agentmanager.common.util;
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.ResultTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import org.apache.commons.collections.CollectionUtils;
 
