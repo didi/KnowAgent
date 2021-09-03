@@ -5,6 +5,9 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.message.BasicHeader;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -18,8 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 @org.springframework.stereotype.Service
 public class ElasticsearchServiceImpl implements ElasticsearchService {
@@ -37,7 +42,8 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
 
     private volatile RestHighLevelClient restHighLevelClient;
 
-    private void setClient() {
+    @PostConstruct
+    public void setClient() {
         if (null == restHighLevelClient) {
             synchronized (this) {
                 if (null == restHighLevelClient) {
@@ -52,6 +58,19 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
                     this.restHighLevelClient = new RestHighLevelClient(restClientBuilder);
                 }
             }
+        }
+    }
+
+    @Override
+    public void bulkInsert(BulkRequest bulkRequest) {
+        BulkResponse response = null;
+        try {
+            response = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new ServiceException(
+                    "class=ElasticsearchServiceImpl||method=bulkInsert||errMsg=query elasticsearch failed", e,
+                    ErrorCodeEnum.ELASTICSEARCH_QUERY_FAILED.getCode()
+            );
         }
     }
 

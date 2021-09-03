@@ -11,11 +11,15 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.elasticsearch.service.ElasticsearchService;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -49,12 +53,24 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public void writeMetrics(ConsumerRecords<String, String> records) {
-
+        BulkRequest bulkRequest = new BulkRequest();
+        for (ConsumerRecord<String, String> record : records) {
+            IndexRequest indexRequest = new IndexRequest(agentMetricsIndex);
+            indexRequest.source(record.value(), XContentType.JSON);
+            bulkRequest.add(indexRequest);
+        }
+        elasticsearchService.bulkInsert(bulkRequest);
     }
 
     @Override
     public void writeErrors(ConsumerRecords<String, String> records) {
-
+        BulkRequest bulkRequest = new BulkRequest();
+        for (ConsumerRecord<String, String> record : records) {
+            IndexRequest indexRequest = new IndexRequest(agentErrorLogIndex);
+            indexRequest.source(record.value(), XContentType.JSON);
+            bulkRequest.add(indexRequest);
+        }
+        elasticsearchService.bulkInsert(bulkRequest);
     }
 
     @Override
