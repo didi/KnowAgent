@@ -107,12 +107,14 @@ metadata:
 
 agent:
   metrics:
+    storage:
+      type: mysql
     datasource:
       elasticsearch:
         ip: 1
         port: 1
-        appId: 1
-        appSecret: 1
+        appId:
+        appSecret:
         agentMetricsIndexName: 1
         agentErrorLogIndexName: 1
     producer:

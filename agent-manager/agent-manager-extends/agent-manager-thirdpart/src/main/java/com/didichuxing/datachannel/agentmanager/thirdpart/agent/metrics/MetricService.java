@@ -1,24 +1,11 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentMetricDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverTopicDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.CollectTaskMetricMapper;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.ErrorLogMapper;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.KafkaClusterMapper;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
+import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
@@ -27,12 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -55,6 +39,9 @@ public class MetricService {
 
     @Autowired
     private ErrorLogMapper errorLogMapper;
+
+    @Autowired
+    private AgentMetricsDAO agentMetricsDAO;
 
     @Value("${agent.metrics.producer.identify:false}")
     private boolean identify;
@@ -112,18 +99,7 @@ public class MetricService {
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-                for (ConsumerRecord<String, String> record : records) {
-                    JSONObject object = JSON.parseObject(record.value());
-                    if (object.getInteger(AgentMetricField.LOG_MODE_ID.getEsValue()) < 0) {
-                        AgentMetricDO agentMetric = JSON.parseObject(record.value(), AgentMetricDO.class);
-                        AgentMetricPO agentMetricPO = ConvertUtil.obj2Obj(agentMetric, AgentMetricPO.class);
-                        agentMetricMapper.insertSelective(agentMetricPO);
-                    } else {
-                        CollectTaskMetricDO collectTaskMetric = JSON.parseObject(record.value(), CollectTaskMetricDO.class);
-                        CollectTaskMetricPO collectTaskMetricPO = ConvertUtil.obj2Obj(collectTaskMetric, CollectTaskMetricPO.class);
-                        collectTaskMetricMapper.insertSelective(collectTaskMetricPO);
-                    }
-                }
+                agentMetricsDAO.writeMetrics(records);
                 if (trigger) {
                     consumer.close();
                     break;
@@ -145,10 +121,7 @@ public class MetricService {
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-                for (ConsumerRecord<String, String> record : records) {
-                    ErrorLogPO errorLogPO = JSON.parseObject(record.value(), ErrorLogPO.class);
-                    errorLogMapper.insertSelective(errorLogPO);
-                }
+                agentMetricsDAO.writeErrors(records);
                 if (trigger) {
                     consumer.close();
                     break;
@@ -186,6 +159,7 @@ public class MetricService {
         errorLogMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
     }
 
+    @PostConstruct
     public void resetMetricConsumers() {
         metricSet.clear();
         errorSet.clear();

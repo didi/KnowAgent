@@ -1,19 +1,26 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentMetricDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.CollectTaskMetricMapper;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.ErrorLogMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
@@ -21,7 +28,6 @@ import java.math.RoundingMode;
 
 import java.util.List;
 
-@Repository
 public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Autowired
@@ -32,6 +38,30 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Autowired
     private ErrorLogMapper errorLogMapper;
+
+    @Override
+    public void writeMetrics(ConsumerRecords<String, String> records) {
+        for (ConsumerRecord<String, String> record : records) {
+            JSONObject object = JSON.parseObject(record.value());
+            if (object.getInteger(AgentMetricField.LOG_MODE_ID.getEsValue()) < 0) {
+                AgentMetricDO agentMetric = JSON.parseObject(record.value(), AgentMetricDO.class);
+                AgentMetricPO agentMetricPO = ConvertUtil.obj2Obj(agentMetric, AgentMetricPO.class);
+                agentMetricMapper.insertSelective(agentMetricPO);
+            } else {
+                CollectTaskMetricDO collectTaskMetric = JSON.parseObject(record.value(), CollectTaskMetricDO.class);
+                CollectTaskMetricPO collectTaskMetricPO = ConvertUtil.obj2Obj(collectTaskMetric, CollectTaskMetricPO.class);
+                collectTaskMetricMapper.insertSelective(collectTaskMetricPO);
+            }
+        }
+    }
+
+    @Override
+    public void writeErrors(ConsumerRecords<String, String> records) {
+        for (ConsumerRecord<String, String> record : records) {
+            ErrorLogPO errorLogPO = JSON.parseObject(record.value(), ErrorLogPO.class);
+            errorLogMapper.insertSelective(errorLogPO);
+        }
+    }
 
     @Override
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {

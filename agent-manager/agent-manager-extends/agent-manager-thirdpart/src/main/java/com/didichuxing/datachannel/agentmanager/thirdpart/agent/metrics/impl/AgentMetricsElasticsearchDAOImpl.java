@@ -11,6 +11,7 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.elasticsearch.service.ElasticsearchService;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.core.CountRequest;
@@ -28,13 +29,11 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Repository
 public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Autowired
@@ -44,9 +43,19 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     private String agentMetricsIndex;
 
     @Value("${agent.metrics.datasource.elasticsearch.agentErrorLogIndexName}")
-    private String agentErrlogIndex;
+    private String agentErrorLogIndex;
 
     private static final long TIME_INTERVAL = 60 * 1000;
+
+    @Override
+    public void writeMetrics(ConsumerRecords<String, String> records) {
+
+    }
+
+    @Override
+    public void writeErrors(ConsumerRecords<String, String> records) {
+
+    }
 
     @Override
     public Long getContainerSendCountEqualsZeroRecordSize(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId, Long heartbeatStartTime, Long heartbeatEndTime) throws ServiceException {
@@ -245,7 +254,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getErrorLogCount(Long startTime, Long endTime, String hostName) {
-        CountRequest countRequest = new CountRequest(agentErrlogIndex);
+        CountRequest countRequest = new CountRequest(agentErrorLogIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
         boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
