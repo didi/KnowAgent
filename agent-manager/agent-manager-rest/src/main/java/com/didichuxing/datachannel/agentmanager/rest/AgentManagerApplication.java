@@ -4,9 +4,11 @@ import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsElasticsearchDAOImpl;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -26,6 +28,9 @@ public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
 
+    @Value("${agent.metrics.storage.type}")
+    public String type;
+
     /**
      * @param args
      */
@@ -38,15 +43,16 @@ public class AgentManagerApplication {
             LOGGER.info("Spring Boot use profile: {}", profile);
         }
         LOGGER.info("agentmanagerApplication started");
-        MetricService metricService = ctx.getBean(MetricService.class);
-        metricService.resetMetricConsumers();
     }
 
-    /**
-     * @return 默认指标流用MySQL做存储
-     */
+
     @Bean
-    public AgentMetricsDAO agentMetricsDAO() {
-        return new AgentMetricsRDSImpl();
+    public AgentMetricsDAO getMetricReader() {
+        if ("es".equals(type)) {
+            return new AgentMetricsElasticsearchDAOImpl();
+        } else {
+            return new AgentMetricsRDSImpl();
+        }
     }
+
 }

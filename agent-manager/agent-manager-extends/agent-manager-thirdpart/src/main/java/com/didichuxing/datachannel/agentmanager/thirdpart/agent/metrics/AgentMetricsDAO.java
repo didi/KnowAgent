@@ -7,10 +7,15 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetr
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import java.util.List;
 
 public interface AgentMetricsDAO {
+
+    void writeMetrics(ConsumerRecords<String, String> records);
+
+    void writeErrors(ConsumerRecords<String, String> records);
 
     /**
      * 获取容器在给定时间范围内给定容器在给定宿主机上关于给定日志采集路径对应 metric "sendcount = 0" 的心跳记录集数量

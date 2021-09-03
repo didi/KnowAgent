@@ -24,28 +24,31 @@ import java.util.Base64;
 @org.springframework.stereotype.Service
 public class ElasticsearchServiceImpl implements ElasticsearchService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchServiceImpl.class);@Value("${agent.metrics.datasource.elasticsearch.ip}")
+    private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchServiceImpl.class);
+
+    @Value("${agent.metrics.datasource.elasticsearch.ip}")
     private String ip;
     @Value("${agent.metrics.datasource.elasticsearch.port}")
     private int port;
-    @Value("${agent.metrics.datasource.elasticsearch.appId}")
+    @Value("${agent.metrics.datasource.elasticsearch.appId:#{null}")
     private String appId;
-    @Value("${agent.metrics.datasource.elasticsearch.appSecret}")
+    @Value("${agent.metrics.datasource.elasticsearch.appSecret:#{null}")
     private String appSecret;
 
     private volatile RestHighLevelClient restHighLevelClient;
 
     private void setClient() {
-        if(null == restHighLevelClient) {
+        if (null == restHighLevelClient) {
             synchronized (this) {
-                if(null == restHighLevelClient) {
-                    HttpHost httpHost = new HttpHost(ip,  port);
-                    Header authHeader = new BasicHeader(
-                            "Authorization", "Basic " + Base64.getEncoder().encodeToString(
-                            String.format("%s:%s", appId, appSecret).getBytes()));
-                    RestClientBuilder restClientBuilder = RestClient
-                            .builder(httpHost)
-                            .setDefaultHeaders(new Header[]{authHeader});
+                if (null == restHighLevelClient) {
+                    HttpHost httpHost = new HttpHost(ip, port);
+                    RestClientBuilder restClientBuilder = RestClient.builder(httpHost);
+                    if (appId != null && appSecret != null) {
+                        Header authHeader = new BasicHeader(
+                                "Authorization", "Basic " + Base64.getEncoder().encodeToString(
+                                String.format("%s:%s", appId, appSecret).getBytes()));
+                        restClientBuilder.setDefaultHeaders(new Header[]{authHeader});
+                    }
                     this.restHighLevelClient = new RestHighLevelClient(restClientBuilder);
                 }
             }
@@ -65,7 +68,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
                     ErrorCodeEnum.ELASTICSEARCH_QUERY_FAILED.getCode()
             );
         }
-        if(null == response || response.status().getStatus() != RestStatus.OK.getStatus()) {
+        if (null == response || response.status().getStatus() != RestStatus.OK.getStatus()) {
             throw new ServiceException(
                     "class=ElasticsearchServiceImpl||method=doQuery||errMsg=query elasticsearch failed",
                     ErrorCodeEnum.ELASTICSEARCH_QUERY_FAILED.getCode()
@@ -87,7 +90,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
                     ErrorCodeEnum.ELASTICSEARCH_QUERY_FAILED.getCode()
             );
         }
-        if(null == countResponse || countResponse.status().getStatus() != RestStatus.OK.getStatus()) {
+        if (null == countResponse || countResponse.status().getStatus() != RestStatus.OK.getStatus()) {
             throw new ServiceException(
                     "class=ElasticsearchServiceImpl||method=doQuery||errMsg=query elasticsearch failed",
                     ErrorCodeEnum.ELASTICSEARCH_QUERY_FAILED.getCode()
