@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 
+import com.alibaba.fastjson.parser.ParserConfig;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
@@ -24,6 +25,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
@@ -38,6 +40,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
@@ -282,7 +285,23 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public AgentMetricPO selectLatestByHostname(String hostname) {
-        return null;
+        long time = System.currentTimeMillis();
+        long startTime = time - MetricConstant.HEARTBEAT_PERIOD;
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, true).to(time, false));
+        builder.query(boolQueryBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        if (hits.length == 0) {
+            return null;
+        }
+        SearchHit hit = hits[0];
+        Map<String, Object> resultMap = hit.getSourceAsMap();
+        return TypeUtils.castToJavaBean(resultMap, AgentMetricPO.class, ParserConfig.getGlobalInstance());
     }
 
     @Override

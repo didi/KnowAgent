@@ -118,10 +118,9 @@ agent:
         agentMetricsIndexName: 1
         agentErrorLogIndexName: 1
     producer:
-      identify: false
-      appId: 0
-      clusterId: 0
-      password: 0
+      appId:
+      clusterId:
+      password:
   http:
     path:
       request:

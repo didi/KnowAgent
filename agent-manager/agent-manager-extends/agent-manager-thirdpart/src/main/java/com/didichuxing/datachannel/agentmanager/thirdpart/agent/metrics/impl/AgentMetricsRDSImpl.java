@@ -3,7 +3,6 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentMetricDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
@@ -44,8 +43,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         for (ConsumerRecord<String, String> record : records) {
             JSONObject object = JSON.parseObject(record.value());
             if (object.getInteger(AgentMetricField.LOG_MODE_ID.getEsValue()) < 0) {
-                AgentMetricDO agentMetric = JSON.parseObject(record.value(), AgentMetricDO.class);
-                AgentMetricPO agentMetricPO = ConvertUtil.obj2Obj(agentMetric, AgentMetricPO.class);
+                AgentMetricPO agentMetricPO = JSON.parseObject(record.value(), AgentMetricPO.class);
                 agentMetricMapper.insertSelective(agentMetricPO);
             } else {
                 CollectTaskMetricDO collectTaskMetric = JSON.parseObject(record.value(), CollectTaskMetricDO.class);

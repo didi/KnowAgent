@@ -35,9 +35,9 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     private String ip;
     @Value("${agent.metrics.datasource.elasticsearch.port}")
     private int port;
-    @Value("${agent.metrics.datasource.elasticsearch.appId:#{null}")
+    @Value("${agent.metrics.datasource.elasticsearch.appId:#{null}}")
     private String appId;
-    @Value("${agent.metrics.datasource.elasticsearch.appSecret:#{null}")
+    @Value("${agent.metrics.datasource.elasticsearch.appSecret:#{null}}")
     private String appSecret;
 
     private volatile RestHighLevelClient restHighLevelClient;
