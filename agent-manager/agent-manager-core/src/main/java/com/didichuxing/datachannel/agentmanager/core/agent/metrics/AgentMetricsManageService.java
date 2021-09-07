@@ -563,23 +563,4 @@ public interface AgentMetricsManageService {
      */
     List<MetricPointList> getAgentListFullGcCountLastest1MinTop5(Long startTime, Long endTime);
 
-    /**
-     * @param agentHostName agent 对应宿主机主机名
-     * @param startTime 开始时间戳
-     * @param endTime 结束时间戳
-     * @param column 聚合字段名
-     * @param function 聚合函数
-     * @return 返回根据agent宿主机主机名聚合计算得到的指标集
-     */
-    List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
-
-    /**
-     * @param startTime 开始时间戳
-     * @param endTime 结束时间戳
-     * @param column 聚合列列名
-     * @param function 聚合函数类型
-     * @return 返回时间范围内按分钟聚合值
-     */
-    List<MetricPoint> queryAggregationGroupByHearttimeMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
-
 }

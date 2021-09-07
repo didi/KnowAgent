@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.Co
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
@@ -48,8 +49,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Value("${agent.metrics.datasource.elasticsearch.agentErrorLogIndexName}")
     private String agentErrorLogIndex;
-
-    private static final long TIME_INTERVAL = 60 * 1000;
 
     @Override
     public void writeMetrics(ConsumerRecords<String, String> records) {
@@ -292,36 +291,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.CPU_USAGE.getEsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.MEMORY_USAGE.getEsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getEsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.SEND_BYTE.getEsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.SEND_COUNT.getEsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentFdUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricSumByMinute(startTime, endTime, hostName, AgentMetricField.FD_COUNT.getEsValue());
-    }
-
-    @Override
     public List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName) {
         return hostMetricMaxByMinute(startTime, endTime, hostName, AgentMetricField.START_TIME.getEsValue());
     }
@@ -347,28 +316,8 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> getFilterOutPerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.FILTER_OUT.getEsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricMinByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.LOG_TIME.getEsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getLimitTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.LIMIT_TIME.getEsValue());
-    }
-
-    @Override
     public List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         return logModelMetricCountByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getEsValue(), false);
-    }
-
-    @Override
-    public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return logModelMetricSumByMinute(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.FILTER_TOO_LARGE_COUNT.getEsValue());
     }
 
     @Override
@@ -442,27 +391,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByAgentFromLogCollectTaskMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return null;
-    }
-
-    @Override
     public List<DashBoardStatisticsDO> groupByKeyAndMinuteAgentMetric(Long startTime, Long endTime, String key, String function, String metric) {
-        return null;
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationByAgentFromAgentMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return null;
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return null;
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationGroupByMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
         return null;
     }
 
@@ -561,7 +490,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.sum(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -597,7 +526,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -632,7 +561,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -667,7 +596,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -704,7 +633,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -741,7 +670,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);
@@ -779,7 +708,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
 
         HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(TIME_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
                 .subAggregation(AggregationBuilders.max(customName).field(field));
         builder.query(boolQueryBuilder);
         builder.aggregation(histogramAggregationBuilder);

@@ -1,7 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.metrics.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
@@ -10,7 +9,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -232,32 +230,32 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPoint> getAgentCpuUsagePerMinMetric(String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getAgentCpuUsagePerMin(startTime, endTime, hostName);
+        return agentMetricsDAO.queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.CPU_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getAgentMemoryUsagePerMinMetric(String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getAgentMemoryUsagePerMin(startTime, endTime, hostName);
+        return agentMetricsDAO.queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.MEMORY_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getAgentFullGcTimesPerMinMetric(String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getAgentGCTimesPerMin(startTime, endTime, hostName);
+        return agentMetricsDAO.queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.GC_COUNT, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getAgentOutputBytesPerMinMetric(String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getAgentOutputBytesPerMin(startTime, endTime, hostName);
+        return agentMetricsDAO.queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getAgentOutputLogsCountPerMinMetric(String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getAgentOutputLogsPerMin(startTime, endTime, hostName);
+        return agentMetricsDAO.queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getAgentFdUsagePerMinMetric(String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getAgentFdUsagePerMin(startTime, endTime, hostName);
+        return agentMetricsDAO.queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.FD_COUNT, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
@@ -292,22 +290,22 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPoint> getFileLogPathAbnormalTruncationPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getFileLogPathAbnormalTruncationPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
+        return agentMetricsDAO.queryByLogModel(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime, AgentMetricField.FILTER_TOO_LARGE_COUNT);
     }
 
     @Override
     public List<MetricPoint> getFilterOutPerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getFilterOutPerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
+        return agentMetricsDAO.queryAggregationByLogModel(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime, AgentMetricField.FILTER_OUT, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getMinCurrentCollectTimePerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
+        return agentMetricsDAO.queryAggregationByLogModel(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime, AgentMetricField.LOG_TIME, CalcFunction.MIN, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getLimitTimePerLogPathPerMinMetric(Long logCollectTaskId, Long fileLogCollectPathId, String hostName, Long startTime, Long endTime) {
-        return agentMetricsDAO.getLimitTimePerLogPathPerMin(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime);
+        return agentMetricsDAO.queryAggregationByLogModel(logCollectTaskId, fileLogCollectPathId, hostName, startTime, endTime, AgentMetricField.LIMIT_TIME, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
@@ -607,16 +605,6 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
             result.add(metricPointList);
         }
         return result;
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return agentMetricsDAO.queryAggregationByAgent(agentHostName, startTime, endTime, column, function);
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationGroupByHearttimeMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return agentMetricsDAO.queryAggregationGroupByMinute(startTime, endTime, column, function);
     }
 
     /**

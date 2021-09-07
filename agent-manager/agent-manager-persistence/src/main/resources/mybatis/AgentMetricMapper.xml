@@ -344,11 +344,4 @@
     GROUP BY ${key}, round(heartbeat_time / 60000) * 60000
   </select>
 
-  <select id="selectAggregationByAgent" resultMap="MetricPointMap">
-    select ${function}(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from agent_metric
-    where hostname = #{agentHostName}
-      and heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    group by round(heartbeat_time / 60000) * 60000
-  </select>
-
 </mapper>

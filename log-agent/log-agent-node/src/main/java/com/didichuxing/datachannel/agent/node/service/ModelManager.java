@@ -122,9 +122,7 @@ public class ModelManager extends AgentComponent {
             return;
         }
 
-        if (!OffsetManager.isInit()) {
-            OffsetManager.init(config.getOffsetConfig(), null);
-        }
+        OffsetManager.init(config.getOffsetConfig(), null);
     }
 
     @Override

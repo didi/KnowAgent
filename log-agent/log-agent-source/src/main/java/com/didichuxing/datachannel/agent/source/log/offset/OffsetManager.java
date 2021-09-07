@@ -58,7 +58,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(OffsetManager.class
      */
     private static final int                                          FILE_MAX_LENGTH                = 250;
 
-    public OffsetManager(OffsetConfig offsetConfig){
+    public OffsetManager() {
     }
 
     public static void onChange(OffsetConfig newConfig) {
