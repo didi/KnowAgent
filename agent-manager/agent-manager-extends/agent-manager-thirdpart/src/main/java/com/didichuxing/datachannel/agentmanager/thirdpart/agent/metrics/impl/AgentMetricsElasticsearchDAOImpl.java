@@ -9,6 +9,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetr
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
@@ -25,15 +26,15 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.histogram.HistogramAggregationBuilder;
 import org.elasticsearch.search.aggregations.metrics.NumericMetricsAggregation;
+import org.elasticsearch.search.aggregations.metrics.Stats;
 import org.elasticsearch.search.aggregations.metrics.Sum;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -166,32 +167,19 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public Integer getFilePathNotExistsCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, AgentMetricField.IS_FILE_EXIST.getEsValue(), false);
-        if (value != null) {
-            return value.intValue();
-        } else {
-            return 0;
-        }
+        Long value = countByFieldTerm(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, AgentMetricField.IS_FILE_EXIST.getEsValue(), false);
+        return value.intValue();
     }
 
     @Override
     public Integer getAbnormalTruncationCountByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        return (int) taskSumByFieldName(logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, startTime, endTime, AgentMetricField.FILTER_TOO_LARGE_COUNT.getEsValue());
+        return (int) aggregateByLogModel(logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName, startTime, endTime, AgentMetricField.FILTER_TOO_LARGE_COUNT.getEsValue(), CalcFunction.SUM);
     }
 
     @Override
     public Integer getFileDisorderCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        CountRequest countRequest = new CountRequest(agentMetricsIndex);
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.IS_FILE_ORDER.getEsValue(), "1"))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
-        countRequest.query(boolQueryBuilder);
-        CountResponse countResponse = elasticsearchService.doCount(countRequest);
-        return (int) countResponse.getCount();
+        Long value = countByFieldTerm(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.IS_FILE_ORDER.getEsValue(), "1");
+        return value.intValue();
     }
 
     /**
@@ -204,7 +192,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
      */
     @Override
     public Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        Long value = selectCountByFieldName(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getEsValue(), true);
+        Long value = countByFieldTerm(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getEsValue(), true);
         if (value != null) {
             return value.intValue();
         } else {
@@ -213,61 +201,18 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public Long getLatestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.LOG_TIME.getEsValue()));
-        builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-        SearchHit[] hits = searchResponse.getHits().getHits();
-        if (hits.length == 0) {
-            return 0L;
-        }
-        SearchHit hit = hits[0];
-        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.LOG_TIME.getEsValue()));
-    }
-
-    @Override
-    public Long getLatestStartupTime(String hostName) {
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.filter(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
-                .filter(QueryBuilders.existsQuery(AgentMetricField.START_TIME.getEsValue()));
-        builder.query(boolQueryBuilder);
-        builder.sort(AgentMetricField.HEARTBEAT_TIME.getEsValue(), SortOrder.DESC);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-        SearchHit[] hits = searchResponse.getHits().getHits();
-        if (hits.length == 0) {
-            return 0L;
-        }
-        SearchHit hit = hits[0];
-        return TypeUtils.castToLong(hit.getSourceAsMap().get(AgentMetricField.START_TIME.getEsValue()));
-    }
-
-    @Override
     public Long getHostCpuLimitDuration(Long startTime, Long endTime, String hostName) {
-        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.LIMIT_RATE.getEsValue());
+        return (long) aggregateByHost(startTime, endTime, hostName, AgentMetricField.LIMIT_RATE.getEsValue(), CalcFunction.SUM);
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String hostName) {
-        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.LIMIT_TIME.getEsValue());
+        return (long) aggregateByHost(startTime, endTime, hostName, AgentMetricField.LIMIT_TIME.getEsValue(), CalcFunction.SUM);
     }
 
     @Override
     public Long getHostByteLimitDuration(Long startTime, Long endTime, String logModelHostName, Long logCollectTaskId, Long fileLogCollectPathId) {
-        return (long) taskSumByFieldName(logCollectTaskId, fileLogCollectPathId, logModelHostName, startTime, endTime, AgentMetricField.LIMIT_TIME.getEsValue());
+        return (long) aggregateByLogModel(logCollectTaskId, fileLogCollectPathId, logModelHostName, startTime, endTime, AgentMetricField.LIMIT_TIME.getEsValue(), CalcFunction.SUM);
     }
 
     @Override
@@ -306,22 +251,22 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public Long getGCCount(Long startTime, Long endTime, String hostName) {
-        return (long) hostSumByFieldName(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getEsValue());
+        return (long) aggregateByHost(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getEsValue(), CalcFunction.SUM);
     }
 
     @Override
     public List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName) {
-        return hostMetricMaxByMinute(startTime, endTime, hostName, AgentMetricField.START_TIME.getEsValue());
+        return queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.START_TIME, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        return taskMetricSumByMinute(startTime, endTime, taskId, AgentMetricField.SEND_BYTE.getEsValue());
+        return queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.COUNT, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime) {
-        return taskMetricSumByMinute(startTime, endTime, taskId, AgentMetricField.SEND_COUNT.getEsValue());
+        return queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.COUNT, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
@@ -341,67 +286,303 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getCollectDelayPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return null;
+        List<MetricPoint> graph = queryAggregationByLogModel(logCollectTaskId, fileLogCollectPathId, logModelHostName, startTime, endTime, AgentMetricField.LOG_TIME, CalcFunction.MIN, MetricConstant.QUERY_INTERVAL);
+        for (MetricPoint metricPoint : graph) {
+            long timestamp = metricPoint.getTimestamp();
+            long logTime = (long) metricPoint.getValue();
+            metricPoint.setValue(timestamp - logTime);
+        }
+        return graph;
     }
 
     @Override
     public List<MetricPoint> getAgentErrorLogCountPerMin(String hostName, Long startTime, Long endTime) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentErrorLogIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .subAggregation(setAggregate(AgentMetricField.HEARTBEAT_TIME.getEsValue(), CalcFunction.COUNT, aggName));
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+
+        Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
+        Histogram histogram = aggregations.get(histogramName);
+        List<MetricPoint> list = new ArrayList<>();
+        for (Histogram.Bucket bucket : histogram.getBuckets()) {
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
+            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(aggName);
+            MetricPoint point = new MetricPoint();
+            point.setTimestamp(timeKey);
+            point.setValue((long) value.value());
+            list.add(point);
+        }
+        return list;
     }
 
     @Override
     public List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = column + "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(MetricConstant.HEARTBEAT_PERIOD).field(AgentMetricField.HEARTBEAT_TIME.getEsValue());
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+
+        Aggregations aggregations = searchResponse.getAggregations();
+        return handleHistogramResult(aggregations, histogramName, aggName);
     }
 
     @Override
     public List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = column + "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(step).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .subAggregation(setAggregate(column.getEsValue(), method, aggName));
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+
+        Aggregations aggregations = searchResponse.getAggregations();
+        return handleHistogramResult(aggregations, histogramName, aggName);
     }
 
     @Override
     public List<MetricPoint> queryAggregationByHostname(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = column + "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true))
+                .must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostname));
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(step).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .subAggregation(setAggregate(column.getEsValue(), method, aggName));
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+
+        Aggregations aggregations = searchResponse.getAggregations();
+        return handleHistogramResult(aggregations, histogramName, aggName);
     }
 
     @Override
     public List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = column + "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
+        if (logCollectTaskId != null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId));
+        }
+        if (logModelHostName != null && !logModelHostName.isEmpty()) {
+            boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName));
+        }
+        if (fileLogCollectPathId != null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId));
+        }
+
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(MetricConstant.HEARTBEAT_PERIOD).field(AgentMetricField.HEARTBEAT_TIME.getEsValue());
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+
+        Aggregations aggregations = searchResponse.getAggregations();
+        return handleHistogramResult(aggregations, histogramName, aggName);
     }
 
     @Override
     public List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = column + "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
+        if (logCollectTaskId != null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), logCollectTaskId));
+        }
+        if (logModelHostName != null && !logModelHostName.isEmpty()) {
+            boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName));
+        }
+        if (fileLogCollectPathId != null) {
+            boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId));
+        }
+
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(step).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .subAggregation(setAggregate(column.getEsValue(), method, aggName));
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        Aggregations aggregations = searchResponse.getAggregations();
+        return handleHistogramResult(aggregations, histogramName, aggName);
     }
 
     @Override
     public List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = column + "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostname))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, true).to(endTime, false));
+
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(MetricConstant.HEARTBEAT_PERIOD).field(AgentMetricField.HEARTBEAT_TIME.getEsValue());
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        Aggregations aggregations = searchResponse.getAggregations();
+        return handleHistogramResult(aggregations, histogramName, aggName);
     }
 
     @Override
     public List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step) {
-        return null;
+        String histogramName = "dataHistogram";
+        String aggName = column + "Agg";
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostname))
+                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, true).to(endTime, false));
+
+        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(histogramName)
+                .interval(step).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
+                .subAggregation(setAggregate(column.getEsValue(), method, aggName));
+        builder.query(boolQueryBuilder);
+        builder.aggregation(histogramAggregationBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        Aggregations aggregations = searchResponse.getAggregations();
+        return handleHistogramResult(aggregations, histogramName, aggName);
     }
 
     @Override
     public Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction method) {
-        return null;
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
+        builder.query(boolQueryBuilder);
+        String aggName = "columnStats";
+        builder.aggregation(AggregationBuilders.stats(column.getEsValue()).field(aggName));
+
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        Aggregations aggregations = searchResponse.getAggregations();
+        if (aggregations == null) {
+            return 0D;
+        }
+
+        Stats stats = aggregations.get(aggName);
+        return getAggregate(stats, method);
     }
 
     @Override
     public CollectTaskMetricPO selectLatestMetric(Long taskId) {
-        return null;
+        long time = System.currentTimeMillis();
+        long startTime = time - MetricConstant.HEARTBEAT_PERIOD;
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, true).to(time, false));
+        builder.query(boolQueryBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        if (hits.length == 0) {
+            return null;
+        }
+        SearchHit hit = hits[0];
+        Map<String, Object> resultMap = hit.getSourceAsMap();
+        return TypeUtils.castToJavaBean(resultMap, CollectTaskMetricPO.class, ParserConfig.getGlobalInstance());
     }
 
     @Override
     public List<CollectTaskMetricPO> queryLatestMetrics(Long time, int step) {
-        return null;
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.mustNot(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(time - step, true).to(time, false));
+        builder.query(boolQueryBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        if (hits.length == 0) {
+            return null;
+        }
+        List<CollectTaskMetricPO> list = new ArrayList<>();
+        for (SearchHit hit : hits) {
+            Map<String, Object> resultMap = hit.getSourceAsMap();
+            CollectTaskMetricPO collectTaskMetricPO = TypeUtils.castToJavaBean(resultMap, CollectTaskMetricPO.class, ParserConfig.getGlobalInstance());
+            list.add(collectTaskMetricPO);
+        }
+        return list;
     }
 
     @Override
     public List<AgentMetricPO> queryLatestAgentMetrics(Long time, int step) {
-        return null;
+        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
+                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(time - step, true).to(time, false));
+        builder.query(boolQueryBuilder);
+        searchRequest.source(builder);
+        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
+        SearchHit[] hits = searchResponse.getHits().getHits();
+        if (hits.length == 0) {
+            return null;
+        }
+        List<AgentMetricPO> list = new ArrayList<>();
+        for (SearchHit hit : hits) {
+            Map<String, Object> resultMap = hit.getSourceAsMap();
+            AgentMetricPO agentMetricPO = TypeUtils.castToJavaBean(resultMap, AgentMetricPO.class, ParserConfig.getGlobalInstance());
+            list.add(agentMetricPO);
+        }
+        return list;
     }
 
     @Override
@@ -414,35 +595,41 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         return null;
     }
 
-    private String setAggregate(SearchSourceBuilder builder, AgentMetricField field, CalcFunction method) {
-        String resultName = field.getEsValue() + method.getValue();
-        switch (method) {
+    private AggregationBuilder setAggregate(String column, CalcFunction function, String aggName) {
+        switch (function) {
             case MAX:
-                builder.aggregation(AggregationBuilders.max(resultName).field(field.getEsValue()));
-                break;
+                return AggregationBuilders.max(aggName).field(column);
             case MIN:
-                builder.aggregation(AggregationBuilders.min(resultName).field(field.getEsValue()));
-                break;
+                return AggregationBuilders.min(aggName).field(column);
             case AVG:
-                builder.aggregation(AggregationBuilders.avg(resultName).field(field.getEsValue()));
-                break;
+                return AggregationBuilders.avg(aggName).field(column);
             case SUM:
-                builder.aggregation(AggregationBuilders.sum(resultName).field(field.getEsValue()));
-                break;
+                return AggregationBuilders.sum(aggName).field(column);
             case COUNT:
-                builder.aggregation(AggregationBuilders.count(resultName).field(field.getEsValue()));
-                break;
+                return AggregationBuilders.count(aggName).field(column);
             default:
-                break;
+                throw new ServiceException(String.format("不支持的聚合类型%s", function.getValue()), ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
         }
-        return resultName;
     }
 
-    private String setHeartbeatTimeHistogramAggregation(SearchSourceBuilder builder, AgentMetricField field, CalcFunction method) {
-        return null;
+    private double getAggregate(Stats stats, CalcFunction function) {
+        switch (function) {
+            case AVG:
+                return stats.getAvg();
+            case SUM:
+                return stats.getSum();
+            case MAX:
+                return stats.getMax();
+            case MIN:
+                return stats.getMin();
+            case COUNT:
+                return stats.getCount();
+            default:
+                throw new ServiceException(String.format("不支持的聚合类型%s", function.getValue()), ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
     }
 
-    private Long selectCountByFieldName(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, String fieldName, Object value) {
+    private Long countByFieldTerm(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, String fieldName, Object value) {
         CountRequest countRequest = new CountRequest(agentMetricsIndex);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
@@ -456,7 +643,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         return countResponse.getCount();
     }
 
-    private double hostSumByFieldName(Long startTime, Long endTime, String hostName, String fieldName) {
+    private double aggregateByHost(Long startTime, Long endTime, String hostName, String fieldName, CalcFunction function) {
         SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -465,18 +652,19 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         builder.query(boolQueryBuilder);
-        String sumName = setAggregate(builder, AgentMetricField.fromString(fieldName), CalcFunction.SUM);
+        String aggName = fieldName + "Agg";
+        builder.aggregation(setAggregate(fieldName, function, aggName));
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         Aggregations aggregations = searchResponse.getAggregations();
         if (aggregations == null) {
             return 0;
         }
-        Sum sum = aggregations.get(sumName);
+        Sum sum = aggregations.get(aggName);
         return sum.getValue();
     }
 
-    private double taskSumByFieldName(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String fieldName) {
+    private double aggregateByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, String fieldName, CalcFunction function) {
         SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
         SearchSourceBuilder builder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -486,231 +674,16 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
                 .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), fileLogCollectPathId))
                 .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
         builder.query(boolQueryBuilder);
-        String sumName = setAggregate(builder, AgentMetricField.fromString(fieldName), CalcFunction.SUM);
+        String aggName = fieldName + "Agg";
+        builder.aggregation(setAggregate(fieldName, function, aggName));
         searchRequest.source(builder);
         SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
         Aggregations aggregations = searchResponse.getAggregations();
         if (aggregations == null) {
             return 0;
         }
-        Sum sum = aggregations.get(sumName);
+        Sum sum = aggregations.get(aggName);
         return sum.getValue();
-    }
-
-    private List<MetricPoint> hostMetricSumByMinute(Long startTime, Long endTime, String hostName, String field) {
-        String customName = "total" + field;
-        String sumName = field + "Sum";
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
-
-        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
-                .subAggregation(AggregationBuilders.sum(customName).field(field));
-        builder.query(boolQueryBuilder);
-        builder.aggregation(histogramAggregationBuilder);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-
-        Aggregations aggregations = searchResponse.getAggregations();
-        if (aggregations == null) {
-            return Collections.emptyList();
-        }
-        Histogram histogram = aggregations.get(sumName);
-        List<MetricPoint> list = new ArrayList<>();
-        for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
-            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
-            MetricPoint point = new MetricPoint();
-            point.setTimestamp(timeKey);
-            point.setValue(value);
-            list.add(point);
-        }
-        return list;
-    }
-
-    private List<MetricPoint> hostMetricMaxByMinute(Long startTime, Long endTime, String hostName, String field) {
-        String customName = "total" + field;
-        String sumName = field + "Max";
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.HOSTNAME.getEsValue(), hostName))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), -1))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
-
-        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
-                .subAggregation(AggregationBuilders.max(customName).field(field));
-        builder.query(boolQueryBuilder);
-        builder.aggregation(histogramAggregationBuilder);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-
-        Aggregations aggregations = searchResponse.getAggregations();
-        if (aggregations == null) {
-            return Collections.emptyList();
-        }
-        Histogram histogram = aggregations.get(sumName);
-        List<MetricPoint> list = new ArrayList<>();
-        for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
-            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
-            MetricPoint point = new MetricPoint();
-            point.setTimestamp(timeKey);
-            point.setValue(value);
-            list.add(point);
-        }
-        return list;
-    }
-
-    private List<MetricPoint> taskMetricSumByMinute(Long startTime, Long endTime, Long taskId, String field) {
-        String customName = "total" + field;
-        String sumName = field + "Sum";
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
-
-        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
-                .subAggregation(AggregationBuilders.max(customName).field(field));
-        builder.query(boolQueryBuilder);
-        builder.aggregation(histogramAggregationBuilder);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-
-        Aggregations aggregations = searchResponse.getAggregations();
-        if (aggregations == null) {
-            return Collections.emptyList();
-        }
-        Histogram histogram = aggregations.get(sumName);
-        List<MetricPoint> list = new ArrayList<>();
-        for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
-            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
-            MetricPoint point = new MetricPoint();
-            point.setTimestamp(timeKey);
-            point.setValue(value);
-            list.add(point);
-        }
-        return list;
-    }
-
-    private List<MetricPoint> taskMetricMinByMinute(Long startTime, Long endTime, Long taskId, String field) {
-        String customName = "total" + field;
-        String sumName = field + "Min";
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
-
-        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
-                .subAggregation(AggregationBuilders.max(customName).field(field));
-        builder.query(boolQueryBuilder);
-        builder.aggregation(histogramAggregationBuilder);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-
-        Aggregations aggregations = searchResponse.getAggregations();
-        if (aggregations == null) {
-            return Collections.emptyList();
-        }
-        Histogram histogram = aggregations.get(sumName);
-        List<MetricPoint> list = new ArrayList<>();
-        for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
-            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
-            MetricPoint point = new MetricPoint();
-            point.setTimestamp(timeKey);
-            point.setValue(value);
-            list.add(point);
-        }
-        return list;
-    }
-
-    private List<MetricPoint> logModelMetricSumByMinute(Long startTime, Long endTime, Long taskId, Long pathId, String logModelHostName, String field) {
-        String customName = "total" + field;
-        String sumName = field + "Sum";
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), pathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
-
-        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
-                .subAggregation(AggregationBuilders.max(customName).field(field));
-        builder.query(boolQueryBuilder);
-        builder.aggregation(histogramAggregationBuilder);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-
-        Aggregations aggregations = searchResponse.getAggregations();
-        if (aggregations == null) {
-            return Collections.emptyList();
-        }
-        Histogram histogram = aggregations.get(sumName);
-        List<MetricPoint> list = new ArrayList<>();
-        for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
-            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
-            MetricPoint point = new MetricPoint();
-            point.setTimestamp(timeKey);
-            point.setValue(value);
-            list.add(point);
-        }
-        return list;
-    }
-
-    private List<MetricPoint> logModelMetricMinByMinute(Long startTime, Long endTime, Long taskId, Long pathId, String logModelHostName, String field) {
-        String customName = "total" + field;
-        String sumName = field + "Min";
-        SearchRequest searchRequest = new SearchRequest(agentMetricsIndex);
-        SearchSourceBuilder builder = new SearchSourceBuilder();
-        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-
-        boolQueryBuilder.must(QueryBuilders.termQuery(AgentMetricField.LOG_MODE_ID.getEsValue(), taskId))
-                .must(QueryBuilders.termQuery(AgentMetricField.PATH_ID.getEsValue(), pathId))
-                .must(QueryBuilders.termQuery(AgentMetricField.LOG_MODEL_HOST_NAME.getEsValue(), logModelHostName))
-                .must(QueryBuilders.rangeQuery(AgentMetricField.HEARTBEAT_TIME.getEsValue()).from(startTime, false).to(endTime, true));
-
-        HistogramAggregationBuilder histogramAggregationBuilder = AggregationBuilders.histogram(sumName)
-                .interval(MetricConstant.QUERY_INTERVAL).field(AgentMetricField.HEARTBEAT_TIME.getEsValue())
-                .subAggregation(AggregationBuilders.max(customName).field(field));
-        builder.query(boolQueryBuilder);
-        builder.aggregation(histogramAggregationBuilder);
-        searchRequest.source(builder);
-        SearchResponse searchResponse = elasticsearchService.doQuery(searchRequest);
-
-        Aggregations aggregations = searchResponse.getAggregations();
-        if (aggregations == null) {
-            return Collections.emptyList();
-        }
-        Histogram histogram = aggregations.get(sumName);
-        List<MetricPoint> list = new ArrayList<>();
-        for (Histogram.Bucket bucket : histogram.getBuckets()) {
-            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
-            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(customName);
-            MetricPoint point = new MetricPoint();
-            point.setTimestamp(timeKey);
-            point.setValue(value);
-            list.add(point);
-        }
-        return list;
     }
 
     private List<MetricPoint> logModelMetricCountByMinute(Long startTime, Long endTime, Long taskId, Long pathId, String logModelHostName, String field, Object fieldValue) {
@@ -751,4 +724,20 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
         return list;
     }
 
+    private List<MetricPoint> handleHistogramResult(Aggregations aggregations, String histogramName, String aggName) {
+        if (aggregations == null) {
+            return Collections.emptyList();
+        }
+        Histogram histogram = aggregations.get(histogramName);
+        List<MetricPoint> list = new ArrayList<>();
+        for (Histogram.Bucket bucket : histogram.getBuckets()) {
+            Long timeKey = DateUtils.castToTimestamp(bucket.getKey());
+            NumericMetricsAggregation.SingleValue value = (NumericMetricsAggregation.SingleValue) bucket.getAggregations().getAsMap().get(aggName);
+            MetricPoint point = new MetricPoint();
+            point.setTimestamp(timeKey);
+            point.setValue((long) value.value());
+            list.add(point);
+        }
+        return list;
+    }
 }

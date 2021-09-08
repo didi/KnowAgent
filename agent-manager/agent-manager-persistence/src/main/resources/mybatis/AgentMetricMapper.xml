@@ -277,28 +277,10 @@
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and hostname = #{hostName}
   </select>
-  <select id="selectSumPerMin" resultMap="MetricPointMap">
-    select sum(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time
-    from agent_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and hostname = #{hostName}
-    group by round(heartbeat_time / 60000) * 60000
-  </select>
-  <select id="selectAvgPerMin" resultMap="MetricPointMap">
-    select avg(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time
-    from agent_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and hostname = #{hostName}
-    group by round(heartbeat_time / 60000) * 60000
-  </select>
   <delete id="deleteBeforeTime" parameterType="java.lang.Long">
     delete from agent_metric
     where heartbeat_time &lt;= #{time}
   </delete>
-  <select id="selectMaxByHostname" resultType="java.lang.Long">
-    select max(${column}) from agent_metric
-    where hostname = #{hostName}
-  </select>
   <select id="selectHeartbeatCount" resultType="java.lang.Long">
     select count(heartbeat_time) from agent_metric
     where hostname = #{hostName}

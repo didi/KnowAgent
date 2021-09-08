@@ -5,12 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
@@ -21,9 +22,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import java.util.List;
 
@@ -127,16 +125,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public Long getLatestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        return (Long) collectTaskMetricMapper.selectSingleMax(logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricField.LOG_TIME.getRdsValue());
-    }
-
-    @Override
-    public Long getLatestStartupTime(String hostName) {
-        return agentMetricMapper.selectMaxByHostname(hostName, AgentMetricField.START_TIME.getRdsValue());
-    }
-
-    @Override
     public Long getHostCpuLimitDuration(Long startTime, Long endTime, String hostName) {
         return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, AgentMetricField.LIMIT_RATE.getRdsValue());
     }
@@ -174,13 +162,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
 
     @Override
     public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, AgentMetricField.SEND_BYTE.getRdsValue());
-        for (MetricPoint metricPoint : graph) {
-            BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
-            BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b2);
-        }
-        return graph;
+        return collectTaskMetricMapper.selectAggregationByTask(taskId, startTime, endTime, AgentMetricField.SEND_BYTE.getRdsValue(), CalcFunction.SUM.getValue(), MetricConstant.QUERY_INTERVAL);
     }
 
     @Override

@@ -132,7 +132,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Long getLastestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String hostName) {
-        return agentMetricsDAO.getLatestCollectTime(logCollectTaskId, fileLogCollectPathId, hostName);
+        return agentMetricsDAO.selectLatestMetric(logCollectTaskId).getLogTime();
     }
 
     @Override
@@ -220,7 +220,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Long getLastestAgentStartupTime(String hostName) {
-        return agentMetricsDAO.getLatestStartupTime(hostName);
+        return agentMetricsDAO.selectLatestByHostname(hostName).getStartTime();
     }
 
     @Override

@@ -25,6 +25,7 @@ import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
+import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.DirectoryLogCollectPathManageService;
@@ -72,7 +73,7 @@ public class RdHostController {
     private DirectoryLogCollectPathManageService directoryLogCollectPathManageService;
 
     @Autowired
-    private AgentMetricsDAO agentMetricsDAO;
+    private AgentMetricsManageService agentMetricsManageService;
 
     @ApiOperation(value = "测试主机名连通性", notes = "")
     @RequestMapping(value = "/connectivity/{hostname}", method = RequestMethod.GET)
@@ -262,7 +263,7 @@ public class RdHostController {
                 }
                 hostAgentVO.setOpenedLogCollectTaskNum(openedLogCollectTaskNum);
                 hostAgentVO.setOpenedLogPathNum(openedLogPathNum);
-                hostAgentVO.setLastestAgentStartupTime(agentMetricsDAO.getLatestStartupTime(agentDO.getHostName()));
+                hostAgentVO.setLastestAgentStartupTime(agentMetricsManageService.getLastestAgentStartupTime(agentDO.getHostName()));
             }
             return hostAgentVO;
         }

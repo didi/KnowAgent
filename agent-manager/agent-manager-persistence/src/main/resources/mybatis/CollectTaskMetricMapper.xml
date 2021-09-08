@@ -748,22 +748,11 @@
     <result column="read_time_max" property="value" jdbcType="INTEGER" />
     <result column="valid_time_config" property="value" jdbcType="BIT" />
   </resultMap>
-  <select id="selectSumByHostnamePerMin" resultMap="MetricPointMap">
-    select sum(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    and log_model_host_name = #{hostName}
-    group by log_model_host_name, round(heartbeat_time / 60000) * 60000
-  </select>
   <select id="selectSumByTaskIdPerMin" resultMap="MetricPointMap">
     select sum(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
     and log_mode_id = #{taskId}
     group by log_mode_id, round(heartbeat_time / 60000) * 60000
-  </select>
-  <select id="selectSingleByTaskIdPerMin" resultMap="MetricPointMap">
-    select ${column}, heartbeat_time from collect_task_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    and log_mode_id = #{taskId}
   </select>
   <select id="selectSinglePerMin" resultMap="MetricPointMap">
     select ${column}, heartbeat_time from collect_task_metric
@@ -790,48 +779,6 @@
     <if test="pathId != null">
       and path_id = #{pathId}
     </if>
-  </select>
-  <select id="selectAvgPerMin" resultMap="MetricPointMap">
-    select avg(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    <if test="taskId != null">
-      and log_mode_id = #{taskId}
-    </if>
-    <if test="hostName != null and !''.equals(hostName)">
-      and log_model_host_name = #{hostName}
-    </if>
-    <if test="pathId != null">
-      and path_id = #{pathId}
-    </if>
-    group by round(heartbeat_time / 60000) * 60000
-  </select>
-  <select id="selectSumPerMin" resultMap="MetricPointMap">
-    select sum(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    <if test="taskId != null">
-      and log_mode_id = #{taskId}
-    </if>
-    <if test="hostName != null and !''.equals(hostName)">
-      and log_model_host_name = #{hostName}
-    </if>
-    <if test="pathId != null">
-      and path_id = #{pathId}
-    </if>
-    group by round(heartbeat_time / 60000) * 60000
-  </select>
-  <select id="selectMinPerMin" resultMap="MetricPointMap">
-    select min(${column}) ${column}, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-    <if test="taskId != null">
-      and log_mode_id = #{taskId}
-    </if>
-    <if test="hostName != null and !''.equals(hostName)">
-      and log_model_host_name = #{hostName}
-    </if>
-    <if test="pathId != null">
-      and path_id = #{pathId}
-    </if>
-    group by log_mode_id, round(heartbeat_time / 60000) * 60000
   </select>
   <select id="selectDelayTimePerMin" resultMap="MetricPointMap">
     select max(heartbeat_time - log_time) log_time, round(heartbeat_time / 60000) * 60000 heartbeat_time from collect_task_metric
@@ -886,17 +833,6 @@
       and path_id = #{pathId}
       and ${column} &lt; 0
   </select>
-  <select id="selectSingleHeartbeatCount" resultType="java.lang.Long">
-    select count(heartbeat_time) from collect_task_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_mode_id = #{taskId} and log_model_host_name = #{hostName}
-      and path_id = #{pathId}
-  </select>
-  <select id="selectHeartbeatCountByHostname" resultType="java.lang.Long">
-    select count(heartbeat_time) from collect_task_metric
-    where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
-      and log_model_host_name = #{hostName}
-  </select>
   <select id="selectHeartbeatCount" resultType="java.lang.Long">
     select count(heartbeat_time) from collect_task_metric
     where heartbeat_time &gt; #{startTime} and heartbeat_time &lt;= #{endTime}
@@ -946,10 +882,6 @@
     select max(${column}) from collect_task_metric
       where log_mode_id = #{taskId} and log_model_host_name = #{hostName}
       and path_id = #{pathId}
-  </select>
-  <select id="selectMaxByHostname" resultType="java.lang.Object">
-    select max(${column}) from collect_task_metric
-      where log_model_host_name = #{hostName}
   </select>
   <select id="selectByTask" resultMap="MetricPointMap">
     select ${column}, heartbeat_time from collect_task_metric

@@ -205,18 +205,6 @@ public interface AgentMetricsDAO {
     Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName);
 
     /**
-     * 获取最后一次采集的时间
-     *
-     * @param logCollectTaskId
-     * @param fileLogCollectPathId
-     * @param logModelHostName
-     * @return
-     */
-    Long getLatestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName);
-
-    Long getLatestStartupTime(String hostName);
-
-    /**
      * @param startTime
      * @param endTime
      * @param hostName
