@@ -11,7 +11,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.Co
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
-import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMetricMapper;
@@ -158,16 +157,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName) {
         return agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, AgentMetricField.START_TIME.getRdsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectAggregationByTask(taskId, startTime, endTime, AgentMetricField.SEND_BYTE.getRdsValue(), CalcFunction.SUM.getValue(), MetricConstant.QUERY_INTERVAL);
-    }
-
-    @Override
-    public List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, AgentMetricField.READ_COUNT.getRdsValue());
     }
 
     @Override

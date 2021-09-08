@@ -193,11 +193,7 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     @Override
     public Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
         Long value = countByFieldTerm(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logModelHostName, AgentMetricField.VALID_TIME_CONFIG.getEsValue(), true);
-        if (value != null) {
-            return value.intValue();
-        } else {
-            return 0;
-        }
+        return value.intValue();
     }
 
     @Override
@@ -257,16 +253,6 @@ public class AgentMetricsElasticsearchDAOImpl implements AgentMetricsDAO {
     @Override
     public List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName) {
         return queryAgentAggregation(hostName, startTime, endTime, AgentMetricField.START_TIME, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
-    }
-
-    @Override
-    public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        return queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.SEND_BYTE, CalcFunction.COUNT, MetricConstant.QUERY_INTERVAL);
-    }
-
-    @Override
-    public List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime) {
-        return queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.SEND_COUNT, CalcFunction.COUNT, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override

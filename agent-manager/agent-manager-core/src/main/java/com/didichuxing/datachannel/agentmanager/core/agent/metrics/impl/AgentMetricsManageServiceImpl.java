@@ -265,12 +265,12 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPoint> getLogCollectTaskLogsBytesPerMinMetric(Long logCollectTaskId, Long startTime, Long endTime) {
-        return agentMetricsDAO.getLogCollectTaskBytesPerMin(logCollectTaskId, startTime, endTime);
+        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.READ_BYTE, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override
     public List<MetricPoint> getLogCollectTaskLogsCountPerMinMetric(Long logCollectTaskId, Long startTime, Long endTime) {
-        return agentMetricsDAO.getLogCollectTaskLogCountPerMin(logCollectTaskId, startTime, endTime);
+        return agentMetricsDAO.queryAggregationByTask(logCollectTaskId, startTime, endTime, AgentMetricField.READ_COUNT, CalcFunction.SUM, MetricConstant.QUERY_INTERVAL);
     }
 
     @Override

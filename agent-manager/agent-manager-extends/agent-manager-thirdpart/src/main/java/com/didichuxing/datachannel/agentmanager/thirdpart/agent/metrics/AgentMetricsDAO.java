@@ -230,10 +230,6 @@ public interface AgentMetricsDAO {
 
     List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName);
 
-    List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime);
-
-    List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime);
-
     List<MetricPoint> getFileLogPathNotExistsPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
 
     List<MetricPoint> getFileLogPathDisorderPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
