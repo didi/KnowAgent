@@ -60,7 +60,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     @Transactional
     public MetadataSyncResult sync() {
         List<PodConfig> podConfigs = K8sUtil.filterWithServices(K8sUtil.getAllPodConfig());
-        List<HostDO> localHosts = hostManageService.list();
+        List<HostDO> localHostsAndContainers = hostManageService.list();
         MetadataSyncResult metadataSyncResult = new MetadataSyncResult();
         List<MetadataSyncResultPerService> resultList = new ArrayList<>();
         Map<String, List<PodConfig>> configServiceMap = new HashMap<>();
@@ -103,7 +103,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                 String hostName = podConfig.getNodeName();
                 String hostIp = podConfig.getNodeIp();
                 List<String> containerNames = podConfig.getContainerNames();
-                for (HostDO localHost : localHosts) {
+                for (HostDO localHost : localHostsAndContainers) {
                     if (localHost.getExternalId() != SourceEnum.MANUAL.getCode()) {
                         continue;
                     }
@@ -141,6 +141,18 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             }
             metadataSyncResultPerService.setRelateHostNum(relatedHosts);
             if (CollectionUtils.isEmpty(duplicateIps) && CollectionUtils.isEmpty(duplicateHostnames)) {
+                List<Long> localHostIds = new ArrayList<>();
+                List<HostDO> localContainers = new ArrayList<>();
+                for (HostDO hostOrContainer : localHostsAndContainers) {
+                    if (hostOrContainer.getExternalId() != SourceEnum.K8S.getCode()) {
+                        continue;
+                    }
+                    if (hostOrContainer.getContainer() == 0) {
+                        localHostIds.add(hostOrContainer.getId());
+                    } else {
+                        localContainers.add(hostOrContainer);
+                    }
+                }
                 for (PodConfig podConfig : configList) {
                     String hostname = podConfig.getNodeName();
                     HostDO hostDO = new HostDO();
@@ -150,30 +162,32 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     hostDO.setContainer(0);
                     hostDO.setExternalId(SourceEnum.K8S.getCode());
                     List<HostDO> containers = convertToContainers(podConfig);
-                    List<Long> hostIds = new ArrayList<>();
+                    List<Long> containerIds = new ArrayList<>();
                     try {
                         HostDO hostDO1 = hostManageService.getHostByHostName(hostname);
                         if (hostDO1 == null) {
                             hostManageService.createHost(hostDO, null);
                         } else {
                             if (!hostDO1.getIp().equals(hostDO.getIp()) || !hostDO1.getContainer().equals(hostDO.getContainer())) {
-                                hostDO.setId(hostDO1.getId());
+                                Long id = hostDO1.getId();
+                                hostDO.setId(id);
+                                localHostIds.remove(id);
                                 hostManageService.updateHost(hostDO, null);
                             }
                         }
-                        Set<HostDO>[] differences = ListCompareUtil.compare(containers, localHosts, HostDO::getHostName, null);
-                        for (HostDO more : differences[0]) {
-                            Long id = hostManageService.createHost(more, null);
-                            hostIds.add(id);
-                        }
-                        for (HostDO modify : differences[2]) {
-                            hostManageService.updateHost(modify, null);
-                        }
+                        Set<HostDO>[] differences = ListCompareUtil.compare(containers, localContainers, HostDO::getHostName, null);
                         for (HostDO less : differences[3]) {
                             Long id = less.getId();
                             hostManageService.deleteHost(id, true, true,null);
                             serviceHostManageService.deleteByHostId(id);
                             k8sPodContainerManageService.deleteByHostId(id);
+                        }
+                        for (HostDO modify : differences[2]) {
+                            hostManageService.updateHost(modify, null);
+                        }
+                        for (HostDO more : differences[0]) {
+                            Long id = hostManageService.createHost(more, null);
+                            containerIds.add(id);
                         }
                     } catch (ServiceException e) {
                         LOGGER.error("添加主机异常", e);
@@ -188,8 +202,11 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                         k8sPodDO1.setId(podId);
                         k8sPodManageService.updateK8sPod(k8sPodDO1, null);
                     }
-                    buildServiceRelation(hostIds, serviceId);
-                    buildPodRelation(hostIds, podId);
+                    buildServiceRelation(containerIds, serviceId);
+                    buildPodRelation(containerIds, podId);
+                }
+                for (Long localHostId : localHostIds) {
+                    hostManageService.deleteHost(localHostId, true, true, null);
                 }
                 metadataSyncResultPerService.setDuplicateHostNameHostList(Collections.emptyList());
                 metadataSyncResultPerService.setDuplicateIpHostList(Collections.emptyList());
