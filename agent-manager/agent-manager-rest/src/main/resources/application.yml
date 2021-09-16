@@ -3,7 +3,7 @@ server:
 logging:
   pattern:
     file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
-  config: classpath:log4j2.yaml
+  config: classpath:log4j2.xml
   path: .
   file:
     max-history: 7
