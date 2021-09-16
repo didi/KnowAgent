@@ -211,16 +211,28 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Integer getLastestCpuUsage(String hostName) {
-        return agentMetricsDAO.selectLatestByHostname(hostName).getCpuUsage().intValue();
+        AgentMetricPO agentMetricPO = agentMetricsDAO.selectLatestByHostname(hostName);
+        if (agentMetricPO == null) {
+            return 0;
+        }
+        return agentMetricPO.getCpuUsage().intValue();
     }
 
     public Long getLatestMemoryUsage(String hostName) {
-        return agentMetricsDAO.selectLatestByHostname(hostName).getMemoryUsage();
+        AgentMetricPO agentMetricPO = agentMetricsDAO.selectLatestByHostname(hostName);
+        if (agentMetricPO == null) {
+            return 0L;
+        }
+        return agentMetricPO.getMemoryUsage();
     }
 
     @Override
     public Long getLastestAgentStartupTime(String hostName) {
-        return agentMetricsDAO.selectLatestByHostname(hostName).getStartTime();
+        AgentMetricPO agentMetricPO = agentMetricsDAO.selectLatestByHostname(hostName);
+        if (agentMetricPO == null) {
+            return 0L;
+        }
+        return agentMetricPO.getStartTime();
     }
 
     @Override
