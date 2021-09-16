@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.elasticsearch.service
 
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.message.BasicHeader;
@@ -49,7 +50,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
                 if (null == restHighLevelClient) {
                     HttpHost httpHost = new HttpHost(ip, port);
                     RestClientBuilder restClientBuilder = RestClient.builder(httpHost);
-                    if (appId != null && appSecret != null) {
+                    if (!StringUtils.isBlank(appId) && !StringUtils.isBlank(appSecret)) {
                         Header authHeader = new BasicHeader(
                                 "Authorization", "Basic " + Base64.getEncoder().encodeToString(
                                 String.format("%s:%s", appId, appSecret).getBytes()));

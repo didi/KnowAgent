@@ -108,19 +108,13 @@ metadata:
 agent:
   metrics:
     storage:
-      type: mysql
+      type: rds
     datasource:
       elasticsearch:
         ip: 1
         port: 1
-        appId:
-        appSecret:
         agentMetricsIndexName: 1
         agentErrorLogIndexName: 1
-    producer:
-      appId:
-      clusterId:
-      password:
   http:
     path:
       request:
