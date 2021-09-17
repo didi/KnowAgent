@@ -1117,7 +1117,7 @@ public class LogSource extends AbstractSource {
         if (logTime == null) {
             return;
         }
-        if (logTime > maxLogTime) {
+        if (logTime < maxLogTime) {
             maxLogTime = logTime;
         }
     }
