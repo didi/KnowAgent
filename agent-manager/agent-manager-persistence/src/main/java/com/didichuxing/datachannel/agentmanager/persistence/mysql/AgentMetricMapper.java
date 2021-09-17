@@ -28,13 +28,7 @@ public interface AgentMetricMapper {
 
     Long selectSum(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
 
-    List<MetricPoint> selectSumPerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
-
-    List<MetricPoint> selectAvgPerMin(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName, @Param("column") String column);
-
     int deleteBeforeTime(@Param("time") Long time);
-
-    Long selectMaxByHostname(@Param("hostName") String hostName, @Param("column") String column);
 
     Long selectHeartbeatCount(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("hostName") String hostName);
 
@@ -47,6 +41,4 @@ public interface AgentMetricMapper {
     List<MetricPoint> selectAggregation(@Param("hostname") String hostname, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function, @Param("step") Integer step);
 
     List<DashBoardStatisticsDO> groupByKeyAndMinute(@Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("key") String key, @Param("function") String function, @Param("metric") String metric);
-
-    List<MetricPoint> selectAggregationByAgent(@Param("agentHostName") String agentHostName, @Param("startTime") Long startTime, @Param("endTime") Long endTime, @Param("column") String column, @Param("function") String function);
 }

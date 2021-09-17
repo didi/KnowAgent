@@ -58,6 +58,11 @@ public class K8sPodContainerManageServiceImpl implements K8sPodContainerManageSe
         return k8sPodhostDAO.deleteByPodId(podId);
     }
 
+    @Override
+    public int deleteByHostId(Long hostId) {
+        return k8sPodhostDAO.deleteByHostId(hostId);
+    }
+
     private CheckResult checkPodContainer(K8sPodHostPO k8sPodContainerPO) {
         if (k8sPodContainerPO == null) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(),

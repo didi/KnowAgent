@@ -2,9 +2,13 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.elasticsearch.service
 
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.message.BasicHeader;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -18,8 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 @org.springframework.stereotype.Service
 public class ElasticsearchServiceImpl implements ElasticsearchService {
@@ -30,20 +36,21 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     private String ip;
     @Value("${agent.metrics.datasource.elasticsearch.port}")
     private int port;
-    @Value("${agent.metrics.datasource.elasticsearch.appId:#{null}")
+    @Value("${agent.metrics.datasource.elasticsearch.appId:#{null}}")
     private String appId;
-    @Value("${agent.metrics.datasource.elasticsearch.appSecret:#{null}")
+    @Value("${agent.metrics.datasource.elasticsearch.appSecret:#{null}}")
     private String appSecret;
 
     private volatile RestHighLevelClient restHighLevelClient;
 
-    private void setClient() {
+    @PostConstruct
+    public void setClient() {
         if (null == restHighLevelClient) {
             synchronized (this) {
                 if (null == restHighLevelClient) {
                     HttpHost httpHost = new HttpHost(ip, port);
                     RestClientBuilder restClientBuilder = RestClient.builder(httpHost);
-                    if (appId != null && appSecret != null) {
+                    if (!StringUtils.isBlank(appId) && !StringUtils.isBlank(appSecret)) {
                         Header authHeader = new BasicHeader(
                                 "Authorization", "Basic " + Base64.getEncoder().encodeToString(
                                 String.format("%s:%s", appId, appSecret).getBytes()));
@@ -52,6 +59,19 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
                     this.restHighLevelClient = new RestHighLevelClient(restClientBuilder);
                 }
             }
+        }
+    }
+
+    @Override
+    public void bulkInsert(BulkRequest bulkRequest) {
+        BulkResponse response = null;
+        try {
+            response = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            throw new ServiceException(
+                    "class=ElasticsearchServiceImpl||method=bulkInsert||errMsg=query elasticsearch failed", e,
+                    ErrorCodeEnum.ELASTICSEARCH_QUERY_FAILED.getCode()
+            );
         }
     }
 

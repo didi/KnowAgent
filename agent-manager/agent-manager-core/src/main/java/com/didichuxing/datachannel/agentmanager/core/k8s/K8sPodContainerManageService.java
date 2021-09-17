@@ -26,4 +26,6 @@ public interface K8sPodContainerManageService {
 
     int deleteByPodId(Long podId);
 
+    int deleteByHostId(Long hostId);
+
 }

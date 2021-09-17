@@ -1,10 +1,12 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.BasePO;
 
 import java.util.Date;
 
 public class CollectTaskMetricPO extends BasePO {
+    @JSONField(deserialize = false, serialize = false)
     private Long id;
 
     private Integer readTimeMean;
@@ -41,6 +43,7 @@ public class CollectTaskMetricPO extends BasePO {
 
     private Integer filterTooLargeCount;
 
+    @JSONField(name = "channel.type")
     private String channelType;
 
     private Integer logModelVersion;
@@ -89,6 +92,7 @@ public class CollectTaskMetricPO extends BasePO {
 
     private Integer sendCount;
 
+    @JSONField(name = "source.type")
     private String sourceType;
 
     private Long logTime;

@@ -1,10 +1,12 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.po.agent;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.BasePO;
 
 import java.util.Date;
 
 public class AgentMetricPO extends BasePO {
+    @JSONField(deserialize = false, serialize = false)
     private Long id;
 
     private Double cpuUsage;

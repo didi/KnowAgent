@@ -76,7 +76,7 @@ public class FileNodeInfoTest {
 
         OffsetManager.flush();
 
-        OffsetManager loader = new OffsetManager(offsetConfig);
+        OffsetManager loader = new OffsetManager();
         loader.loadOffset(null);
 
         List<FileNode> fileNodes = new ArrayList<>();
@@ -136,7 +136,7 @@ public class FileNodeInfoTest {
 
         OffsetManager.flush();
 
-        OffsetManager loader = new OffsetManager(offsetConfig);
+        OffsetManager loader = new OffsetManager();
         loader.loadOffset(null);
 
         List<FileNode> fileNodes = new ArrayList<>();

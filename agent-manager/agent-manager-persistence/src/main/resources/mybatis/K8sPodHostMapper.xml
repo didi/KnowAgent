@@ -64,4 +64,7 @@
   <delete id="deleteByPodId" parameterType="java.lang.Long">
     delete from tb_k8s_pod_host where k8s_pod_id = #{podId}
   </delete>
+  <delete id="deleteByHostId" parameterType="java.lang.Long">
+    delete from tb_k8s_pod_host where host_id = #{hostId}
+  </delete>
 </mapper>

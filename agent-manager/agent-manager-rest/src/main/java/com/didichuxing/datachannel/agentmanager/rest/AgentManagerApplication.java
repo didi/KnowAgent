@@ -28,7 +28,7 @@ public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
 
-    @Value("${agent.metrics.storage.type}")
+    @Value("${agent.metrics.storage.type:#{null}}")
     public String type;
 
     /**

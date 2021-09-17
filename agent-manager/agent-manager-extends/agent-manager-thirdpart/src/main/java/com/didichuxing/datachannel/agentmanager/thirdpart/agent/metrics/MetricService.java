@@ -6,6 +6,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
@@ -43,16 +44,13 @@ public class MetricService {
     @Autowired
     private AgentMetricsDAO agentMetricsDAO;
 
-    @Value("${agent.metrics.producer.identify:false}")
-    private boolean identify;
-
-    @Value("${agent.metrics.producer.appId:0}")
+    @Value("${agent.metrics.producer.appId:#{null}}")
     private String appId;
 
-    @Value("${agent.metrics.producer.clusterId:0}")
+    @Value("${agent.metrics.producer.clusterId:#{null}}")
     private String clusterId;
 
-    @Value("${agent.metrics.producer.password:0}")
+    @Value("${agent.metrics.producer.password:#{null}}")
     private String password;
 
     private static volatile boolean trigger = false;
@@ -95,7 +93,6 @@ public class MetricService {
         Properties properties = getProducerProps(kafkaClusterPO.getKafkaClusterBrokerConfiguration());
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
         consumer.subscribe(Arrays.asList(receiverTopicDO.getTopic()));
-
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
@@ -143,7 +140,7 @@ public class MetricService {
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
-        if (identify) {
+        if (!StringUtils.isBlank(appId) && !StringUtils.isBlank(clusterId) && !StringUtils.isBlank(password)) {
             String format = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s.%s\" password=\"%s\";";
             String jaasConfig = String.format(format, clusterId, appId, password);
             props.put("sasl.jaas.config", jaasConfig);

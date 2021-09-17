@@ -1,6 +1,8 @@
 package com.didichuxing.datachannel.agentmanager.core.k8s;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataResult;
+import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.domain.PodConfig;
 
 import java.util.List;
 
@@ -44,4 +46,7 @@ public interface K8sPodManageService {
      */
     K8sPodDO getByNameAndSpace(String namespace, String name);
 
+    MetadataResult parse2MetadataResult(List<PodConfig> podConfigList);
+
+    K8sPodDO convert(PodConfig config);
 }

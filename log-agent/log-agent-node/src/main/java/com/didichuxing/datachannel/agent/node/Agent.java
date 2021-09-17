@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agent.node;
 
+import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.node.service.http.server.HttpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Agent {
 
-    private static final Logger  LOGGER     = LoggerFactory.getLogger(Agent.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Agent.class.getName());
 
     /**
      * agent http 服务
@@ -35,20 +36,13 @@ public class Agent {
     public static void main(String[] args) {
         START_TIME = System.currentTimeMillis();
         LOGGER.info("start time is " + START_TIME);
-        // 初始化
-        LOGGER.info("begin to init agent.");
         if (!init()) {
             System.exit(-1);
         }
-        LOGGER.info("succes to init agent.");
 
-        // 启动
-        LOGGER.info("begin to start agent.");
         if (!start()) {
             System.exit(-1);
         }
-        LOGGER.info("success to start agent.");
-
         isRunning = true;
 
         // 关闭
@@ -79,7 +73,7 @@ public class Agent {
 
             return true;
         } catch (Exception e) {
-            LOGGER.error("Agent error!", "init error! {}", e.getMessage());
+            LogGather.recordErrorLog("Agent error!", "init error! {}", e);
         }
         return false;
     }
@@ -93,7 +87,7 @@ public class Agent {
             configService.start();
             return true;
         } catch (Exception e) {
-            LOGGER.error("Agent error!", "init error! {}", e.getMessage());
+            LogGather.recordErrorLog("Agent error!", "start error! {}", e);
         }
         return false;
     }
@@ -110,8 +104,8 @@ public class Agent {
             launchService.stop(true);
             configService.stop(true);
             httpService.stop(true);
-        } catch (Throwable ex) {
-            LOGGER.error("Agent error!", "stop error! {}", ex.getMessage());
+        } catch (Throwable e) {
+            LogGather.recordErrorLog("Agent error!", "stop error! {}", e);
         }
         LOGGER.info("stop agent success.");
     }

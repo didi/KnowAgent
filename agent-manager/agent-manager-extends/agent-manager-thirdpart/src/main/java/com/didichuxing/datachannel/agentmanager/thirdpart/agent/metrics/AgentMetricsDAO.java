@@ -205,18 +205,6 @@ public interface AgentMetricsDAO {
     Integer getSliceErrorCount(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName);
 
     /**
-     * 获取最后一次采集的时间
-     *
-     * @param logCollectTaskId
-     * @param fileLogCollectPathId
-     * @param logModelHostName
-     * @return
-     */
-    Long getLatestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName);
-
-    Long getLatestStartupTime(String hostName);
-
-    /**
      * @param startTime
      * @param endTime
      * @param hostName
@@ -240,37 +228,13 @@ public interface AgentMetricsDAO {
 
     Long getGCCount(Long startTime, Long endTime, String hostName);
 
-    List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName);
-
-    List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName);
-
-    List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName);
-
-    List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName);
-
-    List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName);
-
-    List<MetricPoint> getAgentFdUsagePerMin(Long startTime, Long endTime, String hostName);
-
     List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName);
-
-    List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime);
-
-    List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime);
 
     List<MetricPoint> getFileLogPathNotExistsPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
 
     List<MetricPoint> getFileLogPathDisorderPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
 
-    List<MetricPoint> getFilterOutPerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
-
-    List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
-
-    List<MetricPoint> getLimitTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
-
     List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
-
-    List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
 
     List<MetricPoint> getCollectDelayPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime);
 
@@ -300,14 +264,6 @@ public interface AgentMetricsDAO {
 
     List<DashBoardStatisticsDO> groupByKeyAndMinuteLogCollectTaskMetric(Long startTime, Long endTime, String key, String function, String metric);
 
-    List<MetricPoint> queryAggregationByAgentFromLogCollectTaskMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
-
     List<DashBoardStatisticsDO> groupByKeyAndMinuteAgentMetric(Long startTime, Long endTime, String key, String function, String metric);
-
-    List<MetricPoint> queryAggregationByAgentFromAgentMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
-
-    List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
-
-    List<MetricPoint> queryAggregationGroupByMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
 
 }

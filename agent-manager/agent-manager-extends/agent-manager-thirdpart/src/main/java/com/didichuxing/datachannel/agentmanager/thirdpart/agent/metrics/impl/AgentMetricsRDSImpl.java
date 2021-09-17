@@ -3,13 +3,12 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.util.TypeUtils;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentMetricDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
@@ -22,9 +21,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import java.util.List;
 
@@ -44,8 +40,7 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         for (ConsumerRecord<String, String> record : records) {
             JSONObject object = JSON.parseObject(record.value());
             if (object.getInteger(AgentMetricField.LOG_MODE_ID.getEsValue()) < 0) {
-                AgentMetricDO agentMetric = JSON.parseObject(record.value(), AgentMetricDO.class);
-                AgentMetricPO agentMetricPO = ConvertUtil.obj2Obj(agentMetric, AgentMetricPO.class);
+                AgentMetricPO agentMetricPO = JSON.parseObject(record.value(), AgentMetricPO.class);
                 agentMetricMapper.insertSelective(agentMetricPO);
             } else {
                 CollectTaskMetricDO collectTaskMetric = JSON.parseObject(record.value(), CollectTaskMetricDO.class);
@@ -129,16 +124,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public Long getLatestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        return (Long) collectTaskMetricMapper.selectSingleMax(logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricField.LOG_TIME.getRdsValue());
-    }
-
-    @Override
-    public Long getLatestStartupTime(String hostName) {
-        return agentMetricMapper.selectMaxByHostname(hostName, AgentMetricField.START_TIME.getRdsValue());
-    }
-
-    @Override
     public Long getHostCpuLimitDuration(Long startTime, Long endTime, String hostName) {
         return collectTaskMetricMapper.selectSumByHostname(startTime, endTime, hostName, AgentMetricField.LIMIT_RATE.getRdsValue());
     }
@@ -170,71 +155,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> getAgentCpuUsagePerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, AgentMetricField.CPU_USAGE.getRdsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentMemoryUsagePerMin(Long startTime, Long endTime, String hostName) {
-        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, AgentMetricField.MEMORY_USAGE.getRdsValue());
-        for (MetricPoint metricPoint : graph) {
-            BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
-            BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b2);
-        }
-        return graph;
-    }
-
-    @Override
-    public List<MetricPoint> getAgentGCTimesPerMin(Long startTime, Long endTime, String hostName) {
-        return agentMetricMapper.selectSumPerMin(startTime, endTime, hostName, AgentMetricField.GC_COUNT.getRdsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentOutputBytesPerMin(Long startTime, Long endTime, String hostName) {
-        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, AgentMetricField.SEND_BYTE.getRdsValue());
-        for (MetricPoint metricPoint : graph) {
-            BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
-            BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b2);
-        }
-        return graph;
-    }
-
-    @Override
-    public List<MetricPoint> getAgentOutputLogsPerMin(Long startTime, Long endTime, String hostName) {
-        return collectTaskMetricMapper.selectSumByHostnamePerMin(startTime, endTime, hostName, AgentMetricField.SEND_COUNT.getRdsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getAgentFdUsagePerMin(Long startTime, Long endTime, String hostName) {
-        List<MetricPoint> graph = agentMetricMapper.selectAvgPerMin(startTime, endTime, hostName, AgentMetricField.FD_COUNT.getRdsValue());
-        for (MetricPoint metricPoint : graph) {
-            Integer i = TypeUtils.castToInt(metricPoint.getValue());
-            metricPoint.setValue(i);
-        }
-        return graph;
-    }
-
-    @Override
     public List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName) {
         return agentMetricMapper.selectSinglePerMin(startTime, endTime, hostName, AgentMetricField.START_TIME.getRdsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getLogCollectTaskBytesPerMin(Long taskId, Long startTime, Long endTime) {
-        List<MetricPoint> graph = collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, AgentMetricField.SEND_BYTE.getRdsValue());
-        for (MetricPoint metricPoint : graph) {
-            BigDecimal b1 = TypeUtils.castToBigDecimal(metricPoint.getValue());
-            BigDecimal b2 = b1.divide(new BigDecimal(1024 * 1024), 2, RoundingMode.HALF_UP);
-            metricPoint.setValue(b2);
-        }
-        return graph;
-    }
-
-    @Override
-    public List<MetricPoint> getLogCollectTaskLogCountPerMin(Long taskId, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSumByTaskIdPerMin(startTime, endTime, taskId, AgentMetricField.READ_COUNT.getRdsValue());
     }
 
     @Override
@@ -253,21 +175,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> getFilterOutPerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricField.FILTER_OUT.getRdsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getMinCurrentCollectTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectMinPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricField.LOG_TIME.getRdsValue());
-    }
-
-    @Override
-    public List<MetricPoint> getLimitTimePerLogPathPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSumPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricField.LIMIT_TIME.getRdsValue());
-    }
-
-    @Override
     public List<MetricPoint> getFileLogPathLogSliceErrorPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
         List<MetricPoint> graph = collectTaskMetricMapper.selectFileDisorderPerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId);
         for (MetricPoint metricPoint : graph) {
@@ -275,11 +182,6 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
             metricPoint.setValue(collectFiles.matches( "\"" + AgentMetricField.VALID_TIME_CONFIG.getRdsValue() + "\":false") ? 1 : 0);
         }
         return graph;
-    }
-
-    @Override
-    public List<MetricPoint> getFileLogPathAbnormalTruncationPerMin(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime) {
-        return collectTaskMetricMapper.selectSinglePerMin(startTime, endTime, logCollectTaskId, logModelHostName, fileLogCollectPathId, AgentMetricField.FILTER_TOO_LARGE_COUNT.getRdsValue());
     }
 
     @Override
@@ -353,28 +255,8 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
     }
 
     @Override
-    public List<MetricPoint> queryAggregationByAgentFromLogCollectTaskMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return collectTaskMetricMapper.selectAggregationByAgent(agentHostName, startTime, endTime, column.getRdsValue(), function.getValue());
-    }
-
-    @Override
     public List<DashBoardStatisticsDO> groupByKeyAndMinuteAgentMetric(Long startTime, Long endTime, String key, String function, String metric) {
         return agentMetricMapper.groupByKeyAndMinute(startTime, endTime, key, function, metric);
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationByAgentFromAgentMetrics(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return agentMetricMapper.selectAggregationByAgent(agentHostName, startTime, endTime, column.getRdsValue(), function.getValue());
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationByAgent(String agentHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return collectTaskMetricMapper.selectAggregationByAgent(agentHostName, startTime, endTime, column.getRdsValue(), function.getValue());
-    }
-
-    @Override
-    public List<MetricPoint> queryAggregationGroupByMinute(Long startTime, Long endTime, AgentMetricField column, CalcFunction function) {
-        return collectTaskMetricMapper.selectAggregationGroupByMinute(startTime, endTime, column.getRdsValue(), function.getValue());
     }
 
 }
