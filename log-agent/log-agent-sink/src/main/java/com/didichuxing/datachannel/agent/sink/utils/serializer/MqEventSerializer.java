@@ -52,7 +52,7 @@ public abstract class MqEventSerializer {
                     eventContent = CUT_FLAG;
                 }
                 mqEvent.setContent(eventContent);
-                contentToSend = serializeSingle(mqEvent);
+                contentToSend = serializeArray(mqEvent);
                 LOG.warn("content is too large, so it be cutted.modelId is "
                         + getModelConfig().getCommonConfig().getModelId() + ", sourceItem is "
                         + mqEvent.getSourceItemHeaderName() + mqEvent.getSourceItemName() + ", rate is "
