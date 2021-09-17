@@ -1006,7 +1006,7 @@ public class LogSource extends AbstractSource {
 
         ret.put(FileMetricsFields.COLLECT_FILE_NAMES_STR, collectFiles);
         ret.put(FileMetricsFields.LATEST_FILE_NAME_STR, latestFileName);
-        ret.put(FileMetricsFields.MAX_TIME_GAP_STR, maxLogTime == 0 ? 0 : System.currentTimeMillis() - maxLogTime);
+        ret.put(FileMetricsFields.MAX_TIME_GAP_STR, maxLogTime);
         ret.put(FileMetricsFields.LATEST_LOG_TIME_STR, logTimeStr);
         ret.put(FileMetricsFields.LATEST_LOG_TIME, latestLogTime);
         ret.put(FileMetricsFields.RELATED_FILES, relatedFileNodeMap.size());
@@ -1117,8 +1117,9 @@ public class LogSource extends AbstractSource {
         if (logTime == null) {
             return;
         }
-        if (logTime < maxLogTime) {
-            maxLogTime = logTime;
+        Long gap = System.currentTimeMillis() - logTime;
+        if (gap > maxLogTime) {
+            maxLogTime = gap;
         }
     }
 
