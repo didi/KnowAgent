@@ -11,7 +11,7 @@ public class LogCollectTaskAdvancedConfiguration {
     /**
      * channel 最大内存
      */
-    private Long channelMaxBytes = 100 * 1024 * 1024L;
+    private Long channelMaxBytes = 10 * 1024 * 1024L;
     /**
      * channel 最大缓存数量
      */
