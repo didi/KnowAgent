@@ -1,13 +1,17 @@
 package com.didichuxing.datachannel.agent.sink.kafkaSink;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.didichuxing.datachannel.agent.common.api.TopicPartitionKeyTypeEnum;
 import com.didichuxing.datachannel.agent.common.constants.Tags;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.sink.utils.EventUtils;
 import com.didichuxing.datachannel.agent.sink.utils.StringFilter;
+import com.didichuxing.datachannel.agent.sink.utils.serializer.JsonMqEventSerializer;
+import com.didichuxing.datachannel.agent.sink.utils.serializer.MqEventSerializer;
 import com.didichuxing.datachannel.agent.source.log.config.LogSourceConfig;
 import org.apache.commons.lang.StringUtils;
 
@@ -68,6 +72,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
     // 0：代表普通日志、1：public日志
     private Integer              businessType;
 
+    // 根据partition数量自动判断是否采用固定时间轮转partition key发送模式
+    private int                topicPartitionKeyType = TopicPartitionKeyTypeEnum.UNKNOWN.getType();
+
+    private MqEventSerializer eventSerializer;
+
     public KafkaSink(ModelConfig config, AbstractChannel channel, int orderNum){
         super(config, channel, orderNum);
     }
@@ -76,6 +85,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
     public void configure(ComponentConfig config) {
         this.kafkaTargetConfig = (KafkaTargetConfig) this.modelConfig.getTargetConfig();
         businessType = ((LogSourceConfig) (this.modelConfig.getSourceConfig())).getMatchConfig().getBusinessType();
+
+        this.eventSerializer = new JsonMqEventSerializer(this);
+
         setKeyDelay();
     }
 
@@ -288,55 +300,56 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
     /**
      * 批量发送
      *
-     * @param kafkaEvents
+     * @param mqEvents
      * @param isAsync
      * @return
      */
-    private boolean sendBatch(List<KafkaEvent> kafkaEvents, Boolean isAsync) {
-        String content = EventUtils.toNewListJson(this, kafkaEvents, businessType);
-        if (StringUtils.isBlank(content)) {
+    private boolean sendBatch(List<KafkaEvent> mqEvents, Boolean isAsync) {
+
+        byte[] content = eventSerializer.serializeArray(mqEvents);
+        if (content == null) {
             return false;
         }
-        if (EventUtils.checkIsTooLarge(this, content)) {
-            KafkaEvent one = kafkaEvents.get(0);
+        if (eventSerializer.checkIsTooLarge(content)) {
+            KafkaEvent one = mqEvents.get(0);
             LOGGER.warn("content is too large, so it be send one by one.modelId is "
-                        + modelConfig.getCommonConfig().getModelId() + ", sourceItem is "
-                        + one.getSourceItemHeaderName() + one.getSourceItemName() + ", rate is " + one.getRate());
+                    + modelConfig.getCommonConfig().getModelId() + ", sourceItem is "
+                    + one.getSourceItemHeaderName() + one.getSourceItemName() + ", rate is " + one.getRate());
             // 消息过大
-            for (KafkaEvent kafkaEvent : kafkaEvents) {
-                String contentToSend = EventUtils.getVaildEvent(this, kafkaEvent, businessType);
-                if (StringUtils.isNotBlank(contentToSend)) {
-                    if (!sendReally(Collections.singletonList(kafkaEvent), contentToSend, isAsync)) {
+            for (KafkaEvent mqEvent : mqEvents) {
+                byte[] contentToSend = eventSerializer.getValidEvent(mqEvent);
+                if (contentToSend != null) {
+                    if (!sendReally(Collections.singletonList(mqEvent), contentToSend, isAsync)) {
                         return false;
                     }
                 }
             }
             return true;
         } else {
-            return sendReally(kafkaEvents, content, isAsync);
+            return sendReally(mqEvents, content, isAsync);
         }
     }
 
     /**
      * 单条发送 mq + content
      *
-     * @param kafkaEvents
+     * @param mqEvents
      * @param isAsync
      * @return
      */
-    private boolean sendItemOrContent(List<KafkaEvent> kafkaEvents, Boolean isAsync) {
-        for (KafkaEvent kafkaEvent : kafkaEvents) {
+    private boolean sendItemOrContent(List<KafkaEvent> mqEvents, Boolean isAsync) {
+        for (KafkaEvent mqEvent : mqEvents) {
             if (StringUtils.isNotBlank(kafkaTargetConfig.getKeyFormat())
-                && StringUtils.isNotBlank(kafkaTargetConfig.getKeyStartFlag())) {
+                    && StringUtils.isNotBlank(kafkaTargetConfig.getKeyStartFlag())) {
                 // 按照key发送
-                if (!sendByKey(kafkaEvent, isAsync)) {
+                if (!sendByKey(mqEvent, isAsync)) {
                     return false;
                 }
             } else {
                 // 正常发送
-                String contentToSend = EventUtils.getVaildEvent(this, kafkaEvent, businessType);
-                if (StringUtils.isNotBlank(contentToSend)) {
-                    if (!sendReally(Collections.singletonList(kafkaEvent), contentToSend, isAsync)) {
+                byte[] contentToSend = eventSerializer.getValidEvent(mqEvent);
+                if (contentToSend != null) {
+                    if (!sendReally(Collections.singletonList(mqEvent), contentToSend, isAsync)) {
                         return false;
                     }
                 }
@@ -352,11 +365,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
      * @param isAsync
      * @return
      */
-    private boolean sendReally(List<KafkaEvent> kafkaEvents, String content, boolean isAsync) {
+    private boolean sendReally(List<KafkaEvent> kafkaEvents, byte[] content, boolean isAsync) {
         try {
             Long start = TimeUtils.getNanoTime();
             String key = EventUtils.getPartitionKey(this,
-                                                    kafkaEvents.size() > 0 ? kafkaEvents.get(0) : new KafkaEvent());
+                                                    kafkaEvents.size() > 0 ? kafkaEvents.get(0) : new KafkaEvent(), topicPartitionKeyType);
             String sourceItemKey = null;
             long rate = -1L;
 
@@ -420,20 +433,20 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
     /**
      * 按照指定的key发送
      *
-     * @param kafkaEvent
+     * @param mqEvent
      * @param isAsync
      * @return
      */
-    private boolean sendByKey(KafkaEvent kafkaEvent, boolean isAsync) {
+    private boolean sendByKey(KafkaEvent mqEvent, boolean isAsync) {
         Long start = TimeUtils.getNanoTime();
-        String contentToSend = EventUtils.getVaildEvent(this, kafkaEvent, businessType);
-        if (StringUtils.isBlank(contentToSend)) {
+        byte[] contentToSend = eventSerializer.getValidEvent(mqEvent);
+        if (contentToSend == null) {
             return true;
         }
-        String key = EventUtils.getPartitionKey(this, kafkaEvent);
-        int bytes = kafkaEvent.length();
-        String sourceItemKey = kafkaEvent.getSourceItemKey();
-        long rate = kafkaEvent.getPreRate();
+        String key = EventUtils.getPartitionKey(this, mqEvent, topicPartitionKeyType);
+        int bytes = mqEvent.length();
+        String sourceItemKey = mqEvent.getSourceItemKey();
+        long rate = mqEvent.getPreRate();
         try {
             if (!isAsync) {
                 long initalSleepTime = INITAL_TO_SLEEP_TIME;
@@ -441,8 +454,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                 while (!isStop) {
                     try {
                         setProducer();
-                        boolean result = producer.sendSync(getTargetTopic(kafkaTargetConfig.getTopic()), key,
-                                                           contentToSend);
+                        boolean result = producer.sendSync(kafkaTargetConfig.getTopic(), key, contentToSend);
                         if (result) {
                             break;
                         } else {
@@ -453,9 +465,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                             }
                         }
                     } catch (Exception e) {
-                        LogGather.recordErrorLog("KafkaSink error", "send to Kafka error.topic is "
-                                                                    + getTargetTopic(kafkaTargetConfig.getTopic()),
-                                                 e);
+                        LogGather.recordErrorLog("MqSink error",
+                                "send to Mq error.topic is " + kafkaTargetConfig.getTopic(), e);
                     }
                 }
 
@@ -463,16 +474,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                     taskPatternStatistics.sinkOneRecord(bytes, TimeUtils.getNanoTime() - start);
                 }
             } else {
-                return producer.send(getTargetTopic(kafkaTargetConfig.getTopic()), key, contentToSend,
-                                     new KafkaCallBack(this, 1, bytes, start,
-                                                       getTargetTopic(kafkaTargetConfig.getTopic()),
-                                                       modelConfig.getCommonConfig().getModelId(), sourceItemKey, rate));
+                if (modelConfig.getTag().equals(Tags.TASK_LOG2KAFKA)) {
+                    return producer.send(kafkaTargetConfig.getTopic(), key, contentToSend,
+                            new KafkaCallBack(this, 1, bytes, start, kafkaTargetConfig.getTopic(),
+                                    modelConfig.getCommonConfig().getModelId(), sourceItemKey,
+                                    rate));
+                } else {
+                    //TODO：不支持其他处理方式
+
+                }
             }
             return true;
         } catch (Exception e) {
-            LogGather.recordErrorLog("KafkaSink error", "send to Kafka by Key error.modelId is "
-                                                        + this.modelConfig.getCommonConfig().getModelId(),
-                                     e);
+            LogGather.recordErrorLog("MqSink error", "send to mq by Key error.modelId is "
+                            + this.modelConfig.getCommonConfig().getModelId(),
+                    e);
         }
         return false;
     }
@@ -495,8 +511,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                     setProducer();
                     KafkaEvent event = new KafkaEvent();
                     event.setSourceItemKey(sourceItemKey);
-                    String key = EventUtils.getPartitionKey(this, event);
-                    boolean result = producer.sendSync(getTargetTopic(kafkaTargetConfig.getTopic()), key, content);
+                    String key = EventUtils.getPartitionKey(this, event, topicPartitionKeyType);
+                    boolean result = producer.sendSync(getTargetTopic(kafkaTargetConfig.getTopic()), key, content.getBytes(StandardCharsets.UTF_8));
                     if (result || isStop) {
                         break;
                     } else {

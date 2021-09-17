@@ -41,7 +41,7 @@ public class KafkaMessageProducer {
     private Properties                    properties         = null;
 
     /** * kafka客户端 */
-    private KafkaProducer<String, String> kafkaProducer      = null;
+    private KafkaProducer<String, byte[]> kafkaProducer      = null;
 
     /** * flush标志 */
     private volatile AtomicBoolean        isflushing         = new AtomicBoolean(false);
@@ -149,7 +149,7 @@ public class KafkaMessageProducer {
             confProperties.remove(LogConfigConstants.SASL_JAAS_CONFIG);
         }
 
-        kafkaProducer = new KafkaProducer<String, String>(confProperties);
+        kafkaProducer = new KafkaProducer<>(confProperties);
         LOGGER.info("init kafka client successfully.config is " + confProperties);
         kafkaProducerKey = buildProducerKey();
         LOGGER.info("init kafka producer key success. key is " + kafkaProducerKey);
@@ -174,13 +174,13 @@ public class KafkaMessageProducer {
      * @param value
      * @return
      */
-    public boolean sendSync(String topic, String key, String value) {
+    public boolean sendSync(String topic, String key, byte[] value) {
         if (kafkaProducer == null || isStop) {
             return false;
         }
         try {
-            Future<RecordMetadata> future = kafkaProducer.send(new ProducerRecord<String, String>(
-                topic, key, value.toString()));
+            Future<RecordMetadata> future = kafkaProducer.send(new ProducerRecord<>(
+                topic, key, value));
             RecordMetadata metadata = future.get(DEFAULT_TIME_OUT, TimeUnit.MILLISECONDS);
             if (metadata != null) {
                 return true;
@@ -200,8 +200,8 @@ public class KafkaMessageProducer {
      * @param topic
      * @param value
      */
-    public void send(String topic, String value) {
-        kafkaProducer.send(new ProducerRecord<String, String>(topic, String.valueOf(System
+    public void send(String topic, byte[] value) {
+        kafkaProducer.send(new ProducerRecord<>(topic, String.valueOf(System
             .currentTimeMillis()), value));
     }
 
@@ -212,8 +212,8 @@ public class KafkaMessageProducer {
      * @param key
      * @param value
      */
-    public void send(String topic, String key, String value) {
-        kafkaProducer.send(new ProducerRecord<String, String>(topic, key, value));
+    public void send(String topic, String key, byte[] value) {
+        kafkaProducer.send(new ProducerRecord<>(topic, key, value));
     }
 
     /**
@@ -224,8 +224,8 @@ public class KafkaMessageProducer {
      * @param value
      * @param callback
      */
-    public boolean send(String topic, String key, String value, Callback callback) {
-        kafkaProducer.send(new ProducerRecord<String, String>(topic, key, value), callback);
+    public boolean send(String topic, String key, byte[] value, Callback callback) {
+        kafkaProducer.send(new ProducerRecord<>(topic, key, value), callback);
         return true;
     }
 
@@ -238,8 +238,8 @@ public class KafkaMessageProducer {
      * @param value
      * @param callback
      */
-    public void send(String topic, Integer partition, String key, String value, Callback callback) {
-        kafkaProducer.send(new ProducerRecord<String, String>(topic, partition, key, value),
+    public void send(String topic, Integer partition, String key, byte[] value, Callback callback) {
+        kafkaProducer.send(new ProducerRecord<>(topic, partition, key, value),
             callback);
     }
 
@@ -253,9 +253,9 @@ public class KafkaMessageProducer {
      * @param value
      * @param callback
      */
-    public void send(String topic, Integer partition, Long timestamp, String key, String value,
+    public void send(String topic, Integer partition, Long timestamp, String key, byte[] value,
                      Callback callback) {
-        kafkaProducer.send(new ProducerRecord<String, String>(topic, partition, timestamp, key,
+        kafkaProducer.send(new ProducerRecord<>(topic, partition, timestamp, key,
             value), callback);
     }
 

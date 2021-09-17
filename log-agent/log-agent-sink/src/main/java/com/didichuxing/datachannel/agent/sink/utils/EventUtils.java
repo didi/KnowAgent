@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.common.api.StandardLogType;
+import com.didichuxing.datachannel.agent.common.api.TopicPartitionKeyTypeEnum;
 import com.didichuxing.datachannel.agent.common.api.TransFormate;
 import org.apache.commons.lang.StringUtils;
 
@@ -41,50 +42,44 @@ public class EventUtils {
     /**
      * 获取content的partition-key，
      *
-     * @param kafkaEvent
+     * @param mqEvent
      * @return
      */
-    public static String getPartitionKey(KafkaSink kafkaSink, KafkaEvent kafkaEvent) {
-        if (kafkaEvent == null) {
-            return String.valueOf(System.currentTimeMillis());
+    public static String getPartitionKey(KafkaSink mqSink, KafkaEvent mqEvent, int topicPartitionKeyType) {
+        if (mqEvent == null) {
+            return getPartitionKeyByType(topicPartitionKeyType);
         }
-        if (kafkaSink == null
-            || StringUtils.isBlank(kafkaSink.getKafkaTargetConfig().getKeyStartFlag())
-            || StringUtils.isBlank(kafkaSink.getKafkaTargetConfig().getKeyFormat())) {
-            if (kafkaSink != null
-                && StringUtils.isNotBlank(kafkaSink.getKafkaTargetConfig().getRegularPartKey())) {
-                if (kafkaSink.getKafkaTargetConfig().getRegularPartKey()
-                    .equals(LogConfigConstants.HOSTNAME_FLAG)) {
+        if (mqSink == null || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyStartFlag())
+                || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyFormat())) {
+            if (mqSink != null && StringUtils.isNotBlank(mqSink.getKafkaTargetConfig().getRegularPartKey())) {
+                if (mqSink.getKafkaTargetConfig().getRegularPartKey().equals(LogConfigConstants.HOSTNAME_FLAG)) {
                     // 以主机名作为key
                     return CommonUtils.getHOSTNAME();
-                } else if (kafkaSink.getKafkaTargetConfig().getRegularPartKey()
-                    .equals(LogConfigConstants.FILE_FLAG)) {
+                } else if (mqSink.getKafkaTargetConfig().getRegularPartKey().equals(LogConfigConstants.FILE_FLAG)) {
                     // 以文件key作为key
-                    return kafkaEvent.getSourceItemKey();
-                } else if (kafkaSink.getKafkaTargetConfig().getRegularPartKey()
-                    .startsWith(LogConfigConstants.TIME_FLAG)) {
+                    return mqEvent.getSourceItemKey();
+                } else if (mqSink.getKafkaTargetConfig().getRegularPartKey().startsWith(LogConfigConstants.TIME_FLAG)) {
                     // time
-                    return kafkaEvent.getSourceItemKey() + System.currentTimeMillis()
-                           / kafkaSink.getKeyDelay();
+                    return mqEvent.getSourceItemKey() + System.currentTimeMillis() / mqSink.getKeyDelay();
 
                 } else {
-                    return String.valueOf(System.currentTimeMillis());
+                    return getPartitionKeyByType(topicPartitionKeyType);
                 }
             } else {
-                return String.valueOf(System.currentTimeMillis());
+                // 判断是否需要开启时间轮转、（默认512ms换一个partition）
+                return getPartitionKeyByType(topicPartitionKeyType);
             }
         } else {
-            String keyStartFlag = kafkaSink.getKafkaTargetConfig().getKeyStartFlag();
-            String keyFormat = kafkaSink.getKafkaTargetConfig().getKeyFormat();
-            int keyStartFlagIndex = kafkaSink.getKafkaTargetConfig().getKeyStartFlagIndex();
+            String keyStartFlag = mqSink.getKafkaTargetConfig().getKeyStartFlag();
+            String keyFormat = mqSink.getKafkaTargetConfig().getKeyFormat();
+            int keyStartFlagIndex = mqSink.getKafkaTargetConfig().getKeyStartFlagIndex();
 
             // 若keyFormat非空，且keyFormat为特殊标记，则以hostName为key
-            if (StringUtils.isNotBlank(keyFormat)
-                && keyFormat.equals(LogConfigConstants.HOSTNAME_FLAG)) {
+            if (StringUtils.isNotBlank(keyFormat) && keyFormat.equals(LogConfigConstants.HOSTNAME_FLAG)) {
                 return CommonUtils.getHOSTNAME();
             }
 
-            String line = kafkaEvent.getContent();
+            String line = mqEvent.getContent();
             if (StringUtils.isNotEmpty(keyStartFlag) && StringUtils.isNotEmpty(keyFormat)) {
                 boolean isVaild = true;
                 for (int i = 0; i < keyStartFlagIndex + 1; i++) {
@@ -99,82 +94,27 @@ public class EventUtils {
                 }
                 if (isVaild) {
                     if (line.length() < keyFormat.length()) {
-                        LOGGER.warn("Content has no key, topic is "
-                                    + kafkaSink.getKafkaTargetConfig().getTopic());
-                        return String.valueOf(System.currentTimeMillis());
+                        LOGGER.warn("Content has no key, topic is " + mqSink.getKafkaTargetConfig().getTopic());
+                        return getPartitionKeyByType(topicPartitionKeyType);
                     } else {
                         return line.substring(0, keyFormat.length());
                     }
                 } else {
                     // 此时说明line中不存在startFlag
-                    return String.valueOf(System.currentTimeMillis());
+                    return getPartitionKeyByType(topicPartitionKeyType);
                 }
-            } else if (StringUtils.isEmpty(keyStartFlag) && keyStartFlagIndex == 0
-                       && StringUtils.isNotBlank(keyFormat)) {
+            } else
+            if (StringUtils.isEmpty(keyStartFlag) && keyStartFlagIndex == 0 && StringUtils.isNotBlank(keyFormat)) {
                 // 兼容key的分隔符是空，但是范例有值的场景
                 if (line.length() < keyFormat.length()) {
-                    return String.valueOf(System.currentTimeMillis());
+                    return getPartitionKeyByType(topicPartitionKeyType);
                 } else {
                     return line.substring(0, keyFormat.length());
                 }
             }
 
-            return String.valueOf(System.currentTimeMillis());
+            return getPartitionKeyByType(topicPartitionKeyType);
         }
-    }
-
-    /**
-     * 消息体较大时，获取有效的logEvent的解析后的结果
-     *
-     * @param kafkaSink
-     * @param kafkaEvent
-     * @return
-     */
-    public static String getVaildEvent(KafkaSink kafkaSink, KafkaEvent kafkaEvent, Integer businessType) {
-        try {
-            String contentToSend = toNewItemJson(kafkaSink, kafkaEvent, businessType);
-            if (checkIsTooLarge(kafkaSink, contentToSend)) {
-                String eventContent = kafkaEvent.getContent();
-                if (StringUtils.isNotBlank(eventContent)) {
-                    // 有可能 contentToSend.length * 3 > commonConfig.getMaxContentSize(),但是content.length <
-                    // commonConfig.getMaxContentSize() / 3
-                    int threadHold = kafkaSink.getKafkaTargetConfig().getMaxContentSize().intValue() / 3;
-                    if (eventContent.length() > threadHold) {
-                        eventContent = eventContent.substring(0, threadHold) + CUT_FLAG;
-                    }
-                } else {
-                    eventContent = CUT_FLAG;
-                }
-                kafkaEvent.setContent(eventContent);
-                contentToSend = toNewItemJson(kafkaSink, kafkaEvent, businessType);
-                LOGGER.warn("content is too large, so it be cutted.modelId is "
-                            + kafkaSink.getModelConfig().getCommonConfig().getModelId() + ", sourceItem is "
-                            + kafkaEvent.getSourceItemHeaderName() + kafkaEvent.getSourceItemName() + ", rate is "
-                            + kafkaEvent.getRate());
-                kafkaSink.getTaskPatternStatistics().tooLarge();
-            }
-            String result = null;
-            int transFormate = kafkaSink.getKafkaTargetConfig().getTransFormate();
-            if (transFormate == TransFormate.MQList.getStatus()) {
-                // 按照list发送
-                List<KafkaEvent> list = new ArrayList<>();
-                list.add(kafkaEvent);
-                result = toNewListJson(kafkaSink, list, businessType);
-            } else if (transFormate == TransFormate.MQItem.getStatus()) {
-                // 单个发送
-                result = contentToSend;
-            } else {
-                // 纯内容发送
-                result = kafkaEvent.getContent();
-            }
-            return result;
-        } catch (Exception e) {
-            LogGather.recordErrorLog("LogEventUtils error",
-                                     "getVaildEvent error. modelId is "
-                                                            + kafkaSink.getModelConfig().getCommonConfig().getModelId(),
-                                     e);
-        }
-        return null;
     }
 
     /**
@@ -373,40 +313,16 @@ public class EventUtils {
     }
 
     /**
-     * 单个logEvent转换成string
-     *
-     * @param kafkaSink kafkaSink
-     * @param kafkaEvent kafkaEvent
-     * @return json of logEvent
+     * 根据不同的partition key 类型获取对应的partition key
+     * 判断是否需要开启时间轮转、（开启后默认512ms换一个partition）
+     * @param topicPartitionKeyType
+     * @return
      */
-    public static String toNewItemJson(KafkaSink kafkaSink, KafkaEvent kafkaEvent,
-                                       Integer businessType) {
-        EventItemSerializer ser = new EventItemSerializer();
-        return ser.toItemJsonString(toSerializerObject(kafkaSink, kafkaEvent, businessType));
-    }
-
-    private static void appendItem(StringBuilder sb, String key, String value) {
-        if (value != null) {
-            sb.append(QUAT).append(key).append(QUAT).append(COLON).append(QUAT).append(value)
-                .append(QUAT).append(COMMA);
-        }
-    }
-
-    private static void appendItem(StringBuilder sb, String key, Integer value) {
-        if (value != null) {
-            sb.append(QUAT).append(key).append(QUAT).append(COLON).append(value).append(COMMA);
-        }
-    }
-
-    private static void appendItem(StringBuilder sb, String key, Long value) {
-        if (value != null) {
-            sb.append(QUAT).append(key).append(QUAT).append(COLON).append(value).append(COMMA);
-        }
-    }
-
-    private static void appendItemEnd(StringBuilder sb, String key, Long value) {
-        if (value != null) {
-            sb.append(QUAT).append(key).append(QUAT).append(COLON).append(value);
+    private static String getPartitionKeyByType(int topicPartitionKeyType) {
+        if (topicPartitionKeyType == TopicPartitionKeyTypeEnum.FIXED_TIME_PARTITION_KEY.getType()) {
+            return CommonUtils.getHOSTNAME() + (System.currentTimeMillis() >> 9);
+        } else {
+            return String.valueOf(System.currentTimeMillis());
         }
     }
 
