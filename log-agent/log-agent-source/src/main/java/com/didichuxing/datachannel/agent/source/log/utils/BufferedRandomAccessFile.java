@@ -291,8 +291,9 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
         boolean isEndFlag = false;
         //boolean bigLine = false;
         // 长度最长为1M(不考虑中文字符的影响)
+        int length = -1;
         while (!eol) {
-            int length = read(indexBuffer);
+            length = read(indexBuffer);
             if (length >= 0) {
                 int crIndex = FileUtils.getLineDelimiterIndex(indexBuffer,
                     FileUtils.CR_LINE_DELIMITER, length);
@@ -324,7 +325,7 @@ public class BufferedRandomAccessFile extends RandomAccessFile {
             }
         }
 
-        if (out.size() == 0) {
+        if (length < 0 && out.size() == 0) {
             return null;
         } else {
             return out.toByteArray();
