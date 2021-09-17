@@ -57,7 +57,7 @@ function start() {
 
     #JAVA启动参数
     # APP_OPTS="-server -Xms1536m -Xmx1536m -Xmn768m -Xss256k -XX:PermSize=48m -XX:MaxPermSize=48m -XX:SurvivorRatio=5 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=1 -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=68 -XX:MaxDirectMemorySize=64m -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:${workspace}/log/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=3 -XX:GCLogFileSize=10240k -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=../logs -XX:ErrorFile=../logs/hs_err_pid%p.log"
-    JAVA_MEM_OPTS="-Xms1536m -Xmx1536m -xmn768m -Xss256k -XX:MaxDirectMemorySize=64m"
+    JAVA_MEM_OPTS="-Xms1536m -Xmx1536m -Xmn768m -Xss256k -XX:MaxDirectMemorySize=64m"
     JAVA_GC_OPTS="-XX:+UseConcMarkSweepGC -XX:SurvivorRatio=5 -XX:+ExplicitGCInvokesConcurrent"
     APP_OPTS="-server ${JAVA_MEM_OPTS} ${JAVA_GC_OPTS} -XX:-UseContainerSupport"
 
