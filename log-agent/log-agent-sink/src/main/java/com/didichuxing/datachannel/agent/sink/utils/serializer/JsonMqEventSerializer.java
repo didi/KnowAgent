@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonMqEventSerializer extends MqEventSerializer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonMqEventSerializer.class);
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger LOGGER       = LoggerFactory.getLogger(JsonMqEventSerializer.class);
+    private final ObjectMapper  objectMapper = new ObjectMapper();
 
     public JsonMqEventSerializer(KafkaSink mqSink) {
         super(mqSink);
@@ -65,19 +65,27 @@ public class JsonMqEventSerializer extends MqEventSerializer {
             objectNode.set("content", nodeFactory.textNode(mqEvent.getContent()));
             objectNode.set("hostName", nodeFactory.textNode(CommonUtils.getHOSTNAME()));
             objectNode.set("uniqueKey", nodeFactory.textNode(mqEvent.getMsgUniqueKey()));
-            objectNode.set("originalAppName", nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getOriginalAppName()));
-            objectNode.set("odinLeaf", nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getOdinLeaf()));
+            objectNode
+                .set("originalAppName", nodeFactory.textNode(getModelConfig()
+                    .getEventMetricsConfig().getOriginalAppName()));
+            objectNode.set("odinLeaf",
+                nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getOdinLeaf()));
             objectNode.set("logTime", nodeFactory.numberNode(mqEvent.getMsgTime()));
-            objectNode.set("logId", nodeFactory.numberNode(getModelConfig().getCommonConfig().getModelId()));
+            objectNode.set("logId",
+                nodeFactory.numberNode(getModelConfig().getCommonConfig().getModelId()));
 
             if (StringUtils.isNotBlank(getModelConfig().getEventMetricsConfig().getTransName())) {
-                objectNode.set("appName", nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getTransName()));
+                objectNode.set("appName",
+                    nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getTransName()));
             } else {
-                objectNode.set("appName", nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getBelongToCluster()));
+                objectNode.set("appName", nodeFactory.textNode(getModelConfig()
+                    .getEventMetricsConfig().getBelongToCluster()));
             }
-            objectNode.set("queryFrom", nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getQueryFrom()));
+            objectNode.set("queryFrom",
+                nodeFactory.textNode(getModelConfig().getEventMetricsConfig().getQueryFrom()));
             objectNode.set("logName", nodeFactory.textNode(mqEvent.getSourceItemName()));
-            objectNode.set("isService", nodeFactory.numberNode(getModelConfig().getEventMetricsConfig().getIsService()));
+            objectNode.set("isService",
+                nodeFactory.numberNode(getModelConfig().getEventMetricsConfig().getIsService()));
             objectNode.set("pathId", nodeFactory.numberNode(mqEvent.getSourceId()));
             // 历史原因，timetamp使用logTime的string类型
             objectNode.set("timestamp", nodeFactory.textNode(String.valueOf(mqEvent.getMsgTime())));
@@ -88,7 +96,8 @@ public class JsonMqEventSerializer extends MqEventSerializer {
             objectNode.set("preOffset", nodeFactory.numberNode(mqEvent.getPreRate()));
 
             if (getModelConfig().getEventMetricsConfig().getOtherEvents() != null) {
-                for (Map.Entry<String, String> entry : getModelConfig().getEventMetricsConfig().getOtherEvents().entrySet()) {
+                for (Map.Entry<String, String> entry : getModelConfig().getEventMetricsConfig()
+                    .getOtherEvents().entrySet()) {
                     objectNode.set(entry.getKey(), nodeFactory.textNode(entry.getValue()));
                 }
             }

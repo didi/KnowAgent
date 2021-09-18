@@ -7,14 +7,15 @@ package com.didichuxing.datachannel.agent.common.api;
  */
 public enum TopicPartitionKeyTypeEnum {
 
-                                   // 0：未初始化、1：当前时间戳为key、2：每隔512毫秒切换不同的topic Partition Key
-                                   UNKNOWN(0, "unknown"), RANDOM_PARTITION_KEY(1, "randomPartitionKey"),
-                                   FIXED_TIME_PARTITION_KEY(2, "fixPartitionKey");
+    // 0：未初始化、1：当前时间戳为key、2：每隔512毫秒切换不同的topic Partition Key
+    UNKNOWN(0, "unknown"), RANDOM_PARTITION_KEY(1, "randomPartitionKey"), FIXED_TIME_PARTITION_KEY(
+                                                                                                   2,
+                                                                                                   "fixPartitionKey");
 
     private Integer type;
     private String  comment;
 
-    TopicPartitionKeyTypeEnum(Integer type, String comment){
+    TopicPartitionKeyTypeEnum(Integer type, String comment) {
         this.type = type;
         this.comment = comment;
     }

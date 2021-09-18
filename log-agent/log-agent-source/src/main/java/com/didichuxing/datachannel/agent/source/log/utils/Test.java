@@ -11,7 +11,7 @@ public class Test {
         }
 
         byte[] delimiter = FileUtils.LF_LINE_DELIMITER;
-//        FileUtils.CR_LINE_DELIMITER;
+        //        FileUtils.CR_LINE_DELIMITER;
         int length = -1;
 
         int result = FileUtils.getLineDelimiterIndex(value, delimiter, length);

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.HostMapper">
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="container" jdbcType="TINYINT" property="container" />
+    <result column="parent_host_name" jdbcType="VARCHAR" property="parentHostName" />
+    <result column="machine_zone" jdbcType="VARCHAR" property="machineZone" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="external_id" jdbcType="BIGINT" property="externalId" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="extend_field" jdbcType="VARCHAR" property="extendField" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, host_name, ip, container, parent_host_name, machine_zone, department, external_id, operator, create_time, modify_time, extend_field
+  </sql>
+  <sql id="Base_Column_List_selectByServiceId">
+    t1.id, t1.host_name, t1.ip, t1.container, t1.parent_host_name, t1.machine_zone, t1.department, t1.operator, t1.create_time, t1.modify_time, t1.extend_field
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_host
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByHostName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_host
+    where host_name = #{hostName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByIp" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_host
+    where ip = #{ip,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectContainerListByParentHostName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_host
+    where container = 1 AND parent_host_name = #{hostName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="list" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_host
+  </select>
+
+  <select id="selectAllMachineZones" resultType="java.lang.String">
+    select
+    distinct machine_zone
+    from tb_host
+  </select>
+
+  <select id="selectByServiceId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List_selectByServiceId" />
+    from tb_host t1
+    INNER JOIN tb_service_host t2 ON t1.id = t2.host_id
+    WHERE t2.service_id = #{serviceId,jdbcType=BIGINT}
+  </select>
+
+
+  <resultMap id="PaginationQueryByConditonResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostAgentPO">
+    <id column="host_id" jdbcType="BIGINT" property="hostId" />
+    <result column="host_name" jdbcType="VARCHAR" property="hostName" />
+    <result column="host_ip" jdbcType="VARCHAR" property="hostIp" />
+    <result column="host_type" jdbcType="TINYINT" property="hostType" />
+    <result column="agent_health_level" jdbcType="TINYINT" property="agentHealthLevel" />
+    <result column="host_machine_zone" jdbcType="VARCHAR" property="hostMachineZone" />
+    <result column="host_create_time" jdbcType="TIMESTAMP" property="hostCreateTime" />
+    <result column="agent_version_id" jdbcType="BIGINT" property="agentVersionId" />
+    <result column="agent_id" jdbcType="BIGINT" property="agentId" />
+    <result column="parent_host_name" jdbcType="VARCHAR" property="parentHostName" />
+  </resultMap>
+  <select id="paginationQueryByConditon" resultMap="PaginationQueryByConditonResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostPaginationQueryConditionDO" >
+    SELECT
+    DISTINCT t1.id AS host_id, t1.host_name as host_name, t1.ip as host_ip, t1.container as host_type,
+    t5.agent_health_level as agent_health_level, t3.agent_version_id as agent_version_id, t1.machine_zone as host_machine_zone, t1.create_time as host_create_time, t3.id as agent_id, t1.parent_host_name as parent_host_name
+    FROM tb_host as t1
+    LEFT JOIN tb_service_host as t2 ON t2.host_id = t1.id
+    LEFT JOIN tb_agent as t3 ON t3.host_name = t1.host_name
+    LEFT JOIN tb_agent_health as t5 ON t5.agent_id = t3.id
+    LEFT JOIN tb_service_project t6 ON t2.service_id = t6.service_id
+    <where>
+      1 = 1
+      <if test="hostName != null">
+        and t1.host_name like concat('%',#{hostName},'%')
+      </if>
+      <if test="ip != null">
+        and t1.ip like concat('%',#{ip},'%')
+      </if>
+      <if test="agentVersionIdList != null">
+        and t3.agent_version_id in
+        <foreach collection="agentVersionIdList" item="agentVersionId" index="index" open="(" close=")" separator=",">
+          #{agentVersionId}
+        </foreach>
+      </if>
+      <if test="agentHealthLevelList != null">
+        and t5.agent_health_level in
+        <foreach collection="agentHealthLevelList" item="agentHealthLevel" index="index" open="(" close=")" separator=",">
+          #{agentHealthLevel}
+        </foreach>
+      </if>
+      <if test="containerList != null">
+        and t1.container in
+        <foreach collection="containerList" item="container" index="index" open="(" close=")" separator=",">
+          #{container}
+        </foreach>
+      </if>
+      <if test="serviceIdList != null">
+        and t2.service_id in
+        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+          #{serviceId}
+        </foreach>
+      </if>
+      <if test="projectId != null">
+        and t6.project_id = #{projectId}
+      </if>
+      <if test="createTimeStart != null">
+        and t1.create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= t1.create_time
+      </if>
+    </where>
+    order by
+    <choose>
+      <when test="sortColumn != null">
+        ${sortColumn}
+        <choose>
+          <when test="asc == true">
+            asc
+          </when>
+          <otherwise>
+            desc
+          </otherwise>
+        </choose>
+      </when>
+      <otherwise>
+        host_create_time desc
+      </otherwise>
+    </choose>
+    limit #{limitFrom}, #{limitSize}
+  </select>
+
+  <select id="queryCountByCondition" resultType="java.lang.Integer" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostPaginationQueryConditionDO" >
+    select count(*) from (
+    SELECT
+    DISTINCT t1.id AS host_id
+    FROM tb_host as t1
+    LEFT JOIN tb_service_host as t2 ON t2.host_id = t1.id
+    LEFT JOIN tb_agent as t3 ON t3.host_name = t1.host_name
+    LEFT JOIN tb_agent_health as t5 ON t5.agent_id = t3.id
+    LEFT JOIN tb_service_project t6 ON t2.service_id = t6.service_id
+    <where>
+      1 = 1
+      <if test="hostName != null">
+        and t1.host_name like concat('%',#{hostName},'%')
+      </if>
+      <if test="ip != null">
+        and t1.ip like concat('%',#{ip},'%')
+      </if>
+      <if test="agentVersionIdList != null">
+        and t3.agent_version_id in
+        <foreach collection="agentVersionIdList" item="agentVersionId" index="index" open="(" close=")" separator=",">
+          #{agentVersionId}
+        </foreach>
+      </if>
+      <if test="agentHealthLevelList != null">
+        and t5.agent_health_level in
+        <foreach collection="agentHealthLevelList" item="agentHealthLevel" index="index" open="(" close=")" separator=",">
+          #{agentHealthLevel}
+        </foreach>
+      </if>
+      <if test="containerList != null">
+        and t1.container in
+        <foreach collection="containerList" item="container" index="index" open="(" close=")" separator=",">
+          #{container}
+        </foreach>
+      </if>
+      <if test="serviceIdList != null">
+        and t2.service_id in
+        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+          #{serviceId}
+        </foreach>
+      </if>
+      <if test="projectId != null">
+        and t6.project_id = #{projectId}
+      </if>
+      <if test="createTimeStart != null">
+        and t1.create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= t1.create_time
+      </if>
+    </where>
+    ) as t4
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_host
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_host (host_name, ip, container, parent_host_name, machine_zone, department, external_id, operator, extend_field)
+    values (
+        #{hostName,jdbcType=VARCHAR},
+        #{ip,jdbcType=VARCHAR},
+        #{container,jdbcType=TINYINT},
+        #{parentHostName,jdbcType=VARCHAR},
+        #{machineZone,jdbcType=VARCHAR},
+        #{department,jdbcType=VARCHAR},
+        #{externalId,jdbcType=VARCHAR},
+        #{operator,jdbcType=VARCHAR},
+        #{extendField,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostPO">
+    update tb_host
+    set machine_zone = #{machineZone,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      container = #{container,jdbcType=TINYINT},
+      parent_host_name = #{parentHostName,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      extend_field = #{extendField,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="countByHostType" parameterType="java.lang.Integer" resultType="java.lang.Long" >
+    select
+      count (*)
+    from tb_host
+    where container = #{container,jdbcType=TINYINT}
+  </select>
+
+</mapper>

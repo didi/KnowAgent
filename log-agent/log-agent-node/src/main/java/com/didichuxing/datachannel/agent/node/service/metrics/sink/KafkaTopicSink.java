@@ -6,6 +6,8 @@ import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @description:
  * @author: huangjw
@@ -56,7 +58,8 @@ public class KafkaTopicSink {
         }
 
         if (producer != null) {
-            producer.send(config.getTopic(), CommonUtils.getHOSTNAME(), content);
+            producer.send(config.getTopic(), CommonUtils.getHOSTNAME(),
+                content.getBytes(StandardCharsets.UTF_8));
         }
     }
 

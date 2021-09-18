@@ -1,0 +1,123 @@
+server:
+  port: 8080
+logging:
+  pattern:
+    file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
+  config: classpath:log4j2.yaml
+  path: .
+  file:
+    max-history: 7
+
+mybatis:
+  configuration:
+    mapUnderscoreToCamelCase: true
+  mapper-locations: classpath:mybatis/*.xml
+
+spring:
+  datasource:
+    name: data
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      stat-view-servlet:
+        enabled: false
+      driver-class-name: org.mariadb.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+      username: root
+      password: 123456
+      initialSize: 10
+      validationQueryTimeout: 5000
+      transactionQueryTimeout: 60000
+      minIdle: 10
+      maxActive: 30
+      max-wait: 60000
+      keepAlive: true
+      time-between-eviction-runs-millis: 1000
+      min-evictable-idle-time-millis: 300000
+      defaultAutoCommit: true
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnReturn: false
+      testOnBorrow: true
+      logAbandoned: true
+      pool-prepared-statements: true
+      max-open-prepared-statements: 50
+      filters: stat,wall
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  messages:
+    encoding: UTF-8
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 600MB
+      max-request-size: 600MB
+  auv-job:
+    jdbc-url: jdbc:mysql://localhost:3306/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: org.mariadb.jdbc.Driver
+    max-lifetime: 60000
+    init-sql: true
+    init-thread-num: 10
+    max-thread-num: 20
+  transaction:
+    default-timeout: 300
+
+kcm:
+  enabled: true
+  gift:
+    endpoint: 1
+    accessKeyID: 1
+    secretAccessKey: 1
+    bucket: agentmanager
+
+lam:
+  n9e-job:
+    base-url:
+    timeout: 300
+    account: root
+    script-file: lam_script.sh
+    user-token:
+
+metadata:
+  sync:
+    request:
+      service:
+        url: 1
+        enabled: false
+      host:
+        url: 1
+      kafkacluster:
+        url: 1
+        enabled: false
+      containers:
+        url: 1
+      permission:
+        url: 1
+        srv-token: 1
+        user-token: 1
+        enabled: false
+      k8s:
+        service-key: servicename
+        path-name: logpath
+        enabled: false
+
+agent:
+  metrics:
+    storage:
+      type: rds
+    datasource:
+      elasticsearch:
+        ip: 1
+        port: 1
+        agentMetricsIndexName: 1
+        agentErrorLogIndexName: 1
+  http:
+    path:
+      request:
+        url: http://%s:%d/log-agent/path
+        port: 2023
+        body:

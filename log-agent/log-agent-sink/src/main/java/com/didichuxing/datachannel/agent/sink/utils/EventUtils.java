@@ -45,22 +45,28 @@ public class EventUtils {
      * @param mqEvent
      * @return
      */
-    public static String getPartitionKey(KafkaSink mqSink, KafkaEvent mqEvent, int topicPartitionKeyType) {
+    public static String getPartitionKey(KafkaSink mqSink, KafkaEvent mqEvent,
+                                         int topicPartitionKeyType) {
         if (mqEvent == null) {
             return getPartitionKeyByType(topicPartitionKeyType);
         }
         if (mqSink == null || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyStartFlag())
-                || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyFormat())) {
-            if (mqSink != null && StringUtils.isNotBlank(mqSink.getKafkaTargetConfig().getRegularPartKey())) {
-                if (mqSink.getKafkaTargetConfig().getRegularPartKey().equals(LogConfigConstants.HOSTNAME_FLAG)) {
+            || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyFormat())) {
+            if (mqSink != null
+                && StringUtils.isNotBlank(mqSink.getKafkaTargetConfig().getRegularPartKey())) {
+                if (mqSink.getKafkaTargetConfig().getRegularPartKey()
+                    .equals(LogConfigConstants.HOSTNAME_FLAG)) {
                     // 以主机名作为key
                     return CommonUtils.getHOSTNAME();
-                } else if (mqSink.getKafkaTargetConfig().getRegularPartKey().equals(LogConfigConstants.FILE_FLAG)) {
+                } else if (mqSink.getKafkaTargetConfig().getRegularPartKey()
+                    .equals(LogConfigConstants.FILE_FLAG)) {
                     // 以文件key作为key
                     return mqEvent.getSourceItemKey();
-                } else if (mqSink.getKafkaTargetConfig().getRegularPartKey().startsWith(LogConfigConstants.TIME_FLAG)) {
+                } else if (mqSink.getKafkaTargetConfig().getRegularPartKey()
+                    .startsWith(LogConfigConstants.TIME_FLAG)) {
                     // time
-                    return mqEvent.getSourceItemKey() + System.currentTimeMillis() / mqSink.getKeyDelay();
+                    return mqEvent.getSourceItemKey() + System.currentTimeMillis()
+                           / mqSink.getKeyDelay();
 
                 } else {
                     return getPartitionKeyByType(topicPartitionKeyType);
@@ -75,7 +81,8 @@ public class EventUtils {
             int keyStartFlagIndex = mqSink.getKafkaTargetConfig().getKeyStartFlagIndex();
 
             // 若keyFormat非空，且keyFormat为特殊标记，则以hostName为key
-            if (StringUtils.isNotBlank(keyFormat) && keyFormat.equals(LogConfigConstants.HOSTNAME_FLAG)) {
+            if (StringUtils.isNotBlank(keyFormat)
+                && keyFormat.equals(LogConfigConstants.HOSTNAME_FLAG)) {
                 return CommonUtils.getHOSTNAME();
             }
 
@@ -94,7 +101,8 @@ public class EventUtils {
                 }
                 if (isVaild) {
                     if (line.length() < keyFormat.length()) {
-                        LOGGER.warn("Content has no key, topic is " + mqSink.getKafkaTargetConfig().getTopic());
+                        LOGGER.warn("Content has no key, topic is "
+                                    + mqSink.getKafkaTargetConfig().getTopic());
                         return getPartitionKeyByType(topicPartitionKeyType);
                     } else {
                         return line.substring(0, keyFormat.length());
@@ -103,8 +111,8 @@ public class EventUtils {
                     // 此时说明line中不存在startFlag
                     return getPartitionKeyByType(topicPartitionKeyType);
                 }
-            } else
-            if (StringUtils.isEmpty(keyStartFlag) && keyStartFlagIndex == 0 && StringUtils.isNotBlank(keyFormat)) {
+            } else if (StringUtils.isEmpty(keyStartFlag) && keyStartFlagIndex == 0
+                       && StringUtils.isNotBlank(keyFormat)) {
                 // 兼容key的分隔符是空，但是范例有值的场景
                 if (line.length() < keyFormat.length()) {
                     return getPartitionKeyByType(topicPartitionKeyType);

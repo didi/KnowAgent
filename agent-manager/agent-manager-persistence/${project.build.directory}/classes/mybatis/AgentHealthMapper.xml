@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentHealthMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agent_id" property="agentId" jdbcType="BIGINT" />
+    <result column="agent_health_level" property="agentHealthLevel" jdbcType="TINYINT" />
+    <result column="agent_health_description" property="agentHealthDescription" jdbcType="VARCHAR" />
+    <result column="lastest_error_logs_exists_check_healthy_time" property="lastestErrorLogsExistsCheckHealthyTime" jdbcType="BIGINT" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="agent_startup_time" property="agentStartupTime" jdbcType="BIGINT" />
+    <result column="agent_startup_time_last_time" property="agentStartupTimeLastTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agent_id, agent_health_level, agent_health_description, lastest_error_logs_exists_check_healthy_time, 
+    operator, create_time, modify_time, agent_startup_time, agent_startup_time_last_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_agent_health
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_agent_health
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" useGeneratedKeys="true" keyProperty="id" >
+    insert into tb_agent_health (id, agent_id, agent_health_level, 
+      agent_health_description, lastest_error_logs_exists_check_healthy_time, 
+      operator, agent_startup_time, agent_startup_time_last_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{agentId,jdbcType=BIGINT}, #{agentHealthLevel,jdbcType=TINYINT}, 
+      #{agentHealthDescription,jdbcType=VARCHAR}, #{lastestErrorLogsExistsCheckHealthyTime,jdbcType=BIGINT}, 
+      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
+      #{agentStartupTime,jdbcType=BIGINT}, #{agentStartupTimeLastTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_agent_health
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="agentId != null" >
+        agent_id,
+      </if>
+      <if test="agentHealthLevel != null" >
+        agent_health_level,
+      </if>
+      <if test="agentHealthDescription != null" >
+        agent_health_description,
+      </if>
+      <if test="lastestErrorLogsExistsCheckHealthyTime != null" >
+        lastest_error_logs_exists_check_healthy_time,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="agentStartupTime != null" >
+        agent_startup_time,
+      </if>
+      <if test="agentStartupTimeLastTime != null" >
+        agent_startup_time_last_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="agentId != null" >
+        #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="agentHealthLevel != null" >
+        #{agentHealthLevel,jdbcType=TINYINT},
+      </if>
+      <if test="agentHealthDescription != null" >
+        #{agentHealthDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="lastestErrorLogsExistsCheckHealthyTime != null" >
+        #{lastestErrorLogsExistsCheckHealthyTime,jdbcType=BIGINT},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="agentStartupTime != null" >
+        #{agentStartupTime,jdbcType=BIGINT},
+      </if>
+      <if test="agentStartupTimeLastTime != null" >
+        #{agentStartupTimeLastTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" >
+    update tb_agent_health
+    <set >
+      <if test="agentId != null" >
+        agent_id = #{agentId,jdbcType=BIGINT},
+      </if>
+      <if test="agentHealthLevel != null" >
+        agent_health_level = #{agentHealthLevel,jdbcType=TINYINT},
+      </if>
+      <if test="agentHealthDescription != null" >
+        agent_health_description = #{agentHealthDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="lastestErrorLogsExistsCheckHealthyTime != null" >
+        lastest_error_logs_exists_check_healthy_time = #{lastestErrorLogsExistsCheckHealthyTime,jdbcType=BIGINT},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO" >
+    update tb_agent_health
+    set agent_id = #{agentId,jdbcType=BIGINT},
+      agent_health_level = #{agentHealthLevel,jdbcType=TINYINT},
+      agent_health_description = #{agentHealthDescription,jdbcType=VARCHAR},
+      lastest_error_logs_exists_check_healthy_time = #{lastestErrorLogsExistsCheckHealthyTime,jdbcType=BIGINT},
+      operator = #{operator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      agent_startup_time = #{agentStartupTime,jdbcType=BIGINT},
+      agent_startup_time_last_time = #{agentStartupTimeLastTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <delete id="deleteByAgentId" parameterType="java.lang.Long" >
+    delete from tb_agent_health
+    where agent_id = #{agentId,jdbcType=BIGINT}
+  </delete>
+  <select id="selectByAgentId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_agent_health
+    where agent_id = #{agentId,jdbcType=BIGINT}
+  </select>
+</mapper>

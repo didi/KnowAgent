@@ -16,10 +16,10 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class MqEventSerializer {
-    private static final Logger LOG = LoggerFactory.getLogger(MqEventSerializer.class);
+    private static final Logger LOG      = LoggerFactory.getLogger(MqEventSerializer.class);
     private static final String CUT_FLAG = "...";
 
-    private final KafkaSink mqSink;
+    private final KafkaSink     mqSink;
 
     protected MqEventSerializer(KafkaSink mqSink) {
         this.mqSink = mqSink;
@@ -54,9 +54,9 @@ public abstract class MqEventSerializer {
                 mqEvent.setContent(eventContent);
                 contentToSend = serializeArray(mqEvent);
                 LOG.warn("content is too large, so it be cutted.modelId is "
-                        + getModelConfig().getCommonConfig().getModelId() + ", sourceItem is "
-                        + mqEvent.getSourceItemHeaderName() + mqEvent.getSourceItemName() + ", rate is "
-                        + mqEvent.getRate());
+                         + getModelConfig().getCommonConfig().getModelId() + ", sourceItem is "
+                         + mqEvent.getSourceItemHeaderName() + mqEvent.getSourceItemName()
+                         + ", rate is " + mqEvent.getRate());
                 this.getTaskPatternStatistics().tooLarge();
             }
             byte[] result = null;
@@ -73,10 +73,9 @@ public abstract class MqEventSerializer {
             }
             return result;
         } catch (Exception e) {
-            LogGather.recordErrorLog("LogEventUtils error",
-                    "getVaildEvent error. modelId is "
-                            + getModelConfig().getCommonConfig().getModelId(),
-                    e);
+            LogGather.recordErrorLog("LogEventUtils error", "getVaildEvent error. modelId is "
+                                                            + getModelConfig().getCommonConfig()
+                                                                .getModelId(), e);
         }
         return null;
     }
