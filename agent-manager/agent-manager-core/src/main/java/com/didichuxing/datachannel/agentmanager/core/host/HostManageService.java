@@ -83,6 +83,8 @@ public interface HostManageService {
      */
     List<HostDO> getHostsByServiceId(Long serviceId);
 
+    List<HostDO> getHostsByPodId(Long podId);
+
     /**
      * 根据主机id获取对应主机对象
      *

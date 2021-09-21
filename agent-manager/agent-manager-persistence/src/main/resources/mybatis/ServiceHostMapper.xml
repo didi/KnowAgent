@@ -50,18 +50,6 @@
       (#{item.serviceId}, #{item.hostId})
     </foreach>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
-    update tb_service_host
-    <set >
-      <if test="serviceId != null" >
-        service_id = #{serviceId,jdbcType=BIGINT},
-      </if>
-      <if test="hostId != null" >
-        host_id = #{hostId,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
     update tb_service_host
     set service_id = #{serviceId,jdbcType=BIGINT},

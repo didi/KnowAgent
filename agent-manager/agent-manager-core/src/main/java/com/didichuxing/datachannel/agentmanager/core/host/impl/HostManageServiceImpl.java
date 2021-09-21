@@ -328,6 +328,15 @@ public class HostManageServiceImpl implements HostManageService {
     }
 
     @Override
+    public List<HostDO> getHostsByPodId(Long podId) {
+        List<HostPO> hosts = hostDAO.selectByPodId(podId);
+        if (hosts == null) {
+            return Collections.emptyList();
+        }
+        return hostManageServiceExtension.hostPOList2HostDOList(hosts);
+    }
+
+    @Override
     public HostDO getById(Long id) {
         HostPO hostPO = hostDAO.selectByPrimaryKey(id);
         if(null == hostPO) {
