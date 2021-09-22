@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agent.node;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.node.am.v2.AgentCollectConfigurationImpl;
 import com.didichuxing.datachannel.agent.node.service.http.client.HttpClient;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentRegisterDTO;
@@ -81,7 +82,7 @@ public class ConfigService extends AgentComponent {
             isRunning = true;
             Thread.sleep(waitTime);
         } catch (Throwable e) {
-            LOGGER.error("ConfigService error!", "wait time sleep error!, {}", e.getMessage());
+            LogGather.recordErrorLog("ConfigService error!", "wait time sleep error!, {}", e);
         }
 
         // 第一次拉取配置并初始化整个系统
@@ -94,7 +95,7 @@ public class ConfigService extends AgentComponent {
                 writeLocalConfig(curAgentConfig);
             }
         } catch (Throwable e) {
-            LOGGER.error("ConfigService error!", "getAgentConfig error!, {}", e.getMessage());
+            LogGather.recordErrorLog("ConfigService error!", "getAgentConfig error!, {}", e);
         }
 
         // 后台线程
@@ -111,7 +112,7 @@ public class ConfigService extends AgentComponent {
                             }
                         }
                     } catch (Throwable t) {
-                        LOGGER.error("ConfigChange", "config service change error, {}", t.getMessage());
+                        LogGather.recordErrorLog("ConfigChange", "config service change error, {}", t);
                     }
 
                     try {
