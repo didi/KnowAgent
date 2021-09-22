@@ -342,7 +342,7 @@ CREATE TABLE `tb_collect_delay_monitor_black_list` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
   `collect_delay_monitor_black_list_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '采集延迟检查黑名单类型：\n\n0：表示主机\n\n1：表示采集任务\n\n2：表示主机 + 采集任务',
   `host_name` varchar(128) NOT NULL DEFAULT '' COMMENT '主机名',
-  `log_collector_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collector_task 主键 id',
+  `log_collector_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task 主键 id',
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -355,7 +355,7 @@ CREATE TABLE `tb_collect_delay_monitor_black_list` (
 DROP TABLE IF EXISTS `tb_directory_log_collect_path`;
 CREATE TABLE `tb_directory_log_collect_path` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collector_task主键',
+  `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task主键',
   `path` varchar(255) NOT NULL DEFAULT '' COMMENT '待采集路径',
   `collect_files_filter_regular_pipeline_json_string` varchar(4096) NOT NULL DEFAULT '' COMMENT '采集文件筛选正则集 pipeline json 形式字符串，集合中每一项为一个过滤正则项< filterRegular , type >，filterRegular表示过滤正则内容，type表示黑/白名单类型0：白名单 1：黑名单\n\n注：FilterRegular 须有序存储，过滤时按集合顺序进行过滤计算',
   `directory_collect_depth` int(11) NOT NULL DEFAULT '1' COMMENT '目录采集深度',
@@ -371,7 +371,7 @@ CREATE TABLE `tb_directory_log_collect_path` (
 DROP TABLE IF EXISTS `tb_file_log_collect_path`;
 CREATE TABLE `tb_file_log_collect_path` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collector_task主键',
+  `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task主键',
   `path` varchar(255) NOT NULL DEFAULT '' COMMENT '待采集路径',
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -488,8 +488,6 @@ CREATE TABLE `tb_log_collect_task` (
   `host_filter_rule_logic_json_string` varchar(4096) NOT NULL COMMENT '主机过滤规则信息（存储 BaseHostFilterRuleLogic 某具体实现类的 json 化形式）',
   `advanced_configuration_json_string` varchar(4096) DEFAULT '' COMMENT '采集任务高级配置项集，为json形式字符串',
   `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `configuration_version` int(11) NOT NULL DEFAULT '0' COMMENT '日志采集任务配置版本号',
   `old_data_filter_type` tinyint(255) NOT NULL COMMENT '历史数据过滤 0：不过滤 1：从当前时间开始采集 2：从自定义时间开始采集，自定义时间取collectStartBusinessTime属性值',
   `log_collect_task_execute_timeout_ms` bigint(20) DEFAULT NULL COMMENT '日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型"按指定时间范围采集"时才存在值',
@@ -499,6 +497,8 @@ CREATE TABLE `tb_log_collect_task` (
   `log_content_slice_rule_logic_json_string` varchar(1024) NOT NULL DEFAULT '' COMMENT '日志内容切片规则信息（存储 BaseLogContentSliceRuleLogic 某具体实现类的 json 化形式）',
   `file_name_suffix_match_rule_logic_json_string` varchar(1024) NOT NULL DEFAULT '' COMMENT '待采集文件后缀匹配规则信息（存储 BaseCollectFileSuffixMatchRuleLogic 某具体实现类的 json 化形式）',
   `collect_delay_threshold_ms` bigint(255) NOT NULL COMMENT '该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~ 当前时间间隔',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志采集任务表：表示一个待运行在agent的采集任务';
 
@@ -508,7 +508,7 @@ CREATE TABLE `tb_log_collect_task` (
 DROP TABLE IF EXISTS `tb_log_collect_task_health`;
 CREATE TABLE `tb_log_collect_task_health` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collector_task主键',
+  `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task主键',
   `log_collect_task_health_level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '采集任务健康等级\n\n0：绿色 表示：采集任务很健康，对业务没有任何影响，且运行该采集任务的 Agent 也健康\n\n1：黄色 表示：采集任务存在风险，该采集任务有对应错误日志输出\n\n2：红色 表示：采集任务不健康，对业务有影响，该采集任务需要做采集延迟监控但乱序输出，或该采集任务需要做采集延迟监控但延迟时间超过指定阈值、该采集任务对应 kafka 集群信息不存在 待维护',
   `log_collect_task_health_description` varchar(1024) NOT NULL COMMENT '日志采集任务健康描述信息',
   `lastest_collect_dquality_time_per_log_file_path_json_string` varchar(2048) NOT NULL DEFAULT '' COMMENT '日志采集任务中各日志主文件对应的最近采集完整性时间，json 字符串形式，[{“logfilePath1”: 1602323589023 }, …]',
@@ -528,7 +528,7 @@ CREATE TABLE `tb_log_collect_task_health` (
 DROP TABLE IF EXISTS `tb_log_collect_task_service`;
 CREATE TABLE `tb_log_collect_task_service` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
-  `log_collector_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collector_task 主键 id',
+  `log_collector_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task 主键 id',
   `service_id` bigint(20) NOT NULL COMMENT '表 tb_service 主键 id',
   PRIMARY KEY (`id`),
   KEY `idx_service_id` (`service_id`),
@@ -591,4 +591,4 @@ CREATE TABLE `tb_service_project` (
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into tb_agent_version (file_name, file_md5, file_type, description, operator, version)
-values ('agent-new.tgz',	'854b955f12beeceabdcdcdefba4c5c1c',	0,	'',	'System', '1.0.0');
+values ('agent-new.tgz',	'',	0,	'',	'System', '1.0.0');
