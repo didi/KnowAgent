@@ -16,8 +16,6 @@ public interface ServiceHostMapper {
 
     ServiceHostPO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(ServiceHostPO record);
-
     int updateByPrimaryKey(ServiceHostPO record);
 
     int deleteByHostId(Long hostId);

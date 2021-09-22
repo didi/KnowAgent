@@ -315,13 +315,13 @@ public class AgentManageServiceImpl implements AgentManageService {
                 );
             }
         }
-        if (uninstall) {
-            /*
-             * 添加一条Agent卸载任务记录
-             */
-            AgentOperationTaskDO agentOperationTask = agentOperationTaskManageService.agent2AgentOperationTaskUnInstall(agentDO);
-            agentOperationTaskManageService.createAgentOperationTask(agentOperationTask, operator);
-        }
+        /*
+         * 添加一条Agent卸载任务记录 todo 功能未完成
+         */
+//        if (uninstall) {
+//            AgentOperationTaskDO agentOperationTask = agentOperationTaskManageService.agent2AgentOperationTaskUnInstall(agentDO);
+//            agentOperationTaskManageService.createAgentOperationTask(agentOperationTask, operator);
+//        }
         /*'
          * 删除Agent关联Agent健康信息
          */

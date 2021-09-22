@@ -26,6 +26,8 @@ public interface HostMapper {
 
     List<HostPO> selectByServiceId(Long serviceId);
 
+    List<HostPO> selectByPodId(Long podId);
+
     List<HostAgentPO> paginationQueryByConditon(HostPaginationQueryConditionDO hostPaginationQueryConditionDO);
 
     Integer queryCountByCondition(HostPaginationQueryConditionDO hostPaginationQueryConditionDO);

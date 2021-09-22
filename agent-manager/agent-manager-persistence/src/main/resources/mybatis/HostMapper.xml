@@ -18,7 +18,7 @@
   <sql id="Base_Column_List">
     id, host_name, ip, container, parent_host_name, machine_zone, department, external_id, operator, create_time, modify_time, extend_field
   </sql>
-  <sql id="Base_Column_List_selectByServiceId">
+  <sql id="join_column">
     t1.id, t1.host_name, t1.ip, t1.container, t1.parent_host_name, t1.machine_zone, t1.department, t1.operator, t1.create_time, t1.modify_time, t1.extend_field
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -62,12 +62,18 @@
 
   <select id="selectByServiceId" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List_selectByServiceId" />
+    <include refid="join_column" />
     from tb_host t1
     INNER JOIN tb_service_host t2 ON t1.id = t2.host_id
     WHERE t2.service_id = #{serviceId,jdbcType=BIGINT}
   </select>
-
+  <select id="selectByPodId" resultMap="BaseResultMap">
+    select
+    <include refid="join_column" />
+    from tb_host t1
+    INNER JOIN tb_k8s_pod_host t2 ON t1.id = t2.host_id
+    WHERE t2.k8s_pod_id = #{podId,jdbcType=BIGINT}
+  </select>
 
   <resultMap id="PaginationQueryByConditonResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.host.HostAgentPO">
     <id column="host_id" jdbcType="BIGINT" property="hostId" />

@@ -111,7 +111,7 @@ public class ListCompareUtil {
      * @param p   比较相同key是否需要修改的方法
      * @param <R> key类型
      * @param <T> 元素类型
-     * @return 数组第一项表示前者比后者多的元素，第二项表示前者和后者相同的元素，第三项表示key相同但内容互不相同的元素，第四项表示前者比后者少的元素
+     * @return 数组第一项表示前者比后者多的元素，第二项表示前者和后者相同的元素，第三项表示key相同但其他内容互不相同的元素（元素来自于后者），第四项表示前者比后者少的元素
      */
     public static <R, T> Set<T>[] compare(Collection<T> src, Collection<T> dst, Function<T, R> f, BiPredicate<T, T> p) {
         Set<T> more;
@@ -134,9 +134,9 @@ public class ListCompareUtil {
                 less.add(t);
             } else {
                 if (p.test(previous, t)) {
-                    modify.add(t);
-                } else {
                     same.add(t);
+                } else {
+                    modify.add(t);
                 }
             }
         }
