@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Agent {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Agent.class.getName());
+    private static final Logger  LOGGER     = LoggerFactory.getLogger(Agent.class.getName());
 
     /**
      * agent http 服务
