@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -109,11 +110,12 @@ public class ListCompareUtil {
      * @param dst 后一个集合
      * @param f   获取元素key的方法
      * @param p   比较相同key是否需要修改的方法
+     * @param c   对c的修改操作
      * @param <R> key类型
      * @param <T> 元素类型
      * @return 数组第一项表示前者比后者多的元素，第二项表示前者和后者相同的元素，第三项表示key相同但其他内容互不相同的元素（元素来自于后者），第四项表示前者比后者少的元素
      */
-    public static <R, T> Set<T>[] compare(Collection<T> src, Collection<T> dst, Function<T, R> f, BiPredicate<T, T> p) {
+    public static <R, T> Set<T>[] compareAndMerge(Collection<T> src, Collection<T> dst, Function<T, R> f, BiPredicate<T, T> p, BiConsumer<T, T> c) {
         Set<T> more;
         Set<T> same = new HashSet<>();
         Set<T> modify = new HashSet<>();
@@ -136,6 +138,7 @@ public class ListCompareUtil {
                 if (p.test(previous, t)) {
                     same.add(t);
                 } else {
+                    c.accept(previous, t);
                     modify.add(t);
                 }
             }

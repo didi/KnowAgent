@@ -180,7 +180,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     hostManageService.createHost(hostDO, null);
                 }
                 List<HostDO> remoteContainers = convertToContainers(podConfig);
-                Set<HostDO>[] difference = ListCompareUtil.compare(localContainers, remoteContainers, HostDO::getHostName, (p1, p2) -> p1.getIp().equals(p2.getIp()));
+                Set<HostDO>[] difference = ListCompareUtil.compareAndMerge(remoteContainers, localContainers, HostDO::getHostName, (p1, p2) -> p1.getIp().equals(p2.getIp()), (c1, c2) -> {
+                    c1.setId(c2.getId());
+                });
                 List<Long> containerIds = new ArrayList<>();
                 for (HostDO toAdd : difference[0]) {
                     Long id = hostManageService.createHost(toAdd, null);
