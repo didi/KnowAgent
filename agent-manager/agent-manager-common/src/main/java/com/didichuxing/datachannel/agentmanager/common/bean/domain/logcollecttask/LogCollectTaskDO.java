@@ -114,6 +114,8 @@ public class LogCollectTaskDO extends BaseDO {
      */
     private Long collectDelayThresholdMs;
 
+    private Integer relateAgentNum;
+
     public Date getLogCollectTaskFinishTime() {
         return logCollectTaskFinishTime;
     }
@@ -304,5 +306,13 @@ public class LogCollectTaskDO extends BaseDO {
 
     public void setCollectDelayThresholdMs(Long collectDelayThresholdMs) {
         this.collectDelayThresholdMs = collectDelayThresholdMs;
+    }
+
+    public Integer getRelateAgentNum() {
+        return relateAgentNum;
+    }
+
+    public void setRelateAgentNum(Integer relateAgentNum) {
+        this.relateAgentNum = relateAgentNum;
     }
 }

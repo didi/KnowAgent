@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
@@ -42,6 +43,7 @@ import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
+import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
@@ -65,14 +67,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -117,6 +112,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     @Autowired
     private AgentCollectConfigurationManageServiceExtension agentCollectConfigurationManageServiceExtension;
+
+    @Autowired
+    private AgentManageService agentManageService;
 
     @Autowired
     private AgentMetricsManageService agentMetricsManageService;
@@ -1133,6 +1131,30 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          */
         logCollectTaskDO.setFileLogCollectPathList(fileLogCollectPathManageService.getAllFileLogCollectPathByLogCollectTaskId(id));
         return logCollectTaskDO;
+    }
+
+    @Override
+    public Integer getRelatedAgentCount(Long id) {
+        if (id <= 0) {
+            throw new ServiceException("task id非法", ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
+        }
+        Set<Long> agentIds = new HashSet<>();
+        List<HostDO> hosts = hostManageService.getHostListByLogCollectTaskId(id);
+        Set<String> hostnames = new HashSet<>();
+        for (HostDO host : hosts) {
+            if (HostTypeEnum.CONTAINER.getCode().equals(host.getContainer())) {
+                hostnames.add(host.getParentHostName());
+            } else {
+                hostnames.add(host.getHostName());
+            }
+        }
+        for (String hostname : hostnames) {
+            AgentDO agentDO = agentManageService.getAgentByHostName(hostname);
+            if (agentDO != null) {
+                agentIds.add(agentDO.getId());
+            }
+        }
+        return agentIds.size();
     }
 
     @Override

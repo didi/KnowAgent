@@ -56,6 +56,8 @@ public interface LogCollectTaskManageService {
      */
     LogCollectTaskDO getById(Long id);
 
+    Integer getRelatedAgentCount(Long id);
+
     /**
      * 启/停指定日志采集任务
      * @param logCollectTaskId 日志采集任务id

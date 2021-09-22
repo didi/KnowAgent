@@ -137,6 +137,8 @@ public class NormalLogCollectTaskController {
     @ResponseBody
     public Result<LogCollectTaskVO> getLogCollectTaskById(@PathVariable Long logCollectTaskId) {
         LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
+        int agentCount = logCollectTaskManageService.getRelatedAgentCount(logCollectTaskId);
+        logCollectTaskDO.setRelateAgentNum(agentCount);
         return Result.buildSucc(logCollectTaskDO2LogCollectTaskVO(logCollectTaskDO));
     }
 
@@ -353,6 +355,7 @@ public class NormalLogCollectTaskController {
         logCollectTaskVO.setLogCollectTaskType(logCollectTaskDO.getLogCollectTaskType());
         logCollectTaskVO.setLogContentFilterRuleVO(JSON.parseObject(logCollectTaskDO.getLogContentFilterRuleLogicJsonString(), LogContentFilterRuleVO.class));
         logCollectTaskVO.setOldDataFilterType(logCollectTaskDO.getOldDataFilterType());
+        logCollectTaskVO.setRelateAgentNum(logCollectTaskDO.getRelateAgentNum());
         //set receiver
         ReceiverDO receiverDO = kafkaClusterManageService.getById(logCollectTaskDO.getKafkaClusterId());
         if (null == receiverDO) {
@@ -425,7 +428,6 @@ public class NormalLogCollectTaskController {
         logCollectTaskVO.setLogContentSliceRule(JSON.parseObject(logCollectTaskDO.getLogContentSliceRuleLogicJsonString(), LogSliceRuleVO.class));
         logCollectTaskVO.setFileNameSuffixMatchRule(JSON.parseObject(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString(), FileNameSuffixMatchRuleVO.class));
         logCollectTaskVO.setCollectDelayThresholdMs(logCollectTaskDO.getCollectDelayThresholdMs());
-        logCollectTaskVO.setRelateAgentNum(hostManageService.getHostListContainsAgentByLogCollectTaskId(logCollectTaskDO.getId()).size());
         return logCollectTaskVO;
     }
 
