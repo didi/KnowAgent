@@ -64,7 +64,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
     private static final String ROLL_DAY1             = "\\d{4}-\\d{2}-\\d{2}";
     private static final String ROLL_DAY2             = "\\d{4}\\d{2}\\d{2}";
 
-    private static final Method indexOfMethod;
     public static final byte[] CR_LINE_DELIMITER = {'\r'};
     public static final byte[] LF_LINE_DELIMITER = {'\n'};
     public static final byte[] CRLF_LINE_DELIMITER = {'\r', '\n'};
@@ -74,13 +73,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         defaultRollingSamples.add(ROLL_HOUR2);
         defaultRollingSamples.add(ROLL_DAY1);
         defaultRollingSamples.add(ROLL_DAY2);
-        try {
-            Class<?> stringLatin1 = Class.forName("java.lang.StringLatin1");
-            indexOfMethod = stringLatin1.getMethod("indexOf", byte[].class, int.class, byte[].class, int.class, int.class);
-            indexOfMethod.setAccessible(true);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
