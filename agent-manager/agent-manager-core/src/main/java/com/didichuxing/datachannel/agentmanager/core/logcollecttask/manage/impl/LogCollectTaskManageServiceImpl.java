@@ -56,8 +56,7 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceLogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskMapper;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.AgentCollectConfigurationManageServiceExtension;
-import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigurationManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;

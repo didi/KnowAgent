@@ -10,7 +10,7 @@
     <version>1.0.0</version>
 
     <modules>
-        <module>agent-manager-console</module>
+<!--        <module>agent-manager-console</module>-->
         <module>agent-manager-persistence</module>
         <module>agent-manager-common</module>
         <module>agent-manager-core</module>

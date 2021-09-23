@@ -14,10 +14,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
-import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
-import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
-import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
-import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
+import com.didichuxing.datachannel.agentmanager.common.util.*;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
@@ -75,6 +72,25 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         } else {
             return null;
         }
+    }
+
+    @Override
+    public ReceiverDO[] getDefaultReceivers() {
+        List<KafkaClusterPO> kafkaClusterPOList = kafkaClusterDAO.list();
+        if (CollectionUtils.isEmpty(kafkaClusterPOList)) {
+            return null;
+        }
+        ReceiverDO metricReceiver = null;
+        ReceiverDO errorLogReceiver = null;
+        for (KafkaClusterPO kafkaClusterPO : kafkaClusterPOList) {
+            if (!StringUtils.isBlank(kafkaClusterPO.getAgentMetricsTopic())) {
+                metricReceiver = ConvertUtil.obj2Obj(kafkaClusterPO, ReceiverDO.class);
+            }
+            if (!StringUtils.isBlank(kafkaClusterPO.getAgentErrorLogsTopic())) {
+                errorLogReceiver = ConvertUtil.obj2Obj(kafkaClusterPO, ReceiverDO.class);
+            }
+        }
+        return new ReceiverDO[]{metricReceiver, errorLogReceiver};
     }
 
     @Override
@@ -440,6 +456,9 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
 
     @Override
     public ReceiverDO getById(Long receiverId) {
+        if (receiverId == null || receiverId <= 0) {
+            return null;
+        }
         KafkaClusterPO kafkaClusterPO = kafkaClusterDAO.selectByPrimaryKey(receiverId);
         if (null != kafkaClusterPO) {
             return kafkaClusterManageServiceExtension.kafkaClusterPO2KafkaCluster(kafkaClusterPO);
@@ -449,7 +468,7 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
     }
 
     @Override
-    public List<ReceiverDO> paginationQueryByConditon(ReceiverPaginationQueryConditionDO query) {
+    public List<ReceiverDO> paginationQueryByCondition(ReceiverPaginationQueryConditionDO query) {
         String column = query.getSortColumn();
         if (column != null) {
             for (char c : column.toCharArray()) {

@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension;
+package com.didichuxing.datachannel.agentmanager.core.agent.configuration;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;

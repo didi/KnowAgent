@@ -1,37 +1,31 @@
-package com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.impl;
+package com.didichuxing.datachannel.agentmanager.core.agent.configuration.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.config.*;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.YesOrNoEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
-import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.AgentCollectConfigurationManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigurationManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.impl.HostFilterRule;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.springframework.stereotype.Service
+@Service
 public class DefaultAgentCollectConfigurationManageServiceExtensionImpl implements AgentCollectConfigurationManageServiceExtension {
 
     @Override
     public AgentConfiguration agent2AgentConfiguration(AgentDO agent, ReceiverDO metricsReceiverDO, ReceiverDO errorLogsReceiverDO) throws ServiceException {
-        if(null == agent) {
-            throw new ServiceException(
-                    String.format(
-                            "class=AgentCollectConfigurationManageServiceExtensionImpl||method=agent2AgentConfiguration||msg={%s}",
-                            "入参agent对象不可为空"
-                    ),
-                    ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
-            );
+        if (null == agent) {
+            throw new ServiceException(String.format("class=AgentCollectConfigurationManageServiceExtensionImpl||method=agent2AgentConfiguration||msg={%s}", "入参agent对象不可为空"), ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
         }
         /*
          * agentDo 2 agentConfiguration
@@ -184,11 +178,7 @@ public class DefaultAgentCollectConfigurationManageServiceExtensionImpl implemen
         } catch (ServiceException ex) {
             throw ex;
         }
-        if(needToDeploy) {
-            return true;
-        } else {
-            return false;
-        }
+        return needToDeploy;
     }
 
 }
