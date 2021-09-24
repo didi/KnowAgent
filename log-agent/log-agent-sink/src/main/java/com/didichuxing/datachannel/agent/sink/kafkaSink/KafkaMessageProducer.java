@@ -117,7 +117,7 @@ public class KafkaMessageProducer {
         confProperties.put("key.serializer",
             "org.apache.kafka.common.serialization.StringSerializer");
         confProperties.put("value.serializer",
-            "org.apache.kafka.common.serialization.StringSerializer");
+            "org.apache.kafka.common.serialization.ByteArraySerializer");
         confProperties.remove("serializer.class");
 
         // 兼容ack参数
