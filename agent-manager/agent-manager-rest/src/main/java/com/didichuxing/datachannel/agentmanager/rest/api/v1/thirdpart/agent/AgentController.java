@@ -40,9 +40,7 @@ public class AgentController {
     @RequestMapping(path = "/config", method = RequestMethod.GET)
     public Result<String> getAgentCollectConfiguration(@RequestParam String hostName) {
         AgentCollectConfiguration agentCollectConfiguration = agentCollectConfigurationManageService.getAgentConfigurationByHostName(hostName);
-        Result result = Result.buildSucc();
-        result.setData(JSON.toJSONString(agentCollectConfiguration));
-        return result;
+        return Result.buildSucc(JSON.toJSONString(agentCollectConfiguration));
     }
 
     @ApiOperation(value = "Agent注册", notes = "")

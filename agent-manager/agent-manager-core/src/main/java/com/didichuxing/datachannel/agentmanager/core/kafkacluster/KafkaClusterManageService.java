@@ -19,6 +19,8 @@ public interface KafkaClusterManageService {
      */
     ReceiverDO getKafkaClusterByKafkaClusterId(Long kafkaClusterId);
 
+    ReceiverDO[] getDefaultReceivers();
+
     /**
      * 获取全量kafka集群对象
      * @return 全量kafka集群对象
@@ -67,7 +69,7 @@ public interface KafkaClusterManageService {
      * @param receiverPaginationQueryConditionDO 分页查询条件
      * @return 返回根据给定参数分页查询到的结果集
      */
-    List<ReceiverDO> paginationQueryByConditon(ReceiverPaginationQueryConditionDO receiverPaginationQueryConditionDO);
+    List<ReceiverDO> paginationQueryByCondition(ReceiverPaginationQueryConditionDO receiverPaginationQueryConditionDO);
 
     /**
      * 根据给定参数查询满足条件的结果集总数量

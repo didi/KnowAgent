@@ -48,7 +48,7 @@ public class NormalReceiverController {
     // @CheckPermission(permission = AGENT_KAFKA_CLUSTER_LIST)
     public Result<PaginationResult<ReceiverVO>> listReceivers(@RequestBody ReceiverPaginationRequestDTO dto) {
         ReceiverPaginationQueryConditionDO receiverPaginationQueryConditionDO = receiverPaginationRequestDTO2ReceiverPaginationQueryConditionDO(dto);
-        List<ReceiverVO> receiverVOList = receiverDOList2ReceiverVOList(kafkaClusterManageService.paginationQueryByConditon(receiverPaginationQueryConditionDO));
+        List<ReceiverVO> receiverVOList = receiverDOList2ReceiverVOList(kafkaClusterManageService.paginationQueryByCondition(receiverPaginationQueryConditionDO));
         PaginationResult<ReceiverVO> paginationResult = new PaginationResult<>(receiverVOList, kafkaClusterManageService.queryCountByCondition(receiverPaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
         return Result.buildSucc(paginationResult);
     }

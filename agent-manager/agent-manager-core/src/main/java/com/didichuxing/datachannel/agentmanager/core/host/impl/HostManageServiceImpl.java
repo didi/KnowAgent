@@ -28,7 +28,7 @@ import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageSe
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.HostMapper;
 import com.didichuxing.datachannel.agentmanager.remote.host.RemoteHostManageService;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.AgentCollectConfigurationManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigurationManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.host.extension.HostManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

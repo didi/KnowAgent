@@ -17,7 +17,7 @@ import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageSer
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.AgentCollectConfigurationManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigurationManageServiceExtension;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -221,19 +221,20 @@ public class AgentCollectConfigurationManageServiceImpl implements AgentCollectC
         /*
          * 加载agent关联的metrics流 & errorlogs流对应的ReceiverDO对象
          */
+        ReceiverDO[] defaultReceivers = kafkaClusterManageService.getDefaultReceivers();
         ReceiverDO metricsReceiverDO = kafkaClusterManageService.getById(agent.getMetricsSendReceiverId());
         ReceiverDO errorLogsReceiverDO = kafkaClusterManageService.getById(agent.getErrorLogsSendReceiverId());
-        if (null == metricsReceiverDO) {
-            throw new ServiceException(
-                    String.format("Agent={%s}关联的MetricsReceiver对象={receiverId=%d}在系统中不存在", JSON.toJSONString(agent), agent.getMetricsSendReceiverId()),
-                    ErrorCodeEnum.KAFKA_CLUSTER_NOT_EXISTS.getCode()
-            );
-        }
-        if (null == errorLogsReceiverDO) {
-            throw new ServiceException(
-                    String.format("Agent={%s}关联的ErrorLogsReceiver对象={receiverId=%d}在系统中不存在", JSON.toJSONString(agent), agent.getErrorLogsSendReceiverId()),
-                    ErrorCodeEnum.KAFKA_CLUSTER_NOT_EXISTS.getCode()
-            );
+        if (defaultReceivers != null) {
+            if (null == metricsReceiverDO) {
+                metricsReceiverDO = defaultReceivers[0];
+            }
+            if (null == errorLogsReceiverDO) {
+                errorLogsReceiverDO = defaultReceivers[1];
+            }
+        } else {
+            if (metricsReceiverDO == null || errorLogsReceiverDO == null) {
+                throw new ServiceException(String.format("Agent id %d 关联的接收端不存在", agent.getId()), ErrorCodeEnum.KAFKA_CLUSTER_NOT_EXISTS.getCode());
+            }
         }
         /*
          * 构建AgentConfiguration对象

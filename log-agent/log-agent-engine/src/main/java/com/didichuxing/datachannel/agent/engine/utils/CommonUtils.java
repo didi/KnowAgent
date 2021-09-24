@@ -225,7 +225,7 @@ public class CommonUtils {
      */
     public static Map<String, String> readSettings() throws IOException {
         Properties prop = new Properties();
-        try(InputStream is = CommonUtils.class.getClassLoader().getResourceAsStream(settingsFile)) {
+        try (InputStream is = CommonUtils.class.getClassLoader().getResourceAsStream(settingsFile)) {
             prop.load(is);
         } catch (IOException e) {
             LogGather.recordErrorLog("CommonUtil error!", "load " + settingsFile + " error", e);
