@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agent.engine.utils.monitor.*;
 
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +85,15 @@ public class ProcessUtils {
                 "class=ProcessUtils||method=getOSResourceService||msg=system={%s} not support",
                 osName), ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
         }
+    }
+
+    /**
+     * 获取当前进程对应jdk版本
+     * @return
+     */
+    public String getCurrentProcessJdkVersion() {
+        String javaVersion = System.getProperty("java.version");
+        return javaVersion;
     }
 
 }

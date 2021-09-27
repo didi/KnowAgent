@@ -17,6 +17,8 @@ import com.didichuxing.datachannel.agent.common.api.StandardLogType;
 import com.didichuxing.datachannel.agent.common.beans.LogPath;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
+import com.didichuxing.datachannel.agent.engine.utils.OSTypeEnum;
+import com.didichuxing.datachannel.agent.engine.utils.ProcessUtils;
 import com.didichuxing.datachannel.agent.source.log.beans.FileDirNode;
 import com.didichuxing.datachannel.agent.source.log.config.MatchConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +66,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
     private static final String ROLL_DAY1             = "\\d{4}-\\d{2}-\\d{2}";
     private static final String ROLL_DAY2             = "\\d{4}\\d{2}\\d{2}";
 
+    private static Method indexOfMethod;
+
+    private static boolean jdkVersionGe11;
+
     public static final byte[] CR_LINE_DELIMITER = {'\r'};
     public static final byte[] LF_LINE_DELIMITER = {'\n'};
     public static final byte[] CRLF_LINE_DELIMITER = {'\r', '\n'};
@@ -73,6 +79,37 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         defaultRollingSamples.add(ROLL_HOUR2);
         defaultRollingSamples.add(ROLL_DAY1);
         defaultRollingSamples.add(ROLL_DAY2);
+        jdkVersionGe11 = jdkVersionGe11();
+        if(jdkVersionGe11) {
+            try {
+                Class<?> stringLatin1 = Class.forName("java.lang.StringLatin1");
+                indexOfMethod = stringLatin1.getMethod("indexOf", byte[].class, int.class, byte[].class, int.class, int.class);
+                indexOfMethod.setAccessible(true);
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * @return 返回当前进程对应jdk版本是否大于等于11
+     */
+    private static boolean jdkVersionGe11() {
+        String javaVersion = ProcessUtils.getInstance().getCurrentProcessJdkVersion();
+        String[] partOfJavaVersion = StringUtils.split(javaVersion, ".");
+        if(StringUtils.isBlank(javaVersion) || null == partOfJavaVersion || partOfJavaVersion.length < 2) {
+            LOGGER.warn(
+                    String.format("class=FileUtils||method=jdkVersionGe11||msg=%s", "获取当前进程jdk版本失败，系统将默认选择jdk1.8方式")
+            );
+            return false;
+        } else {
+            Integer bigVersion = Integer.valueOf(partOfJavaVersion[0]);
+            if(11 <= bigVersion) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     /**
@@ -1240,7 +1277,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
      * @return 换行符位置, -1未找到
      */
     public static int getLineDelimiterIndex(byte[] value, byte[] delimiter, int length) {
-        return indexOf(value, length, delimiter, 1, 0);
+        if(jdkVersionGe11) {
+            try {
+                return (int) indexOfMethod.invoke(null, value, length, delimiter, 1, 0);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return indexOf(value, length, delimiter, 1, 0);
+        }
     }
 
     public static int indexOf(byte[] value, int valueCount, byte[] str, int strCount, int fromIndex) {
