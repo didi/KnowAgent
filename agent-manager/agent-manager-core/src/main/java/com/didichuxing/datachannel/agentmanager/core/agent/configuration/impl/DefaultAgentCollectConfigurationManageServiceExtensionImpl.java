@@ -92,6 +92,7 @@ public class DefaultAgentCollectConfigurationManageServiceExtensionImpl implemen
         logCollectTaskConfiguration.setLogCollectTaskType(logCollectTask.getLogCollectTaskType());
         logCollectTaskConfiguration.setOldDataFilterType(logCollectTask.getOldDataFilterType());
         logCollectTaskConfiguration.setFileNameSuffixMatchRuleLogicJsonString(logCollectTask.getFileNameSuffixMatchRuleLogicJsonString());
+        logCollectTaskConfiguration.setLogContentSliceRuleLogicJsonString(logCollectTask.getLogContentSliceRuleLogicJsonString());
         if (CollectionUtils.isEmpty(logCollectTask.getDirectoryLogCollectPathList()) && CollectionUtils.isEmpty(logCollectTask.getFileLogCollectPathList())) {
             throw new ServiceException(
                     String.format("LogCollectTask={id=%d}关联的目录型采集路径集 & 文件型采集路径集不可都为空", logCollectTask.getId()),

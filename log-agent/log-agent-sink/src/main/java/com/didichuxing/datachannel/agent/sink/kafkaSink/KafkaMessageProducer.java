@@ -116,8 +116,6 @@ public class KafkaMessageProducer {
         // 当没有配置文件时，设置最基本的序列化类
         confProperties.put("key.serializer",
             "org.apache.kafka.common.serialization.StringSerializer");
-        confProperties.put("value.serializer",
-            "org.apache.kafka.common.serialization.StringSerializer");
         confProperties.remove("serializer.class");
 
         // 兼容ack参数
@@ -149,7 +147,11 @@ public class KafkaMessageProducer {
             confProperties.remove(LogConfigConstants.SASL_JAAS_CONFIG);
         }
 
-        kafkaProducer = new KafkaProducer<>(confProperties);
+        Properties bytesConfProperties = new Properties();
+        bytesConfProperties.putAll(confProperties);
+        // 发送kafka的类型定义为bytes数组
+        bytesConfProperties.put("value.serializer", "org.apache.kafka.common.serialization.ByteArraySerializer");
+        kafkaProducer = new KafkaProducer<>(bytesConfProperties);
         LOGGER.info("init kafka client successfully.config is " + confProperties);
         kafkaProducerKey = buildProducerKey();
         LOGGER.info("init kafka producer key success. key is " + kafkaProducerKey);
