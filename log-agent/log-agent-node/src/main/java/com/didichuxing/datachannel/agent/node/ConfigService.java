@@ -3,7 +3,6 @@ package com.didichuxing.datachannel.agent.node;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.node.am.v2.AgentCollectConfigurationImpl;
 import com.didichuxing.datachannel.agent.node.service.http.client.HttpClient;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentRegisterDTO;
@@ -82,7 +81,7 @@ public class ConfigService extends AgentComponent {
             isRunning = true;
             Thread.sleep(waitTime);
         } catch (Throwable e) {
-            LogGather.recordErrorLog("ConfigService error!", "wait time sleep error!, {}", e);
+            LOGGER.error("ConfigService error!", "wait time sleep error!, {}", e.getMessage());
         }
 
         // 第一次拉取配置并初始化整个系统
@@ -95,7 +94,7 @@ public class ConfigService extends AgentComponent {
                 writeLocalConfig(curAgentConfig);
             }
         } catch (Throwable e) {
-            LogGather.recordErrorLog("ConfigService error!", "getAgentConfig error!, {}", e);
+            LOGGER.error("ConfigService error!", "getAgentConfig error!, {}", e.getMessage());
         }
 
         // 后台线程
@@ -112,7 +111,7 @@ public class ConfigService extends AgentComponent {
                             }
                         }
                     } catch (Throwable t) {
-                        LogGather.recordErrorLog("ConfigChange", "config service change error, {}", t);
+                        LOGGER.error("ConfigChange", "config service change error, {}", t.getMessage());
                     }
 
                     try {
@@ -161,7 +160,7 @@ public class ConfigService extends AgentComponent {
         }
 
         if (agentConfig == null) {
-            CONFIG_LOGGER.warn("can not get this agent's logConfig.");
+            CONFIG_LOGGER.warn("can not get this agent's  logConfig.");
         } else {
             CONFIG_LOGGER.info("get config success");
         }
@@ -316,30 +315,39 @@ public class ConfigService extends AgentComponent {
             if (StringUtils.isNotBlank(rootStr)) {
                 JSONObject jsonObject = JSONObject.parseObject(rootStr);
                 Integer code = jsonObject.getInteger("code");
-                if (null != code) {
-                    if (code.equals(ErrorCodeEnum.AGENT_NOT_EXISTS.getCode())) {
-                        //agent未注册
+                if(null != code) {
+                    if(code.equals(ErrorCodeEnum.AGENT_NOT_EXISTS.getCode())) {//agent未注册
                         //注册 agent 信息至 agent-manager 端，并等待下一次配置获取
                         agentRegister(ip, port, agentRegisterUrl, agentVersion, agentCollectType);
-                    } else if (code.equals(ResultTypeEnum.SUCCESS.getCode())) {
-                        //agent 配置获取成功
+                    } else if(code.equals(ResultTypeEnum.SUCCESS.getCode())) {//agent 配置获取成功
                         String config = jsonObject.getString("data");
                         if (StringUtils.isNotBlank(config) && !"{}".equals(config)) {
                             agentConfig = buildAgentConfigFromString(config);
                         } else {//agent配置对应data域不可为空
-                            CONFIG_LOGGER.warn(String.format("get agent config from remote agent-manager failed, the response data field is null, the response is: %s, ip={%s},port={%d},url={%s},param={%s}.", rootStr, ip, port, url, JSON.toJSONString(param)));
+                            CONFIG_LOGGER.warn(
+                                    String.format("get agent config from remote agent-manager failed, the response data field is null, the response is: %s, ip={%s},port={%d},url={%s},param={%s}.", rootStr, ip, port, url, JSON.toJSONString(param))
+                            );
                         }
-                    } else {//unknown code
-                        CONFIG_LOGGER.warn(String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}, response unknown code={%d}.", ip, port, url, JSON.toJSONString(param), code));
+                    } else {//unknow code
+                        CONFIG_LOGGER.warn(
+                                String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}, response unknown code={%d}.", ip, port, url, JSON.toJSONString(param), code)
+                        );
                     }
                 } else {//code is null
-                    CONFIG_LOGGER.warn(String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}, response code is null, the response is: %s.", ip, port, url, JSON.toJSONString(param), rootStr));
+                    CONFIG_LOGGER.warn(
+                            String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}, response code is null, the response is: %s.", ip, port, url, JSON.toJSONString(param), rootStr)
+                    );
                 }
             } else {
-                CONFIG_LOGGER.warn(String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}, response is null.", ip, port, url, JSON.toJSONString(param)));
+                CONFIG_LOGGER.warn(
+                        String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}, response is null.", ip, port, url, JSON.toJSONString(param))
+                );
             }
         } catch (Exception e) {
-            CONFIG_LOGGER.warn(String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}.", ip, port, url, JSON.toJSONString(param)), e);
+            CONFIG_LOGGER.warn(
+                    String.format("get agent config from remote agent-manager failed, ip={%s},port={%d},url={%s},param={%s}.", ip, port, url, JSON.toJSONString(param)),
+                    e
+            );
             agentConfig = null;
         }
         return agentConfig;
@@ -357,9 +365,9 @@ public class ConfigService extends AgentComponent {
         if(StringUtils.isBlank(agentCollectType)) {
             throw new Exception("local config item {collect.type} not be null.");
         }
-        int collectType;
+        Integer collectType;
         try {
-            collectType = Integer.parseInt(agentCollectType);
+            collectType = Integer.valueOf(agentCollectType);
         } catch (Exception ex) {
             throw new Exception("config item {collect.type} must be integer.", ex);
         }
@@ -371,12 +379,16 @@ public class ConfigService extends AgentComponent {
         String requestBody = JSON.toJSONString(agentRegisterDTO);
         String responseString = HttpClient.post(ip, port, agentRegisterUrl, requestBody);
         if(StringUtils.isBlank(responseString)) {
-            CONFIG_LOGGER.warn(String.format("register agent to agent-manager failed, because response is null, ip={%s},port={%d},agentRegisterUrl={%s},agentVersion={%s},agentCollectType={%s},requestBody={%s}", ip, port, agentRegisterUrl, agentVersion, agentCollectType, requestBody));
+            CONFIG_LOGGER.warn(
+                    String.format("register agent to agent-manager failed, because response is null, ip={%s},port={%d},agentRegisterUrl={%s},agentVersion={%s},agentCollectType={%s},requestBody={%s}", ip, port, agentRegisterUrl, agentVersion, agentCollectType, requestBody)
+            );
         }
         JSONObject jsonObject = JSONObject.parseObject(responseString);
         Integer code = jsonObject.getInteger("code");
-        if(null == code || !code.equals(ResultTypeEnum.SUCCESS.getCode())) { //请求失败
-            CONFIG_LOGGER.warn(String.format("register agent to agent-manager failed, the response is: %s, ip={%s},port={%d},agentRegisterUrl={%s},agentVersion={%s},agentCollectType={%s},requestBody={%s}", responseString, ip, port, agentRegisterUrl, agentVersion, agentCollectType, requestBody));
+        if(null == code || !code.equals(ResultTypeEnum.SUCCESS.getCode())) {//请求失败
+            CONFIG_LOGGER.warn(
+                    String.format("register agent to agent-manager failed, the response is: %s, ip={%s},port={%d},agentRegisterUrl={%s},agentVersion={%s},agentCollectType={%s},requestBody={%s}", responseString, ip, port, agentRegisterUrl, agentVersion, agentCollectType, requestBody)
+            );
             throw new Exception(
                     String.format("register agent to agent-manager failed, the response is: %s, ip={%s},port={%d},agentRegisterUrl={%s},agentVersion={%s},agentCollectType={%s},requestBody={%s}", responseString, ip, port, agentRegisterUrl, agentVersion, agentCollectType, requestBody)
             );
@@ -400,14 +412,16 @@ public class ConfigService extends AgentComponent {
         byte[] bytes;
         try {
             bytes = new byte[inputStream.available()];
-            if (bytes.length == 0) {
-                return null;
-            }
             inputStream.read(bytes);
         } catch (IOException e) {
             CONFIG_LOGGER.warn("can't read local config:" + local, e);
             return null;
         }
+
+        if (bytes.length == 0) {
+            return null;
+        }
+
         AgentConfig config;
         try {
             config = buildAgentConfigFromString(new String(bytes));
