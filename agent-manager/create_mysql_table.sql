@@ -3,7 +3,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 drop database logi_agent_manager;
 
-create database logi_agent_manager;
+drop database IF EXISTS logi_agent_manager;
 use logi_agent_manager;
 
 -- ----------------------------
@@ -133,28 +133,28 @@ CREATE TABLE `auv_worker_blacklist` (
 DROP TABLE IF EXISTS `collect_task_metric`;
 CREATE TABLE `collect_task_metric` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `read_time_mean` int(11) NOT NULL DEFAULT '0',
+  `read_time_mean` bigint(20) NOT NULL DEFAULT '0',
   `filter_remained` int(11) NOT NULL DEFAULT '0',
   `channel_capacity` varchar(32) NOT NULL DEFAULT '',
   `is_file_exist` tinyint(1) NOT NULL DEFAULT '0',
   `path_id` bigint(20) NOT NULL DEFAULT '-1',
   `type` varchar(32) NOT NULL DEFAULT '',
   `read_count` int(11) NOT NULL DEFAULT '0',
-  `send_time_mean` int(11) NOT NULL DEFAULT '0',
+  `send_time_mean` bigint(20) NOT NULL DEFAULT '0',
   `master_file` varchar(64) NOT NULL DEFAULT '',
   `path` varchar(256) NOT NULL DEFAULT '',
   `hostname` varchar(64) NOT NULL DEFAULT '',
   `heartbeat_time` bigint(20) NOT NULL DEFAULT '0',
   `host_ip` varchar(32) NOT NULL DEFAULT '',
   `sink_num` int(11) NOT NULL DEFAULT '0',
-  `flush_time_mean` int(11) NOT NULL DEFAULT '0',
+  `flush_time_mean` bigint(20) NOT NULL DEFAULT '0',
   `latest_file` varchar(64) NOT NULL DEFAULT '',
   `filter_too_large_count` int(11) NOT NULL DEFAULT '0',
   `channel_type` varchar(64) NOT NULL DEFAULT '',
   `log_model_version` int(11) NOT NULL DEFAULT '0',
   `topic` varchar(64) NOT NULL DEFAULT '',
   `flush_count` int(11) NOT NULL DEFAULT '0',
-  `flush_time_max` int(11) NOT NULL DEFAULT '0',
+  `flush_time_max` bigint(20) NOT NULL DEFAULT '0',
   `filter_out` int(11) NOT NULL DEFAULT '0',
   `related_files` int(11) NOT NULL DEFAULT '0',
   `log_model_host_name` varchar(64) NOT NULL DEFAULT '',
@@ -163,14 +163,14 @@ CREATE TABLE `collect_task_metric` (
   `control_time_mean` bigint(20) NOT NULL DEFAULT '0',
   `limit_time` int(11) NOT NULL DEFAULT '0',
   `log_mode_id` bigint(20) NOT NULL DEFAULT '-1',
-  `flush_time_min` int(11) NOT NULL DEFAULT '0',
-  `read_time_min` int(11) NOT NULL DEFAULT '0',
-  `send_time_max` int(11) NOT NULL DEFAULT '0',
+  `flush_time_min` bigint(20) NOT NULL DEFAULT '0',
+  `read_time_min` bigint(20) NOT NULL DEFAULT '0',
+  `send_time_max` bigint(20) NOT NULL DEFAULT '0',
   `dynamic_limiter` int(11) NOT NULL DEFAULT '0',
   `log_path_key` varchar(256) NOT NULL DEFAULT '',
-  `max_time_gap` int(11) NOT NULL DEFAULT '0',
+  `max_time_gap` bigint(20) NOT NULL DEFAULT '0',
   `send_byte` int(11) NOT NULL DEFAULT '0',
-  `send_time_min` int(11) NOT NULL DEFAULT '0',
+  `send_time_min` bigint(20) NOT NULL DEFAULT '0',
   `log_time_str` varchar(256) NOT NULL DEFAULT '',
   `control_time_max` bigint(20) NOT NULL DEFAULT '0',
   `send_count` int(11) NOT NULL DEFAULT '0',
@@ -182,7 +182,7 @@ CREATE TABLE `collect_task_metric` (
   `collect_files` varchar(4096) NOT NULL DEFAULT '',
   `control_time_min` bigint(20) NOT NULL DEFAULT '0',
   `read_byte` int(11) NOT NULL DEFAULT '0',
-  `read_time_max` int(11) NOT NULL DEFAULT '0',
+  `read_time_max` bigint(20) NOT NULL DEFAULT '0',
   `valid_time_config` tinyint(1) NOT NULL DEFAULT '0',
   `operator` varchar(64) NOT NULL DEFAULT '',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
