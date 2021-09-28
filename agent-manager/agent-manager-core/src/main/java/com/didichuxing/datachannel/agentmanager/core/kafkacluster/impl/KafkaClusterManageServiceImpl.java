@@ -322,32 +322,19 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
              * 校验待删除kafkaCluster在系统中是否被 logcollecttask & agent 所引用，如存在引用，则不允许删除
              */
             List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getLogCollectTaskListByKafkaClusterId(id);
-            for (LogCollectTaskDO logCollectTaskDO : logCollectTaskDOList) {
-                logCollectTaskDO.setKafkaClusterId(null);
-                logCollectTaskDO.setSendTopic(null);
-                logCollectTaskManageService.updateLogCollectTask(logCollectTaskDO, SpringTool.getUserName());
-            }
-            /*if(CollectionUtils.isNotEmpty(logCollectTaskDOList)) {
+            if(CollectionUtils.isNotEmpty(logCollectTaskDOList)) {
                 throw new ServiceException(
                         String.format("待删除KafkaCluster={id=%d}存在{%d}个关联的LogCollectTask，请先解除关联", id, logCollectTaskDOList.size()),
                         ErrorCodeEnum.KAFKA_CLUSTER_DELETE_FAILED_CAUSE_BY_RELA_LOGCOLLECTTASK_EXISTS.getCode()
                 );
-            }*/
-            List<AgentDO> agentDOList = agentManageService.getAgentListByKafkaClusterId(id);
-            for (AgentDO agentDO : agentDOList) {
-                agentDO.setErrorLogsSendReceiverId(null);
-                agentDO.setErrorLogsSendTopic(null);
-                agentDO.setMetricsSendReceiverId(null);
-                agentDO.setMetricsSendTopic(null);
-                agentManageService.updateAgent(agentDO, SpringTool.getUserName());
             }
-
-            /*if(CollectionUtils.isNotEmpty(agentDOList)) {
+            List<AgentDO> agentDOList = agentManageService.getAgentListByKafkaClusterId(id);
+            if(CollectionUtils.isNotEmpty(agentDOList)) {
                 throw new ServiceException(
                         String.format("待删除KafkaCluster={id=%d}存在{%d}个关联的Agent，请先解除关联", id, agentDOList.size()),
                         ErrorCodeEnum.KAFKA_CLUSTER_DELETE_FAILED_CAUSE_BY_RELA_AGENT_EXISTS.getCode()
                 );
-            }*/
+            }
         }
         /*
          * 删除对应kafkacluster记录

@@ -128,8 +128,7 @@ public class CommonUtils {
                 buf.append(s);
             }
             String hostname = buf.toString();
-            if (StringUtils.isBlank(hostname) || hostname.contains("localhost")
-                    || hostname.contains("请求超时")) {
+            if (StringUtils.isBlank(hostname) || hostname.contains("localhost") || hostname.contains("请求超时")) {
                 return null;
             }
         } catch (Exception e) {
@@ -258,7 +257,7 @@ public class CommonUtils {
     public static String selectTopic(String originalTopics) {
         if (StringUtils.isBlank(originalTopics)) {
             LOGGER.warn(String.format(
-                    "originalTopics [%s] is null, please check input param topic.", originalTopics));
+                "originalTopics [%s] is null, please check input param topic.", originalTopics));
         }
         return originalTopics;
     }

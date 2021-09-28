@@ -65,7 +65,7 @@ config.port=Agent-Manager微服务配置的http端口（默认：8080）
 
 ## 4. 启动与停止
 
-在`bin`目录下，执行`sh start.sh`即可启动Agent服务，执行`sh stop.sh`即可停止Agent服务。
+在`output`目录下，执行`sh start.sh`即可启动Agent服务，执行`sh stop.sh`即可停止Agent服务。
 
 ## 5. 使用
 
