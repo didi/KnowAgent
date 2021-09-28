@@ -105,7 +105,7 @@ public class Result<T> implements Serializable {
         return result;
     }
 
-    public static Result buildSucc(String msg) {
+    public static Result buildSuccWithMsg(String msg) {
         Result result = new Result();
         result.setCode(ResultTypeEnum.SUCCESS.getCode());
         result.setMessage(msg);
