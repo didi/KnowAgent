@@ -6,13 +6,13 @@ import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import org.apache.commons.lang3.StringUtils;
 
 import org.slf4j.Logger;
@@ -24,7 +24,10 @@ import org.slf4j.LoggerFactory;
  * @Date: 18/6/21 20:19
  */
 public class CommonUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class.getName());
+
+    private static final Logger             LOGGER           = LoggerFactory
+            .getLogger(CommonUtils.class
+                    .getName());
 
     private static String                   HOSTNAME;
 
@@ -112,7 +115,7 @@ public class CommonUtils {
 
         HOSTNAMEHASHCODE = HOSTNAME.hashCode();
         if (HOSTNAMEHASHCODE < 0) {
-            HOSTNAMEHASHCODE = -HOSTNAMEHASHCODE;
+            HOSTNAMEHASHCODE = 0 - HOSTNAMEHASHCODE;
         }
     }
 
@@ -128,7 +131,8 @@ public class CommonUtils {
                 buf.append(s);
             }
             String hostname = buf.toString();
-            if (StringUtils.isBlank(hostname) || hostname.contains("localhost") || hostname.contains("请求超时")) {
+            if (StringUtils.isBlank(hostname) || hostname.contains("localhost")
+                    || hostname.indexOf("请求超时") != -1) {
                 return null;
             }
         } catch (Exception e) {
@@ -172,9 +176,11 @@ public class CommonUtils {
             }
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(plainText.getBytes());
-            byte[] b = md.digest();
+            byte b[] = md.digest();
+
             int i;
-            StringBuilder buf = new StringBuilder();
+
+            StringBuffer buf = new StringBuffer("");
             for (int offset = 0; offset < b.length; offset++) {
                 i = b[offset];
                 if (i < 0) {
@@ -187,7 +193,8 @@ public class CommonUtils {
             }
             return buf.toString();
         } catch (NoSuchAlgorithmException e) {
-            LogGather.recordErrorLog("CommonUtil error!", String.format("get md5 error.string is , %s", plainText), e);
+            LOGGER.error("CommonUtil error!", "get md5 error.string is , {}" + plainText,
+                    e.getMessage());
         }
         return null;
     }
@@ -221,13 +228,17 @@ public class CommonUtils {
      * @throws IOException
      */
     public static Map<String, String> readSettings() throws IOException {
+        InputStream is = CommonUtils.class.getClassLoader().getResourceAsStream(settingsFile);
         Properties prop = new Properties();
-        try (InputStream is = CommonUtils.class.getClassLoader().getResourceAsStream(settingsFile)) {
+        try {
             prop.load(is);
         } catch (IOException e) {
-            LogGather.recordErrorLog("CommonUtil error!", "load " + settingsFile + " error", e);
+            LOGGER
+                    .error("CommonUtil error!", "load " + settingsFile + " error, {}", e.getMessage());
+        } finally {
+            is.close();
         }
-        return (Map) prop;
+        return new HashMap<String, String>((Map) prop);
     }
 
     /**
@@ -257,7 +268,7 @@ public class CommonUtils {
     public static String selectTopic(String originalTopics) {
         if (StringUtils.isBlank(originalTopics)) {
             LOGGER.warn(String.format(
-                "originalTopics [%s] is null, please check input param topic.", originalTopics));
+                    "originalTopics [%s] is null, please check input param topic.", originalTopics));
         }
         return originalTopics;
     }
@@ -272,7 +283,8 @@ public class CommonUtils {
         try {
             return new String(Base64.getDecoder().decode(encode.getBytes()));
         } catch (Exception e) {
-            LogGather.recordErrorLog("CommonUtil error!", String.format("decode error. string is %s", encode), e);
+            LOGGER.error("CommonUtil error!", "decode error. string is {}, {}", encode,
+                    e.getMessage());
         }
         return "";
     }
@@ -287,7 +299,8 @@ public class CommonUtils {
         try {
             return new String(Base64.getEncoder().encode(source.getBytes()));
         } catch (Exception e) {
-            LogGather.recordErrorLog("CommonUtil error!", String.format("encode error. string is %s", source), e);
+            LOGGER.error("CommonUtil error!", "encode error. string is {}, {}", source,
+                    e.getMessage());
         }
         return "";
     }
@@ -318,7 +331,8 @@ public class CommonUtils {
             // 返回加密结果
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            LogGather.recordErrorLog("CommonUtil error!", String.format("get md5 error.string is %s", content), e);
+            LOGGER.error("CommonUtil error!", "get md5 error.string is {}, {}", content,
+                    e.getMessage());
         }
         return null;
     }
