@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 public class CommonUtils {
 
     private static final Logger             LOGGER           = LoggerFactory
-            .getLogger(CommonUtils.class
-                    .getName());
+                                                                 .getLogger(CommonUtils.class
+                                                                     .getName());
 
     private static String                   HOSTNAME;
 
@@ -132,7 +132,7 @@ public class CommonUtils {
             }
             String hostname = buf.toString();
             if (StringUtils.isBlank(hostname) || hostname.contains("localhost")
-                    || hostname.indexOf("请求超时") != -1) {
+                || hostname.indexOf("请求超时") != -1) {
                 return null;
             }
         } catch (Exception e) {
@@ -194,7 +194,7 @@ public class CommonUtils {
             return buf.toString();
         } catch (NoSuchAlgorithmException e) {
             LOGGER.error("CommonUtil error!", "get md5 error.string is , {}" + plainText,
-                    e.getMessage());
+                e.getMessage());
         }
         return null;
     }
@@ -234,7 +234,7 @@ public class CommonUtils {
             prop.load(is);
         } catch (IOException e) {
             LOGGER
-                    .error("CommonUtil error!", "load " + settingsFile + " error, {}", e.getMessage());
+                .error("CommonUtil error!", "load " + settingsFile + " error, {}", e.getMessage());
         } finally {
             is.close();
         }
@@ -268,7 +268,7 @@ public class CommonUtils {
     public static String selectTopic(String originalTopics) {
         if (StringUtils.isBlank(originalTopics)) {
             LOGGER.warn(String.format(
-                    "originalTopics [%s] is null, please check input param topic.", originalTopics));
+                "originalTopics [%s] is null, please check input param topic.", originalTopics));
         }
         return originalTopics;
     }
@@ -284,7 +284,7 @@ public class CommonUtils {
             return new String(Base64.getDecoder().decode(encode.getBytes()));
         } catch (Exception e) {
             LOGGER.error("CommonUtil error!", "decode error. string is {}, {}", encode,
-                    e.getMessage());
+                e.getMessage());
         }
         return "";
     }
@@ -300,7 +300,7 @@ public class CommonUtils {
             return new String(Base64.getEncoder().encode(source.getBytes()));
         } catch (Exception e) {
             LOGGER.error("CommonUtil error!", "encode error. string is {}, {}", source,
-                    e.getMessage());
+                e.getMessage());
         }
         return "";
     }
@@ -332,7 +332,7 @@ public class CommonUtils {
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             LOGGER.error("CommonUtil error!", "get md5 error.string is {}, {}", content,
-                    e.getMessage());
+                e.getMessage());
         }
         return null;
     }
