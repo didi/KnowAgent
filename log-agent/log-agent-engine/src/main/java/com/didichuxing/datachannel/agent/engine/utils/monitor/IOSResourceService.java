@@ -13,7 +13,17 @@ public interface IOSResourceService {
     /**
      * @return 返回jvm进程启动时间
      */
-    long getProcessStartTime();
+    long getProcessStartupTime();
+
+    /**
+     * @return 返回系统启动时间
+     */
+    long getSystemStartupTime();
+
+    /**
+     * @return 返回系统当前时间
+     */
+    long getSystemCurrentTimeMillis();
 
     /*********************************** about cpu ***********************************/
 

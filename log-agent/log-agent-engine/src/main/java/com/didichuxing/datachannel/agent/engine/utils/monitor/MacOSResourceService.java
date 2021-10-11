@@ -96,7 +96,17 @@ public class MacOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getProcessStartTime() {
+    public long getProcessStartupTime() {
+        return 0;
+    }
+
+    @Override
+    public long getSystemStartupTime() {
+        return 0;
+    }
+
+    @Override
+    public long getSystemCurrentTimeMillis() {
         return 0;
     }
 
