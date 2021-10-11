@@ -80,6 +80,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class.get
         defaultRollingSamples.add(ROLL_DAY1);
         defaultRollingSamples.add(ROLL_DAY2);
         jdkVersionGe11 = jdkVersionGe11();
+        LOGGER.info(String.format("jdkVersionGe11:%s", String.valueOf(jdkVersionGe11)));
         if(jdkVersionGe11) {
             try {
                 Class<?> stringLatin1 = Class.forName("java.lang.StringLatin1");
