@@ -144,7 +144,7 @@ public class WindowsOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public float getCurrentSystemCpuLoad() {
+    public double getCurrentSystemCpuLoad() {
         return 0;
     }
 
@@ -198,6 +198,11 @@ public class WindowsOSResourceService implements IOSResourceService {
 
     @Override
     public long getSystemMemorySwapSize() {
+        return 0;
+    }
+
+    @Override
+    public long getSystemMemorySwapFree() {
         return 0;
     }
 

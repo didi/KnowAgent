@@ -6,6 +6,7 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -148,7 +149,7 @@ public class AixOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public float getCurrentSystemCpuLoad() {
+    public double getCurrentSystemCpuLoad() {
         return 0;
     }
 
@@ -202,6 +203,11 @@ public class AixOSResourceService implements IOSResourceService {
 
     @Override
     public long getSystemMemorySwapSize() {
+        return 0;
+    }
+
+    @Override
+    public long getSystemMemorySwapFree() {
         return 0;
     }
 

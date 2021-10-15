@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agent.engine.utils.monitor;
 
 import com.didichuxing.datachannel.agent.engine.limit.cpu.LinuxCpuTime;
+import com.didichuxing.datachannel.agent.engine.limit.net.LinuxNetFlow;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.management.*;
+
+import com.sun.management.OperatingSystemMXBean;
+
 import java.lang.reflect.Method;
 
 /**
@@ -28,6 +32,8 @@ public class LinuxOSResourceService implements IOSResourceService {
 
     private LinuxCpuTime        lastLinuxCpuTime;
 
+    private LinuxNetFlow        lastLinuxNetFlow;
+
     public LinuxOSResourceService() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
@@ -37,6 +43,15 @@ public class LinuxOSResourceService implements IOSResourceService {
             LOGGER
                 .error(
                     "class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed",
+                    e);
+        }
+
+        try {
+            lastLinuxNetFlow = new LinuxNetFlow(getPid());// 记录上次的收发字节数
+        } catch (Exception e) {
+            LOGGER
+                .error(
+                    "class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=NetFlow init failed",
                     e);
         }
     }
@@ -103,17 +118,27 @@ public class LinuxOSResourceService implements IOSResourceService {
 
     @Override
     public long getProcessStartupTime() {
-        return 0;
+        try {
+            return ManagementFactory.getRuntimeMXBean().getStartTime();
+        } catch (Exception ex) {
+            LOGGER.error("获取jvm启动时间失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public long getSystemStartupTime() {
+        String output = getOutputByCmd(
+            "date -d \"$(awk '{print $1}' /proc/uptime) second ago\" +%s", false, "系统启动时间");
+        if (StringUtils.isNotBlank(output)) {
+            return 1000 * Long.parseLong(output);
+        }
         return 0;
     }
 
     @Override
     public long getSystemCurrentTimeMillis() {
-        return 0;
+        return System.currentTimeMillis();
     }
 
     @Override
@@ -134,22 +159,38 @@ public class LinuxOSResourceService implements IOSResourceService {
 
     @Override
     public float getCurrentProcessCpuUsageTotalPercent() {
-        return 0;
+        return getCurrentProcessCpuUsage() / getCpuNum();
     }
 
     @Override
     public float getCurrentSystemCpuUsage() {
-        return 0;
+        try {
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getPid(), getCpuNum());
+            float cpuUsage = curLinuxCpuTime.getSystemUsage(lastLinuxCpuTime);
+            lastLinuxCpuTime = curLinuxCpuTime;
+            return cpuUsage;
+        } catch (Exception e) {
+            LOGGER
+                .error(
+                    "class=LinuxOSResourceService||method=getCurrentSystemCpuUsage||msg=current process's cpu usage get failed",
+                    e);
+            return 0;
+        }
     }
 
     @Override
     public float getCurrentSystemCpuUsageTotalPercent() {
-        return 0;
+        return getCurrentSystemCpuUsage() * getCpuNum();
     }
 
     @Override
-    public float getCurrentSystemCpuLoad() {
-        return 0;
+    public double getCurrentSystemCpuLoad() {
+        try {
+            return ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前jvm进程宿主机cpu负载]失败", ex);
+            return 0;
+        }
     }
 
     @Override
@@ -172,77 +213,165 @@ public class LinuxOSResourceService implements IOSResourceService {
 
     @Override
     public long getCurrentProcessHeapMemoryUsed() {
-        return 0;
+        try {
+            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+            return memoryMXBean.getHeapMemoryUsage().getUsed();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前进程堆内内存使用量]失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public long getCurrentProcessNonHeapMemoryUsed() {
-        return 0;
+        try {
+            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+            return memoryMXBean.getNonHeapMemoryUsage().getUsed();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前进程堆外内存使用量]失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public long getCurrentProcessMaxHeapSize() {
-        return 0;
+        try {
+            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+            return memoryMXBean.getHeapMemoryUsage().getMax();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前进程最大可用堆内存]失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public long getCurrentSystemMemoryFree() {
-        return 0;
+        try {
+            OperatingSystemMXBean systemMXBean = (OperatingSystemMXBean) ManagementFactory
+                .getOperatingSystemMXBean();
+            return systemMXBean.getFreePhysicalMemorySize();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[系统当前可用内存]失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public long getSystemMemoryTotal() {
-        return 0;
+        try {
+            OperatingSystemMXBean systemMXBean = (OperatingSystemMXBean) ManagementFactory
+                .getOperatingSystemMXBean();
+            return systemMXBean.getTotalPhysicalMemorySize();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[系统内存总大小]失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public long getSystemMemoryUsed() {
-        return 0;
+        return getSystemMemoryTotal() - getCurrentSystemMemoryFree();
     }
 
     @Override
     public long getSystemMemorySwapSize() {
-        return 0;
+        try {
+            OperatingSystemMXBean systemMXBean = (OperatingSystemMXBean) ManagementFactory
+                .getOperatingSystemMXBean();
+            return systemMXBean.getTotalSwapSpaceSize();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[系统swap内存总大小]失败", ex);
+            return 0;
+        }
+    }
+
+    @Override
+    public long getSystemMemorySwapFree() {
+        try {
+            OperatingSystemMXBean systemMXBean = (OperatingSystemMXBean) ManagementFactory
+                .getOperatingSystemMXBean();
+            return systemMXBean.getFreeSwapSpaceSize();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[系统swap可用内存]失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public long getSystemMemorySwapUsed() {
-        return 0;
+        return getSystemMemorySwapSize() - getSystemMemorySwapFree();
     }
 
     @Override
     public long getProcessMemoryUsedPeak() {
+        String output = getOutputByCmd("grep VmPeak /proc/%d/status | awk '{print $2}'", true,
+            "jvm进程使用峰值");
+        if (StringUtils.isNotBlank(output)) {
+            return 1024 * Long.parseLong(output);
+        }
         return 0;
     }
 
     @Override
     public long getSystemDiskTotal() {
+        String output = getOutputByCmd("df -k | awk 'NR>1{a+=$2} END{print a}'", false, "系统磁盘总容量");
+        if (StringUtils.isNotBlank(output)) {
+            return 1024 * Long.parseLong(output);
+        }
         return 0;
     }
 
     @Override
     public long getSystemDiskUsed() {
+        String output = getOutputByCmd("df -k | awk 'NR>1{a+=$3} END{print a}'", false, "系统磁盘已使用量");
+        if (StringUtils.isNotBlank(output)) {
+            return 1024 * Long.parseLong(output);
+        }
         return 0;
     }
 
     @Override
     public long getSystemDiskFree() {
+        String output = getOutputByCmd("df -k | awk 'NR>1{a+=$4} END{print a}'", false,
+            "系统磁盘剩余可使用量");
+        if (StringUtils.isNotBlank(output)) {
+            return 1024 * Long.parseLong(output);
+        }
         return 0;
     }
 
     @Override
     public long getSystemDiskFreeMin() {
+        // 跳过df第一行
+        String output = getOutputByCmd(
+            "df -k | tail -n +2 | awk 'NR==1{min=$4;next}{min=min<$4?min:$4}END{print min}'",
+            false, "系统各磁盘中剩余可使用量最小值");
+        if (StringUtils.isNotBlank(output)) {
+            return 1024 * Long.parseLong(output);
+        }
         return 0;
     }
 
     @Override
     public int getSystemDiskNum() {
+        String output = getOutputByCmd("df -k | awk 'NR>1{a+=1} END{print a}'", false, "系统挂载磁盘数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
         return 0;
     }
 
     @Override
     public long getYoungGcCount() {
-        return 0;
+        long gcCounts = 0L;
+        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+            .getGarbageCollectorMXBeans()) {
+            String name = garbageCollector.getName();
+            if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
+                gcCounts += garbageCollector.getCollectionCount();
+            }
+        }
+        return gcCounts;
     }
 
     @Override
@@ -260,221 +389,450 @@ public class LinuxOSResourceService implements IOSResourceService {
 
     @Override
     public long getYoungGcTime() {
-        return 0;
+        long gcTime = 0L;
+        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+            .getGarbageCollectorMXBeans()) {
+            String name = garbageCollector.getName();
+            if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
+                gcTime += garbageCollector.getCollectionTime();
+            }
+        }
+        return gcTime;
     }
 
     @Override
     public long getFullGcTime() {
-        return 0;
+        long gcTime = 0L;
+        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+            .getGarbageCollectorMXBeans()) {
+            String name = garbageCollector.getName();
+            if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
+                gcTime += garbageCollector.getCollectionTime();
+            }
+        }
+        return gcTime;
     }
 
     @Override
     public int getCurrentProcessFdUsed() {
-        //linux 获取 fd 使用量
+        String output = getOutputByCmd("ls /proc/%d/fd | wc -l", true, "jvm进程当前fd使用数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getSystemMaxFdSize() {
+        String output = getOutputByCmd("cat /proc/sys/fs/file-max", false, "系统最大fd可用数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentSystemFdUsed() {
+        String output = getOutputByCmd("cat /proc/sys/fs/file-nr | awk '{print $1}'", false,
+            "系统fd使用量");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentProcessThreadNum() {
+        try {
+            ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
+            return mxBean.getThreadCount();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前jvm进程线程使用数]失败", ex);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getCurrentProcessThreadNumPeak() {
+        try {
+            ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
+            return mxBean.getPeakThreadCount();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[jvm进程启动以来线程数峰值]失败", ex);
+            return 0;
+        }
+    }
+
+    @Override
+    public float getCurrentSystemDiskIOUsagePercent() {
+        String output = getOutputByCmd("iostat -dkx | awk 'NR>2{a+=$14} END{print a}'", false,
+            "系统当前磁盘 io 使用率");
+        if (StringUtils.isNotBlank(output)) {
+            return Float.parseFloat(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public float getCurrentProcessDiskIOAwaitTimePercent() {
+        String output = getOutputByCmd("iotop -P -b -n 1 | awk '{if($1~/%d/) print $10}'", true,
+            "jvm进程磁盘 io 读写等待时间占总时间百分比");
+        if (StringUtils.isNotBlank(output)) {
+            return Float.parseFloat(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentSystemIOPS() {
+        String output = getOutputByCmd("iostat -dk | awk 'NR>2{a+=$2} END{print a}'", false,
+            "系统当前每秒 io 请求数量");
+        if (StringUtils.isNotBlank(output)) {
+            double v = Double.parseDouble(output);
+            return (int) v;
+        }
+        return 0;
+    }
+
+    @Override
+    public long getCurrentSystemDiskIOReadBytesPS() {
+        String output = getOutputByCmd("iostat -dk | awk 'NR>2{a+=$3} END{print a}'", false,
+            "系统当前磁盘 io 每秒读取字节数");
+        if (StringUtils.isNotBlank(output)) {
+            double v = 1024 * Double.parseDouble(output);
+            return (long) v;
+        }
+        return 0;
+    }
+
+    @Override
+    public long getCurrentSystemDiskIOWriteBytesPS() {
+        String output = getOutputByCmd("iostat -dk | awk 'NR>2{a+=$4} END{print a}'", false,
+            "系统当前磁盘 io 每秒写入字节数");
+        if (StringUtils.isNotBlank(output)) {
+            double v = 1024 * Double.parseDouble(output);
+            return (long) v;
+        }
+        return 0;
+    }
+
+    @Override
+    public long getCurrentProcessDiskIOReadBytesPS() {
+        String output = getOutputByCmd("pidstat -p %d -d | awk 'NR==4{print $4}'", true,
+            "jvm进程当前磁盘 io 每秒读取字节数");
+        if (StringUtils.isNotBlank(output)) {
+            double v = 1024 * Double.parseDouble(output);
+            return (long) v;
+        }
+        return 0;
+    }
+
+    @Override
+    public long getCurrentProcessDiskIOWriteBytesPS() {
+        String output = getOutputByCmd("pidstat -p %d -d | awk 'NR==4{print $5}'", true,
+            "jvm进程当前磁盘 io 每秒写入字节数");
+        if (StringUtils.isNotBlank(output)) {
+            double v = 1024 * Double.parseDouble(output);
+            return (long) v;
+        }
+        return 0;
+    }
+
+    @Override
+    public long getCurrentSystemDiskIOResponseTimeAvg() {
+        String output = getOutputByCmd("iostat -dkx | awk 'NR>2{a+=$10} END{print a}'", false,
+            "系统每一个磁盘 io 请求的平均处理时间");
+        if (StringUtils.isNotBlank(output)) {
+            double v = Double.parseDouble(output);
+            return (long) v;
+        }
+        return 0;
+    }
+
+    @Override
+    public long getCurrentSystemDiskIOProcessTimeAvg() {
+        String output = getOutputByCmd("iostat -dkx | awk 'NR>2{a+=$13} END{print a}'", false,
+            "系统每次设备 io 处理的平均处理时间");
+        if (StringUtils.isNotBlank(output)) {
+            double v = Double.parseDouble(output);
+            return (long) v;
+        }
+        return 0;
+    }
+
+    @Override
+    public long getCurrentSystemNetworkReceiveBytesPS() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
+            long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, true, true);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return receiveBytesPS;
+        } catch (Exception e) {
+            LOGGER
+                .error(
+                    "class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current system receives bytes per second get failed",
+                    e);
+            return 0;
+        }
+    }
+
+    @Override
+    public long getCurrentSystemNetworkSendBytesPS() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
+            long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, true, false);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return receiveBytesPS;
+        } catch (Exception e) {
+            LOGGER
+                .error(
+                    "class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current system sends bytes per second get failed",
+                    e);
+            return 0;
+        }
+    }
+
+    @Override
+    public long getCurrentProcessNetworkReceiveBytesPS() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
+            long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, false, true);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return receiveBytesPS;
+        } catch (Exception e) {
+            LOGGER
+                .error(
+                    "class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process receives bytes per second get failed",
+                    e);
+            return 0;
+        }
+    }
+
+    @Override
+    public long getCurrentProcessNetworkSendBytesPS() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
+            long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, false, false);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return receiveBytesPS;
+        } catch (Exception e) {
+            LOGGER
+                .error(
+                    "class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process sends bytes per second get failed",
+                    e);
+            return 0;
+        }
+    }
+
+    @Override
+    public int getCurrentSystemNetworkTcpConnectionNum() {
+        String output = getOutputByCmd("netstat -ant | wc -l", false, "系统当前tcp连接数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentProcessNetworkTcpConnectionNum() {
+        String output = getOutputByCmd("netstat -antp | grep %d | wc -l", true, "jvm进程当前tcp连接数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentSystemNetworkTcpTimeWaitNum() {
+        String output = getOutputByCmd(
+            "netstat -ant | awk '{if($NF~/^TIME_WAIT/) a+=1} END{print a}'", false,
+            "系统当前处于 time wait 状态 tcp 连接数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentProcessNetworkTcpTimeWaitNum() {
+        String output = getOutputByCmd(
+            "netstat -antp | grep %d | awk '{if($6~/^TIME_WAIT/) a+=1} END{print a}'", true,
+            "jvm进程当前处于 time wait 状态 tcp 连接数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentSystemNetworkTcpCloseWaitNum() {
+        String output = getOutputByCmd(
+            "netstat -ant | awk '{if($NF~/^CLOSE_WAIT/) a+=1} END{print a}'", false,
+            "系统当前处于 close wait 状态 tcp 连接数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCurrentProcessNetworkTcpCloseWaitNum() {
+        String output = getOutputByCmd(
+            "netstat -antp | grep %d | awk '{if($6~/^CLOSE_WAIT/) a+=1} END{print a}'", true,
+            "jvm进程当前处于 close wait 状态 tcp 连接数");
+        if (StringUtils.isNotBlank(output)) {
+            return Integer.parseInt(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkTcpActiveOpens() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $6}'",
+            false, "系统启动以来 Tcp 主动连接次数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkTcpPassiveOpens() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $7}'",
+            false, "系统启动以来 Tcp 被动连接次数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkTcpAttemptFails() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $8}'",
+            false, "系统启动以来 Tcp 连接失败次数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkTcpEstabResets() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $9}'",
+            false, "系统启动以来 Tcp 连接异常断开次数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkTcpRetransSegs() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $13}'",
+            false, "系统启动以来 Tcp 重传的报文段总个数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkTcpExtListenOverflows() {
+        String output = getOutputByCmd(
+            "netstat -s | egrep \"listen|LISTEN\" | awk '{a+=$1}{print a}'", false,
+            "系统启动以来 Tcp 监听队列溢出次数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkUdpInDatagrams() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $2}'",
+            false, "系统启动以来 UDP 入包量");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkUdpOutDatagrams() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $5}'",
+            false, "系统启动以来 UDP 出包量");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkUdpInErrors() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $4}'",
+            false, "系统启动以来 UDP 入包错误数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkUdpNoPorts() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $3}'",
+            false, "系统启动以来 UDP 端口不可达个数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getSystemNetworkUdpSendBufferErrors() {
+        String output = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $7}'",
+            false, "系统启动以来 UDP 发送缓冲区满次数");
+        if (StringUtils.isNotBlank(output)) {
+            return Long.parseLong(output);
+        }
+        return 0;
+    }
+
+    private String getOutputByCmd(String procFDShell, boolean isProcess, String errorMsg) {
+        //linux 根据shell命令获取资源
         Process process = null;
         BufferedReader br = null;
-        String procFDShell = "ls /proc/%d/fd | wc -l";
         try {
-            procFDShell = String.format(procFDShell, PID);
+            if (isProcess) {
+                procFDShell = String.format(procFDShell, PID);
+            }
             String[] cmd = new String[] { "sh", "-c", procFDShell };
             process = Runtime.getRuntime().exec(cmd);
             int resultCode = process.waitFor();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = null;
             while ((line = br.readLine()) != null) {
-                int fdNum = Integer.parseInt(line.trim());
-                return fdNum;
+                return line.trim();
             }
         } catch (Exception ex) {
-            LOGGER.error("获取系统资源项[文件句柄数使用率]失败", ex);
-            return 0;
+            LOGGER.error("获取系统资源项[{}]失败", errorMsg, ex);
+            return "";
         } finally {
             try {
                 if (br != null) {
                     br.close();
                 }
             } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程对应输入流失败", ex);
+                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程对应输入流失败", errorMsg, errorMsg, ex);
             }
             try {
                 if (process != null) {
                     process.destroy();
                 }
             } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[文件句柄数使用率]失败，原因为关闭执行获取文件句柄数的脚本进程失败", ex);
+                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程失败", errorMsg, errorMsg, ex);
             }
         }
-        LOGGER.error("获取系统资源项[文件句柄数使用率]失败");
-        return 0;
-    }
-
-    @Override
-    public int getSystemMaxFdSize() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentSystemFdUsed() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentProcessThreadNum() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentProcessThreadNumPeak() {
-        return 0;
-    }
-
-    @Override
-    public float getCurrentSystemDiskIOUsagePercent() {
-        return 0;
-    }
-
-    @Override
-    public float getCurrentProcessDiskIOAwaitTimePercent() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentSystemIOPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentSystemDiskIOReadBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentSystemDiskIOWriteBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentProcessDiskIOReadBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentProcessDiskIOWriteBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentSystemDiskIOResponseTimeAvg() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentSystemDiskIOProcessTimeAvg() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentSystemNetworkReceiveBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentSystemNetworkSendBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentProcessNetworkReceiveBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public long getCurrentProcessNetworkSendBytesPS() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentSystemNetworkTcpConnectionNum() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentProcessNetworkTcpConnectionNum() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentSystemNetworkTcpTimeWaitNum() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentProcessNetworkTcpTimeWaitNum() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentSystemNetworkTcpCloseWaitNum() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentProcessNetworkTcpCloseWaitNum() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkTcpActiveOpens() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkTcpPassiveOpens() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkTcpAttemptFails() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkTcpEstabResets() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkTcpRetransSegs() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkTcpExtListenOverflows() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkUdpInDatagrams() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkUdpOutDatagrams() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkUdpInErrors() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkUdpNoPorts() {
-        return 0;
-    }
-
-    @Override
-    public long getSystemNetworkUdpSendBufferErrors() {
-        return 0;
+        LOGGER.error("获取系统资源项[{}]失败", errorMsg);
+        return "";
     }
 }

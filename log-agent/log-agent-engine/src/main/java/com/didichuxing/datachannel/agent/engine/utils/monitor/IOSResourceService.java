@@ -59,7 +59,7 @@ public interface IOSResourceService {
     /**
      * @return 返回当前jvm进程宿主机cpu负载
      */
-    float getCurrentSystemCpuLoad();
+    double getCurrentSystemCpuLoad();
 
     /*********************************** about memory ***********************************/
 
@@ -102,6 +102,11 @@ public interface IOSResourceService {
      * @return 返回系统swap内存总大小 单位：byte
      */
     long getSystemMemorySwapSize();
+
+    /**
+     * @return 返回系统可用swap内存 单位：byte
+     */
+    long getSystemMemorySwapFree();
 
     /**
      * @return 返回系统swap内存使用量 单位：byte
