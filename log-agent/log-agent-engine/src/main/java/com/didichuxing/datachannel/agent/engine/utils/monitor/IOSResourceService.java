@@ -5,6 +5,273 @@ package com.didichuxing.datachannel.agent.engine.utils.monitor;
  */
 public interface IOSResourceService {
 
+    /*********************************** system level ***********************************/
+
+    /*********************** about system ***********************/
+
+    /**
+     * @return 返回系统时间偏移量
+     */
+    long getSystemNtpOffset();
+
+    /**
+     * @return 返回系统进程个数
+     */
+    int getSystemProcCount();
+
+    /**
+     *
+     * @return 返回系统运行的时间
+     */
+    long getSystemUptime();
+
+    /*********************** about cpu ***********************/
+
+    /**
+     * @return 返回系统总体CPU使用率(单位：%)
+     */
+    double getSystemCpuUtil();
+
+    /**
+     * @return 返回cpu上下文交换次数
+     */
+    long getSystemCpuSwitches();
+
+    /**
+     * @return 返回虚拟处理器CPU时间占比(单位：%)
+     */
+    double getSystemCpuGuest();
+
+    /**
+     * @return 返回总总体cpu空闲率（单位：%）
+     */
+    double getSystemCpuIdle();
+
+    /**
+     * @return 返回等待I/O的CPU时间占比(单位：%)
+     */
+    double getSystemCpuIOWait();
+
+    /**
+     * @return 返回系统对应CPU核心数
+     */
+    int getSystemCpuNumCores();
+
+    /**
+     * @return 返回等待处理其他虚拟核的时间占比(单位：%)
+     */
+    double getSystemCpuSteal();
+
+    /**
+     * @return 返回内核态CPU时间占比(单位：%)
+     */
+    double getSystemCpuSystem();
+
+    /**
+     * @return 返回用户态CPU时间占比(单位：%)
+     */
+    double getSystemCpuUser();
+
+    /*********************** about disk ***********************/
+    /**
+     * @return 返回各磁盘分区余量大小（单位：byte）
+     */
+    String getSystemDiskBytesFree();
+
+    /**
+     * @return 返回磁盘某分区用量占比（单位：%）
+     */
+    double getSystemDiskUsedPercent();
+
+    /**
+     * @return 返回设备读操作耗时(单位：ms)
+     */
+    long getSystemDiskReadTime();
+
+    /**
+     * @return 返回读取磁盘时间百分比（单位：%）
+     */
+    double getSystemDiskReadTimePercent();
+
+    /**
+     * @return 返回磁盘各分区总量（单位：byte）
+     */
+    String getSystemDiskBytesTotal();
+
+    /**
+     * @return 返回磁盘各分区用量大小（单位：byte）
+     */
+    String getSystemDiskBytesUsed();
+
+    /**
+     * @return 返回设备写操作耗时(单位：ms)
+     */
+    long getSystemDiskWriteTime();
+
+    /**
+     * @return 返回写入磁盘时间百分比（单位：%）
+     */
+    double getSystemDiskWriteTimePercent();
+
+    /**
+     * @return 返回系统已分配文件句柄数
+     */
+    int getSystemFilesAllocated();
+
+    /**
+     * @return 返回系统未分配文件句柄数
+     */
+    int getSystemFilesLeft();
+
+    /**
+     * @return 返回系统使用文件句柄占已分配百分比（单位：%）
+     */
+    double getSystemFilesUsedPercent();
+
+    /**
+     * @return 返回系统可以打开的最大文件句柄数
+     */
+    int getSystemFilesMax();
+
+    /**
+     * @return 返回系统使用的已分配文件句柄数
+     */
+    int getSystemFilesUsed();
+
+    /**
+     * @return 返回系统各分区空闲inode数量
+     */
+    String getSystemDiskInodesFree();
+
+    /**
+     * @return 返回系统各分区已用inode占比（单位：%）
+     */
+    String getSystemDiskInodesUsedPercent();
+
+    /**
+     * @return 返回系统各分区inode总数量
+     */
+    String getSystemDiskInodesTotal();
+
+    /**
+     * @return 返回系统各分区已用inode数量
+     */
+    String getSystemDiskInodesUsed();
+
+    /*********************** about io ***********************/
+
+    /**
+     * @return 返回设备平均队列长度
+     */
+    long getSystemIOAvgQuSz();
+
+    /**
+     * @return 返回设备平均请求大小
+     */
+    long getSystemIOAvgRqSz();
+
+    /**
+     * @return 返回每次IO平均处理时间（单位：ms）
+     */
+    long getSystemIOAwait();
+
+    /**
+     * @return 返回读请求平均耗时(单位：ms)
+     */
+    long getSystemIORAwait();
+
+    /**
+     * @return 返回每秒读请求数量
+     */
+    long getSystemIOReadRequest();
+
+    /**
+     * @return 返回每秒读取字节数
+     */
+    long getSystemIOReadBytes();
+
+    /**
+     * @return 返回每秒合并到设备队列的读请求数
+     */
+    long getSystemIORRQMS();
+
+    /**
+     * @return 每次IO平均服务时间（单位：ms）
+     * 注：仅 做参考
+     */
+    long getSystemIOSVCTM();
+
+    /**
+     * @return 返回I/O请求的CPU时间百分比
+     */
+    double getSystemIOUtil();
+
+    /**
+     * @return 返回写请求平均耗时(单位：ms)
+     */
+    long getSystemIOWAwait();
+
+    /**
+     * @return 返回每秒写请求数量
+     */
+    long getSystemIOWriteRequest();
+
+    /**
+     * @return 返回每秒写字节数
+     */
+    long getSystemIOWriteBytes();
+
+    /**
+     * @return 返回每秒合并到设备队列的写请求数
+     */
+    long getSystemIOWRQMS();
+
+    /**
+     * @return 返回系统近1分钟平均负载
+     */
+    double getSystemLoad1();
+
+    /**
+     * @return 返回系统近5分钟平均负载
+     */
+    double getSystemLoad5();
+
+    /**
+     * @return 返回系统近15分钟平均负载
+     */
+    double getSystemLoad15();
+
+    /*********************** about memory ***********************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * @return 返回jvm进程对应pid
      */
