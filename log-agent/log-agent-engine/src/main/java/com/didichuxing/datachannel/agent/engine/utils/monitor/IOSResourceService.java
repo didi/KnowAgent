@@ -243,6 +243,12 @@ public interface IOSResourceService {
 
     /*********************** about memory ***********************/
 
+    /**
+     * @return 返回系统文件缓冲区的物理RAM量（单位：byte）
+     */
+    long getSystemMemBuffered();
+
+
 
 
 
