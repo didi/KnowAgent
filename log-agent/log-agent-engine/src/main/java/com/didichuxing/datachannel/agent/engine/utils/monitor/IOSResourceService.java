@@ -456,9 +456,19 @@ public interface IOSResourceService {
     double getProcCpuSys();
 
     /**
-     * @return 返回当前进程中线程数量
+     * @return 返回当前进程cpu上下文交换次数
      */
-    double getProcCpuThreads();
+    long getProcCpuSwitches();
+
+    /**
+     * @return 返回当前进程cpu自愿上下文交换次数（自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换。比如说， I/O、内存等系统资源不足时，就会发生自愿上下文切换 pidstat）
+     */
+    long getProcCpuVoluntarySwitches();
+
+    /**
+     * @return 返回当前进程cpu非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）
+     */
+    long getProcCpuNonVoluntarySwitches();
 
     /**
      * @return 返回当前进程cpu使用率(单位：%)
@@ -594,7 +604,7 @@ public interface IOSResourceService {
     /*********************** about thread ***********************/
 
     /**
-     * @return 返回当前jvm进程线程使用数
+     * @return 返回当前jvm进程中线程数
      */
     int getJvmProcThreadNum();
 
