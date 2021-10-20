@@ -137,11 +137,6 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getSystemCurrentTimeMillis() {
-        return System.currentTimeMillis();
-    }
-
-    @Override
     public float getCurrentProcessCpuUsage() {
         try {
             LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getPid(), getCpuNum());
@@ -561,7 +556,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getCurrentSystemNetworkReceiveBytesPS() {
+    public long getSystemNetworkReceiveBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
             long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, true, true);
@@ -577,7 +572,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getCurrentSystemNetworkSendBytesPS() {
+    public long getSystemNetworkSendBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
             long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, true, false);
@@ -593,7 +588,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getCurrentProcessNetworkReceiveBytesPS() {
+    public long getProcNetworkReceiveBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
             long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, false, true);
@@ -609,7 +604,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getCurrentProcessNetworkSendBytesPS() {
+    public long getProcNetworkSendBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getPid());
             long receiveBytesPS = curLinuxNetFlow.getBytesPS(lastLinuxNetFlow, false, false);
@@ -625,7 +620,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public int getCurrentSystemNetworkTcpConnectionNum() {
+    public int getSystemNetworkTcpConnectionNum() {
         String output = getOutputByCmd("netstat -ant | wc -l", false, "系统当前tcp连接数");
         if (StringUtils.isNotBlank(output)) {
             return Integer.parseInt(output);
@@ -634,7 +629,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public int getCurrentProcessNetworkTcpConnectionNum() {
+    public int getProcNetworkTcpConnectionNum() {
         String output = getOutputByCmd("netstat -antp | grep %d | wc -l", true, "jvm进程当前tcp连接数");
         if (StringUtils.isNotBlank(output)) {
             return Integer.parseInt(output);
@@ -643,7 +638,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public int getCurrentSystemNetworkTcpTimeWaitNum() {
+    public int getSystemNetworkTcpTimeWaitNum() {
         String output = getOutputByCmd(
             "netstat -ant | awk '{if($NF~/^TIME_WAIT/) a+=1} END{print a}'", false,
             "系统当前处于 time wait 状态 tcp 连接数");
@@ -654,7 +649,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public int getCurrentProcessNetworkTcpTimeWaitNum() {
+    public int getProcNetworkTcpTimeWaitNum() {
         String output = getOutputByCmd(
             "netstat -antp | grep %d | awk '{if($6~/^TIME_WAIT/) a+=1} END{print a}'", true,
             "jvm进程当前处于 time wait 状态 tcp 连接数");
@@ -665,7 +660,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public int getCurrentSystemNetworkTcpCloseWaitNum() {
+    public int getSystemNetworkTcpCloseWaitNum() {
         String output = getOutputByCmd(
             "netstat -ant | awk '{if($NF~/^CLOSE_WAIT/) a+=1} END{print a}'", false,
             "系统当前处于 close wait 状态 tcp 连接数");
@@ -676,7 +671,7 @@ public class LinuxOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public int getCurrentProcessNetworkTcpCloseWaitNum() {
+    public int getProcNetworkTcpCloseWaitNum() {
         String output = getOutputByCmd(
             "netstat -antp | grep %d | awk '{if($6~/^CLOSE_WAIT/) a+=1} END{print a}'", true,
             "jvm进程当前处于 close wait 状态 tcp 连接数");

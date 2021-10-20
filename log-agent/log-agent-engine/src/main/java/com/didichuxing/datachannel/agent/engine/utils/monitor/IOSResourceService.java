@@ -1,13 +1,14 @@
 package com.didichuxing.datachannel.agent.engine.utils.monitor;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 系统资源服务
  */
 public interface IOSResourceService {
 
     /*********************************** system level ***********************************/
-
-    /*********************** about system ***********************/
 
     /**
      * @return 返回系统时间偏移量
@@ -20,8 +21,12 @@ public interface IOSResourceService {
     int getSystemProcCount();
 
     /**
-     *
-     * @return 返回系统运行的时间
+     * @return 返回系统启动时间
+     */
+    long getSystemStartupTime();
+
+    /**
+     * @return 返回系统运行时间
      */
     long getSystemUptime();
 
@@ -74,19 +79,19 @@ public interface IOSResourceService {
 
     /*********************** about disk ***********************/
     /**
-     * @return 返回各磁盘分区余量大小（单位：byte）
+     * @return 返回磁盘各分区余量大小（单位：byte）
      */
-    String getSystemDiskBytesFree();
+    Map<String, Long> getSystemDiskBytesFree();
 
     /**
-     * @return 返回磁盘某分区用量占比（单位：%）
+     * @return 返回磁盘各分区用量占比（单位：%）
      */
-    double getSystemDiskUsedPercent();
+    Map<String, Double> getSystemDiskUsedPercent();
 
     /**
-     * @return 返回设备读操作耗时(单位：ms)
+     * @return 返回各设备读操作耗时(单位：ms)
      */
-    long getSystemDiskReadTime();
+    Map<String, Long> getSystemDiskReadTime();
 
     /**
      * @return 返回读取磁盘时间百分比（单位：%）
@@ -96,17 +101,17 @@ public interface IOSResourceService {
     /**
      * @return 返回磁盘各分区总量（单位：byte）
      */
-    String getSystemDiskBytesTotal();
+    Map<String, Long> getSystemDiskBytesTotal();
 
     /**
      * @return 返回磁盘各分区用量大小（单位：byte）
      */
-    String getSystemDiskBytesUsed();
+    Map<String, Long> getSystemDiskBytesUsed();
 
     /**
-     * @return 返回设备写操作耗时(单位：ms)
+     * @return 返回各设备写操作耗时(单位：ms)
      */
-    long getSystemDiskWriteTime();
+    Map<String, Long> getSystemDiskWriteTime();
 
     /**
      * @return 返回写入磁盘时间百分比（单位：%）
@@ -141,22 +146,22 @@ public interface IOSResourceService {
     /**
      * @return 返回系统各分区空闲inode数量
      */
-    String getSystemDiskInodesFree();
+    Map<String, Long> getSystemDiskInodesFree();
 
     /**
      * @return 返回系统各分区已用inode占比（单位：%）
      */
-    String getSystemDiskInodesUsedPercent();
+    Map<String, Double> getSystemDiskInodesUsedPercent();
 
     /**
      * @return 返回系统各分区inode总数量
      */
-    String getSystemDiskInodesTotal();
+    Map<String, Long> getSystemDiskInodesTotal();
 
     /**
      * @return 返回系统各分区已用inode数量
      */
-    String getSystemDiskInodesUsed();
+    Map<String, Long> getSystemDiskInodesUsed();
 
     /*********************** about io ***********************/
 
@@ -248,332 +253,127 @@ public interface IOSResourceService {
      */
     long getSystemMemBuffered();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * @return 返回缓存内存的物理RAM量（单位：byte）
+     */
+    long getSystemMemCached();
 
     /**
-     * @return 返回jvm进程对应pid
+     * @return 返回系统当前可分配的内存总量（单位：byte）
      */
-    long getPid();
+    long getSystemMemCommitLimit();
 
     /**
-     * @return 返回jvm进程启动时间
+     * @return 返回在磁盘分页文件上保留的物理内存量（单位：byte）
      */
-    long getProcessStartupTime();
+    long getSystemMemCommitted();
 
     /**
-     * @return 返回系统启动时间
+     * @return 返回系统已分配的包括进程未使用的内存量（单位：byte）
      */
-    long getSystemStartupTime();
+    long getSystemMemCommittedAs();
 
     /**
-     * @return 返回系统当前时间
+     * @return 返回不能写入磁盘的物理内存量（单位：byte）
      */
-    long getSystemCurrentTimeMillis();
-
-    /*********************************** about cpu ***********************************/
+    long getSystemMemNonPaged();
 
     /**
-     * @return 返回系统cpu核数
+     * @return 返回没被使用是可以写入磁盘的物理内存量（单位：byte）
      */
-    int getCpuNum();
+    long getSystemMemPaged();
 
     /**
-     * @return 返回jvm进程当前cpu使用率
-     * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
+     * @return 返回系统内存空闲率
      */
-    float getCurrentProcessCpuUsage();
+    double getSystemMemFreePercent();
 
     /**
-     * @return 返回jvm进程当前cpu使用率
-     * 注意：使用率为总使用比率，如jvm进程使用一颗核，系统共10核，则返回0.1 = 10%
+     * @return 返回系统内存使用率
      */
-    float getCurrentProcessCpuUsageTotalPercent();
+    double getSystemMemUsedPercent();
 
     /**
-     * @return 返回系统当前cpu总体使用率
-     * 注：使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200
+     * @return 返回用作共享内存的物理RAM量（单位：byte）
      */
-    float getCurrentSystemCpuUsage();
+    long getSystemMemShared();
 
     /**
-     * @return 返回系统当前cpu使用率
-     * 注意：使用率为总使用比率，如agent进程宿主机使用一颗核，系统共10核，则返回0.1 = 10%
+     * @return 返回内核用来缓存数据结构供自己使用的内存量（单位：byte）
      */
-    float getCurrentSystemCpuUsageTotalPercent();
+    long getSystemMemSlab();
 
     /**
-     * @return 返回当前jvm进程宿主机cpu负载
+     * @return 返回系统物理内存总量（单位：byte）
      */
-    double getCurrentSystemCpuLoad();
-
-    /*********************************** about memory ***********************************/
+    long getSystemMemTotal();
 
     /**
-     * @return 返回jvm进程当前内存总使用量（堆内内存 + 堆外内存） 单位：byte
+     * @return 返回系统空闲内存大小（单位：byte）
      */
-    long getCurrentProcessMemoryUsed();
+    long getSystemMemFree();
 
     /**
-     * @return 返回jvm进程而且堆内存使用量 单位：byte
+     * @return 返回系统已用内存大小（单位：byte）
      */
-    long getCurrentProcessHeapMemoryUsed();
+    long getSystemMemUsed();
 
     /**
-     * @return 返回jvm进程当前堆外内存使用量 单位：byte
+     * @return 返回系统用作缓存的交换空间
      */
-    long getCurrentProcessNonHeapMemoryUsed();
+    long getSystemSwapCached();
 
     /**
-     * @return 返回jvm进程最大可用堆内存(对应 jvm Xmx) 单位：byte
+     * @return 返回系统空闲swap大小（单位：byte）
      */
-    long getCurrentProcessMaxHeapSize();
+    long getSystemSwapFree();
 
     /**
-     * @return 返回系统当前可用内存 单位：byte
+     * @return 返回系统空闲swap占比
      */
-    long getCurrentSystemMemoryFree();
+    double getSystemSwapFreePercent();
 
     /**
-     * @return 返回系统内存总大小 单位：byte
+     * @return 返回系统swap总大小（单位：byte）
      */
-    long getSystemMemoryTotal();
+    long getSystemSwapTotal();
 
     /**
-     * @return 返回系统已使用内存大小 单位：byte
+     * @return 返回系统已用swap大小（单位：byte）
      */
-    long getSystemMemoryUsed();
+    long getSystemSwapUsed();
 
     /**
-     * @return 返回系统swap内存总大小 单位：byte
+     * @return 返回系统已用swap占比（单位：%）
      */
-    long getSystemMemorySwapSize();
+    double getSystemSwapUsedPercent();
+
+    /*********************** about network ***********************/
 
     /**
-     * @return 返回系统可用swap内存 单位：byte
+     * @return 返回系统网络每秒下行流量
      */
-    long getSystemMemorySwapFree();
+    long getSystemNetworkReceiveBytesPs();
 
     /**
-     * @return 返回系统swap内存使用量 单位：byte
+     * @return 返回系统网络每秒上行流量
      */
-    long getSystemMemorySwapUsed();
+    long getSystemNetworkSendBytesPs();
 
     /**
-     * @return 返回jvm进程启动以来内存使用量峰值 单位：byte
+     * @return 返回系统tcp连接数
      */
-    long getProcessMemoryUsedPeak();
-
-    /*********************************** about disk ***********************************/
+    int getSystemNetworkTcpConnectionNum();
 
     /**
-     * @return 返回系统磁盘总容量 单位：字节
-     * 注：如系统挂载多块磁盘，则返回系统各磁盘容量之和
+     * @return 返回系统处于 time wait 状态 tcp 连接数
      */
-    long getSystemDiskTotal();
+    int getSystemNetworkTcpTimeWaitNum();
 
     /**
-     * @return 返回系统磁盘已使用量 单位：字节
-     * 注：如系统挂载多块磁盘，则返回系统各磁盘使用量之和
+     * @return 返回系统处于 close wait 状态 tcp 连接数
      */
-    long getSystemDiskUsed();
-
-    /**
-     * @return 返回系统磁盘剩余可用使用量 单位：字节
-     * 注：如系统挂载多块磁盘，则返回系统各磁盘可使用量之和
-     */
-    long getSystemDiskFree();
-
-    /**
-     * @return 返回系统挂载的各磁盘中，最小磁盘可使用量 单位：字节
-     */
-    long getSystemDiskFreeMin();
-
-    /**
-     * @return 返回系统挂载磁盘数
-     */
-    int getSystemDiskNum();
-
-    /*********************************** about agent process gc ***********************************/
-
-    /**
-     * @return 返回jvm进程启动以来 young gc 次数
-     */
-    long getYoungGcCount();
-
-    /**
-     * @return 返回jvm进程启动以来 full gc 次数
-     */
-    long getFullGcCount();
-
-    /**
-     * @return 返回jvm进程启动以来 young gc 耗时 单位：ms
-     */
-    long getYoungGcTime();
-
-    /**
-     * @return 返回jvm进程启动以来 full gc 耗时 单位：ms
-     */
-    long getFullGcTime();
-
-    /*********************************** about fd ***********************************/
-
-    /**
-     * @return 返回jvm进程当前fd使用数
-     */
-    int getCurrentProcessFdUsed();
-
-    /**
-     * @return 返回系统fd使用量
-     */
-    int getCurrentSystemFdUsed();
-
-    /**
-     * @return 返回系统最大fd可用数
-     */
-    int getSystemMaxFdSize();
-
-    /*********************************** about thread ***********************************/
-
-    /**
-     * @return 返回jvm进程当前线程使用数
-     */
-    int getCurrentProcessThreadNum();
-
-    /**
-     * @return 返回jvm进程启动以来线程数峰值
-     */
-    int getCurrentProcessThreadNumPeak();
-
-    /*********************************** about io ***********************************/
-
-    /**
-     * @return 返回系统当前磁盘 io 每秒读取字节数
-     */
-    long getCurrentSystemDiskIOReadBytesPS();
-
-    /**
-     * @return 返回系统当前磁盘 io 每秒写入字节数
-     */
-    long getCurrentSystemDiskIOWriteBytesPS();
-
-    /**
-     * @return 返回jvm进程当前磁盘 io 每秒读取字节数
-     */
-    long getCurrentProcessDiskIOReadBytesPS();
-
-    /**
-     * @return 返回jvm进程当前磁盘 io 每秒写入字节数
-     */
-    long getCurrentProcessDiskIOWriteBytesPS();
-
-    /**
-     * @return 返回系统当前磁盘 io 使用率，100% 表示磁盘io能力达到饱和，对应 linux %util
-     */
-    float getCurrentSystemDiskIOUsagePercent();
-
-    /**
-     * @return 返回jvm进程磁盘 io 读写等待时间占总时间百分比 对应 iotop IO
-     */
-    float getCurrentProcessDiskIOAwaitTimePercent();
-
-    /**
-     * @return 返回系统当前每秒 io 请求数量（随机读场景须关注）
-     */
-    int getCurrentSystemIOPS();
-
-    /**
-     * @return 返回系统每一个磁盘 io 请求的平均处理时间 单位：ms，对应 linux await
-     */
-    long getCurrentSystemDiskIOResponseTimeAvg();
-
-    /**
-     * @return 返回系统每次设备 io 处理的平均处理时间 单位：ms，对应 linux svctm
-     * 如：getCurrentSystemIOProcessTimeAvg 值趋近于 getCurrentSystemIOResponseTimeAvg，表示几乎不存在 io 等待，
-     * getCurrentSystemIOResponseTimeAvg 值远高于 getCurrentSystemIOProcessTimeAvg，表示 I/O队列等待较长，可能导致系统上运行的应用程序将变慢
-     */
-    long getCurrentSystemDiskIOProcessTimeAvg();
-
-    /*********************************** about network ***********************************/
-
-    /**
-     * @return 返回系统当前网络每秒下行流量
-     */
-    long getCurrentSystemNetworkReceiveBytesPS();
-
-    /**
-     * @return 返回系统网络当前每秒上行流量
-     */
-    long getCurrentSystemNetworkSendBytesPS();
-
-    /**
-     * @return 返回jvm进程当前网络每秒下行流量
-     */
-    long getCurrentProcessNetworkReceiveBytesPS();
-
-    /**
-     * @return 返回jvm进程当前网络每秒上行流量
-     */
-    long getCurrentProcessNetworkSendBytesPS();
-
-    /************************** about network tcp **************************/
-
-    /**
-     * @return 返回系统当前tcp连接数
-     */
-    int getCurrentSystemNetworkTcpConnectionNum();
-
-    /**
-     * @return 返回jvm进程当前tcp连接数
-     */
-    int getCurrentProcessNetworkTcpConnectionNum();
-
-    /**
-     * @return 返回系统当前处于 time wait 状态 tcp 连接数
-     */
-    int getCurrentSystemNetworkTcpTimeWaitNum();
-
-    /**
-     * @return 返回jvm进程当前处于 time wait 状态 tcp 连接数
-     */
-    int getCurrentProcessNetworkTcpTimeWaitNum();
-
-    /**
-     * @return 返回系统当前处于 close wait 状态 tcp 连接数
-     */
-    int getCurrentSystemNetworkTcpCloseWaitNum();
-
-    /**
-     * @return 返回jvm进程当前处于 close wait 状态 tcp 连接数
-     */
-    int getCurrentProcessNetworkTcpCloseWaitNum();
+    int getSystemNetworkTcpCloseWaitNum();
 
     /**
      * @return 返回系统启动以来 Tcp 主动连接次数
@@ -605,8 +405,6 @@ public interface IOSResourceService {
      */
     long getSystemNetworkTcpExtListenOverflows();
 
-    /************************** about network udp **************************/
-
     /**
      * @return 返回系统启动以来 UDP 入包量
      */
@@ -631,5 +429,257 @@ public interface IOSResourceService {
      * @return 返回系统启动以来 UDP 发送缓冲区满次数
      */
     long getSystemNetworkUdpSendBufferErrors();
+
+    /*********************************** process level ***********************************/
+
+    /**
+     * @return 返回当前Jvm进程启动时间
+     */
+    long getProcStartupTime();
+
+    /**
+     * @return 返回当前Jvm进程运行时间
+     */
+    long getProcUptime();
+
+    /**
+     * @return 返回当前Jvm进程对应pid
+     */
+    long getProcPid();
+
+    /*********************** about cpu ***********************/
+
+    /**
+     *
+     * @return 返回当前进程系统态cpu使用率(单位：%)
+     */
+    double getProcCpuSys();
+
+    /**
+     * @return 返回当前进程中线程数量
+     */
+    double getProcCpuThreads();
+
+    /**
+     * @return 返回当前进程cpu使用率(单位：%)
+     */
+    double getProcCpuUtil();
+
+    /**
+     * @return 返回当前进程用户态cpu使用率(单位：%)
+     */
+    double getProcCpuUser();
+
+    /*********************** about io ***********************/
+
+    /**
+     * @return 返回当前进程io读取频率(单位：hz)
+     */
+    double getProcIOReadRate();
+
+    /**
+     * @return 返回当前进程io读取速率(单位：b/s)
+     */
+    long getProcIOReadBytesRate();
+
+    /**
+     * @return 返回当前进程io写入频率(单位：hz)
+     */
+    double getProcIOWriteRate();
+
+    /**
+     * @return 返回当前进程io写入速率(单位：b/s)
+     */
+    long getProcIOWriteBytesRate();
+
+    /**
+     * @return 返回当前进程io读写等待时间占总时间百分比（单位：%） 对应 iotop IO
+     */
+    double getProcIOAwaitTimePercent();
+
+    /*********************** about memory ***********************/
+
+    /**
+     * @return 返回当前进程data内存大小
+     */
+    long getProcMemData();
+
+    /**
+     * @return 返回当前进程dirty内存大小
+     */
+    long getProcMemDirty();
+
+    /**
+     * @return 返回当前进程lib内存大小
+     */
+    long getProcMemLib();
+
+    /**
+     * @return 返回当前进程常驻内存大小
+     */
+    long getProcMemRss();
+
+    /**
+     * @return 返回当前进程共享内存大小
+     */
+    long getProcMemShared();
+
+    /**
+     * @return 返回当前进程交换空间大小
+     */
+    long getProcMemSwap();
+
+    /**
+     * @return 返回当前进程Text内存大小
+     */
+    long getProcMemText();
+
+    /**
+     * @return 返回当前进程内存使用量（单位：byte）
+     */
+    long getProcMemUsed();
+
+    /**
+     * @return 返回当前进程内存使用率(单位：%)
+     */
+    double getProcMemUtil();
+
+    /**
+     * @return 返回当前进程虚拟内存大小
+     */
+    long getProcMemVms();
+
+    /**
+     * @return 返回当前jvm进程堆内存使用量（单位：byte）
+     */
+    long getJvmProcHeapMemoryUsed();
+
+    /**
+     * @return 返回当前jvm进程堆外内存使用量（单位：byte）
+     */
+    long getJvmProcNonHeapMemoryUsed();
+
+    /**
+     * @return 返回当前jvm进程最大可用堆内存，对应 jvm Xmx（单位：byte）
+     */
+    long getJvmProcHeapSizeXmx();
+
+    /**
+     * @return 返回当前jvm进程启动以来内存使用量峰值（单位：byte）
+     */
+    long getJvmProcMemUsedPeak();
+
+    /*********************** about gc ***********************/
+
+    /**
+     * @return 返回当前jvm进程启动以来 young gc 次数
+     */
+    long getJvmProcYoungGcCount();
+
+    /**
+     * @return 返回当前jvm进程启动以来 full gc 次数
+     */
+    long getJvmProcFullGcCount();
+
+    /**
+     * @return 返回当前jvm进程启动以来 young gc 耗时 单位：ms
+     */
+    long getJvmProcYoungGcTime();
+
+    /**
+     * @return 返回当前jvm进程启动以来 full gc 耗时 单位：ms
+     */
+    long getJvmProcFullGcTime();
+
+    /*********************** about thread ***********************/
+
+    /**
+     * @return 返回当前jvm进程线程使用数
+     */
+    int getJvmProcThreadNum();
+
+    /**
+     * @return 返回当前jvm进程启动以来线程数峰值
+     */
+    int getJvmProcThreadNumPeak();
+
+    /**
+     * @return 返回当前jvm进程正常采集线程池可容纳的最大线程数
+     */
+    int getJvmProcNormalSourceThreadPoolMaxThreadNum();
+
+    /**
+     * @return 返回当前jvm进程正常采集线程池实际线程数
+     */
+    int getJvmProcNormalSourceThreadPoolThreadNum();
+
+    /**
+     * @return 返回当前jvm进程正常采集线程池任务队列最大容量
+     */
+    int getJvmProcNormalThreadPoolMaxQueueSize();
+
+    /**
+     * @return 返回当前jvm进程正常采集线程池任务队列实际数量
+     */
+    int getJvmProcNormalThreadPoolQueueSize();
+
+    /**
+     * @return 返回当前jvm进程临时采集线程池可容纳的最大线程数
+     */
+    int getJvmProcTempSourceThreadPoolMaxThreadNum();
+
+    /**
+     * @return 返回当前jvm进程临时采集线程池实际线程数
+     */
+    int getJvmProcTempSourceThreadPoolThreadNum();
+
+    /**
+     * @return 返回当前jvm进程临时采集线程池任务队列最大容量
+     */
+    int getJvmProcTempThreadPoolMaxQueueSize();
+
+    /**
+     * @return 返回当前jvm进程临时采集线程池任务队列实际数量
+     */
+    int getJvmProcTempThreadPoolQueueSize();
+
+    /*********************** about fd ***********************/
+
+    /**
+     * @return 返回当前Jvm进程打开文件句柄数量
+     */
+    int getProcOpenFdCount();
+
+    /*********************** about network ***********************/
+
+    /**
+     * @return 返回当前Jvm进程监听端口
+     */
+    List<Integer> getProcPortListen();
+
+    /**
+     * @return 返回当前Jvm进程网络每秒下行流量
+     */
+    long getProcNetworkReceiveBytesPs();
+
+    /**
+     * @return 返回当前Jvm进程网络每秒上行流量
+     */
+    long getProcNetworkSendBytesPs();
+
+    /**
+     * @return 返回当前Jvm进程当前tcp连接数
+     */
+    int getProcNetworkTcpConnectionNum();
+
+    /**
+     * @return 返回当前Jvm进程当前处于 time wait 状态 tcp 连接数
+     */
+    int getProcNetworkTcpTimeWaitNum();
+
+    /**
+     * @return 返回当前Jvm进程当前处于 close wait 状态 tcp 连接数
+     */
+    int getProcNetworkTcpCloseWaitNum();
 
 }

@@ -379,52 +379,52 @@ public class AixOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getCurrentSystemNetworkReceiveBytesPS() {
+    public long getSystemNetworkReceiveBytesPs() {
         return 0;
     }
 
     @Override
-    public long getCurrentSystemNetworkSendBytesPS() {
+    public long getSystemNetworkSendBytesPs() {
         return 0;
     }
 
     @Override
-    public long getCurrentProcessNetworkReceiveBytesPS() {
+    public long getProcNetworkReceiveBytesPs() {
         return 0;
     }
 
     @Override
-    public long getCurrentProcessNetworkSendBytesPS() {
+    public long getProcNetworkSendBytesPs() {
         return 0;
     }
 
     @Override
-    public int getCurrentSystemNetworkTcpConnectionNum() {
+    public int getSystemNetworkTcpConnectionNum() {
         return 0;
     }
 
     @Override
-    public int getCurrentProcessNetworkTcpConnectionNum() {
+    public int getProcNetworkTcpConnectionNum() {
         return 0;
     }
 
     @Override
-    public int getCurrentSystemNetworkTcpTimeWaitNum() {
+    public int getSystemNetworkTcpTimeWaitNum() {
         return 0;
     }
 
     @Override
-    public int getCurrentProcessNetworkTcpTimeWaitNum() {
+    public int getProcNetworkTcpTimeWaitNum() {
         return 0;
     }
 
     @Override
-    public int getCurrentSystemNetworkTcpCloseWaitNum() {
+    public int getSystemNetworkTcpCloseWaitNum() {
         return 0;
     }
 
     @Override
-    public int getCurrentProcessNetworkTcpCloseWaitNum() {
+    public int getProcNetworkTcpCloseWaitNum() {
         return 0;
     }
 
