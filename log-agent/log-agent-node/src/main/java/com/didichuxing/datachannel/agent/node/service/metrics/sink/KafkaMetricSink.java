@@ -93,6 +93,11 @@ public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
 
     @Override
     public void putMetrics(MetricsRecord record) {
+
+        /*
+         * TODO：指标统一采用 agent-manager 侧定义指标名，去掉新、老指标对应版本兼容逻辑
+         */
+
         Iterable<Metric> metrics = record.metrics();
         Iterable<MetricsTag> tags = record.tags();
         Map<String, Object> result = new HashMap<>();

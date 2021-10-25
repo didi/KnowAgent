@@ -671,11 +671,4 @@ public class AgentManageServiceTest extends ApplicationTests {
 //    }
 //
 
-    @Test
-    public void agentHealthTest() {
-        List<AgentDO> agentDOList = agentManageService.list();
-        for (AgentDO agentDO : agentDOList) {
-            AgentHealthLevelEnum agentHealthLevelEnum = agentManageService.checkAgentHealth(agentDO);
-        }
-    }
 }

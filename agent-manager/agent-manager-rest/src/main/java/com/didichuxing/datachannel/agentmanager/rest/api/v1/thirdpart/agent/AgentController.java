@@ -4,12 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.version.AgentVersionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentRegisterDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.config.AgentCollectConfiguration;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.config.AgentCollectConfigDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
-import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigurationManageService;
+import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionManageService;
 import io.swagger.annotations.Api;
@@ -28,7 +28,7 @@ public class AgentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AgentController.class);
 
     @Autowired
-    private AgentCollectConfigurationManageService agentCollectConfigurationManageService;
+    private AgentCollectConfigManageService agentCollectConfigManageService;
 
     @Autowired
     private AgentManageService agentManageService;
@@ -39,8 +39,8 @@ public class AgentController {
     @ApiOperation(value = "获取Agent配置 & Agent 待采集日志采集任务集", notes = "")
     @RequestMapping(path = "/config", method = RequestMethod.GET)
     public Result<String> getAgentCollectConfiguration(@RequestParam String hostName) {
-        AgentCollectConfiguration agentCollectConfiguration = agentCollectConfigurationManageService.getAgentConfigurationByHostName(hostName);
-        return Result.buildSucc(JSON.toJSONString(agentCollectConfiguration));
+        AgentCollectConfigDO agentCollectConfigDO = agentCollectConfigManageService.getAgentConfigDOByHostName(hostName);
+        return Result.buildSucc(JSON.toJSONString(agentCollectConfigDO));
     }
 
     @ApiOperation(value = "Agent注册", notes = "")

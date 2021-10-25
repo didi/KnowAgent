@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Kafka生产者相关配置项
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProducerConfiguration {
+public class ReceiverConfigDO {
 
     @ApiModelProperty(value = "接收端对象id")
     private Long receiverId;

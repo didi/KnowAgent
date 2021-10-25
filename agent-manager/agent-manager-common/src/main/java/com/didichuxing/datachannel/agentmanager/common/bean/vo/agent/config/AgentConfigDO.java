@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Agent配置信息
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AgentConfiguration {
+public class AgentConfigDO {
 
     @ApiModelProperty(value = "采集端id")
     private Long agentId;
@@ -27,10 +27,10 @@ public class AgentConfiguration {
     private String advancedConfigurationJsonString;
 
     @ApiModelProperty(value = "Agent指标信息发往的Receiver端生产者配置")
-    private ProducerConfiguration metricsProducerConfiguration;
+    private ReceiverConfigDO metricsReceiverConfigDO;
 
     @ApiModelProperty(value = "Agent错误日志信息发往的Receiver端生产者配置")
-    private ProducerConfiguration errorLogsProducerConfiguration;
+    private ReceiverConfigDO errorLogsReceiverConfigDO;
 
     @ApiModelProperty(value = "采集端限流 cpu 阈值")
     private Integer cpuLimitThreshold;
@@ -78,20 +78,20 @@ public class AgentConfiguration {
         this.advancedConfigurationJsonString = advancedConfigurationJsonString;
     }
 
-    public ProducerConfiguration getMetricsProducerConfiguration() {
-        return metricsProducerConfiguration;
+    public ReceiverConfigDO getMetricsProducerConfiguration() {
+        return metricsReceiverConfigDO;
     }
 
-    public void setMetricsProducerConfiguration(ProducerConfiguration metricsProducerConfiguration) {
-        this.metricsProducerConfiguration = metricsProducerConfiguration;
+    public void setMetricsProducerConfiguration(ReceiverConfigDO metricsReceiverConfigDO) {
+        this.metricsReceiverConfigDO = metricsReceiverConfigDO;
     }
 
-    public ProducerConfiguration getErrorLogsProducerConfiguration() {
-        return errorLogsProducerConfiguration;
+    public ReceiverConfigDO getErrorLogsProducerConfiguration() {
+        return errorLogsReceiverConfigDO;
     }
 
-    public void setErrorLogsProducerConfiguration(ProducerConfiguration errorLogsProducerConfiguration) {
-        this.errorLogsProducerConfiguration = errorLogsProducerConfiguration;
+    public void setErrorLogsProducerConfiguration(ReceiverConfigDO errorLogsReceiverConfigDO) {
+        this.errorLogsReceiverConfigDO = errorLogsReceiverConfigDO;
     }
 
     public Integer getCpuLimitThreshold() {

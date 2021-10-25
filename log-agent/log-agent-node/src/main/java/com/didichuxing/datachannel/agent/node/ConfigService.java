@@ -3,7 +3,7 @@ package com.didichuxing.datachannel.agent.node;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.didichuxing.datachannel.agent.node.am.v2.AgentCollectConfigurationImpl;
+import com.didichuxing.datachannel.agent.node.am.v2.AgentCollectConfigDOImpl;
 import com.didichuxing.datachannel.agent.node.service.http.client.HttpClient;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentRegisterDTO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
@@ -456,7 +456,7 @@ public class ConfigService extends AgentComponent {
                 }
                 agentConfig.setModelConfigs(modelConfigs);
             }*/
-            AgentCollectConfigurationImpl agentCollectConfigurationImpl = JSONObject.parseObject(input, AgentCollectConfigurationImpl.class);
+            AgentCollectConfigDOImpl agentCollectConfigurationImpl = JSONObject.parseObject(input, AgentCollectConfigDOImpl.class);
             return agentCollectConfigurationImpl.convertToAgentConfig();
         } catch (Exception e) {
             CONFIG_LOGGER.error("buildAgentConfigFromString error! input is " + input, e);

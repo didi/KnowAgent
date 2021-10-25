@@ -1,7 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author huqidong
@@ -9,6 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
  * 文件类型日志采集路径配置信息
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FileLogCollectPathConfiguration extends LogCollectPathConfiguration {
+public class FileLogCollectPathConfigDO extends LogCollectPathConfigDO {
 
 }

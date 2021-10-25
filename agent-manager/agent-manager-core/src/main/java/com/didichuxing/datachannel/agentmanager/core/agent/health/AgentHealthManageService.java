@@ -1,6 +1,8 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 
 /**
  * @author huqidong
@@ -37,5 +39,13 @@ public interface AgentHealthManageService {
      * @param operator 操作人
      */
     void updateAgentHealth(AgentHealthDO agentHealthDO, String operator);
+
+    /**
+     * 检查给定 Agent 健康度，并将检查结果信息更新至表 Agent
+     *
+     * @param agentDO 待检查 agent 对象
+     * @return 返回给定 agent 健康度检查结果，如给定Agent无须被诊断（如：处于 agent check 黑名单），返回 AgentHealthLevelEnum.GREEN
+     */
+    AgentHealthLevelEnum checkAgentHealth(AgentDO agentDO);
 
 }

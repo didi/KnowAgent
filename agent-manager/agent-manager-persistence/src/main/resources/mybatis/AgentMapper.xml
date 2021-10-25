@@ -35,7 +35,7 @@
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from tb_agent
     where id = #{id,jdbcType=BIGINT}
@@ -64,17 +64,17 @@
     where host_name = #{hostName,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" useGeneratedKeys="true" keyProperty="id">
-    insert into tb_agent (id, host_name, ip, 
-      collect_type, cpu_limit_threshold, byte_limit_threshold, 
-      agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version,
-      operator, metrics_producer_configuration, error_logs_producer_configuration
-      )
-    values (#{id,jdbcType=BIGINT}, #{hostName,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, 
-      #{collectType,jdbcType=TINYINT}, #{cpuLimitThreshold,jdbcType=INTEGER}, #{byteLimitThreshold,jdbcType=BIGINT}, 
-      #{agentVersionId,jdbcType=BIGINT}, #{metricsSendTopic,jdbcType=VARCHAR}, #{metricsSendReceiverId,jdbcType=BIGINT}, #{errorLogsSendTopic,jdbcType=VARCHAR}, #{errorLogsSendReceiverId,jdbcType=BIGINT},
-      #{advancedConfigurationJsonString,jdbcType=VARCHAR}, #{configurationVersion,jdbcType=INTEGER},
-      #{operator,jdbcType=VARCHAR}, #{metricsProducerConfiguration, jdbcType=VARCHAR}, #{errorLogsProducerConfiguration, jdbcType=VARCHAR}
-      )
+    insert into tb_agent (id, host_name, ip,
+                          collect_type, cpu_limit_threshold, byte_limit_threshold,
+                          agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version,
+                          operator, metrics_producer_configuration, error_logs_producer_configuration
+    )
+    values (#{id,jdbcType=BIGINT}, #{hostName,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR},
+            #{collectType,jdbcType=TINYINT}, #{cpuLimitThreshold,jdbcType=INTEGER}, #{byteLimitThreshold,jdbcType=BIGINT},
+            #{agentVersionId,jdbcType=BIGINT}, #{metricsSendTopic,jdbcType=VARCHAR}, #{metricsSendReceiverId,jdbcType=BIGINT}, #{errorLogsSendTopic,jdbcType=VARCHAR}, #{errorLogsSendReceiverId,jdbcType=BIGINT},
+            #{advancedConfigurationJsonString,jdbcType=VARCHAR}, #{configurationVersion,jdbcType=INTEGER},
+            #{operator,jdbcType=VARCHAR}, #{metricsProducerConfiguration, jdbcType=VARCHAR}, #{errorLogsProducerConfiguration, jdbcType=VARCHAR}
+           )
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_agent

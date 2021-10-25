@@ -41,10 +41,10 @@ public class LogCollectTaskConfiguration {
     private String advancedConfigurationJsonString;
 
     @ApiModelProperty(value = "日志采集任务采集的日志需要发往的Receiver端生产者配置")
-    private ProducerConfiguration logProducerConfiguration;
+    private ReceiverConfigDO logReceiverConfigDO;
 
     @ApiModelProperty(value = "日志采集任务关联的文件类型采集路径集")
-    private List<FileLogCollectPathConfiguration> fileLogCollectPathList;
+    private List<FileLogCollectPathConfigDO> fileLogCollectPathList;
 
     @ApiModelProperty(value = "日志内容过滤规则信息（存储 BaseLogContentFilterRuleLogic 某具体实现类的 json 化形式）")
     private String logContentFilterRuleLogicJsonString;
@@ -146,19 +146,19 @@ public class LogCollectTaskConfiguration {
         this.advancedConfigurationJsonString = advancedConfigurationJsonString;
     }
 
-    public ProducerConfiguration getLogProducerConfiguration() {
-        return logProducerConfiguration;
+    public ReceiverConfigDO getLogProducerConfiguration() {
+        return logReceiverConfigDO;
     }
 
-    public void setLogProducerConfiguration(ProducerConfiguration logProducerConfiguration) {
-        this.logProducerConfiguration = logProducerConfiguration;
+    public void setLogProducerConfiguration(ReceiverConfigDO logReceiverConfigDO) {
+        this.logReceiverConfigDO = logReceiverConfigDO;
     }
 
-    public List<FileLogCollectPathConfiguration> getFileLogCollectPathList() {
+    public List<FileLogCollectPathConfigDO> getFileLogCollectPathList() {
         return fileLogCollectPathList;
     }
 
-    public void setFileLogCollectPathList(List<FileLogCollectPathConfiguration> fileLogCollectPathList) {
+    public void setFileLogCollectPathList(List<FileLogCollectPathConfigDO> fileLogCollectPathList) {
         this.fileLogCollectPathList = fileLogCollectPathList;
     }
 

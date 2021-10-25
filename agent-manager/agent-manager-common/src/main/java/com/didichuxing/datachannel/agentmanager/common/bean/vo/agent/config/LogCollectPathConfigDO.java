@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 日志采集路径配置信息
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LogCollectPathConfiguration {
+public class LogCollectPathConfigDO {
 
     @ApiModelProperty(value = "文件类型日志采集路径 id")
     private Long pathId;

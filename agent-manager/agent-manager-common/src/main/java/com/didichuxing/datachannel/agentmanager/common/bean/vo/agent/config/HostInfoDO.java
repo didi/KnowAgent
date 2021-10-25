@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * 主机信息
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class HostInfo {
+public class HostInfoDO {
 
     @ApiModelProperty(value = "主机名")
     private String hostName;
@@ -50,14 +50,14 @@ public class HostInfo {
     public boolean equals(Object o) {
         if (this == o) return true;
 
-        if (!(o instanceof HostInfo)) return false;
+        if (!(o instanceof HostInfoDO)) return false;
 
-        HostInfo hostInfo = (HostInfo) o;
+        HostInfoDO hostInfoDO = (HostInfoDO) o;
 
         return new EqualsBuilder()
-                .append(hostName, hostInfo.hostName)
-                .append(hostType, hostInfo.hostType)
-                .append(hostExtendField, hostInfo.hostExtendField)
+                .append(hostName, hostInfoDO.hostName)
+                .append(hostType, hostInfoDO.hostType)
+                .append(hostExtendField, hostInfoDO.hostExtendField)
                 .isEquals();
     }
 
@@ -70,13 +70,13 @@ public class HostInfo {
                 .toHashCode();
     }
 
-    public HostInfo(String hostName, Integer hostType, String hostExtendField) {
+    public HostInfoDO(String hostName, Integer hostType, String hostExtendField) {
         this.hostName = hostName;
         this.hostType = hostType;
         this.hostExtendField = hostExtendField;
     }
 
-    public HostInfo() {
+    public HostInfoDO() {
 
     }
 

@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.task.resource.health.check.agen
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
@@ -32,6 +33,9 @@ public class AgentHealthCheckTask implements Job {
     @Autowired
     private AgentManageService agentManageService;
 
+    @Autowired
+    private AgentHealthManageService agentHealthManageService;
+
     @Override
     public Object execute(JobContext jobContext) throws Exception {
         List<AgentDO> agentDOList = agentManageService.list();
@@ -42,7 +46,7 @@ public class AgentHealthCheckTask implements Job {
         List<Future> futures = Lists.newArrayList();
         for (AgentDO agentDO : agentDOList) {
             futures.add(threadPool.submit(() -> {
-                AgentHealthLevelEnum agentHealthLevelEnum = agentManageService.checkAgentHealth(agentDO);
+                AgentHealthLevelEnum agentHealthLevelEnum = agentHealthManageService.checkAgentHealth(agentDO);
                 LOGGER.info("class=AgentHealthCheckTask||method=execute||agentId={}||"
                         + "agentHealthLevelEnum={}", agentDO.getId(), agentHealthLevelEnum.getDescription());
                 return agentHealthLevelEnum;

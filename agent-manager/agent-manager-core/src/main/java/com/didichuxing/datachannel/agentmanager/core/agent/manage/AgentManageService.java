@@ -103,14 +103,6 @@ public interface AgentManageService {
     List<MetricPanelGroup> listAgentMetrics(Long agentId, Long startTime, Long endTime);
 
     /**
-     * 检查给定 Agent 健康度，并将检查结果信息更新至表 Agent
-     *
-     * @param agentDO 待检查 agent 对象
-     * @return 返回给定 agent 健康度检查结果，如给定Agent无须被诊断（如：处于 agent check 黑名单），返回 AgentHealthLevelEnum.GREEN
-     */
-    AgentHealthLevelEnum checkAgentHealth(AgentDO agentDO);
-
-    /**
      * @return 返回系统全量Agent对象集
      */
     List<AgentDO> list();
@@ -161,13 +153,6 @@ public interface AgentManageService {
      * @return 返回系统全量 agent 数
      */
     Long countAll();
-
-    /**
-     * 校验给定主机名的Agent是否不关联任何日志采集任务
-     * @param hostName agent 对应 主机名
-     * @return true：不关联任何日志采集任务 false：存在关联的日志采集任务
-     */
-    boolean checkAgentNotRelateAnyLogCollectTask(String hostName);
 
     /**
      * @return 返回系统全量 agent 主机名集

@@ -86,7 +86,7 @@ public class DashboardController {
         List<String> agentHostNameList = agentManageService.getAllHostNames();
         Long nonRelateAnyLogCollectTaskAgentNum = 0L;
         for (String hostName : agentHostNameList) {
-            if(agentManageService.checkAgentNotRelateAnyLogCollectTask(hostName)) {
+            if(CollectionUtils.isEmpty(logCollectTaskManageService.getLogCollectTaskListByAgentHostName(hostName))) {
                 nonRelateAnyLogCollectTaskAgentNum++;
             }
         }
@@ -204,7 +204,7 @@ public class DashboardController {
                 List<String> agentHostNameList = agentManageService.getAllHostNames();
                 Long nonRelateAnyLogCollectTaskAgentNum = 0L;
                 for (String hostName : agentHostNameList) {
-                    if(agentManageService.checkAgentNotRelateAnyLogCollectTask(hostName)) {
+                    if(CollectionUtils.isEmpty(logCollectTaskManageService.getLogCollectTaskListByAgentHostName(hostName))) {
                         nonRelateAnyLogCollectTaskAgentNum++;
                     }
                 }

@@ -19,6 +19,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostType
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
@@ -28,7 +29,6 @@ import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageSe
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.HostMapper;
 import com.didichuxing.datachannel.agentmanager.remote.host.RemoteHostManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigurationManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.host.extension.HostManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -74,7 +74,7 @@ public class HostManageServiceImpl implements HostManageService {
     private HostManageServiceExtension hostManageServiceExtension;
 
     @Autowired
-    private AgentCollectConfigurationManageServiceExtension agentCollectConfigurationManageServiceExtension;
+    private AgentCollectConfigManageService agentCollectConfigManageService;
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
@@ -389,7 +389,7 @@ public class HostManageServiceImpl implements HostManageService {
             List<HostDO> hostDOList = getHostsByServiceId(serviceDO.getId());
             for (HostDO hostDO : hostDOList) {
                 //根据日志采集任务设置的主机过滤规则进行对应主机过滤
-                if(agentCollectConfigurationManageServiceExtension.need2Deploy(logCollectTaskDO, hostDO)) {
+                if(agentCollectConfigManageService.need2Deploy(logCollectTaskDO, hostDO)) {
                     relationHostDOList.add(hostDO);
                 }
             }

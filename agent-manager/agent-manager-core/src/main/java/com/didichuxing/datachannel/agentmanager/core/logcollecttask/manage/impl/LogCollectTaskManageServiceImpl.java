@@ -43,6 +43,7 @@ import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
+import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
@@ -56,7 +57,6 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceLogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskMapper;
-import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigurationManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -110,7 +110,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     private OperateRecordService operateRecordService;
 
     @Autowired
-    private AgentCollectConfigurationManageServiceExtension agentCollectConfigurationManageServiceExtension;
+    private AgentCollectConfigManageService agentCollectConfigManageService;
 
     @Autowired
     private AgentManageService agentManageService;
@@ -120,8 +120,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     @Autowired
     private K8sPodManageService k8sPodManageService;
-
-    private MetricPointComparator metricPointComparator = new MetricPointComparator();
 
     @Override
     @Transactional
@@ -1456,7 +1454,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         List<LogCollectTaskDO> logCollectTaskList = new ArrayList<>(logCollectTaskPOList.size());
         for (LogCollectTaskPO logCollectTaskPO : logCollectTaskPOList) {
             LogCollectTaskDO logCollectTaskDO = logCollectTaskManageServiceExtension.logCollectTaskPO2LogCollectTaskDO(logCollectTaskPO);
-            if (agentCollectConfigurationManageServiceExtension.need2Deploy(logCollectTaskDO, hostDO)) {
+            if (agentCollectConfigManageService.need2Deploy(logCollectTaskDO, hostDO)) {
                 //根据日志采集任务id获取其关联的日志采集任务路径对象集
                 List<FileLogCollectPathDO> fileLogCollectPathDOList = fileLogCollectPathManageService.getAllFileLogCollectPathByLogCollectTaskId(logCollectTaskDO.getId());
                 /*
@@ -2043,6 +2041,22 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
             }
         }
         return result;
+    }
+
+    @Override
+    public List<LogCollectTaskDO> getLogCollectTaskListByAgentHostName(String agentHostName) {
+        /*
+         * 根据 hostName 获取其对应 agent
+         */
+        AgentDO agentDO = agentManageService.getAgentByHostName(agentHostName);
+        if (null == agentDO) {
+            return new ArrayList<>();
+        }
+        /*
+         * 获取 agent 关联的日志采集任务集
+         */
+        List<LogCollectTaskDO> logCollectTaskDOList = getLogCollectTaskListByAgentId(agentDO.getId());
+        return logCollectTaskDOList;
     }
 
     @Override

@@ -44,7 +44,7 @@ import java.util.*;
  * @date 2020/12/27 9:59
  * @desc
  */
-public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
+public class AgentCollectConfigDOImpl extends AgentCollectConfigDO {
 
     /**
      * 日志模型限流等级 - 高
@@ -60,7 +60,7 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
     private static final Integer MODEL_LIMIT_LEVEL_MIDDLE = 5;
 
     private static final Logger  LOGGER                   = LoggerFactory
-                                                              .getLogger(AgentCollectConfigurationImpl.class);
+                                                              .getLogger(AgentCollectConfigDOImpl.class);
 
     /**
      * 将自身转化为AgentConfig对象并返回
@@ -68,8 +68,8 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
      * @return 返回自身转化为的AgentConfig对象
      */
     public AgentConfig convertToAgentConfig() {
-        AgentConfiguration agentConfiguration = getAgentConfiguration();
-        String advancedConfigurationJsonString = agentConfiguration.getAdvancedConfigurationJsonString();
+        AgentConfigDO agentConfigDO = getAgentConfiguration();
+        String advancedConfigurationJsonString = agentConfigDO.getAdvancedConfigurationJsonString();
         AgentAdvancedConfiguration agentAdvancedConfiguration = null;
         if (StringUtils.isNotBlank(advancedConfigurationJsonString)) {
             agentAdvancedConfiguration = JSON.parseObject(advancedConfigurationJsonString, AgentAdvancedConfiguration.class);
@@ -81,8 +81,8 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
         /*
          * set agentConfig 对应一级属性值
          */
-        agentConfig.setHostname(agentConfiguration.getHostName());
-        agentConfig.setVersion(agentConfiguration.getAgentConfigurationVersion());
+        agentConfig.setHostname(agentConfigDO.getHostName());
+        agentConfig.setVersion(agentConfigDO.getAgentConfigurationVersion());
         /*
          * set offset config, use default offset config
          */
@@ -91,17 +91,17 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
          * set error log config
          */
         ErrorLogConfig errorLogConfig = new ErrorLogConfig();//error 配置
-        ProducerConfiguration errorLogsProducerConfiguration = agentConfiguration.getErrorLogsProducerConfiguration();
-        errorLogConfig.setNameServer(errorLogsProducerConfiguration.getNameServer());
-        errorLogConfig.setProperties(errorLogsProducerConfiguration.getProperties());
-        errorLogConfig.setTopic(errorLogsProducerConfiguration.getTopic());
+        ReceiverConfigDO errorLogsReceiverConfigDO = agentConfigDO.getErrorLogsProducerConfiguration();
+        errorLogConfig.setNameServer(errorLogsReceiverConfigDO.getNameServer());
+        errorLogConfig.setProperties(errorLogsReceiverConfigDO.getProperties());
+        errorLogConfig.setTopic(errorLogsReceiverConfigDO.getTopic());
         errorLogConfig.setSwitchConfig(ServiceSwitch.ON.getStatus());
         agentConfig.setErrorLogConfig(errorLogConfig);
         /*
          * set limit config
          */
         LimitConfig limitConfig = new LimitConfig();
-        limitConfig.setCpuThreshold(agentConfiguration.getCpuLimitThreshold());
+        limitConfig.setCpuThreshold(agentConfigDO.getCpuLimitThreshold());
         limitConfig.setStartThreshold(agentAdvancedConfiguration.getAgentLimitStartThreshold());
         limitConfig.setMinThreshold(agentAdvancedConfiguration.getAgentLimitMinThreshold());
         agentConfig.setLimitConfig(limitConfig);
@@ -109,23 +109,23 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
          * set metrics config
          */
         MetricConfig metricConfig = new MetricConfig();
-        ProducerConfiguration metricsProducerConfiguration = agentConfiguration.getMetricsProducerConfiguration();
-        metricConfig.setNameServer(metricsProducerConfiguration.getNameServer());
-        metricConfig.setProperties(metricsProducerConfiguration.getProperties());
-        metricConfig.setTopic(metricsProducerConfiguration.getTopic());
+        ReceiverConfigDO metricsReceiverConfigDO = agentConfigDO.getMetricsProducerConfiguration();
+        metricConfig.setNameServer(metricsReceiverConfigDO.getNameServer());
+        metricConfig.setProperties(metricsReceiverConfigDO.getProperties());
+        metricConfig.setTopic(metricsReceiverConfigDO.getTopic());
         metricConfig.setSwitchConfig(ServiceSwitch.ON.getStatus());
         metricConfig.setTransfer(true);//TODO：
         agentConfig.setMetricConfig(metricConfig);
         /*
          * set model config
          */
-        Map<HostInfo, List<LogCollectTaskConfiguration>> hostName2LogCollectTaskConfigurationMap = getHostName2LogCollectTaskConfigurationMap();
+        Map<HostInfoDO, List<LogCollectTaskConfiguration>> hostName2LogCollectTaskConfigurationMap = getHostName2LogCollectTaskConfigurationMap();
         List<ModelConfig> modelConfigs = new ArrayList<>();
-        for (Map.Entry<HostInfo, List<LogCollectTaskConfiguration>> entry : hostName2LogCollectTaskConfigurationMap.entrySet()) {
-            HostInfo hostInfo = entry.getKey();//待采集主机信息
+        for (Map.Entry<HostInfoDO, List<LogCollectTaskConfiguration>> entry : hostName2LogCollectTaskConfigurationMap.entrySet()) {
+            HostInfoDO hostInfoDO = entry.getKey();//待采集主机信息
             List<LogCollectTaskConfiguration> logCollectTaskConfigurations = entry.getValue();//待采集主机对应的日志采集任务信息集
             for (LogCollectTaskConfiguration logCollectTaskConfiguration : logCollectTaskConfigurations) {
-                ModelConfig modelConfig = buildModelConfig(hostInfo, logCollectTaskConfiguration);
+                ModelConfig modelConfig = buildModelConfig(hostInfoDO, logCollectTaskConfiguration);
                 modelConfigs.add(modelConfig);
             }
         }
@@ -136,11 +136,11 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
     /**
      * 根据给定主机 & 日志采集任务构建对应日志模型配置对象
      *
-     * @param hostInfo                    主机对象
+     * @param hostInfoDO                    主机对象
      * @param logCollectTaskConfiguration 日志采集任务对象
      * @return 根据给定主机 & 日志采集任务构建的对应日志模型配置对象
      */
-    private ModelConfig buildModelConfig(HostInfo hostInfo, LogCollectTaskConfiguration logCollectTaskConfiguration) {
+    private ModelConfig buildModelConfig(HostInfoDO hostInfoDO, LogCollectTaskConfiguration logCollectTaskConfiguration) {
 
         /*
          * 构建 日志采集任务高级配置信息
@@ -158,7 +158,7 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
          */
         ModelConfig modelConfig = new ModelConfig(Tags.TASK_LOG2KAFKA);
         modelConfig.setCollectType(CollectType.COLLECT_IN_NORMAL_SERVER.getStatus());
-        modelConfig.setHostname(hostInfo.getHostName());
+        modelConfig.setHostname(hostInfoDO.getHostName());
         modelConfig.setVersion(logCollectTaskConfiguration.getConfigurationVersion());
         /*
          * set channel config
@@ -252,22 +252,22 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
         //set log paths
         if (CollectionUtils.isNotEmpty(logCollectTaskConfiguration.getFileLogCollectPathList())) {//文件型采集
             List<LogPath> logPaths = new ArrayList<>(logCollectTaskConfiguration.getFileLogCollectPathList().size());
-            for (FileLogCollectPathConfiguration fileLogCollectPathConfiguration : logCollectTaskConfiguration.getFileLogCollectPathList()) {
+            for (FileLogCollectPathConfigDO fileLogCollectPathConfigDO : logCollectTaskConfiguration.getFileLogCollectPathList()) {
                 LogPath logPath = new LogPath();
                 logPath.setLogModelId(logCollectTaskConfiguration.getLogCollectTaskId());
-                logPath.setPath(fileLogCollectPathConfiguration.getPath());
-                logPath.setPathId(fileLogCollectPathConfiguration.getPathId());
-                if (hostInfo.getHostType().equals(HostTypeEnum.CONTAINER.getCode())) {//容器采集case须设置其 dockerPath
-                    String containerPath = fileLogCollectPathConfiguration.getRealPath();//容器路径
+                logPath.setPath(fileLogCollectPathConfigDO.getPath());
+                logPath.setPathId(fileLogCollectPathConfigDO.getPathId());
+                if (hostInfoDO.getHostType().equals(HostTypeEnum.CONTAINER.getCode())) {//容器采集case须设置其 dockerPath
+                    String containerPath = fileLogCollectPathConfigDO.getRealPath();//容器路径
                     logPath.setDockerPath(containerPath);
                     logPath.setRealPath(containerPath);
                 } else {//非容器路径
-                    logPath.setPath(fileLogCollectPathConfiguration.getPath());
+                    logPath.setPath(fileLogCollectPathConfigDO.getPath());
                 }
                 logPaths.add(logPath);
             }
             logSourceConfig.setLogPaths(logPaths);
-            FileLogCollectPathConfiguration fileLogCollectPathConfiguration = logCollectTaskConfiguration.getFileLogCollectPathList().get(0);
+            FileLogCollectPathConfigDO fileLogCollectPathConfigDO = logCollectTaskConfiguration.getFileLogCollectPathList().get(0);
 
         }
         logSourceConfig.setMaxErrorLineNum(logCollectTaskAdvancedConfiguration.getMaxErrorLineNum());
@@ -282,7 +282,7 @@ public class AgentCollectConfigurationImpl extends AgentCollectConfiguration {
          */
         KafkaTargetConfig targetConfig = new KafkaTargetConfig();
         targetConfig.setAsync(logCollectTaskAdvancedConfiguration.getAsync());
-        ProducerConfiguration kafkaClusterConfiguration = logCollectTaskConfiguration.getLogProducerConfiguration();
+        ReceiverConfigDO kafkaClusterConfiguration = logCollectTaskConfiguration.getLogProducerConfiguration();
         targetConfig.setBootstrap(kafkaClusterConfiguration.getNameServer());
         targetConfig.setClusterId(kafkaClusterConfiguration.getReceiverId().intValue());
         String contentFilterJsonString = logCollectTaskConfiguration.getLogContentFilterRuleLogicJsonString();

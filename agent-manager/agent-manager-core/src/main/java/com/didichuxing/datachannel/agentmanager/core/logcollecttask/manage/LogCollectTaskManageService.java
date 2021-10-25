@@ -202,6 +202,12 @@ public interface LogCollectTaskManageService {
     List<LogCollectTaskDO> getLogCollectTaskListByAgentId(Long agentId);
 
     /**
+     * @param agentHostName agent宿主机名
+     * @return 根据 agentHostName 获取到的对应 agent 所有待采集的日志采集任务集
+     */
+    List<LogCollectTaskDO> getLogCollectTaskListByAgentHostName(String agentHostName);
+
+    /**
      * 获取给定kafkaClusterId对应KafkaCluster对象关联的LogCollectTaskDO对象集
      * @param kafkaClusterId KafkaCluster对象id值
      * @return 返回给定kafkaClusterId对应KafkaCluster对象关联的LogCollectTaskDO对象集
