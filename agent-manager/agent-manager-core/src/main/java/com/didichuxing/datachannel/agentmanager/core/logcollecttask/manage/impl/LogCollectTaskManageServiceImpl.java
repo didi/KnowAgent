@@ -1553,7 +1553,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
                     //TODO：@ 徐光
                     ProcessorChain processorChain = getLogCollectTaskHealthCheckProcessorChain();
-
                     /*
                      * 计算logpath对应完整性时间
                      */

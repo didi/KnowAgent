@@ -14,13 +14,13 @@ public class ProcessorChain implements Processor {
     }
 
     @Override
-    public void process(Context context) {
+    public void process(Context context, ProcessorChain chain) {
         if(index == processorList.size()) {
             return;
         }
         Processor processor = processorList.get(index);
         index++;
-        processor.process(context);
+        processor.process(context, chain);
     }
 
 }
