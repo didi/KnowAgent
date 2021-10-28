@@ -12,6 +12,11 @@ public class AgentAdvancedConfiguration {
      */
     private Long agentLimitMinThreshold   = 1000000L;
 
+    /**
+     * 系统统计量启停状态 默认关闭
+     */
+    private int  systemStatisticsStatus   = 0;
+
     public Long getAgentLimitStartThreshold() {
         return agentLimitStartThreshold;
     }
@@ -26,5 +31,13 @@ public class AgentAdvancedConfiguration {
 
     public void setAgentLimitMinThreshold(Long agentLimitMinThreshold) {
         this.agentLimitMinThreshold = agentLimitMinThreshold;
+    }
+
+    public int getSystemStatisticsStatus() {
+        return systemStatisticsStatus;
+    }
+
+    public void setSystemStatisticsStatus(int systemStatisticsStatus) {
+        this.systemStatisticsStatus = systemStatisticsStatus;
     }
 }

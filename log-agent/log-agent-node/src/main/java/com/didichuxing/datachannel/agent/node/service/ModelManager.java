@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.didichuxing.datachannel.agent.common.constants.Tags;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.metrics.source.SystemStatistics;
 import com.didichuxing.datachannel.agent.node.Agent;
 import org.apache.commons.lang.StringUtils;
 
@@ -39,6 +40,8 @@ public class ModelManager extends AgentComponent {
 
     private AgentStatistics            agentStatistics;
 
+    private SystemStatistics           systemStatistics;
+
     @Override
     public boolean init(AgentConfig config) {
         LOGGER.info("begin to init model manager. config is " + config);
@@ -61,6 +64,14 @@ public class ModelManager extends AgentComponent {
              * 初始化 agent 统计信息对象
              */
             agentStatistics.init();
+
+            if (config.getSystemStatisticsStatus() != 0) {
+                /*
+                 * 构建并初始化system统计信息对象
+                 */
+                systemStatistics = new SystemStatistics("systemBasic");
+                systemStatistics.init();
+            }
         } catch (Exception e) {
             LogGather.recordErrorLog("ModelManager error!", "ModelManager init error!", e);
         }
@@ -172,6 +183,9 @@ public class ModelManager extends AgentComponent {
         LimitService.LIMITER.stop();
 
         this.agentStatistics.destory();
+        if (this.agentConfig.getSystemStatisticsStatus() != 0) {
+            this.systemStatistics.destory();
+        }
         LOGGER.info("stop modelManager success!");
         return true;
     }

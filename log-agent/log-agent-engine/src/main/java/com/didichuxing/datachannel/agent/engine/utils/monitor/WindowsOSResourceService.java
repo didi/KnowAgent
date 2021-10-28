@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.management.*;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 默认系统资源服务
@@ -37,7 +39,7 @@ public class WindowsOSResourceService implements IOSResourceService {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {
-            lastLinuxCpuTime = new LinuxCpuTime(getPid(), getCpuNum());// 记录上次的cpu耗时
+            lastLinuxCpuTime = new LinuxCpuTime(getProcPid(), getSystemCpuNumCores());// 记录上次的cpu耗时
         } catch (Exception e) {
             LOGGER
                 .error(
@@ -102,12 +104,17 @@ public class WindowsOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getPid() {
-        return PID;
+    public void clearCache() {
+
     }
 
     @Override
-    public long getProcessStartupTime() {
+    public long getSystemNtpOffset() {
+        return 0;
+    }
+
+    @Override
+    public int getSystemProcCount() {
         return 0;
     }
 
@@ -117,227 +124,327 @@ public class WindowsOSResourceService implements IOSResourceService {
     }
 
     @Override
-    public long getSystemCurrentTimeMillis() {
+    public long getSystemUptime() {
         return 0;
     }
 
     @Override
-    public float getCurrentProcessCpuUsage() {
-        throw new ServiceException(
-            "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support",
-            ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
-    }
-
-    @Override
-    public float getCurrentProcessCpuUsageTotalPercent() {
+    public double getSystemCpuUtil() {
         return 0;
     }
 
     @Override
-    public float getCurrentSystemCpuUsage() {
+    public double getSystemCpuUtilTotalPercent() {
         return 0;
     }
 
     @Override
-    public float getCurrentSystemCpuUsageTotalPercent() {
+    public long getSystemCpuSwitches() {
         return 0;
     }
 
     @Override
-    public double getCurrentSystemCpuLoad() {
+    public double getSystemCpuGuest() {
         return 0;
     }
 
     @Override
-    public int getCpuNum() {
+    public double getSystemCpuIdle() {
+        return 0;
+    }
+
+    @Override
+    public double getSystemCpuIOWait() {
+        return 0;
+    }
+
+    @Override
+    public int getSystemCpuNumCores() {
         return CPU_NUM;
     }
 
     @Override
-    public long getCurrentProcessMemoryUsed() {
-        try {
-            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-            MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
-            MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
-            return heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
-        } catch (Exception ex) {
-            LOGGER.error("获取系统资源项[当前进程内存使用量]失败", ex);
-            return 0;
-        }
-    }
-
-    @Override
-    public long getCurrentProcessHeapMemoryUsed() {
+    public double getSystemCpuSteal() {
         return 0;
     }
 
     @Override
-    public long getCurrentProcessNonHeapMemoryUsed() {
+    public double getSystemCpuSystem() {
         return 0;
     }
 
     @Override
-    public long getCurrentProcessMaxHeapSize() {
+    public double getSystemCpuUser() {
         return 0;
     }
 
     @Override
-    public long getCurrentSystemMemoryFree() {
+    public Map<String, Long> getSystemDiskBytesFree() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Double> getSystemDiskUsedPercent() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemDiskReadTime() {
+        return null;
+    }
+
+    @Override
+    public double getSystemDiskReadTimePercent() {
         return 0;
     }
 
     @Override
-    public long getSystemMemoryTotal() {
+    public Map<String, Long> getSystemDiskBytesTotal() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemDiskBytesUsed() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemDiskWriteTime() {
+        return null;
+    }
+
+    @Override
+    public double getSystemDiskWriteTimePercent() {
         return 0;
     }
 
     @Override
-    public long getSystemMemoryUsed() {
+    public int getSystemFilesAllocated() {
         return 0;
     }
 
     @Override
-    public long getSystemMemorySwapSize() {
+    public int getSystemFilesLeft() {
         return 0;
     }
 
     @Override
-    public long getSystemMemorySwapFree() {
+    public double getSystemFilesUsedPercent() {
         return 0;
     }
 
     @Override
-    public long getSystemMemorySwapUsed() {
+    public int getSystemFilesMax() {
         return 0;
     }
 
     @Override
-    public long getProcessMemoryUsedPeak() {
+    public int getSystemFilesUsed() {
         return 0;
     }
 
     @Override
-    public long getSystemDiskTotal() {
+    public int getSystemFilesNotUsed() {
         return 0;
     }
 
     @Override
-    public long getSystemDiskUsed() {
+    public Map<String, Long> getSystemDiskInodesFree() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Double> getSystemDiskInodesUsedPercent() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemDiskInodesTotal() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemDiskInodesUsed() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOAvgQuSz() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOAvgRqSz() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOAwait() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIORAwait() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOReadRequest() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOReadBytes() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIORRQMS() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOSVCTM() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Double> getSystemIOUtil() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOWAwait() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOWriteRequest() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOWriteBytes() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Long> getSystemIOWRQMS() {
+        return null;
+    }
+
+    @Override
+    public double getSystemLoad1() {
         return 0;
     }
 
     @Override
-    public long getSystemDiskFree() {
+    public double getSystemLoad5() {
         return 0;
     }
 
     @Override
-    public long getSystemDiskFreeMin() {
+    public double getSystemLoad15() {
         return 0;
     }
 
     @Override
-    public int getSystemDiskNum() {
+    public long getSystemMemBuffered() {
         return 0;
     }
 
     @Override
-    public long getYoungGcCount() {
+    public long getSystemMemCached() {
         return 0;
     }
 
     @Override
-    public long getFullGcCount() {
-        long gcCounts = 0L;
-        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-            .getGarbageCollectorMXBeans()) {
-            String name = garbageCollector.getName();
-            if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
-                gcCounts += garbageCollector.getCollectionCount();
-            }
-        }
-        return gcCounts;
-    }
-
-    @Override
-    public long getYoungGcTime() {
+    public long getSystemMemCommitLimit() {
         return 0;
     }
 
     @Override
-    public long getFullGcTime() {
+    public long getSystemMemCommitted() {
         return 0;
     }
 
     @Override
-    public int getCurrentProcessFdUsed() {
-        throw new ServiceException(
-            "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's fd used get failed, windows system not support",
-            ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
-    }
-
-    @Override
-    public int getSystemMaxFdSize() {
+    public long getSystemMemCommittedAs() {
         return 0;
     }
 
     @Override
-    public int getCurrentSystemFdUsed() {
+    public long getSystemMemNonPaged() {
         return 0;
     }
 
     @Override
-    public int getCurrentProcessThreadNum() {
+    public long getSystemMemPaged() {
         return 0;
     }
 
     @Override
-    public int getCurrentProcessThreadNumPeak() {
+    public double getSystemMemFreePercent() {
         return 0;
     }
 
     @Override
-    public float getCurrentSystemDiskIOUsagePercent() {
+    public double getSystemMemUsedPercent() {
         return 0;
     }
 
     @Override
-    public float getCurrentProcessDiskIOAwaitTimePercent() {
+    public long getSystemMemShared() {
         return 0;
     }
 
     @Override
-    public int getCurrentSystemIOPS() {
+    public long getSystemMemSlab() {
         return 0;
     }
 
     @Override
-    public long getCurrentSystemDiskIOReadBytesPS() {
+    public long getSystemMemTotal() {
         return 0;
     }
 
     @Override
-    public long getCurrentSystemDiskIOWriteBytesPS() {
+    public long getSystemMemFree() {
         return 0;
     }
 
     @Override
-    public long getCurrentProcessDiskIOReadBytesPS() {
+    public long getSystemMemUsed() {
         return 0;
     }
 
     @Override
-    public long getCurrentProcessDiskIOWriteBytesPS() {
+    public long getSystemSwapCached() {
         return 0;
     }
 
     @Override
-    public long getCurrentSystemDiskIOResponseTimeAvg() {
+    public long getSystemSwapFree() {
         return 0;
     }
 
     @Override
-    public long getCurrentSystemDiskIOProcessTimeAvg() {
+    public double getSystemSwapFreePercent() {
+        return 0;
+    }
+
+    @Override
+    public long getSystemSwapTotal() {
+        return 0;
+    }
+
+    @Override
+    public long getSystemSwapUsed() {
+        return 0;
+    }
+
+    @Override
+    public double getSystemSwapUsedPercent() {
         return 0;
     }
 
@@ -444,5 +551,248 @@ public class WindowsOSResourceService implements IOSResourceService {
     @Override
     public long getSystemNetworkUdpSendBufferErrors() {
         return 0;
+    }
+
+    @Override
+    public long getProcStartupTime() {
+        return 0;
+    }
+
+    @Override
+    public long getProcUptime() {
+        return 0;
+    }
+
+    @Override
+    public long getProcPid() {
+        return PID;
+    }
+
+    @Override
+    public double getProcCpuSys() {
+        return 0;
+    }
+
+    @Override
+    public long getProcCpuSwitchesPS() {
+        return 0;
+    }
+
+    @Override
+    public long getProcCpuVoluntarySwitchesPS() {
+        return 0;
+    }
+
+    @Override
+    public long getProcCpuNonVoluntarySwitchesPS() {
+        return 0;
+    }
+
+    @Override
+    public float getProcCpuUtil() {
+        return 0;
+    }
+
+    @Override
+    public float getProcCpuUtilTotalPercent() {
+        return 0;
+    }
+
+    @Override
+    public double getProcCpuUser() {
+        return 0;
+    }
+
+    @Override
+    public double getProcIOReadRate() {
+        return 0;
+    }
+
+    @Override
+    public long getProcIOReadBytesRate() {
+        return 0;
+    }
+
+    @Override
+    public double getProcIOWriteRate() {
+        return 0;
+    }
+
+    @Override
+    public long getProcIOWriteBytesRate() {
+        return 0;
+    }
+
+    @Override
+    public double getProcIOAwaitTimePercent() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemData() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemDirty() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemLib() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemRss() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemShared() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemSwap() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemText() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemUsed() {
+        try {
+            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+            MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
+            MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
+            return heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前进程内存使用量]失败", ex);
+            return 0;
+        }
+    }
+
+    @Override
+    public double getProcMemUtil() {
+        return 0;
+    }
+
+    @Override
+    public long getProcMemVms() {
+        return 0;
+    }
+
+    @Override
+    public long getJvmProcHeapMemoryUsed() {
+        return 0;
+    }
+
+    @Override
+    public long getJvmProcNonHeapMemoryUsed() {
+        return 0;
+    }
+
+    @Override
+    public long getJvmProcHeapSizeXmx() {
+        return 0;
+    }
+
+    @Override
+    public long getJvmProcMemUsedPeak() {
+        return 0;
+    }
+
+    @Override
+    public long getJvmProcYoungGcCount() {
+        return 0;
+    }
+
+    @Override
+    public long getJvmProcFullGcCount() {
+        long gcCounts = 0L;
+        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                .getGarbageCollectorMXBeans()) {
+            String name = garbageCollector.getName();
+            if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
+                gcCounts += garbageCollector.getCollectionCount();
+            }
+        }
+        return gcCounts;
+    }
+
+    @Override
+    public long getJvmProcYoungGcTime() {
+        return 0;
+    }
+
+    @Override
+    public long getJvmProcFullGcTime() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcThreadNum() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcThreadNumPeak() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcNormalSourceThreadPoolMaxThreadNum() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcNormalSourceThreadPoolThreadNum() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcNormalThreadPoolMaxQueueSize() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcNormalThreadPoolQueueSize() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcTempSourceThreadPoolMaxThreadNum() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcTempSourceThreadPoolThreadNum() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcTempThreadPoolMaxQueueSize() {
+        return 0;
+    }
+
+    @Override
+    public int getJvmProcTempThreadPoolQueueSize() {
+        return 0;
+    }
+
+    @Override
+    public int getProcOpenFdCount() {
+        throw new ServiceException(
+                "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's fd used get failed, windows system not support",
+                ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
+    }
+
+    @Override
+    public List<Integer> getProcPortListen() {
+        return null;
     }
 }

@@ -8,6 +8,11 @@ import java.util.Map;
  */
 public interface IOSResourceService {
 
+    /**
+     * 清除已有资源
+     */
+    void clearCache();
+
     /*********************************** system level ***********************************/
 
     /**
@@ -34,8 +39,15 @@ public interface IOSResourceService {
 
     /**
      * @return 返回系统总体CPU使用率(单位：%)
+     * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
      */
     double getSystemCpuUtil();
+
+    /**
+     * @return 返回系统总体CPU使用率(单位：%)
+     * 注意：使用率为总使用比率，如jvm进程使用一颗核，系统共10核，则返回0.1 = 10%
+     */
+    double getSystemCpuUtilTotalPercent();
 
     /**
      * @return 返回cpu上下文交换次数
@@ -144,6 +156,11 @@ public interface IOSResourceService {
     int getSystemFilesUsed();
 
     /**
+     * @return 返回系统未使用的已分配文件句柄数
+     */
+    int getSystemFilesNotUsed();
+
+    /**
      * @return 返回系统各分区空闲inode数量
      */
     Map<String, Long> getSystemDiskInodesFree();
@@ -166,70 +183,70 @@ public interface IOSResourceService {
     /*********************** about io ***********************/
 
     /**
-     * @return 返回设备平均队列长度
+     * @return 返回各设备平均队列长度
      */
-    long getSystemIOAvgQuSz();
+    Map<String, Long> getSystemIOAvgQuSz();
 
     /**
-     * @return 返回设备平均请求大小
+     * @return 返回各设备平均请求大小
      */
-    long getSystemIOAvgRqSz();
+    Map<String, Long> getSystemIOAvgRqSz();
 
     /**
-     * @return 返回每次IO平均处理时间（单位：ms）
+     * @return 返回各设备每次IO平均处理时间（单位：ms）
      */
-    long getSystemIOAwait();
+    Map<String, Long> getSystemIOAwait();
 
     /**
-     * @return 返回读请求平均耗时(单位：ms)
+     * @return 返回各设备读请求平均耗时(单位：ms)
      */
-    long getSystemIORAwait();
+    Map<String, Long> getSystemIORAwait();
 
     /**
-     * @return 返回每秒读请求数量
+     * @return 返回各设备每秒读请求数量
      */
-    long getSystemIOReadRequest();
+    Map<String, Long> getSystemIOReadRequest();
 
     /**
-     * @return 返回每秒读取字节数
+     * @return 返回各设备每秒读取字节数
      */
-    long getSystemIOReadBytes();
+    Map<String, Long> getSystemIOReadBytes();
 
     /**
-     * @return 返回每秒合并到设备队列的读请求数
+     * @return 返回各设备每秒合并到设备队列的读请求数
      */
-    long getSystemIORRQMS();
+    Map<String, Long> getSystemIORRQMS();
 
     /**
-     * @return 每次IO平均服务时间（单位：ms）
+     * @return 每次各设备IO平均服务时间（单位：ms）
      * 注：仅 做参考
      */
-    long getSystemIOSVCTM();
+    Map<String, Long> getSystemIOSVCTM();
 
     /**
-     * @return 返回I/O请求的CPU时间百分比
+     * @return 返回各设备I/O请求的CPU时间百分比
      */
-    double getSystemIOUtil();
+    Map<String, Double> getSystemIOUtil();
 
     /**
-     * @return 返回写请求平均耗时(单位：ms)
+     * @return 返回各设备写请求平均耗时(单位：ms)
      */
-    long getSystemIOWAwait();
+    Map<String, Long> getSystemIOWAwait();
 
     /**
-     * @return 返回每秒写请求数量
+     * @return 返回各设备每秒写请求数量
      */
-    long getSystemIOWriteRequest();
+    Map<String, Long> getSystemIOWriteRequest();
 
     /**
-     * @return 返回每秒写字节数
+     * @return 返回各设备每秒写字节数
      */
-    long getSystemIOWriteBytes();
+    Map<String, Long> getSystemIOWriteBytes();
 
     /**
-     * @return 返回每秒合并到设备队列的写请求数
+     * @return 返回各设备每秒合并到设备队列的写请求数
      */
-    long getSystemIOWRQMS();
+    Map<String, Long> getSystemIOWRQMS();
 
     /**
      * @return 返回系统近1分钟平均负载
@@ -456,24 +473,31 @@ public interface IOSResourceService {
     double getProcCpuSys();
 
     /**
-     * @return 返回当前进程cpu上下文交换次数
+     * @return 返回当前进程cpu每秒上下文交换次数
      */
-    long getProcCpuSwitches();
+    long getProcCpuSwitchesPS();
 
     /**
-     * @return 返回当前进程cpu自愿上下文交换次数（自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换。比如说， I/O、内存等系统资源不足时，就会发生自愿上下文切换 pidstat）
+     * @return 返回当前进程cpu每秒自愿上下文交换次数（自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换。比如说， I/O、内存等系统资源不足时，就会发生自愿上下文切换 pidstat）
      */
-    long getProcCpuVoluntarySwitches();
+    long getProcCpuVoluntarySwitchesPS();
 
     /**
-     * @return 返回当前进程cpu非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）
+     * @return 返回当前进程cpu每秒非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）
      */
-    long getProcCpuNonVoluntarySwitches();
+    long getProcCpuNonVoluntarySwitchesPS();
 
     /**
      * @return 返回当前进程cpu使用率(单位：%)
+     * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
      */
-    double getProcCpuUtil();
+    float getProcCpuUtil();
+
+    /**
+     * @return 返回当前进程cpu使用率(单位：%)
+     * 注意：使用率为总使用比率，如jvm进程使用一颗核，系统共10核，则返回0.1 = 10%
+     */
+    float getProcCpuUtilTotalPercent();
 
     /**
      * @return 返回当前进程用户态cpu使用率(单位：%)
@@ -656,7 +680,7 @@ public interface IOSResourceService {
     /*********************** about fd ***********************/
 
     /**
-     * @return 返回当前Jvm进程打开文件句柄数量
+     * @return 返回当前Jvm进程打开fd数量
      */
     int getProcOpenFdCount();
 

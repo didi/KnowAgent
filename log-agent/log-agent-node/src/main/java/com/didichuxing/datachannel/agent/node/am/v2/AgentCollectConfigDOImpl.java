@@ -83,6 +83,7 @@ public class AgentCollectConfigDOImpl extends AgentCollectConfigDO {
          */
         agentConfig.setHostname(agentConfigDO.getHostName());
         agentConfig.setVersion(agentConfigDO.getAgentConfigurationVersion());
+        agentConfig.setSystemStatisticsStatus(agentAdvancedConfiguration.getSystemStatisticsStatus());
         /*
          * set offset config, use default offset config
          */

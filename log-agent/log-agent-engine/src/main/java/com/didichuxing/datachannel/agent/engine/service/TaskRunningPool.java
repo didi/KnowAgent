@@ -49,4 +49,12 @@ public class TaskRunningPool {
             executorService.submit(task);
         }
     }
+
+    public static ExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    public static ExecutorService getTempExecutorService() {
+        return tempExecutorService;
+    }
 }

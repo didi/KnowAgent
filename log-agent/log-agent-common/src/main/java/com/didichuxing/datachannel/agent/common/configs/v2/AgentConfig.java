@@ -30,6 +30,11 @@ public class AgentConfig {
      */
     private int               version = 0;
 
+    /**
+     * 系统统计量启停状态
+     */
+    private int               systemStatisticsStatus;
+
     private OffsetConfig      offsetConfig;
     private MetricConfig      metricConfig;
     private ErrorLogConfig    errorLogConfig;
@@ -98,6 +103,14 @@ public class AgentConfig {
 
     public void setModelConfigs(List<ModelConfig> modelConfigs) {
         this.modelConfigs = modelConfigs;
+    }
+
+    public int getSystemStatisticsStatus() {
+        return systemStatisticsStatus;
+    }
+
+    public void setSystemStatisticsStatus(int systemStatisticsStatus) {
+        this.systemStatisticsStatus = systemStatisticsStatus;
     }
 
     @JSONField(serialize = false)
