@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
@@ -26,6 +27,8 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPan
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricsDashBoard;
+import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
+import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
@@ -1481,6 +1484,25 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     }
 
     /**
+     * @return 获取日志采集任务健康度检查处理器链
+     */
+    private ProcessorChain getLogCollectTaskHealthCheckProcessorChain() {
+        ProcessorChain processorChain = new ProcessorChain();
+        for(Class<Processor> clazz : GlobalProperties.LOG_COLLECT_TASK_HEALTH_CHECK_PROCESSOR_CLASS_LIST) {
+            try {
+                processorChain.addProcessor(clazz.newInstance());
+            } catch (Exception ex) {
+                throw new ServiceException(
+                        String.format("%s invoke newInstance() failed, cause by: %s", clazz.getName(), ex.getMessage()),
+                        ex,
+                        ErrorCodeEnum.REFLECTION_NEW_INSTANCE_EXCEPTION.getCode()
+                );
+            }
+        }
+        return processorChain;
+    }
+
+    /**
      * 诊断给定流式日志采集任务
      *
      * @param logCollectTaskDO  待诊断日志采集任务对象
@@ -1528,6 +1550,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 Integer filePathExistsCheckHealthyCount = 0;
                 Integer logSliceCheckHealthyCount = 0;
                 for (HostDO hostDO : hostDOList) {
+
+                    //TODO：@ 徐光
+                    ProcessorChain processorChain = getLogCollectTaskHealthCheckProcessorChain();
 
                     /*
                      * 计算logpath对应完整性时间
