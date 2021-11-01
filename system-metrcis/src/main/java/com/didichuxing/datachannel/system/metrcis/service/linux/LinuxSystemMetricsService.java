@@ -1,6 +1,7 @@
-package com.didichuxing.datachannel.system.metrcis.factory.linux;
+package com.didichuxing.datachannel.system.metrcis.service.linux;
 
-import com.didichuxing.datachannel.system.metrcis.factory.SystemMetrics;
+import com.didichuxing.datachannel.system.metrcis.bean.SystemMetrics;
+import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,9 @@ import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class LinuxSystemMetrics implements SystemMetrics {
+public class LinuxSystemMetricsService implements SystemMetricsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetrics.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsService.class);
 
     /**
      * 当前agent进程id
@@ -106,7 +107,7 @@ public class LinuxSystemMetrics implements SystemMetrics {
 
     private Lock writeLock = lock.writeLock();
 
-    public LinuxSystemMetrics() {
+    public LinuxSystemMetricsService() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
     }
@@ -940,6 +941,11 @@ public class LinuxSystemMetrics implements SystemMetrics {
     @Override
     public long getSystemNetworkUdpSendBufferErrors() {
         return getResourceValueByKey(systemNetworkUdpStat, "SndbufErrors", "getSystemNetworkUdpSendBufferErrors");
+    }
+
+    @Override
+    public SystemMetrics getSystemMetrics() {
+        return null;
     }
 
     /**

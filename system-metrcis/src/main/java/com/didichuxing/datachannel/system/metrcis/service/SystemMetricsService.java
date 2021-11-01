@@ -1,4 +1,6 @@
-package com.didichuxing.datachannel.system.metrcis.factory;
+package com.didichuxing.datachannel.system.metrcis.service;
+
+import com.didichuxing.datachannel.system.metrcis.bean.SystemMetrics;
 
 import java.util.Map;
 
@@ -6,7 +8,7 @@ import java.util.Map;
  * 系统级指标
  * @author william.hu
  */
-public interface SystemMetrics {
+public interface SystemMetricsService {
 
     /**
      * @return 返回系统时间偏移量
@@ -439,5 +441,10 @@ public interface SystemMetrics {
      * @return 返回系统启动以来 UDP 发送缓冲区满次数
      */
     long getSystemNetworkUdpSendBufferErrors();
+
+    /**
+     * @return 返回当前系统指标集 如须获取全量系统指标，请调用该方法而非挨个调用各指标获取函数以提升其性能、降低消耗
+     */
+    SystemMetrics getSystemMetrics();
 
 }
