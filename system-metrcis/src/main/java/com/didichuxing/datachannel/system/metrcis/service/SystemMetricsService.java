@@ -11,6 +11,11 @@ import java.util.Map;
 public interface SystemMetricsService {
 
     /**
+     * agent宿主机cpu核（逻辑核）
+     */
+    int CPU_NUM = Runtime.getRuntime().availableProcessors();
+
+    /**
      * @return 返回系统时间偏移量
      */
     long getSystemNtpOffset();
