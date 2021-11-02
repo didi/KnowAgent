@@ -20,7 +20,7 @@ import java.util.Map;
  * 日志切片是否配置错误检查
  * @author Ronaldo
  */
-@HealthCheckProcessorAnnotation(seq = 4, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 5, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class LogSliceErrorExistsCheckProcessor implements Processor {
 
     @Override

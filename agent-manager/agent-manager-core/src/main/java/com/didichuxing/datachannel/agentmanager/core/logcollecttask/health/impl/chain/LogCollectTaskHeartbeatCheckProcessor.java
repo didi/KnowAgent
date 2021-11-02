@@ -18,7 +18,7 @@ import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsM
  * @author Ronaldo
  */
 @HealthCheckProcessorAnnotation(seq = 1, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
-public class HeartbeatCheckProcessor implements Processor {
+public class LogCollectTaskHeartbeatCheckProcessor implements Processor {
 
 
     @Override

@@ -18,7 +18,7 @@ import java.util.Map;
  * 是否存在采集延迟检查
  * @author Ronaldo
  */
-@HealthCheckProcessorAnnotation(seq = 7, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 6, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class CollectDelayCheckProcessor implements Processor {
     @Override
     public void process(Context context, ProcessorChain chain) {

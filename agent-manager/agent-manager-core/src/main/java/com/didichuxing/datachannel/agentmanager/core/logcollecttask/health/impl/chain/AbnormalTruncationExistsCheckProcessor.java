@@ -20,7 +20,7 @@ import java.util.Map;
  * 日志异常截断检查
  * @author Ronaldo
  */
-@HealthCheckProcessorAnnotation(seq = 5, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 4, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class AbnormalTruncationExistsCheckProcessor implements Processor {
 
 
