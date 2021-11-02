@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.system.metrcis.factory.linux;
+package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.util.FileUtils;
 import java.util.List;
