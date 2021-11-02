@@ -11,6 +11,11 @@ import java.util.List;
 public interface ProcMetricsService {
 
     /**
+     * @return 返回当前Jvm进程 pid
+     */
+    long getPid();
+
+    /**
      * @return 返回当前Jvm进程启动时间
      */
     long getProcStartupTime();

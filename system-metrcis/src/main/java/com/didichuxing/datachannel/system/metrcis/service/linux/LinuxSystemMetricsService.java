@@ -21,10 +21,6 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
      * 当前agent进程id
      */
     private final long PID;
-    /**
-     * agent宿主机cpu核（逻辑核）
-     */
-    private final int CPU_NUM;
 
     /**
      * 获取磁盘分区情况
@@ -109,7 +105,6 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     public LinuxSystemMetricsService() {
         PID = initializePid();
-        CPU_NUM = Runtime.getRuntime().availableProcessors();
     }
 
     /**
