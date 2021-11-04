@@ -1,14 +1,17 @@
 package com.didichuxing.datachannel.system.metrcis.service;
 
-import com.didichuxing.datachannel.system.metrcis.bean.ProcMetrics;
-
 import java.util.List;
 
 /**
- * 进程级指标
- * @author william.hu
+ * @author Ronaldo
+ * @Date 2021/11/3
  */
-public interface ProcMetricsService {
+public interface ProcResourceService {
+
+    /**
+     * 清除已有资源
+     */
+    void clearCache();
 
     /**
      * @return 返回当前Jvm进程启动时间
@@ -27,9 +30,6 @@ public interface ProcMetricsService {
 
     /*********************** about cpu ***********************/
 
-    /**
-     * @return 系统cpu核数
-     */
     int getSystemCpuNumCores();
 
     /**
@@ -241,10 +241,4 @@ public interface ProcMetricsService {
      * @return 返回当前Jvm进程当前处于 close wait 状态 tcp 连接数
      */
     int getProcNetworkTcpCloseWaitNum();
-
-    /**
-     * @return 返回当前进程指标集 如须获取全量当前进程指标，请调用该方法而非挨个调用各指标获取函数以提升其性能、降低消耗
-     */
-    ProcMetrics getProcMetrics();
-
 }

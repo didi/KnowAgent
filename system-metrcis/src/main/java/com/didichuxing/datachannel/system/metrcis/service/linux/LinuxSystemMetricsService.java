@@ -2,183 +2,40 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.bean.SystemMetrics;
 import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
+import com.didichuxing.datachannel.system.metrcis.service.SystemResourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.management.ManagementFactory;
 import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+
+/**
+ * 获取系统级指标
+ * 包括按需获取指标数据和一次性获取所有指标数据
+ * @author Ronaldo
+ * @Date 2021/11/3
+ */
 public class LinuxSystemMetricsService implements SystemMetricsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsService.class);
 
-    /**
-     * 当前agent进程id
-     */
-    private final long PID;
-
-    /**
-     * 获取磁盘分区情况
-     * 返回 磁盘分区名称(名称+挂载点,以:分割) 磁盘容量大小 磁盘已用容量 磁盘可用容量
-     */
-    private List<String> systemDiskStat = new ArrayList<>();
-
-    /**
-     * 获取系统cpu使用情况
-     * 返回 %usr %sys %iowait %steal %guest %idle
-     */
-    private List<String> systemCpuStat = new ArrayList<>();
-
-    /**
-     * 获取系统句柄数
-     * 返回 已分配且使用中句柄数，已分配未使用，最大数目
-     */
-    private List<String> systemFileHandleNum = new ArrayList<>();
-
-    /**
-     * 系统磁盘读写操作耗时
-     * 返回 磁盘名称 读操作耗时 写操作耗时
-     */
-    private List<String> systemDiskReadWriteTime = new ArrayList<>();
-
-    /**
-     * 获取系统磁盘分区inode情况
-     * 返回 磁盘分区名称(名称+挂载点,以:分割) inode总量 inode已用 inode可用
-     */
-    private List<String> systemDiskInodeStat = new ArrayList<>();
-
-    /**
-     * 获取系统磁盘IO情况
-     */
-    private List<String> systemIOStat = new ArrayList<>();
-
-    /**
-     * 获取系统平均负载情况
-     * 返回 近1分钟平均负载 近5分钟平均负载 近15分钟平均负载
-     */
-    private List<String> systemLoad = new ArrayList<>();
-
-    /**
-     * 系统内存情况
-     * 键为具体某种内存使用名称，值为该内存对应的值
-     */
-    private Map<String, Long> systemMemoryInfo = new HashMap<>();
-
-    /**
-     * 当前系统网络Tcp各状态统计
-     * Tcp状态：个数
-     */
-    private Map<String, Long> currentSystemNetworkTcpStat = new HashMap<>();
-
-    /**
-     * 系统启动以来 Tcp 统计
-     * Tcp:次数
-     */
-    private Map<String, Long> systemNetworkTcpStat = new HashMap<>();
-
-    /**
-     * 系统启动以来 Udp 统计
-     * Udp:次数
-     */
-    private Map<String, Long> systemNetworkUdpStat = new HashMap<>();
-
-    /**
-     * 存储网络流量
-     */
-    private List<Double>   netFlow = new ArrayList<>();
-
-    /**
-     * 是否使用已有资源
-     */
-    private volatile boolean loadCache = false;
-
-    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
-    private Lock readLock = lock.readLock();
-
-    private Lock writeLock = lock.writeLock();
+    private LinuxNetFlow lastLinuxNetFlow;
 
     public LinuxSystemMetricsService() {
-        PID = initializePid();
-    }
-
-    /**
-     * @return 返回当前 agent 进程 id
-     */
-    private long initializePid() {
-        final String name = ManagementFactory.getRuntimeMXBean().getName();
         try {
-            return Long.parseLong(name.split("@")[0]);
-        } catch (final NumberFormatException e) {
-            LOGGER.warn(String.format("failed parsing PID from [{}]", name), e);
-            return -1;
+            lastLinuxNetFlow = new LinuxNetFlow();// 记录上次的收发字节数
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsService||method=DefaultLinuxSystemMetricsService()||msg=NetFlow init failed",
+                    e);
         }
     }
-
-    /**
-     * 初始化所有资源
-     */
-    private void loadResource() {
-        readLock.lock();
-        if (!this.loadCache) {
-            readLock.unlock();
-            writeLock.lock();
-            try {
-                if (!this.loadCache) {
-                    systemDiskStat = getOutputByCmd(
-                            "df -k | awk 'NR>1{print $1,$2,$3,$4}'", false, "系统磁盘情况");
-
-                    systemCpuStat = getOutputByCmd(
-                            "mpstat | awk 'NR==4{print $3,$5,$6,$9,$10,$NF}'", false, "系统cpu使用情况");
-
-                    systemFileHandleNum = getOutputByCmd(
-                            "cat /proc/sys/fs/file-nr", false, "系统句柄数");
-
-                    systemDiskReadWriteTime = getOutputByCmd(
-                            "vmstat -d | awk 'NR>2{print $1,$5,$9}'", false, "磁盘读写操作耗时");
-
-                    systemDiskInodeStat = getOutputByCmd(
-                            "df -i | awk 'NR>1{print $1\":\"$6,$2,$3,$4}'", false, "系统各分区inode情况");
-
-                    systemIOStat = getOutputByCmd(
-                            "iostat -dkx | head -n -1 | awk 'NR>3'", false, "系统各磁盘设备IO情况");
-
-                    systemLoad = getOutputByCmd(
-                            "sar -q 1 1 | grep ':' | awk '{print $4,$5,$6}'", false, "系统负载情况");
-
-                    systemMemoryInfo = getKeyValueResource(
-                            "cat /proc/meminfo", false, 1024, "系统内存情况");
-
-                    currentSystemNetworkTcpStat = getKeyValueResource(
-                            "netstat -an | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'", false, 1, "当前系统网络Tcp情况");
-
-                    systemNetworkTcpStat = getSystemNetworkStat(
-                            "cat /proc/net/snmp | grep 'Tcp:' | awk '{print $6,$7,$8,$9,$13}'", false, "系统启动以来网络Tcp情况");
-
-                    systemNetworkUdpStat = getSystemNetworkStat(
-                            "cat /proc/net/snmp | grep 'Udp:' | awk '{print $2,$3,$4,$5,$7}'", false, "系统启动以来网络Udp情况");
-
-                    this.loadCache = true;
-                }
-                readLock.lock();
-            } catch(Exception e) {
-                LOGGER.error("class=DefaultOSResourceService||method=getMoreSystemResource()||msg=failed to initResource",
-                        e);
-            } finally {
-                writeLock.unlock();
-            }
-        }
-    }
-
 
     @Override
     public long getSystemNtpOffset() {
-        List<String> output = getOutputByCmd("clock | awk '{print $4}'", false,
+        List<String> output = getOutputByCmd("clock | awk '{print $4}'",
                 "系统时间偏移量");
         if (!output.isEmpty() && StringUtils.isNotBlank(output.get(0))) {
             double v =  1000 * Double.parseDouble(output.get(0));
@@ -189,10 +46,12 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public int getSystemProcCount() {
-        List<String> output = getOutputByCmd(" ps -ef  | wc -l", false,
+        List<String> output = getOutputByCmd(" ps -ef  | wc -l",
                 "系统进程个数");
         if (!output.isEmpty() && StringUtils.isNotBlank(output.get(0))) {
             return Integer.parseInt(output.get(0)) - 1;
+        }else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemProcCount()||msg=data is null");
         }
         return 0;
     }
@@ -205,10 +64,12 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
     @Override
     public long getSystemUptime() {
         List<String> systemUpTime = getOutputByCmd(
-                "awk '{print $1}' /proc/uptime", false, "系统运行时间");
+                "awk '{print $1}' /proc/uptime", "系统运行时间");
         if (!systemUpTime.isEmpty() && StringUtils.isNotBlank(systemUpTime.get(0))) {
             double v =  1000 * Double.parseDouble(systemUpTime.get(0));
             return (long) v;
+        }else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemUptime()||msg=data is null");
         }
         return 0L;
     }
@@ -225,27 +86,47 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public long getSystemCpuSwitches() {
-        List<String> output = getOutputByCmd("cat /proc/stat | grep 'ctxt' | awk '{print $2}'", false,
+        List<String> output = getOutputByCmd("cat /proc/stat | grep 'ctxt' | awk '{print $2}'",
                 "cpu上下文交换次数");
         if (!output.isEmpty() && StringUtils.isNotBlank(output.get(0))) {
             return Long.parseLong(output.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSwitches||msg=data is null");
         }
         return 0;
     }
 
     @Override
     public double getSystemCpuGuest() {
-        return getOneSystemResource(systemCpuStat, 4, 6, "虚拟处理器CPU时间占比");
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $10}'", "虚拟处理器CPU时间占比");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuGuest||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public double getSystemCpuIdle() {
-        return getOneSystemResource(systemCpuStat, 5, 6, "总体cpu空闲率");
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $12}'", "总体cpu空闲率");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdle||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public double getSystemCpuIOWait() {
-        return getOneSystemResource(systemCpuStat,2, 6, "等待I/O的CPU时间占比");
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $6}'", "等待I/O的CPU时间占比");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIOWait||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
@@ -255,149 +136,182 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public double getSystemCpuSteal() {
-        return getOneSystemResource(systemCpuStat, 3, 6, "等待处理其他虚拟核的时间占比");
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $9}'", "等待处理其他虚拟核的时间占比");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSteal||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public double getSystemCpuSystem() {
-        return getOneSystemResource(systemCpuStat, 1, 6, "内核态CPU时间占比");
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $5}'", "内核态CPU时间占比");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSystem||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public double getSystemCpuUser() {
-        return getOneSystemResource(systemCpuStat, 0, 6, "用户态CPU时间占比");
-    }
-
-    /**
-     * 获取一项系统资源
-     * @param systemResource 系统资源
-     * @param index 下标
-     * @param length 单行数据长度
-     * @param message 某状态描述
-     * @return
-     */
-    private double getOneSystemResource(List<String> systemResource, int index, int length, String message) {
-        loadResource();
-
-        try {
-            if (!systemResource.isEmpty() && StringUtils.isNotBlank(systemResource.get(0))) {
-                String cpuStat = systemResource.get(0);
-                String[] array = cpuStat.split("\\s+");
-                if (array.length < length) {
-                    LOGGER.error("获取系统资源项[{}}]失败", message);
-                    return 0.0d;
-                }
-                return Double.parseDouble(array[index]);
-            }
-        } catch (Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=getOneSystemResource()||msg=failed to get system resource",
-                    e);
-        } finally {
-            readLock.unlock();
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $3}'", "用户态CPU时间占比");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUser||msg=data is null");
+            return 0.0d;
         }
-        return 0.0d;
     }
 
     @Override
     public Map<String, Long> getSystemDiskBytesFree() {
-        return getMoreSystemResource(systemDiskStat, 3, 4, 1024, "磁盘各分区总量");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("df -k | awk 'NR>1{print $1,$4,$6}'", "磁盘各分区余量大小");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 3) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskBytesFree()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0] + ":" + array[2];
+            long value = 1024 * Long.parseLong(array[1]);
+            result.put(key, value);
+        }
+        return result;
     }
 
     @Override
     public Map<String, Double> getSystemDiskUsedPercent() {
-        loadResource();
-
         Map<String, Double> result = new HashMap<>();
-        try {
-            if (!systemDiskStat.isEmpty()) {
-                for (String s : systemDiskStat) {
-                    String[] array = s.split("\\s+");
-                    if (array.length < 4) {
-                        LOGGER.error("获取系统资源项[磁盘各分区总量]失败");
-                        return result;
-                    }
-                    long used = Long.parseLong(array[2]);
-                    long total = Long.parseLong(array[1]);
-                    double percent = 1.0 * used / total;
-                    result.put(array[0], percent);
-                }
+        List<String> lines = getOutputByCmd("df -k | awk 'NR>1{print $1,$2,$3,$6}'", "磁盘各分区用量占比");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 4) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskUsedPercent()||msg=data is not enough");
+                return result;
             }
-        } catch(Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=getSystemDiskUsedPercent()||msg=failed to get SystemDiskUsedPercent",
-                    e);
-        } finally {
-            readLock.unlock();
+            String key = array[0] + ":" + array[3];
+            double value = 1.0 * Long.parseLong(array[2]) / Long.parseLong(array[1]);
+            result.put(key, value);
         }
         return result;
     }
 
     @Override
     public Map<String, Long> getSystemDiskReadTime() {
-        return getMoreSystemResource(systemDiskReadWriteTime, 1, 3, 1, "各设备读操作耗时");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5}'", "各设备读操作耗时");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskReadTime()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0];
+            long value = Long.parseLong(array[1]);
+            result.put(key, value);
+        }
+        return result;
     }
-
     @Override
     public double getSystemDiskReadTimePercent() {
-        return getSystemDiskReadWriteTimePercent(true);
+        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $5,$9}'", "读取磁盘时间百分比");
+        long readWriteSum = 0L;
+        long readSum = 0L;
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskReadTimePercent()||msg=data is not enough");
+                return 0.0d;
+            }
+            long readTime = Long.parseLong(array[0]);
+            long writeTime = Long.parseLong(array[1]);
+            readWriteSum += readTime + writeTime;
+            readSum += readTime;
+        }
+        if (readWriteSum == 0) {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskReadTimePercent()||msg=readWriteTimeSum is zero");
+            return 0.0d;
+        }
+        return 1.0 * readSum / readWriteSum;
     }
 
     @Override
     public Map<String, Long> getSystemDiskBytesTotal() {
-        return getMoreSystemResource(systemDiskStat, 1, 4, 1024, "磁盘各分区总量");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("df -k | awk 'NR>1{print $1,$2,$6}'", "磁盘各分区总量");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 3) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskBytesTotal()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0] + ":" + array[2];
+            long value = 1024 * Long.parseLong(array[1]);
+            result.put(key, value);
+        }
+        return result;
     }
 
     @Override
     public Map<String, Long> getSystemDiskBytesUsed() {
-        return getMoreSystemResource(systemDiskStat, 2, 4, 1024, "磁盘各分区用量大小");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("df -k | awk 'NR>1{print $1,$3,$6}'", "磁盘各分区用量大小");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 3) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskBytesUsed()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0] + ":" + array[2];
+            long value = 1024 * Long.parseLong(array[1]);
+            result.put(key, value);
+        }
+        return result;
     }
 
     @Override
     public Map<String, Long> getSystemDiskWriteTime() {
-        return getMoreSystemResource(systemDiskReadWriteTime, 2, 3, 1, "各设备写操作耗时");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$9}'", "各设备写操作耗时");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskWriteTime()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0];
+            long value = Long.parseLong(array[1]);
+            result.put(key, value);
+        }
+        return result;
     }
 
     @Override
     public double getSystemDiskWriteTimePercent() {
-        return getSystemDiskReadWriteTimePercent(false);
-    }
-
-    /**
-     * 根据读写操作获取读写操作时间占比
-     * @param isRead 是否是读操作
-     * @return 读写操作时间占比
-     */
-    private double getSystemDiskReadWriteTimePercent(boolean isRead) {
-        loadResource();
-
-        try {
-            if (!systemDiskReadWriteTime.isEmpty()) {
-                long readValue = 0;
-                long writeValue = 0;
-                for (String s : systemDiskReadWriteTime) {
-                    String[] array = s.split("\\s+");
-                    if (array.length < 3) {
-                        LOGGER.error("获取系统资源项[{}}]失败", "读取磁盘时间百分比");
-                        return 0.0d;
-                    }
-                    readValue += Long.parseLong(array[1]);
-                    writeValue += Long.parseLong(array[2]);
-                }
-                long sum = readValue + readValue;
-                if (sum == 0) {
-                    return 0.0d;
-                }
-                if (isRead) {
-                    return 1.0 * readValue / sum;
-                }
-                return 1.0 * writeValue / sum;
+        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $5,$9}'", "写入磁盘时间百分比");
+        long readWriteSum = 0L;
+        long writeSum = 0L;
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskWriteTimePercent()||msg=data is not enough");
+                return 0.0d;
             }
-        } catch (Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=getSystemDiskReadWriteTimePercent()||msg=failed to get SystemDiskReadWriteTimePercent",
-                    e);
-        } finally {
-            readLock.unlock();
+            long readTime = Long.parseLong(array[0]);
+            long writeTime = Long.parseLong(array[1]);
+            readWriteSum += readTime + writeTime;
+            writeSum += writeTime;
         }
-        return 0.0d;
+        if (readWriteSum == 0) {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskWriteTimePercent()||msg=readWriteTimeSum is zero");
+            return 0.0d;
+        }
+        return 1.0 * writeSum / readWriteSum;
     }
 
     @Override
@@ -417,240 +331,296 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public int getSystemFilesMax() {
-        return getSystemFileHandle(2, "系统可以打开的最大文件句柄数");
+        List<String> lines = getOutputByCmd("cat /proc/sys/fs/file-nr | awk '{print $3}'", "系统可以打开的最大文件句柄数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemFilesMax()||msg=data is null");
+        }
+        return 0;
     }
 
     @Override
     public int getSystemFilesUsed() {
-        return getSystemFileHandle(0, "系统使用的已分配文件句柄数");
+        List<String> lines = getOutputByCmd("cat /proc/sys/fs/file-nr | awk '{print $1}'", "系统使用的已分配文件句柄数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemFilesUsed()||msg=data is null");
+        }
+        return 0;
     }
 
     @Override
     public int getSystemFilesNotUsed() {
-        return getSystemFileHandle(1, "系统未使用的已分配文件句柄数");
-    }
-
-    /**
-     * 根据下标获取相应的文件句柄数
-     * @param index 下标
-     * @param message 资源描述
-     * @return 相对应文件句柄数
-     */
-    private int getSystemFileHandle(int index, String message) {
-        loadResource();
-
-        try {
-            if (!systemFileHandleNum.isEmpty() && StringUtils.isNotBlank(systemFileHandleNum.get(0))) {
-                String cpuStat = systemFileHandleNum.get(0);
-                String[] array = cpuStat.split("\\s+");
-                if (array.length < 3) {
-                    LOGGER.error("获取系统资源项[{}}]失败", message);
-                }
-                return Integer.parseInt(array[index]);
-            }
-        } catch(Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=getSystemFileHandle()||msg=failed to get system file handle",
-                    e);
-        } finally {
-            readLock.unlock();
+        List<String> lines = getOutputByCmd("cat /proc/sys/fs/file-nr | awk '{print $2}'", "系统未使用的已分配文件句柄数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemFilesNotUsed()||msg=获取系统未使用的已分配文件句柄数失败");
         }
-
         return 0;
     }
 
     @Override
     public Map<String, Long> getSystemDiskInodesFree() {
-        return getMoreSystemResource(systemDiskInodeStat, 3, 4, 1, "系统各分区空闲inode数量");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("df -i | awk 'NR>1{print $1,$4,$6}'", "系统各分区空闲inode数量");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 3) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskInodesFree()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0] + ":" + array[2];
+            long value = Long.parseLong(array[1]);
+            result.put(key, value);
+        }
+        return result;
     }
 
     @Override
     public Map<String, Double> getSystemDiskInodesUsedPercent() {
-        loadResource();
-
         Map<String, Double> result = new HashMap<>();
-        try {
-            if (!systemDiskInodeStat.isEmpty()) {
-                for (String s : systemDiskInodeStat) {
-                    String[] array = s.split("\\s+");
-                    if (array.length < 4) {
-                        LOGGER.error("获取系统资源项[{}}]失败", "系统各分区已用inode占比");
-                        return result;
-                    }
-                    long inodeUsed = Long.parseLong(array[2]);
-                    long inodeTotal = Long.parseLong(array[1]);
-                    double inodeUsedPercent = 1.0 * inodeUsed / inodeTotal;
-                    result.put(array[0], inodeUsedPercent);
-                }
+        List<String> lines = getOutputByCmd("df -i | awk 'NR>1{print $1,$2,$3,$6}'", "系统各分区已用inode占比");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 4) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskInodesUsedPercent()||msg=data is not enough");
+                return result;
             }
-            return result;
-        } catch(Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=getSystemDiskInodesUsedPercent()||msg=failed to get systemDiskInodesUsedPercent",
-                    e);
-        } finally {
-            readLock.unlock();
+            String key = array[0] + ":" + array[3];
+            long inodeTotal = Long.parseLong(array[1]);
+            long inodeUsed = Long.parseLong(array[2]);
+            result.put(key, 1.0 * inodeUsed / inodeTotal);
         }
         return result;
     }
 
     @Override
     public Map<String, Long> getSystemDiskInodesTotal() {
-        return getMoreSystemResource(systemDiskInodeStat, 1, 4, 1, "系统各分区inode总数量");
-    }
-
-    @Override
-    public Map<String, Long> getSystemDiskInodesUsed() {
-        return getMoreSystemResource(systemDiskInodeStat, 2, 4, 1,"系统各分区已用inode数量");
-    }
-
-    /**
-     * 获取多行系统资源
-     * @param systemResource 资源源文件
-     * @param index 下标
-     * @param length 每行数据长度限制
-     * @param size 单位换算，若结果值单位为KB,需乘以1024；单位为个数，结果乘以1
-     * @param message 资源描述
-     * @return
-     */
-    private Map<String, Long> getMoreSystemResource(List<String> systemResource, int index, int length, int size, String message) {
-        loadResource();
-
         Map<String, Long> result = new HashMap<>();
-        try {
-            if (!systemResource.isEmpty()) {
-                for (String s : systemResource) {
-                    String[] array = s.split("\\s+");
-                    if (array.length < length) {
-                        LOGGER.error("获取系统资源项[{}}]失败", message);
-                        return result;
-                    }
-                    double value = size * Double.parseDouble(array[index]);
-                    result.put(array[0], (long) value);
-                }
+        List<String> lines = getOutputByCmd("df -i | awk 'NR>1{print $1,$2,$6}'", "系统各分区inode总数量");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 3) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskInodesTotal()||msg=data is not enough");
+                return result;
             }
-            return result;
-        } catch (Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=getMoreSystemResource()||msg=failed to get system resource",
-                    e);
-        } finally {
-            readLock.unlock();
+            String key = array[0] + ":" + array[2];
+            long value = Long.parseLong(array[1]);
+            result.put(key, value);
         }
         return result;
     }
 
     @Override
+    public Map<String, Long> getSystemDiskInodesUsed() {
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("df -i | awk 'NR>1{print $1,$3,$6}'", "系统各分区已用inode数量");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 3) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskInodesUsed()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0] + ":" + array[2];
+            long value = Long.parseLong(array[1]);
+            result.put(key, value);
+        }
+        return result;
+    }
+
+
+    @Override
     public Map<String, Long> getSystemIOAvgQuSz() {
-        return getMoreSystemResource(systemIOStat, 8, 14, 1, "各设备平均队列长度");
+        return getSystemIOResource(9, "getSystemIOAvgQuSz()", "各设备平均队列长度");
     }
 
     @Override
     public Map<String, Long> getSystemIOAvgRqSz() {
-        return getMoreSystemResource(systemIOStat, 7, 14, 1, "各设备平均请求大小");
+        return getSystemIOResource(8, "getSystemIOAvgRqSz()", "各设备平均请求大小");
     }
 
     @Override
     public Map<String, Long> getSystemIOAwait() {
-        return getMoreSystemResource(systemIOStat, 9, 14, 1, "各设备每次IO平均处理时间");
+        return getSystemIOResource(10, "getSystemIORAwait()", "各设备每次IO平均处理时间");
     }
 
     @Override
     public Map<String, Long> getSystemIORAwait() {
-        return getMoreSystemResource(systemIOStat, 10, 14, 1, "各设备读请求平均耗时");
+        return getSystemIOResource(11, "getSystemIORAwait()", "各设备读请求平均耗时");
     }
 
     @Override
     public Map<String, Long> getSystemIOReadRequest() {
-        return getMoreSystemResource(systemIOStat, 3, 14, 1, "各设备每秒读请求数量");
+        return getSystemIOResource(4, "getSystemIOReadRequest()", "各设备每秒读请求数量");
     }
 
     @Override
     public Map<String, Long> getSystemIOReadBytes() {
-        return getMoreSystemResource(systemIOStat, 5, 14, 1024, "各设备每秒读取字节数");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$6}'", "各设备每秒读取字节数");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemIOReadBytes()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0];
+            double value = 1024 * Double.parseDouble(array[1]);
+            result.put(key, (long) value);
+        }
+        return result;
     }
 
     @Override
     public Map<String, Long> getSystemIORRQMS() {
-        return getMoreSystemResource(systemIOStat, 1, 14, 1, "各设备每秒合并到设备队列的读请求数");
+        return getSystemIOResource(2, "getSystemIORRQMS()", "各设备每秒合并到设备队列的读请求数");
     }
 
     @Override
     public Map<String, Long> getSystemIOSVCTM() {
-        return getMoreSystemResource(systemIOStat, 12, 14, 1, "每次各设备IO平均服务时间");
+        return getSystemIOResource(13, "getSystemIOSVCTM()", "每次各设备IO平均服务时间");
     }
 
     @Override
     public Map<String, Double> getSystemIOUtil() {
-        loadResource();
-
         Map<String, Double> result = new HashMap<>();
-        try {
-            if (!systemIOStat.isEmpty()) {
-                for (String s : systemIOStat) {
-                    String[] array = s.split("\\s+");
-                    if (array.length < 14) {
-                        LOGGER.error("获取系统资源项[{}}]失败", "各设备I/O请求的CPU时间百分比");
-                        return result;
-                    }
-                    double value = Double.parseDouble(array[13]);
-                    result.put(array[0], value);
-                }
+        List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$14}'", "各设备I/O请求的CPU时间百分比");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemIOUtil()||msg=data is not enough");
+                return result;
             }
-        } catch(Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method=getSystemIOUtil()||msg=failed to get system IOUtil",
-                    e);
-        } finally {
-            readLock.unlock();
+            String key = array[0];
+            double value = Double.parseDouble(array[1]);
+            result.put(key, value);
         }
         return result;
     }
 
     @Override
     public Map<String, Long> getSystemIOWAwait() {
-        return getMoreSystemResource(systemIOStat, 11, 14, 1, "各设备写请求平均耗时");
+        return getSystemIOResource(12, "getSystemIOWAwait()", "各设备写请求平均耗时");
     }
 
     @Override
     public Map<String, Long> getSystemIOWriteRequest() {
-        return getMoreSystemResource(systemIOStat, 4, 14, 1, "各设备每秒写请求数量");
+        return getSystemIOResource(5, "getSystemIOWriteRequest()", "各设备每秒写请求数量");
     }
 
     @Override
     public Map<String, Long> getSystemIOWriteBytes() {
-        return getMoreSystemResource(systemIOStat, 6, 14, 1024, "各设备每秒写字节数");
+        Map<String, Long> result = new HashMap<>();
+        List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$7}'", "各设备每秒写字节数");
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemIOWriteBytes()||msg=data is not enough");
+                return result;
+            }
+            String key = array[0];
+            double value = 1024 * Double.parseDouble(array[1]);
+            result.put(key, (long) value);
+        }
+        return result;
     }
 
     @Override
     public Map<String, Long> getSystemIOWRQMS() {
-        return getMoreSystemResource(systemIOStat, 2, 14, 1, "各设备每秒合并到设备队列的写请求数");
+        return getSystemIOResource(3, "getSystemIOWRQMS()", "各设备每秒合并到设备队列的写请求数");
+    }
+
+    /**
+     * 获取磁盘IO的相关资源
+     * @param index 资源下标
+     * @param methodName 获取该资源的方法名称
+     * @param resourceMessage 资源描述
+     * @return
+     */
+    private Map<String, Long> getSystemIOResource(int index, String methodName, String resourceMessage) {
+        Map<String, Long> result = new HashMap<>();
+        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", index);
+        List<String> lines = getOutputByCmd(procFDShell, resourceMessage);
+        for (String line : lines) {
+            String[] array = line.split("\\s+");
+            if (array.length < 2) {
+                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", methodName);
+                return result;
+            }
+            String key = array[0];
+            double value = Double.parseDouble(array[1]);
+            result.put(key, (long) value);
+        }
+        return result;
     }
 
     @Override
     public double getSystemLoad1() {
-        return getOneSystemResource(systemLoad, 0, 3, "系统近1分钟平均负载");
+        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $4}'", "系统近1分钟平均负载");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad1||msg=获取系统近1分钟平均负载失败");
+            return 0.0d;
+        }
     }
 
     @Override
     public double getSystemLoad5() {
-        return getOneSystemResource(systemLoad, 1, 3, "系统近5分钟平均负载");
+        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $5}'", "系统近5分钟平均负载");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad5||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public double getSystemLoad15() {
-        return getOneSystemResource(systemLoad, 2, 3, "系统近15分钟平均负载");
+        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $6}'", "系统近15分钟平均负载");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad15||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public long getSystemMemBuffered() {
-        return getResourceValueByKey(systemMemoryInfo, "Buffers:", "getSystemMemBuffered");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Buffers:' | awk '{print $2}'", "系统文件缓冲区的物理RAM量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemBuffered()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemMemCached() {
-        return getResourceValueByKey(systemMemoryInfo, "Cached:", "getSystemMemCached");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Cached:' | awk '{print $2}'", "缓存内存的物理RAM量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCached()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemMemCommitLimit() {
-        return getResourceValueByKey(systemMemoryInfo, "CommitLimit:", "getSystemMemCommitLimit");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'CommitLimit:' | awk '{print $2}'", "系统当前可分配的内存总量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCommitLimit()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
@@ -660,17 +630,35 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public long getSystemMemCommittedAs() {
-        return getResourceValueByKey(systemMemoryInfo, "Committed_AS:", "getSystemMemCommittedAs");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Committed_AS:' | awk '{print $2}'", "系统已分配的包括进程未使用的内存量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCommittedAs()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemMemNonPaged() {
-        return getResourceValueByKey(systemMemoryInfo, "KernelStack:", "getSystemMemNonPaged");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'KernelStack:' | awk '{print $2}'", "写入磁盘的物理内存量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemNonPaged()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemMemPaged() {
-        return getResourceValueByKey(systemMemoryInfo, "Writeback:", "getSystemMemPaged");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Writeback:' | awk '{print $2}'", "没被使用是可以写入磁盘的物理内存量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemPaged()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
@@ -695,44 +683,46 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public long getSystemMemShared() {
-        return getResourceValueByKey(systemMemoryInfo, "Shmem:", "getSystemMemShared");
-    }
-
-    /**
-     * 由key获取系统资源中的值
-     * @param resource key为具体资源名称， value为其值
-     * @param key 键
-     * @param methodName 调用方法名称
-     * @return
-     */
-    private long getResourceValueByKey(Map<String, Long> resource, String key, String methodName) {
-        loadResource();
-
-        try {
-            if (resource.containsKey(key)) {
-                return resource.get(key);
-            }
-        } catch(Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method={}()||msg=failed to get resource", methodName,
-                    e);
-        } finally {
-            readLock.unlock();
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Shmem:' | awk '{print $2}'", "用作共享内存的物理RAM量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemShared()||msg=data is null");
+            return 0L;
         }
-        return 0L;
     }
+
     @Override
     public long getSystemMemSlab() {
-        return getResourceValueByKey(systemMemoryInfo, "Slab:", "getSystemMemSlab");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Slab:' | awk '{print $2}'", "内核用来缓存数据结构供自己使用的内存量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemSlab()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemMemTotal() {
-        return getResourceValueByKey(systemMemoryInfo, "MemTotal:", "getSystemMemTotal");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'MemTotal:' | awk '{print $2}'", "系统物理内存总量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemTotal()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemMemFree() {
-        return getResourceValueByKey(systemMemoryInfo, "MemFree:", "getSystemMemFree");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'MemFree:' | awk '{print $2}'", "系系统空闲内存大小");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemFree()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
@@ -742,12 +732,24 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public long getSystemSwapCached() {
-        return getResourceValueByKey(systemMemoryInfo, "SwapCached:", "getSystemSwapCached");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapCached:' | awk '{print $2}'", "系统用作缓存的交换空间");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapCached()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemSwapFree() {
-        return getResourceValueByKey(systemMemoryInfo, "SwapFree:", "getSystemSwapFree");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapFree:' | awk '{print $2}'", "系统空闲swap大小");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapFree()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
@@ -762,7 +764,13 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
 
     @Override
     public long getSystemSwapTotal() {
-        return getResourceValueByKey(systemMemoryInfo, "SwapTotal:", "getSystemSwapTotal");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapTotal:' | awk '{print $2}'", "系统swap总大小");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapTotal()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
@@ -780,184 +788,294 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
         return 1.0 * getSystemSwapUsed() / swapTotal;
     }
 
-    /**
-     * 根据命令行获取key value 资源
-     * @param procFDShell 命令行
-     * @param isProcess 是否是进程
-     * @param size 单位转换
-     * @param message 资源信息
-     * @return
-     */
-    private Map<String, Long> getKeyValueResource(String procFDShell, boolean isProcess, int size, String message) {
-        Map<String, Long> result = new HashMap<>();
-        List<String> lines = getOutputByCmd(procFDShell, isProcess, message);
-        if(!lines.isEmpty()) {
-            for (String line : lines) {
-                String[] array = line.split("\\s+");
-                if(array.length < 2) {
-                    LOGGER.error("获取系统资源项[{}]失败,每行数据太短", message);
-                    return result;
-                }
-                long value = size * Long.parseLong(array[1]);
-                result.put(array[0], value);
-            }
-        }
-        return result;
-    }
-
     @Override
     public long getSystemNetworkReceiveBytesPs() {
-        return (long) getResourceFromList(netFlow, 0, "getSystemNetworkReceiveBytesPs");
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
+            double processReceiveBytesPs = curLinuxNetFlow.getSystemReceiveBytesPs(lastLinuxNetFlow);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return (long) processReceiveBytesPs;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getSystemNetworkReceiveBytesPs()||msg=获取系统网络每秒下行流量失败",
+                    e);
+            return 0L;
+        }
     }
 
     @Override
     public long getSystemNetworkSendBytesPs() {
-        return (long) getResourceFromList(netFlow, 1, "getSystemNetworkSendBytesPs");
-    }
-
-    /**
-     * 根据下标获取资源列表中某项数据
-     * @param resource 资源列表
-     * @param index 下标
-     * @param methodName 方法名称
-     * @return
-     */
-    private double getResourceFromList(List<Double> resource, int index, String methodName) {
-        loadResource();
-
         try {
-            return resource.get(index);
-        } catch(Exception e) {
-            LOGGER.error("class=DefaultOSResourceService||method={}()||msg=failed to get resource", methodName,
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
+            double processTransmitBytesPs = curLinuxNetFlow.getSystemTransmitBytesPs(lastLinuxNetFlow);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return (long) processTransmitBytesPs;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getSystemNetworkSendBytesPs()||msg=获取系统网络每秒上行流量失败",
                     e);
-        } finally {
-            readLock.unlock();
+            return 0L;
         }
-        return 0.0d;
     }
 
     @Override
     public int getSystemNetworkTcpConnectionNum() {
-        loadResource();
-        long tcpConnectionNum = 0;
-        Set<Map.Entry<String, Long>> entries = currentSystemNetworkTcpStat.entrySet();
-        for (Map.Entry<String, Long> entry : entries) {
-            tcpConnectionNum += entry.getValue();
+        List<String> lines = getOutputByCmd("netstat -an | grep -c 'tcp'", "系统tcp连接数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpConnectionNum()||msg=data is null");
+            return 0;
         }
-        return (int) tcpConnectionNum;
     }
 
     @Override
     public int getSystemNetworkTcpTimeWaitNum() {
-        return (int) getResourceValueByKey(currentSystemNetworkTcpStat, "TIME_WAIT", "getSystemNetworkTcpTimeWaitNum");
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'TIME_WAIT'", "系统处于 time wait 状态 tcp 连接数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpTimeWaitNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public int getSystemNetworkTcpCloseWaitNum() {
-        return (int) getResourceValueByKey(currentSystemNetworkTcpStat, "CLOSE_WAIT", "getSystemNetworkTcpTimeWaitNum");
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'CLOSE_WAIT'", "系统处于 close wait 状态 tcp 连接数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpCloseWaitNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkTcpActiveOpens() {
-        return getResourceValueByKey(systemNetworkTcpStat, "ActiveOpens", "getSystemNetworkTcpActiveOpens");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $6}'", "系统启动以来 Tcp 主动连接次数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpActiveOpens()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkTcpPassiveOpens() {
-        return getResourceValueByKey(systemNetworkTcpStat, "PassiveOpens", "getSystemNetworkTcpPassiveOpens");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $7}'", "系统启动以来 Tcp 被动连接次数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpPassiveOpens()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkTcpAttemptFails() {
-        return getResourceValueByKey(systemNetworkTcpStat, "AttemptFails", "getSystemNetworkTcpAttemptFails");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $8}'", "系统启动以来 Tcp 连接失败次数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpAttemptFails()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkTcpEstabResets() {
-        return getResourceValueByKey(systemNetworkTcpStat, "EstabResets", "getSystemNetworkTcpEstabResets");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $9}'", "系统启动以来 Tcp 连接异常断开次数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpEstabResets()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkTcpRetransSegs() {
-        return getResourceValueByKey(systemNetworkTcpStat, "RetransSegs", "getSystemNetworkTcpRetransSegs");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $13}'", "系统启动以来 Tcp 重传的报文段总个数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpRetransSegs()||msg=data is null");
+            return 0;
+        }
     }
 
-    /**
-     * 根据命令行获取Tcp信息
-     * @param procFDShell 命令行
-     * @param isProcess 是进程还是系统
-     * @param message 资源描述
-     * @return
-     */
-    private Map<String, Long> getSystemNetworkStat(String procFDShell, boolean isProcess, String message) {
-        Map<String, Long> result = new HashMap<>();
-        List<String> lines = getOutputByCmd(procFDShell, isProcess, message);
-        if(lines.size() == 2) {
-            String[] keys = lines.get(0).split("\\s+");
-            String[] values = lines.get(1).split("\\s+");
-            for (int i = 0; i < keys.length; i++) {
-                result.put(keys[i], Long.parseLong(values[i]));
-            }
-        }
-        return result;
-    }
 
     @Override
     public long getSystemNetworkTcpExtListenOverflows() {
-        List<String> output = getOutputByCmd(
-                "netstat -s | egrep \"listen|LISTEN\" | awk '{a+=$1}{print a}'", false,
+        List<String> lines = getOutputByCmd(
+                "netstat -s | egrep \"listen|LISTEN\" | awk '{a+=$1}{print a}'",
                 "系统启动以来 Tcp 监听队列溢出次数");
-        if (!output.isEmpty()) {
-            return Long.parseLong(output.get(0));
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
         }
         return 0;
     }
 
     @Override
     public long getSystemNetworkUdpInDatagrams() {
-        return getResourceValueByKey(systemNetworkUdpStat, "InDatagrams", "getSystemNetworkUdpInDatagrams");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $2}'", "系统启动以来 UDP 入包量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpInDatagrams()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkUdpOutDatagrams() {
-        return getResourceValueByKey(systemNetworkUdpStat, "OutDatagrams", "getSystemNetworkUdpOutDatagrams");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $5}'", "系统启动以来 UDP 出包量");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpOutDatagrams()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkUdpInErrors() {
-        return getResourceValueByKey(systemNetworkUdpStat, "InErrors", "getSystemNetworkUdpInErrors");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $4}'", "系统启动以来 UDP 入包错误数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpInErrors()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkUdpNoPorts() {
-        return getResourceValueByKey(systemNetworkUdpStat, "NoPorts", "getSystemNetworkUdpNoPorts");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $3}'", "系统启动以来 UDP 端口不可达个数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpNoPorts()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public long getSystemNetworkUdpSendBufferErrors() {
-        return getResourceValueByKey(systemNetworkUdpStat, "SndbufErrors", "getSystemNetworkUdpSendBufferErrors");
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $7}'", "系统启动以来 UDP 发送缓冲区满次数");
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpSendBufferErrors()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public SystemMetrics getSystemMetrics() {
-        return null;
+        SystemMetrics systemMetrics = new SystemMetrics();
+        SystemResourceService systemResourceService = new LinuxSystemResourceService();
+
+        systemResourceService.clearCache();
+        systemMetrics.setSystemNtpOffset(systemResourceService.getSystemNtpOffset());
+        systemMetrics.setSystemProcCount(systemResourceService.getSystemProcCount());
+        systemMetrics.setSystemStartupTime(systemResourceService.getSystemStartupTime());
+        systemMetrics.setSystemUptime(systemResourceService.getSystemUptime());
+        systemMetrics.setSystemCpuUtil(systemResourceService.getSystemCpuUtil());
+        systemMetrics.setSystemCpuUtilTotalPercent(systemResourceService.getSystemCpuUtilTotalPercent());
+        systemMetrics.setSystemCpuSwitches(systemResourceService.getSystemCpuSwitches());
+        systemMetrics.setSystemCpuGuest(systemResourceService.getSystemCpuGuest());
+        systemMetrics.setSystemCpuIdle(systemResourceService.getSystemCpuIdle());
+        systemMetrics.setSystemCpuIOWait(systemResourceService.getSystemCpuIOWait());
+        systemMetrics.setSystemCpuNumCores(systemResourceService.getSystemCpuNumCores());
+        systemMetrics.setSystemCpuSteal(systemResourceService.getSystemCpuSteal());
+        systemMetrics.setSystemCpuSystem(systemResourceService.getSystemCpuSystem());
+        systemMetrics.setSystemCpuUser(systemResourceService.getSystemCpuUser());
+        systemMetrics.setSystemDiskBytesFree(systemResourceService.getSystemDiskBytesFree());
+        systemMetrics.setSystemDiskUsedPercent(systemResourceService.getSystemDiskUsedPercent());
+        systemMetrics.setSystemDiskReadTime(systemResourceService.getSystemDiskReadTime());
+        systemMetrics.setSystemDiskReadTimePercent(systemResourceService.getSystemDiskReadTimePercent());
+        systemMetrics.setSystemDiskBytesTotal(systemResourceService.getSystemDiskBytesTotal());
+        systemMetrics.setSystemDiskBytesUsed(systemResourceService.getSystemDiskBytesUsed());
+        systemMetrics.setSystemDiskWriteTime(systemResourceService.getSystemDiskWriteTime());
+        systemMetrics.setSystemDiskWriteTimePercent(systemResourceService.getSystemDiskWriteTimePercent());
+        systemMetrics.setSystemFilesAllocated(systemResourceService.getSystemFilesAllocated());
+        systemMetrics.setSystemFilesLeft(systemResourceService.getSystemFilesLeft());
+        systemMetrics.setSystemFilesUsedPercent(systemResourceService.getSystemFilesUsedPercent());
+        systemMetrics.setSystemFilesMax(systemResourceService.getSystemFilesMax());
+        systemMetrics.setSystemFilesUsed(systemResourceService.getSystemFilesUsed());
+        systemMetrics.setSystemFilesNotUsed(systemResourceService.getSystemFilesNotUsed());
+        systemMetrics.setSystemDiskInodesFree(systemResourceService.getSystemDiskInodesFree());
+        systemMetrics.setSystemDiskInodesUsedPercent(systemResourceService.getSystemDiskInodesUsedPercent());
+        systemMetrics.setSystemDiskInodesTotal(systemResourceService.getSystemDiskInodesTotal());
+        systemMetrics.setSystemDiskInodesUsed(systemResourceService.getSystemDiskInodesUsed());
+        systemMetrics.setSystemIOAvgQuSz(systemResourceService.getSystemIOAvgQuSz());
+        systemMetrics.setSystemIOAvgRqSz(systemResourceService.getSystemIOAvgRqSz());
+        systemMetrics.setSystemIOAwait(systemResourceService.getSystemIOAwait());
+        systemMetrics.setSystemIORAwait(systemResourceService.getSystemIORAwait());
+        systemMetrics.setSystemIOReadRequest(systemResourceService.getSystemIOReadRequest());
+        systemMetrics.setSystemIOReadBytes(systemResourceService.getSystemIOReadBytes());
+        systemMetrics.setSystemIORRQMS(systemResourceService.getSystemIORRQMS());
+        systemMetrics.setSystemIOSVCTM(systemResourceService.getSystemIOSVCTM());
+        systemMetrics.setSystemIOUtil(systemResourceService.getSystemIOUtil());
+        systemMetrics.setSystemIOWAwait(systemResourceService.getSystemIOWAwait());
+        systemMetrics.setSystemIOWriteRequest(systemResourceService.getSystemIOWriteRequest());
+        systemMetrics.setSystemIOWriteBytes(systemResourceService.getSystemIOWriteBytes());
+        systemMetrics.setSystemIOWRQMS(systemResourceService.getSystemIOWRQMS());
+        systemMetrics.setSystemLoad1(systemResourceService.getSystemLoad1());
+        systemMetrics.setSystemLoad5(systemResourceService.getSystemLoad5());
+        systemMetrics.setSystemLoad15(systemResourceService.getSystemLoad15());
+        systemMetrics.setSystemMemCached(systemResourceService.getSystemMemCached());
+        systemMetrics.setSystemMemBuffered(systemResourceService.getSystemMemBuffered());
+        systemMetrics.setSystemMemFree(systemResourceService.getSystemMemFree());
+        systemMetrics.setSystemMemCommitLimit(systemResourceService.getSystemMemCommitLimit());
+        systemMetrics.setSystemMemSlab(systemResourceService.getSystemMemSlab());
+        systemMetrics.setSystemMemCommitted(systemResourceService.getSystemMemCommitted());
+        systemMetrics.setSystemMemCommittedAs(systemResourceService.getSystemMemCommittedAs());
+        systemMetrics.setSystemMemFreePercent(systemResourceService.getSystemMemFreePercent());
+        systemMetrics.setSystemMemNonPaged(systemResourceService.getSystemMemNonPaged());
+        systemMetrics.setSystemMemPaged(systemResourceService.getSystemMemPaged());
+        systemMetrics.setSystemMemShared(systemResourceService.getSystemMemShared());
+        systemMetrics.setSystemMemTotal(systemResourceService.getSystemMemTotal());
+        systemMetrics.setSystemMemUsed(systemResourceService.getSystemMemUsed());
+        systemMetrics.setSystemMemUsedPercent(systemResourceService.getSystemMemUsedPercent());
+        systemMetrics.setSystemSwapCached(systemResourceService.getSystemSwapCached());
+        systemMetrics.setSystemSwapFree(systemResourceService.getSystemSwapFree());
+        systemMetrics.setSystemSwapTotal(systemResourceService.getSystemSwapTotal());
+        systemMetrics.setSystemSwapUsed(systemResourceService.getSystemSwapUsed());
+        systemMetrics.setSystemSwapFreePercent(systemResourceService.getSystemSwapFreePercent());
+        systemMetrics.setSystemSwapUsedPercent(systemResourceService.getSystemSwapUsedPercent());
+        systemMetrics.setSystemNetworkSendBytesPs(systemResourceService.getSystemNetworkSendBytesPs());
+        systemMetrics.setSystemNetworkReceiveBytesPs(systemResourceService.getSystemNetworkReceiveBytesPs());
+        systemMetrics.setSystemNetworkTcpActiveOpens(systemResourceService.getSystemNetworkTcpActiveOpens());
+        systemMetrics.setSystemNetworkTcpAttemptFails(systemResourceService.getSystemNetworkTcpAttemptFails());
+        systemMetrics.setSystemNetworkTcpCloseWaitNum(systemResourceService.getSystemNetworkTcpCloseWaitNum());
+        systemMetrics.setSystemNetworkTcpConnectionNum(systemResourceService.getSystemNetworkTcpConnectionNum());
+        systemMetrics.setSystemNetworkTcpEstabResets(systemResourceService.getSystemNetworkTcpEstabResets());
+        systemMetrics.setSystemNetworkTcpExtListenOverflows(systemResourceService.getSystemNetworkTcpExtListenOverflows());
+        systemMetrics.setSystemNetworkTcpPassiveOpens(systemResourceService.getSystemNetworkTcpPassiveOpens());
+        systemMetrics.setSystemNetworkTcpRetransSegs(systemResourceService.getSystemNetworkTcpRetransSegs());
+        systemMetrics.setSystemNetworkTcpTimeWaitNum(systemResourceService.getSystemNetworkTcpTimeWaitNum());
+        systemMetrics.setSystemNetworkUdpInDatagrams(systemResourceService.getSystemNetworkUdpInDatagrams());
+        systemMetrics.setSystemNetworkUdpInErrors(systemResourceService.getSystemNetworkUdpInErrors());
+        systemMetrics.setSystemNetworkUdpNoPorts(systemResourceService.getSystemNetworkUdpNoPorts());
+        systemMetrics.setSystemNetworkUdpOutDatagrams(systemResourceService.getSystemNetworkUdpOutDatagrams());
+        systemMetrics.setSystemNetworkUdpSendBufferErrors(systemResourceService.getSystemNetworkUdpSendBufferErrors());
+
+        return systemMetrics;
     }
 
     /**
      * linux 根据shell命令获取系统或者进程资源
      * @param procFDShell shell命令
-     * @param isProcess   是不是进程
      * @param resourceMessage    资源描述信息
      * @return
      */
-    private List<String> getOutputByCmd(String procFDShell, boolean isProcess, String resourceMessage) {
+    private List<String> getOutputByCmd(String procFDShell, String resourceMessage) {
         Process process = null;
         BufferedReader br = null;
         List<String> lines = new ArrayList<>();
         try {
-            if (isProcess) {
-                procFDShell = String.format(procFDShell, PID);
-            }
             String[] cmd = new String[] { "sh", "-c", procFDShell };
             process = Runtime.getRuntime().exec(cmd);
             int resultCode = process.waitFor();

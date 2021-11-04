@@ -38,21 +38,20 @@ public class LinuxNetFlow {
      */
     private final String  SYSTEM_PATH = "/proc/net/dev";
 
-    /**
-     * 进程收发字节数的路径
-     */
-    private final String  PROCESS_PATH;
-
-    public LinuxNetFlow(long pid) throws Exception {
-        this.PROCESS_PATH = "/proc/" + pid + "/net/dev";
+    public LinuxNetFlow(long pid){
+        String PROCESS_PATH = "/proc/" + pid + "/net/dev";
         this.currentTime = System.currentTimeMillis();
-
-        List<String> systemReceiveAndTransmitBytes = FileUtils.readFileContent(SYSTEM_PATH, -1);
         List<String> processReceiveAndTransmitBytes = FileUtils.readFileContent(PROCESS_PATH, -1);
-        this.systemReceiveBytes = getBytes(systemReceiveAndTransmitBytes, 2);
-        this.systemTransmitBytes = getBytes(systemReceiveAndTransmitBytes, 10);
         this.processReceiveBytes = getBytes(processReceiveAndTransmitBytes, 2);
         this.processTransmitBytes = getBytes(processReceiveAndTransmitBytes, 10);
+    }
+
+    public LinuxNetFlow() {
+        this.currentTime = System.currentTimeMillis();
+        List<String> systemReceiveAndTransmitBytes = FileUtils.readFileContent(SYSTEM_PATH, -1);
+        this.systemReceiveBytes = getBytes(systemReceiveAndTransmitBytes, 2);
+        this.systemTransmitBytes = getBytes(systemReceiveAndTransmitBytes, 10);
+
     }
 
     /**
