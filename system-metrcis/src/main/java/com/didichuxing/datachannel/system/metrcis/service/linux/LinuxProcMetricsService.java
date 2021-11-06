@@ -2,7 +2,6 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.bean.ProcMetrics;
 import com.didichuxing.datachannel.system.metrcis.service.ProcMetricsService;
-import com.didichuxing.datachannel.system.metrcis.service.ProcResourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +12,7 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.ThreadMXBean;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 获取进程级指标
@@ -41,9 +38,18 @@ public class LinuxProcMetricsService implements ProcMetricsService {
 
     private LinuxNetFlow lastLinuxNetFlow;
 
+    private LinuxCpuTime lastLinuxCpuTime;
+
     public LinuxProcMetricsService() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
+
+        try {
+            lastLinuxCpuTime = new LinuxCpuTime(getProcPid(), getSystemCpuNumCores());// 记录上次的cpu耗时
+        } catch (Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=DefaultOSResourceService()||msg=CpuTime init failed",
+                    e);
+        }
 
         try {
             lastLinuxIORate = new LinuxIORate(getProcPid());// 记录上次IO速率
@@ -133,12 +139,15 @@ public class LinuxProcMetricsService implements ProcMetricsService {
 
     @Override
     public float getProcCpuUtil() {
-        List<String> lines = getOutputByCmd("pidstat -p %d | awk 'NR==4{print $7}'", "当前进程cpu使用率");
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Float.parseFloat(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuUtil||msg=data is null");
-            return 0L;
+        try {
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getProcPid(), getSystemCpuNumCores());
+            float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
+            lastLinuxCpuTime = curLinuxCpuTime;
+            return cpuUsage;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed",
+                    e);
+            return 0f;
         }
     }
 
@@ -549,58 +558,187 @@ public class LinuxProcMetricsService implements ProcMetricsService {
 
     @Override
     public ProcMetrics getProcMetrics() {
+        return buildProMetrics();
+    }
+
+    /**
+     * 获取所有进程指标
+     * @return
+     */
+    private ProcMetrics buildProMetrics() {
         ProcMetrics procMetrics = new ProcMetrics();
-        ProcResourceService procResourceService = new LinuxProcResourceService();
 
-        procResourceService.clearCache();
-        procMetrics.setProcStartupTime(procResourceService.getProcStartupTime());
-        procMetrics.setProcUptime(procResourceService.getProcUptime());
-        procMetrics.setProcPid(procResourceService.getProcPid());
-        procMetrics.setProcCpuSys(procResourceService.getProcCpuSys());
-        procMetrics.setProcCpuSwitchesPS(procResourceService.getProcCpuSwitchesPS());
-        procMetrics.setProcCpuUser(procResourceService.getProcCpuUser());
-        procMetrics.setProcCpuUtil(procResourceService.getProcCpuUtil());
-        procMetrics.setProcCpuUtilTotalPercent(procResourceService.getProcCpuUtilTotalPercent());
-        procMetrics.setProcCpuNonVoluntarySwitchesPS(procResourceService.getProcCpuNonVoluntarySwitchesPS());
-        procMetrics.setProcCpuVoluntarySwitchesPS(procResourceService.getProcCpuVoluntarySwitchesPS());
-        procMetrics.setProcIOAwaitTimePercent(procResourceService.getProcIOAwaitTimePercent());
-        procMetrics.setProcIOReadBytesRate(procResourceService.getProcIOReadBytesRate());
-        procMetrics.setProcIOReadRate(procResourceService.getProcIOReadRate());
-        procMetrics.setProcIOWriteRate(procResourceService.getProcIOWriteRate());
-        procMetrics.setProcIOWriteBytesRate(procResourceService.getProcIOWriteBytesRate());
-        procMetrics.setProcMemData(procResourceService.getProcMemData());
+        LinuxProcessResource processResource = new LinuxProcessResource();
 
-        procMetrics.setProcMemLib(procResourceService.getProcMemLib());
-        procMetrics.setProcMemRss(procResourceService.getProcMemRss());
-        procMetrics.setProcMemSwap(procResourceService.getProcMemSwap());
-        procMetrics.setProcMemDirty(procResourceService.getProcMemDirty());
-        procMetrics.setProcMemText(procResourceService.getProcMemText());
-        procMetrics.setProcMemShared(procResourceService.getProcMemShared());
-        procMetrics.setProcMemUsed(procResourceService.getProcMemUsed());
-        procMetrics.setProcMemUtil(procResourceService.getProcMemUtil());
-        procMetrics.setProcMemVms(procResourceService.getProcMemVms());
-        procMetrics.setJvmProcMemUsedPeak(procResourceService.getJvmProcMemUsedPeak());
-        procMetrics.setJvmProcHeapMemoryUsed(procResourceService.getJvmProcHeapMemoryUsed());
-        procMetrics.setJvmProcNonHeapMemoryUsed(procResourceService.getJvmProcNonHeapMemoryUsed());
-        procMetrics.setJvmProcHeapSizeXmx(procResourceService.getJvmProcHeapSizeXmx());
+        // pid and time
+        buildProcPidAndTimeMetrics(procMetrics);
 
-        procMetrics.setJvmProcFullGcCount(procResourceService.getJvmProcFullGcCount());
-        procMetrics.setJvmProcFullGcTime(procResourceService.getJvmProcFullGcTime());
-        procMetrics.setJvmProcYoungGcCount(procResourceService.getJvmProcYoungGcCount());
-        procMetrics.setJvmProcYoungGcTime(procResourceService.getJvmProcYoungGcTime());
+        // cpu
+        buildCpuMetrics(procMetrics, processResource);
 
-        procMetrics.setProcOpenFdCount(procResourceService.getProcOpenFdCount());
-        procMetrics.setJvmProcThreadNum(procResourceService.getJvmProcThreadNum());
-        procMetrics.setJvmProcThreadNumPeak(procResourceService.getJvmProcThreadNumPeak());
+        // io
+        buildIOMetrics(procMetrics);
 
-        procMetrics.setProcPortListen(procResourceService.getProcPortListen());
-        procMetrics.setProcNetworkSendBytesPs(procResourceService.getProcNetworkSendBytesPs());
-        procMetrics.setProcNetworkReceiveBytesPs(procResourceService.getProcNetworkReceiveBytesPs());
-        procMetrics.setProcNetworkTcpCloseWaitNum(procResourceService.getProcNetworkTcpCloseWaitNum());
-        procMetrics.setProcNetworkTcpConnectionNum(procResourceService.getProcNetworkTcpConnectionNum());
-        procMetrics.setProcNetworkTcpTimeWaitNum(procResourceService.getProcNetworkTcpTimeWaitNum());
+        // memory
+        buildMemoryMetrics(procMetrics, processResource);
+
+        // gc
+        buildGcMetrics(procMetrics);
+
+        // thread
+        buildThreadMetrics(procMetrics);
+
+        // fd
+        procMetrics.setProcOpenFdCount(getProcOpenFdCount());
+
+        // network
+        buildNetworkMetrics(procMetrics, processResource);
 
         return procMetrics;
+    }
+
+    private void buildNetworkMetrics(ProcMetrics procMetrics, LinuxProcessResource processResource) {
+        Map<String, Long> processNetworkTcpStat = processResource.getProcessNetworkTcpStat();
+        procMetrics.setProcNetworkTcpTimeWaitNum((int) getResourceValueByKey(processNetworkTcpStat, "TIME_WAIT", "getProcNetworkTcpTimeWaitNum"));
+        procMetrics.setProcPortListen(getProcPortListen());
+        procMetrics.setProcNetworkTcpCloseWaitNum((int) getResourceValueByKey(processNetworkTcpStat, "CLOSE_WAIT", "getProcNetworkTcpCloseWaitNum"));
+        procMetrics.setProcNetworkTcpConnectionNum(getProcNetworkTcpConnectionNumByTcpStat(processNetworkTcpStat));
+        procMetrics.setProcNetworkReceiveBytesPs(getProcNetworkReceiveBytesPs());
+        procMetrics.setProcNetworkSendBytesPs(getProcNetworkSendBytesPs());
+    }
+
+    private void buildThreadMetrics(ProcMetrics procMetrics) {
+        procMetrics.setJvmProcThreadNumPeak(getJvmProcThreadNumPeak());
+        procMetrics.setJvmProcThreadNum(getJvmProcThreadNum());
+    }
+
+    private void buildGcMetrics(ProcMetrics procMetrics) {
+        procMetrics.setJvmProcYoungGcTime(getJvmProcYoungGcTime());
+        procMetrics.setJvmProcYoungGcCount(getJvmProcYoungGcCount());
+        procMetrics.setJvmProcFullGcTime(getJvmProcFullGcTime());
+        procMetrics.setJvmProcFullGcCount(getJvmProcFullGcCount());
+    }
+
+    private void buildMemoryMetrics(ProcMetrics procMetrics, LinuxProcessResource processResource) {
+        Map<String, Long> processMemoryInfo = processResource.getProcessMemoryInfo();
+        procMetrics.setProcMemVms(getResourceValueByKey(processMemoryInfo, "VmSize:", "getProcMemVms"));
+        procMetrics.setProcMemData(getResourceValueByKey(processMemoryInfo, "VmData:", "getProcMemData"));
+        procMetrics.setProcMemDirty(getResourceValueByKey(processMemoryInfo, "RssAnon:", "getProcMemDirty"));
+        procMetrics.setProcMemShared(getResourceValueByKey(processMemoryInfo, "RssShmem:", "getProcMemShared"));
+        procMetrics.setProcMemRss(getResourceValueByKey(processMemoryInfo, "VmRSS:", "getProcMemRss"));
+        procMetrics.setProcMemText(getResourceValueByKey(processMemoryInfo, "VmExe:", "getProcMemText"));
+        procMetrics.setProcMemLib(getResourceValueByKey(processMemoryInfo, "VmLib:", "getProcMemLib"));
+        long jvmProcHeapMemoryUsed = getJvmProcHeapMemoryUsed();
+        long jvmProcNonHeapMemoryUsed = getJvmProcNonHeapMemoryUsed();
+        procMetrics.setJvmProcHeapMemoryUsed(jvmProcHeapMemoryUsed);
+        procMetrics.setJvmProcNonHeapMemoryUsed(jvmProcNonHeapMemoryUsed);
+        procMetrics.setProcMemUsed(jvmProcHeapMemoryUsed + jvmProcNonHeapMemoryUsed);
+        procMetrics.setProcMemUtil(getProcMemUtil());
+        procMetrics.setProcMemSwap(getProcMemSwap());
+        procMetrics.setJvmProcMemUsedPeak(getJvmProcMemUsedPeak());
+        procMetrics.setJvmProcHeapSizeXmx(getJvmProcHeapSizeXmx());
+    }
+
+    private void buildIOMetrics(ProcMetrics procMetrics) {
+        procMetrics.setProcIOWriteBytesRate(getProcIOWriteBytesRate());
+        procMetrics.setProcIOWriteRate(getProcIOWriteRate());
+        procMetrics.setProcIOReadRate(getProcIOReadRate());
+        procMetrics.setProcIOReadBytesRate(getProcIOReadBytesRate());
+        procMetrics.setProcIOAwaitTimePercent(getProcIOAwaitTimePercent());
+    }
+
+    private void buildCpuMetrics(ProcMetrics procMetrics, LinuxProcessResource processResource) {
+        List<String> processCpuStat = processResource.getProcessCpuStat();
+        List<String> processCpuSwitchesPS = processResource.getProcessCpuSwitchesPS();
+        procMetrics.setProcCpuUser(getOneSystemResource(processCpuStat, 0, 3, "当前进程用户态cpu使用率"));
+        procMetrics.setProcCpuSys(getOneSystemResource(processCpuStat, 1, 3, "当前进程系统态cpu使用率"));
+        float procCpuUtil = (float) getOneSystemResource(processCpuStat, 2, 3, "当前进程系统态cpu使用率");
+        procMetrics.setProcCpuUtil(procCpuUtil);
+        procMetrics.setProcCpuUtilTotalPercent(procCpuUtil / getSystemCpuNumCores() );
+        long procCpuVoluntarySwitchesPS = (long) getOneSystemResource(processCpuSwitchesPS, 0, 2, "当前进程cpu每秒自愿上下文交换次数");
+        long procCpuNonVoluntarySwitchesPS = (long) getOneSystemResource(processCpuSwitchesPS, 1, 2, "当前进程cpu每秒非自愿上下文交换次数");
+        procMetrics.setProcCpuVoluntarySwitchesPS(procCpuVoluntarySwitchesPS);
+        procMetrics.setProcCpuNonVoluntarySwitchesPS(procCpuNonVoluntarySwitchesPS);
+        procMetrics.setProcCpuSwitchesPS(procCpuVoluntarySwitchesPS + procCpuNonVoluntarySwitchesPS);
+    }
+
+    private void buildProcPidAndTimeMetrics(ProcMetrics procMetrics) {
+        procMetrics.setProcPid(getProcPid());
+        procMetrics.setProcStartupTime(getProcStartupTime());
+        procMetrics.setProcUptime(getProcUptime());
+    }
+
+    final class LinuxProcessResource {
+
+        /**
+         * 当前进程网络Tcp各状态统计
+         * Tcp状态：个数
+         */
+        private Map<String, Long> processNetworkTcpStat;
+
+        /**
+         * 当前进程CPU状态
+         * %usr %system %CPU
+         */
+        private List<String> processCpuStat;
+
+        /**
+         * 当前进程CPU上下文切换次数
+         * 返回 每秒主动切换次数 每秒被动切换次数
+         */
+        private List<String> processCpuSwitchesPS;
+
+        /**
+         * 进程内存占用情况
+         */
+        private Map<String, Long> processMemoryInfo;
+
+        public LinuxProcessResource() {
+            processCpuStat = getOutputByCmd("pidstat -p %d | awk 'NR==4{print $4,$5,$7}'", "进程CPU使用情况");
+            processNetworkTcpStat = getKeyValueResource("netstat -antp | grep %d | awk '{++S[$6]} END {for(a in S) print a, S[a]}'", 1, "进程网络Tcp情况");
+            processCpuSwitchesPS = getOutputByCmd("pidstat -w -p %d | awk 'NR==4{print $4,$5}'", "进程CPU每秒上下文切换次数");
+            processMemoryInfo = getKeyValueResource("cat /proc/%d/status | awk 'NR>12 && NR<28'", 1024, "进程内存使用情况");
+        }
+
+        /**
+         * 根据命令行获取key value 资源
+         * @param procFDShell 命令行
+         * @param size 单位转换
+         * @param message 资源信息
+         * @return
+         */
+        private Map<String, Long> getKeyValueResource(String procFDShell, int size, String message) {
+            Map<String, Long> result = new HashMap<>();
+            List<String> lines = getOutputByCmd(procFDShell, message);
+            if(!lines.isEmpty()) {
+                for (String line : lines) {
+                    String[] array = line.split("\\s+");
+                    if(array.length < 2) {
+                        LOGGER.error("获取系统资源项[{}]失败,每行数据太短", message);
+                        return result;
+                    }
+                    long value = size * Long.parseLong(array[1]);
+                    result.put(array[0], value);
+                }
+            }
+            return result;
+        }
+
+        public Map<String, Long> getProcessNetworkTcpStat() {
+            return processNetworkTcpStat;
+        }
+
+        public List<String> getProcessCpuStat() {
+            return processCpuStat;
+        }
+
+        public List<String> getProcessCpuSwitchesPS() {
+            return processCpuSwitchesPS;
+        }
+
+        public Map<String, Long> getProcessMemoryInfo() {
+            return processMemoryInfo;
+        }
     }
 
     /**
@@ -643,5 +781,59 @@ public class LinuxProcMetricsService implements ProcMetricsService {
                 LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程失败", resourceMessage, resourceMessage, ex);
             }
         }
+    }
+
+    /**
+     * 获取一项系统资源
+     * @param systemResource 系统资源
+     * @param index 下标
+     * @param length 单行数据长度
+     * @param message 某状态描述
+     * @return
+     */
+    private double getOneSystemResource(List<String> systemResource, int index, int length, String message) {
+        try {
+            if (!systemResource.isEmpty() && StringUtils.isNotBlank(systemResource.get(0))) {
+                String cpuStat = systemResource.get(0);
+                String[] array = cpuStat.split("\\s+");
+                if (array.length < length) {
+                    LOGGER.error("获取系统资源项[{}}]失败", message);
+                    return 0.0d;
+                }
+                return Double.parseDouble(array[index]);
+            }
+        } catch (Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getOneSystemResource()||msg=failed to get system resource",
+                    e);
+        }
+        return 0.0d;
+    }
+
+    /**
+     * 由key获取系统资源中的值
+     * @param resource key为具体资源名称， value为其值
+     * @param key 键
+     * @param methodName 调用方法名称
+     * @return
+     */
+    private long getResourceValueByKey(Map<String, Long> resource, String key, String methodName) {
+        try {
+            if (resource.containsKey(key)) {
+                return resource.get(key);
+            }
+        } catch(Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method={}()||msg=failed to get resource", methodName,
+                    e);
+        }
+        return 0L;
+    }
+
+    private int getProcNetworkTcpConnectionNumByTcpStat(Map<String, Long> processNetworkTcpStat) {
+        long tcpConnectionNum = 0;
+        Set<Map.Entry<String, Long>> entries = processNetworkTcpStat.entrySet();
+        for (Map.Entry<String, Long> entry : entries) {
+            tcpConnectionNum += entry.getValue();
+        }
+        return (int) tcpConnectionNum;
     }
 }

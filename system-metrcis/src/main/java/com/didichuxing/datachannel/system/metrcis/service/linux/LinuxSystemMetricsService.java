@@ -2,7 +2,6 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.bean.SystemMetrics;
 import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
-import com.didichuxing.datachannel.system.metrcis.service.SystemResourceService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -971,100 +970,6 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
         }
     }
 
-    @Override
-    public SystemMetrics getSystemMetrics() {
-        SystemMetrics systemMetrics = new SystemMetrics();
-        SystemResourceService systemResourceService = new LinuxSystemResourceService();
-
-        systemResourceService.clearCache();
-        systemMetrics.setSystemNtpOffset(systemResourceService.getSystemNtpOffset());
-        systemMetrics.setSystemProcCount(systemResourceService.getSystemProcCount());
-        systemMetrics.setSystemStartupTime(systemResourceService.getSystemStartupTime());
-        systemMetrics.setSystemUptime(systemResourceService.getSystemUptime());
-        systemMetrics.setSystemCpuUtil(systemResourceService.getSystemCpuUtil());
-        systemMetrics.setSystemCpuUtilTotalPercent(systemResourceService.getSystemCpuUtilTotalPercent());
-        systemMetrics.setSystemCpuSwitches(systemResourceService.getSystemCpuSwitches());
-        systemMetrics.setSystemCpuGuest(systemResourceService.getSystemCpuGuest());
-        systemMetrics.setSystemCpuIdle(systemResourceService.getSystemCpuIdle());
-        systemMetrics.setSystemCpuIOWait(systemResourceService.getSystemCpuIOWait());
-        systemMetrics.setSystemCpuNumCores(systemResourceService.getSystemCpuNumCores());
-        systemMetrics.setSystemCpuSteal(systemResourceService.getSystemCpuSteal());
-        systemMetrics.setSystemCpuSystem(systemResourceService.getSystemCpuSystem());
-        systemMetrics.setSystemCpuUser(systemResourceService.getSystemCpuUser());
-        systemMetrics.setSystemDiskBytesFree(systemResourceService.getSystemDiskBytesFree());
-        systemMetrics.setSystemDiskUsedPercent(systemResourceService.getSystemDiskUsedPercent());
-        systemMetrics.setSystemDiskReadTime(systemResourceService.getSystemDiskReadTime());
-        systemMetrics.setSystemDiskReadTimePercent(systemResourceService.getSystemDiskReadTimePercent());
-        systemMetrics.setSystemDiskBytesTotal(systemResourceService.getSystemDiskBytesTotal());
-        systemMetrics.setSystemDiskBytesUsed(systemResourceService.getSystemDiskBytesUsed());
-        systemMetrics.setSystemDiskWriteTime(systemResourceService.getSystemDiskWriteTime());
-        systemMetrics.setSystemDiskWriteTimePercent(systemResourceService.getSystemDiskWriteTimePercent());
-        systemMetrics.setSystemFilesAllocated(systemResourceService.getSystemFilesAllocated());
-        systemMetrics.setSystemFilesLeft(systemResourceService.getSystemFilesLeft());
-        systemMetrics.setSystemFilesUsedPercent(systemResourceService.getSystemFilesUsedPercent());
-        systemMetrics.setSystemFilesMax(systemResourceService.getSystemFilesMax());
-        systemMetrics.setSystemFilesUsed(systemResourceService.getSystemFilesUsed());
-        systemMetrics.setSystemFilesNotUsed(systemResourceService.getSystemFilesNotUsed());
-        systemMetrics.setSystemDiskInodesFree(systemResourceService.getSystemDiskInodesFree());
-        systemMetrics.setSystemDiskInodesUsedPercent(systemResourceService.getSystemDiskInodesUsedPercent());
-        systemMetrics.setSystemDiskInodesTotal(systemResourceService.getSystemDiskInodesTotal());
-        systemMetrics.setSystemDiskInodesUsed(systemResourceService.getSystemDiskInodesUsed());
-        systemMetrics.setSystemIOAvgQuSz(systemResourceService.getSystemIOAvgQuSz());
-        systemMetrics.setSystemIOAvgRqSz(systemResourceService.getSystemIOAvgRqSz());
-        systemMetrics.setSystemIOAwait(systemResourceService.getSystemIOAwait());
-        systemMetrics.setSystemIORAwait(systemResourceService.getSystemIORAwait());
-        systemMetrics.setSystemIOReadRequest(systemResourceService.getSystemIOReadRequest());
-        systemMetrics.setSystemIOReadBytes(systemResourceService.getSystemIOReadBytes());
-        systemMetrics.setSystemIORRQMS(systemResourceService.getSystemIORRQMS());
-        systemMetrics.setSystemIOSVCTM(systemResourceService.getSystemIOSVCTM());
-        systemMetrics.setSystemIOUtil(systemResourceService.getSystemIOUtil());
-        systemMetrics.setSystemIOWAwait(systemResourceService.getSystemIOWAwait());
-        systemMetrics.setSystemIOWriteRequest(systemResourceService.getSystemIOWriteRequest());
-        systemMetrics.setSystemIOWriteBytes(systemResourceService.getSystemIOWriteBytes());
-        systemMetrics.setSystemIOWRQMS(systemResourceService.getSystemIOWRQMS());
-        systemMetrics.setSystemLoad1(systemResourceService.getSystemLoad1());
-        systemMetrics.setSystemLoad5(systemResourceService.getSystemLoad5());
-        systemMetrics.setSystemLoad15(systemResourceService.getSystemLoad15());
-        systemMetrics.setSystemMemCached(systemResourceService.getSystemMemCached());
-        systemMetrics.setSystemMemBuffered(systemResourceService.getSystemMemBuffered());
-        systemMetrics.setSystemMemFree(systemResourceService.getSystemMemFree());
-        systemMetrics.setSystemMemCommitLimit(systemResourceService.getSystemMemCommitLimit());
-        systemMetrics.setSystemMemSlab(systemResourceService.getSystemMemSlab());
-        systemMetrics.setSystemMemCommitted(systemResourceService.getSystemMemCommitted());
-        systemMetrics.setSystemMemCommittedAs(systemResourceService.getSystemMemCommittedAs());
-        systemMetrics.setSystemMemFreePercent(systemResourceService.getSystemMemFreePercent());
-        systemMetrics.setSystemMemNonPaged(systemResourceService.getSystemMemNonPaged());
-        systemMetrics.setSystemMemPaged(systemResourceService.getSystemMemPaged());
-        systemMetrics.setSystemMemShared(systemResourceService.getSystemMemShared());
-        systemMetrics.setSystemMemTotal(systemResourceService.getSystemMemTotal());
-        systemMetrics.setSystemMemUsed(systemResourceService.getSystemMemUsed());
-        systemMetrics.setSystemMemUsedPercent(systemResourceService.getSystemMemUsedPercent());
-        systemMetrics.setSystemSwapCached(systemResourceService.getSystemSwapCached());
-        systemMetrics.setSystemSwapFree(systemResourceService.getSystemSwapFree());
-        systemMetrics.setSystemSwapTotal(systemResourceService.getSystemSwapTotal());
-        systemMetrics.setSystemSwapUsed(systemResourceService.getSystemSwapUsed());
-        systemMetrics.setSystemSwapFreePercent(systemResourceService.getSystemSwapFreePercent());
-        systemMetrics.setSystemSwapUsedPercent(systemResourceService.getSystemSwapUsedPercent());
-        systemMetrics.setSystemNetworkSendBytesPs(systemResourceService.getSystemNetworkSendBytesPs());
-        systemMetrics.setSystemNetworkReceiveBytesPs(systemResourceService.getSystemNetworkReceiveBytesPs());
-        systemMetrics.setSystemNetworkTcpActiveOpens(systemResourceService.getSystemNetworkTcpActiveOpens());
-        systemMetrics.setSystemNetworkTcpAttemptFails(systemResourceService.getSystemNetworkTcpAttemptFails());
-        systemMetrics.setSystemNetworkTcpCloseWaitNum(systemResourceService.getSystemNetworkTcpCloseWaitNum());
-        systemMetrics.setSystemNetworkTcpConnectionNum(systemResourceService.getSystemNetworkTcpConnectionNum());
-        systemMetrics.setSystemNetworkTcpEstabResets(systemResourceService.getSystemNetworkTcpEstabResets());
-        systemMetrics.setSystemNetworkTcpExtListenOverflows(systemResourceService.getSystemNetworkTcpExtListenOverflows());
-        systemMetrics.setSystemNetworkTcpPassiveOpens(systemResourceService.getSystemNetworkTcpPassiveOpens());
-        systemMetrics.setSystemNetworkTcpRetransSegs(systemResourceService.getSystemNetworkTcpRetransSegs());
-        systemMetrics.setSystemNetworkTcpTimeWaitNum(systemResourceService.getSystemNetworkTcpTimeWaitNum());
-        systemMetrics.setSystemNetworkUdpInDatagrams(systemResourceService.getSystemNetworkUdpInDatagrams());
-        systemMetrics.setSystemNetworkUdpInErrors(systemResourceService.getSystemNetworkUdpInErrors());
-        systemMetrics.setSystemNetworkUdpNoPorts(systemResourceService.getSystemNetworkUdpNoPorts());
-        systemMetrics.setSystemNetworkUdpOutDatagrams(systemResourceService.getSystemNetworkUdpOutDatagrams());
-        systemMetrics.setSystemNetworkUdpSendBufferErrors(systemResourceService.getSystemNetworkUdpSendBufferErrors());
-
-        return systemMetrics;
-    }
-
     /**
      * linux 根据shell命令获取系统或者进程资源
      * @param procFDShell shell命令
@@ -1106,4 +1011,578 @@ public class LinuxSystemMetricsService implements SystemMetricsService {
         }
     }
 
+    @Override
+    public SystemMetrics getSystemMetrics() {
+        return buildSystemMetrics();
+    }
+
+    /**
+     * 获取系统所有的指标
+     */
+    private SystemMetrics buildSystemMetrics() {
+
+        SystemMetrics systemMetrics = new SystemMetrics();
+
+        LinuxSystemResource systemResource = new LinuxSystemResource();
+
+        // 系统时间和进程个数
+        buildSystemProcessAndTimeMetrics(systemMetrics);
+
+        // 系统cpu情况
+        buildCpuMetrics(systemMetrics, systemResource);
+
+        // 系统磁盘分区情况
+        buildDiskMetrics(systemMetrics, systemResource);
+
+        // 系统磁盘读写情况
+        buildDiskReadWriteMetrics(systemMetrics, systemResource);
+
+        // 系统文件句柄数
+        buildFileHandleMetrics(systemMetrics, systemResource);
+
+        // 系统各分区inode数量
+        buildDiskInodeMetrics(systemMetrics, systemResource);
+
+        // 系统IO
+        buildIOMetrics(systemMetrics, systemResource);
+
+        // 系统平均负载
+        buildSystemLoadMetrics(systemMetrics, systemResource);
+
+        // 系统内存
+        buildSystemMemoryMetrics(systemMetrics, systemResource);
+
+        // 系统网络流量
+        buildSystemReceiveSendBytesMetrics(systemMetrics);
+
+        // tcp
+        buildSystemTcpMetrics(systemMetrics, systemResource);
+
+        // udp
+        buildSystemUdpMetrics(systemMetrics, systemResource);
+
+
+
+        return systemMetrics;
+    }
+
+    private void buildSystemProcessAndTimeMetrics(SystemMetrics systemMetrics) {
+        systemMetrics.setSystemStartupTime(getSystemStartupTime());
+        systemMetrics.setSystemNtpOffset(getSystemNtpOffset());
+        systemMetrics.setSystemProcCount(getSystemProcCount());
+        systemMetrics.setSystemUptime(getSystemUptime());
+    }
+
+    private void buildSystemUdpMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        Map<String, Long> systemNetworkUdpStat = systemResource.getSystemNetworkUdpStat();
+        systemMetrics.setSystemNetworkUdpInDatagrams(getResourceValueByKey(systemNetworkUdpStat, "InDatagrams", "getSystemNetworkUdpInDatagrams"));
+        systemMetrics.setSystemNetworkUdpOutDatagrams(getResourceValueByKey(systemNetworkUdpStat, "OutDatagrams", "getSystemNetworkUdpOutDatagrams"));
+        systemMetrics.setSystemNetworkUdpSendBufferErrors(getResourceValueByKey(systemNetworkUdpStat, "SndbufErrors", "getSystemNetworkUdpSendBufferErrors"));
+        systemMetrics.setSystemNetworkUdpNoPorts(getResourceValueByKey(systemNetworkUdpStat, "NoPorts", "getSystemNetworkUdpNoPorts"));
+        systemMetrics.setSystemNetworkUdpInErrors(getResourceValueByKey(systemNetworkUdpStat, "InErrors", "getSystemNetworkUdpInErrors"));
+    }
+
+    private void buildSystemTcpMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        Map<String, Long> currentSystemNetworkTcpStat = systemResource.getCurrentSystemNetworkTcpStat();
+        Map<String, Long> systemNetworkTcpStat = systemResource.getSystemNetworkTcpStat();
+        systemMetrics.setSystemNetworkTcpTimeWaitNum((int) getResourceValueByKey(currentSystemNetworkTcpStat, "TIME_WAIT", "getSystemNetworkTcpTimeWaitNum"));
+        systemMetrics.setSystemNetworkTcpCloseWaitNum((int) getResourceValueByKey(currentSystemNetworkTcpStat, "CLOSE_WAIT", "getSystemNetworkTcpTimeWaitNum"));
+        systemMetrics.setSystemNetworkTcpConnectionNum(getSystemNetworkTcpConnectionNumByTcpStat(currentSystemNetworkTcpStat));
+        systemMetrics.setSystemNetworkTcpActiveOpens(getResourceValueByKey(systemNetworkTcpStat, "ActiveOpens", "getSystemNetworkTcpActiveOpens"));
+        systemMetrics.setSystemNetworkTcpPassiveOpens(getResourceValueByKey(systemNetworkTcpStat, "PassiveOpens", "getSystemNetworkTcpPassiveOpens"));
+        systemMetrics.setSystemNetworkTcpAttemptFails(getResourceValueByKey(systemNetworkTcpStat, "AttemptFails", "getSystemNetworkTcpAttemptFails"));
+        systemMetrics.setSystemNetworkTcpEstabResets(getResourceValueByKey(systemNetworkTcpStat, "EstabResets", "getSystemNetworkTcpEstabResets"));
+        systemMetrics.setSystemNetworkTcpRetransSegs(getResourceValueByKey(systemNetworkTcpStat, "RetransSegs", "getSystemNetworkTcpRetransSegs"));
+        systemMetrics.setSystemNetworkTcpExtListenOverflows(getSystemNetworkTcpExtListenOverflows());
+    }
+
+    private void buildSystemReceiveSendBytesMetrics(SystemMetrics systemMetrics) {
+        systemMetrics.setSystemNetworkReceiveBytesPs(getSystemNetworkReceiveBytesPs());
+        systemMetrics.setSystemNetworkSendBytesPs(getSystemNetworkSendBytesPs());
+    }
+
+    private void buildSystemMemoryMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        Map<String, Long> systemMemoryInfo = systemResource.getSystemMemoryInfo();
+        long systemMemTotal = getResourceValueByKey(systemMemoryInfo, "MemTotal:", "getSystemMemTotal");
+        long systemMemFree = getResourceValueByKey(systemMemoryInfo, "MemFree:", "getSystemMemFree");
+        long systemMemUsed = systemMemTotal - systemMemFree;
+        systemMetrics.setSystemMemTotal(systemMemTotal);
+        systemMetrics.setSystemMemFree(systemMemFree);
+        systemMetrics.setSystemMemUsed(systemMemUsed);
+        systemMetrics.setSystemMemUsedPercent(systemMemTotal == 0 ? 0.0d : 1.0 * systemMemUsed / systemMemTotal);
+        systemMetrics.setSystemMemFreePercent(systemMemTotal == 0 ? 0.0d : 1.0 * systemMemFree / systemMemTotal);
+        systemMetrics.setSystemMemShared(getResourceValueByKey(systemMemoryInfo, "Shmem:", "getSystemMemShared"));
+        systemMetrics.setSystemMemPaged(getResourceValueByKey(systemMemoryInfo, "Writeback:", "getSystemMemPaged"));
+        systemMetrics.setSystemMemNonPaged(getResourceValueByKey(systemMemoryInfo, "KernelStack:", "getSystemMemNonPaged"));
+        systemMetrics.setSystemMemBuffered(getResourceValueByKey(systemMemoryInfo, "Buffers:", "getSystemMemBuffered"));
+        systemMetrics.setSystemMemCached(getResourceValueByKey(systemMemoryInfo, "Cached:", "getSystemMemCached"));
+        long systemMemCommitLimit = getResourceValueByKey(systemMemoryInfo, "CommitLimit:", "getSystemMemCommitLimit");
+        long systemMemCommittedAs = getResourceValueByKey(systemMemoryInfo, "Committed_AS:", "getSystemMemCommittedAs");
+        systemMetrics.setSystemMemCommitLimit(systemMemCommitLimit);
+        systemMetrics.setSystemMemCommittedAs(systemMemCommittedAs);
+        systemMetrics.setSystemMemCommitted(systemMemCommitLimit - systemMemCommittedAs);
+        systemMetrics.setSystemMemSlab(getResourceValueByKey(systemMemoryInfo, "Slab:", "getSystemMemSlab"));
+        systemMetrics.setSystemSwapCached(getResourceValueByKey(systemMemoryInfo, "SwapCached:", "getSystemSwapCached"));
+        long systemSwapTotal = getResourceValueByKey(systemMemoryInfo, "SwapTotal:", "getSystemSwapTotal");
+        long systemSwapFree = getResourceValueByKey(systemMemoryInfo, "SwapFree:", "getSystemSwapFree");
+        long systemSwapUsed = systemSwapTotal - systemSwapFree;
+        systemMetrics.setSystemSwapTotal(systemSwapTotal);
+        systemMetrics.setSystemSwapFree(systemSwapFree);
+        systemMetrics.setSystemSwapUsed(systemSwapUsed);
+        systemMetrics.setSystemSwapUsedPercent(systemSwapTotal == 0 ? 0.0d : 1.0 * systemSwapUsed / systemSwapTotal);
+        systemMetrics.setSystemSwapFreePercent(systemSwapTotal == 0 ? 0.0d : 1.0 * systemSwapFree / systemSwapTotal);
+    }
+
+    private void buildSystemLoadMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        List<String> systemLoad = systemResource.getSystemLoad();
+        systemMetrics.setSystemLoad1(getOneSystemResource(systemLoad, 0, 3, "系统近1分钟平均负载"));
+        systemMetrics.setSystemLoad5(getOneSystemResource(systemLoad, 1, 3, "系统近5分钟平均负载"));
+        systemMetrics.setSystemLoad15(getOneSystemResource(systemLoad, 2, 3, "系统近15分钟平均负载"));
+    }
+
+    private void buildIOMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        List<String> systemIOStat = systemResource.getSystemIOStat();
+        systemMetrics.setSystemIORRQMS(getMoreSystemResource(systemIOStat, 1, 14, 1, "各设备每秒合并到设备队列的读请求数"));
+        systemMetrics.setSystemIOWRQMS(getMoreSystemResource(systemIOStat, 2, 14, 1, "各设备每秒合并到设备队列的写请求数"));
+        systemMetrics.setSystemIOReadRequest(getMoreSystemResource(systemIOStat, 3, 14, 1, "各设备每秒读请求数量"));
+        systemMetrics.setSystemIOWriteRequest(getMoreSystemResource(systemIOStat, 4, 14, 1, "各设备每秒写请求数量"));
+        systemMetrics.setSystemIOReadBytes(getMoreSystemResource(systemIOStat, 5, 14, 1024, "各设备每秒读取字节数"));
+        systemMetrics.setSystemIOWriteBytes(getMoreSystemResource(systemIOStat, 6, 14, 1024, "各设备每秒写字节数"));
+        systemMetrics.setSystemIOAvgQuSz(getMoreSystemResource(systemIOStat, 8, 14, 1, "各设备平均队列长度"));
+        systemMetrics.setSystemIOAwait(getMoreSystemResource(systemIOStat, 9, 14, 1, "各设备每次IO平均处理时间"));
+        systemMetrics.setSystemIORAwait(getMoreSystemResource(systemIOStat, 10, 14, 1, "各设备读请求平均耗时"));
+        systemMetrics.setSystemIOWAwait(getMoreSystemResource(systemIOStat, 11, 14, 1, "各设备写请求平均耗时"));
+        systemMetrics.setSystemIOSVCTM(getMoreSystemResource(systemIOStat, 12, 14, 1, "每次各设备IO平均服务时间"));
+        systemMetrics.setSystemIOUtil(getSystemIOUtilByIOStat(systemIOStat));
+    }
+
+    private void buildDiskInodeMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        List<String> systemDiskInodeStat = systemResource.getSystemDiskInodeStat();
+        systemMetrics.setSystemDiskInodesTotal(getMoreSystemResource(systemDiskInodeStat, 1, 4, 1, "系统各分区inode总数量"));
+        systemMetrics.setSystemDiskInodesUsed(getMoreSystemResource(systemDiskInodeStat, 2, 4, 1,"系统各分区已用inode数量"));
+        systemMetrics.setSystemDiskInodesFree(getMoreSystemResource(systemDiskInodeStat, 3, 4, 1, "系统各分区空闲inode数量"));
+        systemMetrics.setSystemDiskInodesUsedPercent(getSystemDiskInodesUsedPercentByInodeStat(systemDiskInodeStat));
+    }
+
+    private void buildFileHandleMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        List<String> systemFileHandleNum = systemResource.getSystemFileHandleNum();
+        int systemFilesUsed = getSystemFileHandle(systemFileHandleNum, 0, "系统使用的已分配文件句柄数");
+        int systemFilesNotUsed = getSystemFileHandle(systemFileHandleNum, 1, "系统未使用的已分配文件句柄数");
+        int systemFilesMax = getSystemFileHandle(systemFileHandleNum, 2, "系统可以打开的最大文件句柄数");
+        int systemFilesAllocated = systemFilesUsed + systemFilesNotUsed;
+        int systemFilesLeft = systemFilesMax - systemFilesAllocated;
+        double systemFilesUsedPercent = 1.0 * systemFilesUsed / systemFilesAllocated;
+        systemMetrics.setSystemFilesUsed(systemFilesUsed);
+        systemMetrics.setSystemFilesNotUsed(systemFilesNotUsed);
+        systemMetrics.setSystemFilesMax(systemFilesMax);
+        systemMetrics.setSystemFilesAllocated(systemFilesAllocated);
+        systemMetrics.setSystemFilesLeft(systemFilesLeft);
+        systemMetrics.setSystemFilesUsedPercent(systemFilesUsedPercent);
+    }
+
+    private void buildDiskReadWriteMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        List<String> systemDiskReadWriteTime = systemResource.getSystemDiskReadWriteTime();
+        systemMetrics.setSystemDiskReadTime(getMoreSystemResource(systemDiskReadWriteTime, 1, 3, 1, "各设备读操作耗时"));
+        systemMetrics.setSystemDiskWriteTime(getMoreSystemResource(systemDiskReadWriteTime, 2, 3, 1, "各设备写操作耗时"));
+        systemMetrics.setSystemDiskReadTimePercent(getSystemDiskReadWriteTimePercent(systemDiskReadWriteTime, true));
+        systemMetrics.setSystemDiskWriteTimePercent(getSystemDiskReadWriteTimePercent(systemDiskReadWriteTime, false));
+    }
+
+    private void buildDiskMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        List<String> systemDiskStat = systemResource.getSystemDiskStat();
+        systemMetrics.setSystemDiskBytesTotal(getMoreSystemResource(systemDiskStat, 1, 4, 1024, "磁盘各分区总量"));
+        systemMetrics.setSystemDiskBytesUsed(getMoreSystemResource(systemDiskStat, 2, 4, 1024, "磁盘各分区用量大小"));
+        systemMetrics.setSystemDiskBytesFree(getMoreSystemResource(systemDiskStat, 3, 4, 1024, "磁盘各分区总量"));
+        systemMetrics.setSystemDiskUsedPercent(getSystemDiskUsedPercentBySystemDiskStat(systemDiskStat));
+    }
+
+    private void buildCpuMetrics(SystemMetrics systemMetrics, LinuxSystemResource systemResource) {
+        List<String> systemCpuStat = systemResource.getSystemCpuStat();
+        systemMetrics.setSystemCpuUser(getOneSystemResource(systemCpuStat, 0, 6, "用户态CPU时间占比"));
+        systemMetrics.setSystemCpuSystem(getOneSystemResource(systemCpuStat, 1, 6, "内核态CPU时间占比"));
+        systemMetrics.setSystemCpuIOWait(getOneSystemResource(systemCpuStat,2, 6, "等待I/O的CPU时间占比"));
+        systemMetrics.setSystemCpuSteal(getOneSystemResource(systemCpuStat, 3, 6, "等待处理其他虚拟核的时间占比"));
+        systemMetrics.setSystemCpuGuest(getOneSystemResource(systemCpuStat, 4, 6, "虚拟处理器CPU时间占比"));
+        double systemCpuIdle = getOneSystemResource(systemCpuStat, 5, 6, "总体cpu空闲率");
+        double systemCpuUtilTotalPercent = 100.0d - systemCpuIdle;
+        systemMetrics.setSystemCpuIdle(systemCpuIdle);
+        systemMetrics.setSystemCpuUtilTotalPercent(systemCpuUtilTotalPercent);
+        systemMetrics.setSystemCpuUtil(systemCpuUtilTotalPercent * getSystemCpuNumCores());
+        systemMetrics.setSystemCpuSwitches(getSystemCpuSwitches());
+        systemMetrics.setSystemCpuNumCores(getSystemCpuNumCores());
+    }
+
+    final class LinuxSystemResource {
+
+        /**
+         * 获取系统cpu使用情况
+         * 返回 %usr %sys %iowait %steal %guest %idle
+         */
+        private List<String> systemCpuStat;
+
+        /**
+         * 获取磁盘分区情况
+         * 返回 磁盘分区名称(名称+挂载点,以:分割) 磁盘容量大小 磁盘已用容量 磁盘可用容量
+         */
+        private List<String> systemDiskStat;
+
+        /**
+         * 获取系统句柄数
+         * 返回 已分配且使用中句柄数，已分配未使用，最大数目
+         */
+        private List<String> systemFileHandleNum;
+
+        /**
+         * 系统磁盘读写操作耗时
+         * 返回 磁盘名称 读操作耗时 写操作耗时
+         */
+        private List<String> systemDiskReadWriteTime;
+
+        /**
+         * 获取系统磁盘分区inode情况
+         * 返回 磁盘分区名称(名称+挂载点,以:分割) inode总量 inode已用 inode可用
+         */
+        private List<String> systemDiskInodeStat;
+
+        /**
+         * 获取系统磁盘IO情况
+         */
+        private List<String> systemIOStat;
+
+        /**
+         * 获取系统平均负载情况
+         * 返回 近1分钟平均负载 近5分钟平均负载 近15分钟平均负载
+         */
+        private List<String> systemLoad;
+
+        /**
+         * 系统内存情况
+         * 键为具体某种内存使用名称，值为该内存对应的值
+         */
+        private Map<String, Long> systemMemoryInfo;
+
+        /**
+         * 当前系统网络Tcp各状态统计
+         * Tcp状态：个数
+         */
+        private Map<String, Long> currentSystemNetworkTcpStat;
+
+        /**
+         * 系统启动以来 Tcp 统计
+         * Tcp:次数
+         */
+        private Map<String, Long> systemNetworkTcpStat;
+
+        /**
+         * 系统启动以来 Udp 统计
+         * Udp:次数
+         */
+        private Map<String, Long> systemNetworkUdpStat;
+
+        public LinuxSystemResource() {
+            systemCpuStat = getOutputByCmd("mpstat | awk 'NR==4{print $3,$5,$6,$9,$10,$NF}'", "系统cpu使用情况");
+            systemDiskStat = getOutputByCmd("df -k | awk 'NR>1{print $1,$2,$3,$4}'", "系统磁盘情况");
+            systemFileHandleNum = getOutputByCmd("cat /proc/sys/fs/file-nr", "系统句柄数");
+            systemDiskReadWriteTime = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5,$9}'", "磁盘读写操作耗时");
+            systemDiskInodeStat = getOutputByCmd("df -i | awk 'NR>1{print $1\":\"$6,$2,$3,$4}'", "系统各分区inode情况");
+            systemIOStat = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3'", "系统各磁盘设备IO情况");
+            systemLoad = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $4,$5,$6}'", "系统负载情况");
+            systemMemoryInfo = getKeyValueResource("cat /proc/meminfo", 1024, "系统内存情况");
+            currentSystemNetworkTcpStat = getKeyValueResource("netstat -an | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'", 1, "当前系统网络Tcp情况");
+            systemNetworkTcpStat = getSystemNetworkStat("cat /proc/net/snmp | grep 'Tcp:' | awk '{print $6,$7,$8,$9,$13}'", "系统启动以来网络Tcp情况");
+            systemNetworkUdpStat = getSystemNetworkStat("cat /proc/net/snmp | grep 'Udp:' | awk '{print $2,$3,$4,$5,$7}'", "系统启动以来网络Udp情况");
+        }
+
+        /**
+         * 根据命令行获取key value 资源
+         * @param procFDShell 命令行
+         * @param size 单位转换
+         * @param message 资源信息
+         * @return
+         */
+        private Map<String, Long> getKeyValueResource(String procFDShell, int size, String message) {
+            Map<String, Long> result = new HashMap<>();
+            List<String> lines = getOutputByCmd(procFDShell, message);
+            if(!lines.isEmpty()) {
+                for (String line : lines) {
+                    String[] array = line.split("\\s+");
+                    if(array.length < 2) {
+                        LOGGER.error("获取系统资源项[{}]失败,每行数据太短", message);
+                        return result;
+                    }
+                    long value = size * Long.parseLong(array[1]);
+                    result.put(array[0], value);
+                }
+            }
+            return result;
+        }
+
+        /**
+         * 根据命令行获取Tcp信息
+         * @param procFDShell 命令行
+         * @param message 资源描述
+         * @return
+         */
+        private Map<String, Long> getSystemNetworkStat(String procFDShell, String message) {
+            Map<String, Long> result = new HashMap<>();
+            List<String> lines = getOutputByCmd(procFDShell, message);
+            if(lines.size() == 2) {
+                String[] keys = lines.get(0).split("\\s+");
+                String[] values = lines.get(1).split("\\s+");
+                for (int i = 0; i < keys.length; i++) {
+                    result.put(keys[i], Long.parseLong(values[i]));
+                }
+            }
+            return result;
+        }
+
+
+        public List<String> getSystemCpuStat() {
+            return systemCpuStat;
+        }
+
+        public List<String> getSystemDiskStat() {
+            return systemDiskStat;
+        }
+
+        public List<String> getSystemFileHandleNum() {
+            return systemFileHandleNum;
+        }
+
+        public List<String> getSystemDiskReadWriteTime() {
+            return systemDiskReadWriteTime;
+        }
+
+        public List<String> getSystemDiskInodeStat() {
+            return systemDiskInodeStat;
+        }
+
+        public List<String> getSystemIOStat() {
+            return systemIOStat;
+        }
+
+        public List<String> getSystemLoad() {
+            return systemLoad;
+        }
+
+        public Map<String, Long> getSystemMemoryInfo() {
+            return systemMemoryInfo;
+        }
+
+        public Map<String, Long> getCurrentSystemNetworkTcpStat() {
+            return currentSystemNetworkTcpStat;
+        }
+
+        public Map<String, Long> getSystemNetworkTcpStat() {
+            return systemNetworkTcpStat;
+        }
+
+        public Map<String, Long> getSystemNetworkUdpStat() {
+            return systemNetworkUdpStat;
+        }
+
+    }
+
+    /**
+     * 获取一项系统资源
+     * @param systemResource 系统资源
+     * @param index 下标
+     * @param length 单行数据长度
+     * @param message 某状态描述
+     * @return
+     */
+    private double getOneSystemResource(List<String> systemResource, int index, int length, String message) {
+        try {
+            if (!systemResource.isEmpty() && StringUtils.isNotBlank(systemResource.get(0))) {
+                String cpuStat = systemResource.get(0);
+                String[] array = cpuStat.split("\\s+");
+                if (array.length < length) {
+                    LOGGER.error("获取系统资源项[{}}]失败", message);
+                    return 0.0d;
+                }
+                return Double.parseDouble(array[index]);
+            }
+        } catch (Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getOneSystemResource()||msg=failed to get system resource",
+                    e);
+        }
+        return 0.0d;
+    }
+
+    /**
+     * 获取多行系统资源
+     * @param systemResource 资源源文件
+     * @param index 下标
+     * @param length 每行数据长度限制
+     * @param size 单位换算，若结果值单位为KB,需乘以1024；单位为个数，结果乘以1
+     * @param message 资源描述
+     * @return
+     */
+    private Map<String, Long> getMoreSystemResource(List<String> systemResource, int index, int length, int size, String message) {
+        Map<String, Long> result = new HashMap<>();
+        try {
+            for (String s : systemResource) {
+                String[] array = s.split("\\s+");
+                if (array.length < length) {
+                    LOGGER.error("获取系统资源项[{}}]失败", message);
+                    return result;
+                }
+                double value = size * Double.parseDouble(array[index]);
+                result.put(array[0], (long) value);
+            }
+            return result;
+        } catch (Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getMoreSystemResource()||msg=failed to get system resource",
+                    e);
+        }
+        return result;
+    }
+
+    /**
+     * 根据读写操作获取读写操作时间占比
+     * @param isRead 是否是读操作
+     * @return 读写操作时间占比
+     */
+    private double getSystemDiskReadWriteTimePercent(List<String> systemDiskReadWriteTime, boolean isRead) {
+        try {
+            long readValue = 0;
+            long writeValue = 0;
+            for (String s : systemDiskReadWriteTime) {
+                String[] array = s.split("\\s+");
+                if (array.length < 3) {
+                    LOGGER.error("获取系统资源项[{}}]失败", "读取磁盘时间百分比");
+                    return 0.0d;
+                }
+                readValue += Long.parseLong(array[1]);
+                writeValue += Long.parseLong(array[2]);
+            }
+            long sum = readValue + readValue;
+            if (sum == 0) {
+                return 0.0d;
+            }
+            if (isRead) {
+                return 1.0 * readValue / sum;
+            }
+            return 1.0 * writeValue / sum;
+        } catch (Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getSystemDiskReadWriteTimePercent()||msg=failed to get SystemDiskReadWriteTimePercent",
+                    e);
+        }
+        return 0.0d;
+    }
+
+    private Map<String, Double> getSystemDiskUsedPercentBySystemDiskStat(List<String> systemDiskStat) {
+        Map<String, Double> result = new HashMap<>();
+        try {
+            for (String s : systemDiskStat) {
+                String[] array = s.split("\\s+");
+                if (array.length < 4) {
+                    LOGGER.error("获取系统资源项[磁盘各分区总量]失败");
+                    return result;
+                }
+                long used = Long.parseLong(array[2]);
+                long total = Long.parseLong(array[1]);
+                double percent = 1.0 * used / total;
+                result.put(array[0], percent);
+            }
+        } catch(Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getSystemDiskUsedPercent()||msg=failed to get SystemDiskUsedPercent",
+                    e);
+        }
+        return result;
+    }
+
+    /**
+     * 根据下标获取相应的文件句柄数
+     * @param systemFileHandleNum 资源
+     * @param index 下标
+     * @param message 资源描述
+     * @return 相对应文件句柄数
+     */
+    private int getSystemFileHandle(List<String> systemFileHandleNum, int index, String message) {
+
+        try {
+            if (!systemFileHandleNum.isEmpty() && StringUtils.isNotBlank(systemFileHandleNum.get(0))) {
+                String cpuStat = systemFileHandleNum.get(0);
+                String[] array = cpuStat.split("\\s+");
+                if (array.length < 3) {
+                    LOGGER.error("获取系统资源项[{}}]失败", message);
+                }
+                return Integer.parseInt(array[index]);
+            }
+        } catch(Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getSystemFileHandle()||msg=failed to get system file handle",
+                    e);
+        }
+        return 0;
+    }
+
+    private Map<String, Double> getSystemDiskInodesUsedPercentByInodeStat(List<String> systemDiskInodeStat) {
+        Map<String, Double> result = new HashMap<>();
+        try {
+            for (String s : systemDiskInodeStat) {
+                String[] array = s.split("\\s+");
+                if (array.length < 4) {
+                    LOGGER.error("获取系统资源项[{}}]失败", "系统各分区已用inode占比");
+                    return result;
+                }
+                long inodeUsed = Long.parseLong(array[2]);
+                long inodeTotal = Long.parseLong(array[1]);
+                double inodeUsedPercent = 1.0 * inodeUsed / inodeTotal;
+                result.put(array[0], inodeUsedPercent);
+            }
+            return result;
+        } catch(Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getSystemDiskInodesUsedPercent()||msg=failed to get systemDiskInodesUsedPercent",
+                    e);
+        }
+        return result;
+    }
+
+    private Map<String, Double> getSystemIOUtilByIOStat(List<String> systemIOStat) {
+        Map<String, Double> result = new HashMap<>();
+        try {
+            for (String s : systemIOStat) {
+                String[] array = s.split("\\s+");
+                if (array.length < 14) {
+                    LOGGER.error("获取系统资源项[{}}]失败", "各设备I/O请求的CPU时间百分比");
+                    return result;
+                }
+                double value = Double.parseDouble(array[13]);
+                result.put(array[0], value);
+            }
+        } catch(Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method=getSystemIOUtil()||msg=failed to get system IOUtil",
+                    e);
+        }
+        return result;
+    }
+
+    /**
+     * 由key获取系统资源中的值
+     * @param resource key为具体资源名称， value为其值
+     * @param key 键
+     * @param methodName 调用方法名称
+     * @return
+     */
+    private long getResourceValueByKey(Map<String, Long> resource, String key, String methodName) {
+        try {
+            if (resource.containsKey(key)) {
+                return resource.get(key);
+            }
+        } catch(Exception e) {
+            LOGGER.error("class=DefaultOSResourceService||method={}()||msg=failed to get resource", methodName,
+                    e);
+        }
+        return 0L;
+    }
+
+    private int getSystemNetworkTcpConnectionNumByTcpStat(Map<String, Long> currentSystemNetworkTcpStat) {
+        long tcpConnectionNum = 0;
+        Set<Map.Entry<String, Long>> entries = currentSystemNetworkTcpStat.entrySet();
+        for (Map.Entry<String, Long> entry : entries) {
+            tcpConnectionNum += entry.getValue();
+        }
+        return (int) tcpConnectionNum;
+    }
 }
