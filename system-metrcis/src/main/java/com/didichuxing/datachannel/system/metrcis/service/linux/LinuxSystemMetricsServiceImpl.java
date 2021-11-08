@@ -17,13 +17,13 @@ import java.util.*;
  * @author Ronaldo
  * @Date 2021/11/3
  */
-public class LinuxSystemMetricsService implements SystemMetricsService {
+public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsServiceImpl.class);
 
     private LinuxNetFlow lastLinuxNetFlow;
 
-    public LinuxSystemMetricsService() {
+    public LinuxSystemMetricsServiceImpl() {
         try {
             lastLinuxNetFlow = new LinuxNetFlow();// 记录上次的收发字节数
         } catch (Exception e) {

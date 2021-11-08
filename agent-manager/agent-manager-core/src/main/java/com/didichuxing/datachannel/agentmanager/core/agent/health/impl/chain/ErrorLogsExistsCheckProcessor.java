@@ -12,7 +12,6 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHe
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
-import jdk.internal.agent.resources.agent;
 
 /**
  * 校验 agent 是否存在错误日志输出

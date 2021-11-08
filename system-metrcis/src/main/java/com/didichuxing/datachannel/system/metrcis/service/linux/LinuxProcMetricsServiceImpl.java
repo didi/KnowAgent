@@ -20,9 +20,9 @@ import java.util.*;
  * @author Ronaldo
  * @Date 2021/11/3
  */
-public class LinuxProcMetricsService implements ProcMetricsService {
+public class LinuxProcMetricsServiceImpl implements ProcMetricsService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxProcMetricsService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxProcMetricsServiceImpl.class);
 
     /**
      * 当前agent进程id
@@ -40,7 +40,7 @@ public class LinuxProcMetricsService implements ProcMetricsService {
 
     private LinuxCpuTime lastLinuxCpuTime;
 
-    public LinuxProcMetricsService() {
+    public LinuxProcMetricsServiceImpl() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
 
