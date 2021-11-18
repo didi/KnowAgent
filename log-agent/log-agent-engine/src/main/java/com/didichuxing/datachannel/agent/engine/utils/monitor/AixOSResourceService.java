@@ -595,9 +595,9 @@ public class AixOSResourceService implements IOSResourceService {
     public float getProcCpuUtil() {
         String osName = osMxBean.getName().toLowerCase();
         throw new ServiceException(
-                String.format(
-                        "class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support",
-                        osName), ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
+            String.format(
+                "class=DefaultOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed, {%s} system not support",
+                osName), ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
     }
 
     @Override
@@ -722,7 +722,7 @@ public class AixOSResourceService implements IOSResourceService {
     public long getJvmProcFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();

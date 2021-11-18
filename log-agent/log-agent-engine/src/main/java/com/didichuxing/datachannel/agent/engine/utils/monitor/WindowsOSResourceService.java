@@ -715,7 +715,7 @@ public class WindowsOSResourceService implements IOSResourceService {
     public long getJvmProcFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();
@@ -787,8 +787,8 @@ public class WindowsOSResourceService implements IOSResourceService {
     @Override
     public int getProcOpenFdCount() {
         throw new ServiceException(
-                "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's fd used get failed, windows system not support",
-                ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
+            "class=WindowsOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's fd used get failed, windows system not support",
+            ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
     }
 
     @Override

@@ -21,39 +21,40 @@ public class LinuxIORate {
     /**
      * 当前时间
      */
-    private long          currentTime;
+    private long                currentTime;
 
     /**
      * 进程io读写路径
      */
-    private final String  PROCESS_PATH;
+    private final String        PROCESS_PATH;
 
     /**
      * 进程读取总次数
      */
-    private long          processIOReadTimes;
+    private long                processIOReadTimes;
 
     /**
      * 进程写入总次数
      */
-    private long          processIOWriteTimes;
+    private long                processIOWriteTimes;
 
     /**
      * 进程读取总字节数
      */
-    private long          processIOReadBytes;
+    private long                processIOReadBytes;
 
     /**
      * 进程写入总字节数
      */
-    private long          processIOWriteBytes;
+    private long                processIOWriteBytes;
 
     public LinuxIORate(long pid) throws Exception {
         this.PROCESS_PATH = "/proc/" + pid + "/io";
         this.currentTime = System.currentTimeMillis();
 
         // 获取路径每行数据
-        Map<String, Long> processIOInfoMap = getProcessIoInfo(FileUtils.readFileContent(PROCESS_PATH, -1));
+        Map<String, Long> processIOInfoMap = getProcessIoInfo(FileUtils.readFileContent(
+            PROCESS_PATH, -1));
         this.processIOReadTimes = processIOInfoMap.get("syscr");
         this.processIOWriteTimes = processIOInfoMap.get("syscw");
         this.processIOReadBytes = processIOInfoMap.get("read_bytes");

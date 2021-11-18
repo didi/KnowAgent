@@ -13,37 +13,37 @@ public class LinuxNetFlow {
     /**
      * 系统接收的字节数
      */
-    private long          systemReceiveBytes;
+    private long         systemReceiveBytes;
 
     /**
      * 系统发送的字节数
      */
-    private long          systemTransmitBytes;
+    private long         systemTransmitBytes;
 
     /**
      * 进程接收的字节数
      */
-    private long          processReceiveBytes;
+    private long         processReceiveBytes;
 
     /**
      * 进程发送的字节数
      */
-    private long          processTransmitBytes;
+    private long         processTransmitBytes;
 
     /**
      * 当前时间
      */
-    private long          currentTime;
+    private long         currentTime;
 
     /**
      * 系统收发字节数的路径
      */
-    private final String  SYSTEM_PATH = "/proc/net/dev";
+    private final String SYSTEM_PATH = "/proc/net/dev";
 
     /**
      * 进程收发字节数的路径
      */
-    private final String  PROCESS_PATH;
+    private final String PROCESS_PATH;
 
     public LinuxNetFlow(long pid) throws Exception {
         this.PROCESS_PATH = "/proc/" + pid + "/net/dev";

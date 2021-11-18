@@ -711,7 +711,7 @@ public class MacOSResourceService implements IOSResourceService {
     public long getJvmProcFullGcCount() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
+            .getGarbageCollectorMXBeans()) {
             String name = garbageCollector.getName();
             if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
                 gcCounts += garbageCollector.getCollectionCount();
@@ -785,7 +785,7 @@ public class MacOSResourceService implements IOSResourceService {
         Process process = null;
         BufferedReader br = null;
         String procCpuShell = String.format(
-                "lsof -n|awk '{print $2}'|sort|uniq -c |sort -nr|grep %d", getProcPid());
+            "lsof -n|awk '{print $2}'|sort|uniq -c |sort -nr|grep %d", getProcPid());
         try {
             procCpuShell = String.format(procCpuShell, PID);
             String[] cmd = new String[] { "sh", "-c", procCpuShell };

@@ -94,7 +94,6 @@ public class SystemUtils {
         return osResourceService.getSystemSwapUsed();
     }
 
-
     /**
      * @return 返回系统启动以来 Tcp 主动连接次数
      */
