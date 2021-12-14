@@ -17,7 +17,8 @@ import java.util.*;
  * @author Ronaldo
  * @Date 2021/11/3
  */
-public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
+public
+class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsServiceImpl.class);
 
@@ -75,7 +76,7 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
     public double getSystemCpuUtil() {
-        return getSystemCpuUtilTotalPercent() * getSystemCpuNumCores();
+        return getSystemCpuUtilTotalPercent() * getSystemCpuCores();
     }
 
     @Override
@@ -129,7 +130,7 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     @Override
-    public int getSystemCpuNumCores() {
+    public int getSystemCpuCores() {
         return CPU_NUM;
     }
 
@@ -1207,9 +1208,9 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
         double systemCpuUtilTotalPercent = 100.0d - systemCpuIdle;
         systemMetrics.setSystemCpuIdle(systemCpuIdle);
         systemMetrics.setSystemCpuUtilTotalPercent(systemCpuUtilTotalPercent);
-        systemMetrics.setSystemCpuUtil(systemCpuUtilTotalPercent * getSystemCpuNumCores());
+        systemMetrics.setSystemCpuUtil(systemCpuUtilTotalPercent * getSystemCpuCores());
         systemMetrics.setSystemCpuSwitches(getSystemCpuSwitches());
-        systemMetrics.setSystemCpuNumCores(getSystemCpuNumCores());
+        systemMetrics.setSystemCpuNumCores(getSystemCpuCores());
     }
 
     final class LinuxSystemResource {
