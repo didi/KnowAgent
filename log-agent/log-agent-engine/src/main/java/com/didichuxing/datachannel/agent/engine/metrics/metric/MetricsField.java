@@ -60,7 +60,7 @@ public enum MetricsField {
 
     CHANNEL_TYPE("channelType", "channel_type", "channelType"),
 
-    LOG_MODEL_VERSION("logModelVersionlogModelVersion", "log_model_version", "logModelVersion"),
+    LOG_MODEL_VERSION("logModelVersion", "log_model_version", "logModelVersion"),
 
     TOPIC("topic", "topic", "topic"),
 

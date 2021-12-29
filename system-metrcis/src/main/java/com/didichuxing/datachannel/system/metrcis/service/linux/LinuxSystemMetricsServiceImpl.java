@@ -23,88 +23,93 @@ import java.util.*;
 public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
-    public long getSystemNtpOffset() {
-        return 0;
+    public String getHostName() {
+        return null;
     }
 
     @Override
-    public int getSystemProcCount() {
-        return 0;
+    public Long getSystemNtpOffset() {
+        return null;
     }
 
     @Override
-    public long getSystemStartupTime() {
-        return 0;
+    public Integer getSystemProcCount() {
+        return null;
     }
 
     @Override
-    public long getSystemUptime() {
-        return 0;
+    public Long getSystemStartupTime() {
+        return null;
     }
 
     @Override
-    public int getProcessesBlocked() {
-        return 0;
+    public Long getSystemUptime() {
+        return null;
     }
 
     @Override
-    public int getProcessesSleeping() {
-        return 0;
+    public Integer getProcessesBlocked() {
+        return null;
     }
 
     @Override
-    public int getProcessesZombies() {
-        return 0;
+    public Integer getProcessesSleeping() {
+        return null;
     }
 
     @Override
-    public int getProcessesStopped() {
-        return 0;
+    public Integer getProcessesZombies() {
+        return null;
     }
 
     @Override
-    public int getProcessesRunning() {
-        return 0;
+    public Integer getProcessesStopped() {
+        return null;
     }
 
     @Override
-    public int getProcessesIdle() {
-        return 0;
+    public Integer getProcessesRunning() {
+        return null;
     }
 
     @Override
-    public int getProcessesWait() {
-        return 0;
+    public Integer getProcessesIdle() {
+        return null;
     }
 
     @Override
-    public int getProcessesDead() {
-        return 0;
+    public Integer getProcessesWait() {
+        return null;
     }
 
     @Override
-    public int getProcessesPaging() {
-        return 0;
+    public Integer getProcessesDead() {
+        return null;
     }
 
     @Override
-    public int getProcessesUnknown() {
-        return 0;
+    public Integer getProcessesPaging() {
+        return null;
     }
 
     @Override
-    public int getProcessesTotal() {
-        return 0;
+    public Integer getProcessesUnknown() {
+        return null;
     }
 
     @Override
-    public int getProcessesTotalThreads() {
-        return 0;
+    public Integer getProcessesTotal() {
+        return null;
     }
 
     @Override
-    public int getSystemCpuCores() {
-        return 0;
+    public Integer getProcessesTotalThreads() {
+        return null;
+    }
+
+    @Override
+    public Integer getSystemCpuCores() {
+        return null;
     }
 
     @Override
@@ -178,108 +183,108 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     @Override
-    public long getSystemMemCommitLimit() {
-        return 0;
+    public Long getSystemMemCommitLimit() {
+        return null;
     }
 
     @Override
-    public long getSystemMemCommittedAs() {
-        return 0;
+    public Long getSystemMemCommittedAs() {
+        return null;
     }
 
     @Override
-    public long getSystemMemCommitted() {
-        return 0;
+    public Long getSystemMemCommitted() {
+        return null;
     }
 
     @Override
-    public long getSystemMemNonPaged() {
-        return 0;
+    public Long getSystemMemNonPaged() {
+        return null;
     }
 
     @Override
-    public long getSystemMemPaged() {
-        return 0;
+    public Long getSystemMemPaged() {
+        return null;
     }
 
     @Override
-    public long getSystemMemShared() {
-        return 0;
+    public Long getSystemMemShared() {
+        return null;
     }
 
     @Override
-    public long getSystemMemSlab() {
-        return 0;
+    public Long getSystemMemSlab() {
+        return null;
     }
 
     @Override
-    public long getSystemMemTotal() {
-        return 0;
+    public Long getSystemMemTotal() {
+        return null;
     }
 
     @Override
-    public long getSystemMemFree() {
-        return 0;
+    public Long getSystemMemFree() {
+        return null;
     }
 
     @Override
-    public long getSystemMemUsed() {
-        return 0;
+    public Long getSystemMemUsed() {
+        return null;
     }
 
     @Override
-    public long getSystemMemBuffered() {
-        return 0;
+    public Long getSystemMemBuffered() {
+        return null;
     }
 
     @Override
-    public long getSystemMemCached() {
-        return 0;
+    public Long getSystemMemCached() {
+        return null;
     }
 
     @Override
-    public double getSystemMemFreePercent() {
-        return 0;
+    public Double getSystemMemFreePercent() {
+        return null;
     }
 
     @Override
-    public double getSystemMemUsedPercent() {
-        return 0;
+    public Double getSystemMemUsedPercent() {
+        return null;
     }
 
     @Override
-    public long getSystemSwapCached() {
-        return 0;
+    public Long getSystemSwapCached() {
+        return null;
     }
 
     @Override
-    public long getSystemSwapFree() {
-        return 0;
+    public Long getSystemSwapFree() {
+        return null;
     }
 
     @Override
-    public double getSystemSwapFreePercent() {
-        return 0;
+    public Double getSystemSwapFreePercent() {
+        return null;
     }
 
     @Override
-    public long getSystemSwapTotal() {
-        return 0;
+    public Long getSystemSwapTotal() {
+        return null;
     }
 
     @Override
-    public long getSystemSwapUsed() {
-        return 0;
+    public Long getSystemSwapUsed() {
+        return null;
     }
 
     @Override
-    public double getSystemSwapUsedPercent() {
-        return 0;
+    public Double getSystemSwapUsedPercent() {
+        return null;
     }
 
     @Override
-    public int getSystemDisks() {
-        return 0;
+    public Integer getSystemDisks() {
+        return null;
     }
 
     @Override
@@ -288,38 +293,38 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     @Override
-    public int getSystemFilesMax() {
-        return 0;
+    public Integer getSystemFilesMax() {
+        return null;
     }
 
     @Override
-    public int getSystemFilesAllocated() {
-        return 0;
+    public Integer getSystemFilesAllocated() {
+        return null;
     }
 
     @Override
-    public int getSystemFilesLeft() {
-        return 0;
+    public Integer getSystemFilesLeft() {
+        return null;
     }
 
     @Override
-    public double getSystemFilesUsedPercent() {
-        return 0;
+    public Double getSystemFilesUsedPercent() {
+        return null;
     }
 
     @Override
-    public int getSystemFilesUsed() {
-        return 0;
+    public Integer getSystemFilesUsed() {
+        return null;
     }
 
     @Override
-    public int getSystemFilesNotUsed() {
-        return 0;
+    public Integer getSystemFilesNotUsed() {
+        return null;
     }
 
     @Override
-    public int getSystemNetCards() {
-        return 0;
+    public Integer getSystemNetCards() {
+        return null;
     }
 
     @Override

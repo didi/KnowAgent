@@ -18,96 +18,101 @@ public interface SystemMetricsService {
     /**
      * agent宿主机cpu核（逻辑核）
      */
-    int CPU_NUM = Runtime.getRuntime().availableProcessors();
+    Integer CPU_NUM = Runtime.getRuntime().availableProcessors();
+
+    /**
+     * @return 返回主机名
+     */
+    String getHostName();
 
     /**
      * @return 返回源时钟与本地时钟的时间差（毫秒）
      */
-    long getSystemNtpOffset();
+    Long getSystemNtpOffset();
 
     /**
      * @return 返回系统进程个数
      */
-    int getSystemProcCount();
+    Integer getSystemProcCount();
 
     /**
      * @return 返回系统启动时间
      */
-    long getSystemStartupTime();
+    Long getSystemStartupTime();
 
     /**
      * @return 返回系统运行时间
      */
-    long getSystemUptime();
+    Long getSystemUptime();
 
     /*********************** about process ***********************/
 
     /**
      * @return 返回当前不可中断的睡眠状态下的进程数
      */
-    int getProcessesBlocked();
+    Integer getProcessesBlocked();
 
     /**
      * @return 返回当前可中断的睡眠状态下的进程数
      */
-    int getProcessesSleeping();
+    Integer getProcessesSleeping();
 
     /**
      * @return 返回当前僵尸态进程数
      */
-    int getProcessesZombies();
+    Integer getProcessesZombies();
 
     /**
      * @return 返回当前暂停状态进程数
      */
-    int getProcessesStopped();
+    Integer getProcessesStopped();
 
     /**
      * @return 返回当前运行中的进程数
      */
-    int getProcessesRunning();
+    Integer getProcessesRunning();
 
     /**
      * @return 返回当前挂起的空闲进程数
      */
-    int getProcessesIdle();
+    Integer getProcessesIdle();
 
     /**
      * @return 返回当前等待中的进程数
      */
-    int getProcessesWait();
+    Integer getProcessesWait();
 
     /**
      * @return 返回当前回收中的进程数
      */
-    int getProcessesDead();
+    Integer getProcessesDead();
 
     /**
      * @return 返回当前分页进程数
      */
-    int getProcessesPaging();
+    Integer getProcessesPaging();
 
     /**
      * @return 返回当前未知状态进程数
      */
-    int getProcessesUnknown();
+    Integer getProcessesUnknown();
 
     /**
      * @return 返回当前总进程数
      */
-    int getProcessesTotal();
+    Integer getProcessesTotal();
 
     /**
      * @return 返回当前总线程数
      */
-    int getProcessesTotalThreads();
+    Integer getProcessesTotalThreads();
 
     /*********************** about cpu ***********************/
 
     /**
      * @return 返回系统CPU核心数
      */
-    int getSystemCpuCores();
+    Integer getSystemCpuCores();
 
     /**
      * @return 返回系统总体CPU使用率(单位：%)
@@ -186,109 +191,109 @@ public interface SystemMetricsService {
     /**
      * @return 返回系统当前可分配的内存总量（单位：byte）
      */
-    long getSystemMemCommitLimit();
+    Long getSystemMemCommitLimit();
 
     /**
      * @return 返回系统已分配的包括进程未使用的内存量（单位：byte）
      */
-    long getSystemMemCommittedAs();
+    Long getSystemMemCommittedAs();
 
     /**
      * @return 返回在磁盘分页文件上保留的物理内存量（单位：byte）
      */
-    long getSystemMemCommitted();
+    Long getSystemMemCommitted();
 
     /**
      * @return 返回不能写入磁盘的物理内存量（单位：byte）
      */
-    long getSystemMemNonPaged();
+    Long getSystemMemNonPaged();
 
     /**
      * @return 返回没被使用是可以写入磁盘的物理内存量（单位：byte）
      */
-    long getSystemMemPaged();
+    Long getSystemMemPaged();
 
     /**
      * @return 返回用作共享内存的物理RAM量（单位：byte）
      */
-    long getSystemMemShared();
+    Long getSystemMemShared();
 
     /**
      * @return 返回内核用来缓存数据结构供自己使用的内存量（单位：byte）
      */
-    long getSystemMemSlab();
+    Long getSystemMemSlab();
 
     /**
      * @return 返回系统物理内存总量（单位：byte）
      */
-    long getSystemMemTotal();
+    Long getSystemMemTotal();
 
     /**
      * @return 返回系统空闲内存大小（单位：byte）
      */
-    long getSystemMemFree();
+    Long getSystemMemFree();
 
     /**
      * @return 返回系统已用内存大小（单位：byte）
      */
-    long getSystemMemUsed();
+    Long getSystemMemUsed();
 
     /**
      * @return 返回系统文件缓冲区的物理RAM量（单位：byte）
      */
-    long getSystemMemBuffered();
+    Long getSystemMemBuffered();
 
     /**
      * @return 返回缓存内存的物理RAM量（单位：byte）
      */
-    long getSystemMemCached();
+    Long getSystemMemCached();
 
     /**
      * @return 返回系统内存空闲率
      */
-    double getSystemMemFreePercent();
+    Double getSystemMemFreePercent();
 
     /**
      * @return 返回系统内存使用率
      */
-    double getSystemMemUsedPercent();
+    Double getSystemMemUsedPercent();
 
     /**
      * @return 返回系统用作缓存的交换空间
      */
-    long getSystemSwapCached();
+    Long getSystemSwapCached();
 
     /**
      * @return 返回系统空闲swap大小（单位：byte）
      */
-    long getSystemSwapFree();
+    Long getSystemSwapFree();
 
     /**
      * @return 返回系统空闲swap占比
      */
-    double getSystemSwapFreePercent();
+    Double getSystemSwapFreePercent();
 
     /**
      * @return 返回系统swap总大小（单位：byte）
      */
-    long getSystemSwapTotal();
+    Long getSystemSwapTotal();
 
     /**
      * @return 返回系统已用swap大小（单位：byte）
      */
-    long getSystemSwapUsed();
+    Long getSystemSwapUsed();
 
     /**
      * @return 返回系统已用swap占比（单位：%）
      */
-    double getSystemSwapUsedPercent();
+    Double getSystemSwapUsedPercent();
 
     /*********************** about disk、disk io ***********************/
 
     /**
      * @return 返回系统磁盘数
      */
-    int getSystemDisks();
+    Integer getSystemDisks();
 
     /**
      * @return 返回系统各磁盘信息
@@ -300,39 +305,39 @@ public interface SystemMetricsService {
     /**
      * @return 返回系统可以打开的最大文件句柄数
      */
-    int getSystemFilesMax();
+    Integer getSystemFilesMax();
 
     /**
      * @return 返回系统已分配文件句柄数
      */
-    int getSystemFilesAllocated();
+    Integer getSystemFilesAllocated();
 
     /**
      * @return 返回系统未分配文件句柄数
      */
-    int getSystemFilesLeft();
+    Integer getSystemFilesLeft();
 
     /**
      * @return 返回系统使用文件句柄占已分配百分比（单位：%）
      */
-    double getSystemFilesUsedPercent();
+    Double getSystemFilesUsedPercent();
 
     /**
      * @return 返回系统使用的已分配文件句柄数
      */
-    int getSystemFilesUsed();
+    Integer getSystemFilesUsed();
 
     /**
      * @return 返回系统未使用的已分配文件句柄数
      */
-    int getSystemFilesNotUsed();
+    Integer getSystemFilesNotUsed();
 
     /*********************** about network ***********************/
 
     /**
      * @return 返回系统网卡数
      */
-    int getSystemNetCards();
+    Integer getSystemNetCards();
 
     /**
      * @return 返回系统各网卡信息

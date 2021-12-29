@@ -9,42 +9,67 @@ import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
 public class NetCardInfo {
 
     /**
+     * mac地址
+     */
+    private String systemNetCardsBandMacAddress;
+
+    /**
+     * 设备名
+     */
+    private String systemNetCardsBandDevice;
+
+    /**
      * 最大带宽（单位：byte）
      */
-    private Long bandwidthByte;
+    private Long systemNetCardsBandWidth;
 
     /**
      * 每秒下行流量（单位：字节）
      */
-    private PeriodStatistics<Long> receiveBytesPs;
+    private PeriodStatistics<Long> systemNetCardsReceiveBytesPs;
 
     /**
      * 每秒上行流量（单位：字节）
      */
-    private PeriodStatistics<Long> sendBytesPs;
+    private PeriodStatistics<Long> systemNetCardsSendBytesPs;
 
-    public Long getBandwidthByte() {
-        return bandwidthByte;
+    public String getSystemNetCardsBandMacAddress() {
+        return systemNetCardsBandMacAddress;
     }
 
-    public void setBandwidthByte(Long bandwidthByte) {
-        this.bandwidthByte = bandwidthByte;
+    public void setSystemNetCardsBandMacAddress(String systemNetCardsBandMacAddress) {
+        this.systemNetCardsBandMacAddress = systemNetCardsBandMacAddress;
     }
 
-    public PeriodStatistics<Long> getReceiveBytesPs() {
-        return receiveBytesPs;
+    public String getSystemNetCardsBandDevice() {
+        return systemNetCardsBandDevice;
     }
 
-    public void setReceiveBytesPs(PeriodStatistics<Long> receiveBytesPs) {
-        this.receiveBytesPs = receiveBytesPs;
+    public void setSystemNetCardsBandDevice(String systemNetCardsBandDevice) {
+        this.systemNetCardsBandDevice = systemNetCardsBandDevice;
     }
 
-    public PeriodStatistics<Long> getSendBytesPs() {
-        return sendBytesPs;
+    public Long getSystemNetCardsBandWidth() {
+        return systemNetCardsBandWidth;
     }
 
-    public void setSendBytesPs(PeriodStatistics<Long> sendBytesPs) {
-        this.sendBytesPs = sendBytesPs;
+    public void setSystemNetCardsBandWidth(Long systemNetCardsBandWidth) {
+        this.systemNetCardsBandWidth = systemNetCardsBandWidth;
     }
 
+    public PeriodStatistics<Long> getSystemNetCardsReceiveBytesPs() {
+        return systemNetCardsReceiveBytesPs;
+    }
+
+    public void setSystemNetCardsReceiveBytesPs(PeriodStatistics<Long> systemNetCardsReceiveBytesPs) {
+        this.systemNetCardsReceiveBytesPs = systemNetCardsReceiveBytesPs;
+    }
+
+    public PeriodStatistics<Long> getSystemNetCardsSendBytesPs() {
+        return systemNetCardsSendBytesPs;
+    }
+
+    public void setSystemNetCardsSendBytesPs(PeriodStatistics<Long> systemNetCardsSendBytesPs) {
+        this.systemNetCardsSendBytesPs = systemNetCardsSendBytesPs;
+    }
 }
