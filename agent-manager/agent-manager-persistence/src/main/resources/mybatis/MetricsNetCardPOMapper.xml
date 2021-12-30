@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsNetCardPOMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsNetCardPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hostName" property="hostname" jdbcType="VARCHAR" />
+    <result column="systemNetCardsBandMacAddress" property="systemnetcardsbandmacaddress" jdbcType="VARCHAR" />
+    <result column="systemNetCardsBandDevice" property="systemnetcardsbanddevice" jdbcType="VARCHAR" />
+    <result column="systemNetCardsBandWidth" property="systemnetcardsbandwidth" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPs" property="systemnetcardsreceivebytesps" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPsMin" property="systemnetcardsreceivebytespsmin" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPsMax" property="systemnetcardsreceivebytespsmax" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPsMean" property="systemnetcardsreceivebytespsmean" jdbcType="DOUBLE" />
+    <result column="systemNetCardsReceiveBytesPsStd" property="systemnetcardsreceivebytespsstd" jdbcType="DOUBLE" />
+    <result column="systemNetCardsReceiveBytesPs55Quantile" property="systemnetcardsreceivebytesps55quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPs75Quantile" property="systemnetcardsreceivebytesps75quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPs95Quantile" property="systemnetcardsreceivebytesps95quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPs99Quantile" property="systemnetcardsreceivebytesps99quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPs" property="systemnetcardssendbytesps" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPsMin" property="systemnetcardssendbytespsmin" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPsMax" property="systemnetcardssendbytespsmax" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPsMean" property="systemnetcardssendbytespsmean" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPsStd" property="systemnetcardssendbytespsstd" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPs55Quantile" property="systemnetcardssendbytesps55quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPs75Quantile" property="systemnetcardssendbytesps75quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPs95Quantile" property="systemnetcardssendbytesps95quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPs99Quantile" property="systemnetcardssendbytesps99quantile" jdbcType="BIGINT" />
+    <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
+    <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
+    <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hostName, systemNetCardsBandMacAddress, systemNetCardsBandDevice, systemNetCardsBandWidth, 
+    systemNetCardsReceiveBytesPs, systemNetCardsReceiveBytesPsMin, systemNetCardsReceiveBytesPsMax, 
+    systemNetCardsReceiveBytesPsMean, systemNetCardsReceiveBytesPsStd, systemNetCardsReceiveBytesPs55Quantile, 
+    systemNetCardsReceiveBytesPs75Quantile, systemNetCardsReceiveBytesPs95Quantile, systemNetCardsReceiveBytesPs99Quantile, 
+    systemNetCardsSendBytesPs, systemNetCardsSendBytesPsMin, systemNetCardsSendBytesPsMax, 
+    systemNetCardsSendBytesPsMean, systemNetCardsSendBytesPsStd, systemNetCardsSendBytesPs55Quantile, 
+    systemNetCardsSendBytesPs75Quantile, systemNetCardsSendBytesPs95Quantile, systemNetCardsSendBytesPs99Quantile, 
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_metrics_net_card
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_metrics_net_card
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsNetCardPO" >
+    insert into tb_metrics_net_card (id, hostName, systemNetCardsBandMacAddress, 
+      systemNetCardsBandDevice, systemNetCardsBandWidth, 
+      systemNetCardsReceiveBytesPs, systemNetCardsReceiveBytesPsMin, 
+      systemNetCardsReceiveBytesPsMax, systemNetCardsReceiveBytesPsMean, 
+      systemNetCardsReceiveBytesPsStd, systemNetCardsReceiveBytesPs55Quantile, 
+      systemNetCardsReceiveBytesPs75Quantile, systemNetCardsReceiveBytesPs95Quantile, 
+      systemNetCardsReceiveBytesPs99Quantile, systemNetCardsSendBytesPs, 
+      systemNetCardsSendBytesPsMin, systemNetCardsSendBytesPsMax, 
+      systemNetCardsSendBytesPsMean, systemNetCardsSendBytesPsStd, 
+      systemNetCardsSendBytesPs55Quantile, systemNetCardsSendBytesPs75Quantile, 
+      systemNetCardsSendBytesPs95Quantile, systemNetCardsSendBytesPs99Quantile, 
+      heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
+      )
+    values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{systemnetcardsbandmacaddress,jdbcType=VARCHAR}, 
+      #{systemnetcardsbanddevice,jdbcType=VARCHAR}, #{systemnetcardsbandwidth,jdbcType=BIGINT}, 
+      #{systemnetcardsreceivebytesps,jdbcType=BIGINT}, #{systemnetcardsreceivebytespsmin,jdbcType=BIGINT}, 
+      #{systemnetcardsreceivebytespsmax,jdbcType=BIGINT}, #{systemnetcardsreceivebytespsmean,jdbcType=DOUBLE}, 
+      #{systemnetcardsreceivebytespsstd,jdbcType=DOUBLE}, #{systemnetcardsreceivebytesps55quantile,jdbcType=BIGINT}, 
+      #{systemnetcardsreceivebytesps75quantile,jdbcType=BIGINT}, #{systemnetcardsreceivebytesps95quantile,jdbcType=BIGINT}, 
+      #{systemnetcardsreceivebytesps99quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps,jdbcType=BIGINT}, 
+      #{systemnetcardssendbytespsmin,jdbcType=BIGINT}, #{systemnetcardssendbytespsmax,jdbcType=BIGINT}, 
+      #{systemnetcardssendbytespsmean,jdbcType=DOUBLE}, #{systemnetcardssendbytespsstd,jdbcType=DOUBLE}, 
+      #{systemnetcardssendbytesps55quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps75quantile,jdbcType=BIGINT}, 
+      #{systemnetcardssendbytesps95quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps99quantile,jdbcType=BIGINT}, 
+      #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsNetCardPO" >
+    insert into tb_metrics_net_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hostname != null" >
+        hostName,
+      </if>
+      <if test="systemnetcardsbandmacaddress != null" >
+        systemNetCardsBandMacAddress,
+      </if>
+      <if test="systemnetcardsbanddevice != null" >
+        systemNetCardsBandDevice,
+      </if>
+      <if test="systemnetcardsbandwidth != null" >
+        systemNetCardsBandWidth,
+      </if>
+      <if test="systemnetcardsreceivebytesps != null" >
+        systemNetCardsReceiveBytesPs,
+      </if>
+      <if test="systemnetcardsreceivebytespsmin != null" >
+        systemNetCardsReceiveBytesPsMin,
+      </if>
+      <if test="systemnetcardsreceivebytespsmax != null" >
+        systemNetCardsReceiveBytesPsMax,
+      </if>
+      <if test="systemnetcardsreceivebytespsmean != null" >
+        systemNetCardsReceiveBytesPsMean,
+      </if>
+      <if test="systemnetcardsreceivebytespsstd != null" >
+        systemNetCardsReceiveBytesPsStd,
+      </if>
+      <if test="systemnetcardsreceivebytesps55quantile != null" >
+        systemNetCardsReceiveBytesPs55Quantile,
+      </if>
+      <if test="systemnetcardsreceivebytesps75quantile != null" >
+        systemNetCardsReceiveBytesPs75Quantile,
+      </if>
+      <if test="systemnetcardsreceivebytesps95quantile != null" >
+        systemNetCardsReceiveBytesPs95Quantile,
+      </if>
+      <if test="systemnetcardsreceivebytesps99quantile != null" >
+        systemNetCardsReceiveBytesPs99Quantile,
+      </if>
+      <if test="systemnetcardssendbytesps != null" >
+        systemNetCardsSendBytesPs,
+      </if>
+      <if test="systemnetcardssendbytespsmin != null" >
+        systemNetCardsSendBytesPsMin,
+      </if>
+      <if test="systemnetcardssendbytespsmax != null" >
+        systemNetCardsSendBytesPsMax,
+      </if>
+      <if test="systemnetcardssendbytespsmean != null" >
+        systemNetCardsSendBytesPsMean,
+      </if>
+      <if test="systemnetcardssendbytespsstd != null" >
+        systemNetCardsSendBytesPsStd,
+      </if>
+      <if test="systemnetcardssendbytesps55quantile != null" >
+        systemNetCardsSendBytesPs55Quantile,
+      </if>
+      <if test="systemnetcardssendbytesps75quantile != null" >
+        systemNetCardsSendBytesPs75Quantile,
+      </if>
+      <if test="systemnetcardssendbytesps95quantile != null" >
+        systemNetCardsSendBytesPs95Quantile,
+      </if>
+      <if test="systemnetcardssendbytesps99quantile != null" >
+        systemNetCardsSendBytesPs99Quantile,
+      </if>
+      <if test="heartbeattime != null" >
+        heartbeatTime,
+      </if>
+      <if test="heartbeattimeminute != null" >
+        heartbeatTimeMinute,
+      </if>
+      <if test="heartbeattimehour != null" >
+        heartbeatTimeHour,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hostname != null" >
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="systemnetcardsbandmacaddress != null" >
+        #{systemnetcardsbandmacaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="systemnetcardsbanddevice != null" >
+        #{systemnetcardsbanddevice,jdbcType=VARCHAR},
+      </if>
+      <if test="systemnetcardsbandwidth != null" >
+        #{systemnetcardsbandwidth,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps != null" >
+        #{systemnetcardsreceivebytesps,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytespsmin != null" >
+        #{systemnetcardsreceivebytespsmin,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytespsmax != null" >
+        #{systemnetcardsreceivebytespsmax,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytespsmean != null" >
+        #{systemnetcardsreceivebytespsmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardsreceivebytespsstd != null" >
+        #{systemnetcardsreceivebytespsstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardsreceivebytesps55quantile != null" >
+        #{systemnetcardsreceivebytesps55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps75quantile != null" >
+        #{systemnetcardsreceivebytesps75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps95quantile != null" >
+        #{systemnetcardsreceivebytesps95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps99quantile != null" >
+        #{systemnetcardsreceivebytesps99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps != null" >
+        #{systemnetcardssendbytesps,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytespsmin != null" >
+        #{systemnetcardssendbytespsmin,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytespsmax != null" >
+        #{systemnetcardssendbytespsmax,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytespsmean != null" >
+        #{systemnetcardssendbytespsmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardssendbytespsstd != null" >
+        #{systemnetcardssendbytespsstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardssendbytesps55quantile != null" >
+        #{systemnetcardssendbytesps55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps75quantile != null" >
+        #{systemnetcardssendbytesps75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps95quantile != null" >
+        #{systemnetcardssendbytesps95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps99quantile != null" >
+        #{systemnetcardssendbytesps99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattime != null" >
+        #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null" >
+        #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null" >
+        #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsNetCardPO" >
+    update tb_metrics_net_card
+    <set >
+      <if test="hostname != null" >
+        hostName = #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="systemnetcardsbandmacaddress != null" >
+        systemNetCardsBandMacAddress = #{systemnetcardsbandmacaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="systemnetcardsbanddevice != null" >
+        systemNetCardsBandDevice = #{systemnetcardsbanddevice,jdbcType=VARCHAR},
+      </if>
+      <if test="systemnetcardsbandwidth != null" >
+        systemNetCardsBandWidth = #{systemnetcardsbandwidth,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps != null" >
+        systemNetCardsReceiveBytesPs = #{systemnetcardsreceivebytesps,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytespsmin != null" >
+        systemNetCardsReceiveBytesPsMin = #{systemnetcardsreceivebytespsmin,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytespsmax != null" >
+        systemNetCardsReceiveBytesPsMax = #{systemnetcardsreceivebytespsmax,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytespsmean != null" >
+        systemNetCardsReceiveBytesPsMean = #{systemnetcardsreceivebytespsmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardsreceivebytespsstd != null" >
+        systemNetCardsReceiveBytesPsStd = #{systemnetcardsreceivebytespsstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardsreceivebytesps55quantile != null" >
+        systemNetCardsReceiveBytesPs55Quantile = #{systemnetcardsreceivebytesps55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps75quantile != null" >
+        systemNetCardsReceiveBytesPs75Quantile = #{systemnetcardsreceivebytesps75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps95quantile != null" >
+        systemNetCardsReceiveBytesPs95Quantile = #{systemnetcardsreceivebytesps95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardsreceivebytesps99quantile != null" >
+        systemNetCardsReceiveBytesPs99Quantile = #{systemnetcardsreceivebytesps99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps != null" >
+        systemNetCardsSendBytesPs = #{systemnetcardssendbytesps,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytespsmin != null" >
+        systemNetCardsSendBytesPsMin = #{systemnetcardssendbytespsmin,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytespsmax != null" >
+        systemNetCardsSendBytesPsMax = #{systemnetcardssendbytespsmax,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytespsmean != null" >
+        systemNetCardsSendBytesPsMean = #{systemnetcardssendbytespsmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardssendbytespsstd != null" >
+        systemNetCardsSendBytesPsStd = #{systemnetcardssendbytespsstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetcardssendbytesps55quantile != null" >
+        systemNetCardsSendBytesPs55Quantile = #{systemnetcardssendbytesps55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps75quantile != null" >
+        systemNetCardsSendBytesPs75Quantile = #{systemnetcardssendbytesps75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps95quantile != null" >
+        systemNetCardsSendBytesPs95Quantile = #{systemnetcardssendbytesps95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetcardssendbytesps99quantile != null" >
+        systemNetCardsSendBytesPs99Quantile = #{systemnetcardssendbytesps99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattime != null" >
+        heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null" >
+        heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null" >
+        heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsNetCardPO" >
+    update tb_metrics_net_card
+    set hostName = #{hostname,jdbcType=VARCHAR},
+      systemNetCardsBandMacAddress = #{systemnetcardsbandmacaddress,jdbcType=VARCHAR},
+      systemNetCardsBandDevice = #{systemnetcardsbanddevice,jdbcType=VARCHAR},
+      systemNetCardsBandWidth = #{systemnetcardsbandwidth,jdbcType=BIGINT},
+      systemNetCardsReceiveBytesPs = #{systemnetcardsreceivebytesps,jdbcType=BIGINT},
+      systemNetCardsReceiveBytesPsMin = #{systemnetcardsreceivebytespsmin,jdbcType=BIGINT},
+      systemNetCardsReceiveBytesPsMax = #{systemnetcardsreceivebytespsmax,jdbcType=BIGINT},
+      systemNetCardsReceiveBytesPsMean = #{systemnetcardsreceivebytespsmean,jdbcType=DOUBLE},
+      systemNetCardsReceiveBytesPsStd = #{systemnetcardsreceivebytespsstd,jdbcType=DOUBLE},
+      systemNetCardsReceiveBytesPs55Quantile = #{systemnetcardsreceivebytesps55quantile,jdbcType=BIGINT},
+      systemNetCardsReceiveBytesPs75Quantile = #{systemnetcardsreceivebytesps75quantile,jdbcType=BIGINT},
+      systemNetCardsReceiveBytesPs95Quantile = #{systemnetcardsreceivebytesps95quantile,jdbcType=BIGINT},
+      systemNetCardsReceiveBytesPs99Quantile = #{systemnetcardsreceivebytesps99quantile,jdbcType=BIGINT},
+      systemNetCardsSendBytesPs = #{systemnetcardssendbytesps,jdbcType=BIGINT},
+      systemNetCardsSendBytesPsMin = #{systemnetcardssendbytespsmin,jdbcType=BIGINT},
+      systemNetCardsSendBytesPsMax = #{systemnetcardssendbytespsmax,jdbcType=BIGINT},
+      systemNetCardsSendBytesPsMean = #{systemnetcardssendbytespsmean,jdbcType=DOUBLE},
+      systemNetCardsSendBytesPsStd = #{systemnetcardssendbytespsstd,jdbcType=DOUBLE},
+      systemNetCardsSendBytesPs55Quantile = #{systemnetcardssendbytesps55quantile,jdbcType=BIGINT},
+      systemNetCardsSendBytesPs75Quantile = #{systemnetcardssendbytesps75quantile,jdbcType=BIGINT},
+      systemNetCardsSendBytesPs95Quantile = #{systemnetcardssendbytesps95quantile,jdbcType=BIGINT},
+      systemNetCardsSendBytesPs99Quantile = #{systemnetcardssendbytesps99quantile,jdbcType=BIGINT},
+      heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
+      heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
+      heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
