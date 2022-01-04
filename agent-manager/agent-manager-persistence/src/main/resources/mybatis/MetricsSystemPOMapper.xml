@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsSystemPOMapper" >
-  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsSystemPO" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="osType" property="ostype" jdbcType="VARCHAR" />
     <result column="osVersion" property="osversion" jdbcType="VARCHAR" />
@@ -291,7 +291,7 @@
     delete from tb_metrics_system
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsSystemPO" >
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
     insert into tb_metrics_system (id, osType, osVersion, 
       osKernelVersion, hostName, ips, 
       systemNtpOffset, systemStartupTime, systemUptime, 
@@ -485,7 +485,7 @@
       #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsSystemPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
     insert into tb_metrics_system
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1818,7 +1818,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsSystemPO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
     update tb_metrics_system
     <set >
       <if test="ostype != null" >
@@ -2484,7 +2484,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsSystemPO" >
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
     update tb_metrics_system
     set osType = #{ostype,jdbcType=VARCHAR},
       osVersion = #{osversion,jdbcType=VARCHAR},

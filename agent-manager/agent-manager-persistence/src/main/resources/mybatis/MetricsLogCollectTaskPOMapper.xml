@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsLogCollectTaskPOMapper" >
-  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsLogCollectTaskPO" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="collectTaskId" property="collecttaskid" jdbcType="BIGINT" />
     <result column="pathId" property="pathid" jdbcType="BIGINT" />
@@ -137,7 +137,7 @@
     delete from tb_metrics_log_collect_task
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsLogCollectTaskPO" >
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     insert into tb_metrics_log_collect_task (id, collectTaskId, pathId, 
       agentHostName, collectTaskHostName, agentHostIp, 
       businessTimestamp, maxBusinessTimestampDelay, 
@@ -223,7 +223,7 @@
       #{dynamiclimiterthreshold,jdbcType=BIGINT}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
       #{heartbeattimehour,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsLogCollectTaskPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     insert into tb_metrics_log_collect_task
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -830,7 +830,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsLogCollectTaskPO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     update tb_metrics_log_collect_task
     <set >
       <if test="collecttaskid != null" >
@@ -1133,7 +1133,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsLogCollectTaskPO" >
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     update tb_metrics_log_collect_task
     set collectTaskId = #{collecttaskid,jdbcType=BIGINT},
       pathId = #{pathid,jdbcType=BIGINT},

@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.common.bean.po.agent;
+package com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask;
 
 public class LogCollectTaskHealthDetailPO {
     private Long id;

@@ -1,6 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsLogCollectTaskPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 
 public interface MetricsLogCollectTaskPOMapper {
     int deleteByPrimaryKey(Long id);

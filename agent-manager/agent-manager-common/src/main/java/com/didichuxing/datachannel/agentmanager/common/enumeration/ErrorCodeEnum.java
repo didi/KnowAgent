@@ -92,6 +92,7 @@ public enum ErrorCodeEnum {
      * LogCollectTaskHealth 相关 30000 ~ 30999
      */
     LOGCOLLECTTASK_HEALTH_NOT_EXISTS(30000, "LogCollectTaskHealth不存在"),
+    SCOPE_COLLECT_LOGCOLLECTTASK_HEALTH_CHECK_NOT_SUPPORT(30001, "不支持时间范围采集类型的采集任务健康度检查"),
     /*
      * 文件操作 相关 31000 ~ 31999
      */

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsProcessPOMapper" >
-  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsProcessPO" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="hostName" property="hostname" jdbcType="VARCHAR" />
     <result column="procStartupTime" property="procstartuptime" jdbcType="BIGINT" />
@@ -266,7 +266,7 @@
     delete from tb_metrics_process
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsProcessPO" >
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     insert into tb_metrics_process (id, hostName, procStartupTime, 
       procUptime, procPid, procCpuUtil, 
       procCpuUtilMin, procCpuUtilMax, procCpuUtilMean, 
@@ -448,7 +448,7 @@
       #{procnetworktcpnonenum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
       #{heartbeattimehour,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsProcessPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     insert into tb_metrics_process
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1637,7 +1637,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsProcessPO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     update tb_metrics_process
     <set >
       <if test="hostname != null" >
@@ -2231,7 +2231,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsProcessPO" >
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     update tb_metrics_process
     set hostName = #{hostname,jdbcType=VARCHAR},
       procStartupTime = #{procstartuptime,jdbcType=BIGINT},

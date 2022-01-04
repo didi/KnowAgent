@@ -7,8 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -23,14 +22,12 @@ import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class AgentMetricsManageServiceImpl implements AgentMetricsManageService {
@@ -132,7 +129,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Long getLastestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String hostName) {
-        return agentMetricsDAO.selectLatestMetric(logCollectTaskId).getLogTime();
+        return agentMetricsDAO.selectLatestMetric(logCollectTaskId).getBusinesstimestamp();
     }
 
     @Override
@@ -194,7 +191,7 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Integer getLastestFdUsage(String hostName) {
-        return agentMetricsDAO.selectLatestByHostname(hostName).getFdCount();
+        return null;
     }
 
     @Override
@@ -211,28 +208,16 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public Integer getLastestCpuUsage(String hostName) {
-        AgentMetricPO agentMetricPO = agentMetricsDAO.selectLatestByHostname(hostName);
-        if (agentMetricPO == null) {
-            return 0;
-        }
-        return agentMetricPO.getCpuUsage().intValue();
+        return null;
     }
 
     public Long getLatestMemoryUsage(String hostName) {
-        AgentMetricPO agentMetricPO = agentMetricsDAO.selectLatestByHostname(hostName);
-        if (agentMetricPO == null) {
-            return 0L;
-        }
-        return agentMetricPO.getMemoryUsage();
+        return null;
     }
 
     @Override
     public Long getLastestAgentStartupTime(String hostName) {
-        AgentMetricPO agentMetricPO = agentMetricsDAO.selectLatestByHostname(hostName);
-        if (agentMetricPO == null) {
-            return 0L;
-        }
-        return agentMetricPO.getStartTime();
+        return null;
     }
 
     @Override
@@ -438,18 +423,15 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
     }
 
     @Override
-    public CollectTaskMetricPO getLatestMetric(Long taskId) {
-        return agentMetricsDAO.selectLatestMetric(taskId);
+    public MetricsLogCollectTaskPO getLatestMetric(Long taskId) {
+//        return agentMetricsDAO.selectLatestMetric(taskId);
+        return null;
     }
 
     @Override
-    public List<CollectTaskMetricPO> queryLatest(Long time) {
-        return agentMetricsDAO.queryLatestMetrics(time, MetricConstant.HEARTBEAT_PERIOD);
-    }
-
-    @Override
-    public List<AgentMetricPO> queryAgentLatest(Long time) {
-        return agentMetricsDAO.queryLatestAgentMetrics(time, MetricConstant.HEARTBEAT_PERIOD);
+    public List<MetricsLogCollectTaskPO> queryLatest(Long time) {
+//        return agentMetricsDAO.queryLatestMetrics(time, MetricConstant.HEARTBEAT_PERIOD);
+        return null;
     }
 
     @Override
@@ -459,164 +441,172 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
 
     @Override
     public List<MetricPointList> getLogCollectTaskListCollectBytesLastest1MinTop5(Long startTime, Long endTime) {
-        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
-        Map<Long, Integer> idValueMap = new HashMap<>();
-        for (CollectTaskMetricPO metric : metrics) {
-            idValueMap.merge(metric.getLogModeId(), metric.getReadByte(), (a, b) -> a + b);
-        }
-        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
-        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
-        List<Long> topTaskIds = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (Long taskId : topTaskIds) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.READ_BYTE, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
-            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(taskId);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            if (logCollectTaskDO != null) {
-                metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
-            } else {
-                metricPointList.setName(StringUtils.EMPTY);
-                LOGGER.warn("class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
-                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", taskId));
-            }
-            result.add(metricPointList);
-        }
-        return result;
+//        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+//        Map<Long, Integer> idValueMap = new HashMap<>();
+//        for (CollectTaskMetricPO metric : metrics) {
+//            idValueMap.merge(metric.getLogModeId(), metric.getReadByte(), (a, b) -> a + b);
+//        }
+//        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+//        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+//        List<Long> topTaskIds = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (Long taskId : topTaskIds) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.READ_BYTE, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
+//            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(taskId);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            if (logCollectTaskDO != null) {
+//                metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
+//            } else {
+//                metricPointList.setName(StringUtils.EMPTY);
+//                LOGGER.warn("class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
+//                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", taskId));
+//            }
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     @Override
     public List<MetricPointList> getLogCollectTaskListCollectCountLastest1MinTop5(Long startTime, Long endTime) {
-        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
-        Map<Long, Integer> idValueMap = new HashMap<>();
-        for (CollectTaskMetricPO metric : metrics) {
-            idValueMap.merge(metric.getLogModeId(), metric.getReadCount(), (a, b) -> a + b);
-        }
-        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
-        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
-        List<Long> topTaskIds = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (Long taskId : topTaskIds) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.READ_COUNT, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
-            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(taskId);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            if (logCollectTaskDO != null) {
-                metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
-            } else {
-                metricPointList.setName(StringUtils.EMPTY);
-                LOGGER.warn("class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
-                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", taskId));
-            }
-            result.add(metricPointList);
-        }
-        return result;
+//        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+//        Map<Long, Integer> idValueMap = new HashMap<>();
+//        for (CollectTaskMetricPO metric : metrics) {
+//            idValueMap.merge(metric.getLogModeId(), metric.getReadCount(), (a, b) -> a + b);
+//        }
+//        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+//        List<Map.Entry<Long, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+//        List<Long> topTaskIds = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (Long taskId : topTaskIds) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByTask(taskId, startTime, endTime, AgentMetricField.READ_COUNT, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
+//            LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(taskId);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            if (logCollectTaskDO != null) {
+//                metricPointList.setName(logCollectTaskDO.getLogCollectTaskName());
+//            } else {
+//                metricPointList.setName(StringUtils.EMPTY);
+//                LOGGER.warn("class=AgentMetricsManageServiceImpl||method=getLogCollectTaskListCollectBytesLastest1MinTop5||msg={}",
+//                        String.format("系统中不存在id={%d}的LogCollectTask，将其指标Name设置为空串\"\"", taskId));
+//            }
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     @Override
     public List<MetricPointList> getAgentListCollectBytesLastest1MinTop5(Long startTime, Long endTime) {
-        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
-        Map<String, Integer> idValueMap = new HashMap<>();
-        for (CollectTaskMetricPO metric : metrics) {
-            idValueMap.merge(metric.getHostname(), metric.getReadByte(), (a, b) -> a + b);
-        }
-        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
-        List<Map.Entry<String, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
-        List<String> hostnames = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (String hostname : hostnames) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByLogModel(null, null, hostname, startTime, endTime, AgentMetricField.READ_BYTE, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(hostname);
-            result.add(metricPointList);
-        }
-        return result;
+//        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+//        Map<String, Integer> idValueMap = new HashMap<>();
+//        for (CollectTaskMetricPO metric : metrics) {
+//            idValueMap.merge(metric.getHostname(), metric.getReadByte(), (a, b) -> a + b);
+//        }
+//        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+//        List<Map.Entry<String, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+//        List<String> hostnames = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (String hostname : hostnames) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByLogModel(null, null, hostname, startTime, endTime, AgentMetricField.READ_BYTE, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            metricPointList.setName(hostname);
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     @Override
     public List<MetricPointList> getAgentListCollectCountLastest1MinTop5(Long startTime, Long endTime) {
-        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
-        Map<String, Integer> idValueMap = new HashMap<>();
-        for (CollectTaskMetricPO metric : metrics) {
-            idValueMap.merge(metric.getHostname(), metric.getReadCount(), (a, b) -> a + b);
-        }
-        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
-        List<Map.Entry<String, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
-        List<String> hostnames = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (String hostname : hostnames) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByLogModel(null, null, hostname, startTime, endTime, AgentMetricField.READ_COUNT, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(hostname);
-            result.add(metricPointList);
-        }
-        return result;
+//        List<CollectTaskMetricPO> metrics = queryLatest(endTime);
+//        Map<String, Integer> idValueMap = new HashMap<>();
+//        for (CollectTaskMetricPO metric : metrics) {
+//            idValueMap.merge(metric.getHostname(), metric.getReadCount(), (a, b) -> a + b);
+//        }
+//        int limit = 5 < idValueMap.size() ? 5 : idValueMap.size();
+//        List<Map.Entry<String, Integer>> entries = new ArrayList<>(idValueMap.entrySet());
+//        List<String> hostnames = entries.stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue())).limit(limit).map(Map.Entry::getKey).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (String hostname : hostnames) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAggregationByLogModel(null, null, hostname, startTime, endTime, AgentMetricField.READ_COUNT, CalcFunction.SUM, MetricConstant.HEARTBEAT_PERIOD);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            metricPointList.setName(hostname);
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     @Override
     public List<MetricPointList> getAgentListCpuUsageLastest1MinTop5(Long startTime, Long endTime) {
-        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
-        int limit = 5 < metrics.size() ? 5 : metrics.size();
-        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getCpuUsage().compareTo(o1.getCpuUsage())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (String hostname : hostnames) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.CPU_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(hostname);
-            result.add(metricPointList);
-        }
-        return result;
+//        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+//        int limit = 5 < metrics.size() ? 5 : metrics.size();
+//        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getCpuUsage().compareTo(o1.getCpuUsage())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (String hostname : hostnames) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.CPU_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            metricPointList.setName(hostname);
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     @Override
     public List<MetricPointList> getAgentListFdUsedLastest1MinTop5(Long startTime, Long endTime) {
-        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
-        int limit = 5 < metrics.size() ? 5 : metrics.size();
-        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getFdCount().compareTo(o1.getFdCount())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (String hostname : hostnames) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.FD_COUNT, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(hostname);
-            result.add(metricPointList);
-        }
-        return result;
+//        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+//        int limit = 5 < metrics.size() ? 5 : metrics.size();
+//        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getFdCount().compareTo(o1.getFdCount())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (String hostname : hostnames) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.FD_COUNT, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            metricPointList.setName(hostname);
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     @Override
     public List<MetricPointList> getAgentListMemoryUsedLastest1MinTop5(Long startTime, Long endTime) {
-        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
-        int limit = 5 < metrics.size() ? 5 : metrics.size();
-        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getMemoryUsage().compareTo(o1.getMemoryUsage())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (String hostname : hostnames) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.MEMORY_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(hostname);
-            result.add(metricPointList);
-        }
-        return result;
+//        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+//        int limit = 5 < metrics.size() ? 5 : metrics.size();
+//        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getMemoryUsage().compareTo(o1.getMemoryUsage())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (String hostname : hostnames) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.MEMORY_USAGE, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            metricPointList.setName(hostname);
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     @Override
     public List<MetricPointList> getAgentListFullGcCountLastest1MinTop5(Long startTime, Long endTime) {
-        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
-        int limit = 5 < metrics.size() ? 5 : metrics.size();
-        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getGcCount().compareTo(o1.getGcCount())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
-        List<MetricPointList> result = new ArrayList<>();
-        for (String hostname : hostnames) {
-            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.GC_COUNT, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
-            MetricPointList metricPointList = new MetricPointList();
-            metricPointList.setMetricPointList(metricPoint);
-            metricPointList.setName(hostname);
-            result.add(metricPointList);
-        }
-        return result;
+//        List<AgentMetricPO> metrics = queryAgentLatest(endTime);
+//        int limit = 5 < metrics.size() ? 5 : metrics.size();
+//        List<String> hostnames = metrics.stream().sorted((o1, o2) -> o2.getGcCount().compareTo(o1.getGcCount())).limit(limit).map(AgentMetricPO::getHostname).filter(StringUtils::isNotBlank).collect(Collectors.toList());
+//        List<MetricPointList> result = new ArrayList<>();
+//        for (String hostname : hostnames) {
+//            List<MetricPoint> metricPoint = agentMetricsDAO.queryAgentAggregation(hostname, startTime, endTime, AgentMetricField.GC_COUNT, CalcFunction.MAX, MetricConstant.QUERY_INTERVAL);
+//            MetricPointList metricPointList = new MetricPointList();
+//            metricPointList.setMetricPointList(metricPoint);
+//            metricPointList.setName(hostname);
+//            result.add(metricPointList);
+//        }
+//        return result;
+        return null;
     }
 
     /**

@@ -8,7 +8,6 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckPr
 import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsElasticsearchDAOImpl;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +126,8 @@ public class AgentManagerApplication {
     @Bean
     public AgentMetricsDAO getMetricReader() {
         if ("es".equals(type)) {
-            return new AgentMetricsElasticsearchDAOImpl();
+//            return new AgentMetricsElasticsearchDAOImpl();
+            return null;
         } else {
             return new AgentMetricsRDSImpl();
         }

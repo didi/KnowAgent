@@ -3,8 +3,7 @@ package com.didichuxing.datachannel.agentmanager.core.agent.metrics;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -499,11 +498,9 @@ public interface AgentMetricsManageService {
      */
     List<MetricPoint> queryAgentAggregation(AgentMetricQueryDO agentMetricQueryDO, String column, String method, int step);
 
-    CollectTaskMetricPO getLatestMetric(Long taskId);
+    MetricsLogCollectTaskPO getLatestMetric(Long taskId);
 
-    List<CollectTaskMetricPO> queryLatest(Long time);
-
-    List<AgentMetricPO> queryAgentLatest(Long time);
+    List<MetricsLogCollectTaskPO> queryLatest(Long time);
 
     Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction function);
 

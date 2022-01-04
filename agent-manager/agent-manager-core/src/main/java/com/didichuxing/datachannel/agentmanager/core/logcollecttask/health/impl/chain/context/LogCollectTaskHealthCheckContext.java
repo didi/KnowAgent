@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain;
+package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
@@ -6,6 +6,10 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.chain.Context;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
+import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsLogCollectTaskService;
+import com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsLogCollectTaskPOMapper;
 import lombok.Data;
 
 import java.util.Map;
@@ -95,4 +99,12 @@ public class LogCollectTaskHealthCheckContext extends Context {
      * 日志采集任务健康检查描述
      */
     private String logCollectTaskHealthDescription;
+
+    /**
+     * 采集任我指标查询接口
+     */
+    private MetricsLogCollectTaskService metricsLogCollectTaskService;
+
+    private LogCollectTaskHealthDetailManageService logCollectTaskHealthDetailManageService;
+
 }

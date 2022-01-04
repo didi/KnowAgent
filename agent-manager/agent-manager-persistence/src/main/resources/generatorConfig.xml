@@ -39,21 +39,21 @@
         <table tableName="tb_metrics_agent"  domainObjectName="MetricsAgentPO" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" />
-        <table tableName="tb_metrics_log_collect_task"  domainObjectName="MetricsLogCollectTaskPO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" />
-        <table tableName="tb_metrics_net_card"  domainObjectName="MetricsNetCardPO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" />
-        <table tableName="tb_metrics_disk"  domainObjectName="MetricsDiskPO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" />
-        <table tableName="tb_metrics_process"  domainObjectName="MetricsProcessPO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" />
-        <table tableName="tb_metrics_system"  domainObjectName="MetricsSystemPO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" />
+<!--        <table tableName="tb_metrics_log_collect_task"  domainObjectName="MetricsLogCollectTaskPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_net_card"  domainObjectName="MetricsNetCardPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_disk"  domainObjectName="MetricsDiskPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_process"  domainObjectName="MetricsProcessPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_system"  domainObjectName="MetricsSystemPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
 
     </context>
 </generatorConfiguration>

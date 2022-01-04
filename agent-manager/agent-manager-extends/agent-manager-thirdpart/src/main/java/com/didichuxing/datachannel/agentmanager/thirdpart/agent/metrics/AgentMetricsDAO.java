@@ -1,8 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentMetricPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -224,8 +223,6 @@ public interface AgentMetricsDAO {
 
     Integer getErrorLogCount(Long startTime, Long endTime, String hostName);
 
-    AgentMetricPO selectLatestByHostname(String hostname);
-
     Long getGCCount(Long startTime, Long endTime, String hostName);
 
     List<MetricPoint> getAgentStartupExistsPerMin(Long startTime, Long endTime, String hostName);
@@ -256,11 +253,7 @@ public interface AgentMetricsDAO {
 
     Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
 
-    CollectTaskMetricPO selectLatestMetric(Long taskId);
-
-    List<CollectTaskMetricPO> queryLatestMetrics(Long time, int step);
-
-    List<AgentMetricPO> queryLatestAgentMetrics(Long time, int step);
+    MetricsLogCollectTaskPO selectLatestMetric(Long taskId);
 
     List<DashBoardStatisticsDO> groupByKeyAndMinuteLogCollectTaskMetric(Long startTime, Long endTime, String key, String function, String metric);
 

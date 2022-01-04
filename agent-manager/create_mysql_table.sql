@@ -21,7 +21,7 @@ CREATE TABLE `auv_job` (
                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                            PRIMARY KEY (`id`),
                            UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='正在执行的job信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1265 DEFAULT CHARSET=utf8mb3 COMMENT='正在执行的job信息';
 
 -- ----------------------------
 -- Table structure for auv_job_log
@@ -42,7 +42,7 @@ CREATE TABLE `auv_job_log` (
                                `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='job执行历史日志';
+) ENGINE=InnoDB AUTO_INCREMENT=1264 DEFAULT CHARSET=utf8mb3 COMMENT='job执行历史日志';
 
 -- ----------------------------
 -- Table structure for auv_task
@@ -67,7 +67,7 @@ CREATE TABLE `auv_task` (
                             `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                             PRIMARY KEY (`id`),
                             UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='任务信息';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COMMENT='任务信息';
 
 -- ----------------------------
 -- Table structure for auv_task_lock
@@ -81,7 +81,7 @@ CREATE TABLE `auv_task_lock` (
                                  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='任务锁';
+) ENGINE=InnoDB AUTO_INCREMENT=1265 DEFAULT CHARSET=utf8mb3 COMMENT='任务锁';
 
 -- ----------------------------
 -- Table structure for auv_worker
@@ -103,7 +103,7 @@ CREATE TABLE `auv_worker` (
                               `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                               PRIMARY KEY (`id`),
                               UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8mb3 COMMENT='worker信息';
+) ENGINE=InnoDB AUTO_INCREMENT=18122 DEFAULT CHARSET=utf8mb3 COMMENT='worker信息';
 
 -- ----------------------------
 -- Table structure for auv_worker_blacklist
@@ -260,7 +260,7 @@ CREATE TABLE `tb_agent_version` (
                                     PRIMARY KEY (`id`) USING BTREE,
                                     UNIQUE KEY `unq_idx_version` (`version`) USING BTREE,
                                     UNIQUE KEY `unq_idx_file_md5` (`file_md5`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Table structure for tb_collect_delay_monitor_black_list
@@ -439,6 +439,7 @@ CREATE TABLE `tb_log_collect_task_health` (
                                               `log_collect_task_id` bigint NOT NULL COMMENT '表tb_log_collect_task主键',
                                               `log_collect_task_health_level` tinyint NOT NULL DEFAULT '0' COMMENT '采集任务健康等级\n\n0：绿色 表示：采集任务很健康，对业务没有任何影响，且运行该采集任务的 Agent 也健康\n\n1：黄色 表示：采集任务存在风险，该采集任务有对应错误日志输出\n\n2：红色 表示：采集任务不健康，对业务有影响，该采集任务需要做采集延迟监控但乱序输出，或该采集任务需要做采集延迟监控但延迟时间超过指定阈值、该采集任务对应 kafka 集群信息不存在 待维护',
                                               `log_collect_task_health_description` varchar(1024) NOT NULL COMMENT '日志采集任务健康描述信息',
+                                              `log_collect_task_health_inspection_result_type` int DEFAULT NULL COMMENT '日志采集任务巡检结果类型',
                                               `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                               `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                               `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -459,7 +460,8 @@ CREATE TABLE `tb_log_collect_task_health_detail` (
                                                      `file_path_exists_check_healthy_heartbeat_time` bigint DEFAULT NULL COMMENT '“文件路径是否存在健康检查”为健康时的时间点',
                                                      `file_disorder_check_healthy_heartbeat_time` bigint DEFAULT NULL COMMENT '“文件乱序健康检查”为健康时的时间点',
                                                      `log_slice_check_healthy_heartbeat_time` bigint DEFAULT NULL COMMENT ' “日志切片健康检查”为健康时的时间点',
-                                                     PRIMARY KEY (`id`) USING BTREE
+                                                     PRIMARY KEY (`id`) USING BTREE,
+                                                     KEY `idx_taskId_pathId_hostName` (`log_collect_task_id`,`path_id`,`host_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
 
 -- ----------------------------
@@ -504,6 +506,7 @@ CREATE TABLE `tb_metrics_agent` (
                                     `writeBytes` bigint DEFAULT NULL COMMENT '采样周期内出口采集流量 单位：bytes',
                                     `writeCount` bigint DEFAULT NULL COMMENT '采样周期内出口采集条数 单位：条',
                                     `errorLogsCount` bigint DEFAULT NULL COMMENT '采样周期内错误日志输出条数，当前值',
+                                    `errorLogsSendFailedCount` bigint DEFAULT NULL COMMENT '采样周期内错误日志发送失败次数，当前值',
                                     `normalCollectThreadNumMax` int DEFAULT NULL COMMENT '流式采集线程池可容纳的最大线程数，当前值',
                                     `normalCollectThreadNumSize` int DEFAULT NULL COMMENT '流式采集线程池实际运行线程数，当前值',
                                     `normalCollectThreadQueueMax` int DEFAULT NULL COMMENT '流式采集线程池任务队列最大容量，当前值',

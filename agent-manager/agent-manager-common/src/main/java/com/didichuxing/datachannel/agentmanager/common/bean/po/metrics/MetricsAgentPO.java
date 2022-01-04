@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.common.bean.po.agent;
+package com.didichuxing.datachannel.agentmanager.common.bean.po.metrics;
 
 public class MetricsAgentPO {
     private Long id;
@@ -20,6 +20,8 @@ public class MetricsAgentPO {
     private Long writecount;
 
     private Long errorlogscount;
+
+    private Long errorlogssendfailedcount;
 
     private Integer normalcollectthreadnummax;
 
@@ -133,6 +135,14 @@ public class MetricsAgentPO {
 
     public void setErrorlogscount(Long errorlogscount) {
         this.errorlogscount = errorlogscount;
+    }
+
+    public Long getErrorlogssendfailedcount() {
+        return errorlogssendfailedcount;
+    }
+
+    public void setErrorlogssendfailedcount(Long errorlogssendfailedcount) {
+        this.errorlogssendfailedcount = errorlogssendfailedcount;
     }
 
     public Integer getNormalcollectthreadnummax() {

@@ -1,36 +1,404 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsAgentPOMapper" >
-  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsAgentPO" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="hostName" property="hostname" jdbcType="VARCHAR" />
-    <result column="limitTps" property="limittps" jdbcType="BIGINT" />
-    <result column="cpuLimit" property="cpulimit" jdbcType="DOUBLE" />
-    <result column="agentVersion" property="agentversion" jdbcType="VARCHAR" />
-    <result column="readBytes" property="readbytes" jdbcType="BIGINT" />
-    <result column="readCount" property="readcount" jdbcType="BIGINT" />
-    <result column="writeBytes" property="writebytes" jdbcType="BIGINT" />
-    <result column="writeCount" property="writecount" jdbcType="BIGINT" />
-    <result column="errorLogsCount" property="errorlogscount" jdbcType="BIGINT" />
-    <result column="normalCollectThreadNumMax" property="normalcollectthreadnummax" jdbcType="INTEGER" />
-    <result column="normalCollectThreadNumSize" property="normalcollectthreadnumsize" jdbcType="INTEGER" />
-    <result column="normalCollectThreadQueueMax" property="normalcollectthreadqueuemax" jdbcType="INTEGER" />
-    <result column="normalCollectThreadQueueSize" property="normalcollectthreadqueuesize" jdbcType="INTEGER" />
-    <result column="temporaryCollectThreadNumMax" property="temporarycollectthreadnummax" jdbcType="INTEGER" />
-    <result column="temporaryCollectThreadNumSize" property="temporarycollectthreadnumsize" jdbcType="INTEGER" />
-    <result column="temporaryCollectThreadQueueMax" property="temporarycollectthreadqueuemax" jdbcType="INTEGER" />
-    <result column="temporaryCollectThreadQueueSize" property="temporarycollectthreadqueuesize" jdbcType="INTEGER" />
-    <result column="collectTaskNum" property="collecttasknum" jdbcType="INTEGER" />
-    <result column="runningCollectTaskNum" property="runningcollecttasknum" jdbcType="INTEGER" />
-    <result column="pauseCollectTaskNum" property="pausecollecttasknum" jdbcType="INTEGER" />
-    <result column="collectPathNum" property="collectpathnum" jdbcType="INTEGER" />
-    <result column="runningCollectPathNum" property="runningcollectpathnum" jdbcType="INTEGER" />
-    <result column="pauseCollectPathNum" property="pausecollectpathnum" jdbcType="INTEGER" />
-    <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
-    <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
-    <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsAgentPOMapper">
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="hostName" jdbcType="VARCHAR" property="hostname" />
+    <result column="limitTps" jdbcType="BIGINT" property="limittps" />
+    <result column="cpuLimit" jdbcType="DOUBLE" property="cpulimit" />
+    <result column="agentVersion" jdbcType="VARCHAR" property="agentversion" />
+    <result column="readBytes" jdbcType="BIGINT" property="readbytes" />
+    <result column="readCount" jdbcType="BIGINT" property="readcount" />
+    <result column="writeBytes" jdbcType="BIGINT" property="writebytes" />
+    <result column="writeCount" jdbcType="BIGINT" property="writecount" />
+    <result column="errorLogsCount" jdbcType="BIGINT" property="errorlogscount" />
+    <result column="errorLogsSendFailedCount" jdbcType="BIGINT" property="errorlogssendfailedcount" />
+    <result column="normalCollectThreadNumMax" jdbcType="INTEGER" property="normalcollectthreadnummax" />
+    <result column="normalCollectThreadNumSize" jdbcType="INTEGER" property="normalcollectthreadnumsize" />
+    <result column="normalCollectThreadQueueMax" jdbcType="INTEGER" property="normalcollectthreadqueuemax" />
+    <result column="normalCollectThreadQueueSize" jdbcType="INTEGER" property="normalcollectthreadqueuesize" />
+    <result column="temporaryCollectThreadNumMax" jdbcType="INTEGER" property="temporarycollectthreadnummax" />
+    <result column="temporaryCollectThreadNumSize" jdbcType="INTEGER" property="temporarycollectthreadnumsize" />
+    <result column="temporaryCollectThreadQueueMax" jdbcType="INTEGER" property="temporarycollectthreadqueuemax" />
+    <result column="temporaryCollectThreadQueueSize" jdbcType="INTEGER" property="temporarycollectthreadqueuesize" />
+    <result column="collectTaskNum" jdbcType="INTEGER" property="collecttasknum" />
+    <result column="runningCollectTaskNum" jdbcType="INTEGER" property="runningcollecttasknum" />
+    <result column="pauseCollectTaskNum" jdbcType="INTEGER" property="pausecollecttasknum" />
+    <result column="collectPathNum" jdbcType="INTEGER" property="collectpathnum" />
+    <result column="runningCollectPathNum" jdbcType="INTEGER" property="runningcollectpathnum" />
+    <result column="pauseCollectPathNum" jdbcType="INTEGER" property="pausecollectpathnum" />
+    <result column="heartbeatTime" jdbcType="BIGINT" property="heartbeattime" />
+    <result column="heartbeatTimeMinute" jdbcType="BIGINT" property="heartbeattimeminute" />
+    <result column="heartbeatTimeHour" jdbcType="BIGINT" property="heartbeattimehour" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
+    id, hostName, limitTps, cpuLimit, agentVersion, readBytes, readCount, writeBytes, 
+    writeCount, errorLogsCount, errorLogsSendFailedCount, normalCollectThreadNumMax, 
+    normalCollectThreadNumSize, normalCollectThreadQueueMax, normalCollectThreadQueueSize, 
+    temporaryCollectThreadNumMax, temporaryCollectThreadNumSize, temporaryCollectThreadQueueMax, 
+    temporaryCollectThreadQueueSize, collectTaskNum, runningCollectTaskNum, pauseCollectTaskNum, 
+    collectPathNum, runningCollectPathNum, pauseCollectPathNum, heartbeatTime, heartbeatTimeMinute, 
+    heartbeatTimeHour
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_metrics_agent
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_metrics_agent
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    insert into tb_metrics_agent (id, hostName, limitTps, 
+      cpuLimit, agentVersion, readBytes, 
+      readCount, writeBytes, writeCount, 
+      errorLogsCount, errorLogsSendFailedCount, 
+      normalCollectThreadNumMax, normalCollectThreadNumSize, 
+      normalCollectThreadQueueMax, normalCollectThreadQueueSize, 
+      temporaryCollectThreadNumMax, temporaryCollectThreadNumSize, 
+      temporaryCollectThreadQueueMax, temporaryCollectThreadQueueSize, 
+      collectTaskNum, runningCollectTaskNum, 
+      pauseCollectTaskNum, collectPathNum, runningCollectPathNum, 
+      pauseCollectPathNum, heartbeatTime, heartbeatTimeMinute, 
+      heartbeatTimeHour)
+    values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{limittps,jdbcType=BIGINT}, 
+      #{cpulimit,jdbcType=DOUBLE}, #{agentversion,jdbcType=VARCHAR}, #{readbytes,jdbcType=BIGINT}, 
+      #{readcount,jdbcType=BIGINT}, #{writebytes,jdbcType=BIGINT}, #{writecount,jdbcType=BIGINT}, 
+      #{errorlogscount,jdbcType=BIGINT}, #{errorlogssendfailedcount,jdbcType=BIGINT}, 
+      #{normalcollectthreadnummax,jdbcType=INTEGER}, #{normalcollectthreadnumsize,jdbcType=INTEGER}, 
+      #{normalcollectthreadqueuemax,jdbcType=INTEGER}, #{normalcollectthreadqueuesize,jdbcType=INTEGER}, 
+      #{temporarycollectthreadnummax,jdbcType=INTEGER}, #{temporarycollectthreadnumsize,jdbcType=INTEGER}, 
+      #{temporarycollectthreadqueuemax,jdbcType=INTEGER}, #{temporarycollectthreadqueuesize,jdbcType=INTEGER}, 
+      #{collecttasknum,jdbcType=INTEGER}, #{runningcollecttasknum,jdbcType=INTEGER}, 
+      #{pausecollecttasknum,jdbcType=INTEGER}, #{collectpathnum,jdbcType=INTEGER}, #{runningcollectpathnum,jdbcType=INTEGER}, 
+      #{pausecollectpathnum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
+      #{heartbeattimehour,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    insert into tb_metrics_agent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="hostname != null">
+        hostName,
+      </if>
+      <if test="limittps != null">
+        limitTps,
+      </if>
+      <if test="cpulimit != null">
+        cpuLimit,
+      </if>
+      <if test="agentversion != null">
+        agentVersion,
+      </if>
+      <if test="readbytes != null">
+        readBytes,
+      </if>
+      <if test="readcount != null">
+        readCount,
+      </if>
+      <if test="writebytes != null">
+        writeBytes,
+      </if>
+      <if test="writecount != null">
+        writeCount,
+      </if>
+      <if test="errorlogscount != null">
+        errorLogsCount,
+      </if>
+      <if test="errorlogssendfailedcount != null">
+        errorLogsSendFailedCount,
+      </if>
+      <if test="normalcollectthreadnummax != null">
+        normalCollectThreadNumMax,
+      </if>
+      <if test="normalcollectthreadnumsize != null">
+        normalCollectThreadNumSize,
+      </if>
+      <if test="normalcollectthreadqueuemax != null">
+        normalCollectThreadQueueMax,
+      </if>
+      <if test="normalcollectthreadqueuesize != null">
+        normalCollectThreadQueueSize,
+      </if>
+      <if test="temporarycollectthreadnummax != null">
+        temporaryCollectThreadNumMax,
+      </if>
+      <if test="temporarycollectthreadnumsize != null">
+        temporaryCollectThreadNumSize,
+      </if>
+      <if test="temporarycollectthreadqueuemax != null">
+        temporaryCollectThreadQueueMax,
+      </if>
+      <if test="temporarycollectthreadqueuesize != null">
+        temporaryCollectThreadQueueSize,
+      </if>
+      <if test="collecttasknum != null">
+        collectTaskNum,
+      </if>
+      <if test="runningcollecttasknum != null">
+        runningCollectTaskNum,
+      </if>
+      <if test="pausecollecttasknum != null">
+        pauseCollectTaskNum,
+      </if>
+      <if test="collectpathnum != null">
+        collectPathNum,
+      </if>
+      <if test="runningcollectpathnum != null">
+        runningCollectPathNum,
+      </if>
+      <if test="pausecollectpathnum != null">
+        pauseCollectPathNum,
+      </if>
+      <if test="heartbeattime != null">
+        heartbeatTime,
+      </if>
+      <if test="heartbeattimeminute != null">
+        heartbeatTimeMinute,
+      </if>
+      <if test="heartbeattimehour != null">
+        heartbeatTimeHour,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hostname != null">
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="limittps != null">
+        #{limittps,jdbcType=BIGINT},
+      </if>
+      <if test="cpulimit != null">
+        #{cpulimit,jdbcType=DOUBLE},
+      </if>
+      <if test="agentversion != null">
+        #{agentversion,jdbcType=VARCHAR},
+      </if>
+      <if test="readbytes != null">
+        #{readbytes,jdbcType=BIGINT},
+      </if>
+      <if test="readcount != null">
+        #{readcount,jdbcType=BIGINT},
+      </if>
+      <if test="writebytes != null">
+        #{writebytes,jdbcType=BIGINT},
+      </if>
+      <if test="writecount != null">
+        #{writecount,jdbcType=BIGINT},
+      </if>
+      <if test="errorlogscount != null">
+        #{errorlogscount,jdbcType=BIGINT},
+      </if>
+      <if test="errorlogssendfailedcount != null">
+        #{errorlogssendfailedcount,jdbcType=BIGINT},
+      </if>
+      <if test="normalcollectthreadnummax != null">
+        #{normalcollectthreadnummax,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadnumsize != null">
+        #{normalcollectthreadnumsize,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadqueuemax != null">
+        #{normalcollectthreadqueuemax,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadqueuesize != null">
+        #{normalcollectthreadqueuesize,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadnummax != null">
+        #{temporarycollectthreadnummax,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadnumsize != null">
+        #{temporarycollectthreadnumsize,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadqueuemax != null">
+        #{temporarycollectthreadqueuemax,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadqueuesize != null">
+        #{temporarycollectthreadqueuesize,jdbcType=INTEGER},
+      </if>
+      <if test="collecttasknum != null">
+        #{collecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="runningcollecttasknum != null">
+        #{runningcollecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="pausecollecttasknum != null">
+        #{pausecollecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="collectpathnum != null">
+        #{collectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="runningcollectpathnum != null">
+        #{runningcollectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="pausecollectpathnum != null">
+        #{pausecollectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="heartbeattime != null">
+        #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null">
+        #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null">
+        #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    update tb_metrics_agent
+    <set>
+      <if test="hostname != null">
+        hostName = #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="limittps != null">
+        limitTps = #{limittps,jdbcType=BIGINT},
+      </if>
+      <if test="cpulimit != null">
+        cpuLimit = #{cpulimit,jdbcType=DOUBLE},
+      </if>
+      <if test="agentversion != null">
+        agentVersion = #{agentversion,jdbcType=VARCHAR},
+      </if>
+      <if test="readbytes != null">
+        readBytes = #{readbytes,jdbcType=BIGINT},
+      </if>
+      <if test="readcount != null">
+        readCount = #{readcount,jdbcType=BIGINT},
+      </if>
+      <if test="writebytes != null">
+        writeBytes = #{writebytes,jdbcType=BIGINT},
+      </if>
+      <if test="writecount != null">
+        writeCount = #{writecount,jdbcType=BIGINT},
+      </if>
+      <if test="errorlogscount != null">
+        errorLogsCount = #{errorlogscount,jdbcType=BIGINT},
+      </if>
+      <if test="errorlogssendfailedcount != null">
+        errorLogsSendFailedCount = #{errorlogssendfailedcount,jdbcType=BIGINT},
+      </if>
+      <if test="normalcollectthreadnummax != null">
+        normalCollectThreadNumMax = #{normalcollectthreadnummax,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadnumsize != null">
+        normalCollectThreadNumSize = #{normalcollectthreadnumsize,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadqueuemax != null">
+        normalCollectThreadQueueMax = #{normalcollectthreadqueuemax,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadqueuesize != null">
+        normalCollectThreadQueueSize = #{normalcollectthreadqueuesize,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadnummax != null">
+        temporaryCollectThreadNumMax = #{temporarycollectthreadnummax,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadnumsize != null">
+        temporaryCollectThreadNumSize = #{temporarycollectthreadnumsize,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadqueuemax != null">
+        temporaryCollectThreadQueueMax = #{temporarycollectthreadqueuemax,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadqueuesize != null">
+        temporaryCollectThreadQueueSize = #{temporarycollectthreadqueuesize,jdbcType=INTEGER},
+      </if>
+      <if test="collecttasknum != null">
+        collectTaskNum = #{collecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="runningcollecttasknum != null">
+        runningCollectTaskNum = #{runningcollecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="pausecollecttasknum != null">
+        pauseCollectTaskNum = #{pausecollecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="collectpathnum != null">
+        collectPathNum = #{collectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="runningcollectpathnum != null">
+        runningCollectPathNum = #{runningcollectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="pausecollectpathnum != null">
+        pauseCollectPathNum = #{pausecollectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="heartbeattime != null">
+        heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null">
+        heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null">
+        heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    update tb_metrics_agent
+    set hostName = #{hostname,jdbcType=VARCHAR},
+      limitTps = #{limittps,jdbcType=BIGINT},
+      cpuLimit = #{cpulimit,jdbcType=DOUBLE},
+      agentVersion = #{agentversion,jdbcType=VARCHAR},
+      readBytes = #{readbytes,jdbcType=BIGINT},
+      readCount = #{readcount,jdbcType=BIGINT},
+      writeBytes = #{writebytes,jdbcType=BIGINT},
+      writeCount = #{writecount,jdbcType=BIGINT},
+      errorLogsCount = #{errorlogscount,jdbcType=BIGINT},
+      errorLogsSendFailedCount = #{errorlogssendfailedcount,jdbcType=BIGINT},
+      normalCollectThreadNumMax = #{normalcollectthreadnummax,jdbcType=INTEGER},
+      normalCollectThreadNumSize = #{normalcollectthreadnumsize,jdbcType=INTEGER},
+      normalCollectThreadQueueMax = #{normalcollectthreadqueuemax,jdbcType=INTEGER},
+      normalCollectThreadQueueSize = #{normalcollectthreadqueuesize,jdbcType=INTEGER},
+      temporaryCollectThreadNumMax = #{temporarycollectthreadnummax,jdbcType=INTEGER},
+      temporaryCollectThreadNumSize = #{temporarycollectthreadnumsize,jdbcType=INTEGER},
+      temporaryCollectThreadQueueMax = #{temporarycollectthreadqueuemax,jdbcType=INTEGER},
+      temporaryCollectThreadQueueSize = #{temporarycollectthreadqueuesize,jdbcType=INTEGER},
+      collectTaskNum = #{collecttasknum,jdbcType=INTEGER},
+      runningCollectTaskNum = #{runningcollecttasknum,jdbcType=INTEGER},
+      pauseCollectTaskNum = #{pausecollecttasknum,jdbcType=INTEGER},
+      collectPathNum = #{collectpathnum,jdbcType=INTEGER},
+      runningCollectPathNum = #{runningcollectpathnum,jdbcType=INTEGER},
+      pauseCollectPathNum = #{pausecollectpathnum,jdbcType=INTEGER},
+      heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
+      heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
+      heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="hostName" jdbcType="VARCHAR" property="hostname" />
+    <result column="limitTps" jdbcType="BIGINT" property="limittps" />
+    <result column="cpuLimit" jdbcType="DOUBLE" property="cpulimit" />
+    <result column="agentVersion" jdbcType="VARCHAR" property="agentversion" />
+    <result column="readBytes" jdbcType="BIGINT" property="readbytes" />
+    <result column="readCount" jdbcType="BIGINT" property="readcount" />
+    <result column="writeBytes" jdbcType="BIGINT" property="writebytes" />
+    <result column="writeCount" jdbcType="BIGINT" property="writecount" />
+    <result column="errorLogsCount" jdbcType="BIGINT" property="errorlogscount" />
+    <result column="normalCollectThreadNumMax" jdbcType="INTEGER" property="normalcollectthreadnummax" />
+    <result column="normalCollectThreadNumSize" jdbcType="INTEGER" property="normalcollectthreadnumsize" />
+    <result column="normalCollectThreadQueueMax" jdbcType="INTEGER" property="normalcollectthreadqueuemax" />
+    <result column="normalCollectThreadQueueSize" jdbcType="INTEGER" property="normalcollectthreadqueuesize" />
+    <result column="temporaryCollectThreadNumMax" jdbcType="INTEGER" property="temporarycollectthreadnummax" />
+    <result column="temporaryCollectThreadNumSize" jdbcType="INTEGER" property="temporarycollectthreadnumsize" />
+    <result column="temporaryCollectThreadQueueMax" jdbcType="INTEGER" property="temporarycollectthreadqueuemax" />
+    <result column="temporaryCollectThreadQueueSize" jdbcType="INTEGER" property="temporarycollectthreadqueuesize" />
+    <result column="collectTaskNum" jdbcType="INTEGER" property="collecttasknum" />
+    <result column="runningCollectTaskNum" jdbcType="INTEGER" property="runningcollecttasknum" />
+    <result column="pauseCollectTaskNum" jdbcType="INTEGER" property="pausecollecttasknum" />
+    <result column="collectPathNum" jdbcType="INTEGER" property="collectpathnum" />
+    <result column="runningCollectPathNum" jdbcType="INTEGER" property="runningcollectpathnum" />
+    <result column="pauseCollectPathNum" jdbcType="INTEGER" property="pausecollectpathnum" />
+    <result column="heartbeatTime" jdbcType="BIGINT" property="heartbeattime" />
+    <result column="heartbeatTimeMinute" jdbcType="BIGINT" property="heartbeattimeminute" />
+    <result column="heartbeatTimeHour" jdbcType="BIGINT" property="heartbeattimehour" />
+  </resultMap>
+  <sql id="Base_Column_List">
     id, hostName, limitTps, cpuLimit, agentVersion, readBytes, readCount, writeBytes, 
     writeCount, errorLogsCount, normalCollectThreadNumMax, normalCollectThreadNumSize, 
     normalCollectThreadQueueMax, normalCollectThreadQueueSize, temporaryCollectThreadNumMax, 
@@ -38,17 +406,17 @@
     collectTaskNum, runningCollectTaskNum, pauseCollectTaskNum, collectPathNum, runningCollectPathNum, 
     pauseCollectPathNum, heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from tb_metrics_agent
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tb_metrics_agent
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsAgentPO" >
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
     insert into tb_metrics_agent (id, hostName, limitTps, 
       cpuLimit, agentVersion, readBytes, 
       readCount, writeBytes, writeCount, 
@@ -74,260 +442,260 @@
       #{pausecollectpathnum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
       #{heartbeattimehour,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsAgentPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
     insert into tb_metrics_agent
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="hostname != null" >
+      <if test="hostname != null">
         hostName,
       </if>
-      <if test="limittps != null" >
+      <if test="limittps != null">
         limitTps,
       </if>
-      <if test="cpulimit != null" >
+      <if test="cpulimit != null">
         cpuLimit,
       </if>
-      <if test="agentversion != null" >
+      <if test="agentversion != null">
         agentVersion,
       </if>
-      <if test="readbytes != null" >
+      <if test="readbytes != null">
         readBytes,
       </if>
-      <if test="readcount != null" >
+      <if test="readcount != null">
         readCount,
       </if>
-      <if test="writebytes != null" >
+      <if test="writebytes != null">
         writeBytes,
       </if>
-      <if test="writecount != null" >
+      <if test="writecount != null">
         writeCount,
       </if>
-      <if test="errorlogscount != null" >
+      <if test="errorlogscount != null">
         errorLogsCount,
       </if>
-      <if test="normalcollectthreadnummax != null" >
+      <if test="normalcollectthreadnummax != null">
         normalCollectThreadNumMax,
       </if>
-      <if test="normalcollectthreadnumsize != null" >
+      <if test="normalcollectthreadnumsize != null">
         normalCollectThreadNumSize,
       </if>
-      <if test="normalcollectthreadqueuemax != null" >
+      <if test="normalcollectthreadqueuemax != null">
         normalCollectThreadQueueMax,
       </if>
-      <if test="normalcollectthreadqueuesize != null" >
+      <if test="normalcollectthreadqueuesize != null">
         normalCollectThreadQueueSize,
       </if>
-      <if test="temporarycollectthreadnummax != null" >
+      <if test="temporarycollectthreadnummax != null">
         temporaryCollectThreadNumMax,
       </if>
-      <if test="temporarycollectthreadnumsize != null" >
+      <if test="temporarycollectthreadnumsize != null">
         temporaryCollectThreadNumSize,
       </if>
-      <if test="temporarycollectthreadqueuemax != null" >
+      <if test="temporarycollectthreadqueuemax != null">
         temporaryCollectThreadQueueMax,
       </if>
-      <if test="temporarycollectthreadqueuesize != null" >
+      <if test="temporarycollectthreadqueuesize != null">
         temporaryCollectThreadQueueSize,
       </if>
-      <if test="collecttasknum != null" >
+      <if test="collecttasknum != null">
         collectTaskNum,
       </if>
-      <if test="runningcollecttasknum != null" >
+      <if test="runningcollecttasknum != null">
         runningCollectTaskNum,
       </if>
-      <if test="pausecollecttasknum != null" >
+      <if test="pausecollecttasknum != null">
         pauseCollectTaskNum,
       </if>
-      <if test="collectpathnum != null" >
+      <if test="collectpathnum != null">
         collectPathNum,
       </if>
-      <if test="runningcollectpathnum != null" >
+      <if test="runningcollectpathnum != null">
         runningCollectPathNum,
       </if>
-      <if test="pausecollectpathnum != null" >
+      <if test="pausecollectpathnum != null">
         pauseCollectPathNum,
       </if>
-      <if test="heartbeattime != null" >
+      <if test="heartbeattime != null">
         heartbeatTime,
       </if>
-      <if test="heartbeattimeminute != null" >
+      <if test="heartbeattimeminute != null">
         heartbeatTimeMinute,
       </if>
-      <if test="heartbeattimehour != null" >
+      <if test="heartbeattimehour != null">
         heartbeatTimeHour,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="hostname != null" >
+      <if test="hostname != null">
         #{hostname,jdbcType=VARCHAR},
       </if>
-      <if test="limittps != null" >
+      <if test="limittps != null">
         #{limittps,jdbcType=BIGINT},
       </if>
-      <if test="cpulimit != null" >
+      <if test="cpulimit != null">
         #{cpulimit,jdbcType=DOUBLE},
       </if>
-      <if test="agentversion != null" >
+      <if test="agentversion != null">
         #{agentversion,jdbcType=VARCHAR},
       </if>
-      <if test="readbytes != null" >
+      <if test="readbytes != null">
         #{readbytes,jdbcType=BIGINT},
       </if>
-      <if test="readcount != null" >
+      <if test="readcount != null">
         #{readcount,jdbcType=BIGINT},
       </if>
-      <if test="writebytes != null" >
+      <if test="writebytes != null">
         #{writebytes,jdbcType=BIGINT},
       </if>
-      <if test="writecount != null" >
+      <if test="writecount != null">
         #{writecount,jdbcType=BIGINT},
       </if>
-      <if test="errorlogscount != null" >
+      <if test="errorlogscount != null">
         #{errorlogscount,jdbcType=BIGINT},
       </if>
-      <if test="normalcollectthreadnummax != null" >
+      <if test="normalcollectthreadnummax != null">
         #{normalcollectthreadnummax,jdbcType=INTEGER},
       </if>
-      <if test="normalcollectthreadnumsize != null" >
+      <if test="normalcollectthreadnumsize != null">
         #{normalcollectthreadnumsize,jdbcType=INTEGER},
       </if>
-      <if test="normalcollectthreadqueuemax != null" >
+      <if test="normalcollectthreadqueuemax != null">
         #{normalcollectthreadqueuemax,jdbcType=INTEGER},
       </if>
-      <if test="normalcollectthreadqueuesize != null" >
+      <if test="normalcollectthreadqueuesize != null">
         #{normalcollectthreadqueuesize,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadnummax != null" >
+      <if test="temporarycollectthreadnummax != null">
         #{temporarycollectthreadnummax,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadnumsize != null" >
+      <if test="temporarycollectthreadnumsize != null">
         #{temporarycollectthreadnumsize,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadqueuemax != null" >
+      <if test="temporarycollectthreadqueuemax != null">
         #{temporarycollectthreadqueuemax,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadqueuesize != null" >
+      <if test="temporarycollectthreadqueuesize != null">
         #{temporarycollectthreadqueuesize,jdbcType=INTEGER},
       </if>
-      <if test="collecttasknum != null" >
+      <if test="collecttasknum != null">
         #{collecttasknum,jdbcType=INTEGER},
       </if>
-      <if test="runningcollecttasknum != null" >
+      <if test="runningcollecttasknum != null">
         #{runningcollecttasknum,jdbcType=INTEGER},
       </if>
-      <if test="pausecollecttasknum != null" >
+      <if test="pausecollecttasknum != null">
         #{pausecollecttasknum,jdbcType=INTEGER},
       </if>
-      <if test="collectpathnum != null" >
+      <if test="collectpathnum != null">
         #{collectpathnum,jdbcType=INTEGER},
       </if>
-      <if test="runningcollectpathnum != null" >
+      <if test="runningcollectpathnum != null">
         #{runningcollectpathnum,jdbcType=INTEGER},
       </if>
-      <if test="pausecollectpathnum != null" >
+      <if test="pausecollectpathnum != null">
         #{pausecollectpathnum,jdbcType=INTEGER},
       </if>
-      <if test="heartbeattime != null" >
+      <if test="heartbeattime != null">
         #{heartbeattime,jdbcType=BIGINT},
       </if>
-      <if test="heartbeattimeminute != null" >
+      <if test="heartbeattimeminute != null">
         #{heartbeattimeminute,jdbcType=BIGINT},
       </if>
-      <if test="heartbeattimehour != null" >
+      <if test="heartbeattimehour != null">
         #{heartbeattimehour,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsAgentPO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
     update tb_metrics_agent
-    <set >
-      <if test="hostname != null" >
+    <set>
+      <if test="hostname != null">
         hostName = #{hostname,jdbcType=VARCHAR},
       </if>
-      <if test="limittps != null" >
+      <if test="limittps != null">
         limitTps = #{limittps,jdbcType=BIGINT},
       </if>
-      <if test="cpulimit != null" >
+      <if test="cpulimit != null">
         cpuLimit = #{cpulimit,jdbcType=DOUBLE},
       </if>
-      <if test="agentversion != null" >
+      <if test="agentversion != null">
         agentVersion = #{agentversion,jdbcType=VARCHAR},
       </if>
-      <if test="readbytes != null" >
+      <if test="readbytes != null">
         readBytes = #{readbytes,jdbcType=BIGINT},
       </if>
-      <if test="readcount != null" >
+      <if test="readcount != null">
         readCount = #{readcount,jdbcType=BIGINT},
       </if>
-      <if test="writebytes != null" >
+      <if test="writebytes != null">
         writeBytes = #{writebytes,jdbcType=BIGINT},
       </if>
-      <if test="writecount != null" >
+      <if test="writecount != null">
         writeCount = #{writecount,jdbcType=BIGINT},
       </if>
-      <if test="errorlogscount != null" >
+      <if test="errorlogscount != null">
         errorLogsCount = #{errorlogscount,jdbcType=BIGINT},
       </if>
-      <if test="normalcollectthreadnummax != null" >
+      <if test="normalcollectthreadnummax != null">
         normalCollectThreadNumMax = #{normalcollectthreadnummax,jdbcType=INTEGER},
       </if>
-      <if test="normalcollectthreadnumsize != null" >
+      <if test="normalcollectthreadnumsize != null">
         normalCollectThreadNumSize = #{normalcollectthreadnumsize,jdbcType=INTEGER},
       </if>
-      <if test="normalcollectthreadqueuemax != null" >
+      <if test="normalcollectthreadqueuemax != null">
         normalCollectThreadQueueMax = #{normalcollectthreadqueuemax,jdbcType=INTEGER},
       </if>
-      <if test="normalcollectthreadqueuesize != null" >
+      <if test="normalcollectthreadqueuesize != null">
         normalCollectThreadQueueSize = #{normalcollectthreadqueuesize,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadnummax != null" >
+      <if test="temporarycollectthreadnummax != null">
         temporaryCollectThreadNumMax = #{temporarycollectthreadnummax,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadnumsize != null" >
+      <if test="temporarycollectthreadnumsize != null">
         temporaryCollectThreadNumSize = #{temporarycollectthreadnumsize,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadqueuemax != null" >
+      <if test="temporarycollectthreadqueuemax != null">
         temporaryCollectThreadQueueMax = #{temporarycollectthreadqueuemax,jdbcType=INTEGER},
       </if>
-      <if test="temporarycollectthreadqueuesize != null" >
+      <if test="temporarycollectthreadqueuesize != null">
         temporaryCollectThreadQueueSize = #{temporarycollectthreadqueuesize,jdbcType=INTEGER},
       </if>
-      <if test="collecttasknum != null" >
+      <if test="collecttasknum != null">
         collectTaskNum = #{collecttasknum,jdbcType=INTEGER},
       </if>
-      <if test="runningcollecttasknum != null" >
+      <if test="runningcollecttasknum != null">
         runningCollectTaskNum = #{runningcollecttasknum,jdbcType=INTEGER},
       </if>
-      <if test="pausecollecttasknum != null" >
+      <if test="pausecollecttasknum != null">
         pauseCollectTaskNum = #{pausecollecttasknum,jdbcType=INTEGER},
       </if>
-      <if test="collectpathnum != null" >
+      <if test="collectpathnum != null">
         collectPathNum = #{collectpathnum,jdbcType=INTEGER},
       </if>
-      <if test="runningcollectpathnum != null" >
+      <if test="runningcollectpathnum != null">
         runningCollectPathNum = #{runningcollectpathnum,jdbcType=INTEGER},
       </if>
-      <if test="pausecollectpathnum != null" >
+      <if test="pausecollectpathnum != null">
         pauseCollectPathNum = #{pausecollectpathnum,jdbcType=INTEGER},
       </if>
-      <if test="heartbeattime != null" >
+      <if test="heartbeattime != null">
         heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
       </if>
-      <if test="heartbeattimeminute != null" >
+      <if test="heartbeattimeminute != null">
         heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
       </if>
-      <if test="heartbeattimehour != null" >
+      <if test="heartbeattimehour != null">
         heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsAgentPO" >
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
     update tb_metrics_agent
     set hostName = #{hostname,jdbcType=VARCHAR},
       limitTps = #{limittps,jdbcType=BIGINT},

@@ -150,13 +150,6 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "根据给定LogCollectTask对象id，获取给定时间范围（startTime ~ endTime）内的LogCollectTask运行指标集", notes = "")
-    @RequestMapping(value = "/{logCollectTaskId}/metrics/{startTime}/{endTime}", method = RequestMethod.GET)
-    @ResponseBody
-    public Result<List<MetricPanelGroup>> listLogCollectTaskMetrics(@PathVariable Long logCollectTaskId, @PathVariable Long startTime, @PathVariable Long endTime) {
-        return Result.buildSucc(logCollectTaskManageService.listLogCollectTaskMetrics(logCollectTaskId, startTime, endTime));
-    }
-
     /**
      * @param dto 待转化LogCollectTaskUpdateDTO对象
      * @return 返回将LogCollectTaskUpdateDTO对象转化为LogCollectTaskDO对象

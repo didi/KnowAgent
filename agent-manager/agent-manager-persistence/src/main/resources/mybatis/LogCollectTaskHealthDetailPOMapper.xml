@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskHealthDetailPOMapper" >
-  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.LogCollectTaskHealthDetailPO" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="log_collect_task_id" property="logCollectTaskId" jdbcType="BIGINT" />
     <result column="path_id" property="pathId" jdbcType="BIGINT" />
@@ -23,11 +23,17 @@
     from tb_log_collect_task_health_detail
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health_detail
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT} and path_id = #{pathId,jdbcType=BIGINT} and host_name = #{hostName,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from tb_log_collect_task_health_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.LogCollectTaskHealthDetailPO" >
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
     insert into tb_log_collect_task_health_detail (id, log_collect_task_id, path_id, 
       host_name, collect_dquality_time, too_large_truncate_check_healthy_heartbeat_time, 
       file_path_exists_check_healthy_heartbeat_time, file_disorder_check_healthy_heartbeat_time, 
@@ -37,7 +43,7 @@
       #{filePathExistsCheckHealthyHeartbeatTime,jdbcType=BIGINT}, #{fileDisorderCheckHealthyHeartbeatTime,jdbcType=BIGINT}, 
       #{logSliceCheckHealthyHeartbeatTime,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.LogCollectTaskHealthDetailPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
     insert into tb_log_collect_task_health_detail
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -98,7 +104,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.LogCollectTaskHealthDetailPO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
     update tb_log_collect_task_health_detail
     <set >
       <if test="logCollectTaskId != null" >
@@ -128,7 +134,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.LogCollectTaskHealthDetailPO" >
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
     update tb_log_collect_task_health_detail
     set log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT},
       path_id = #{pathId,jdbcType=BIGINT},

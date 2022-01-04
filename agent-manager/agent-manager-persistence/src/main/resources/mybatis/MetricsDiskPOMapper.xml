@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsDiskPOMapper" >
-  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsDiskPO" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="hostName" property="hostname" jdbcType="VARCHAR" />
     <result column="systemDiskPath" property="systemdiskpath" jdbcType="VARCHAR" />
@@ -240,7 +240,7 @@
     delete from tb_metrics_disk
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsDiskPO" >
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     insert into tb_metrics_disk (id, hostName, systemDiskPath, 
       systemDiskDevice, systemDiskFsType, systemDiskBytesTotal, 
       systemDiskBytesFree, systemDiskBytesUsed, 
@@ -406,7 +406,7 @@
       #{systemdiskwritetimepercent99quantile,jdbcType=DOUBLE}, #{heartbeattime,jdbcType=BIGINT}, 
       #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsDiskPO" >
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     insert into tb_metrics_disk
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1481,7 +1481,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsDiskPO" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     update tb_metrics_disk
     <set >
       <if test="hostname != null" >
@@ -2018,7 +2018,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsDiskPO" >
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     update tb_metrics_disk
     set hostName = #{hostname,jdbcType=VARCHAR},
       systemDiskPath = #{systemdiskpath,jdbcType=VARCHAR},

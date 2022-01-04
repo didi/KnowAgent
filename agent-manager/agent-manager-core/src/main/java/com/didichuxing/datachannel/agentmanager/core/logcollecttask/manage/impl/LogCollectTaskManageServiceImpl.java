@@ -1,8 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
@@ -27,24 +25,17 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPan
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricsDashBoard;
-import com.didichuxing.datachannel.agentmanager.common.chain.Context;
-import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
-import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
-import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.MetricUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
@@ -55,7 +46,6 @@ import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.LogCollectTaskHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.DirectoryLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
@@ -163,16 +153,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public Integer queryCountByCondition(LogCollectTaskPaginationQueryConditionDO logCollectTaskPaginationQueryConditionDO) {
         return logCollectorTaskDAO.queryCountByCondition(logCollectTaskPaginationQueryConditionDO);
-    }
-
-    @Override
-    public List<MetricPanelGroup> listLogCollectTaskMetrics(Long logCollectTaskId, Long startTime, Long endTime) {
-        return handlerListLogCollectTaskMetrics(logCollectTaskId, startTime, endTime).getMetricPanelGroupList();
-    }
-
-    @Override
-    public List<MetricPanelGroup> listLogCollectTaskMetricsPerHostAndPath(Long logCollectTaskId, Long logPathId, String hostName, Long startTime, Long endTime) {
-        return handleListLogCollectTaskMetricsPerHostAndPath(logCollectTaskId, logPathId, hostName, startTime, endTime);
     }
 
     @Override
@@ -1159,278 +1139,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return agentIds.size();
     }
 
-    @Override
-    public LogCollectTaskHealthLevelEnum checkLogCollectTaskHealth(LogCollectTaskDO logCollectTaskDO) {
-        /*
-         * 校验日志采集任务是否须被诊断
-         */
-        CheckResult checkResult = logCollectTaskNeedCheck(logCollectTaskDO);
-        /*
-         * 诊断对应日志采集任务
-         */
-        if (checkResult.getCheckResult()) {//须诊断对应日志采集任务
-            if (logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode())) {
-                return handleCheckNormalLogCollectTaskHealth(logCollectTaskDO, true);
-            } else if (logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode()) && !logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {
-                return handleCheckTimeScopeLogCollectTaskHealth(logCollectTaskDO, true);
-            } else {
-                throw new ServiceException(
-                        String.format("LogCollectTask={id=%d}未知采集类型={%d}", logCollectTaskDO.getId(), logCollectTaskDO.getLogCollectTaskType()),
-                        ErrorCodeEnum.UNKNOWN_COLLECT_TYPE.getCode()
-                );
-            }
-        } else {//该日志采集任务无须被诊断
-            return LogCollectTaskHealthLevelEnum.GREEN;
-        }
-    }
 
-    /**
-     * 诊断给定时间范围采集类型日志采集任务
-     *
-     * @param logCollectTaskDO  待诊断日志采集任务对象
-     * @param checkCollectDelay 是否校验日志采集任务采集延时 true：校验 false：不校验
-     * @return 待诊断日志采集任务对象对应诊断结果
-     */
-    private LogCollectTaskHealthLevelEnum handleCheckTimeScopeLogCollectTaskHealth(LogCollectTaskDO logCollectTaskDO, boolean checkCollectDelay) {
-        /*
-         * 获取待检测日志采集任务对应健康记录
-         */
-        LogCollectTaskHealthDO logCollectTaskHealthDO = logCollectTaskHealthManageService.getByLogCollectTaskId(logCollectTaskDO.getId());
-        if (null == logCollectTaskHealthDO) {
-            throw new ServiceException(String.format("LogCollectTaskHealth={logCollectTaskId=%d}在系统中不存在", logCollectTaskDO.getId()), ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode());
-        }
-        /*
-         * 获取日式采集任务须部署的主机列表
-         */
-        List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(logCollectTaskDO.getId());//部署日志采集任务的主机对象集
-        /*
-         * 获取日志采集任务须采集的文件路径集
-         */
-        List<FileLogCollectPathDO> fileLogCollectPathDOList = logCollectTaskDO.getFileLogCollectPathList();//日志采集任务对应各采集路径
-        /*
-         * 进入巡检流程
-         */
 
-        LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = LogCollectTaskHealthLevelEnum.GREEN;//日志采集任务健康度检查结果
-        String logCollectTaskHealthDescription = "";//日志采集任务健康检查描述
-        Long minCurrentCollectTime = Long.MAX_VALUE;//记录logCollectTaskDO对应各LogCollectPath最小采集时间，记为采集完整性时间
-        Integer scopeCollectCompleteLogPathCount = 0;//记录时间范围采集类型日志采集任务已采集完logCollectPath数 如 scopeCollectCompleteLogPathCount == fileLogCollectPathDOList.size() 表示 logCollectTaskDO 已完成，记录对应任务执行结束时间，并修改对应状态为 "已完成"
-        Map<Long, Long> logFilePathId2CollctCompleteTimeMap = new HashMap<>();//存储各fileLogPath对应采集完整性时间 map，key:logPathId value:collctCompleteTime
-        Long logCollectTaskHealthCheckTimeEnd = DateUtils.getBeforeSeconds(new Date(), 1).getTime();//日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
-        //存储各健康值对应时间点
-        Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
-        Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
-        Map<Long, Long> fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFileDisorderCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
-        Map<Long, Long> fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFilePathExistsCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
-        if (CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {
-            for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
-                minCurrentCollectTime = Long.MAX_VALUE;
-                Integer abnormalTruncationCheckHealthyCount = 0;
-                Integer fileDisorderCheckHealthyCount = 0;
-                Integer filePathExistsCheckHealthyCount = 0;
-                Integer logSliceCheckHealthyCount = 0;
-                for (HostDO hostDO : hostDOList) {
 
-                    /*
-                     * 计算logpath对应完整性时间
-                     */
-                    minCurrentCollectTime = Math.min(minCurrentCollectTime, getCurrentCompleteTime(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName()));
-
-                    /************************ mark red cases ************************/
-
-                    /*
-                     * 校验日志采集任务健康度
-                     */
-                    if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()))) {
-                        //表示健康度已被检测为 red，此时，无须再进行校验
-                        continue;
-                    }
-
-                    /*
-                     * 校验在距当前时间的心跳存活判定周期内，logCollectTaskId+fileLogCollectPathId+hostName是否存在心跳
-                     */
-                    boolean alive = checkAliveByHeartbeat(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd);
-                    if (!alive) {//不存活
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    }
-                    /*
-                     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在
-                     */
-                    boolean filePathExists = checkFilePathExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap);
-                    if (!filePathExists) {//不存在
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    } else {
-                        filePathExistsCheckHealthyCount++;
-                    }
-                    /*
-                     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在乱序
-                     */
-                    boolean fileDisorder = checkFileDisorder(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap);
-                    if (fileDisorder) {//存在 乱序
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    } else {
-                        fileDisorderCheckHealthyCount++;
-                    }
-                    /*
-                     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片配置错误
-                     */
-                    boolean errorLogsExists = checkLogSliceErrorExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap);
-                    if (errorLogsExists) {//存在 日志切片配置错误
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    } else {
-                        logSliceCheckHealthyCount++;
-                    }
-                    /*
-                     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断
-                     */
-                    boolean abnormalTruncationExists = checkAbnormalTruncationExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd, fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap);
-                    if (abnormalTruncationExists) {//存在 异常截断
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    } else {
-                        abnormalTruncationCheckHealthyCount++;
-                    }
-                    /*
-                     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在多 agent 并发采集
-                     */
-                    boolean concurrentCollectExists = checkConcurrentCollectExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskHealthCheckTimeEnd);
-                    if (concurrentCollectExists) {
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    }
-                    /*
-                     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在采集延迟
-                     */
-                    if (checkCollectDelay && null != logCollectTaskDO.getCollectDelayThresholdMs() && logCollectTaskDO.getCollectDelayThresholdMs() > 0) {//该文件型日志采集路径须做采集延迟监控
-                        boolean collectDelay = checkCollectDelay(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskDO.getCollectDelayThresholdMs());
-                        if (collectDelay) {//存在 采集延迟
-                            logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getLogCollectTaskHealthLevelEnum();
-                            logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                        }
-                    }
-                    /*
-                     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在执行超时情况 & 其是否已执行完
-                     */
-                    if (logCollectTaskDO.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode())) {
-                        if (!logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {//处于非 "已完成状态" & 时间范围采集类型的日志采集任务须检查其运行时长是否超时
-                            boolean executeTimeout = checkTimeScopeLogCollectTaskExecuteTimeout(logCollectTaskDO, fileLogCollectPathDO.getId(), hostDO.getHostName(), logCollectTaskDO.getLogCollectTaskExecuteTimeoutMs());
-                            if (executeTimeout) {//存在 执行超时
-                                logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_TIMEOUT.getLogCollectTaskHealthLevelEnum();
-                                logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_TIMEOUT.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                            }
-                            //时间范围采集类型日志采集任务是否已执行完，如已执行完，scopeCollectCompleteLogPathCount++
-                            boolean timeScopeCollectComplete = checkTimeScopeCollectComplete(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO);
-                            if (timeScopeCollectComplete) {
-                                scopeCollectCompleteLogPathCount++;
-                            }
-                        }
-                    }
-
-                    /************************ mark yellow cases ************************/
-
-                    /*
-                     * 校验日志采集任务健康度
-                     */
-                    if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
-                        //表示健康度已被检测为 red or yellow，此时，无须再进行校验
-                        continue;
-                    }
-
-                    /*
-                     * 校验 logcollecttask + logpath 在 host 端是否存在采集端出口流量阈值限流
-                     */
-                    boolean byteLimitOnHostExists = checkByteLimitOnHostExists(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    if (byteLimitOnHostExists) {//存在采集端出口流量阈值限流
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format("%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}", LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(), logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-                    }
-                    /*
-                     * 校验 logcollecttask 是否未关联主机
-                     */
-                    boolean notRelateAnyHost = checkNotRelateAnyHost(logCollectTaskDO.getId());
-                    if (notRelateAnyHost) {//logcollecttask 未关联主机
-                        logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = String.format(
-                                "%s:LogCollectTaskId={%d}",
-                                LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getDescription(),
-                                logCollectTaskDO.getId()
-                        );
-                    }
-                }
-                /*
-                 * 设置各 filePathId 对应采集完整性时间
-                 */
-                logFilePathId2CollctCompleteTimeMap.put(fileLogCollectPathDO.getId(), minCurrentCollectTime);
-                /*
-                 * 设置各filePathId对应各指标健康时时间，以便下次进行巡检
-                 */
-                if (abnormalTruncationCheckHealthyCount.equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-                if (logSliceCheckHealthyCount.equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-                if (fileDisorderCheckHealthyCount.equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-                if (filePathExistsCheckHealthyCount.equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-            }
-        }
-
-        if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
-            //表示健康度已被检测为 red or yellow，此时，无须再进行校验
-            //do nothing
-        } else {
-            /*
-             * 校验 logcollecttask 对应下游 topic 是否被限流
-             */
-            boolean topicLimitExists = checkTopicLimitExists(logCollectTaskDO.getKafkaClusterId(), logCollectTaskDO.getSendTopic());
-            if (topicLimitExists) {//存在下游 topic 端被限流
-                logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
-                logCollectTaskHealthDescription = String.format(
-                        "%s:LogCollectTaskId={%d}, kafkaClusterId={%d}, sendTopic={%s}",
-                        LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getDescription(),
-                        logCollectTaskDO.getId(),
-                        logCollectTaskDO.getKafkaClusterId(),
-                        logCollectTaskDO.getSendTopic()
-                );
-            }
-        }
-
-        /*
-         * 校验 "时间范围日志采集任务" 是否已执行完成，scopeCollectCompleteLogPathCount 是否 等于 fileLogCollectPathDOList.size()，如是，表示 logCollectTaskDO 已执行完成，记录对应任务执行结束时间，并修改对应状态为 "已完成"
-         */
-        if (scopeCollectCompleteLogPathCount.equals(fileLogCollectPathDOList.size())) {
-            LogCollectTaskPO logCollectTaskPO = logCollectorTaskDAO.selectByPrimaryKey(logCollectTaskDO.getId());
-            logCollectTaskPO.setLogCollectTaskFinishTime(new Date());
-            logCollectTaskPO.setLogCollectTaskStatus(LogCollectTaskStatusEnum.FINISH.getCode());
-            logCollectTaskPO.setOperator(CommonConstant.getOperator(null));
-            logCollectorTaskDAO.updateByPrimaryKey(logCollectTaskPO);
-        }
-
-        /*
-         * 持久化 logCollectTaskHealth 信息
-         */
-        logCollectTaskHealthDO.setLogCollectTaskHealthLevel(logCollectTaskHealthLevelEnum.getCode());
-        logCollectTaskHealthDO.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-        logCollectTaskHealthDO.setLastestCollectDqualityTimePerLogFilePathJsonString(JSON.toJSONString(logFilePathId2CollctCompleteTimeMap));
-        logCollectTaskHealthDO.setLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestLogSliceCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestFileDisorderCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestFilePathExistsCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap));
-        logCollectTaskHealthManageService.updateLogCollectorTaskHealth(logCollectTaskHealthDO, CommonConstant.getOperator(null));
-        return logCollectTaskHealthLevelEnum;
-    }
 
     @Override
     public List<LogCollectTaskDO> getAllLogCollectTask2HealthCheck() {
@@ -1485,198 +1196,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return logCollectTaskPOList2LogCollectTaskDOListAndLoadRelationLogCollectPath(logCollectTaskPOList);
     }
 
-    /**
-     * @return 获取日志采集任务健康度检查处理器链
-     */
-    private ProcessorChain getLogCollectTaskHealthCheckProcessorChain() {
-        ProcessorChain processorChain = new ProcessorChain();
-        for(Class<Processor> clazz : GlobalProperties.LOG_COLLECT_TASK_HEALTH_CHECK_PROCESSOR_CLASS_LIST) {
-            try {
-                processorChain.addProcessor(clazz.newInstance());
-            } catch (Exception ex) {
-                throw new ServiceException(
-                        String.format("%s invoke newInstance() failed, cause by: %s", clazz.getName(), ex.getMessage()),
-                        ex,
-                        ErrorCodeEnum.REFLECTION_NEW_INSTANCE_EXCEPTION.getCode()
-                );
-            }
-        }
-        return processorChain;
-    }
 
-    /**
-     * 诊断给定流式日志采集任务
-     *
-     * @param logCollectTaskDO  待诊断日志采集任务对象
-     * @param checkCollectDelay 是否校验日志采集任务采集延时 true：校验 false：不校验
-     * @return 待诊断日志采集任务对象对应诊断结果
-     */
-    private LogCollectTaskHealthLevelEnum handleCheckNormalLogCollectTaskHealth(LogCollectTaskDO logCollectTaskDO, boolean checkCollectDelay) throws ServiceException {
-        /*
-         * 获取待检测日志采集任务对应健康记录
-         */
-        LogCollectTaskHealthDO logCollectTaskHealthDO = logCollectTaskHealthManageService.getByLogCollectTaskId(logCollectTaskDO.getId());
-        if (null == logCollectTaskHealthDO) {
-            throw new ServiceException(String.format("LogCollectTaskHealth={logCollectTaskId=%d}在系统中不存在", logCollectTaskDO.getId()), ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode());
-        }
-        /*
-         * 获取日式采集任务须部署的主机列表
-         */
-        List<HostDO> hostDOList = hostManageService.getHostListByLogCollectTaskId(logCollectTaskDO.getId());//部署日志采集任务的主机对象集
-        /*
-         * 获取日志采集任务须采集的文件路径集
-         */
-        List<FileLogCollectPathDO> fileLogCollectPathDOList = logCollectTaskDO.getFileLogCollectPathList();//日志采集任务对应各采集路径
-        /*
-         * 进入巡检流程，初始化
-         */
-        LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = LogCollectTaskHealthLevelEnum.GREEN;//日志采集任务健康度检查结果
-        String logCollectTaskHealthDescription = "";//日志采集任务健康检查描述
-        Long minCurrentCollectTime = Long.MAX_VALUE;//记录logCollectTaskDO对应各LogCollectPath最小采集时间，记为采集完整性时间
-        Map<Long, Long> logFilePathId2CollctCompleteTimeMap = new HashMap<>(); //存储各fileLogPath对应采集完整性时间 map，key:logPathId value:collctCompleteTime
-        Long logCollectTaskHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
-        //存储各健康值对应时间点
-        Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
-        Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
-        Map<Long, Long> fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFileDisorderCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
-        Map<Long, Long> fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFilePathExistsCheckHealthyTimePerLogFilePath(), new TypeReference<Map<Long, Long>>() {
-        });
 
-        // 构建上下文对象
-        LogCollectTaskHealthCheckContext context = new LogCollectTaskHealthCheckContext();
-        context.setLogCollectTaskDO(logCollectTaskDO);
-        context.setCheckCollectDelay(checkCollectDelay);
-        context.setFileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap(fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap);
-        context.setFileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap(fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap);
-        context.setFileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap(fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap);
-        context.setFileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap(fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap);
-        context.setLogCollectTaskHealthCheckTimeEnd(logCollectTaskHealthCheckTimeEnd);
-        context.setAgentMetricsManageService(agentMetricsManageService);
-        context.setLogCollectTaskHealthLevelEnum(logCollectTaskHealthLevelEnum);
-        context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
 
-        // 构建处理链
-        ProcessorChain processorChain = getLogCollectTaskHealthCheckProcessorChain();
-
-        if (CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {
-            for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
-                minCurrentCollectTime = Long.MAX_VALUE;
-
-                context.setFileLogCollectPathDO(fileLogCollectPathDO);
-                context.setAbnormalTruncationCheckHealthyCount(0);
-                context.setFileDisorderCheckHealthyCount(0);
-                context.setFilePathExistsCheckHealthyCount(0);
-                context.setLogSliceCheckHealthyCount(0);
-
-                for (HostDO hostDO : hostDOList) {
-
-                    /*
-                     * 计算logpath对应完整性时间
-                     */
-                    minCurrentCollectTime = Math.min(minCurrentCollectTime, getCurrentCompleteTime(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName()));
-
-                    /*
-                     * 执行巡检流程
-                     */
-                    context.setHostDO(hostDO);
-                    processorChain.process(context, processorChain);
-
-                    /*
-                     * 判断巡检结果
-                     */
-                    if (context.getLogCollectTaskHealthLevelEnum() != LogCollectTaskHealthLevelEnum.GREEN) {
-                        logCollectTaskHealthLevelEnum = context.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = context.getLogCollectTaskHealthDescription();
-                        LOGGER.info(logCollectTaskHealthDescription);
-
-                        /*
-                         * 持久化 logCollectTaskHealth 信息
-                         */
-                        logCollectTaskHealthDO.setLogCollectTaskHealthLevel(logCollectTaskHealthLevelEnum.getCode());
-                        logCollectTaskHealthDO.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-                        logCollectTaskHealthDO.setLastestCollectDqualityTimePerLogFilePathJsonString(JSON.toJSONString(logFilePathId2CollctCompleteTimeMap));
-                        logCollectTaskHealthDO.setLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap));
-                        logCollectTaskHealthDO.setLastestLogSliceCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap));
-                        logCollectTaskHealthDO.setLastestFileDisorderCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap));
-                        logCollectTaskHealthDO.setLastestFilePathExistsCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap));
-                        logCollectTaskHealthManageService.updateLogCollectorTaskHealth(logCollectTaskHealthDO, CommonConstant.getOperator(null));
-
-                        return logCollectTaskHealthLevelEnum;
-                    }
-                }
-                /*
-                 * 设置各 filePathId 对应采集完整性时间
-                 */
-                logFilePathId2CollctCompleteTimeMap.put(fileLogCollectPathDO.getId(), minCurrentCollectTime);
-                /*
-                 * 设置各filePathId对应各指标健康时时间，以便下次进行巡检
-                 */
-                if (context.getAbnormalTruncationCheckHealthyCount().equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-                if (context.getLogSliceCheckHealthyCount().equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-                if (context.getFileDisorderCheckHealthyCount().equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-                if (context.getFilePathExistsCheckHealthyCount().equals(hostDOList.size())) {
-                    fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap.put(fileLogCollectPathDO.getId(), logCollectTaskHealthCheckTimeEnd);
-                }
-            }
-        }
-
-        if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
-            //表示健康度已被检测为 red or yellow，此时，无须再进行校验
-            //do nothing
-        } else {
-            /*
-             * 校验 logcollecttask 对应下游 topic 是否被限流
-             */
-            boolean topicLimitExists = checkTopicLimitExists(logCollectTaskDO.getKafkaClusterId(), logCollectTaskDO.getSendTopic());
-            if (topicLimitExists) {//存在下游 topic 端被限流
-                logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
-                logCollectTaskHealthDescription = String.format(
-                        "%s:LogCollectTaskId={%d}, kafkaClusterId={%d}, sendTopic={%s}",
-                        LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getDescription(),
-                        logCollectTaskDO.getId(),
-                        logCollectTaskDO.getKafkaClusterId(),
-                        logCollectTaskDO.getSendTopic()
-                );
-            }
-            /*
-             * 校验 logcollecttask 是否未关联主机
-             */
-            boolean notRelateAnyHost = checkNotRelateAnyHost(logCollectTaskDO.getId());
-            if (notRelateAnyHost) {//logcollecttask 未关联主机
-                logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getLogCollectTaskHealthLevelEnum();
-                logCollectTaskHealthDescription = String.format(
-                        "%s:LogCollectTaskId={%d}",
-                        LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getDescription(),
-                        logCollectTaskDO.getId()
-                );
-            }
-        }
-
-        LOGGER.info(logCollectTaskHealthDescription);
-
-        /*
-         * 持久化 logCollectTaskHealth 信息
-         */
-        logCollectTaskHealthDO.setLogCollectTaskHealthLevel(logCollectTaskHealthLevelEnum.getCode());
-        logCollectTaskHealthDO.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-        logCollectTaskHealthDO.setLastestCollectDqualityTimePerLogFilePathJsonString(JSON.toJSONString(logFilePathId2CollctCompleteTimeMap));
-        logCollectTaskHealthDO.setLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestLogSliceCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestFileDisorderCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestFilePathExistsCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap));
-        logCollectTaskHealthManageService.updateLogCollectorTaskHealth(logCollectTaskHealthDO, CommonConstant.getOperator(null));
-        return logCollectTaskHealthLevelEnum;
-
-    }
 
     /**
      * 校验 时间范围采集类型日志采集任务是否已执行完
@@ -1978,31 +1500,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return agentMetricsManageService.getLastestCollectTime(logCollectTaskId, fileLogCollectPathId, hostName);
     }
 
-    /**
-     * 校验给定日志采集任务是否需要进行诊断
-     *
-     * @param logCollectTaskDO 待校验日志采集任务对象
-     * @return 返回给定日志采集任务是否需要进行诊断 true：需要 false：不需要
-     */
-    private CheckResult logCollectTaskNeedCheck(LogCollectTaskDO logCollectTaskDO) throws ServiceException {
-        //TODO：后续添加日志采集任务黑名单功能后，须添加黑名单过滤规则
-        Integer logCollectTaskType = logCollectTaskDO.getLogCollectTaskType();
-        if (LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode().equals(logCollectTaskType)) {//流采
-            if (logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.STOP.getCode())) {//待校验日志采集任务处于"停止"状态
-                return new CheckResult(false);
-            }
-        } else if (LogCollectTaskTypeEnum.TIME_SCOPE_COLLECT.getCode().equals(logCollectTaskType)) {//时间范围采集
-            if (logCollectTaskDO.getLogCollectTaskStatus().equals(LogCollectTaskStatusEnum.FINISH.getCode())) {//待校验日志采集任务处于"已完成"状态
-                return new CheckResult(false);
-            }
-        } else {
-            throw new ServiceException(
-                    String.format("待校验日志采集任务对象={%s}的logCollectTaskType属性值={%d}不合法，合法值范围见枚举类LogCollectTaskTypeEnum定义", JSON.toJSONString(logCollectTaskDO), logCollectTaskType),
-                    ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode()
-            );
-        }
-        return new CheckResult(true);
-    }
+
 
     @Override
     public List<LogCollectTaskDO> getLogCollectTaskListByAgentId(Long agentId) {

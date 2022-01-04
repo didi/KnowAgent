@@ -3,8 +3,6 @@ package com.didichuxing.datachannel.agentmanager.core.agent.manage.impl;
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.operationtask.AgentOperationTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
@@ -12,11 +10,8 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricQueryDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.CollectTaskMetricPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.http.PathRequest;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
@@ -27,12 +22,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoi
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricsDashBoard;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
-import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
@@ -657,10 +649,10 @@ public class AgentManageServiceImpl implements AgentManageService {
         List<LogCollectTaskDO> taskList = logCollectTaskManageService.getLogCollectTaskListByHost(hostDO);
         List<CollectTaskMetricDO> list = new ArrayList<>();
         for (LogCollectTaskDO logCollectTaskDO : taskList) {
-            CollectTaskMetricPO collectTaskMetricPO = agentMetricsManageService.getLatestMetric(logCollectTaskDO.getId());
-            CollectTaskMetricDO collectTaskMetricDO = ConvertUtil.obj2Obj(collectTaskMetricPO, CollectTaskMetricDO.class);
-            collectTaskMetricDO.setTaskStatus(logCollectTaskDO.getLogCollectTaskStatus());
-            list.add(collectTaskMetricDO);
+//            CollectTaskMetricPO collectTaskMetricPO = agentMetricsManageService.getLatestMetric(logCollectTaskDO.getId());
+//            CollectTaskMetricDO collectTaskMetricDO = ConvertUtil.obj2Obj(collectTaskMetricPO, CollectTaskMetricDO.class);
+//            collectTaskMetricDO.setTaskStatus(logCollectTaskDO.getLogCollectTaskStatus());
+//            list.add(collectTaskMetricDO);
         }
         return list;
     }

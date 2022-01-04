@@ -24,19 +24,14 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class MetricService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class);
 
-    @Autowired
-    private AgentMetricMapper agentMetricMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class);
 
     @Autowired
     private AgentMapper agentMapper;
 
     @Autowired
     private KafkaClusterMapper kafkaClusterMapper;
-
-    @Autowired
-    private CollectTaskMetricMapper collectTaskMetricMapper;
 
     @Autowired
     private ErrorLogMapper errorLogMapper;
@@ -151,8 +146,9 @@ public class MetricService {
     }
 
     public void clear() {
-        agentMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
-        collectTaskMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
+        //TODO：
+//        agentMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
+//        collectTaskMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
         errorLogMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
     }
 

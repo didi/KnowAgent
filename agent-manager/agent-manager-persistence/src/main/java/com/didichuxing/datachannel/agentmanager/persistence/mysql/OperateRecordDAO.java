@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.persistence.mysql.optrecord;
+package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.po.operaterecord.OperateRecordPO;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.MetricsSystemPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO;
 
 public interface MetricsSystemPOMapper {
     int deleteByPrimaryKey(Long id);
