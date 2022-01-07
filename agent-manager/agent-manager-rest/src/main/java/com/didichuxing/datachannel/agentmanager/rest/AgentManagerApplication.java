@@ -28,7 +28,7 @@ import java.util.*;
 @EnableAsync
 @EnableScheduling
 @ServletComponentScan
-@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager", "com.didiglobal.logi.auvjob"})
+@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager"})
 public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);

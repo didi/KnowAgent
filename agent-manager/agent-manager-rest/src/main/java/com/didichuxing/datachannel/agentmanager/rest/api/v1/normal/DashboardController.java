@@ -91,10 +91,10 @@ public class DashboardController {
             }
         }
         dashBoardVO.setNonRelateAnyLogCollectTaskAgentNum(nonRelateAnyLogCollectTaskAgentNum);
-        dashBoardVO.setCollectBytesDay(logCollectTaskManageService.getCollectBytesToday());
-        dashBoardVO.setCurrentCollectBytes(logCollectTaskManageService.getCurrentCollectBytes());
-        dashBoardVO.setCollectLogEventsDay(logCollectTaskManageService.getCollectCountToday());
-        dashBoardVO.setCurrentCollectLogEvents(logCollectTaskManageService.getCurrentCollectCount());
+//        dashBoardVO.setCollectBytesDay(logCollectTaskManageService.getCollectBytesToday());
+//        dashBoardVO.setCurrentCollectBytes(logCollectTaskManageService.getCurrentCollectBytes());
+//        dashBoardVO.setCollectLogEventsDay(logCollectTaskManageService.getCollectCountToday());
+//        dashBoardVO.setCurrentCollectLogEvents(logCollectTaskManageService.getCurrentCollectCount());
 
         /*********************** part 2：占比 饼图 ***********************/
         List<LogCollectTaskDO> redLogCollectTaskDOList = logCollectTaskManageService.getByHealthLevel(LogCollectTaskHealthLevelEnum.RED.getCode());
@@ -124,18 +124,18 @@ public class DashboardController {
 
         /*********************** part 3：时序 图 指标 ***********************/
 
-        dashBoardVO.setLogCollectTaskListCollectBytesTop5(agentMetricsManageService.getLogCollectTaskListCollectBytesLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setLogCollectTaskListCollectCountTop5(agentMetricsManageService.getLogCollectTaskListCollectCountLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setLogCollectTaskListRelateHostsTop5(logCollectTaskManageService.getTop5HostCount(startTime, endTime));
-        dashBoardVO.setLogCollectTaskListRelateAgentsTop5(logCollectTaskManageService.getTop5AgentCount(startTime, endTime));
-
-        dashBoardVO.setAgentListCollectBytesTop5(agentMetricsManageService.getAgentListCollectBytesLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setAgentListCollectCountTop5(agentMetricsManageService.getAgentListCollectCountLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setAgentListCpuUsageTop5(agentMetricsManageService.getAgentListCpuUsageLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setAgentListFdUsedTop5(agentMetricsManageService.getAgentListFdUsedLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setAgentListMemoryUsageTop5(agentMetricsManageService.getAgentListMemoryUsedLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setAgentListFullGcCountTop5(agentMetricsManageService.getAgentListFullGcCountLastest1MinTop5(startTime, endTime));
-        dashBoardVO.setAgentListRelateLogCollectTasksTop5(agentManageService.getTop5LogCollectTaskCount(startTime, endTime));
+//        dashBoardVO.setLogCollectTaskListCollectBytesTop5(agentMetricsManageService.getLogCollectTaskListCollectBytesLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setLogCollectTaskListCollectCountTop5(agentMetricsManageService.getLogCollectTaskListCollectCountLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setLogCollectTaskListRelateHostsTop5(logCollectTaskManageService.getTop5HostCount(startTime, endTime));
+//        dashBoardVO.setLogCollectTaskListRelateAgentsTop5(logCollectTaskManageService.getTop5AgentCount(startTime, endTime));
+//
+//        dashBoardVO.setAgentListCollectBytesTop5(agentMetricsManageService.getAgentListCollectBytesLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setAgentListCollectCountTop5(agentMetricsManageService.getAgentListCollectCountLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setAgentListCpuUsageTop5(agentMetricsManageService.getAgentListCpuUsageLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setAgentListFdUsedTop5(agentMetricsManageService.getAgentListFdUsedLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setAgentListMemoryUsageTop5(agentMetricsManageService.getAgentListMemoryUsedLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setAgentListFullGcCountTop5(agentMetricsManageService.getAgentListFullGcCountLastest1MinTop5(startTime, endTime));
+//        dashBoardVO.setAgentListRelateLogCollectTasksTop5(agentManageService.getTop5LogCollectTaskCount(startTime, endTime));
 
         return Result.buildSucc(dashBoardVO);
 
@@ -211,16 +211,16 @@ public class DashboardController {
                 dashBoardVO.setNonRelateAnyLogCollectTaskAgentNum(nonRelateAnyLogCollectTaskAgentNum);
                 break;
             case CURRENT_COLLECT_BYTES:
-                dashBoardVO.setCurrentCollectBytes(logCollectTaskManageService.getCurrentCollectBytes());
+//                dashBoardVO.setCurrentCollectBytes(logCollectTaskManageService.getCurrentCollectBytes());
                 break;
             case CURRENT_COLLECT_LOG_EVENTS:
-                dashBoardVO.setCurrentCollectLogEvents(logCollectTaskManageService.getCurrentCollectCount());
+//                dashBoardVO.setCurrentCollectLogEvents(logCollectTaskManageService.getCurrentCollectCount());
                 break;
             case COLLECT_BYTES_DAY:
-                dashBoardVO.setCollectBytesDay(logCollectTaskManageService.getCollectBytesToday());
+//                dashBoardVO.setCollectBytesDay(logCollectTaskManageService.getCollectBytesToday());
                 break;
             case COLLECT_LOG_EVENTS_DAY:
-                dashBoardVO.setCollectLogEventsDay(logCollectTaskManageService.getCollectCountToday());
+//                dashBoardVO.setCollectLogEventsDay(logCollectTaskManageService.getCollectCountToday());
                 break;
             case RED_LOG_COLLECT_TASK_NAME_ID_PAIR_LIST:
                 List<LogCollectTaskDO> redLogCollectTaskDOList = logCollectTaskManageService.getByHealthLevel(LogCollectTaskHealthLevelEnum.RED.getCode());
@@ -255,37 +255,37 @@ public class DashboardController {
                 dashBoardVO.setYellowAgentHostNameIdPairList(yellowAgentHostNameIdPairList);
                 break;
             case LOG_COLLECT_TASK_LIST_COLLECT_BYTES_TOP5:
-                dashBoardVO.setLogCollectTaskListCollectBytesTop5(agentMetricsManageService.getLogCollectTaskListCollectBytesLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setLogCollectTaskListCollectBytesTop5(agentMetricsManageService.getLogCollectTaskListCollectBytesLastest1MinTop5(startTime, endTime));
                 break;
             case LOG_COLLECT_TASK_LIST_COLLECT_COUNT_TOP5:
-                dashBoardVO.setLogCollectTaskListCollectCountTop5(agentMetricsManageService.getLogCollectTaskListCollectCountLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setLogCollectTaskListCollectCountTop5(agentMetricsManageService.getLogCollectTaskListCollectCountLastest1MinTop5(startTime, endTime));
                 break;
             case LOG_COLLECT_TASK_LIST_RELATE_HOSTS_TOP5:
-                dashBoardVO.setLogCollectTaskListRelateHostsTop5(logCollectTaskManageService.getTop5HostCount(startTime, endTime));
+//                dashBoardVO.setLogCollectTaskListRelateHostsTop5(logCollectTaskManageService.getTop5HostCount(startTime, endTime));
                 break;
             case LOG_COLLECT_TASK_LIST_RELATE_AGENTS_TOP5:
-                dashBoardVO.setLogCollectTaskListRelateAgentsTop5(logCollectTaskManageService.getTop5AgentCount(startTime, endTime));
+//                dashBoardVO.setLogCollectTaskListRelateAgentsTop5(logCollectTaskManageService.getTop5AgentCount(startTime, endTime));
                 break;
             case AGENT_LIST_COLLECT_BYTES_TOP5:
-                dashBoardVO.setAgentListCollectBytesTop5(agentMetricsManageService.getAgentListCollectBytesLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setAgentListCollectBytesTop5(agentMetricsManageService.getAgentListCollectBytesLastest1MinTop5(startTime, endTime));
                 break;
             case AGENT_LIST_COLLECT_COUNT_TOP5:
-                dashBoardVO.setAgentListCollectCountTop5(agentMetricsManageService.getAgentListCollectCountLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setAgentListCollectCountTop5(agentMetricsManageService.getAgentListCollectCountLastest1MinTop5(startTime, endTime));
                 break;
             case AGENT_LIST_CPU_USAGE_TOP5:
-                dashBoardVO.setAgentListCpuUsageTop5(agentMetricsManageService.getAgentListCpuUsageLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setAgentListCpuUsageTop5(agentMetricsManageService.getAgentListCpuUsageLastest1MinTop5(startTime, endTime));
                 break;
             case AGENT_LIST_MEMORY_USAGE_TOP5:
-                dashBoardVO.setAgentListMemoryUsageTop5(agentMetricsManageService.getAgentListMemoryUsedLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setAgentListMemoryUsageTop5(agentMetricsManageService.getAgentListMemoryUsedLastest1MinTop5(startTime, endTime));
                 break;
             case AGENT_LIST_FD_USED_TOP5:
-                dashBoardVO.setAgentListFdUsedTop5(agentMetricsManageService.getAgentListFdUsedLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setAgentListFdUsedTop5(agentMetricsManageService.getAgentListFdUsedLastest1MinTop5(startTime, endTime));
                 break;
             case AGENT_LIST_FULL_GC_COUNT_TOP5:
-                dashBoardVO.setAgentListFullGcCountTop5(agentMetricsManageService.getAgentListFullGcCountLastest1MinTop5(startTime, endTime));
+//                dashBoardVO.setAgentListFullGcCountTop5(agentMetricsManageService.getAgentListFullGcCountLastest1MinTop5(startTime, endTime));
                 break;
             case AGENT_LIST_RELATE_LOG_COLLECT_TASKS_TOP5:
-                dashBoardVO.setAgentListRelateLogCollectTasksTop5(agentManageService.getTop5LogCollectTaskCount(startTime, endTime));
+//                dashBoardVO.setAgentListRelateLogCollectTasksTop5(agentManageService.getTop5LogCollectTaskCount(startTime, endTime));
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + dashboardMetricEnum);

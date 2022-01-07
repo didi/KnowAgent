@@ -106,6 +106,12 @@ public enum ErrorCodeEnum {
      * Elasticsearch 查询相关 33000 ~ 33999
      */
     ELASTICSEARCH_QUERY_FAILED(33000, "Elasticsearch 查询失败"),
+    /**
+     * Metrics 查询相关 34000 ~ 34999
+     */
+    METRICS_QUERY_METRIC_NOT_EXISTS(34000, "待查询指标不存在"),
+
+
 
     UNKNOWN(90001, "未知错误"),
 

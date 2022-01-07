@@ -2,22 +2,14 @@ package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 public class DashBoardVO {
 
-    @ApiModelProperty(value = "系统现有日志采集任务总数")
-    private Long logCollectTaskNum;
-
-    @ApiModelProperty(value = "系统现有未关联任何主机的日志采集任务数")
-    private Long nonRelateAnyHostLogCollectTaskNum;
-
-    @ApiModelProperty(value = "系统现有日志采集路径总数")
-    private Long logCollectPathNum;
-
-    @ApiModelProperty(value = "系统现有应用总数")
-    private Long serviceNum;
+    /********************************** part 1 **********************************/
 
     @ApiModelProperty(value = "系统现有主机总数")
     private Long hostNum;
@@ -28,20 +20,46 @@ public class DashBoardVO {
     @ApiModelProperty(value = "系统现有agent总数")
     private Long agentNum;
 
-    @ApiModelProperty(value = "系统现有未关联任何日志采集任务的 agent 数")
+    @ApiModelProperty(value = "系统现有未关联任何日志采集任务的agent数")
     private Long nonRelateAnyLogCollectTaskAgentNum;
 
-    @ApiModelProperty(value = "系统当前采集流量总量/s")
-    private Long currentCollectBytes;
+    @ApiModelProperty(value = "系统现有服务总数")
+    private Long serviceNum;
 
-    @ApiModelProperty(value = "系统当前采集总条数/s")
-    private Long currentCollectLogEvents;
+    @ApiModelProperty(value = "系统现有未关联主机服务数")
+    private Long nonRelateAnyHostServiceNum;
 
-    @ApiModelProperty(value = "当日采集流量")
-    private Long collectBytesDay;
+    @ApiModelProperty(value = "系统现有日志采集任务总数")
+    private Long logCollectTaskNum;
 
-    @ApiModelProperty(value = "当日采集条数")
-    private Long collectLogEventsDay;
+    @ApiModelProperty(value = "系统现有未关联任何主机的日志采集任务数")
+    private Long nonRelateAnyHostLogCollectTaskNum;
+
+    @ApiModelProperty(value = "系统现有日志采集路径总数")
+    private Long logCollectPathNum;
+
+    @ApiModelProperty(value = "系统全量agent cpu耗费（单位：core）")
+    private Long agentCpuCoresSpend;
+
+    @ApiModelProperty(value = "系统全量agent memory耗费（单位：byte）")
+    private Long agentMemoryCoresSpend;
+
+    @ApiModelProperty(value = "系统全量agent实时上行流量（单位：byte/s）")
+    private Long agentUplinkBytes;
+
+    @ApiModelProperty(value = "系统全量agent实时下行流量（单位：byte/s）")
+    private Long agentDownLinkBytes;
+
+    @ApiModelProperty(value = "系统全量agent近1分钟发送条数")
+    private Long agentSendLogEventsLast1Minute;
+
+    @ApiModelProperty(value = "系统全量agent当日发送流量")
+    private Long agentSendBytesDay;
+
+    @ApiModelProperty(value = "系统全量agent当日发送条数")
+    private Long agentSendLogEventsDay;
+
+    /********************************** part 2 **********************************/
 
     @ApiModelProperty(value = "系统当前处于red状态日志采集任务列表集 key：日志采集任务名 value：日志采集任务 id")
     private List<Pair<String, Long>> redLogCollectTaskNameIdPairList;
@@ -55,256 +73,93 @@ public class DashBoardVO {
     @ApiModelProperty(value = "系统当前处于yellow状态agent列表集 key：hostName value：agent id")
     private List<Pair<String, Long>> yellowAgentHostNameIdPairList;
 
-    @ApiModelProperty(value = "近1分钟日志采集量最大top5日志采集任务")
-    private List<MetricPointList> logCollectTaskListCollectBytesTop5;
+    /********************************** part 3 **********************************/
 
-    @ApiModelProperty(value = "近1分钟日志采集条数最大top5日志采集任务")
-    private List<MetricPointList> logCollectTaskListCollectCountTop5;
+    /*************************** agent 视角 ***************************/
 
-    @ApiModelProperty(value = "关联主机数最多top5日志采集任务集")
-    private List<MetricPointList> logCollectTaskListRelateHostsTop5;
+    @ApiModelProperty(value = "主机时间ntp gap top5 agents，key：agent主机名 value：ntp gap（单位：ms）")
+    private List<Pair<String, Long>> ntpGapTop5Agents;
 
-    @ApiModelProperty(value = "关联agent数最多top5日志采集任务集")
-    private List<MetricPointList> logCollectTaskListRelateAgentsTop5;
+    @ApiModelProperty(value = "cpu使用量top5 agents，key：agent主机名 value：cpu使用量")
+    private List<Pair<String, Double>> cpuUsageTop5Agents;
 
-    @ApiModelProperty(value = "近1分钟日志采集量最大top5 agent")
-    private List<MetricPointList> agentListCollectBytesTop5;
+    @ApiModelProperty(value = "memory使用量top5 agents，key：agent主机名 value：memory使用量（单位：byte）")
+    private List<Pair<String, Long>> memoryUsedTop5Agents;
 
-    @ApiModelProperty(value = "近1分钟日志采集条数最大top5 agent")
-    private List<MetricPointList> agentListCollectCountTop5;
+    @ApiModelProperty(value = "带宽使用量top5 agents，key：agent主机名 value：带宽使用量（单位：byte）")
+    private List<Pair<String, Long>> bandWidthUsedTop5Agents;
 
-    @ApiModelProperty(value = "cpu占用核数最多top5agent集")
-    private List<MetricPointList> agentListCpuUsageTop5;
+    @ApiModelProperty(value = "带宽使用率top5 agents，key：agent主机名 value：带宽使用率（单位：%）")
+    private List<Pair<String, Long>> bandWidthUsageTop5Agents;
 
-    //TODO：后续 待 实现
-//    @ApiModelProperty(value = "cpu load 最多top5agent集")
-//    private List<MetricPointList> agentListCpuLoadTop5;
+    @ApiModelProperty(value = "当日 full gc 次数 top5 agents，key：agent主机名 value：当日full gc次数")
+    private List<Pair<String, Long>> fullGcTimesDayTop5Agents;
 
-    @ApiModelProperty(value = "内存使用量最多top5agent集")
-    private List<MetricPointList> agentListMemoryUsageTop5;
+    @ApiModelProperty(value = "fd使用量top5 agents，key：agent主机名 value：fd使用量")
+    private List<Pair<String, Long>> fdUsedTop5Agents;
 
-    @ApiModelProperty(value = " fd 使用量最多top5agent集")
-    private List<MetricPointList> agentListFdUsedTop5;
+    @ApiModelProperty(value = "上行流量top5 agents，key：agent主机名 value：上行流量（单位：byte）")
+    private List<Pair<String, Long>> uplinkBytesTop5Agents;
 
-    @ApiModelProperty(value = "full gc 最多top5agent集")
-    private List<MetricPointList> agentListFullGcCountTop5;
+    @ApiModelProperty(value = "近1分钟发送日志条数top5 agents，key：agent主机名 value：发送日志条数")
+    private List<Pair<String, Long>> sendLogEventsLast1MinuteTop5Agents;
 
-    @ApiModelProperty(value = "关联日志采集任务数最多top5 agent")
-    private List<MetricPointList> agentListRelateLogCollectTasksTop5;
+    @ApiModelProperty(value = "当日发送流量 top5 agents，key：agent主机名 value：当日发送流量")
+    private List<Pair<String, Long>> sendBytesDayTop5Agents;
 
-    public Long getLogCollectTaskNum() {
-        return logCollectTaskNum;
-    }
+    @ApiModelProperty(value = "当日发送条数 top5 agents，key：agent主机名 value：当日发送条数")
+    private List<Pair<String, Long>> sendLogEventsDayTop5Agents;
 
-    public void setLogCollectTaskNum(Long logCollectTaskNum) {
-        this.logCollectTaskNum = logCollectTaskNum;
-    }
+    @ApiModelProperty(value = "运行状态日志采集任务数 top5 agents，key：agent主机名 value：运行状态日志采集任务数")
+    private List<Pair<String, Long>> runningLogCollectTasksTop5Agents;
 
-    public Long getLogCollectPathNum() {
-        return logCollectPathNum;
-    }
+    @ApiModelProperty(value = "运行状态日志采集路径数 top5 agents，key：agent主机名 value：运行状态日志采集路径数")
+    private List<Pair<String, Long>> runningLogCollectPathsTop5Agents;
 
-    public void setLogCollectPathNum(Long logCollectPathNum) {
-        this.logCollectPathNum = logCollectPathNum;
-    }
+    /*************************** logCollectTask 视角 ***************************/
 
-    public Long getServiceNum() {
-        return serviceNum;
-    }
+    @ApiModelProperty(value = "日志时间延时最大 top5 logCollectTasks，key：logCollectTaskId value：日志时间延时（单位：ms）")
+    private List<Pair<Long, Long>> logTimeDelayTop5LogCollectTasks;
 
-    public void setServiceNum(Long serviceNum) {
-        this.serviceNum = serviceNum;
-    }
+    @ApiModelProperty(value = "限流时长 top5 logCollectTasks，key：logCollectTaskId value：限流时长（单位：ms）")
+    private List<Pair<Long, Long>> limitTimeTop5LogCollectTasks;
 
-    public Long getHostNum() {
-        return hostNum;
-    }
+    @ApiModelProperty(value = "上行流量top5 logCollectTasks，key：logCollectTaskId value：上行流量（单位：byte）")
+    private List<Pair<Long, Long>> uplinkBytesTop5LogCollectTasks;
 
-    public void setHostNum(Long hostNum) {
-        this.hostNum = hostNum;
-    }
+    @ApiModelProperty(value = "近1分钟发送日志条数top5 logCollectTasks，key：logCollectTaskId value：近1分钟发送日志条数")
+    private List<Pair<Long, Long>> sendLogEventsLast1MinuteTop5LogCollectTasks;
 
-    public Long getContainerNum() {
-        return containerNum;
-    }
+    @ApiModelProperty(value = "当日发送流量 top5 logCollectTasks，key：logCollectTaskId value：当日发送流量")
+    private List<Pair<Long, Long>> sendBytesDayTop5LogCollectTasks;
 
-    public void setContainerNum(Long containerNum) {
-        this.containerNum = containerNum;
-    }
+    @ApiModelProperty(value = "当日发送条数 top5 logCollectTasks，key：logCollectTaskId value：当日发送条数")
+    private List<Pair<Long, Long>> sendLogEventsDayTop5LogCollectTasks;
 
-    public Long getAgentNum() {
-        return agentNum;
-    }
+    @ApiModelProperty(value = "关联主机数 top5 logCollectTasks，key：logCollectTaskId value：关联主机数")
+    private List<Pair<Long, Long>> relateHostsTop5LogCollectTasks;
 
-    public void setAgentNum(Long agentNum) {
-        this.agentNum = agentNum;
-    }
+    @ApiModelProperty(value = "关联agent数 top5 logCollectTasks，key：logCollectTaskId value：关联agent数")
+    private List<Pair<Long, Long>> relateAgentsTop5LogCollectTasks;
 
-    public Long getNonRelateAnyHostLogCollectTaskNum() {
-        return nonRelateAnyHostLogCollectTaskNum;
-    }
+    /*************************** service 视角 ***************************/
 
-    public Long getCurrentCollectBytes() {
-        return currentCollectBytes;
-    }
+    @ApiModelProperty(value = "上行流量top5 services，key：serviceName value：上行流量（单位：byte）")
+    private List<Pair<String, Long>> uplinkBytesTop5Services;
 
-    public void setCurrentCollectBytes(Long currentCollectBytes) {
-        this.currentCollectBytes = currentCollectBytes;
-    }
+    @ApiModelProperty(value = "近1分钟发送日志条数top5 services，key：serviceName value：近1分钟发送日志条数")
+    private List<Pair<String, Long>> sendLogEventsLast1MinuteTop5Services;
 
-    public Long getCurrentCollectLogEvents() {
-        return currentCollectLogEvents;
-    }
+    @ApiModelProperty(value = "当日发送流量 top5 services，key：serviceName value：当日发送流量")
+    private List<Pair<String, Long>> sendBytesDayTop5Services;
 
-    public void setCurrentCollectLogEvents(Long currentCollectLogEvents) {
-        this.currentCollectLogEvents = currentCollectLogEvents;
-    }
+    @ApiModelProperty(value = "当日发送条数 top5 services，key：serviceName value：当日发送条数")
+    private List<Pair<String, Long>> sendLogEventsDayTop5Services;
 
-    public Long getCollectBytesDay() {
-        return collectBytesDay;
-    }
+    @ApiModelProperty(value = "关联主机数 top5 services，key：serviceName value：关联主机数")
+    private List<Pair<String, Long>> relateHostsTop5Services;
 
-    public void setCollectBytesDay(Long collectBytesDay) {
-        this.collectBytesDay = collectBytesDay;
-    }
+    @ApiModelProperty(value = "关联agent数 top5 services，key：serviceName value：关联agent数")
+    private List<Pair<String, Long>> relateAgentsTop5Services;
 
-    public Long getCollectLogEventsDay() {
-        return collectLogEventsDay;
-    }
-
-    public void setCollectLogEventsDay(Long collectLogEventsDay) {
-        this.collectLogEventsDay = collectLogEventsDay;
-    }
-
-    public List<Pair<String, Long>> getRedLogCollectTaskNameIdPairList() {
-        return redLogCollectTaskNameIdPairList;
-    }
-
-    public void setRedLogCollectTaskNameIdPairList(List<Pair<String, Long>> redLogCollectTaskNameIdPairList) {
-        this.redLogCollectTaskNameIdPairList = redLogCollectTaskNameIdPairList;
-    }
-
-    public List<Pair<String, Long>> getYellowLogCollectTaskNameIdPairList() {
-        return yellowLogCollectTaskNameIdPairList;
-    }
-
-    public void setYellowLogCollectTaskNameIdPairList(List<Pair<String, Long>> yellowLogCollectTaskNameIdPairList) {
-        this.yellowLogCollectTaskNameIdPairList = yellowLogCollectTaskNameIdPairList;
-    }
-
-    public List<Pair<String, Long>> getRedAgentHostNameIdPairList() {
-        return redAgentHostNameIdPairList;
-    }
-
-    public void setRedAgentHostNameIdPairList(List<Pair<String, Long>> redAgentHostNameIdPairList) {
-        this.redAgentHostNameIdPairList = redAgentHostNameIdPairList;
-    }
-
-    public List<Pair<String, Long>> getYellowAgentHostNameIdPairList() {
-        return yellowAgentHostNameIdPairList;
-    }
-
-    public void setYellowAgentHostNameIdPairList(List<Pair<String, Long>> yellowAgentHostNameIdPairList) {
-        this.yellowAgentHostNameIdPairList = yellowAgentHostNameIdPairList;
-    }
-
-    public List<MetricPointList> getLogCollectTaskListCollectBytesTop5() {
-        return logCollectTaskListCollectBytesTop5;
-    }
-
-    public void setLogCollectTaskListCollectBytesTop5(List<MetricPointList> logCollectTaskListCollectBytesTop5) {
-        this.logCollectTaskListCollectBytesTop5 = logCollectTaskListCollectBytesTop5;
-    }
-
-    public List<MetricPointList> getLogCollectTaskListCollectCountTop5() {
-        return logCollectTaskListCollectCountTop5;
-    }
-
-    public void setLogCollectTaskListCollectCountTop5(List<MetricPointList> logCollectTaskListCollectCountTop5) {
-        this.logCollectTaskListCollectCountTop5 = logCollectTaskListCollectCountTop5;
-    }
-
-    public List<MetricPointList> getLogCollectTaskListRelateHostsTop5() {
-        return logCollectTaskListRelateHostsTop5;
-    }
-
-    public void setLogCollectTaskListRelateHostsTop5(List<MetricPointList> logCollectTaskListRelateHostsTop5) {
-        this.logCollectTaskListRelateHostsTop5 = logCollectTaskListRelateHostsTop5;
-    }
-
-    public List<MetricPointList> getLogCollectTaskListRelateAgentsTop5() {
-        return logCollectTaskListRelateAgentsTop5;
-    }
-
-    public void setLogCollectTaskListRelateAgentsTop5(List<MetricPointList> logCollectTaskListRelateAgentsTop5) {
-        this.logCollectTaskListRelateAgentsTop5 = logCollectTaskListRelateAgentsTop5;
-    }
-
-    public List<MetricPointList> getAgentListCollectBytesTop5() {
-        return agentListCollectBytesTop5;
-    }
-
-    public void setAgentListCollectBytesTop5(List<MetricPointList> agentListCollectBytesTop5) {
-        this.agentListCollectBytesTop5 = agentListCollectBytesTop5;
-    }
-
-    public List<MetricPointList> getAgentListCollectCountTop5() {
-        return agentListCollectCountTop5;
-    }
-
-    public void setAgentListCollectCountTop5(List<MetricPointList> agentListCollectCountTop5) {
-        this.agentListCollectCountTop5 = agentListCollectCountTop5;
-    }
-
-    public List<MetricPointList> getAgentListCpuUsageTop5() {
-        return agentListCpuUsageTop5;
-    }
-
-    public void setAgentListCpuUsageTop5(List<MetricPointList> agentListCpuUsageTop5) {
-        this.agentListCpuUsageTop5 = agentListCpuUsageTop5;
-    }
-
-    public List<MetricPointList> getAgentListFdUsedTop5() {
-        return agentListFdUsedTop5;
-    }
-
-    public void setAgentListFdUsedTop5(List<MetricPointList> agentListFdUsedTop5) {
-        this.agentListFdUsedTop5 = agentListFdUsedTop5;
-    }
-
-    public List<MetricPointList> getAgentListMemoryUsageTop5() {
-        return agentListMemoryUsageTop5;
-    }
-
-    public void setAgentListMemoryUsageTop5(List<MetricPointList> agentListMemoryUsageTop5) {
-        this.agentListMemoryUsageTop5 = agentListMemoryUsageTop5;
-    }
-
-    public List<MetricPointList> getAgentListFullGcCountTop5() {
-        return agentListFullGcCountTop5;
-    }
-
-    public void setAgentListFullGcCountTop5(List<MetricPointList> agentListFullGcCountTop5) {
-        this.agentListFullGcCountTop5 = agentListFullGcCountTop5;
-    }
-
-    public void setNonRelateAnyHostLogCollectTaskNum(Long nonRelateAnyHostLogCollectTaskNum) {
-        this.nonRelateAnyHostLogCollectTaskNum = nonRelateAnyHostLogCollectTaskNum;
-    }
-
-    public Long getNonRelateAnyLogCollectTaskAgentNum() {
-        return nonRelateAnyLogCollectTaskAgentNum;
-    }
-
-    public void setNonRelateAnyLogCollectTaskAgentNum(Long nonRelateAnyLogCollectTaskAgentNum) {
-        this.nonRelateAnyLogCollectTaskAgentNum = nonRelateAnyLogCollectTaskAgentNum;
-    }
-
-    public List<MetricPointList> getAgentListRelateLogCollectTasksTop5() {
-        return agentListRelateLogCollectTasksTop5;
-    }
-
-    public void setAgentListRelateLogCollectTasksTop5(List<MetricPointList> agentListRelateLogCollectTasksTop5) {
-        this.agentListRelateLogCollectTasksTop5 = agentListRelateLogCollectTasksTop5;
-    }
 }
