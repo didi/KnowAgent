@@ -35,7 +35,7 @@ public class NormalLogCollectTaskHealthController {
     @ApiOperation(value = "根据给定日志采集任务指标id与日志采集任务健康度巡检状态码更新对应日志采集任务的健康度offset", notes = "")
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @ResponseBody
-    public Result solveErrorDetail(@RequestBody LogCollectTaskHealthSolveErrorDetailDTO logCollectTaskHealthSolveErrorDetailDTO) {
+    public Result solveErrorDetail(@RequestBody LogCollectTaskHealthSolveErrorDetailDTO solveErrorDetailDTO) {
 
         return null;
     }
