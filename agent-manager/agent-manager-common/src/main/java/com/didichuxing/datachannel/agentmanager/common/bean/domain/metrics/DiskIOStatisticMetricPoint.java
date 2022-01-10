@@ -18,7 +18,4 @@ public class DiskIOStatisticMetricPoint extends StatisticMetricPoint {
     @ApiModelProperty(value = "文件系统类型")
     private String fsType;
 
-    @ApiModelProperty(value = "磁盘容量（单位：byte）")
-    private String bytesTotal;
-
 }

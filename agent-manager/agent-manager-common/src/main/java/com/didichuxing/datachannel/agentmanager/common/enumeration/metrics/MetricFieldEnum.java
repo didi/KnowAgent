@@ -10,8 +10,7 @@ public enum MetricFieldEnum {
 
     /*********************************** 系统相关 ***********************************/
 
-    SYSTEM_NTP_OFFSET("systemNtpOffset", "systemNtpOffset")
-
+//    SYSTEM_NTP_OFFSET("systemNtpOffset", "systemNtpOffset")
     ;
 
     /*********************************** 当前进程相关 ***********************************/
@@ -38,10 +37,21 @@ public enum MetricFieldEnum {
      */
     private String fieldName;
 
+    /**
+     * 指标描述
+     */
+    private String description;
 
-    MetricFieldEnum(String metricName, String fieldName) {
+    /**
+     * 指标类型（对应MetricTypeEnum.code）
+     */
+    private Integer type;
+
+    MetricFieldEnum(String metricName, String fieldName, String description, Integer type) {
         this.metricName = metricName;
         this.fieldName = fieldName;
+        this.description = description;
+        this.type = type;
     }
 
     /**

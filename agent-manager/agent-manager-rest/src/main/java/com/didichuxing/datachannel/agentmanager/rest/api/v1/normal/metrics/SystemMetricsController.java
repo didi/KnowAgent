@@ -18,9 +18,6 @@ import java.util.List;
 @RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "metrics/system")
 public class SystemMetricsController {
 
-//    @Autowired
-//    private MetricsSystemService metricsSystemService;
-
     @ApiOperation(value = "获取指标在给定时间范围内最晚的一个指标值", notes = "")
     @RequestMapping(value = "/lable", method = RequestMethod.POST)
     @ResponseBody

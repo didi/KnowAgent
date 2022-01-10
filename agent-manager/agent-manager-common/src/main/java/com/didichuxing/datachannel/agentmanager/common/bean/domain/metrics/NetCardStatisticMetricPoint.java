@@ -15,7 +15,4 @@ public class NetCardStatisticMetricPoint extends StatisticMetricPoint {
     @ApiModelProperty(value = "网卡设备名")
     private String device;
 
-    @ApiModelProperty(value = "网卡带宽（单位：byte）")
-    private String bandWidth;
-
 }
