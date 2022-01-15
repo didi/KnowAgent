@@ -2,8 +2,8 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -239,19 +239,19 @@ public interface AgentMetricsDAO {
 
     List<MetricPoint> queryByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column);
 
-    List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step);
+    List<MetricPoint> queryAggregationByTask(Long logCollectTaskId, Long startTime, Long endTime, AgentMetricField column, AggregationCalcFunctionEnum method, int step);
 
-    List<MetricPoint> queryAggregationByHostname(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step);
+    List<MetricPoint> queryAggregationByHostname(String hostname, Long startTime, Long endTime, AgentMetricField column, AggregationCalcFunctionEnum method, int step);
 
     List<MetricPoint> queryByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column);
 
-    List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step);
+    List<MetricPoint> queryAggregationByLogModel(Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName, Long startTime, Long endTime, AgentMetricField column, AggregationCalcFunctionEnum method, int step);
 
     List<MetricPoint> queryAgent(String hostname, Long startTime, Long endTime, AgentMetricField column);
 
-    List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, CalcFunction method, int step);
+    List<MetricPoint> queryAgentAggregation(String hostname, Long startTime, Long endTime, AgentMetricField column, AggregationCalcFunctionEnum method, int step);
 
-    Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, CalcFunction method);
+    Double queryAggregationForAll(Long startTime, Long endTime, AgentMetricField column, AggregationCalcFunctionEnum method);
 
     MetricsLogCollectTaskPO selectLatestMetric(Long taskId);
 

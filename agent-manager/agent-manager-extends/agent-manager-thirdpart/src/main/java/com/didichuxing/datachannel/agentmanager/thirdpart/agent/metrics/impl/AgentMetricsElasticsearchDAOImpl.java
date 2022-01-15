@@ -4,8 +4,8 @@
 //import com.alibaba.fastjson.util.TypeUtils;
 //import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.metrics.DashBoardStatisticsDO;
 //import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
-//import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
-//import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.CalcFunction;
+//import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AgentMetricField;
+//import com.didichuxing.datachannel.agentmanager.common.enumeration.CalcFunction;
 //import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 //import com.didichuxing.datachannel.agentmanager.common.constant.MetricConstant;
 //import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;

@@ -1,6 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.common;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.AgentMetricField;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AgentMetricField;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

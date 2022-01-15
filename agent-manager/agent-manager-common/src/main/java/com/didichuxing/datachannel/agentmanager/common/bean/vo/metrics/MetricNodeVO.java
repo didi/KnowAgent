@@ -20,4 +20,7 @@ public class MetricNodeVO {
     @ApiModelProperty(value = "子节点集")
     private List<MetricNodeVO> children;
 
+    @ApiModelProperty(value = "是否默认选中")
+    private Boolean checked;
+
 }

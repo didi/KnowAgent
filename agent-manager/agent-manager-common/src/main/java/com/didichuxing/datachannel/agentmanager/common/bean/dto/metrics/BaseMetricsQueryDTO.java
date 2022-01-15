@@ -14,7 +14,7 @@ public class BaseMetricsQueryDTO {
     @ApiModelProperty(value = "结束时间")
     private Long endTime;
 
-    @ApiModelProperty(value = "指标名")
-    private String metricName;
+    @ApiModelProperty(value = "指标代码")
+    private Integer metricCode;
 
 }

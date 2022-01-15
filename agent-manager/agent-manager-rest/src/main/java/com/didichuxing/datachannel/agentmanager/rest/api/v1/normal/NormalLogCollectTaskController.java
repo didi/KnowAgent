@@ -29,7 +29,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.Lo
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogContentFilterRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;

@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
+package com.didichuxing.datachannel.agentmanager.common.enumeration.metrics;
 
 /**
  * normal 无函数
@@ -7,9 +7,9 @@ package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
  * avg 平均函数
  * max,min 最大、最小函数
  */
-public enum CalcFunction {
+public enum AggregationCalcFunctionEnum {
 
-    NORMAL("normal"),
+    NONE("none"),
     SUM("sum"),
     COUNT("count"),
     AVG("avg"),
@@ -22,20 +22,20 @@ public enum CalcFunction {
         return value;
     }
 
-    CalcFunction(String value) {
+    AggregationCalcFunctionEnum(String value) {
         this.value = value;
     }
 
-    public static CalcFunction fromString(String name) {
+    public static AggregationCalcFunctionEnum fromString(String name) {
         if (name == null) {
             return null;
         }
-        CalcFunction f;
+        AggregationCalcFunctionEnum f;
         try {
-            f = CalcFunction.valueOf(name);
+            f = AggregationCalcFunctionEnum.valueOf(name);
             return f;
         } catch (IllegalArgumentException e) {
-            for (CalcFunction value : CalcFunction.values()) {
+            for (AggregationCalcFunctionEnum value : AggregationCalcFunctionEnum.values()) {
                 if (value.value.equals(name)) {
                     return value;
                 }

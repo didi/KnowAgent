@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
+package com.didichuxing.datachannel.agentmanager.common.enumeration.metrics;
 
 public enum AgentMetricField {
     // agent维度

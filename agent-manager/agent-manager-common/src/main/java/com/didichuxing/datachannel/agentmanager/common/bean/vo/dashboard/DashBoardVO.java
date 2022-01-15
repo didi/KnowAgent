@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
+package com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import io.swagger.annotations.ApiModelProperty;

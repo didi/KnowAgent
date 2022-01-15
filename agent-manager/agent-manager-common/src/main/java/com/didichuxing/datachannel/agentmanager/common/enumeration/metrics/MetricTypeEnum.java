@@ -63,4 +63,19 @@ public enum MetricTypeEnum {
         this.description = description;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public Integer getParentMetricTypeCode() {
+        return parentMetricTypeCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

@@ -9,13 +9,6 @@ import lombok.Data;
 @Data
 public class DiskIOStatisticMetricPoint extends StatisticMetricPoint {
 
-    @ApiModelProperty(value = "磁盘挂载路径")
-    private String path;
 
-    @ApiModelProperty(value = "磁盘设备名")
-    private String device;
-
-    @ApiModelProperty(value = "文件系统类型")
-    private String fsType;
 
 }
