@@ -1,15 +1,13 @@
 package com.didichuxing.datachannel.agentmanager.common.enumeration.metrics;
 
-public enum MetricUnitEnum {
+/**
+ * 指标展示类型
+ */
+public enum MetricDisplayTypeEnum {
 
-    NONE(0, "无单位"),
-    BYTE(1,"字节"),
-    M_BYTE(2,"兆字节"),
-    TIMESTAMP_MILLISECOND(3,"时间戳-毫秒"),
-    TIMESTAMP_SECOND(4,"时间戳-秒"),
-    PERCENT(5,"百分比"),
-    DATE_TIME(6,"日期/时间")
-
+    LABLE(1,"lable类型指标"),
+    MULTI_LINE_CHAT(2, "折线图-多根类型指标"),
+    SINGLE_LINE_CHAT(3,"折线图-单根类型指标")
     ;
 
     public Integer getCode() {
@@ -20,7 +18,7 @@ public enum MetricUnitEnum {
         return desc;
     }
 
-    MetricUnitEnum(Integer code, String desc) {
+    MetricDisplayTypeEnum(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
     }

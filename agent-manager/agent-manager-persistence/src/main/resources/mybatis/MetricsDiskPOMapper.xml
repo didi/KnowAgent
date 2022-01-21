@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsDiskPOMapper" >
+
   <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="hostName" property="hostname" jdbcType="VARCHAR" />
@@ -230,16 +231,132 @@
     systemDiskWriteTimePercent75Quantile, systemDiskWriteTimePercent95Quantile, systemDiskWriteTimePercent99Quantile, 
     heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
   </sql>
+
+  <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
+    <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
+    <result column="last" property="last" jdbcType="DOUBLE" />
+    <result column="min" property="min" jdbcType="DOUBLE" />
+    <result column="max" property="max" jdbcType="DOUBLE" />
+    <result column="mean" property="mean" jdbcType="DOUBLE" />
+    <result column="std" property="std" jdbcType="DOUBLE" />
+    <result column="fiftyFiveQuantile" property="fiftyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="seventyFiveQuantile" property="seventyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyFiveQuantile" property="ninetyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyNineQuantile" property="ninetyNineQuantile" jdbcType="DOUBLE" />
+    <result column="macAddress" property="macAddress" jdbcType="VARCHAR"/>
+    <result column="device" property="device" jdbcType="VARCHAR"/>
+    <result column="path" property="path" jdbcType="VARCHAR"/>
+    <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
+    <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${fieldName}
+    from tb_metrics_disk
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    order by heartbeatTime desc
+      limit 1
+  </select>
+  <select id="getSingleChatNonStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+      heartbeatTimeMinute,
+      systemDiskPath as 'path',
+      systemDiskDevice as 'device',
+      systemDiskFsType as 'fsType'
+    from tb_metrics_disk
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      systemDiskPath = #{path,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+            ${function}(${fieldName}Min) as 'min',
+            ${function}(${fieldName}Max) as 'max',
+            ${function}(${fieldName}Mean) as 'mean',
+            ${function}(${fieldName}Std) as 'std',
+            ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+            ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+            ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+            ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+            heartbeatTimeMinute,
+            systemDiskPath as 'path',
+            systemDiskDevice as 'device',
+            systemDiskFsType as 'fsType'
+    from tb_metrics_disk
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      systemDiskPath = #{path,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+
+  <resultMap id="TopNDiskPathResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskTopPO" >
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+
+  <select id="getTopNDiskPath" resultMap="TopNDiskPathResultMap" parameterType="java.util.Map" >
+    select * from (
+      select
+      ${function}(
+      ${fieldName}
+      <if test="sortMetricType == 1">
+        Min
+      </if>
+      <if test="sortMetricType == 2">
+        Max
+      </if>
+      <if test="sortMetricType == 3">
+        Mean
+      </if>
+      <if test="sortMetricType == 4">
+        Std
+      </if>
+      <if test="sortMetricType == 5">
+        55Quantil
+      </if>
+      <if test="sortMetricType == 6">
+        75Quantil
+      </if>
+      <if test="sortMetricType ==7">
+        95Quantil
+      </if>
+      <if test="sortMetricType ==8">
+        99Quantil
+      </if>
+      ) as 'aggVal',
+      systemDiskPath as 'path'
+      from tb_metrics_disk
+      where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
+      group by systemDiskPath
+    ) as agg_table
+    order by agg_table.aggVal desc
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from tb_metrics_disk
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from tb_metrics_disk
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     insert into tb_metrics_disk (id, hostName, systemDiskPath, 
       systemDiskDevice, systemDiskFsType, systemDiskBytesTotal, 
@@ -1481,722 +1598,5 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
-    update tb_metrics_disk
-    <set >
-      <if test="hostname != null" >
-        hostName = #{hostname,jdbcType=VARCHAR},
-      </if>
-      <if test="systemdiskpath != null" >
-        systemDiskPath = #{systemdiskpath,jdbcType=VARCHAR},
-      </if>
-      <if test="systemdiskdevice != null" >
-        systemDiskDevice = #{systemdiskdevice,jdbcType=VARCHAR},
-      </if>
-      <if test="systemdiskfstype != null" >
-        systemDiskFsType = #{systemdiskfstype,jdbcType=VARCHAR},
-      </if>
-      <if test="systemdiskbytestotal != null" >
-        systemDiskBytesTotal = #{systemdiskbytestotal,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskbytesfree != null" >
-        systemDiskBytesFree = #{systemdiskbytesfree,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskbytesused != null" >
-        systemDiskBytesUsed = #{systemdiskbytesused,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskusedpercent != null" >
-        systemDiskUsedPercent = #{systemdiskusedpercent,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskinodestotal != null" >
-        systemDiskInodesTotal = #{systemdiskinodestotal,jdbcType=INTEGER},
-      </if>
-      <if test="systemdiskinodesfree != null" >
-        systemDiskInodesFree = #{systemdiskinodesfree,jdbcType=INTEGER},
-      </if>
-      <if test="systemdiskinodesused != null" >
-        systemDiskInodesUsed = #{systemdiskinodesused,jdbcType=INTEGER},
-      </if>
-      <if test="systemdiskinodesusedpercent != null" >
-        systemDiskInodesUsedPercent = #{systemdiskinodesusedpercent,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgqusz != null" >
-        systemIOAvgQuSz = #{systemioavgqusz,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgquszmin != null" >
-        systemIOAvgQuSzMin = #{systemioavgquszmin,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgquszmax != null" >
-        systemIOAvgQuSzMax = #{systemioavgquszmax,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgquszmean != null" >
-        systemIOAvgQuSzMean = #{systemioavgquszmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgquszstd != null" >
-        systemIOAvgQuSzStd = #{systemioavgquszstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgqusz55quantile != null" >
-        systemIOAvgQuSz55Quantile = #{systemioavgqusz55quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgqusz75quantile != null" >
-        systemIOAvgQuSz75Quantile = #{systemioavgqusz75quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgqusz95quantile != null" >
-        systemIOAvgQuSz95Quantile = #{systemioavgqusz95quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgqusz99quantile != null" >
-        systemIOAvgQuSz99Quantile = #{systemioavgqusz99quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqsz != null" >
-        systemIOAvgRqSz = #{systemioavgrqsz,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqszmin != null" >
-        systemIOAvgRqSzMin = #{systemioavgrqszmin,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqszmax != null" >
-        systemIOAvgRqSzMax = #{systemioavgrqszmax,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqszmean != null" >
-        systemIOAvgRqSzMean = #{systemioavgrqszmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqszstd != null" >
-        systemIOAvgRqSzStd = #{systemioavgrqszstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqsz55quantile != null" >
-        systemIOAvgRqSz55Quantile = #{systemioavgrqsz55quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqsz75quantile != null" >
-        systemIOAvgRqSz75Quantile = #{systemioavgrqsz75quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqsz95quantile != null" >
-        systemIOAvgRqSz95Quantile = #{systemioavgrqsz95quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioavgrqsz99quantile != null" >
-        systemIOAvgRqSz99Quantile = #{systemioavgrqsz99quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioawait != null" >
-        systemIOAwait = #{systemioawait,jdbcType=BIGINT},
-      </if>
-      <if test="systemioawaitmin != null" >
-        systemIOAwaitMin = #{systemioawaitmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemioawaitmax != null" >
-        systemIOAwaitMax = #{systemioawaitmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemioawaitmean != null" >
-        systemIOAwaitMean = #{systemioawaitmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioawaitstd != null" >
-        systemIOAwaitStd = #{systemioawaitstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioawait55quantile != null" >
-        systemIOAwait55Quantile = #{systemioawait55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioawait75quantile != null" >
-        systemIOAwait75Quantile = #{systemioawait75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioawait95quantile != null" >
-        systemIOAwait95Quantile = #{systemioawait95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioawait99quantile != null" >
-        systemIOAwait99Quantile = #{systemioawait99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorawait != null" >
-        systemIORAwait = #{systemiorawait,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorawaitmin != null" >
-        systemIORAwaitMin = #{systemiorawaitmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorawaitmax != null" >
-        systemIORAwaitMax = #{systemiorawaitmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorawaitmean != null" >
-        systemIORAwaitMean = #{systemiorawaitmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiorawaitstd != null" >
-        systemIORAwaitStd = #{systemiorawaitstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiorawait55quantile != null" >
-        systemIORAwait55Quantile = #{systemiorawait55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorawait75quantile != null" >
-        systemIORAwait75Quantile = #{systemiorawait75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorawait95quantile != null" >
-        systemIORAwait95Quantile = #{systemiorawait95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorawait99quantile != null" >
-        systemIORAwait99Quantile = #{systemiorawait99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadrequest != null" >
-        systemIOReadRequest = #{systemioreadrequest,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadrequestmin != null" >
-        systemIOReadRequestMin = #{systemioreadrequestmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadrequestmax != null" >
-        systemIOReadRequestMax = #{systemioreadrequestmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadrequestmean != null" >
-        systemIOReadRequestMean = #{systemioreadrequestmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioreadrequeststd != null" >
-        systemIOReadRequestStd = #{systemioreadrequeststd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioreadrequest55quantile != null" >
-        systemIOReadRequest55Quantile = #{systemioreadrequest55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadrequest75quantile != null" >
-        systemIOReadRequest75Quantile = #{systemioreadrequest75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadrequest95quantile != null" >
-        systemIOReadRequest95Quantile = #{systemioreadrequest95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadrequest99quantile != null" >
-        systemIOReadRequest99Quantile = #{systemioreadrequest99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadbytes != null" >
-        systemIOReadBytes = #{systemioreadbytes,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadbytesmin != null" >
-        systemIOReadBytesMin = #{systemioreadbytesmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadbytesmax != null" >
-        systemIOReadBytesMax = #{systemioreadbytesmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadbytesmean != null" >
-        systemIOReadBytesMean = #{systemioreadbytesmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioreadbytesstd != null" >
-        systemIOReadBytesStd = #{systemioreadbytesstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioreadbytes55quantile != null" >
-        systemIOReadBytes55Quantile = #{systemioreadbytes55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadbytes75quantile != null" >
-        systemIOReadBytes75Quantile = #{systemioreadbytes75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadbytes95quantile != null" >
-        systemIOReadBytes95Quantile = #{systemioreadbytes95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadbytes99quantile != null" >
-        systemIOReadBytes99Quantile = #{systemioreadbytes99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorrqms != null" >
-        systemIORRQMS = #{systemiorrqms,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorrqmsmin != null" >
-        systemIORRQMSMin = #{systemiorrqmsmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorrqmsmax != null" >
-        systemIORRQMSMax = #{systemiorrqmsmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorrqmsmean != null" >
-        systemIORRQMSMean = #{systemiorrqmsmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiorrqmsstd != null" >
-        systemIORRQMSStd = #{systemiorrqmsstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiorrqms55quantile != null" >
-        systemIORRQMS55Quantile = #{systemiorrqms55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorrqms75quantile != null" >
-        systemIORRQMS75Quantile = #{systemiorrqms75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorrqms95quantile != null" >
-        systemIORRQMS95Quantile = #{systemiorrqms95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiorrqms99quantile != null" >
-        systemIORRQMS99Quantile = #{systemiorrqms99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiosvctm != null" >
-        systemIOSVCTM = #{systemiosvctm,jdbcType=BIGINT},
-      </if>
-      <if test="systemiosvctmmin != null" >
-        systemIOSVCTMMin = #{systemiosvctmmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemiosvctmmax != null" >
-        systemIOSVCTMMax = #{systemiosvctmmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemiosvctmmean != null" >
-        systemIOSVCTMMean = #{systemiosvctmmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiosvctmstd != null" >
-        systemIOSVCTMStd = #{systemiosvctmstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiosvctm55quantile != null" >
-        systemIOSVCTM55Quantile = #{systemiosvctm55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiosvctm75quantile != null" >
-        systemIOSVCTM75Quantile = #{systemiosvctm75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiosvctm95quantile != null" >
-        systemIOSVCTM95Quantile = #{systemiosvctm95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiosvctm99quantile != null" >
-        systemIOSVCTM99Quantile = #{systemiosvctm99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioutil != null" >
-        systemIOUtil = #{systemioutil,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutilmin != null" >
-        systemIOUtilMin = #{systemioutilmin,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutilmax != null" >
-        systemIOUtilMax = #{systemioutilmax,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutilmean != null" >
-        systemIOUtilMean = #{systemioutilmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutilstd != null" >
-        systemIOUtilStd = #{systemioutilstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutil55quantile != null" >
-        systemIOUtil55Quantile = #{systemioutil55quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutil75quantile != null" >
-        systemIOUtil75Quantile = #{systemioutil75quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutil95quantile != null" >
-        systemIOUtil95Quantile = #{systemioutil95quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioutil99quantile != null" >
-        systemIOUtil99Quantile = #{systemioutil99quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowawait != null" >
-        systemIOWAwait = #{systemiowawait,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowawaitmin != null" >
-        systemIOWAwaitMin = #{systemiowawaitmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowawaitmax != null" >
-        systemIOWAwaitMax = #{systemiowawaitmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowawaitmean != null" >
-        systemIOWAwaitMean = #{systemiowawaitmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowawaitstd != null" >
-        systemIOWAwaitStd = #{systemiowawaitstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowawait55quantile != null" >
-        systemIOWAwait55Quantile = #{systemiowawait55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowawait75quantile != null" >
-        systemIOWAwait75Quantile = #{systemiowawait75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowawait95quantile != null" >
-        systemIOWAwait95Quantile = #{systemiowawait95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowawait99quantile != null" >
-        systemIOWAwait99Quantile = #{systemiowawait99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowriterequest != null" >
-        systemIOWriteRequest = #{systemiowriterequest,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowriterequestmin != null" >
-        systemIOWriteRequestMin = #{systemiowriterequestmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowriterequestmax != null" >
-        systemIOWriteRequestMax = #{systemiowriterequestmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowriterequestmean != null" >
-        systemIOWriteRequestMean = #{systemiowriterequestmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowriterequeststd != null" >
-        systemIOWriteRequestStd = #{systemiowriterequeststd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowriterequest55quantile != null" >
-        systemIOWriteRequest55Quantile = #{systemiowriterequest55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowriterequest75quantile != null" >
-        systemIOWriteRequest75Quantile = #{systemiowriterequest75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowriterequest95quantile != null" >
-        systemIOWriteRequest95Quantile = #{systemiowriterequest95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowriterequest99quantile != null" >
-        systemIOWriteRequest99Quantile = #{systemiowriterequest99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowritebytes != null" >
-        systemIOWriteBytes = #{systemiowritebytes,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowritebytesmin != null" >
-        systemIOWriteBytesMin = #{systemiowritebytesmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowritebytesmax != null" >
-        systemIOWriteBytesMax = #{systemiowritebytesmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowritebytesmean != null" >
-        systemIOWriteBytesMean = #{systemiowritebytesmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowritebytesstd != null" >
-        systemIOWriteBytesStd = #{systemiowritebytesstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowritebytes55quantile != null" >
-        systemIOWriteBytes55Quantile = #{systemiowritebytes55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowritebytes75quantile != null" >
-        systemIOWriteBytes75Quantile = #{systemiowritebytes75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowritebytes95quantile != null" >
-        systemIOWriteBytes95Quantile = #{systemiowritebytes95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowritebytes99quantile != null" >
-        systemIOWriteBytes99Quantile = #{systemiowritebytes99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadwritebytes != null" >
-        systemIOReadWriteBytes = #{systemioreadwritebytes,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadwritebytesmin != null" >
-        systemIOReadWriteBytesMin = #{systemioreadwritebytesmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadwritebytesmax != null" >
-        systemIOReadWriteBytesMax = #{systemioreadwritebytesmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadwritebytesmean != null" >
-        systemIOReadWriteBytesMean = #{systemioreadwritebytesmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioreadwritebytesstd != null" >
-        systemIOReadWriteBytesStd = #{systemioreadwritebytesstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemioreadwritebytes55quantile != null" >
-        systemIOReadWriteBytes55Quantile = #{systemioreadwritebytes55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadwritebytes75quantile != null" >
-        systemIOReadWriteBytes75Quantile = #{systemioreadwritebytes75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadwritebytes95quantile != null" >
-        systemIOReadWriteBytes95Quantile = #{systemioreadwritebytes95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemioreadwritebytes99quantile != null" >
-        systemIOReadWriteBytes99Quantile = #{systemioreadwritebytes99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowrqms != null" >
-        systemIOWRQMS = #{systemiowrqms,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowrqmsmin != null" >
-        systemIOWRQMSMin = #{systemiowrqmsmin,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowrqmsmax != null" >
-        systemIOWRQMSMax = #{systemiowrqmsmax,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowrqmsmean != null" >
-        systemIOWRQMSMean = #{systemiowrqmsmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowrqmsstd != null" >
-        systemIOWRQMSStd = #{systemiowrqmsstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemiowrqms55quantile != null" >
-        systemIOWRQMS55Quantile = #{systemiowrqms55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowrqms75quantile != null" >
-        systemIOWRQMS75Quantile = #{systemiowrqms75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowrqms95quantile != null" >
-        systemIOWRQMS95Quantile = #{systemiowrqms95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemiowrqms99quantile != null" >
-        systemIOWRQMS99Quantile = #{systemiowrqms99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtime != null" >
-        systemDiskReadTime = #{systemdiskreadtime,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtimemin != null" >
-        systemDiskReadTimeMin = #{systemdiskreadtimemin,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtimemax != null" >
-        systemDiskReadTimeMax = #{systemdiskreadtimemax,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtimemean != null" >
-        systemDiskReadTimeMean = #{systemdiskreadtimemean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimestd != null" >
-        systemDiskReadTimeStd = #{systemdiskreadtimestd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtime55quantile != null" >
-        systemDiskReadTime55Quantile = #{systemdiskreadtime55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtime75quantile != null" >
-        systemDiskReadTime75Quantile = #{systemdiskreadtime75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtime95quantile != null" >
-        systemDiskReadTime95Quantile = #{systemdiskreadtime95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtime99quantile != null" >
-        systemDiskReadTime99Quantile = #{systemdiskreadtime99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskreadtimepercent != null" >
-        systemDiskReadTimePercent = #{systemdiskreadtimepercent,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercentmin != null" >
-        systemDiskReadTimePercentMin = #{systemdiskreadtimepercentmin,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercentmax != null" >
-        systemDiskReadTimePercentMax = #{systemdiskreadtimepercentmax,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercentmean != null" >
-        systemDiskReadTimePercentMean = #{systemdiskreadtimepercentmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercentstd != null" >
-        systemDiskReadTimePercentStd = #{systemdiskreadtimepercentstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercent55quantile != null" >
-        systemDiskReadTimePercent55Quantile = #{systemdiskreadtimepercent55quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercent75quantile != null" >
-        systemDiskReadTimePercent75Quantile = #{systemdiskreadtimepercent75quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercent95quantile != null" >
-        systemDiskReadTimePercent95Quantile = #{systemdiskreadtimepercent95quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskreadtimepercent99quantile != null" >
-        systemDiskReadTimePercent99Quantile = #{systemdiskreadtimepercent99quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetime != null" >
-        systemDiskWriteTime = #{systemdiskwritetime,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskwritetimemin != null" >
-        systemDiskWriteTimeMin = #{systemdiskwritetimemin,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskwritetimemax != null" >
-        systemDiskWriteTimeMax = #{systemdiskwritetimemax,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskwritetimemean != null" >
-        systemDiskWriteTimeMean = #{systemdiskwritetimemean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimestd != null" >
-        systemDiskWriteTimeStd = #{systemdiskwritetimestd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetime55quantile != null" >
-        systemDiskWriteTime55Quantile = #{systemdiskwritetime55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskwritetime75quantile != null" >
-        systemDiskWriteTime75Quantile = #{systemdiskwritetime75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskwritetime95quantile != null" >
-        systemDiskWriteTime95Quantile = #{systemdiskwritetime95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskwritetime99quantile != null" >
-        systemDiskWriteTime99Quantile = #{systemdiskwritetime99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="systemdiskwritetimepercent != null" >
-        systemDiskWriteTimePercent = #{systemdiskwritetimepercent,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercentmin != null" >
-        systemDiskWriteTimePercentMin = #{systemdiskwritetimepercentmin,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercentmax != null" >
-        systemDiskWriteTimePercentMax = #{systemdiskwritetimepercentmax,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercentmean != null" >
-        systemDiskWriteTimePercentMean = #{systemdiskwritetimepercentmean,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercentstd != null" >
-        systemDiskWriteTimePercentStd = #{systemdiskwritetimepercentstd,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercent55quantile != null" >
-        systemDiskWriteTimePercent55Quantile = #{systemdiskwritetimepercent55quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercent75quantile != null" >
-        systemDiskWriteTimePercent75Quantile = #{systemdiskwritetimepercent75quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercent95quantile != null" >
-        systemDiskWriteTimePercent95Quantile = #{systemdiskwritetimepercent95quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="systemdiskwritetimepercent99quantile != null" >
-        systemDiskWriteTimePercent99Quantile = #{systemdiskwritetimepercent99quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="heartbeattime != null" >
-        heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
-      </if>
-      <if test="heartbeattimeminute != null" >
-        heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
-      </if>
-      <if test="heartbeattimehour != null" >
-        heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
-    update tb_metrics_disk
-    set hostName = #{hostname,jdbcType=VARCHAR},
-      systemDiskPath = #{systemdiskpath,jdbcType=VARCHAR},
-      systemDiskDevice = #{systemdiskdevice,jdbcType=VARCHAR},
-      systemDiskFsType = #{systemdiskfstype,jdbcType=VARCHAR},
-      systemDiskBytesTotal = #{systemdiskbytestotal,jdbcType=BIGINT},
-      systemDiskBytesFree = #{systemdiskbytesfree,jdbcType=BIGINT},
-      systemDiskBytesUsed = #{systemdiskbytesused,jdbcType=BIGINT},
-      systemDiskUsedPercent = #{systemdiskusedpercent,jdbcType=DOUBLE},
-      systemDiskInodesTotal = #{systemdiskinodestotal,jdbcType=INTEGER},
-      systemDiskInodesFree = #{systemdiskinodesfree,jdbcType=INTEGER},
-      systemDiskInodesUsed = #{systemdiskinodesused,jdbcType=INTEGER},
-      systemDiskInodesUsedPercent = #{systemdiskinodesusedpercent,jdbcType=DOUBLE},
-      systemIOAvgQuSz = #{systemioavgqusz,jdbcType=DOUBLE},
-      systemIOAvgQuSzMin = #{systemioavgquszmin,jdbcType=DOUBLE},
-      systemIOAvgQuSzMax = #{systemioavgquszmax,jdbcType=DOUBLE},
-      systemIOAvgQuSzMean = #{systemioavgquszmean,jdbcType=DOUBLE},
-      systemIOAvgQuSzStd = #{systemioavgquszstd,jdbcType=DOUBLE},
-      systemIOAvgQuSz55Quantile = #{systemioavgqusz55quantile,jdbcType=DOUBLE},
-      systemIOAvgQuSz75Quantile = #{systemioavgqusz75quantile,jdbcType=DOUBLE},
-      systemIOAvgQuSz95Quantile = #{systemioavgqusz95quantile,jdbcType=DOUBLE},
-      systemIOAvgQuSz99Quantile = #{systemioavgqusz99quantile,jdbcType=DOUBLE},
-      systemIOAvgRqSz = #{systemioavgrqsz,jdbcType=DOUBLE},
-      systemIOAvgRqSzMin = #{systemioavgrqszmin,jdbcType=DOUBLE},
-      systemIOAvgRqSzMax = #{systemioavgrqszmax,jdbcType=DOUBLE},
-      systemIOAvgRqSzMean = #{systemioavgrqszmean,jdbcType=DOUBLE},
-      systemIOAvgRqSzStd = #{systemioavgrqszstd,jdbcType=DOUBLE},
-      systemIOAvgRqSz55Quantile = #{systemioavgrqsz55quantile,jdbcType=DOUBLE},
-      systemIOAvgRqSz75Quantile = #{systemioavgrqsz75quantile,jdbcType=DOUBLE},
-      systemIOAvgRqSz95Quantile = #{systemioavgrqsz95quantile,jdbcType=DOUBLE},
-      systemIOAvgRqSz99Quantile = #{systemioavgrqsz99quantile,jdbcType=DOUBLE},
-      systemIOAwait = #{systemioawait,jdbcType=BIGINT},
-      systemIOAwaitMin = #{systemioawaitmin,jdbcType=BIGINT},
-      systemIOAwaitMax = #{systemioawaitmax,jdbcType=BIGINT},
-      systemIOAwaitMean = #{systemioawaitmean,jdbcType=DOUBLE},
-      systemIOAwaitStd = #{systemioawaitstd,jdbcType=DOUBLE},
-      systemIOAwait55Quantile = #{systemioawait55quantile,jdbcType=BIGINT},
-      systemIOAwait75Quantile = #{systemioawait75quantile,jdbcType=BIGINT},
-      systemIOAwait95Quantile = #{systemioawait95quantile,jdbcType=BIGINT},
-      systemIOAwait99Quantile = #{systemioawait99quantile,jdbcType=BIGINT},
-      systemIORAwait = #{systemiorawait,jdbcType=BIGINT},
-      systemIORAwaitMin = #{systemiorawaitmin,jdbcType=BIGINT},
-      systemIORAwaitMax = #{systemiorawaitmax,jdbcType=BIGINT},
-      systemIORAwaitMean = #{systemiorawaitmean,jdbcType=DOUBLE},
-      systemIORAwaitStd = #{systemiorawaitstd,jdbcType=DOUBLE},
-      systemIORAwait55Quantile = #{systemiorawait55quantile,jdbcType=BIGINT},
-      systemIORAwait75Quantile = #{systemiorawait75quantile,jdbcType=BIGINT},
-      systemIORAwait95Quantile = #{systemiorawait95quantile,jdbcType=BIGINT},
-      systemIORAwait99Quantile = #{systemiorawait99quantile,jdbcType=BIGINT},
-      systemIOReadRequest = #{systemioreadrequest,jdbcType=BIGINT},
-      systemIOReadRequestMin = #{systemioreadrequestmin,jdbcType=BIGINT},
-      systemIOReadRequestMax = #{systemioreadrequestmax,jdbcType=BIGINT},
-      systemIOReadRequestMean = #{systemioreadrequestmean,jdbcType=DOUBLE},
-      systemIOReadRequestStd = #{systemioreadrequeststd,jdbcType=DOUBLE},
-      systemIOReadRequest55Quantile = #{systemioreadrequest55quantile,jdbcType=BIGINT},
-      systemIOReadRequest75Quantile = #{systemioreadrequest75quantile,jdbcType=BIGINT},
-      systemIOReadRequest95Quantile = #{systemioreadrequest95quantile,jdbcType=BIGINT},
-      systemIOReadRequest99Quantile = #{systemioreadrequest99quantile,jdbcType=BIGINT},
-      systemIOReadBytes = #{systemioreadbytes,jdbcType=BIGINT},
-      systemIOReadBytesMin = #{systemioreadbytesmin,jdbcType=BIGINT},
-      systemIOReadBytesMax = #{systemioreadbytesmax,jdbcType=BIGINT},
-      systemIOReadBytesMean = #{systemioreadbytesmean,jdbcType=DOUBLE},
-      systemIOReadBytesStd = #{systemioreadbytesstd,jdbcType=DOUBLE},
-      systemIOReadBytes55Quantile = #{systemioreadbytes55quantile,jdbcType=BIGINT},
-      systemIOReadBytes75Quantile = #{systemioreadbytes75quantile,jdbcType=BIGINT},
-      systemIOReadBytes95Quantile = #{systemioreadbytes95quantile,jdbcType=BIGINT},
-      systemIOReadBytes99Quantile = #{systemioreadbytes99quantile,jdbcType=BIGINT},
-      systemIORRQMS = #{systemiorrqms,jdbcType=BIGINT},
-      systemIORRQMSMin = #{systemiorrqmsmin,jdbcType=BIGINT},
-      systemIORRQMSMax = #{systemiorrqmsmax,jdbcType=BIGINT},
-      systemIORRQMSMean = #{systemiorrqmsmean,jdbcType=DOUBLE},
-      systemIORRQMSStd = #{systemiorrqmsstd,jdbcType=DOUBLE},
-      systemIORRQMS55Quantile = #{systemiorrqms55quantile,jdbcType=BIGINT},
-      systemIORRQMS75Quantile = #{systemiorrqms75quantile,jdbcType=BIGINT},
-      systemIORRQMS95Quantile = #{systemiorrqms95quantile,jdbcType=BIGINT},
-      systemIORRQMS99Quantile = #{systemiorrqms99quantile,jdbcType=BIGINT},
-      systemIOSVCTM = #{systemiosvctm,jdbcType=BIGINT},
-      systemIOSVCTMMin = #{systemiosvctmmin,jdbcType=BIGINT},
-      systemIOSVCTMMax = #{systemiosvctmmax,jdbcType=BIGINT},
-      systemIOSVCTMMean = #{systemiosvctmmean,jdbcType=DOUBLE},
-      systemIOSVCTMStd = #{systemiosvctmstd,jdbcType=DOUBLE},
-      systemIOSVCTM55Quantile = #{systemiosvctm55quantile,jdbcType=BIGINT},
-      systemIOSVCTM75Quantile = #{systemiosvctm75quantile,jdbcType=BIGINT},
-      systemIOSVCTM95Quantile = #{systemiosvctm95quantile,jdbcType=BIGINT},
-      systemIOSVCTM99Quantile = #{systemiosvctm99quantile,jdbcType=BIGINT},
-      systemIOUtil = #{systemioutil,jdbcType=DOUBLE},
-      systemIOUtilMin = #{systemioutilmin,jdbcType=DOUBLE},
-      systemIOUtilMax = #{systemioutilmax,jdbcType=DOUBLE},
-      systemIOUtilMean = #{systemioutilmean,jdbcType=DOUBLE},
-      systemIOUtilStd = #{systemioutilstd,jdbcType=DOUBLE},
-      systemIOUtil55Quantile = #{systemioutil55quantile,jdbcType=DOUBLE},
-      systemIOUtil75Quantile = #{systemioutil75quantile,jdbcType=DOUBLE},
-      systemIOUtil95Quantile = #{systemioutil95quantile,jdbcType=DOUBLE},
-      systemIOUtil99Quantile = #{systemioutil99quantile,jdbcType=DOUBLE},
-      systemIOWAwait = #{systemiowawait,jdbcType=BIGINT},
-      systemIOWAwaitMin = #{systemiowawaitmin,jdbcType=BIGINT},
-      systemIOWAwaitMax = #{systemiowawaitmax,jdbcType=BIGINT},
-      systemIOWAwaitMean = #{systemiowawaitmean,jdbcType=DOUBLE},
-      systemIOWAwaitStd = #{systemiowawaitstd,jdbcType=DOUBLE},
-      systemIOWAwait55Quantile = #{systemiowawait55quantile,jdbcType=BIGINT},
-      systemIOWAwait75Quantile = #{systemiowawait75quantile,jdbcType=BIGINT},
-      systemIOWAwait95Quantile = #{systemiowawait95quantile,jdbcType=BIGINT},
-      systemIOWAwait99Quantile = #{systemiowawait99quantile,jdbcType=BIGINT},
-      systemIOWriteRequest = #{systemiowriterequest,jdbcType=BIGINT},
-      systemIOWriteRequestMin = #{systemiowriterequestmin,jdbcType=BIGINT},
-      systemIOWriteRequestMax = #{systemiowriterequestmax,jdbcType=BIGINT},
-      systemIOWriteRequestMean = #{systemiowriterequestmean,jdbcType=DOUBLE},
-      systemIOWriteRequestStd = #{systemiowriterequeststd,jdbcType=DOUBLE},
-      systemIOWriteRequest55Quantile = #{systemiowriterequest55quantile,jdbcType=BIGINT},
-      systemIOWriteRequest75Quantile = #{systemiowriterequest75quantile,jdbcType=BIGINT},
-      systemIOWriteRequest95Quantile = #{systemiowriterequest95quantile,jdbcType=BIGINT},
-      systemIOWriteRequest99Quantile = #{systemiowriterequest99quantile,jdbcType=BIGINT},
-      systemIOWriteBytes = #{systemiowritebytes,jdbcType=BIGINT},
-      systemIOWriteBytesMin = #{systemiowritebytesmin,jdbcType=BIGINT},
-      systemIOWriteBytesMax = #{systemiowritebytesmax,jdbcType=BIGINT},
-      systemIOWriteBytesMean = #{systemiowritebytesmean,jdbcType=DOUBLE},
-      systemIOWriteBytesStd = #{systemiowritebytesstd,jdbcType=DOUBLE},
-      systemIOWriteBytes55Quantile = #{systemiowritebytes55quantile,jdbcType=BIGINT},
-      systemIOWriteBytes75Quantile = #{systemiowritebytes75quantile,jdbcType=BIGINT},
-      systemIOWriteBytes95Quantile = #{systemiowritebytes95quantile,jdbcType=BIGINT},
-      systemIOWriteBytes99Quantile = #{systemiowritebytes99quantile,jdbcType=BIGINT},
-      systemIOReadWriteBytes = #{systemioreadwritebytes,jdbcType=BIGINT},
-      systemIOReadWriteBytesMin = #{systemioreadwritebytesmin,jdbcType=BIGINT},
-      systemIOReadWriteBytesMax = #{systemioreadwritebytesmax,jdbcType=BIGINT},
-      systemIOReadWriteBytesMean = #{systemioreadwritebytesmean,jdbcType=DOUBLE},
-      systemIOReadWriteBytesStd = #{systemioreadwritebytesstd,jdbcType=DOUBLE},
-      systemIOReadWriteBytes55Quantile = #{systemioreadwritebytes55quantile,jdbcType=BIGINT},
-      systemIOReadWriteBytes75Quantile = #{systemioreadwritebytes75quantile,jdbcType=BIGINT},
-      systemIOReadWriteBytes95Quantile = #{systemioreadwritebytes95quantile,jdbcType=BIGINT},
-      systemIOReadWriteBytes99Quantile = #{systemioreadwritebytes99quantile,jdbcType=BIGINT},
-      systemIOWRQMS = #{systemiowrqms,jdbcType=BIGINT},
-      systemIOWRQMSMin = #{systemiowrqmsmin,jdbcType=BIGINT},
-      systemIOWRQMSMax = #{systemiowrqmsmax,jdbcType=BIGINT},
-      systemIOWRQMSMean = #{systemiowrqmsmean,jdbcType=DOUBLE},
-      systemIOWRQMSStd = #{systemiowrqmsstd,jdbcType=DOUBLE},
-      systemIOWRQMS55Quantile = #{systemiowrqms55quantile,jdbcType=BIGINT},
-      systemIOWRQMS75Quantile = #{systemiowrqms75quantile,jdbcType=BIGINT},
-      systemIOWRQMS95Quantile = #{systemiowrqms95quantile,jdbcType=BIGINT},
-      systemIOWRQMS99Quantile = #{systemiowrqms99quantile,jdbcType=BIGINT},
-      systemDiskReadTime = #{systemdiskreadtime,jdbcType=BIGINT},
-      systemDiskReadTimeMin = #{systemdiskreadtimemin,jdbcType=BIGINT},
-      systemDiskReadTimeMax = #{systemdiskreadtimemax,jdbcType=BIGINT},
-      systemDiskReadTimeMean = #{systemdiskreadtimemean,jdbcType=DOUBLE},
-      systemDiskReadTimeStd = #{systemdiskreadtimestd,jdbcType=DOUBLE},
-      systemDiskReadTime55Quantile = #{systemdiskreadtime55quantile,jdbcType=BIGINT},
-      systemDiskReadTime75Quantile = #{systemdiskreadtime75quantile,jdbcType=BIGINT},
-      systemDiskReadTime95Quantile = #{systemdiskreadtime95quantile,jdbcType=BIGINT},
-      systemDiskReadTime99Quantile = #{systemdiskreadtime99quantile,jdbcType=BIGINT},
-      systemDiskReadTimePercent = #{systemdiskreadtimepercent,jdbcType=DOUBLE},
-      systemDiskReadTimePercentMin = #{systemdiskreadtimepercentmin,jdbcType=DOUBLE},
-      systemDiskReadTimePercentMax = #{systemdiskreadtimepercentmax,jdbcType=DOUBLE},
-      systemDiskReadTimePercentMean = #{systemdiskreadtimepercentmean,jdbcType=DOUBLE},
-      systemDiskReadTimePercentStd = #{systemdiskreadtimepercentstd,jdbcType=DOUBLE},
-      systemDiskReadTimePercent55Quantile = #{systemdiskreadtimepercent55quantile,jdbcType=DOUBLE},
-      systemDiskReadTimePercent75Quantile = #{systemdiskreadtimepercent75quantile,jdbcType=DOUBLE},
-      systemDiskReadTimePercent95Quantile = #{systemdiskreadtimepercent95quantile,jdbcType=DOUBLE},
-      systemDiskReadTimePercent99Quantile = #{systemdiskreadtimepercent99quantile,jdbcType=DOUBLE},
-      systemDiskWriteTime = #{systemdiskwritetime,jdbcType=BIGINT},
-      systemDiskWriteTimeMin = #{systemdiskwritetimemin,jdbcType=BIGINT},
-      systemDiskWriteTimeMax = #{systemdiskwritetimemax,jdbcType=BIGINT},
-      systemDiskWriteTimeMean = #{systemdiskwritetimemean,jdbcType=DOUBLE},
-      systemDiskWriteTimeStd = #{systemdiskwritetimestd,jdbcType=DOUBLE},
-      systemDiskWriteTime55Quantile = #{systemdiskwritetime55quantile,jdbcType=BIGINT},
-      systemDiskWriteTime75Quantile = #{systemdiskwritetime75quantile,jdbcType=BIGINT},
-      systemDiskWriteTime95Quantile = #{systemdiskwritetime95quantile,jdbcType=BIGINT},
-      systemDiskWriteTime99Quantile = #{systemdiskwritetime99quantile,jdbcType=BIGINT},
-      systemDiskWriteTimePercent = #{systemdiskwritetimepercent,jdbcType=DOUBLE},
-      systemDiskWriteTimePercentMin = #{systemdiskwritetimepercentmin,jdbcType=DOUBLE},
-      systemDiskWriteTimePercentMax = #{systemdiskwritetimepercentmax,jdbcType=DOUBLE},
-      systemDiskWriteTimePercentMean = #{systemdiskwritetimepercentmean,jdbcType=DOUBLE},
-      systemDiskWriteTimePercentStd = #{systemdiskwritetimepercentstd,jdbcType=DOUBLE},
-      systemDiskWriteTimePercent55Quantile = #{systemdiskwritetimepercent55quantile,jdbcType=DOUBLE},
-      systemDiskWriteTimePercent75Quantile = #{systemdiskwritetimepercent75quantile,jdbcType=DOUBLE},
-      systemDiskWriteTimePercent95Quantile = #{systemdiskwritetimepercent95quantile,jdbcType=DOUBLE},
-      systemDiskWriteTimePercent99Quantile = #{systemdiskwritetimepercent99quantile,jdbcType=DOUBLE},
-      heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
-      heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
-      heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
 </mapper>

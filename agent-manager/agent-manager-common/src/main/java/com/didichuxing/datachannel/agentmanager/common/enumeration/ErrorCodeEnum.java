@@ -109,7 +109,9 @@ public enum ErrorCodeEnum {
     /**
      * Metrics 查询相关 34000 ~ 34999
      */
-    METRICS_QUERY_METRIC_NOT_EXISTS(34000, "待查询指标不存在"),
+    METRIC_NOT_EXISTS(34000, "指标不存在"),
+    METRICS_TYPE_NOT_EXISTS(34001,"待查询指标系统不存在"),
+    METRICS_QUERY_ERROR(34002, "指标查询错误"),
 
 
 

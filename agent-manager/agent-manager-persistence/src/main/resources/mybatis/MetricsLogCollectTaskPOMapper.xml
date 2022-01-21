@@ -127,16 +127,199 @@
     masterFile, path, collectTaskType, sinkNum, collectTaskVersion, dynamicLimiterThreshold, 
     heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
   </sql>
+
+  <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
+    <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
+    <result column="last" property="last" jdbcType="DOUBLE" />
+    <result column="min" property="min" jdbcType="DOUBLE" />
+    <result column="max" property="max" jdbcType="DOUBLE" />
+    <result column="mean" property="mean" jdbcType="DOUBLE" />
+    <result column="std" property="std" jdbcType="DOUBLE" />
+    <result column="fiftyFiveQuantile" property="fiftyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="seventyFiveQuantile" property="seventyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyFiveQuantile" property="ninetyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyNineQuantile" property="ninetyNineQuantile" jdbcType="DOUBLE" />
+    <result column="macAddress" property="macAddress" jdbcType="VARCHAR"/>
+    <result column="device" property="device" jdbcType="VARCHAR"/>
+    <result column="path" property="path" jdbcType="VARCHAR"/>
+    <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
+    <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${fieldName}
+    from tb_metrics_log_collect_task
+    where
+      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+      <if test="pathId != null">
+        and pathId = #{pathId,jdbcType=BIGINT}
+      </if>
+      <if test="hostName != null">
+        and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+      </if>
+      and
+        heartbeatTime &gt; #{startTime}
+      and
+        heartbeatTime &lt;= #{endTime}
+      order by heartbeatTime desc
+      limit 1
+  </select>
+  <select id="getSingleChatNonStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+      <if test="hostName != null">
+        collectTaskHostName as 'hostName',
+      </if>
+      heartbeatTimeMinute
+    from tb_metrics_log_collect_task
+    where
+      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+      <if test="pathId != null">
+        and pathId = #{pathId,jdbcType=BIGINT}
+      </if>
+      <if test="hostName != null">
+        and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+      </if>
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+            ${function}(${fieldName}Min) as 'min',
+            ${function}(${fieldName}Max) as 'max',
+            ${function}(${fieldName}Mean) as 'mean',
+            ${function}(${fieldName}Std) as 'std',
+            ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+            ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+            ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+            ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+            <if test="hostName != null">
+              collectTaskHostName as 'hostName',
+            </if>
+            heartbeatTimeMinute
+    from tb_metrics_log_collect_task
+    where
+      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+      <if test="pathId != null">
+        and pathId = #{pathId,jdbcType=BIGINT}
+      </if>
+      <if test="hostName != null">
+        and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+      </if>
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+
+  <!--
+  <select id="getTopNByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(
+    ${fieldName}
+    <if test="sortMetricType == 1">
+      Min
+    </if>
+    <if test="sortMetricType == 2">
+      Max
+    </if>
+    <if test="sortMetricType == 3">
+      Mean
+    </if>
+    <if test="sortMetricType == 4">
+      Std
+    </if>
+    <if test="sortMetricType == 5">
+      55Quantil
+    </if>
+    <if test="sortMetricType == 6">
+      75Quantil
+    </if>
+    <if test="sortMetricType ==7">
+      95Quantil
+    </if>
+    <if test="sortMetricType ==8">
+      99Quantil
+    </if>
+    ) as 'aggVal',
+    pathId
+    from tb_metrics_log_collect_task
+    where
+    collectTaskId = #{hostName,jdbcType=VARCHAR}
+    <if test="hostName != null">
+      and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    </if>
+    and
+    heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
+    group by pathId
+    ) as agg_table
+    order by agg_table.aggVal desc
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+  -->
+
+  <resultMap id="TopNHostNameResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO" >
+    <result column="hostName" property="hostName" jdbcType="VARCHAR" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+
+  <select id="getTopNByHostName" resultMap="TopNHostNameResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(
+    ${fieldName}
+    <if test="sortMetricType == 1">
+      Min
+    </if>
+    <if test="sortMetricType == 2">
+      Max
+    </if>
+    <if test="sortMetricType == 3">
+      Mean
+    </if>
+    <if test="sortMetricType == 4">
+      Std
+    </if>
+    <if test="sortMetricType == 5">
+      55Quantil
+    </if>
+    <if test="sortMetricType == 6">
+      75Quantil
+    </if>
+    <if test="sortMetricType ==7">
+      95Quantil
+    </if>
+    <if test="sortMetricType ==8">
+      99Quantil
+    </if>
+    ) as 'aggVal',
+    collectTaskHostName as 'hostName'
+    from tb_metrics_log_collect_task
+    where
+    collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+    <if test="pathId != null">
+      and pathId = #{pathId,jdbcType=BIGINT}
+    </if>
+    and
+    heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
+    group by collectTaskHostName
+    ) as agg_table
+    order by agg_table.aggVal desc
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from tb_metrics_log_collect_task
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from tb_metrics_log_collect_task
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     insert into tb_metrics_log_collect_task (id, collectTaskId, pathId, 
       agentHostName, collectTaskHostName, agentHostIp, 
@@ -830,410 +1013,4 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
-    update tb_metrics_log_collect_task
-    <set >
-      <if test="collecttaskid != null" >
-        collectTaskId = #{collecttaskid,jdbcType=BIGINT},
-      </if>
-      <if test="pathid != null" >
-        pathId = #{pathid,jdbcType=BIGINT},
-      </if>
-      <if test="agenthostname != null" >
-        agentHostName = #{agenthostname,jdbcType=VARCHAR},
-      </if>
-      <if test="collecttaskhostname != null" >
-        collectTaskHostName = #{collecttaskhostname,jdbcType=VARCHAR},
-      </if>
-      <if test="agenthostip != null" >
-        agentHostIp = #{agenthostip,jdbcType=VARCHAR},
-      </if>
-      <if test="businesstimestamp != null" >
-        businessTimestamp = #{businesstimestamp,jdbcType=BIGINT},
-      </if>
-      <if test="maxbusinesstimestampdelay != null" >
-        maxBusinessTimestampDelay = #{maxbusinesstimestampdelay,jdbcType=BIGINT},
-      </if>
-      <if test="limittime != null" >
-        limitTime = #{limittime,jdbcType=BIGINT},
-      </if>
-      <if test="toolargetruncatenum != null" >
-        tooLargeTruncateNum = #{toolargetruncatenum,jdbcType=BIGINT},
-      </if>
-      <if test="toolargetruncatenumtotal != null" >
-        tooLargeTruncateNumTotal = #{toolargetruncatenumtotal,jdbcType=BIGINT},
-      </if>
-      <if test="collectpathisexists != null" >
-        collectPathIsExists = #{collectpathisexists,jdbcType=TINYINT},
-      </if>
-      <if test="disorderexists != null" >
-        disorderExists = #{disorderexists,jdbcType=TINYINT},
-      </if>
-      <if test="sliceerrorexists != null" >
-        sliceErrorExists = #{sliceerrorexists,jdbcType=TINYINT},
-      </if>
-      <if test="readbytes != null" >
-        readBytes = #{readbytes,jdbcType=BIGINT},
-      </if>
-      <if test="readcount != null" >
-        readCount = #{readcount,jdbcType=BIGINT},
-      </if>
-      <if test="sendbytes != null" >
-        sendBytes = #{sendbytes,jdbcType=BIGINT},
-      </if>
-      <if test="sendcount != null" >
-        sendCount = #{sendcount,jdbcType=BIGINT},
-      </if>
-      <if test="readtimeperevent != null" >
-        readTimePerEvent = #{readtimeperevent,jdbcType=BIGINT},
-      </if>
-      <if test="readtimepereventmin != null" >
-        readTimePerEventMin = #{readtimepereventmin,jdbcType=BIGINT},
-      </if>
-      <if test="readtimepereventmax != null" >
-        readTimePerEventMax = #{readtimepereventmax,jdbcType=BIGINT},
-      </if>
-      <if test="readtimepereventmean != null" >
-        readTimePerEventMean = #{readtimepereventmean,jdbcType=BIGINT},
-      </if>
-      <if test="readtimepereventstd != null" >
-        readTimePerEventStd = #{readtimepereventstd,jdbcType=BIGINT},
-      </if>
-      <if test="readtimeperevent55quantile != null" >
-        readTimePerEvent55Quantile = #{readtimeperevent55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="readtimeperevent75quantile != null" >
-        readTimePerEvent75Quantile = #{readtimeperevent75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="readtimeperevent95quantile != null" >
-        readTimePerEvent95Quantile = #{readtimeperevent95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="readtimeperevent99quantile != null" >
-        readTimePerEvent99Quantile = #{readtimeperevent99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="sendtime != null" >
-        sendTime = #{sendtime,jdbcType=BIGINT},
-      </if>
-      <if test="sendtimemin != null" >
-        sendTimeMin = #{sendtimemin,jdbcType=BIGINT},
-      </if>
-      <if test="sendtimemax != null" >
-        sendTimeMax = #{sendtimemax,jdbcType=BIGINT},
-      </if>
-      <if test="sendtimemean != null" >
-        sendTimeMean = #{sendtimemean,jdbcType=BIGINT},
-      </if>
-      <if test="sendtimestd != null" >
-        sendTimeStd = #{sendtimestd,jdbcType=BIGINT},
-      </if>
-      <if test="sendtime55quantile != null" >
-        sendTime55Quantile = #{sendtime55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="sendtime75quantile != null" >
-        sendTime75Quantile = #{sendtime75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="sendtime95quantile != null" >
-        sendTime95Quantile = #{sendtime95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="sendtime99quantile != null" >
-        sendTime99Quantile = #{sendtime99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="flushtime != null" >
-        flushTime = #{flushtime,jdbcType=BIGINT},
-      </if>
-      <if test="flushtimemin != null" >
-        flushTimeMin = #{flushtimemin,jdbcType=BIGINT},
-      </if>
-      <if test="flushtimemax != null" >
-        flushTimeMax = #{flushtimemax,jdbcType=BIGINT},
-      </if>
-      <if test="flushtimemean != null" >
-        flushTimeMean = #{flushtimemean,jdbcType=BIGINT},
-      </if>
-      <if test="flushtimestd != null" >
-        flushTimeStd = #{flushtimestd,jdbcType=BIGINT},
-      </if>
-      <if test="flushtime55quantile != null" >
-        flushTime55Quantile = #{flushtime55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="flushtime75quantile != null" >
-        flushTime75Quantile = #{flushtime75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="flushtime95quantile != null" >
-        flushTime95Quantile = #{flushtime95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="flushtime99quantile != null" >
-        flushTime99Quantile = #{flushtime99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="processtimeperevent != null" >
-        processTimePerEvent = #{processtimeperevent,jdbcType=BIGINT},
-      </if>
-      <if test="processtimepereventmin != null" >
-        processTimePerEventMin = #{processtimepereventmin,jdbcType=BIGINT},
-      </if>
-      <if test="processtimepereventmax != null" >
-        processTimePerEventMax = #{processtimepereventmax,jdbcType=BIGINT},
-      </if>
-      <if test="processtimepereventmean != null" >
-        processTimePerEventMean = #{processtimepereventmean,jdbcType=BIGINT},
-      </if>
-      <if test="processtimepereventstd != null" >
-        processTimePerEventStd = #{processtimepereventstd,jdbcType=BIGINT},
-      </if>
-      <if test="processtimeperevent55quantile != null" >
-        processTimePerEvent55Quantile = #{processtimeperevent55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="processtimeperevent75quantile != null" >
-        processTimePerEvent75Quantile = #{processtimeperevent75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="processtimeperevent95quantile != null" >
-        processTimePerEvent95Quantile = #{processtimeperevent95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="processtimeperevent99quantile != null" >
-        processTimePerEvent99Quantile = #{processtimeperevent99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="flushtimes != null" >
-        flushTimes = #{flushtimes,jdbcType=BIGINT},
-      </if>
-      <if test="flushfailedtimes != null" >
-        flushFailedTimes = #{flushfailedtimes,jdbcType=BIGINT},
-      </if>
-      <if test="filtereventsnum != null" >
-        filterEventsNum = #{filtereventsnum,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytesmax != null" >
-        channelBytesMax = #{channelbytesmax,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountmax != null" >
-        channelCountMax = #{channelcountmax,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessize != null" >
-        channelBytesSize = #{channelbytessize,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessizemin != null" >
-        channelBytesSizeMin = #{channelbytessizemin,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessizemax != null" >
-        channelBytesSizeMax = #{channelbytessizemax,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessizemean != null" >
-        channelBytesSizeMean = #{channelbytessizemean,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessizestd != null" >
-        channelBytesSizeStd = #{channelbytessizestd,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessize55quantile != null" >
-        channelBytesSize55Quantile = #{channelbytessize55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessize75quantile != null" >
-        channelBytesSize75Quantile = #{channelbytessize75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessize95quantile != null" >
-        channelBytesSize95Quantile = #{channelbytessize95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelbytessize99quantile != null" >
-        channelBytesSize99Quantile = #{channelbytessize99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsize != null" >
-        channelCountSize = #{channelcountsize,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsizemin != null" >
-        channelCountSizeMin = #{channelcountsizemin,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsizemax != null" >
-        channelCountSizeMax = #{channelcountsizemax,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsizemean != null" >
-        channelCountSizeMean = #{channelcountsizemean,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsizestd != null" >
-        channelCountSizeStd = #{channelcountsizestd,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsize55quantile != null" >
-        channelCountSize55Quantile = #{channelcountsize55quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsize75quantile != null" >
-        channelCountSize75Quantile = #{channelcountsize75quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsize95quantile != null" >
-        channelCountSize95Quantile = #{channelcountsize95quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelcountsize99quantile != null" >
-        channelCountSize99Quantile = #{channelcountsize99quantile,jdbcType=BIGINT},
-      </if>
-      <if test="channelusedpercent != null" >
-        channelUsedPercent = #{channelusedpercent,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercentmin != null" >
-        channelUsedPercentMin = #{channelusedpercentmin,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercentmax != null" >
-        channelUsedPercentMax = #{channelusedpercentmax,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercentmean != null" >
-        channelUsedPercentMean = #{channelusedpercentmean,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercentstd != null" >
-        channelUsedPercentStd = #{channelusedpercentstd,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercent55quantile != null" >
-        channelUsedPercent55Quantile = #{channelusedpercent55quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercent75quantile != null" >
-        channelUsedPercent75Quantile = #{channelusedpercent75quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercent95quantile != null" >
-        channelUsedPercent95Quantile = #{channelusedpercent95quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="channelusedpercent99quantile != null" >
-        channelUsedPercent99Quantile = #{channelusedpercent99quantile,jdbcType=DOUBLE},
-      </if>
-      <if test="receiverclusterid != null" >
-        receiverClusterId = #{receiverclusterid,jdbcType=BIGINT},
-      </if>
-      <if test="receiverclustertopic != null" >
-        receiverClusterTopic = #{receiverclustertopic,jdbcType=VARCHAR},
-      </if>
-      <if test="collectfiles != null" >
-        collectFiles = #{collectfiles,jdbcType=VARCHAR},
-      </if>
-      <if test="relatedfiles != null" >
-        relatedFiles = #{relatedfiles,jdbcType=INTEGER},
-      </if>
-      <if test="latestfile != null" >
-        latestFile = #{latestfile,jdbcType=VARCHAR},
-      </if>
-      <if test="masterfile != null" >
-        masterFile = #{masterfile,jdbcType=VARCHAR},
-      </if>
-      <if test="path != null" >
-        path = #{path,jdbcType=VARCHAR},
-      </if>
-      <if test="collecttasktype != null" >
-        collectTaskType = #{collecttasktype,jdbcType=INTEGER},
-      </if>
-      <if test="sinknum != null" >
-        sinkNum = #{sinknum,jdbcType=INTEGER},
-      </if>
-      <if test="collecttaskversion != null" >
-        collectTaskVersion = #{collecttaskversion,jdbcType=INTEGER},
-      </if>
-      <if test="dynamiclimiterthreshold != null" >
-        dynamicLimiterThreshold = #{dynamiclimiterthreshold,jdbcType=BIGINT},
-      </if>
-      <if test="heartbeattime != null" >
-        heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
-      </if>
-      <if test="heartbeattimeminute != null" >
-        heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
-      </if>
-      <if test="heartbeattimehour != null" >
-        heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
-    update tb_metrics_log_collect_task
-    set collectTaskId = #{collecttaskid,jdbcType=BIGINT},
-      pathId = #{pathid,jdbcType=BIGINT},
-      agentHostName = #{agenthostname,jdbcType=VARCHAR},
-      collectTaskHostName = #{collecttaskhostname,jdbcType=VARCHAR},
-      agentHostIp = #{agenthostip,jdbcType=VARCHAR},
-      businessTimestamp = #{businesstimestamp,jdbcType=BIGINT},
-      maxBusinessTimestampDelay = #{maxbusinesstimestampdelay,jdbcType=BIGINT},
-      limitTime = #{limittime,jdbcType=BIGINT},
-      tooLargeTruncateNum = #{toolargetruncatenum,jdbcType=BIGINT},
-      tooLargeTruncateNumTotal = #{toolargetruncatenumtotal,jdbcType=BIGINT},
-      collectPathIsExists = #{collectpathisexists,jdbcType=TINYINT},
-      disorderExists = #{disorderexists,jdbcType=TINYINT},
-      sliceErrorExists = #{sliceerrorexists,jdbcType=TINYINT},
-      readBytes = #{readbytes,jdbcType=BIGINT},
-      readCount = #{readcount,jdbcType=BIGINT},
-      sendBytes = #{sendbytes,jdbcType=BIGINT},
-      sendCount = #{sendcount,jdbcType=BIGINT},
-      readTimePerEvent = #{readtimeperevent,jdbcType=BIGINT},
-      readTimePerEventMin = #{readtimepereventmin,jdbcType=BIGINT},
-      readTimePerEventMax = #{readtimepereventmax,jdbcType=BIGINT},
-      readTimePerEventMean = #{readtimepereventmean,jdbcType=BIGINT},
-      readTimePerEventStd = #{readtimepereventstd,jdbcType=BIGINT},
-      readTimePerEvent55Quantile = #{readtimeperevent55quantile,jdbcType=BIGINT},
-      readTimePerEvent75Quantile = #{readtimeperevent75quantile,jdbcType=BIGINT},
-      readTimePerEvent95Quantile = #{readtimeperevent95quantile,jdbcType=BIGINT},
-      readTimePerEvent99Quantile = #{readtimeperevent99quantile,jdbcType=BIGINT},
-      sendTime = #{sendtime,jdbcType=BIGINT},
-      sendTimeMin = #{sendtimemin,jdbcType=BIGINT},
-      sendTimeMax = #{sendtimemax,jdbcType=BIGINT},
-      sendTimeMean = #{sendtimemean,jdbcType=BIGINT},
-      sendTimeStd = #{sendtimestd,jdbcType=BIGINT},
-      sendTime55Quantile = #{sendtime55quantile,jdbcType=BIGINT},
-      sendTime75Quantile = #{sendtime75quantile,jdbcType=BIGINT},
-      sendTime95Quantile = #{sendtime95quantile,jdbcType=BIGINT},
-      sendTime99Quantile = #{sendtime99quantile,jdbcType=BIGINT},
-      flushTime = #{flushtime,jdbcType=BIGINT},
-      flushTimeMin = #{flushtimemin,jdbcType=BIGINT},
-      flushTimeMax = #{flushtimemax,jdbcType=BIGINT},
-      flushTimeMean = #{flushtimemean,jdbcType=BIGINT},
-      flushTimeStd = #{flushtimestd,jdbcType=BIGINT},
-      flushTime55Quantile = #{flushtime55quantile,jdbcType=BIGINT},
-      flushTime75Quantile = #{flushtime75quantile,jdbcType=BIGINT},
-      flushTime95Quantile = #{flushtime95quantile,jdbcType=BIGINT},
-      flushTime99Quantile = #{flushtime99quantile,jdbcType=BIGINT},
-      processTimePerEvent = #{processtimeperevent,jdbcType=BIGINT},
-      processTimePerEventMin = #{processtimepereventmin,jdbcType=BIGINT},
-      processTimePerEventMax = #{processtimepereventmax,jdbcType=BIGINT},
-      processTimePerEventMean = #{processtimepereventmean,jdbcType=BIGINT},
-      processTimePerEventStd = #{processtimepereventstd,jdbcType=BIGINT},
-      processTimePerEvent55Quantile = #{processtimeperevent55quantile,jdbcType=BIGINT},
-      processTimePerEvent75Quantile = #{processtimeperevent75quantile,jdbcType=BIGINT},
-      processTimePerEvent95Quantile = #{processtimeperevent95quantile,jdbcType=BIGINT},
-      processTimePerEvent99Quantile = #{processtimeperevent99quantile,jdbcType=BIGINT},
-      flushTimes = #{flushtimes,jdbcType=BIGINT},
-      flushFailedTimes = #{flushfailedtimes,jdbcType=BIGINT},
-      filterEventsNum = #{filtereventsnum,jdbcType=BIGINT},
-      channelBytesMax = #{channelbytesmax,jdbcType=BIGINT},
-      channelCountMax = #{channelcountmax,jdbcType=BIGINT},
-      channelBytesSize = #{channelbytessize,jdbcType=BIGINT},
-      channelBytesSizeMin = #{channelbytessizemin,jdbcType=BIGINT},
-      channelBytesSizeMax = #{channelbytessizemax,jdbcType=BIGINT},
-      channelBytesSizeMean = #{channelbytessizemean,jdbcType=BIGINT},
-      channelBytesSizeStd = #{channelbytessizestd,jdbcType=BIGINT},
-      channelBytesSize55Quantile = #{channelbytessize55quantile,jdbcType=BIGINT},
-      channelBytesSize75Quantile = #{channelbytessize75quantile,jdbcType=BIGINT},
-      channelBytesSize95Quantile = #{channelbytessize95quantile,jdbcType=BIGINT},
-      channelBytesSize99Quantile = #{channelbytessize99quantile,jdbcType=BIGINT},
-      channelCountSize = #{channelcountsize,jdbcType=BIGINT},
-      channelCountSizeMin = #{channelcountsizemin,jdbcType=BIGINT},
-      channelCountSizeMax = #{channelcountsizemax,jdbcType=BIGINT},
-      channelCountSizeMean = #{channelcountsizemean,jdbcType=BIGINT},
-      channelCountSizeStd = #{channelcountsizestd,jdbcType=BIGINT},
-      channelCountSize55Quantile = #{channelcountsize55quantile,jdbcType=BIGINT},
-      channelCountSize75Quantile = #{channelcountsize75quantile,jdbcType=BIGINT},
-      channelCountSize95Quantile = #{channelcountsize95quantile,jdbcType=BIGINT},
-      channelCountSize99Quantile = #{channelcountsize99quantile,jdbcType=BIGINT},
-      channelUsedPercent = #{channelusedpercent,jdbcType=DOUBLE},
-      channelUsedPercentMin = #{channelusedpercentmin,jdbcType=DOUBLE},
-      channelUsedPercentMax = #{channelusedpercentmax,jdbcType=DOUBLE},
-      channelUsedPercentMean = #{channelusedpercentmean,jdbcType=DOUBLE},
-      channelUsedPercentStd = #{channelusedpercentstd,jdbcType=DOUBLE},
-      channelUsedPercent55Quantile = #{channelusedpercent55quantile,jdbcType=DOUBLE},
-      channelUsedPercent75Quantile = #{channelusedpercent75quantile,jdbcType=DOUBLE},
-      channelUsedPercent95Quantile = #{channelusedpercent95quantile,jdbcType=DOUBLE},
-      channelUsedPercent99Quantile = #{channelusedpercent99quantile,jdbcType=DOUBLE},
-      receiverClusterId = #{receiverclusterid,jdbcType=BIGINT},
-      receiverClusterTopic = #{receiverclustertopic,jdbcType=VARCHAR},
-      collectFiles = #{collectfiles,jdbcType=VARCHAR},
-      relatedFiles = #{relatedfiles,jdbcType=INTEGER},
-      latestFile = #{latestfile,jdbcType=VARCHAR},
-      masterFile = #{masterfile,jdbcType=VARCHAR},
-      path = #{path,jdbcType=VARCHAR},
-      collectTaskType = #{collecttasktype,jdbcType=INTEGER},
-      sinkNum = #{sinknum,jdbcType=INTEGER},
-      collectTaskVersion = #{collecttaskversion,jdbcType=INTEGER},
-      dynamicLimiterThreshold = #{dynamiclimiterthreshold,jdbcType=BIGINT},
-      heartbeatTime = #{heartbeattime,jdbcType=BIGINT},
-      heartbeatTimeMinute = #{heartbeattimeminute,jdbcType=BIGINT},
-      heartbeatTimeHour = #{heartbeattimehour,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
 </mapper>

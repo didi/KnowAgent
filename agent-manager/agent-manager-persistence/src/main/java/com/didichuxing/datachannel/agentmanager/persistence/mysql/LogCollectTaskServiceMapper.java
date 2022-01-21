@@ -3,7 +3,7 @@ package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskServicePO;
 import org.springframework.stereotype.Repository;
 
-@Repository(value = "metricsSystemDAO")
+@Repository(value = "logCollectTaskServiceDAO")
 public interface LogCollectTaskServiceMapper {
     int deleteByPrimaryKey(Long id);
 

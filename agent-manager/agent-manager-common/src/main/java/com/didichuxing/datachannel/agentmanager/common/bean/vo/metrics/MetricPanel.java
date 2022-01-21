@@ -22,7 +22,7 @@ public class MetricPanel {
     private Integer baseUnit;
 
     @ApiModelProperty(value = "展示单位")
-    private Integer unit;
+    private Integer displayUnit;
 
     @ApiModelProperty(value = "lable类型指标值")
     private Object lableValue;

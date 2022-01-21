@@ -116,7 +116,6 @@ public class NormalLogCollectTaskController {
     @ApiOperation(value = "查询日志采集任务列表", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_TASK_LIST)
     public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
         String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
         Long projectId = null;
@@ -147,6 +146,14 @@ public class NormalLogCollectTaskController {
     public Result switchLogCollectTask(@RequestParam(value = "logCollectTaskId") Long logCollectTaskId, @RequestParam(value = "status") Integer status) {
         logCollectTaskManageService.switchLogCollectTask(logCollectTaskId, status, SpringTool.getUserName());
         return Result.buildSucc();
+    }
+
+    @ApiOperation(value = "获取系统全量日志采集任务", notes = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<LogCollectTaskVO>> getAll() {
+        List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAll();
+        return Result.buildSucc(ConvertUtil.list2List(logCollectTaskDOList, LogCollectTaskVO.class));
     }
 
     /**

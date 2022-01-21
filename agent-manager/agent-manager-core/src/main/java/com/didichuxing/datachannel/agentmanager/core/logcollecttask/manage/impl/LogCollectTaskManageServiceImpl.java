@@ -581,10 +581,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         return agentIds.size();
     }
 
-
-
-
-
     @Override
     public List<LogCollectTaskDO> getAllLogCollectTask2HealthCheck() {
         List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.getByStatus(LogCollectTaskStatusEnum.RUNNING.getCode());
@@ -685,6 +681,12 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     @Override
     public List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode) {
         List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.getLogCollectTaskListByHealthLevel(logCollectTaskHealthLevelCode);
+        return logCollectTaskManageServiceExtension.logCollectTaskPOList2LogCollectTaskDOList(logCollectTaskPOList);
+    }
+
+    @Override
+    public List<LogCollectTaskDO> getAll() {
+        List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.queryAll();
         return logCollectTaskManageServiceExtension.logCollectTaskPOList2LogCollectTaskDOList(logCollectTaskPOList);
     }
 

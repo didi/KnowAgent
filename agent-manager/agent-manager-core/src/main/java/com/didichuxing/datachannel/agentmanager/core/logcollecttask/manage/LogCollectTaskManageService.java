@@ -137,4 +137,9 @@ public interface LogCollectTaskManageService {
      */
     List<LogCollectTaskDO> getByHealthLevel(Integer logCollectTaskHealthLevelCode);
 
+    /**
+     * @return 返回系统全量日志采集任务
+     */
+    List<LogCollectTaskDO> getAll();
+
 }
