@@ -9,7 +9,11 @@
 
 ## 2. 源代码编译打包
 
-下载好源代码后，进入`Agent-Manager`的主目录，执行`sh build.sh`命令，得到output目录。
+下载好源代码后，执行如下两个步骤：
+
+1. 进入`system-metrcis`项目主目录，执行mvn clean install -DskipTests命令。
+
+2. 进入`agent-manager`主目录，执行`sh build.sh`命令，得到output目录。
 
 ## 3. MySQL-DB初始化
 

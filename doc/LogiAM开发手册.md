@@ -22,7 +22,9 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ## 2 本地启动
 
-因为本地直接使用`IDEA`启动，并不会将前端资源文件生成，因此在第一次启动之前，需要执行一下`mvn clean install -DskipTests`命令，将前端的静态资源文件打包出来。
+先进入`system-metrcis`项目主目录，执行mvn clean install -DskipTests命令。
+
+因为本地直接使用`IDEA`启动`agent-manager`项目，并不会将前端资源文件生成，因此在第一次启动之前，需要在`agent-manager`项目主目录执行一下`mvn clean install -DskipTests`命令，将前端的静态资源文件打包出来。
 
 `mvn install`执行完成以后，修改`application.yml`配置文件，然后点击启动即可。
 
