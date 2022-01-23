@@ -45,7 +45,7 @@
 
 [LogiAM用户使用手册](doc/user_guide/user_guide_cn.md)
 
-[滴滴开源Logi-AM 一站式日志采集平台.md](doc/滴滴开源Logi-AM 一站式日志采集平台.md)
+[滴滴开源Logi-AM 一站式日志采集平台](doc/滴滴开源Logi-AM%20一站式日志采集平台.md)
 
 # 3 滴滴Logi开源用户交流群
 
