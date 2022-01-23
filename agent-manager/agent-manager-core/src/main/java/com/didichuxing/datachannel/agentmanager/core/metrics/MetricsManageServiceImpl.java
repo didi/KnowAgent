@@ -14,6 +14,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.Metri
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricValueTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -385,7 +386,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             params.put("fieldName", metricFieldEnum.getFieldName());
             params.put("hostName", metricQueryDTO.getHostName());
             if(null == metricQueryDTO.getSortTime() || metricQueryDTO.getSortTime().equals(0L)) {//排序时间点未设置值，将采用时间范围最后时间
-                params.put("sortTime", getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
+                params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
             } else {
                 params.put("sortTime", metricQueryDTO.getSortTime());
             }
@@ -468,7 +469,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             params.put("fieldName", metricFieldEnum.getFieldName());
             params.put("hostName", metricQueryDTO.getHostName());
             if(null == metricQueryDTO.getSortTime() || metricQueryDTO.getSortTime().equals(0L)) {//排序时间点未设置值，将采用时间范围最后时间
-                params.put("sortTime", getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
+                params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
             } else {
                 params.put("sortTime", metricQueryDTO.getSortTime());
             }
@@ -516,15 +517,6 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             //TODO：throw exception 未知MetricDisplayTypeEnum类型
             throw new RuntimeException();
         }
-    }
-
-    /**
-     * 根据给定时间戳，将其转化为分钟为单位时间戳
-     * @param timestamp 毫秒时间戳
-     * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
-     */
-    private Long getMinuteUnitTimeStamp(Long timestamp) {
-        return Math.round(timestamp / 60000.00d) * 60000L;
     }
 
     /**
@@ -595,7 +587,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             params.put("logCollectTaskId", metricQueryDTO.getLogCollectTaskId());
             params.put("pathId", metricQueryDTO.getPathId());
             if(null == metricQueryDTO.getSortTime() || metricQueryDTO.getSortTime().equals(0L)) {//排序时间点未设置值，将采用时间范围最后时间
-                params.put("sortTime", getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
+                params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
             } else {
                 params.put("sortTime", metricQueryDTO.getSortTime());
             }

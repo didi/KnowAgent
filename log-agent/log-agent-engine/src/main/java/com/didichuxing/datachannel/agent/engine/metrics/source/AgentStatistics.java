@@ -46,21 +46,21 @@ public class AgentStatistics extends AbstractStatistics {
         }
         String messageVersion = settings.get(LogConfigConstants.MESSSAGE_VERSION);
         metricsRegistry.tag(MetricsField.MESSAGE_VERSION.getAgentFieldName(), null,
-                messageVersion != null ? messageVersion : "-1");
+            messageVersion != null ? messageVersion : "-1");
         metricsRegistry.tag(
-                MetricsField.START_TIME.getAgentFieldName(),
-                null,
-                startTime != null ? String.valueOf(startTime) : String.valueOf(System
-                        .currentTimeMillis()));
+            MetricsField.START_TIME.getAgentFieldName(),
+            null,
+            startTime != null ? String.valueOf(startTime) : String.valueOf(System
+                .currentTimeMillis()));
         super.init();
     }
 
     @Override
     public void getMetrics(MetricsBuilder builder, boolean all) {
         metricsRegistry.tag(MetricsField.CPU_LIMIT.getAgentFieldName(), null,
-                String.valueOf(limiter.getCpuThreshold()), true);
+            String.valueOf(limiter.getCpuThreshold()), true);
         metricsRegistry.tag(MetricsField.LIMIT_TPS.getAgentFieldName(), null,
-                String.valueOf(limiter.getAllQps()), true);
+            String.valueOf(limiter.getAllQps()), true);
         super.getMetrics(builder, all);
     }
 }

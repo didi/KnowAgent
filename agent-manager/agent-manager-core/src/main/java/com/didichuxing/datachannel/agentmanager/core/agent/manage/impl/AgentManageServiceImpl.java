@@ -56,16 +56,10 @@ public class AgentManageServiceImpl implements AgentManageService {
     private HostManageService hostManageService;
 
     @Autowired
-    private AgentOperationTaskManageService agentOperationTaskManageService;
-
-    @Autowired
     private AgentManageServiceExtension agentManageServiceExtension;
 
     @Autowired
     private AgentMetricsManageService agentMetricsManageService;
-
-    @Autowired
-    private LogCollectTaskManageService logCollectTaskManageService;
 
     @Autowired
     private OperateRecordService operateRecordService;

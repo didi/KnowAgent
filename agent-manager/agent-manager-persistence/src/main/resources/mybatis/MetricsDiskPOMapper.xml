@@ -357,6 +357,13 @@
     from tb_metrics_disk
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_disk
+  </select>
+
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     insert into tb_metrics_disk (id, hostName, systemDiskPath, 
       systemDiskDevice, systemDiskFsType, systemDiskBytesTotal, 

@@ -58,4 +58,5 @@ public interface MetricsDiskPOMapper {
      */
     List<MetricsDiskTopPO> getTopNDiskPath(Map<String, Object> params);
 
+    List<MetricsDiskPO> selectAll();
 }

@@ -15,13 +15,25 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- *
- *
- * @author d06679
- * @date 2017/7/26
- */
 public class DateUtils {
+
+    /**
+     * 根据给定时间戳，将其转化为分钟为单位时间戳
+     * @param timestamp 毫秒时间戳
+     * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
+     */
+    public static Long getMinuteUnitTimeStamp(Long timestamp) {
+        return Math.round(timestamp / 60000.00d) * 60000L;
+    }
+
+    /**
+     * 根据给定时间戳，将其转化为分钟为单位时间戳
+     * @param timestamp 毫秒时间戳
+     * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
+     */
+    public static Long getHourUnitTimeStamp(Long timestamp) {
+        return Math.round(timestamp / 3600000.00d) * 3600000L;
+    }
 
     public static Long date2Long(Date time, String formatStr) {
 
