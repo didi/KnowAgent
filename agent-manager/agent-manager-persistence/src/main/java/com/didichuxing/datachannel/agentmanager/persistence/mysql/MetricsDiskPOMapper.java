@@ -51,10 +51,11 @@ public interface MetricsDiskPOMapper {
     /**
      * @param params
      *  function：聚合函数名
-     *  fieldName：字段名
+     *  fieldName：排序字段名
      *  hostName：agent宿主机主机名
      *  sortTime：排序时间戳（精度：分钟）
      *  topN：前n条记录
+     *  sortType：排序方式 desc、asc
      */
     List<MetricsDiskTopPO> getTopNDiskPath(Map<String, Object> params);
 

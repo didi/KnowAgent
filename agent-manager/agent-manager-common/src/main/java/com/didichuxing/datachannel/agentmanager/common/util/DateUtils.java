@@ -23,7 +23,7 @@ public class DateUtils {
      * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
      */
     public static Long getMinuteUnitTimeStamp(Long timestamp) {
-        return Math.round(timestamp / 60000.00d) * 60000L;
+        return (long) Math.floor(timestamp / 60000.00d) * 60000L;
     }
 
     /**
@@ -32,7 +32,7 @@ public class DateUtils {
      * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
      */
     public static Long getHourUnitTimeStamp(Long timestamp) {
-        return Math.round(timestamp / 3600000.00d) * 3600000L;
+        return (long) Math.floor(timestamp / 3600000.00d) * 3600000L;
     }
 
     public static Long date2Long(Date time, String formatStr) {

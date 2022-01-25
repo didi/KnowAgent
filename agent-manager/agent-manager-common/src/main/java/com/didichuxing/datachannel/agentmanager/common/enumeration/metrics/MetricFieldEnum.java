@@ -50,6 +50,24 @@ public enum MetricFieldEnum {
 //    ),
 
     /*
+     * disk 相关
+     */
+    SYSTEM_DISK_BYTES_FREE(
+            7,
+            "systemDiskBytesFree",
+            "systemDiskBytesFree",
+            "磁盘余量大小（单位：MB）",
+            MetricTypeEnum.SYSTEM_DISK,
+            AggregationCalcFunctionEnum.MIN,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.MULTI_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+    ),
+
+    /*
      * disk io 相关
      */
     SYSTEM_DISK_IO_IO_UTIL(
@@ -63,7 +81,8 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false
+            false,
+            SortTypeEnum.DESC
             ),
 
     SYSTEM_NET_CARD_SEND_BYTES_PS(
@@ -77,7 +96,8 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false
+            false,
+            SortTypeEnum.DESC
     ),
 
     /*********************************** 当前进程相关 ***********************************/
@@ -96,7 +116,8 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_MILLISECOND,
             MetricUnitEnum.DATE_TIME,
             MetricDisplayTypeEnum.LABLE,
-            false
+            false,
+            SortTypeEnum.DESC
     ),
 
     /*
@@ -113,7 +134,8 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            true
+            true,
+            SortTypeEnum.DESC
     ),
 
     /*********************************** agent 相关 ***********************************/
@@ -132,7 +154,8 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_MILLISECOND,
             MetricUnitEnum.DATE_TIME,
             MetricDisplayTypeEnum.LABLE,
-            true
+            true,
+            SortTypeEnum.DESC
     ),
 
     LOG_COLLECT_TASK_SEND_BYTES(
@@ -146,7 +169,8 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            true
+            true,
+            SortTypeEnum.DESC
     )
 
     ;
@@ -206,6 +230,8 @@ public enum MetricFieldEnum {
      */
     private boolean checked;
 
+    private SortTypeEnum sortTypeEnum;
+
     MetricFieldEnum(
             Integer code,
             String metricName,
@@ -217,7 +243,8 @@ public enum MetricFieldEnum {
             MetricUnitEnum baseUnit,
             MetricUnitEnum displayUnit,
             MetricDisplayTypeEnum metricDisplayType,
-            boolean checked
+            boolean checked,
+            SortTypeEnum sortTypeEnum
             ) {
         this.code = code;
         this.metricName = metricName;
@@ -230,6 +257,7 @@ public enum MetricFieldEnum {
         this.displayUnit = displayUnit;
         this.metricDisplayType = metricDisplayType;
         this.checked = checked;
+        this.sortTypeEnum = sortTypeEnum;
     }
 
     public String getMetricName() {
@@ -274,6 +302,10 @@ public enum MetricFieldEnum {
 
     public boolean isChecked() {
         return checked;
+    }
+
+    public SortTypeEnum getSortTypeEnum() {
+        return sortTypeEnum;
     }
 
     /**

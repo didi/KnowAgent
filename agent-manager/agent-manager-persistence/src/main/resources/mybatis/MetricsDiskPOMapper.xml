@@ -262,23 +262,24 @@
       limit 1
   </select>
   <select id="getSingleChatNonStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    select
-      ${function}(${fieldName}) as 'last',
-      heartbeatTimeMinute,
-      systemDiskPath as 'path',
-      systemDiskDevice as 'device',
-      systemDiskFsType as 'fsType'
-    from tb_metrics_disk
-    where
-      hostName = #{hostName,jdbcType=VARCHAR}
-      and
-      systemDiskPath = #{path,jdbcType=VARCHAR}
-      and
-      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
-    group by heartbeatTimeMinute
+    SELECT t1.*, t2.systemDiskPath as 'path', t2.systemDiskDevice as 'device', t2.systemDiskFsType as 'fsType' FROM
+      (select
+         ${function}(${fieldName}) as 'last',
+         heartbeatTimeMinute
+       from tb_metrics_disk
+       where
+         hostName = #{hostName,jdbcType=VARCHAR}
+         and
+         systemDiskPath = #{path,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_disk as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemDiskPath = #{path,jdbcType=VARCHAR}
   </select>
   <select id="getSingleChatStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    select
+    SELECT t1.*, t2.systemDiskPath as 'path', t2.systemDiskDevice as 'device', t2.systemDiskFsType as 'fsType' FROM
+    (select
       ${function}(${fieldName}) as 'last',
             ${function}(${fieldName}Min) as 'min',
             ${function}(${fieldName}Max) as 'max',
@@ -288,10 +289,7 @@
             ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
             ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
             ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
-            heartbeatTimeMinute,
-            systemDiskPath as 'path',
-            systemDiskDevice as 'device',
-            systemDiskFsType as 'fsType'
+            heartbeatTimeMinute
     from tb_metrics_disk
     where
       hostName = #{hostName,jdbcType=VARCHAR}
@@ -299,7 +297,9 @@
       systemDiskPath = #{path,jdbcType=VARCHAR}
       and
       heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
-    group by heartbeatTimeMinute
+    group by heartbeatTimeMinute) as t1
+    LEFT JOIN
+    tb_metrics_disk as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemDiskPath = #{path,jdbcType=VARCHAR}
   </select>
 
   <resultMap id="TopNDiskPathResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskTopPO" >
@@ -310,33 +310,7 @@
   <select id="getTopNDiskPath" resultMap="TopNDiskPathResultMap" parameterType="java.util.Map" >
     select * from (
       select
-      ${function}(
-      ${fieldName}
-      <if test="sortMetricType == 1">
-        Min
-      </if>
-      <if test="sortMetricType == 2">
-        Max
-      </if>
-      <if test="sortMetricType == 3">
-        Mean
-      </if>
-      <if test="sortMetricType == 4">
-        Std
-      </if>
-      <if test="sortMetricType == 5">
-        55Quantil
-      </if>
-      <if test="sortMetricType == 6">
-        75Quantil
-      </if>
-      <if test="sortMetricType ==7">
-        95Quantil
-      </if>
-      <if test="sortMetricType ==8">
-        99Quantil
-      </if>
-      ) as 'aggVal',
+      ${function}(${fieldName}) as 'aggVal',
       systemDiskPath as 'path'
       from tb_metrics_disk
       where
@@ -345,7 +319,7 @@
       heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
       group by systemDiskPath
     ) as agg_table
-    order by agg_table.aggVal desc
+    order by agg_table.aggVal ${sortType}
     <if test="topN != 0">
       limit #{topN}
     </if>

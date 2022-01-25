@@ -8,7 +8,7 @@ import lombok.Data;
 @ApiModel(value = "多条线指标请求参数", description = "")
 public class MultiMetricsQueryDTO extends BaseMetricsQueryDTO {
 
-    @ApiModelProperty(value = "排序时间点 精度：分")
+    @ApiModelProperty(value = "排序时间点 精度：分 默认值：endTime")
     private Long sortTime;
 
     @ApiModelProperty(

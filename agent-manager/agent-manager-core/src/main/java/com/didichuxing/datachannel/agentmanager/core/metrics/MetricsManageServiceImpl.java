@@ -42,6 +42,16 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     @Autowired
     private MetricsLogCollectTaskPOMapper metricsLogCollectTaskDAO;
 
+    /**
+     * top n 默认值
+     */
+    private static Integer TOP_N_DEFAULT_VALUE = 5;
+
+    /**
+     * 指标排序类型 默认值
+     */
+    private static Integer SORT_METRIC_TYPE_DEFAULT_VALUE = 0;
+
     @Override
     public MetricNodeVO getMetricsTreeByMetricType(Integer metricTypeCode) {
         MetricTypeEnum rootMetricTypeEnum = MetricTypeEnum.fromCode(metricTypeCode);
@@ -391,7 +401,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("sortTime", metricQueryDTO.getSortTime());
             }
             if(null == metricQueryDTO.getTopN()) {
-                params.put("topN", 0);
+                params.put("topN", TOP_N_DEFAULT_VALUE);
             } else {
                 params.put("topN", metricQueryDTO.getTopN());
             }
@@ -466,7 +476,13 @@ public class MetricsManageServiceImpl implements MetricsManageService {
              */
             Map<String, Object> params = new HashMap<>();
             params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
-            params.put("fieldName", metricFieldEnum.getFieldName());
+            Integer sortMetricType;
+            if(null == metricQueryDTO.getSortMetricType()) {
+                sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+            } else {
+                sortMetricType = metricQueryDTO.getSortMetricType();
+            }
+            params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
             params.put("hostName", metricQueryDTO.getHostName());
             if(null == metricQueryDTO.getSortTime() || metricQueryDTO.getSortTime().equals(0L)) {//排序时间点未设置值，将采用时间范围最后时间
                 params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
@@ -474,10 +490,11 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("sortTime", metricQueryDTO.getSortTime());
             }
             if(null == metricQueryDTO.getTopN()) {
-                params.put("topN", 0);
+                params.put("topN", TOP_N_DEFAULT_VALUE);
             } else {
                 params.put("topN", metricQueryDTO.getTopN());
             }
+            params.put("sortType", metricFieldEnum.getSortTypeEnum().getType());
             List<MetricsDiskTopPO> metricsDiskTopPOList = metricsDiskDAO.getTopNDiskPath(params);
             /*
              * 2.）根据 top n disk，挨个获取单条线
@@ -515,6 +532,37 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             throw new RuntimeException();
         } else {
             //TODO：throw exception 未知MetricDisplayTypeEnum类型
+            throw new RuntimeException();
+        }
+    }
+
+    /**
+     * 根据给定原始字段名与字段排序类型获取排序字段名
+      * @param fieldName 原始字段名
+     * @param sortMetricType 字段排序类型
+     * @return 返回根据给定原始字段名与字段排序类型获取排序字段名
+     */
+    private String getSortFieldName(String fieldName, Integer sortMetricType) {
+        if(sortMetricType == 0) {
+          return fieldName;
+        } else if(sortMetricType == 1) {
+            return fieldName+"Min";
+        } else if(sortMetricType == 2) {
+            return fieldName+"Max";
+        } else if(sortMetricType == 3) {
+            return fieldName+"Mean";
+        } else if(sortMetricType == 4) {
+            return fieldName+"Std";
+        } else if(sortMetricType == 5) {
+            return fieldName+"55Quantil";
+        } else if(sortMetricType == 6) {
+            return fieldName+"75Quantil";
+        } else if(sortMetricType == 7) {
+            return fieldName+"95Quantil";
+        } else if(sortMetricType == 8) {
+            return fieldName+"99Quantil";
+        } else {
+            //TODO：throw exception 未知sortMetricType类型
             throw new RuntimeException();
         }
     }
@@ -592,7 +640,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("sortTime", metricQueryDTO.getSortTime());
             }
             if(null == metricQueryDTO.getTopN()) {
-                params.put("topN", 0);
+                params.put("topN", TOP_N_DEFAULT_VALUE);
             } else {
                 params.put("topN", metricQueryDTO.getTopN());
             }
