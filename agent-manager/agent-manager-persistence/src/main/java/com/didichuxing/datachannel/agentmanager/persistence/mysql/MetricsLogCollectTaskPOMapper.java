@@ -58,8 +58,10 @@ public interface MetricsLogCollectTaskPOMapper {
      *  fieldName：字段名
      *  logCollectTaskId：日志采集任务id
      *  pathId：日志采集路径id（optional）
+     *  hostName：日志采集任务对应主机名（optional）
      *  sortTime：排序时间戳（精度：分钟）
      *  topN：前n条记录
+     *  sortType：排序方式 desc、asc
      */
     List<MetricsLogCollectTaskTopPO> getTopNByHostName(Map<String, Object> params);
 

@@ -70,11 +70,10 @@
       limit 1
   </select>
   <select id="getSingleChatNonStatisticByMacAddress" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    select
+    SELECT t1.*, t2.systemNetCardsBandMacAddress as 'macAddress', t2.systemNetCardsBandDevice as 'device' FROM
+    (select
       ${function}(${fieldName}) as 'last',
-      heartbeatTimeMinute,
-      systemNetCardsBandMacAddress as 'macAddress',
-      systemNetCardsBandDevice as 'device'
+      heartbeatTimeMinute
     from tb_metrics_net_card
     where
       hostName = #{hostName,jdbcType=VARCHAR}
@@ -82,30 +81,33 @@
       systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
       and
       heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
-    group by heartbeatTimeMinute
+    group by heartbeatTimeMinute) as t1
+    LEFT JOIN
+      tb_metrics_net_card as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
   </select>
   <select id="getSingleChatStatisticByMacAddress" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    select
-      ${function}(${fieldName}) as 'last',
-            ${function}(${fieldName}Min) as 'min',
-            ${function}(${fieldName}Max) as 'max',
-            ${function}(${fieldName}Mean) as 'mean',
-            ${function}(${fieldName}Std) as 'std',
-            ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
-            ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
-            ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
-            ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
-            heartbeatTimeMinute,
-            systemNetCardsBandMacAddress as 'macAddress',
-            systemNetCardsBandDevice as 'device'
-    from tb_metrics_net_card
-    where
-      hostName = #{hostName,jdbcType=VARCHAR}
-      and
-      systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
-      and
-      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
-    group by heartbeatTimeMinute
+    SELECT t1.*, t2.systemNetCardsBandMacAddress as 'macAddress', t2.systemNetCardsBandDevice as 'device' FROM
+      (select
+         ${function}(${fieldName}) as 'last',
+               ${function}(${fieldName}Min) as 'min',
+               ${function}(${fieldName}Max) as 'max',
+               ${function}(${fieldName}Mean) as 'mean',
+               ${function}(${fieldName}Std) as 'std',
+               ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+               ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+               ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+               ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+               heartbeatTimeMinute
+       from tb_metrics_net_card
+       where
+         hostName = #{hostName,jdbcType=VARCHAR}
+         and
+         systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_net_card as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
   </select>
   <resultMap id="TopNMacAddressResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsNetCardTopPO" >
     <result column="macAddress" property="macAddress" jdbcType="VARCHAR" />
@@ -114,33 +116,7 @@
   <select id="getTopNMacAddress" resultMap="TopNMacAddressResultMap" parameterType="java.util.Map" >
     select * from (
     select
-    ${function}(
-    ${fieldName}
-    <if test="sortMetricType == 1">
-      Min
-    </if>
-    <if test="sortMetricType == 2">
-      Max
-    </if>
-    <if test="sortMetricType == 3">
-      Mean
-    </if>
-    <if test="sortMetricType == 4">
-      Std
-    </if>
-    <if test="sortMetricType == 5">
-      55Quantil
-    </if>
-    <if test="sortMetricType == 6">
-      75Quantil
-    </if>
-    <if test="sortMetricType ==7">
-      95Quantil
-    </if>
-    <if test="sortMetricType ==8">
-      99Quantil
-    </if>
-    ) as 'aggVal',
+    ${function}(${fieldName}) as 'aggVal',
     systemNetCardsBandMacAddress as 'macAddress'
     from tb_metrics_net_card
     where
@@ -149,7 +125,7 @@
     heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
     group by systemNetCardsBandMacAddress
     ) as agg_table
-    order by agg_table.aggVal desc
+    order by agg_table.aggVal ${sortType}
     <if test="topN != 0">
       limit #{topN}
     </if>

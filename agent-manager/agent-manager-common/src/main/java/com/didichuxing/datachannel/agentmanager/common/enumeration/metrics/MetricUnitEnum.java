@@ -8,8 +8,8 @@ public enum MetricUnitEnum {
     TIMESTAMP_MILLISECOND(3,"时间戳-毫秒"),
     TIMESTAMP_SECOND(4,"时间戳-秒"),
     PERCENT(5,"百分比"),
-    DATE_TIME(6,"日期/时间")
-
+    DATE_TIME(6,"日期/时间"),
+    TIMESTAMP_NANOSECOND(7,"时间戳-纳秒")
     ;
 
     public Integer getCode() {

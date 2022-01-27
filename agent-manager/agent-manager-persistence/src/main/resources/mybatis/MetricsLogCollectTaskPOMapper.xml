@@ -168,10 +168,10 @@
   <select id="getSingleChatNonStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
     select
       ${function}(${fieldName}) as 'last',
-      <if test="hostName != null">
-        collectTaskHostName as 'hostName',
-      </if>
       heartbeatTimeMinute
+      <if test="hostName != null">
+        , #{hostName,jdbcType=VARCHAR} as 'hostName'
+      </if>
     from tb_metrics_log_collect_task
     where
       collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
@@ -187,30 +187,30 @@
   </select>
   <select id="getSingleChatStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
     select
-      ${function}(${fieldName}) as 'last',
-            ${function}(${fieldName}Min) as 'min',
-            ${function}(${fieldName}Max) as 'max',
-            ${function}(${fieldName}Mean) as 'mean',
-            ${function}(${fieldName}Std) as 'std',
-            ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
-            ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
-            ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
-            ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
-            <if test="hostName != null">
-              collectTaskHostName as 'hostName',
-            </if>
-            heartbeatTimeMinute
+    ${function}(${fieldName}) as 'last',
+    ${function}(${fieldName}Min) as 'min',
+    ${function}(${fieldName}Max) as 'max',
+    ${function}(${fieldName}Mean) as 'mean',
+    ${function}(${fieldName}Std) as 'std',
+    ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+    ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+    ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+    ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+    heartbeatTimeMinute
+    <if test="hostName != null">
+      , #{hostName,jdbcType=VARCHAR} as 'hostName'
+    </if>
     from tb_metrics_log_collect_task
     where
-      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
-      <if test="pathId != null">
-        and pathId = #{pathId,jdbcType=BIGINT}
-      </if>
-      <if test="hostName != null">
-        and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
-      </if>
-      and
-      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+    <if test="pathId != null">
+      and pathId = #{pathId,jdbcType=BIGINT}
+    </if>
+    <if test="hostName != null">
+      and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    </if>
+    and
+    heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
     group by heartbeatTimeMinute
   </select>
 
@@ -271,45 +271,22 @@
   <select id="getTopNByHostName" resultMap="TopNHostNameResultMap" parameterType="java.util.Map" >
     select * from (
     select
-    ${function}(
-    ${fieldName}
-    <if test="sortMetricType == 1">
-      Min
-    </if>
-    <if test="sortMetricType == 2">
-      Max
-    </if>
-    <if test="sortMetricType == 3">
-      Mean
-    </if>
-    <if test="sortMetricType == 4">
-      Std
-    </if>
-    <if test="sortMetricType == 5">
-      55Quantil
-    </if>
-    <if test="sortMetricType == 6">
-      75Quantil
-    </if>
-    <if test="sortMetricType ==7">
-      95Quantil
-    </if>
-    <if test="sortMetricType ==8">
-      99Quantil
-    </if>
-    ) as 'aggVal',
+    ${function}(${fieldName}) as 'aggVal',
     collectTaskHostName as 'hostName'
     from tb_metrics_log_collect_task
     where
     collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+    and
+    heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
     <if test="pathId != null">
       and pathId = #{pathId,jdbcType=BIGINT}
     </if>
-    and
-    heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
+    <if test="hostName != null">
+      and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    </if>
     group by collectTaskHostName
     ) as agg_table
-    order by agg_table.aggVal desc
+    order by agg_table.aggVal ${sortType}
     <if test="topN != 0">
       limit #{topN}
     </if>

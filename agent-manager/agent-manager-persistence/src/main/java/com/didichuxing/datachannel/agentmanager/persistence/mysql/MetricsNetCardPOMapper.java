@@ -56,6 +56,7 @@ public interface MetricsNetCardPOMapper {
      *  hostName：agent宿主机主机名
      *  sortTime：排序时间戳（精度：分钟）
      *  topN：前n条记录
+     *  sortType：排序方式 desc、asc
      */
     List<MetricsNetCardTopPO> getTopNMacAddress(Map<String, Object> params);
 

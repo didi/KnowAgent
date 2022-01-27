@@ -22,11 +22,11 @@ public class MultiMetricsQueryDTO extends BaseMetricsQueryDTO {
                     "6：采样周期内75分位数值，" +
                     "7：采样周期内95分位数值，" +
                     "8：采样周期内99分位数值。" +
-                    "注意：对于不存在统计值的指标，请求时的指标排序类型sortMetricType，取值0（最近一次采样值）"
+                    "注意：对于不存在统计值的指标，请求时的指标排序类型sortMetricType，取值0（最近一次采样值）默认值：0"
     )
     private Integer sortMetricType;
 
-    @ApiModelProperty(value = "按给定指标类型排序后取的top数，注意：0：表示获取全部，非0表示：获取给定topN")
+    @ApiModelProperty(value = "按给定指标类型排序后取的top数，注意：0：表示获取全部，非0表示：获取给定topN 默认值：5")
     private Integer topN;
 
 }

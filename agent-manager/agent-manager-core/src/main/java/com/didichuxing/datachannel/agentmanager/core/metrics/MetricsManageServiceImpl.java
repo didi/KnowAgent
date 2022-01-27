@@ -254,34 +254,6 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     /**
-     * 根据给定指标查询条件获取lable型指标数据
-     * @param metricQueryDTO 指标查询条件
-     * @param metricFieldEnum 待查询指标枚举定义
-     * @param dao 数据访问层对象
-     * @param params 查询参数集
-     * @return 返回根据给定指标查询条件获取lable型指标数据
-     */
-    private Object getLable(BusinessMetricsQueryDTO metricQueryDTO, MetricFieldEnum metricFieldEnum, Object dao, Map<Object,Object> params) {
-        return null;
-    }
-
-    /**
-     * 根据给定指标查询条件获取单折线型指标数据
-     * @param metricQueryDTO 指标查询条件
-     * @param metricFieldEnum 待查询指标枚举定义
-     * @param dao 数据访问层对象
-     * @param params 查询参数集
-     * @return 返回根据给定指标查询条件获取单折线型指标数据
-     */
-    private List<MetricPoint> getSingleLineChat(BusinessMetricsQueryDTO metricQueryDTO, MetricFieldEnum metricFieldEnum, Object dao, Map<Object,Object> params) {
-
-        //TODO：
-
-        return null;
-
-    }
-
-    /**
      * 根据给定指标查询条件获取agent系统级相关指标数据
      * @param metricQueryDTO 指标查询条件
      * @param metricFieldEnum 待查询指标枚举定义
@@ -380,20 +352,21 @@ public class MetricsManageServiceImpl implements MetricsManageService {
          *
          */
         if(metricFieldEnum.getMetricDisplayType().equals(MetricDisplayTypeEnum.LABLE)) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("fieldName", metricFieldEnum.getFieldName());
-            params.put("hostName", metricQueryDTO.getHostName());
-            params.put("startTime", metricQueryDTO.getStartTime());
-            params.put("endTime", metricQueryDTO.getEndTime());
-            Object value = metricsNetCardDAO.getLast(params);
-            return getMetricsPanel(metricFieldEnum, value, null, null);
+            //TODO：不支持lable指标
+            throw new RuntimeException();
         } else if(metricFieldEnum.getMetricDisplayType().equals(MetricDisplayTypeEnum.MULTI_LINE_CHAT)) {
             /*
              * 1.）获取 top n net card
              */
             Map<String, Object> params = new HashMap<>();
             params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
-            params.put("fieldName", metricFieldEnum.getFieldName());
+            Integer sortMetricType;
+            if(null == metricQueryDTO.getSortMetricType()) {
+                sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+            } else {
+                sortMetricType = metricQueryDTO.getSortMetricType();
+            }
+            params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
             params.put("hostName", metricQueryDTO.getHostName());
             if(null == metricQueryDTO.getSortTime() || metricQueryDTO.getSortTime().equals(0L)) {//排序时间点未设置值，将采用时间范围最后时间
                 params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
@@ -405,6 +378,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             } else {
                 params.put("topN", metricQueryDTO.getTopN());
             }
+            params.put("sortType", metricFieldEnum.getSortTypeEnum().getType());
             List<MetricsNetCardTopPO> MetricsNetCardTopPOList = metricsNetCardDAO.getTopNMacAddress(params);
             /*
              * 2.）根据 top n net card，挨个获取单条线
@@ -463,13 +437,8 @@ public class MetricsManageServiceImpl implements MetricsManageService {
          *
          */
         if(metricFieldEnum.getMetricDisplayType().equals(MetricDisplayTypeEnum.LABLE)) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("fieldName", metricFieldEnum.getFieldName());
-            params.put("hostName", metricQueryDTO.getHostName());
-            params.put("startTime", metricQueryDTO.getStartTime());
-            params.put("endTime", metricQueryDTO.getEndTime());
-            Object value = metricsDiskDAO.getLast(params);
-            return getMetricsPanel(metricFieldEnum, value, null, null);
+            //TODO：不支持lable指标
+            throw new RuntimeException();
         } else if(metricFieldEnum.getMetricDisplayType().equals(MetricDisplayTypeEnum.MULTI_LINE_CHAT)) {
             /*
              * 1.）获取 top n disk
@@ -554,13 +523,13 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         } else if(sortMetricType == 4) {
             return fieldName+"Std";
         } else if(sortMetricType == 5) {
-            return fieldName+"55Quantil";
+            return fieldName+"55Quantile";
         } else if(sortMetricType == 6) {
-            return fieldName+"75Quantil";
+            return fieldName+"75Quantile";
         } else if(sortMetricType == 7) {
-            return fieldName+"95Quantil";
+            return fieldName+"95Quantile";
         } else if(sortMetricType == 8) {
-            return fieldName+"99Quantil";
+            return fieldName+"99Quantile";
         } else {
             //TODO：throw exception 未知sortMetricType类型
             throw new RuntimeException();
@@ -573,7 +542,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
      * @return 校验给定指标定义是否为agent业务级指标 true：是 false：否
      */
     private boolean isAgentBusinessMetric(MetricFieldEnum metricFieldEnum) {
-        MetricTypeEnum metricTypeEnum = metricFieldEnum.getMetricType().getParentMetricType();
+        MetricTypeEnum metricTypeEnum = metricFieldEnum.getMetricType();
         return metricTypeEnum.equals(MetricTypeEnum.AGENT_BUSINESS);
     }
 
@@ -631,9 +600,16 @@ public class MetricsManageServiceImpl implements MetricsManageService {
              */
             Map<String, Object> params = new HashMap<>();
             params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
-            params.put("fieldName", metricFieldEnum.getFieldName());
+            Integer sortMetricType;
+            if(null == metricQueryDTO.getSortMetricType()) {
+                sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+            } else {
+                sortMetricType = metricQueryDTO.getSortMetricType();
+            }
+            params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
             params.put("logCollectTaskId", metricQueryDTO.getLogCollectTaskId());
             params.put("pathId", metricQueryDTO.getPathId());
+            params.put("hostName", metricQueryDTO.getHostName());
             if(null == metricQueryDTO.getSortTime() || metricQueryDTO.getSortTime().equals(0L)) {//排序时间点未设置值，将采用时间范围最后时间
                 params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
             } else {
@@ -644,6 +620,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             } else {
                 params.put("topN", metricQueryDTO.getTopN());
             }
+            params.put("sortType", metricFieldEnum.getSortTypeEnum().getType());
             List<MetricsLogCollectTaskTopPO> metricsLogCollectTaskTopPOList = metricsLogCollectTaskDAO.getTopNByHostName(params);
             /*
              * 2.）根据 top n disk，挨个获取单条线

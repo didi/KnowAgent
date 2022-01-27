@@ -19,8 +19,22 @@ public enum MetricFieldEnum {
 //    HOST_NAME("host_name", "hostName", "主机名", MetricTypeEnum.SYSTEM_BASIC, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
 //    IPS("ips", "ips", "IP列表", MetricTypeEnum.SYSTEM_BASIC, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
 //    SYSTEM_NTP_OFFSET("system_ntp_offset","systemNtpOffset","系统时间偏移量", MetricTypeEnum.SYSTEM_BASIC, AggregationCalcFunctionEnum.MAX,MetricValueTypeEnum.CURRENT),
-//    SYSTEM_STARTUP_TIME("system_startup_time", "systemStartupTime", "系统启动时间", MetricTypeEnum.SYSTEM_BASIC, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
 //    SYSTEM_UP_TIME("system_uptime", "systemUptime", "系统运行时间", MetricTypeEnum.SYSTEM_BASIC, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
+
+    SYSTEM_STARTUP_TIME(
+            9,
+            "system_startup_time",
+            "systemStartupTime",
+            "系统启动时间",
+            MetricTypeEnum.SYSTEM_BASIC,
+            AggregationCalcFunctionEnum.NONE,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.TIMESTAMP_MILLISECOND,
+            MetricUnitEnum.DATE_TIME,
+            MetricDisplayTypeEnum.LABLE,
+            false,
+            null
+    ),
 
     /*
      * os 相关
@@ -40,14 +54,38 @@ public enum MetricFieldEnum {
      * cpu 相关
      */
 //    SYSTEM_CPU_CORES("cpu_cores","cpuCores","cpu核数", MetricTypeEnum.SYSTEM_CPU, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
-//    SYSTEM_CPU_UTIL(
-//            "system_cpu_util",
-//            "systemCpuUtil",
-//            "系统总体CPU使用率(单位：%)，使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200",
-//            MetricTypeEnum.SYSTEM_CPU,
-//            AggregationCalcFunctionEnum.MAX,
-//            MetricValueTypeEnum.CURRENT
-//    ),
+    SYSTEM_CPU_UTIL(
+            10,
+            "system_cpu_util",
+            "systemCpuUtil",
+            "系统总体CPU使用率(单位：%)，使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200",
+            MetricTypeEnum.SYSTEM_CPU,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.PERCENT,
+            MetricUnitEnum.PERCENT,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
+    ),
+
+    /*
+     * memory 相关
+     */
+    SYSTEM_MEMORY_FREE(
+            11,
+            "system_memory_free",
+            "systemMemFree",
+            "系统空闲内存大小（单位：byte），当前值",
+            MetricTypeEnum.SYSTEM_MEMORY,
+            AggregationCalcFunctionEnum.MIN,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            null
+    ),
 
     /*
      * disk 相关
@@ -100,6 +138,21 @@ public enum MetricFieldEnum {
             SortTypeEnum.DESC
     ),
 
+    SYSTEM_NET_CARD_BAND_WIDTH(
+            8,
+            "bandWidth",
+            "systemNetCardsBandWidth",
+            "各网卡最大带宽（单位：byte）",
+            MetricTypeEnum.SYSTEM_NET_CARD,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.MULTI_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+    ),
+
     /*********************************** 当前进程相关 ***********************************/
 
     /*
@@ -117,7 +170,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.DATE_TIME,
             MetricDisplayTypeEnum.LABLE,
             false,
-            SortTypeEnum.DESC
+            null
     ),
 
     /*
@@ -135,10 +188,58 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             true,
-            SortTypeEnum.DESC
+            null
+    ),
+
+    /*
+     * memory 相关
+     */
+    PROCESS_MEMORY_USED(
+            12,
+            "process_memory_used",
+            "procMemUsed",
+            "当前进程内存使用量（单位：byte）当前值",
+            MetricTypeEnum.PROCESS_MEMORY,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
     ),
 
     /*********************************** agent 相关 ***********************************/
+
+    AGENT_VERSION(
+            13,
+            "agent_version",
+            "agentVersion",
+            "agent版本号",
+            MetricTypeEnum.AGENT_BUSINESS,
+            null,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.LABLE,
+            false,
+            null
+    ),
+
+    AGENT_WRITE_COUNT(
+            14,
+            "write_count",
+            "writeCount",
+            "采样周期内出口采集条数 单位：条",
+            MetricTypeEnum.AGENT_BUSINESS,
+            AggregationCalcFunctionEnum.SUM,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
+    ),
 
     /*********************************** 采集任务相关 ***********************************/
 
@@ -170,6 +271,21 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             true,
+            SortTypeEnum.DESC
+    ),
+
+    LOG_COLLECT_TASK_READ_TIME_PER_EVENT(
+            15,
+            "read_time_per_event",
+            "readTimePerEvent",
+            "采样周期内单 log event 读取耗时 (单位：纳秒)",
+            MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.TIMESTAMP_NANOSECOND,
+            MetricUnitEnum.TIMESTAMP_NANOSECOND,
+            MetricDisplayTypeEnum.MULTI_LINE_CHAT,
+            false,
             SortTypeEnum.DESC
     )
 

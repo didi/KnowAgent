@@ -37,77 +37,77 @@ public class MetricsLogCollectTaskPO {
 
     private Long sendcount;
 
-    private Long readtimeperevent;
+    private Double readtimeperevent;
 
-    private Long readtimepereventmin;
+    private Double readtimepereventmin;
 
-    private Long readtimepereventmax;
+    private Double readtimepereventmax;
 
-    private Long readtimepereventmean;
+    private Double readtimepereventmean;
 
-    private Long readtimepereventstd;
+    private Double readtimepereventstd;
 
-    private Long readtimeperevent55quantile;
+    private Double readtimeperevent55quantile;
 
-    private Long readtimeperevent75quantile;
+    private Double readtimeperevent75quantile;
 
-    private Long readtimeperevent95quantile;
+    private Double readtimeperevent95quantile;
 
-    private Long readtimeperevent99quantile;
+    private Double readtimeperevent99quantile;
 
-    private Long sendtime;
+    private Double sendtime;
 
-    private Long sendtimemin;
+    private Double sendtimemin;
 
-    private Long sendtimemax;
+    private Double sendtimemax;
 
-    private Long sendtimemean;
+    private Double sendtimemean;
 
-    private Long sendtimestd;
+    private Double sendtimestd;
 
-    private Long sendtime55quantile;
+    private Double sendtime55quantile;
 
-    private Long sendtime75quantile;
+    private Double sendtime75quantile;
 
-    private Long sendtime95quantile;
+    private Double sendtime95quantile;
 
-    private Long sendtime99quantile;
+    private Double sendtime99quantile;
 
-    private Long flushtime;
+    private Double flushtime;
 
-    private Long flushtimemin;
+    private Double flushtimemin;
 
-    private Long flushtimemax;
+    private Double flushtimemax;
 
-    private Long flushtimemean;
+    private Double flushtimemean;
 
-    private Long flushtimestd;
+    private Double flushtimestd;
 
-    private Long flushtime55quantile;
+    private Double flushtime55quantile;
 
-    private Long flushtime75quantile;
+    private Double flushtime75quantile;
 
-    private Long flushtime95quantile;
+    private Double flushtime95quantile;
 
-    private Long flushtime99quantile;
+    private Double flushtime99quantile;
 
-    private Long processtimeperevent;
+    private Double processtimeperevent;
 
-    private Long processtimepereventmin;
+    private Double processtimepereventmin;
 
-    private Long processtimepereventmax;
+    private Double processtimepereventmax;
 
-    private Long processtimepereventmean;
+    private Double processtimepereventmean;
 
-    private Long processtimepereventstd;
+    private Double processtimepereventstd;
 
-    private Long processtimeperevent55quantile;
+    private Double processtimeperevent55quantile;
 
-    private Long processtimeperevent75quantile;
+    private Double processtimeperevent75quantile;
 
-    private Long processtimeperevent95quantile;
+    private Double processtimeperevent95quantile;
 
-    private Long processtimeperevent99quantile;
+    private Double processtimeperevent99quantile;
 
     private Long flushtimes;
 
@@ -119,41 +119,41 @@ public class MetricsLogCollectTaskPO {
 
     private Long channelcountmax;
 
-    private Long channelbytessize;
+    private Double channelbytessize;
 
-    private Long channelbytessizemin;
+    private Double channelbytessizemin;
 
-    private Long channelbytessizemax;
+    private Double channelbytessizemax;
 
-    private Long channelbytessizemean;
+    private Double channelbytessizemean;
 
-    private Long channelbytessizestd;
+    private Double channelbytessizestd;
 
-    private Long channelbytessize55quantile;
+    private Double channelbytessize55quantile;
 
-    private Long channelbytessize75quantile;
+    private Double channelbytessize75quantile;
 
-    private Long channelbytessize95quantile;
+    private Double channelbytessize95quantile;
 
-    private Long channelbytessize99quantile;
+    private Double channelbytessize99quantile;
 
-    private Long channelcountsize;
+    private Double channelcountsize;
 
-    private Long channelcountsizemin;
+    private Double channelcountsizemin;
 
-    private Long channelcountsizemax;
+    private Double channelcountsizemax;
 
-    private Long channelcountsizemean;
+    private Double channelcountsizemean;
 
-    private Long channelcountsizestd;
+    private Double channelcountsizestd;
 
-    private Long channelcountsize55quantile;
+    private Double channelcountsize55quantile;
 
-    private Long channelcountsize75quantile;
+    private Double channelcountsize75quantile;
 
-    private Long channelcountsize95quantile;
+    private Double channelcountsize95quantile;
 
-    private Long channelcountsize99quantile;
+    private Double channelcountsize99quantile;
 
     private Double channelusedpercent;
 
@@ -345,291 +345,291 @@ public class MetricsLogCollectTaskPO {
         this.sendcount = sendcount;
     }
 
-    public Long getReadtimeperevent() {
+    public Double getReadtimeperevent() {
         return readtimeperevent;
     }
 
-    public void setReadtimeperevent(Long readtimeperevent) {
+    public void setReadtimeperevent(Double readtimeperevent) {
         this.readtimeperevent = readtimeperevent;
     }
 
-    public Long getReadtimepereventmin() {
+    public Double getReadtimepereventmin() {
         return readtimepereventmin;
     }
 
-    public void setReadtimepereventmin(Long readtimepereventmin) {
+    public void setReadtimepereventmin(Double readtimepereventmin) {
         this.readtimepereventmin = readtimepereventmin;
     }
 
-    public Long getReadtimepereventmax() {
+    public Double getReadtimepereventmax() {
         return readtimepereventmax;
     }
 
-    public void setReadtimepereventmax(Long readtimepereventmax) {
+    public void setReadtimepereventmax(Double readtimepereventmax) {
         this.readtimepereventmax = readtimepereventmax;
     }
 
-    public Long getReadtimepereventmean() {
+    public Double getReadtimepereventmean() {
         return readtimepereventmean;
     }
 
-    public void setReadtimepereventmean(Long readtimepereventmean) {
+    public void setReadtimepereventmean(Double readtimepereventmean) {
         this.readtimepereventmean = readtimepereventmean;
     }
 
-    public Long getReadtimepereventstd() {
+    public Double getReadtimepereventstd() {
         return readtimepereventstd;
     }
 
-    public void setReadtimepereventstd(Long readtimepereventstd) {
+    public void setReadtimepereventstd(Double readtimepereventstd) {
         this.readtimepereventstd = readtimepereventstd;
     }
 
-    public Long getReadtimeperevent55quantile() {
+    public Double getReadtimeperevent55quantile() {
         return readtimeperevent55quantile;
     }
 
-    public void setReadtimeperevent55quantile(Long readtimeperevent55quantile) {
+    public void setReadtimeperevent55quantile(Double readtimeperevent55quantile) {
         this.readtimeperevent55quantile = readtimeperevent55quantile;
     }
 
-    public Long getReadtimeperevent75quantile() {
+    public Double getReadtimeperevent75quantile() {
         return readtimeperevent75quantile;
     }
 
-    public void setReadtimeperevent75quantile(Long readtimeperevent75quantile) {
+    public void setReadtimeperevent75quantile(Double readtimeperevent75quantile) {
         this.readtimeperevent75quantile = readtimeperevent75quantile;
     }
 
-    public Long getReadtimeperevent95quantile() {
+    public Double getReadtimeperevent95quantile() {
         return readtimeperevent95quantile;
     }
 
-    public void setReadtimeperevent95quantile(Long readtimeperevent95quantile) {
+    public void setReadtimeperevent95quantile(Double readtimeperevent95quantile) {
         this.readtimeperevent95quantile = readtimeperevent95quantile;
     }
 
-    public Long getReadtimeperevent99quantile() {
+    public Double getReadtimeperevent99quantile() {
         return readtimeperevent99quantile;
     }
 
-    public void setReadtimeperevent99quantile(Long readtimeperevent99quantile) {
+    public void setReadtimeperevent99quantile(Double readtimeperevent99quantile) {
         this.readtimeperevent99quantile = readtimeperevent99quantile;
     }
 
-    public Long getSendtime() {
+    public Double getSendtime() {
         return sendtime;
     }
 
-    public void setSendtime(Long sendtime) {
+    public void setSendtime(Double sendtime) {
         this.sendtime = sendtime;
     }
 
-    public Long getSendtimemin() {
+    public Double getSendtimemin() {
         return sendtimemin;
     }
 
-    public void setSendtimemin(Long sendtimemin) {
+    public void setSendtimemin(Double sendtimemin) {
         this.sendtimemin = sendtimemin;
     }
 
-    public Long getSendtimemax() {
+    public Double getSendtimemax() {
         return sendtimemax;
     }
 
-    public void setSendtimemax(Long sendtimemax) {
+    public void setSendtimemax(Double sendtimemax) {
         this.sendtimemax = sendtimemax;
     }
 
-    public Long getSendtimemean() {
+    public Double getSendtimemean() {
         return sendtimemean;
     }
 
-    public void setSendtimemean(Long sendtimemean) {
+    public void setSendtimemean(Double sendtimemean) {
         this.sendtimemean = sendtimemean;
     }
 
-    public Long getSendtimestd() {
+    public Double getSendtimestd() {
         return sendtimestd;
     }
 
-    public void setSendtimestd(Long sendtimestd) {
+    public void setSendtimestd(Double sendtimestd) {
         this.sendtimestd = sendtimestd;
     }
 
-    public Long getSendtime55quantile() {
+    public Double getSendtime55quantile() {
         return sendtime55quantile;
     }
 
-    public void setSendtime55quantile(Long sendtime55quantile) {
+    public void setSendtime55quantile(Double sendtime55quantile) {
         this.sendtime55quantile = sendtime55quantile;
     }
 
-    public Long getSendtime75quantile() {
+    public Double getSendtime75quantile() {
         return sendtime75quantile;
     }
 
-    public void setSendtime75quantile(Long sendtime75quantile) {
+    public void setSendtime75quantile(Double sendtime75quantile) {
         this.sendtime75quantile = sendtime75quantile;
     }
 
-    public Long getSendtime95quantile() {
+    public Double getSendtime95quantile() {
         return sendtime95quantile;
     }
 
-    public void setSendtime95quantile(Long sendtime95quantile) {
+    public void setSendtime95quantile(Double sendtime95quantile) {
         this.sendtime95quantile = sendtime95quantile;
     }
 
-    public Long getSendtime99quantile() {
+    public Double getSendtime99quantile() {
         return sendtime99quantile;
     }
 
-    public void setSendtime99quantile(Long sendtime99quantile) {
+    public void setSendtime99quantile(Double sendtime99quantile) {
         this.sendtime99quantile = sendtime99quantile;
     }
 
-    public Long getFlushtime() {
+    public Double getFlushtime() {
         return flushtime;
     }
 
-    public void setFlushtime(Long flushtime) {
+    public void setFlushtime(Double flushtime) {
         this.flushtime = flushtime;
     }
 
-    public Long getFlushtimemin() {
+    public Double getFlushtimemin() {
         return flushtimemin;
     }
 
-    public void setFlushtimemin(Long flushtimemin) {
+    public void setFlushtimemin(Double flushtimemin) {
         this.flushtimemin = flushtimemin;
     }
 
-    public Long getFlushtimemax() {
+    public Double getFlushtimemax() {
         return flushtimemax;
     }
 
-    public void setFlushtimemax(Long flushtimemax) {
+    public void setFlushtimemax(Double flushtimemax) {
         this.flushtimemax = flushtimemax;
     }
 
-    public Long getFlushtimemean() {
+    public Double getFlushtimemean() {
         return flushtimemean;
     }
 
-    public void setFlushtimemean(Long flushtimemean) {
+    public void setFlushtimemean(Double flushtimemean) {
         this.flushtimemean = flushtimemean;
     }
 
-    public Long getFlushtimestd() {
+    public Double getFlushtimestd() {
         return flushtimestd;
     }
 
-    public void setFlushtimestd(Long flushtimestd) {
+    public void setFlushtimestd(Double flushtimestd) {
         this.flushtimestd = flushtimestd;
     }
 
-    public Long getFlushtime55quantile() {
+    public Double getFlushtime55quantile() {
         return flushtime55quantile;
     }
 
-    public void setFlushtime55quantile(Long flushtime55quantile) {
+    public void setFlushtime55quantile(Double flushtime55quantile) {
         this.flushtime55quantile = flushtime55quantile;
     }
 
-    public Long getFlushtime75quantile() {
+    public Double getFlushtime75quantile() {
         return flushtime75quantile;
     }
 
-    public void setFlushtime75quantile(Long flushtime75quantile) {
+    public void setFlushtime75quantile(Double flushtime75quantile) {
         this.flushtime75quantile = flushtime75quantile;
     }
 
-    public Long getFlushtime95quantile() {
+    public Double getFlushtime95quantile() {
         return flushtime95quantile;
     }
 
-    public void setFlushtime95quantile(Long flushtime95quantile) {
+    public void setFlushtime95quantile(Double flushtime95quantile) {
         this.flushtime95quantile = flushtime95quantile;
     }
 
-    public Long getFlushtime99quantile() {
+    public Double getFlushtime99quantile() {
         return flushtime99quantile;
     }
 
-    public void setFlushtime99quantile(Long flushtime99quantile) {
+    public void setFlushtime99quantile(Double flushtime99quantile) {
         this.flushtime99quantile = flushtime99quantile;
     }
 
-    public Long getProcesstimeperevent() {
+    public Double getProcesstimeperevent() {
         return processtimeperevent;
     }
 
-    public void setProcesstimeperevent(Long processtimeperevent) {
+    public void setProcesstimeperevent(Double processtimeperevent) {
         this.processtimeperevent = processtimeperevent;
     }
 
-    public Long getProcesstimepereventmin() {
+    public Double getProcesstimepereventmin() {
         return processtimepereventmin;
     }
 
-    public void setProcesstimepereventmin(Long processtimepereventmin) {
+    public void setProcesstimepereventmin(Double processtimepereventmin) {
         this.processtimepereventmin = processtimepereventmin;
     }
 
-    public Long getProcesstimepereventmax() {
+    public Double getProcesstimepereventmax() {
         return processtimepereventmax;
     }
 
-    public void setProcesstimepereventmax(Long processtimepereventmax) {
+    public void setProcesstimepereventmax(Double processtimepereventmax) {
         this.processtimepereventmax = processtimepereventmax;
     }
 
-    public Long getProcesstimepereventmean() {
+    public Double getProcesstimepereventmean() {
         return processtimepereventmean;
     }
 
-    public void setProcesstimepereventmean(Long processtimepereventmean) {
+    public void setProcesstimepereventmean(Double processtimepereventmean) {
         this.processtimepereventmean = processtimepereventmean;
     }
 
-    public Long getProcesstimepereventstd() {
+    public Double getProcesstimepereventstd() {
         return processtimepereventstd;
     }
 
-    public void setProcesstimepereventstd(Long processtimepereventstd) {
+    public void setProcesstimepereventstd(Double processtimepereventstd) {
         this.processtimepereventstd = processtimepereventstd;
     }
 
-    public Long getProcesstimeperevent55quantile() {
+    public Double getProcesstimeperevent55quantile() {
         return processtimeperevent55quantile;
     }
 
-    public void setProcesstimeperevent55quantile(Long processtimeperevent55quantile) {
+    public void setProcesstimeperevent55quantile(Double processtimeperevent55quantile) {
         this.processtimeperevent55quantile = processtimeperevent55quantile;
     }
 
-    public Long getProcesstimeperevent75quantile() {
+    public Double getProcesstimeperevent75quantile() {
         return processtimeperevent75quantile;
     }
 
-    public void setProcesstimeperevent75quantile(Long processtimeperevent75quantile) {
+    public void setProcesstimeperevent75quantile(Double processtimeperevent75quantile) {
         this.processtimeperevent75quantile = processtimeperevent75quantile;
     }
 
-    public Long getProcesstimeperevent95quantile() {
+    public Double getProcesstimeperevent95quantile() {
         return processtimeperevent95quantile;
     }
 
-    public void setProcesstimeperevent95quantile(Long processtimeperevent95quantile) {
+    public void setProcesstimeperevent95quantile(Double processtimeperevent95quantile) {
         this.processtimeperevent95quantile = processtimeperevent95quantile;
     }
 
-    public Long getProcesstimeperevent99quantile() {
+    public Double getProcesstimeperevent99quantile() {
         return processtimeperevent99quantile;
     }
 
-    public void setProcesstimeperevent99quantile(Long processtimeperevent99quantile) {
+    public void setProcesstimeperevent99quantile(Double processtimeperevent99quantile) {
         this.processtimeperevent99quantile = processtimeperevent99quantile;
     }
 
@@ -673,147 +673,147 @@ public class MetricsLogCollectTaskPO {
         this.channelcountmax = channelcountmax;
     }
 
-    public Long getChannelbytessize() {
+    public Double getChannelbytessize() {
         return channelbytessize;
     }
 
-    public void setChannelbytessize(Long channelbytessize) {
+    public void setChannelbytessize(Double channelbytessize) {
         this.channelbytessize = channelbytessize;
     }
 
-    public Long getChannelbytessizemin() {
+    public Double getChannelbytessizemin() {
         return channelbytessizemin;
     }
 
-    public void setChannelbytessizemin(Long channelbytessizemin) {
+    public void setChannelbytessizemin(Double channelbytessizemin) {
         this.channelbytessizemin = channelbytessizemin;
     }
 
-    public Long getChannelbytessizemax() {
+    public Double getChannelbytessizemax() {
         return channelbytessizemax;
     }
 
-    public void setChannelbytessizemax(Long channelbytessizemax) {
+    public void setChannelbytessizemax(Double channelbytessizemax) {
         this.channelbytessizemax = channelbytessizemax;
     }
 
-    public Long getChannelbytessizemean() {
+    public Double getChannelbytessizemean() {
         return channelbytessizemean;
     }
 
-    public void setChannelbytessizemean(Long channelbytessizemean) {
+    public void setChannelbytessizemean(Double channelbytessizemean) {
         this.channelbytessizemean = channelbytessizemean;
     }
 
-    public Long getChannelbytessizestd() {
+    public Double getChannelbytessizestd() {
         return channelbytessizestd;
     }
 
-    public void setChannelbytessizestd(Long channelbytessizestd) {
+    public void setChannelbytessizestd(Double channelbytessizestd) {
         this.channelbytessizestd = channelbytessizestd;
     }
 
-    public Long getChannelbytessize55quantile() {
+    public Double getChannelbytessize55quantile() {
         return channelbytessize55quantile;
     }
 
-    public void setChannelbytessize55quantile(Long channelbytessize55quantile) {
+    public void setChannelbytessize55quantile(Double channelbytessize55quantile) {
         this.channelbytessize55quantile = channelbytessize55quantile;
     }
 
-    public Long getChannelbytessize75quantile() {
+    public Double getChannelbytessize75quantile() {
         return channelbytessize75quantile;
     }
 
-    public void setChannelbytessize75quantile(Long channelbytessize75quantile) {
+    public void setChannelbytessize75quantile(Double channelbytessize75quantile) {
         this.channelbytessize75quantile = channelbytessize75quantile;
     }
 
-    public Long getChannelbytessize95quantile() {
+    public Double getChannelbytessize95quantile() {
         return channelbytessize95quantile;
     }
 
-    public void setChannelbytessize95quantile(Long channelbytessize95quantile) {
+    public void setChannelbytessize95quantile(Double channelbytessize95quantile) {
         this.channelbytessize95quantile = channelbytessize95quantile;
     }
 
-    public Long getChannelbytessize99quantile() {
+    public Double getChannelbytessize99quantile() {
         return channelbytessize99quantile;
     }
 
-    public void setChannelbytessize99quantile(Long channelbytessize99quantile) {
+    public void setChannelbytessize99quantile(Double channelbytessize99quantile) {
         this.channelbytessize99quantile = channelbytessize99quantile;
     }
 
-    public Long getChannelcountsize() {
+    public Double getChannelcountsize() {
         return channelcountsize;
     }
 
-    public void setChannelcountsize(Long channelcountsize) {
+    public void setChannelcountsize(Double channelcountsize) {
         this.channelcountsize = channelcountsize;
     }
 
-    public Long getChannelcountsizemin() {
+    public Double getChannelcountsizemin() {
         return channelcountsizemin;
     }
 
-    public void setChannelcountsizemin(Long channelcountsizemin) {
+    public void setChannelcountsizemin(Double channelcountsizemin) {
         this.channelcountsizemin = channelcountsizemin;
     }
 
-    public Long getChannelcountsizemax() {
+    public Double getChannelcountsizemax() {
         return channelcountsizemax;
     }
 
-    public void setChannelcountsizemax(Long channelcountsizemax) {
+    public void setChannelcountsizemax(Double channelcountsizemax) {
         this.channelcountsizemax = channelcountsizemax;
     }
 
-    public Long getChannelcountsizemean() {
+    public Double getChannelcountsizemean() {
         return channelcountsizemean;
     }
 
-    public void setChannelcountsizemean(Long channelcountsizemean) {
+    public void setChannelcountsizemean(Double channelcountsizemean) {
         this.channelcountsizemean = channelcountsizemean;
     }
 
-    public Long getChannelcountsizestd() {
+    public Double getChannelcountsizestd() {
         return channelcountsizestd;
     }
 
-    public void setChannelcountsizestd(Long channelcountsizestd) {
+    public void setChannelcountsizestd(Double channelcountsizestd) {
         this.channelcountsizestd = channelcountsizestd;
     }
 
-    public Long getChannelcountsize55quantile() {
+    public Double getChannelcountsize55quantile() {
         return channelcountsize55quantile;
     }
 
-    public void setChannelcountsize55quantile(Long channelcountsize55quantile) {
+    public void setChannelcountsize55quantile(Double channelcountsize55quantile) {
         this.channelcountsize55quantile = channelcountsize55quantile;
     }
 
-    public Long getChannelcountsize75quantile() {
+    public Double getChannelcountsize75quantile() {
         return channelcountsize75quantile;
     }
 
-    public void setChannelcountsize75quantile(Long channelcountsize75quantile) {
+    public void setChannelcountsize75quantile(Double channelcountsize75quantile) {
         this.channelcountsize75quantile = channelcountsize75quantile;
     }
 
-    public Long getChannelcountsize95quantile() {
+    public Double getChannelcountsize95quantile() {
         return channelcountsize95quantile;
     }
 
-    public void setChannelcountsize95quantile(Long channelcountsize95quantile) {
+    public void setChannelcountsize95quantile(Double channelcountsize95quantile) {
         this.channelcountsize95quantile = channelcountsize95quantile;
     }
 
-    public Long getChannelcountsize99quantile() {
+    public Double getChannelcountsize99quantile() {
         return channelcountsize99quantile;
     }
 
-    public void setChannelcountsize99quantile(Long channelcountsize99quantile) {
+    public void setChannelcountsize99quantile(Double channelcountsize99quantile) {
         this.channelcountsize99quantile = channelcountsize99quantile;
     }
 

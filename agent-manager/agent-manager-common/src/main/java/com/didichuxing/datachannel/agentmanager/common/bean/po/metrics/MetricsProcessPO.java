@@ -19,7 +19,7 @@ public class MetricsProcessPO {
 
     private Double proccpuutilmean;
 
-    private String proccpuutilstd;
+    private Double proccpuutilstd;
 
     private Double proccpuutil55quantile;
 
@@ -467,11 +467,11 @@ public class MetricsProcessPO {
         this.proccpuutilmean = proccpuutilmean;
     }
 
-    public String getProccpuutilstd() {
+    public Double getProccpuutilstd() {
         return proccpuutilstd;
     }
 
-    public void setProccpuutilstd(String proccpuutilstd) {
+    public void setProccpuutilstd(Double proccpuutilstd) {
         this.proccpuutilstd = proccpuutilstd;
     }
 
