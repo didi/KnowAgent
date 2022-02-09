@@ -70,6 +70,12 @@ public class FileLogCollectPathManageServiceImpl implements FileLogCollectPathMa
         return fileLogCollectPathDAO.countAll();
     }
 
+    @Override
+    public FileLogCollectPathDO getById(Long id) {
+        FileLogCollectPathPO fileLogCollectPathPO = fileLogCollectPathDAO.selectByPrimaryKey(id);
+        return fileLogCollectPathManageServiceExtension.fileLogCollectPathPO2FileLogCollectPath(fileLogCollectPathPO);
+    }
+
     /**
      * 创建文件型日志采集路径对象流程
      * @param fileLogCollectPath 待创建文件型日志采集路径对象

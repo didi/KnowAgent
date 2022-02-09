@@ -457,47 +457,13 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
             }
         });
 
-        LogCollectTaskHealthDO logCollectTaskHealthDO = logCollectTaskHealthManageService.getByLogCollectTaskId(logCollectTaskDO.getId());//待更新LogCollectTask对应LogCollectTaskHealth对象
-        //存储各健康值对应时间点
-        Map<Long, Long> fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(), Map.class);
-        Map<Long, Long> fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestLogSliceCheckHealthyTimePerLogFilePath(), Map.class);
-        Map<Long, Long> fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFileDisorderCheckHealthyTimePerLogFilePath(), Map.class);
-        Map<Long, Long> fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap = JSON.parseObject(logCollectTaskHealthDO.getLastestFilePathExistsCheckHealthyTimePerLogFilePath(), Map.class);
-        Long fileLogPathCreateTime = System.currentTimeMillis();
-        for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOListCompareResult.getCreateList()) {
-            fileLogCollectPathDO.setLogCollectTaskId(logCollectTaskDO.getId());
-            Long fileLogCollectPathId = fileLogCollectPathManageService.createFileLogCollectPath(fileLogCollectPathDO, operator);
-            /*
-             * 增加FileLogPath需要更新对应LogCollectTaskHealth.lastestDataDiscardCheckHealthyTimePerLogFilePath、lastestAbnormalTruncationCheckHealthyTimePerLogFilePath、lastestErrorLogsExistsCheckHealthyTimePerLogFilePath、
-             * lastestFileDisorderCheckHealthyTimePerLogFilePath、lastestFilePathExistsCheckHealthyTimePerLogFilePath 对应新增 filelogpath 对应 key - value
-             */
-            fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap.put(fileLogCollectPathId, fileLogPathCreateTime);
-            fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap.put(fileLogCollectPathId, fileLogPathCreateTime);
-            fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap.put(fileLogCollectPathId, fileLogPathCreateTime);
-            fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap.put(fileLogCollectPathId, fileLogPathCreateTime);
-        }
         for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOListCompareResult.getRemoveList()) {
             fileLogCollectPathManageService.deleteFileLogCollectPath(fileLogCollectPathDO.getId(), operator);
-            /*
-             * 增加FileLogPath需要更新对应LogCollectTaskHealth.lastestDataDiscardCheckHealthyTimePerLogFilePath、lastestAbnormalTruncationCheckHealthyTimePerLogFilePath、lastestErrorLogsExistsCheckHealthyTimePerLogFilePath、
-             * lastestFileDisorderCheckHealthyTimePerLogFilePath、lastestFilePathExistsCheckHealthyTimePerLogFilePath 对应删除 filelogpath 对应 key - value
-             */
-            fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap.remove(fileLogCollectPathDO.getId());
-            fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap.remove(fileLogCollectPathDO.getId());
-            fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap.remove(fileLogCollectPathDO.getId());
-            fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap.remove(fileLogCollectPathDO.getId());
         }
         for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOListCompareResult.getModifyList()) {
             fileLogCollectPathManageService.updateFileLogCollectPath(fileLogCollectPathDO, operator);
         }
-        /*
-         * 更新 LogCollectTaskHealth 对象
-         */
-        logCollectTaskHealthDO.setLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestAbnormalTruncationCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestLogSliceCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestLogSliceCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestFileDisorderCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFileDisorderCheckHealthyTimeMap));
-        logCollectTaskHealthDO.setLastestFilePathExistsCheckHealthyTimePerLogFilePath(JSON.toJSONString(fileLogCollectPathId2LastestFilePathExistsCheckHealthyTimeMap));
-        logCollectTaskHealthManageService.updateLogCollectorTaskHealth(logCollectTaskHealthDO, CommonConstant.getOperator(null));
+
         /*
          * 更新日志采集任务对象 & 服务关联关系
          */

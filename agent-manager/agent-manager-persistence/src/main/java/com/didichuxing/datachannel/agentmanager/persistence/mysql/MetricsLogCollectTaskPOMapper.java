@@ -65,4 +65,16 @@ public interface MetricsLogCollectTaskPOMapper {
      */
     List<MetricsLogCollectTaskTopPO> getTopNByHostName(Map<String, Object> params);
 
+    /**
+     * @param params 含：
+     *  logCollectTaskId：日志采集任务id
+     *  pathId：日志采集路径id
+     *  hostName：主机名
+     *  errorFieldName：待查错误对应字段名
+     *  startHeartbeatTime：开始时间戳（不含）
+     *  endHeartbeatTime：结束时间戳（含）
+     * @return 返回根据给定参数获取到的心跳信息集
+     */
+    List<MetricsLogCollectTaskPO> getErrorMetrics(Map params);
+
 }

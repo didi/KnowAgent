@@ -40,7 +40,6 @@ public enum LogCollectTaskHealthInspectionResultEnum {
      */
     private LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum;
 
-
     public Integer getCode() {
         return code;
     }
@@ -59,6 +58,15 @@ public enum LogCollectTaskHealthInspectionResultEnum {
         this.description = description;
         this.logCollectTaskHealthLevelEnum = logCollectTaskHealthLevelEnum;
         this.finalDiagnosis = finalDiagnosis;
+    }
+
+    public static LogCollectTaskHealthInspectionResultEnum getByCode(Integer code) {
+        for (LogCollectTaskHealthInspectionResultEnum item : values()) {
+            if(item.getCode().equals(code)) {
+                return item;
+            }
+        }
+        return null;
     }
 
 }

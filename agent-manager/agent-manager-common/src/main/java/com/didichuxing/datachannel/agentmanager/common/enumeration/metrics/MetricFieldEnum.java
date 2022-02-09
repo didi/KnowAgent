@@ -22,7 +22,7 @@ public enum MetricFieldEnum {
 //    SYSTEM_UP_TIME("system_uptime", "systemUptime", "系统运行时间", MetricTypeEnum.SYSTEM_BASIC, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
 
     SYSTEM_STARTUP_TIME(
-            9,
+            1,
             "system_startup_time",
             "systemStartupTime",
             "系统启动时间",
@@ -55,7 +55,7 @@ public enum MetricFieldEnum {
      */
 //    SYSTEM_CPU_CORES("cpu_cores","cpuCores","cpu核数", MetricTypeEnum.SYSTEM_CPU, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
     SYSTEM_CPU_UTIL(
-            10,
+            2,
             "system_cpu_util",
             "systemCpuUtil",
             "系统总体CPU使用率(单位：%)，使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200",
@@ -73,7 +73,7 @@ public enum MetricFieldEnum {
      * memory 相关
      */
     SYSTEM_MEMORY_FREE(
-            11,
+            3,
             "system_memory_free",
             "systemMemFree",
             "系统空闲内存大小（单位：byte），当前值",
@@ -91,7 +91,7 @@ public enum MetricFieldEnum {
      * disk 相关
      */
     SYSTEM_DISK_BYTES_FREE(
-            7,
+            4,
             "systemDiskBytesFree",
             "systemDiskBytesFree",
             "磁盘余量大小（单位：MB）",
@@ -109,7 +109,7 @@ public enum MetricFieldEnum {
      * disk io 相关
      */
     SYSTEM_DISK_IO_IO_UTIL(
-            1,
+            5,
             "io_util",
             "systemIOUtil",
             "各磁盘I/O请求的时间百分比",
@@ -124,7 +124,7 @@ public enum MetricFieldEnum {
             ),
 
     SYSTEM_NET_CARD_SEND_BYTES_PS(
-            2,
+            6,
             "send_bytes/s",
             "systemNetCardsSendBytesPs",
             "各网卡每秒上行流量（单位：byte）",
@@ -139,7 +139,7 @@ public enum MetricFieldEnum {
     ),
 
     SYSTEM_NET_CARD_BAND_WIDTH(
-            8,
+            7,
             "bandWidth",
             "systemNetCardsBandWidth",
             "各网卡最大带宽（单位：byte）",
@@ -159,7 +159,7 @@ public enum MetricFieldEnum {
      * 基础信息
      */
     PROCESS_START_UP_TIME(
-            3,
+            8,
             "process_startup_time",
             "procStartupTime",
             "当前进程启动时间",
@@ -177,7 +177,7 @@ public enum MetricFieldEnum {
      * cpu 相关
      */
     PROCESS_CPU_UTIL(
-            4,
+            9,
             "process_cpu_util",
             "procCpuUtil",
             "当前进程cpu使用率(单位：%) 使用率采用全核方式计数，如进程使用一颗核，则返回100，如进程使用两颗核，则返回200",
@@ -195,7 +195,7 @@ public enum MetricFieldEnum {
      * memory 相关
      */
     PROCESS_MEMORY_USED(
-            12,
+            10,
             "process_memory_used",
             "procMemUsed",
             "当前进程内存使用量（单位：byte）当前值",
@@ -212,7 +212,7 @@ public enum MetricFieldEnum {
     /*********************************** agent 相关 ***********************************/
 
     AGENT_VERSION(
-            13,
+            11,
             "agent_version",
             "agentVersion",
             "agent版本号",
@@ -227,7 +227,7 @@ public enum MetricFieldEnum {
     ),
 
     AGENT_WRITE_COUNT(
-            14,
+            12,
             "write_count",
             "writeCount",
             "采样周期内出口采集条数 单位：条",
@@ -245,7 +245,7 @@ public enum MetricFieldEnum {
 
 
     LOG_COLLECT_TASK_BUSINESS_TIMESTAMP(
-            5,
+            13,
             "business_time",
             "businessTimestamp",
             "采集业务时间",
@@ -260,7 +260,7 @@ public enum MetricFieldEnum {
     ),
 
     LOG_COLLECT_TASK_SEND_BYTES(
-            6,
+            14,
      "send_bytes",
      "sendBytes",
      "日志发送字节数",

@@ -18,10 +18,22 @@
     log_slice_check_healthy_heartbeat_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from tb_log_collect_task_health_detail
     where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="get" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health_detail
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT} and path_id = #{pathId,jdbcType=BIGINT} and host_name = #{hostName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByLogCollectTaskId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health_detail
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT}
   </select>
   <select id="select" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select

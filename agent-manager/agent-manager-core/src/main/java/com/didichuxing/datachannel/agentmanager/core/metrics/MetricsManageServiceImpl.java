@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.core.metrics;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.BusinessMetricsQueryDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskTopPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsNetCardTopPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
@@ -79,6 +80,23 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         } else {//agent相关指标
             return getAgentMetric(metricQueryDTO, metricFieldEnum);
         }
+    }
+
+    @Override
+    public List<MetricsLogCollectTaskPO> getErrorMetrics(Long logCollectTaskId, Long pathId, String hostName, String errorFieldName, Long startHeartbeatTime, Long endHeartbeatTime) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("logCollectTaskId", logCollectTaskId);
+        params.put("pathId", pathId);
+        params.put("hostName", hostName);
+        params.put("errorFieldName", errorFieldName);
+        params.put("startHeartbeatTime", startHeartbeatTime);
+        params.put("endHeartbeatTime", endHeartbeatTime);
+        return metricsLogCollectTaskDAO.getErrorMetrics(params);
+    }
+
+    @Override
+    public MetricsLogCollectTaskPO getMetricLogCollectTask(Long logCollectTaskMetricId) {
+        return metricsLogCollectTaskDAO.selectByPrimaryKey(logCollectTaskMetricId);
     }
 
     /**

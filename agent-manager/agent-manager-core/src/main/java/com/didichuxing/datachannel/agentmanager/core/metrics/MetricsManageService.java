@@ -1,8 +1,11 @@
 package com.didichuxing.datachannel.agentmanager.core.metrics;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.BusinessMetricsQueryDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
+
+import java.util.List;
 
 public interface MetricsManageService {
 
@@ -19,5 +22,22 @@ public interface MetricsManageService {
      * @return 返回根据给定指标查询条件获取对应的指标数据信息
      */
     MetricPanel getMetric(BusinessMetricsQueryDTO metricQueryDTO);
+
+    /**
+     * @param logCollectTaskId 日志采集任务id
+     * @param pathId 日志采集路径id
+     * @param hostName 主机名
+     * @param errorFieldName 待查错误对应字段名
+     * @param startHeartbeatTime 开始时间戳（不含）
+     * @param endHeartbeatTime 结束时间戳（含）
+     * @return 返回根据给定参数获取到的心跳信息集
+     */
+    List<MetricsLogCollectTaskPO> getErrorMetrics(Long logCollectTaskId, Long pathId, String hostName, String errorFieldName, Long startHeartbeatTime, Long endHeartbeatTime);
+
+    /**
+     * @param logCollectTaskMetricId 日志采集任务指标id
+     * @return 根据给定日志采集任务指标id获取对应日志采集任务指标记录
+     */
+    MetricsLogCollectTaskPO getMetricLogCollectTask(Long logCollectTaskMetricId);
 
 }

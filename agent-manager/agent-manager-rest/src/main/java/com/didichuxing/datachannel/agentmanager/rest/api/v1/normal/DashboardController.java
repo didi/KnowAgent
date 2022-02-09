@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.dashboard.DashboardRequestDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -69,28 +70,30 @@ public class DashboardController {
         DashBoardVO dashBoardVO = new DashBoardVO();
 
         /*********************** part 1：标量 ***********************/
-        dashBoardVO.setLogCollectTaskNum(logCollectTaskManageService.countAll());
-        dashBoardVO.setLogCollectPathNum(fileLogCollectPathManageService.countAll());
-        dashBoardVO.setServiceNum(serviceManageService.countAll());
         dashBoardVO.setHostNum(hostManageService.countAllHost());
         dashBoardVO.setContainerNum(hostManageService.countAllContainer());
         dashBoardVO.setAgentNum(agentManageService.countAll());
-        List<Long> logCollectTaskIdList = logCollectTaskManageService.getAllIds();
-        Long nonRelateAnyHostLogCollectTaskNum = 0L;
-        for (Long logCollectTaskId : logCollectTaskIdList) {
-            if(logCollectTaskManageService.checkNotRelateAnyHost(logCollectTaskId)) {
-                nonRelateAnyHostLogCollectTaskNum++;
-            }
-        }
-        dashBoardVO.setNonRelateAnyHostLogCollectTaskNum(nonRelateAnyHostLogCollectTaskNum);
-        List<String> agentHostNameList = agentManageService.getAllHostNames();
-        Long nonRelateAnyLogCollectTaskAgentNum = 0L;
-        for (String hostName : agentHostNameList) {
-            if(CollectionUtils.isEmpty(logCollectTaskManageService.getLogCollectTaskListByAgentHostName(hostName))) {
-                nonRelateAnyLogCollectTaskAgentNum++;
-            }
-        }
-        dashBoardVO.setNonRelateAnyLogCollectTaskAgentNum(nonRelateAnyLogCollectTaskAgentNum);
+        dashBoardVO.setNonRelateAnyLogCollectTaskAgentNum(getNonRelateAnyLogCollectTaskAgentNum());
+        dashBoardVO.setServiceNum(serviceManageService.countAll());
+        dashBoardVO.setNonRelateAnyHostServiceNum(getNonRelateAnyHostServiceNum());
+        dashBoardVO.setLogCollectTaskNum(logCollectTaskManageService.countAll());
+        dashBoardVO.setNonRelateAnyHostLogCollectTaskNum(getNonRelateAnyHostLogCollectTaskNum());
+        dashBoardVO.setLogCollectPathNum(fileLogCollectPathManageService.countAll());
+//        dashBoardVO.setAgentCpuCoresSpend();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //        dashBoardVO.setCollectBytesDay(logCollectTaskManageService.getCollectBytesToday());
 //        dashBoardVO.setCurrentCollectBytes(logCollectTaskManageService.getCurrentCollectBytes());
 //        dashBoardVO.setCollectLogEventsDay(logCollectTaskManageService.getCollectCountToday());
@@ -139,6 +142,39 @@ public class DashboardController {
 
         return Result.buildSucc(dashBoardVO);
 
+    }
+
+    private Long getNonRelateAnyHostLogCollectTaskNum() {
+        List<Long> logCollectTaskIdList = logCollectTaskManageService.getAllIds();
+        Long nonRelateAnyHostLogCollectTaskNum = 0L;
+        for (Long logCollectTaskId : logCollectTaskIdList) {
+            if(logCollectTaskManageService.checkNotRelateAnyHost(logCollectTaskId)) {
+                nonRelateAnyHostLogCollectTaskNum++;
+            }
+        }
+        return nonRelateAnyHostLogCollectTaskNum;
+    }
+
+    private Long getNonRelateAnyHostServiceNum() {
+        Long nonRelateAnyHostServiceNum = 0L;
+        List<ServiceDO> serviceDOList = serviceManageService.list();
+        for (ServiceDO serviceDO : serviceDOList) {
+            if(CollectionUtils.isEmpty(hostManageService.getHostsByServiceId(serviceDO.getId()))) {
+                nonRelateAnyHostServiceNum++;
+            }
+        }
+        return nonRelateAnyHostServiceNum;
+    }
+
+    private Long getNonRelateAnyLogCollectTaskAgentNum() {
+        Long nonRelateAnyLogCollectTaskAgentNum = 0L;
+        List<String> agentHostNameList = agentManageService.getAllHostNames();
+        for (String hostName : agentHostNameList) {
+            if(CollectionUtils.isEmpty(logCollectTaskManageService.getLogCollectTaskListByAgentHostName(hostName))) {
+                nonRelateAnyLogCollectTaskAgentNum++;
+            }
+        }
+        return nonRelateAnyLogCollectTaskAgentNum;
     }
 
     @ApiOperation(value = "根据给定指标code集获取对应指标数据", notes = "")

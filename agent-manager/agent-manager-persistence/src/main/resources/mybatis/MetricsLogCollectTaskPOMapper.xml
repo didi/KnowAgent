@@ -214,55 +214,6 @@
     group by heartbeatTimeMinute
   </select>
 
-  <!--
-  <select id="getTopNByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    select * from (
-    select
-    ${function}(
-    ${fieldName}
-    <if test="sortMetricType == 1">
-      Min
-    </if>
-    <if test="sortMetricType == 2">
-      Max
-    </if>
-    <if test="sortMetricType == 3">
-      Mean
-    </if>
-    <if test="sortMetricType == 4">
-      Std
-    </if>
-    <if test="sortMetricType == 5">
-      55Quantil
-    </if>
-    <if test="sortMetricType == 6">
-      75Quantil
-    </if>
-    <if test="sortMetricType ==7">
-      95Quantil
-    </if>
-    <if test="sortMetricType ==8">
-      99Quantil
-    </if>
-    ) as 'aggVal',
-    pathId
-    from tb_metrics_log_collect_task
-    where
-    collectTaskId = #{hostName,jdbcType=VARCHAR}
-    <if test="hostName != null">
-      and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
-    </if>
-    and
-    heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
-    group by pathId
-    ) as agg_table
-    order by agg_table.aggVal desc
-    <if test="topN != 0">
-      limit #{topN}
-    </if>
-  </select>
-  -->
-
   <resultMap id="TopNHostNameResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO" >
     <result column="hostName" property="hostName" jdbcType="VARCHAR" />
     <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
@@ -297,6 +248,23 @@
     from tb_metrics_log_collect_task
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="getErrorMetrics" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_log_collect_task
+    where
+        collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+        AND
+        pathId = #{pathId,jdbcType=BIGINT}
+        AND
+        collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+        AND
+        #{errorFieldName,jdbcType=VARCHAR} > 0
+        AND
+        heartbeatTime &gt; #{startHeartbeatTime} and heartbeatTime &lt;= #{endHeartbeatTime}
+  </select>
+
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     insert into tb_metrics_log_collect_task (id, collectTaskId, pathId, 
       agentHostName, collectTaskHostName, agentHostIp, 

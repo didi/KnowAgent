@@ -1,6 +1,9 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDetailDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
+
+import java.util.List;
 
 public interface LogCollectTaskHealthDetailManageService {
 
@@ -32,5 +35,11 @@ public interface LogCollectTaskHealthDetailManageService {
     LogCollectTaskHealthDetailDO getInit(Long logCollectTaskId, Long pathId, String hostName);
 
     void add(LogCollectTaskHealthDetailDO logCollectTaskHealthDetailDO);
+
+    List<LogCollectTaskHealthDetailDO> getByLogCollectTaskIdAndLogCollectTaskHealthInspectionCode(Long logCollectTaskId, Integer logCollectTaskHealthInspectionCode);
+
+    List<MetricsLogCollectTaskPO> getErrorDetails(Long logCollectTaskId, Long pathId, String hostName, Integer logCollectTaskHealthInspectionCode);
+
+    void solveErrorDetail(Long logCollectTaskMetricId, Integer logCollectTaskHealthInspectionCode);
 
 }
