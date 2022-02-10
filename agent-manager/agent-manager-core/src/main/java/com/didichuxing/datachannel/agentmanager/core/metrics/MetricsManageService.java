@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.Business
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 
 import java.util.List;
 
@@ -39,5 +40,13 @@ public interface MetricsManageService {
      * @return 根据给定日志采集任务指标id获取对应日志采集任务指标记录
      */
     MetricsLogCollectTaskPO getMetricLogCollectTask(Long logCollectTaskMetricId);
+
+    /**
+     * @param metricFieldEnum 指标对应枚举对象
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @return 返回给定指标在给定时间范围内在所有agent上汇总统计值
+     */
+    Long getSumMetricAllAgents(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime);
 
 }

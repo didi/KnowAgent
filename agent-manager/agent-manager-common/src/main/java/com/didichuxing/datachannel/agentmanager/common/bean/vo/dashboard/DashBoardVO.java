@@ -42,7 +42,7 @@ public class DashBoardVO {
     private Long agentCpuCoresSpend;
 
     @ApiModelProperty(value = "系统全量agent memory耗费（单位：byte）")
-    private Long agentMemoryCoresSpend;
+    private Long agentMemorySpend;
 
     @ApiModelProperty(value = "系统全量agent实时上行流量（单位：byte/s）")
     private Long agentUplinkBytes;

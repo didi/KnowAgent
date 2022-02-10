@@ -322,6 +322,16 @@
     from tb_metrics_process
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="getSumMetricAllAgents" resultType="java.lang.Double" parameterType="java.util.Map" >
+    SELECT SUM(t1.stat) FROM (
+        SELECT ${function}(${fieldName}) AS 'stat'
+        from tb_metrics_process
+        where heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+        GROUP BY hostName
+    ) AS t1
+  </select>
+
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     insert into tb_metrics_process (id, hostName, procStartupTime, 
       procUptime, procPid, procCpuUtil, 

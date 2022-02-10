@@ -99,6 +99,25 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return metricsLogCollectTaskDAO.selectByPrimaryKey(logCollectTaskMetricId);
     }
 
+    @Override
+    public Long getSumMetricAllAgents(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+        params.put("fieldName", metricFieldEnum.getFieldName());
+        params.put("startTime", metricFieldEnum.getFieldName());
+        params.put("endTime", metricFieldEnum.getFieldName());
+        Double value = 0d;
+        if(isProcessMetric(metricFieldEnum)) {
+            value = metricsProcessDAO.getSumMetricAllAgents(params);
+        } else if(isAgentBusinessMetric(metricFieldEnum)) {
+            value = metricsAgentDAO.getSumMetricAllAgents(params);
+        } else {
+            //TODO：
+            throw new RuntimeException();
+        }
+        return Double.valueOf(Math.ceil(value)).longValue();
+    }
+
     /**
      * @param metricFieldEnum 指标字段定义枚举对象
      * @return 校验给定指标字段定义枚举对象是否为日志采集任务相关指标 true：是 false：否

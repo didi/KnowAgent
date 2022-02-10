@@ -209,6 +209,36 @@ public enum MetricFieldEnum {
             null
     ),
 
+    PROCESS_NET_WORK_SEND_BYTES_PS(
+            16,
+            "process_network_send_bytes_ps",
+            "procNetworkSendBytesPs",
+            "当前进程网络每秒上行流量",
+            MetricTypeEnum.PROCESS_NET_WORK,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            null
+    ),
+
+    PROCESS_NET_WORK_RECEIVE_BYTES_PS(
+            16,
+            "process_network_receive_bytes_ps",
+            "procNetworkReceiveBytesPs",
+            "当前进程网络每秒下行流量",
+            MetricTypeEnum.PROCESS_NET_WORK,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            null
+    ),
+
     /*********************************** agent 相关 ***********************************/
 
     AGENT_VERSION(
@@ -236,6 +266,21 @@ public enum MetricFieldEnum {
             MetricValueTypeEnum.CURRENT,
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
+    ),
+
+    AGENT_WRITE_BYTES(
+            12,
+                    "write_bytes",
+                    "writeBytes",
+                    "采样周期内出口采集流量 单位：bytes",
+            MetricTypeEnum.AGENT_BUSINESS,
+            AggregationCalcFunctionEnum.SUM,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             true,
             null
