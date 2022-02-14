@@ -26,4 +26,7 @@ public class MetricPoint extends StatisticMetricPoint {
     @ApiModelProperty(value = "主机名")
     private String hostName;
 
+    @ApiModelProperty(value = "日志采集任务 id")
+    private Long logCollectTaskId;
+
 }

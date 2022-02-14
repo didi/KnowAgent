@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.Business
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 
 import java.util.List;
@@ -48,5 +49,15 @@ public interface MetricsManageService {
      * @return 返回给定指标在给定时间范围内在所有agent上汇总统计值
      */
     Long getSumMetricAllAgents(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime);
+
+    /**
+     * @param metricFieldEnum 指标对应枚举对象
+     * @param startTime 开始时间戳
+     * @param endTime 结束时间戳
+     * @param sortTimeField 排序字段名
+     * @param logCollectTaskByServiceId 日志采集任务相关指标是否按 serviceId 进行分组统计 true：service id 分组统计 false：logCollectTask id 分组统计，非日志采集任务相关指标忽略该属性
+     * @return 返回给定指标 topN agent 对应指标时序
+     */
+    List<List<MetricPoint>> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceId);
 
 }

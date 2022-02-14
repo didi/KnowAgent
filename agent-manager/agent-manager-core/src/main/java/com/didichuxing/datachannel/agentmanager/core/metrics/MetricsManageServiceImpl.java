@@ -2,18 +2,12 @@ package com.didichuxing.datachannel.agentmanager.core.metrics;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.BusinessMetricsQueryDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskTopPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsNetCardTopPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricDisplayTypeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricTypeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricValueTypeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
@@ -116,6 +110,246 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             throw new RuntimeException();
         }
         return Double.valueOf(Math.ceil(value)).longValue();
+    }
+
+    @Override
+    public List<List<MetricPoint>> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceId) {
+        if(isSystemMetric(metricFieldEnum)) {
+            return handleGetTopNBySystemMetric(metricFieldEnum, startTime, endTime, sortTimeField);
+        } else if(isProcessMetric(metricFieldEnum)) {
+            return handleGetTopNByProcessMetric(metricFieldEnum, startTime, endTime, sortTimeField);
+        } else if(isAgentBusinessMetric(metricFieldEnum)) {
+            return handleGetTopNByAgentBusinessMetric(metricFieldEnum, startTime, endTime, sortTimeField);
+        } else if(isLogCollectTaskMetric(metricFieldEnum)) {
+            if(logCollectTaskByServiceId) {
+                return handleGetTopNByLogCollectTaskMetricPerServicekId(metricFieldEnum, startTime, endTime, sortTimeField);
+            } else {
+                return handleGetTopNByLogCollectTaskMetricPerLogCollectTaskId(metricFieldEnum, startTime, endTime, sortTimeField);
+            }
+        } else {
+            //TODO：
+            throw new RuntimeException();
+        }
+    }
+
+    private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerServicekId(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+        /*
+         * 1.）获取 top n logcollecttask
+         */
+        Map<String, Object> params = new HashMap<>();
+        params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+        Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+        params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
+        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("topN", TOP_N_DEFAULT_VALUE);
+        params.put("sortType", SortTypeEnum.DESC.getType());
+        params.put("sortTimeField", sortTimeField);
+        List<MetricsServiceIdTopPO> metricsServiceIdTopPOList = metricsLogCollectTaskDAO.getTopNByMetricPerServiceId(params);
+        /*
+         * 2.）根据 top n host name，挨个获取单条线
+         */
+        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        for (MetricsServiceIdTopPO metricsServiceIdTopPO : metricsServiceIdTopPOList) {
+            Long serviceId = metricsServiceIdTopPO.getServiceId();
+            if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("serviceId", serviceId);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatStatisticByServiceId(params);
+                multiLineChatValue.add(result);
+            } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("serviceId", serviceId);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatNonStatisticByServiceId(params);
+                multiLineChatValue.add(result);
+            } else {
+                //TODO：throw exception 未知MetricValueTypeEnum类型
+            }
+        }
+        return multiLineChatValue;
+    }
+
+    private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerLogCollectTaskId(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+        /*
+         * 1.）获取 top n logcollecttask
+         */
+        Map<String, Object> params = new HashMap<>();
+        params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+        Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+        params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
+        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("topN", TOP_N_DEFAULT_VALUE);
+        params.put("sortType", SortTypeEnum.DESC.getType());
+        params.put("sortTimeField", sortTimeField);
+        List<MetricsLogCollectTaskIdTopPO> metricsLogCollectTaskIdTopPOList = metricsLogCollectTaskDAO.getTopNByMetricPerLogCollectTaskId(params);
+        /*
+         * 2.）根据 top n host name，挨个获取单条线
+         */
+        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        for (MetricsLogCollectTaskIdTopPO metricsLogCollectTaskIdTopPO : metricsLogCollectTaskIdTopPOList) {
+            Long logCollectTaskId = metricsLogCollectTaskIdTopPO.getLogCollectTaskId();
+            if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("logCollectTaskId", logCollectTaskId);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatStatisticByLogCollectTaskId(params);
+                multiLineChatValue.add(result);
+            } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("logCollectTaskId", logCollectTaskId);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatNonStatisticByLogCollectTaskId(params);
+                multiLineChatValue.add(result);
+            } else {
+                //TODO：throw exception 未知MetricValueTypeEnum类型
+            }
+        }
+        return multiLineChatValue;
+    }
+
+    private List<List<MetricPoint>> handleGetTopNByAgentBusinessMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+        /*
+         * 1.）获取 top n host name
+         */
+        Map<String, Object> params = new HashMap<>();
+        params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+        Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+        params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
+        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("topN", TOP_N_DEFAULT_VALUE);
+        params.put("sortType", SortTypeEnum.DESC.getType());
+        params.put("sortTimeField", sortTimeField);
+        List<MetricsLogCollectTaskTopPO> metricsLogCollectTaskTopPOList = metricsAgentDAO.getTopNByMetricPerHostName(params);
+        /*
+         * 2.）根据 top n host name，挨个获取单条线
+         */
+        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        for (MetricsLogCollectTaskTopPO metricsLogCollectTaskTopPO : metricsLogCollectTaskTopPOList) {
+            String hostName = metricsLogCollectTaskTopPO.getHostName();
+            if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("hostName", hostName);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsAgentDAO.getSingleChatStatisticByHostName(params);
+                multiLineChatValue.add(result);
+            } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("hostName", hostName);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsAgentDAO.getSingleChatNonStatisticByHostName(params);
+                multiLineChatValue.add(result);
+            } else {
+                //TODO：throw exception 未知MetricValueTypeEnum类型
+            }
+        }
+        return multiLineChatValue;
+    }
+
+    private List<List<MetricPoint>> handleGetTopNByProcessMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+        /*
+         * 1.）获取 top n host name
+         */
+        Map<String, Object> params = new HashMap<>();
+        params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+        Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+        params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
+        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("topN", TOP_N_DEFAULT_VALUE);
+        params.put("sortType", SortTypeEnum.DESC.getType());
+        params.put("sortTimeField", sortTimeField);
+        List<MetricsLogCollectTaskTopPO> metricsLogCollectTaskTopPOList = metricsProcessDAO.getTopNByMetricPerHostName(params);
+        /*
+         * 2.）根据 top n host name，挨个获取单条线
+         */
+        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        for (MetricsLogCollectTaskTopPO metricsLogCollectTaskTopPO : metricsLogCollectTaskTopPOList) {
+            String hostName = metricsLogCollectTaskTopPO.getHostName();
+            if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("hostName", hostName);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsProcessDAO.getSingleChatStatisticByHostName(params);
+                multiLineChatValue.add(result);
+            } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("hostName", hostName);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsProcessDAO.getSingleChatNonStatisticByHostName(params);
+                multiLineChatValue.add(result);
+            } else {
+                //TODO：throw exception 未知MetricValueTypeEnum类型
+            }
+        }
+        return multiLineChatValue;
+    }
+
+    private List<List<MetricPoint>> handleGetTopNBySystemMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+        /*
+         * 1.）获取 top n host name
+         */
+        Map<String, Object> params = new HashMap<>();
+        params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+        Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+        params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
+        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("topN", TOP_N_DEFAULT_VALUE);
+        params.put("sortType", SortTypeEnum.DESC.getType());
+        params.put("sortTimeField", sortTimeField);
+        List<MetricsLogCollectTaskTopPO> metricsLogCollectTaskTopPOList = metricsSystemDAO.getTopNByMetricPerHostName(params);
+        /*
+         * 2.）根据 top n host name，挨个获取单条线
+         */
+        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        for (MetricsLogCollectTaskTopPO metricsLogCollectTaskTopPO : metricsLogCollectTaskTopPOList) {
+            String hostName = metricsLogCollectTaskTopPO.getHostName();
+            if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("hostName", hostName);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsSystemDAO.getSingleChatStatisticByHostName(params);
+                multiLineChatValue.add(result);
+            } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
+                params = new HashMap<>();
+                params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                params.put("fieldName", metricFieldEnum.getFieldName());
+                params.put("hostName", hostName);
+                params.put("startTime", startTime);
+                params.put("endTime", endTime);
+                List<MetricPoint> result = metricsSystemDAO.getSingleChatNonStatisticByHostName(params);
+                multiLineChatValue.add(result);
+            } else {
+                //TODO：throw exception 未知MetricValueTypeEnum类型
+            }
+        }
+        return multiLineChatValue;
     }
 
     /**

@@ -36,6 +36,21 @@ public enum MetricFieldEnum {
             null
     ),
 
+    SYSTEM_NTP_OFFSET(
+            1,
+                    "system_ntp_offset",
+                    "systemNtpOffset",
+                    "源时钟与本地时钟的时间差 单位：毫秒",
+            MetricTypeEnum.SYSTEM_BASIC,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.TIMESTAMP_MILLISECOND,
+            MetricUnitEnum.TIMESTAMP_SECOND,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
+    ),
+
     /*
      * os 相关
      */
@@ -92,7 +107,7 @@ public enum MetricFieldEnum {
      */
     SYSTEM_DISK_BYTES_FREE(
             4,
-            "systemDiskBytesFree",
+            "system_disk_bytes_free",
             "systemDiskBytesFree",
             "磁盘余量大小（单位：MB）",
             MetricTypeEnum.SYSTEM_DISK,
@@ -140,7 +155,7 @@ public enum MetricFieldEnum {
 
     SYSTEM_NET_CARD_BAND_WIDTH(
             7,
-            "bandWidth",
+            "band_width",
             "systemNetCardsBandWidth",
             "各网卡最大带宽（单位：byte）",
             MetricTypeEnum.SYSTEM_NET_CARD,
@@ -151,6 +166,36 @@ public enum MetricFieldEnum {
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             false,
             SortTypeEnum.DESC
+    ),
+
+    SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS(
+            7,
+            "system_network_send_and_receive_bytes_ps",
+            "systemNetworkSendAndReceiveBytesPs",
+            "系统网络每秒总流量（单位：byte）",
+            MetricTypeEnum.SYSTEM_NET_WORK,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            null
+    ),
+
+    SYSTEM_NET_WORK_BAND_WIDTH_USED_PERCENT(
+            7,
+                    "system_net_work_band_width_used_percent",
+                    "systemNetWorkBandWidthUsedPercent",
+                    "系统网络带宽使用率（单位：%)",
+            MetricTypeEnum.SYSTEM_NET_WORK,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.PERCENT,
+            MetricUnitEnum.PERCENT,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+                    null
     ),
 
     /*********************************** 当前进程相关 ***********************************/
@@ -239,6 +284,36 @@ public enum MetricFieldEnum {
             null
     ),
 
+    JVM_FULL_GC_COUNT(
+            16,
+            "process_jvm_full_gc_count",
+            "jvmProcFullGcCount",
+            "采样周期内 full gc 次数",
+            MetricTypeEnum.PROCESS_GC,
+            AggregationCalcFunctionEnum.SUM,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            null
+    ),
+
+    PROCESS_FD_USED(
+            12,
+            "process_open_fd_count",
+            "procOpenFdCount",
+            "当前进程打开fd数量",
+            MetricTypeEnum.PROCESS_FD,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
+    ),
+
     /*********************************** agent 相关 ***********************************/
 
     AGENT_VERSION(
@@ -286,8 +361,37 @@ public enum MetricFieldEnum {
             null
     ),
 
-    /*********************************** 采集任务相关 ***********************************/
+    AGENT_RUNNING_COLLECT_TASK_COUNT(
+            12,
+            "running_collect_task_num",
+            "runningCollectTaskNum",
+            "运行状态采集任务数",
+            MetricTypeEnum.AGENT_BUSINESS,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
+    ),
 
+    AGENT_RUNNING_COLLECT_PATH_COUNT(
+            12,
+            "running_collect_path_num",
+            "runningCollectPathNum",
+            "运行状态采集路径数",
+            MetricTypeEnum.AGENT_BUSINESS,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            true,
+            null
+    ),
+
+    /*********************************** 采集任务相关 ***********************************/
 
     LOG_COLLECT_TASK_BUSINESS_TIMESTAMP(
             13,
@@ -319,6 +423,21 @@ public enum MetricFieldEnum {
             SortTypeEnum.DESC
     ),
 
+    LOG_COLLECT_TASK_SEND_COUNT(
+            14,
+            "send_count",
+            "sendCount",
+            "采样周期内日志发送条数",
+            MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
+            AggregationCalcFunctionEnum.SUM,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.MULTI_LINE_CHAT,
+            true,
+            SortTypeEnum.DESC
+    ),
+
     LOG_COLLECT_TASK_READ_TIME_PER_EVENT(
             15,
             "read_time_per_event",
@@ -329,6 +448,36 @@ public enum MetricFieldEnum {
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.TIMESTAMP_NANOSECOND,
             MetricUnitEnum.TIMESTAMP_NANOSECOND,
+            MetricDisplayTypeEnum.MULTI_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+    ),
+
+    LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY(
+            15,
+            "max_business_timestamp_delay",
+            "maxBusinessTimestampDelay",
+            "数据业务时间最大延迟 （单位：秒）",
+            MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.TIMESTAMP_MILLISECOND,
+            MetricUnitEnum.TIMESTAMP_SECOND,
+            MetricDisplayTypeEnum.MULTI_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+    ),
+
+    LOG_COLLECT_TASK_LIMIT_TIME(
+            15,
+            "limit_time",
+            "limitTime",
+            "采样周期内限流时长（单位：秒）",
+            MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
+            AggregationCalcFunctionEnum.SUM,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.TIMESTAMP_MILLISECOND,
+            MetricUnitEnum.TIMESTAMP_SECOND,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             false,
             SortTypeEnum.DESC

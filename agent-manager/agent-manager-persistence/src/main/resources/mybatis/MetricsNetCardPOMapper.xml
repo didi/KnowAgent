@@ -56,6 +56,7 @@
     <result column="path" property="path" jdbcType="VARCHAR"/>
     <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
     <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
   </resultMap>
 
   <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
@@ -80,7 +81,7 @@
       and
       systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
       and
-      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+      heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
     group by heartbeatTimeMinute) as t1
     LEFT JOIN
       tb_metrics_net_card as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
@@ -104,7 +105,7 @@
          and
          systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
          and
-         heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
        group by heartbeatTimeMinute) as t1
         LEFT JOIN
       tb_metrics_net_card as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}

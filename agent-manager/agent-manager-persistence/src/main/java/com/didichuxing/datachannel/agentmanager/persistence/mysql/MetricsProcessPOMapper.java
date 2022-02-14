@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import org.springframework.stereotype.Repository;
@@ -54,4 +55,34 @@ public interface MetricsProcessPOMapper {
      */
     Double getSumMetricAllAgents(Map<String, Object> params);
 
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  sortTime：排序时间戳（精度：分钟）
+     *  topN：前n条记录
+     *  sortType：排序方式 desc、asc
+     *  sortTimeField：排序字段名
+     */
+    List<MetricsLogCollectTaskTopPO> getTopNByMetricPerHostName(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  hostName：主机名
+     *  startTime：心跳开始时间戳
+     *  endTime：心跳结束时间戳
+     */
+    List<MetricPoint> getSingleChatStatisticByHostName(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  hostName：主机名
+     *  startTime：心跳开始时间戳
+     *  endTime：心跳结束时间戳
+     */
+    List<MetricPoint> getSingleChatNonStatisticByHostName(Map<String, Object> params);
 }

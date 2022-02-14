@@ -127,7 +127,6 @@
     masterFile, path, collectTaskType, sinkNum, collectTaskVersion, dynamicLimiterThreshold, 
     heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
   </sql>
-
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
     <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
     <result column="last" property="last" jdbcType="DOUBLE" />
@@ -144,8 +143,8 @@
     <result column="path" property="path" jdbcType="VARCHAR"/>
     <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
     <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
   </resultMap>
-
   <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
     select
       ${fieldName}
@@ -182,7 +181,7 @@
         and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
       </if>
       and
-      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+      heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
     group by heartbeatTimeMinute
   </select>
   <select id="getSingleChatStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
@@ -210,15 +209,13 @@
       and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
     </if>
     and
-    heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
     group by heartbeatTimeMinute
   </select>
-
   <resultMap id="TopNHostNameResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO" >
     <result column="hostName" property="hostName" jdbcType="VARCHAR" />
     <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
   </resultMap>
-
   <select id="getTopNByHostName" resultMap="TopNHostNameResultMap" parameterType="java.util.Map" >
     select * from (
     select
@@ -248,7 +245,6 @@
     from tb_metrics_log_collect_task
     where id = #{id,jdbcType=BIGINT}
   </select>
-
   <select id="getErrorMetrics" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
@@ -263,6 +259,118 @@
         #{errorFieldName,jdbcType=VARCHAR} > 0
         AND
         heartbeatTime &gt; #{startHeartbeatTime} and heartbeatTime &lt;= #{endHeartbeatTime}
+  </select>
+
+  <resultMap id="TopNByMetricPerLogCollectTaskIdResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskIdTopPO" >
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+  <select id="getTopNByMetricPerLogCollectTaskId" resultMap="TopNByMetricPerLogCollectTaskIdResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(${fieldName}) as 'aggVal',
+    collectTaskId as 'logCollectTaskId'
+    from tb_metrics_log_collect_task
+    where
+    ${sortTimeField} = #{sortTime,jdbcType=BIGINT}
+    group by collectTaskId
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+  <select id="getSingleChatNonStatisticByLogCollectTaskId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    SELECT t1.*, t2.collectTaskId as 'logCollectTaskId' FROM
+      (select
+         ${function}(${fieldName}) as 'last',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+  </select>
+  <select id="getSingleChatStatisticByLogCollectTaskId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    SELECT t1.*, t2.collectTaskId as 'logCollectTaskId' FROM
+      (select
+         ${function}(${fieldName}) as 'last',
+               ${function}(${fieldName}Min) as 'min',
+               ${function}(${fieldName}Max) as 'max',
+               ${function}(${fieldName}Mean) as 'mean',
+               ${function}(${fieldName}Std) as 'std',
+               ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+               ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+               ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+               ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+  </select>
+
+  <resultMap id="TopNByMetricPerServiceIdResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsServiceIdTopPO">
+    <result column="serviceId" property="serviceId" jdbcType="BIGINT" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+  <select id="getTopNByMetricPerServiceId" resultMap="TopNByMetricPerServiceIdResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(${fieldName}) as 'aggVal',
+    serviceId as 'serviceId'
+    from tb_metrics_log_collect_task
+    where
+    ${sortTimeField} = #{sortTime,jdbcType=BIGINT}
+    group by serviceId
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+  <select id="getSingleChatNonStatisticByServiceId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    SELECT t1.*, t2.serviceId as 'serviceId' FROM
+      (select
+         ${function}(${fieldName}) as 'last',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         serviceId = #{serviceId,jdbcType=BIGINT}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.serviceId = #{serviceId,jdbcType=BIGINT}
+  </select>
+  <select id="getSingleChatStatisticByServiceId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    SELECT t1.*, t2.serviceId as 'serviceId' FROM
+      (select
+         ${function}(${fieldName}) as 'last',
+               ${function}(${fieldName}Min) as 'min',
+               ${function}(${fieldName}Max) as 'max',
+               ${function}(${fieldName}Mean) as 'mean',
+               ${function}(${fieldName}Std) as 'std',
+               ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+               ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+               ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+               ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         serviceId = #{serviceId,jdbcType=BIGINT}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.serviceId = #{serviceId,jdbcType=BIGINT}
   </select>
 
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >

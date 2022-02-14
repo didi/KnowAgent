@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -78,88 +79,88 @@ public class DashBoardVO {
     /*************************** agent 视角 ***************************/
 
     @ApiModelProperty(value = "主机时间ntp gap top5 agents，key：agent主机名 value：ntp gap（单位：ms）")
-    private List<Pair<String, Long>> ntpGapTop5Agents;
+    private MetricPanel ntpGapTop5Agents;
 
     @ApiModelProperty(value = "cpu使用量top5 agents，key：agent主机名 value：cpu使用量")
-    private List<Pair<String, Double>> cpuUsageTop5Agents;
+    private MetricPanel cpuUsageTop5Agents;
 
     @ApiModelProperty(value = "memory使用量top5 agents，key：agent主机名 value：memory使用量（单位：byte）")
-    private List<Pair<String, Long>> memoryUsedTop5Agents;
+    private MetricPanel memoryUsedTop5Agents;
 
     @ApiModelProperty(value = "带宽使用量top5 agents，key：agent主机名 value：带宽使用量（单位：byte）")
-    private List<Pair<String, Long>> bandWidthUsedTop5Agents;
+    private MetricPanel bandWidthUsedTop5Agents;
 
     @ApiModelProperty(value = "带宽使用率top5 agents，key：agent主机名 value：带宽使用率（单位：%）")
-    private List<Pair<String, Long>> bandWidthUsageTop5Agents;
+    private MetricPanel bandWidthUsageTop5Agents;
 
     @ApiModelProperty(value = "当日 full gc 次数 top5 agents，key：agent主机名 value：当日full gc次数")
-    private List<Pair<String, Long>> fullGcTimesDayTop5Agents;
+    private MetricPanel fullGcTimesDayTop5Agents;
 
     @ApiModelProperty(value = "fd使用量top5 agents，key：agent主机名 value：fd使用量")
-    private List<Pair<String, Long>> fdUsedTop5Agents;
+    private MetricPanel fdUsedTop5Agents;
 
     @ApiModelProperty(value = "上行流量top5 agents，key：agent主机名 value：上行流量（单位：byte）")
-    private List<Pair<String, Long>> uplinkBytesTop5Agents;
+    private MetricPanel uplinkBytesTop5Agents;
 
     @ApiModelProperty(value = "近1分钟发送日志条数top5 agents，key：agent主机名 value：发送日志条数")
-    private List<Pair<String, Long>> sendLogEventsLast1MinuteTop5Agents;
+    private MetricPanel sendLogEventsLast1MinuteTop5Agents;
 
     @ApiModelProperty(value = "当日发送流量 top5 agents，key：agent主机名 value：当日发送流量")
-    private List<Pair<String, Long>> sendBytesDayTop5Agents;
+    private MetricPanel sendBytesDayTop5Agents;
 
     @ApiModelProperty(value = "当日发送条数 top5 agents，key：agent主机名 value：当日发送条数")
-    private List<Pair<String, Long>> sendLogEventsDayTop5Agents;
+    private MetricPanel sendLogEventsDayTop5Agents;
 
     @ApiModelProperty(value = "运行状态日志采集任务数 top5 agents，key：agent主机名 value：运行状态日志采集任务数")
-    private List<Pair<String, Long>> runningLogCollectTasksTop5Agents;
+    private MetricPanel runningLogCollectTasksTop5Agents;
 
     @ApiModelProperty(value = "运行状态日志采集路径数 top5 agents，key：agent主机名 value：运行状态日志采集路径数")
-    private List<Pair<String, Long>> runningLogCollectPathsTop5Agents;
+    private MetricPanel runningLogCollectPathsTop5Agents;
 
     /*************************** logCollectTask 视角 ***************************/
 
     @ApiModelProperty(value = "日志时间延时最大 top5 logCollectTasks，key：logCollectTaskId value：日志时间延时（单位：ms）")
-    private List<Pair<Long, Long>> logTimeDelayTop5LogCollectTasks;
+    private MetricPanel logTimeDelayTop5LogCollectTasks;
 
     @ApiModelProperty(value = "限流时长 top5 logCollectTasks，key：logCollectTaskId value：限流时长（单位：ms）")
-    private List<Pair<Long, Long>> limitTimeTop5LogCollectTasks;
+    private MetricPanel limitTimeTop5LogCollectTasks;
 
-    @ApiModelProperty(value = "上行流量top5 logCollectTasks，key：logCollectTaskId value：上行流量（单位：byte）")
-    private List<Pair<Long, Long>> uplinkBytesTop5LogCollectTasks;
+    @ApiModelProperty(value = "近1分钟发送日志量top5 logCollectTasks，key：logCollectTaskId value：近1分钟发送日志量（单位：byte）")
+    private MetricPanel sendBytesLast1MinuteTop5LogCollectTasks;
 
     @ApiModelProperty(value = "近1分钟发送日志条数top5 logCollectTasks，key：logCollectTaskId value：近1分钟发送日志条数")
-    private List<Pair<Long, Long>> sendLogEventsLast1MinuteTop5LogCollectTasks;
+    private MetricPanel sendLogEventsLast1MinuteTop5LogCollectTasks;
 
-    @ApiModelProperty(value = "当日发送流量 top5 logCollectTasks，key：logCollectTaskId value：当日发送流量")
-    private List<Pair<Long, Long>> sendBytesDayTop5LogCollectTasks;
+    @ApiModelProperty(value = "当日发送日志量 top5 logCollectTasks，key：logCollectTaskId value：当日发送流量")
+    private MetricPanel sendBytesDayTop5LogCollectTasks;
 
-    @ApiModelProperty(value = "当日发送条数 top5 logCollectTasks，key：logCollectTaskId value：当日发送条数")
-    private List<Pair<Long, Long>> sendLogEventsDayTop5LogCollectTasks;
+    @ApiModelProperty(value = "当日发送日志条数 top5 logCollectTasks，key：logCollectTaskId value：当日发送条数")
+    private MetricPanel sendLogEventsDayTop5LogCollectTasks;
 
-    @ApiModelProperty(value = "关联主机数 top5 logCollectTasks，key：logCollectTaskId value：关联主机数")
-    private List<Pair<Long, Long>> relateHostsTop5LogCollectTasks;
+//    @ApiModelProperty(value = "关联主机数 top5 logCollectTasks，key：logCollectTaskId value：关联主机数")
+//    private MetricPanel relateHostsTop5LogCollectTasks;
 
-    @ApiModelProperty(value = "关联agent数 top5 logCollectTasks，key：logCollectTaskId value：关联agent数")
-    private List<Pair<Long, Long>> relateAgentsTop5LogCollectTasks;
+//    @ApiModelProperty(value = "关联agent数 top5 logCollectTasks，key：logCollectTaskId value：关联agent数")
+//    private MetricPanel relateAgentsTop5LogCollectTasks;
 
     /*************************** service 视角 ***************************/
 
-    @ApiModelProperty(value = "上行流量top5 services，key：serviceName value：上行流量（单位：byte）")
-    private List<Pair<String, Long>> uplinkBytesTop5Services;
+    @ApiModelProperty(value = "近1分钟发送日志量top5 services，key：serviceName value：近1分钟发送日志量（单位：byte）")
+    private MetricPanel sendBytesLast1MinuteTop5Services;
 
     @ApiModelProperty(value = "近1分钟发送日志条数top5 services，key：serviceName value：近1分钟发送日志条数")
-    private List<Pair<String, Long>> sendLogEventsLast1MinuteTop5Services;
+    private MetricPanel sendLogEventsLast1MinuteTop5Services;
 
     @ApiModelProperty(value = "当日发送流量 top5 services，key：serviceName value：当日发送流量")
-    private List<Pair<String, Long>> sendBytesDayTop5Services;
+    private MetricPanel sendBytesDayTop5Services;
 
     @ApiModelProperty(value = "当日发送条数 top5 services，key：serviceName value：当日发送条数")
-    private List<Pair<String, Long>> sendLogEventsDayTop5Services;
+    private MetricPanel sendLogEventsDayTop5Services;
 
-    @ApiModelProperty(value = "关联主机数 top5 services，key：serviceName value：关联主机数")
-    private List<Pair<String, Long>> relateHostsTop5Services;
+//    @ApiModelProperty(value = "关联主机数 top5 services，key：serviceName value：关联主机数")
+//    private MetricPanel relateHostsTop5Services;
 
-    @ApiModelProperty(value = "关联agent数 top5 services，key：serviceName value：关联agent数")
-    private List<Pair<String, Long>> relateAgentsTop5Services;
+//    @ApiModelProperty(value = "关联agent数 top5 services，key：serviceName value：关联agent数")
+//    private MetricPanel relateAgentsTop5Services;
 
 }

@@ -23,7 +23,22 @@ public class DateUtils {
      * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
      */
     public static Long getMinuteUnitTimeStamp(Long timestamp) {
-        return (long) Math.floor(timestamp / 60000.00d) * 60000L;
+        return getMinuteUnitTimeStamp(new Date(timestamp));
+    }
+
+    /**
+     * 根据给定日期/时间，将其转化为分钟为单位时间戳
+     * @param time 待转化日期/时间
+     * @return 返回根据给定日期/时间，将其转化为分钟为单位时间戳
+     */
+    public static Long getMinuteUnitTimeStamp(Date time) {
+        if (time == null) {
+            return null;
+        }
+        time = org.apache.commons.lang3.time.DateUtils.setMinutes(time, 0);
+        time = org.apache.commons.lang3.time.DateUtils.setSeconds(time, 0);
+        time = org.apache.commons.lang3.time.DateUtils.setMilliseconds(time, 0);
+        return time.getTime();
     }
 
     /**

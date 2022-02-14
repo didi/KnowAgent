@@ -1,7 +1,9 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskIdTopPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsServiceIdTopPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import org.springframework.stereotype.Repository;
 
@@ -76,5 +78,67 @@ public interface MetricsLogCollectTaskPOMapper {
      * @return 返回根据给定参数获取到的心跳信息集
      */
     List<MetricsLogCollectTaskPO> getErrorMetrics(Map params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  sortTime：排序时间戳（精度：分钟）
+     *  topN：前n条记录
+     *  sortType：排序方式 desc、asc
+     *  sortTimeField：sortTimeField：排序字段名
+     */
+    List<MetricsLogCollectTaskIdTopPO> getTopNByMetricPerLogCollectTaskId(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  logCollectTaskId：日志采集任务 id
+     *  startTime：心跳开始时间戳
+     *  endTime：心跳结束时间戳
+     */
+    List<MetricPoint> getSingleChatStatisticByLogCollectTaskId(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  logCollectTaskId：日志采集任务 id
+     *  startTime：心跳开始时间戳
+     *  endTime：心跳结束时间戳
+     */
+    List<MetricPoint> getSingleChatNonStatisticByLogCollectTaskId(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  sortTime：排序时间戳（精度：分钟）
+     *  topN：前n条记录
+     *  sortType：排序方式 desc、asc
+     *  sortTimeField：sortTimeField：排序字段名
+     */
+    List<MetricsServiceIdTopPO> getTopNByMetricPerServiceId(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  serviceId：服务 id
+     *  startTime：心跳开始时间戳
+     *  endTime：心跳结束时间戳
+     */
+    List<MetricPoint> getSingleChatNonStatisticByServiceId(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  serviceId：服务 id
+     *  startTime：心跳开始时间戳
+     *  endTime：心跳结束时间戳
+     */
+    List<MetricPoint> getSingleChatStatisticByServiceId(Map<String, Object> params);
 
 }

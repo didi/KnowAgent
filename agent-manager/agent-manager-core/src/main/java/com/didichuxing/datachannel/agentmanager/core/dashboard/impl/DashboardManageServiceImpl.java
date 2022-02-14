@@ -5,9 +5,13 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricDisplayTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.SortTimeFieldEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.DashboardManageService;
@@ -49,9 +53,10 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
         DashBoardVO dashBoardVO = new DashBoardVO();
 
-        Date current = new Date(System.currentTimeMillis());
-        Long startTime = DateUtils.getMinuteUnitTimeStamp(DateUtils.getBeforeSeconds(current, 60).getTime());
-        Long endTime = DateUtils.getMinuteUnitTimeStamp(current.getTime());
+        Date current = new Date(System.currentTimeMillis());//当前时间
+        Long last1Minute = DateUtils.getMinuteUnitTimeStamp(DateUtils.getBeforeSeconds(current, 60));//当前时间上一分钟时间戳
+        Long currentMinute = DateUtils.getMinuteUnitTimeStamp(current);//当前时间戳
+        Long currentDayZeroDate = DateUtils.getZeroDate(current).getTime();//当日凌晨00：00：00 时间戳
 
         /*********************** part 1：标量 ***********************/
         dashBoardVO.setHostNum(hostManageService.countAllHost());
@@ -63,14 +68,13 @@ public class DashboardManageServiceImpl implements DashboardManageService {
         dashBoardVO.setLogCollectTaskNum(logCollectTaskManageService.countAll());
         dashBoardVO.setNonRelateAnyHostLogCollectTaskNum(getNonRelateAnyHostLogCollectTaskNum());
         dashBoardVO.setLogCollectPathNum(fileLogCollectPathManageService.countAll());
-        dashBoardVO.setAgentCpuCoresSpend(getAgentCpuCoresSpend(startTime, endTime));
-        dashBoardVO.setAgentMemorySpend(getAgentMemorySpend(startTime, endTime));
-        dashBoardVO.setAgentUplinkBytes(getAgentUplinkBytes(startTime, endTime));
-        dashBoardVO.setAgentDownLinkBytes(getAgentDownLinkBytes(startTime, endTime));
-        dashBoardVO.setAgentSendLogEventsLast1Minute(getAgentSendLogEventsLast1Minute(startTime, endTime));
-        startTime = DateUtils.getZeroDate(current).getTime();
-        dashBoardVO.setAgentSendBytesDay(getAgentSendBytesDay(startTime, endTime));
-        dashBoardVO.setAgentSendLogEventsDay(getAgentSendLogEventsDay(startTime, endTime));
+        dashBoardVO.setAgentCpuCoresSpend(getAgentCpuCoresSpend(last1Minute, currentMinute));
+        dashBoardVO.setAgentMemorySpend(getAgentMemorySpend(last1Minute, currentMinute));
+        dashBoardVO.setAgentUplinkBytes(getAgentUplinkBytes(last1Minute, currentMinute));
+        dashBoardVO.setAgentDownLinkBytes(getAgentDownLinkBytes(last1Minute, currentMinute));
+        dashBoardVO.setAgentSendLogEventsLast1Minute(getAgentSendLogEventsLast1Minute(last1Minute, currentMinute));
+        dashBoardVO.setAgentSendBytesDay(getAgentSendBytesDay(currentDayZeroDate, currentMinute));
+        dashBoardVO.setAgentSendLogEventsDay(getAgentSendLogEventsDay(currentDayZeroDate, currentMinute));
 
         /*********************** part 2：占比 饼图 ***********************/
         List<LogCollectTaskDO> redLogCollectTaskDOList = logCollectTaskManageService.getByHealthLevel(LogCollectTaskHealthLevelEnum.RED.getCode());
@@ -100,8 +104,337 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
         /*********************** part 3：时序 图 指标 ***********************/
 
+        /*************************** agent 视角 ***************************/
+
+        dashBoardVO.setNtpGapTop5Agents(getNtpGapTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setCpuUsageTop5Agents((getCpuUsageTop5Agents(last1Minute, currentMinute)));
+        dashBoardVO.setMemoryUsedTop5Agents(getMemoryUsedTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setBandWidthUsedTop5Agents(getBandWidthUsedTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setBandWidthUsageTop5Agents(getBandWidthUsageTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setFullGcTimesDayTop5Agents(getFullGcTimesDayTop5Agents(currentDayZeroDate, currentMinute));
+        dashBoardVO.setFdUsedTop5Agents(getFdUsedTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setUplinkBytesTop5Agents(getUplinkBytesTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setSendLogEventsLast1MinuteTop5Agents(getSendLogEventsLast1MinuteTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setSendBytesDayTop5Agents(getSendBytesDayTop5Agents(currentDayZeroDate, currentMinute));
+        dashBoardVO.setSendLogEventsDayTop5Agents(getSendLogEventsDayTop5Agents(currentDayZeroDate, currentMinute));
+        dashBoardVO.setRunningLogCollectTasksTop5Agents(getRunningLogCollectTasksTop5Agents(last1Minute, currentMinute));
+        dashBoardVO.setRunningLogCollectPathsTop5Agents(getRunningLogCollectPathsTop5Agents(last1Minute, currentMinute));
+
+        /*************************** logCollectTask 视角 ***************************/
+        dashBoardVO.setLogTimeDelayTop5LogCollectTasks(getLogTimeDelayTop5LogCollectTasks(last1Minute, currentMinute));
+        dashBoardVO.setLimitTimeTop5LogCollectTasks(getLimitTimeTop5LogCollectTasks(last1Minute, currentMinute));
+        dashBoardVO.setSendBytesLast1MinuteTop5LogCollectTasks(getSendBytesTop5LogCollectTasks(last1Minute, currentMinute));
+        dashBoardVO.setSendLogEventsLast1MinuteTop5LogCollectTasks(getSendLogEventsLast1MinuteTop5LogCollectTasks(last1Minute, currentMinute));
+        dashBoardVO.setSendBytesDayTop5LogCollectTasks(getSendBytesDayTop5LogCollectTasks(currentDayZeroDate, currentMinute));
+        dashBoardVO.setSendLogEventsDayTop5LogCollectTasks(getSendLogEventsDayTop5LogCollectTasks(currentDayZeroDate, currentMinute));
+
+        /*************************** service 视角 ***************************/
+        dashBoardVO.setSendBytesLast1MinuteTop5Services(getSendBytesLast1MinuteTop5Services(last1Minute, currentMinute));
+        dashBoardVO.setSendLogEventsLast1MinuteTop5Services(getSendLogEventsLast1MinuteTop5Services(last1Minute, currentMinute));
+        dashBoardVO.setSendBytesDayTop5Services(getSendBytesDayTop5Services(currentDayZeroDate, currentMinute));
+        dashBoardVO.setSendLogEventsDayTop5Services(getSendLogEventsDayTop5Services(currentDayZeroDate, currentMinute));
+
         return dashBoardVO;
 
+    }
+
+    private MetricPanel getSendLogEventsDayTop5Services(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),true
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendBytesDayTop5Services(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),true
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendLogEventsLast1MinuteTop5Services(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),true
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendBytesLast1MinuteTop5Services(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),true
+        );
+        MetricPanel metricPanel = new MetricPanel();
+            metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendLogEventsDayTop5LogCollectTasks(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendBytesDayTop5LogCollectTasks(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendLogEventsLast1MinuteTop5LogCollectTasks(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendBytesTop5LogCollectTasks(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getLimitTimeTop5LogCollectTasks(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_LIMIT_TIME, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_LIMIT_TIME.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_LIMIT_TIME.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_LIMIT_TIME.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getLogTimeDelayTop5LogCollectTasks(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getRunningLogCollectPathsTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getRunningLogCollectTasksTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendLogEventsDayTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_WRITE_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_WRITE_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_WRITE_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendBytesDayTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.AGENT_WRITE_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_WRITE_BYTES.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_WRITE_BYTES.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_WRITE_BYTES.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getSendLogEventsLast1MinuteTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_WRITE_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_WRITE_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_WRITE_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getUplinkBytesTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getFdUsedTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.PROCESS_FD_USED, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.PROCESS_FD_USED.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.PROCESS_FD_USED.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.PROCESS_FD_USED.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getFullGcTimesDayTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.JVM_FULL_GC_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.JVM_FULL_GC_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.JVM_FULL_GC_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.JVM_FULL_GC_COUNT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getBandWidthUsageTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.SYSTEM_NET_WORK_BAND_WIDTH_USED_PERCENT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.SYSTEM_NET_WORK_BAND_WIDTH_USED_PERCENT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.SYSTEM_NET_WORK_BAND_WIDTH_USED_PERCENT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.SYSTEM_NET_WORK_BAND_WIDTH_USED_PERCENT.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getBandWidthUsedTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getMemoryUsedTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.PROCESS_MEMORY_USED, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.PROCESS_MEMORY_USED.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.PROCESS_MEMORY_USED.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.PROCESS_MEMORY_USED.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getCpuUsageTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.PROCESS_CPU_UTIL, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.PROCESS_CPU_UTIL.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.PROCESS_CPU_UTIL.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.PROCESS_CPU_UTIL.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private MetricPanel getNtpGapTop5Agents(Long startTime, Long endTime) {
+        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.SYSTEM_NTP_OFFSET, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.SYSTEM_NTP_OFFSET.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.SYSTEM_NTP_OFFSET.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.SYSTEM_NTP_OFFSET.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
     }
 
     private Long getAgentSendLogEventsDay(Long startTime, Long endTime) {
