@@ -223,6 +223,26 @@
     <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
     <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
     <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" property="heartbeatTimeDay" jdbcType="BIGINT" />
+    <result column="systemNetCardsBandWidth" property="systemNetCardsBandWidth" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs" property="systemNetworkSendAndReceiveBytesPs" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsMin" property="systemNetworkSendAndReceiveBytesPsMin" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsMax" property="systemNetworkSendAndReceiveBytesPsMax" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsMean" property="systemNetworkSendAndReceiveBytesPsMean" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsStd" property="systemNetworkSendAndReceiveBytesPsStd" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs55Quantile" property="systemNetworkSendAndReceiveBytesPs55Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs75Quantile" property="systemNetworkSendAndReceiveBytesPs75Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs95Quantile" property="systemNetworkSendAndReceiveBytesPs95Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs99Quantile" property="systemNetworkSendAndReceiveBytesPs99Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent" property="systemNetWorkBandWidthUsedPercent" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentMin" property="systemNetWorkBandWidthUsedPercentMin" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentMax" property="systemNetWorkBandWidthUsedPercentMax" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentMean" property="systemNetWorkBandWidthUsedPercentMean" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentStd" property="systemNetWorkBandWidthUsedPercentStd" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent55Quantile" property="systemNetWorkBandWidthUsedPercent55Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent75Quantile" property="systemNetWorkBandWidthUsedPercent75Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent95Quantile" property="systemNetWorkBandWidthUsedPercent95Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent99Quantile" property="systemNetWorkBandWidthUsedPercent99Quantile" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, osType, osVersion, osKernelVersion, hostName, ips, systemNtpOffset, systemStartupTime, 
@@ -279,7 +299,10 @@
     systemNetworkTcpAttemptFails, systemNetworkTcpEstabResets, systemNetworkTcpRetransSegs, 
     systemNetworkTcpExtListenOverflows, systemNetworkUdpInDatagrams, systemNetworkUdpOutDatagrams, 
     systemNetworkUdpInErrors, systemNetworkUdpNoPorts, systemNetworkUdpSendBufferErrors, 
-    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay, systemNetCardsBandWidth, systemNetworkSendAndReceiveBytesPs, systemNetworkSendAndReceiveBytesPsMin, systemNetworkSendAndReceiveBytesPsMax,
+    systemNetworkSendAndReceiveBytesPsMean, systemNetworkSendAndReceiveBytesPsStd, systemNetworkSendAndReceiveBytesPs55Quantile, systemNetworkSendAndReceiveBytesPs75Quantile, systemNetworkSendAndReceiveBytesPs95Quantile,
+    systemNetworkSendAndReceiveBytesPs99Quantile, systemNetWorkBandWidthUsedPercent, systemNetWorkBandWidthUsedPercentMin, systemNetWorkBandWidthUsedPercentMax, systemNetWorkBandWidthUsedPercentMean, systemNetWorkBandWidthUsedPercentStd,
+    systemNetWorkBandWidthUsedPercent55Quantile, systemNetWorkBandWidthUsedPercent75Quantile, systemNetWorkBandWidthUsedPercent95Quantile, systemNetWorkBandWidthUsedPercent99Quantile
   </sql>
 
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
@@ -501,8 +524,11 @@
       systemNetworkTcpExtListenOverflows, systemNetworkUdpInDatagrams, 
       systemNetworkUdpOutDatagrams, systemNetworkUdpInErrors, 
       systemNetworkUdpNoPorts, systemNetworkUdpSendBufferErrors, 
-      heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
-      )
+      heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour,
+      heartbeatTimeDay, systemNetCardsBandWidth, systemNetworkSendAndReceiveBytesPs, systemNetworkSendAndReceiveBytesPsMin, systemNetworkSendAndReceiveBytesPsMax,
+      systemNetworkSendAndReceiveBytesPsMean, systemNetworkSendAndReceiveBytesPsStd, systemNetworkSendAndReceiveBytesPs55Quantile, systemNetworkSendAndReceiveBytesPs75Quantile, systemNetworkSendAndReceiveBytesPs95Quantile,
+      systemNetworkSendAndReceiveBytesPs99Quantile, systemNetWorkBandWidthUsedPercent, systemNetWorkBandWidthUsedPercentMin, systemNetWorkBandWidthUsedPercentMax, systemNetWorkBandWidthUsedPercentMean, systemNetWorkBandWidthUsedPercentStd,
+      systemNetWorkBandWidthUsedPercent55Quantile, systemNetWorkBandWidthUsedPercent75Quantile, systemNetWorkBandWidthUsedPercent95Quantile, systemNetWorkBandWidthUsedPercent99Quantile)
     values (#{id,jdbcType=BIGINT}, #{ostype,jdbcType=VARCHAR}, #{osversion,jdbcType=VARCHAR}, 
       #{oskernelversion,jdbcType=VARCHAR}, #{hostname,jdbcType=VARCHAR}, #{ips,jdbcType=VARCHAR}, 
       #{systemntpoffset,jdbcType=BIGINT}, #{systemstartuptime,jdbcType=BIGINT}, #{systemuptime,jdbcType=BIGINT}, 
@@ -597,8 +623,13 @@
       #{systemnetworktcpextlistenoverflows,jdbcType=BIGINT}, #{systemnetworkudpindatagrams,jdbcType=BIGINT}, 
       #{systemnetworkudpoutdatagrams,jdbcType=BIGINT}, #{systemnetworkudpinerrors,jdbcType=BIGINT}, 
       #{systemnetworkudpnoports,jdbcType=BIGINT}, #{systemnetworkudpsendbuffererrors,jdbcType=BIGINT}, 
-      #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}
-      )
+      #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT},
+      #{systemNetCardsBandWidth,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPsMin,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPsMax,jdbcType=DOUBLE},
+      #{systemNetworkSendAndReceiveBytesPsMean,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPsStd,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs55Quantile,jdbcType=DOUBLE},
+      #{systemNetworkSendAndReceiveBytesPs75Quantile,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs95Quantile,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs99Quantile,jdbcType=DOUBLE},
+      #{systemNetWorkBandWidthUsedPercent,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercentMin,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercentMax,jdbcType=DOUBLE},
+      #{systemNetWorkBandWidthUsedPercentMean,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercentStd,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercent55Quantile,jdbcType=DOUBLE},
+      #{systemNetWorkBandWidthUsedPercent75Quantile,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercent95Quantile,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercent99Quantile,jdbcType=DOUBLE})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
     insert into tb_metrics_system
@@ -1266,6 +1297,66 @@
       <if test="heartbeattimehour != null" >
         heartbeatTimeHour,
       </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
+      <if test="systemNetCardsBandWidth != null" >
+        systemNetCardsBandWidth,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs != null" >
+        systemNetworkSendAndReceiveBytesPs,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMin != null" >
+        systemNetworkSendAndReceiveBytesPsMin,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMax != null" >
+        systemNetworkSendAndReceiveBytesPsMax,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMean != null" >
+        systemNetworkSendAndReceiveBytesPsMean,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsStd != null" >
+        systemNetworkSendAndReceiveBytesPsStd,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs55Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs55Quantile,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs75Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs75Quantile,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs95Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs95Quantile,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs99Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs99Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent != null" >
+        systemNetWorkBandWidthUsedPercent,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMin != null" >
+        systemNetWorkBandWidthUsedPercentMin,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMax != null" >
+        systemNetWorkBandWidthUsedPercentMax,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMean != null" >
+        systemNetWorkBandWidthUsedPercentMean,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentStd != null" >
+        systemNetWorkBandWidthUsedPercentStd,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent55Quantile != null" >
+        systemNetWorkBandWidthUsedPercent55Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent75Quantile != null" >
+        systemNetWorkBandWidthUsedPercent75Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent95Quantile != null" >
+        systemNetWorkBandWidthUsedPercent95Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent99Quantile != null" >
+        systemNetWorkBandWidthUsedPercent99Quantile,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1930,6 +2021,66 @@
       </if>
       <if test="heartbeattimehour != null" >
         #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
+      </if>
+      <if test="systemNetCardsBandWidth != null" >
+        #{systemNetCardsBandWidth,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs != null" >
+        #{systemNetworkSendAndReceiveBytesPs,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMin != null" >
+        #{systemNetworkSendAndReceiveBytesPsMin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMax != null" >
+        #{systemNetworkSendAndReceiveBytesPsMax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMean != null" >
+        #{systemNetworkSendAndReceiveBytesPsMean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsStd != null" >
+        #{systemNetworkSendAndReceiveBytesPsStd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs55Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs55Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs75Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs75Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs95Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs95Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs99Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs99Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent != null" >
+        #{systemNetWorkBandWidthUsedPercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMin != null" >
+        #{systemNetWorkBandWidthUsedPercentMin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMax != null" >
+        #{systemNetWorkBandWidthUsedPercentMax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMean != null" >
+        #{systemNetWorkBandWidthUsedPercentMean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentStd != null" >
+        #{systemNetWorkBandWidthUsedPercentStd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent55Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent55Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent75Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent75Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent95Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent95Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent99Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent99Quantile,jdbcType=DOUBLE},
       </if>
     </trim>
   </insert>

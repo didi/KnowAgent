@@ -102,6 +102,8 @@
     <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
     <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
     <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" property="heartbeatTimeDay" jdbcType="BIGINT" />
+    <result column="serviceId" property="serviceId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, collectTaskId, pathId, agentHostName, collectTaskHostName, agentHostIp, businessTimestamp, 
@@ -125,7 +127,7 @@
     channelUsedPercent75Quantile, channelUsedPercent95Quantile, channelUsedPercent99Quantile, 
     receiverClusterId, receiverClusterTopic, collectFiles, relatedFiles, latestFile, 
     masterFile, path, collectTaskType, sinkNum, collectTaskVersion, dynamicLimiterThreshold, 
-    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay, serviceId
   </sql>
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
     <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
@@ -415,7 +417,7 @@
       latestFile, masterFile, path, 
       collectTaskType, sinkNum, collectTaskVersion, 
       dynamicLimiterThreshold, heartbeatTime, heartbeatTimeMinute, 
-      heartbeatTimeHour)
+      heartbeatTimeHour, heartbeatTimeDay, serviceId)
     values (#{id,jdbcType=BIGINT}, #{collecttaskid,jdbcType=BIGINT}, #{pathid,jdbcType=BIGINT}, 
       #{agenthostname,jdbcType=VARCHAR}, #{collecttaskhostname,jdbcType=VARCHAR}, #{agenthostip,jdbcType=VARCHAR}, 
       #{businesstimestamp,jdbcType=BIGINT}, #{maxbusinesstimestampdelay,jdbcType=BIGINT}, 
@@ -457,7 +459,9 @@
       #{latestfile,jdbcType=VARCHAR}, #{masterfile,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
       #{collecttasktype,jdbcType=INTEGER}, #{sinknum,jdbcType=INTEGER}, #{collecttaskversion,jdbcType=INTEGER}, 
       #{dynamiclimiterthreshold,jdbcType=BIGINT}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
-      #{heartbeattimehour,jdbcType=BIGINT})
+      #{heartbeattimehour,jdbcType=BIGINT},
+      #{heartbeatTimeDay,jdbcType=BIGINT},
+      #{serviceId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     insert into tb_metrics_log_collect_task
@@ -762,6 +766,12 @@
       <if test="heartbeattimehour != null" >
         heartbeatTimeHour,
       </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
+      <if test="serviceId != null" >
+        serviceId,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1063,6 +1073,12 @@
       </if>
       <if test="heartbeattimehour != null" >
         #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
+      </if>
+      <if test="serviceId != null" >
+        #{serviceId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

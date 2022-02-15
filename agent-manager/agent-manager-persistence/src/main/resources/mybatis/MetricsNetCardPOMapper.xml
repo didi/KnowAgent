@@ -28,6 +28,7 @@
     <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
     <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
     <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" property="heartbeatTimeDay" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, hostName, systemNetCardsBandMacAddress, systemNetCardsBandDevice, systemNetCardsBandWidth, 
@@ -37,7 +38,7 @@
     systemNetCardsSendBytesPs, systemNetCardsSendBytesPsMin, systemNetCardsSendBytesPsMax, 
     systemNetCardsSendBytesPsMean, systemNetCardsSendBytesPsStd, systemNetCardsSendBytesPs55Quantile, 
     systemNetCardsSendBytesPs75Quantile, systemNetCardsSendBytesPs95Quantile, systemNetCardsSendBytesPs99Quantile, 
-    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay
   </sql>
 
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
@@ -149,7 +150,7 @@
       systemNetCardsSendBytesPsMean, systemNetCardsSendBytesPsStd, 
       systemNetCardsSendBytesPs55Quantile, systemNetCardsSendBytesPs75Quantile, 
       systemNetCardsSendBytesPs95Quantile, systemNetCardsSendBytesPs99Quantile, 
-      heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
+      heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay
       )
     values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{systemnetcardsbandmacaddress,jdbcType=VARCHAR}, 
       #{systemnetcardsbanddevice,jdbcType=VARCHAR}, #{systemnetcardsbandwidth,jdbcType=BIGINT}, 
@@ -162,7 +163,8 @@
       #{systemnetcardssendbytespsmean,jdbcType=DOUBLE}, #{systemnetcardssendbytespsstd,jdbcType=DOUBLE}, 
       #{systemnetcardssendbytesps55quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps75quantile,jdbcType=BIGINT}, 
       #{systemnetcardssendbytesps95quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps99quantile,jdbcType=BIGINT}, 
-      #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}
+      #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT},
+      #{heartbeatTimeDay,jdbcType=BIGINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsNetCardPO" >
@@ -246,6 +248,9 @@
       <if test="heartbeattimehour != null" >
         heartbeatTimeHour,
       </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -325,6 +330,9 @@
       </if>
       <if test="heartbeattimehour != null" >
         #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

@@ -181,6 +181,7 @@
     <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
     <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
     <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" jdbcType="BIGINT" property="heartbeatTimeDay" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, hostName, systemDiskPath, systemDiskDevice, systemDiskFsType, systemDiskBytesTotal, 
@@ -229,7 +230,7 @@
     systemDiskWriteTimePercent, systemDiskWriteTimePercentMin, systemDiskWriteTimePercentMax, 
     systemDiskWriteTimePercentMean, systemDiskWriteTimePercentStd, systemDiskWriteTimePercent55Quantile, 
     systemDiskWriteTimePercent75Quantile, systemDiskWriteTimePercent95Quantile, systemDiskWriteTimePercent99Quantile, 
-    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay
   </sql>
 
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
@@ -421,7 +422,7 @@
       systemDiskWriteTimePercentStd, systemDiskWriteTimePercent55Quantile, 
       systemDiskWriteTimePercent75Quantile, systemDiskWriteTimePercent95Quantile, 
       systemDiskWriteTimePercent99Quantile, heartbeatTime, 
-      heartbeatTimeMinute, heartbeatTimeHour)
+      heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay)
     values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{systemdiskpath,jdbcType=VARCHAR}, 
       #{systemdiskdevice,jdbcType=VARCHAR}, #{systemdiskfstype,jdbcType=VARCHAR}, #{systemdiskbytestotal,jdbcType=BIGINT}, 
       #{systemdiskbytesfree,jdbcType=BIGINT}, #{systemdiskbytesused,jdbcType=BIGINT}, 
@@ -503,7 +504,7 @@
       #{systemdiskwritetimepercentstd,jdbcType=DOUBLE}, #{systemdiskwritetimepercent55quantile,jdbcType=DOUBLE}, 
       #{systemdiskwritetimepercent75quantile,jdbcType=DOUBLE}, #{systemdiskwritetimepercent95quantile,jdbcType=DOUBLE}, 
       #{systemdiskwritetimepercent99quantile,jdbcType=DOUBLE}, #{heartbeattime,jdbcType=BIGINT}, 
-      #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT})
+      #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
     insert into tb_metrics_disk
@@ -1042,6 +1043,9 @@
       <if test="heartbeattimehour != null" >
         heartbeatTimeHour,
       </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1577,6 +1581,9 @@
       </if>
       <if test="heartbeattimehour != null" >
         #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

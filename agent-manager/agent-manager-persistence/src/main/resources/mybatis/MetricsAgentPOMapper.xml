@@ -30,6 +30,7 @@
     <result column="heartbeatTime" jdbcType="BIGINT" property="heartbeattime" />
     <result column="heartbeatTimeMinute" jdbcType="BIGINT" property="heartbeattimeminute" />
     <result column="heartbeatTimeHour" jdbcType="BIGINT" property="heartbeattimehour" />
+    <result column="heartbeatTimeDay" jdbcType="BIGINT" property="heartbeatTimeDay" />
   </resultMap>
   <sql id="Base_Column_List">
     id, hostName, limitTps, cpuLimit, agentVersion, readBytes, readCount, writeBytes, 
@@ -38,7 +39,7 @@
     temporaryCollectThreadNumMax, temporaryCollectThreadNumSize, temporaryCollectThreadQueueMax, 
     temporaryCollectThreadQueueSize, collectTaskNum, runningCollectTaskNum, pauseCollectTaskNum, 
     collectPathNum, runningCollectPathNum, pauseCollectPathNum, heartbeatTime, heartbeatTimeMinute, 
-    heartbeatTimeHour
+    heartbeatTimeHour, heartbeatTimeDay
   </sql>
 
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
@@ -186,7 +187,7 @@
       collectTaskNum, runningCollectTaskNum, 
       pauseCollectTaskNum, collectPathNum, runningCollectPathNum, 
       pauseCollectPathNum, heartbeatTime, heartbeatTimeMinute, 
-      heartbeatTimeHour)
+      heartbeatTimeHour, heartbeatTimeDay)
     values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{limittps,jdbcType=BIGINT}, 
       #{cpulimit,jdbcType=DOUBLE}, #{agentversion,jdbcType=VARCHAR}, #{readbytes,jdbcType=BIGINT}, 
       #{readcount,jdbcType=BIGINT}, #{writebytes,jdbcType=BIGINT}, #{writecount,jdbcType=BIGINT}, 
@@ -198,7 +199,7 @@
       #{collecttasknum,jdbcType=INTEGER}, #{runningcollecttasknum,jdbcType=INTEGER}, 
       #{pausecollecttasknum,jdbcType=INTEGER}, #{collectpathnum,jdbcType=INTEGER}, #{runningcollectpathnum,jdbcType=INTEGER}, 
       #{pausecollectpathnum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
-      #{heartbeattimehour,jdbcType=BIGINT})
+      #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
     insert into tb_metrics_agent
@@ -287,6 +288,9 @@
       <if test="heartbeattimehour != null">
         heartbeatTimeHour,
       </if>
+      <if test="heartbeatTimeDay != null">
+        heartbeatTimeDay,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -372,6 +376,9 @@
       </if>
       <if test="heartbeattimehour != null">
         #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null">
+        #{heartbeatTimeDay,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

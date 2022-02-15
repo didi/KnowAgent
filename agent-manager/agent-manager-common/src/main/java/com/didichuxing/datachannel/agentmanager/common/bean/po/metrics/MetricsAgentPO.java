@@ -57,6 +57,16 @@ public class MetricsAgentPO {
 
     private Long heartbeattimehour;
 
+    private Long heartbeatTimeDay;
+
+    public Long getHeartbeatTimeDay() {
+        return heartbeatTimeDay;
+    }
+
+    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
+        this.heartbeatTimeDay = heartbeatTimeDay;
+    }
+
     public Long getId() {
         return id;
     }

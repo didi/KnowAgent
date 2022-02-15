@@ -10,56 +10,56 @@ use logi_agent_manager;
 -- ----------------------------
 DROP TABLE IF EXISTS `auv_job`;
 CREATE TABLE `auv_job` (
-                           `id` bigint NOT NULL AUTO_INCREMENT,
+                           `id` bigint(20) NOT NULL AUTO_INCREMENT,
                            `code` varchar(100) NOT NULL DEFAULT '' COMMENT 'task code',
                            `task_code` varchar(255) NOT NULL DEFAULT '' COMMENT '任务code',
                            `class_name` varchar(255) NOT NULL DEFAULT '' COMMENT '类的全限定名',
-                           `try_times` int NOT NULL DEFAULT '0' COMMENT '第几次重试',
+                           `try_times` int(11) NOT NULL DEFAULT '0' COMMENT '第几次重试',
                            `worker_code` varchar(200) NOT NULL DEFAULT '' COMMENT '执行机器',
                            `start_time` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '开始时间',
                            `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                            `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                            PRIMARY KEY (`id`),
                            UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=1265 DEFAULT CHARSET=utf8mb3 COMMENT='正在执行的job信息';
+) ENGINE=InnoDB AUTO_INCREMENT=1265 DEFAULT CHARSET=utf8 COMMENT='正在执行的job信息';
 
 -- ----------------------------
 -- Table structure for auv_job_log
 -- ----------------------------
 DROP TABLE IF EXISTS `auv_job_log`;
 CREATE TABLE `auv_job_log` (
-                               `id` bigint NOT NULL AUTO_INCREMENT,
+                               `id` bigint(20) NOT NULL AUTO_INCREMENT,
                                `job_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'job code',
                                `task_code` varchar(255) NOT NULL DEFAULT '' COMMENT '任务code',
                                `class_name` varchar(255) NOT NULL DEFAULT '' COMMENT '类的全限定名',
-                               `try_times` int NOT NULL DEFAULT '0' COMMENT '第几次重试',
+                               `try_times` int(11) NOT NULL DEFAULT '0' COMMENT '第几次重试',
                                `worker_code` varchar(200) NOT NULL DEFAULT '' COMMENT '执行机器',
                                `start_time` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '开始时间',
                                `end_time` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '结束时间',
-                               `status` tinyint NOT NULL DEFAULT '0' COMMENT '执行结果 1成功 2失败 3取消',
+                               `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '执行结果 1成功 2失败 3取消',
                                `error` text NOT NULL COMMENT '错误信息',
                                `result` text NOT NULL COMMENT '执行结果',
                                `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1264 DEFAULT CHARSET=utf8mb3 COMMENT='job执行历史日志';
+) ENGINE=InnoDB AUTO_INCREMENT=1264 DEFAULT CHARSET=utf8 COMMENT='job执行历史日志';
 
 -- ----------------------------
 -- Table structure for auv_task
 -- ----------------------------
 DROP TABLE IF EXISTS `auv_task`;
 CREATE TABLE `auv_task` (
-                            `id` bigint NOT NULL AUTO_INCREMENT,
+                            `id` bigint(20) NOT NULL AUTO_INCREMENT,
                             `code` varchar(100) NOT NULL DEFAULT '' COMMENT 'task code',
                             `name` varchar(255) NOT NULL DEFAULT '' COMMENT '名称',
                             `description` varchar(1000) NOT NULL DEFAULT '' COMMENT '任务描述',
                             `cron` varchar(100) NOT NULL DEFAULT '' COMMENT 'cron 表达式',
                             `class_name` varchar(255) NOT NULL DEFAULT '' COMMENT '类的全限定名',
                             `params` varchar(1000) NOT NULL DEFAULT '' COMMENT '执行参数 map 形式{key1:value1,key2:value2}',
-                            `retry_times` int NOT NULL DEFAULT '0' COMMENT '允许重试次数',
+                            `retry_times` int(11) NOT NULL DEFAULT '0' COMMENT '允许重试次数',
                             `last_fire_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '上次执行时间 [Deprecated]',
-                            `timeout` bigint NOT NULL DEFAULT '0' COMMENT '超时 毫秒',
-                            `status` tinyint NOT NULL DEFAULT '0' COMMENT '1等待 2运行中 3暂停 [Deprecated]',
+                            `timeout` bigint(20) NOT NULL DEFAULT '0' COMMENT '超时 毫秒',
+                            `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1等待 2运行中 3暂停 [Deprecated]',
                             `sub_task_codes` varchar(1000) NOT NULL DEFAULT '' COMMENT '子任务code列表,逗号分隔',
                             `consensual` varchar(200) NOT NULL DEFAULT '' COMMENT '执行策略',
                             `task_worker_str` varchar(1000) NOT NULL DEFAULT '' COMMENT '机器执行信息',
@@ -67,191 +67,191 @@ CREATE TABLE `auv_task` (
                             `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                             PRIMARY KEY (`id`),
                             UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COMMENT='任务信息';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='任务信息';
 
 -- ----------------------------
 -- Table structure for auv_task_lock
 -- ----------------------------
 DROP TABLE IF EXISTS `auv_task_lock`;
 CREATE TABLE `auv_task_lock` (
-                                 `id` bigint NOT NULL AUTO_INCREMENT,
+                                 `id` bigint(20) NOT NULL AUTO_INCREMENT,
                                  `task_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'task code',
                                  `worker_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker code',
-                                 `expire_time` bigint NOT NULL DEFAULT '0' COMMENT '过期时间',
+                                 `expire_time` bigint(20) NOT NULL DEFAULT '0' COMMENT '过期时间',
                                  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1265 DEFAULT CHARSET=utf8mb3 COMMENT='任务锁';
+) ENGINE=InnoDB AUTO_INCREMENT=1265 DEFAULT CHARSET=utf8 COMMENT='任务锁';
 
 -- ----------------------------
 -- Table structure for auv_worker
 -- ----------------------------
 DROP TABLE IF EXISTS `auv_worker`;
 CREATE TABLE `auv_worker` (
-                              `id` bigint NOT NULL AUTO_INCREMENT,
+                              `id` bigint(20) NOT NULL AUTO_INCREMENT,
                               `code` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker code',
                               `name` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker名',
-                              `cpu` int NOT NULL DEFAULT '0' COMMENT 'cpu数量',
+                              `cpu` int(11) NOT NULL DEFAULT '0' COMMENT 'cpu数量',
                               `cpu_used` double NOT NULL DEFAULT '0' COMMENT 'cpu使用率',
                               `memory` double NOT NULL DEFAULT '0' COMMENT '内存,以M为单位',
                               `memory_used` double NOT NULL DEFAULT '0' COMMENT '内存使用率',
                               `jvm_memory` double NOT NULL DEFAULT '0' COMMENT 'jvm堆大小，以M为单位',
                               `jvm_memory_used` double NOT NULL DEFAULT '0' COMMENT 'jvm堆使用率',
-                              `job_num` int NOT NULL DEFAULT '0' COMMENT '正在执行job数',
+                              `job_num` int(11) NOT NULL DEFAULT '0' COMMENT '正在执行job数',
                               `heartbeat` datetime DEFAULT '1971-01-01 00:00:00' COMMENT '心跳时间',
                               `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                               `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                               PRIMARY KEY (`id`),
                               UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=18122 DEFAULT CHARSET=utf8mb3 COMMENT='worker信息';
+) ENGINE=InnoDB AUTO_INCREMENT=18122 DEFAULT CHARSET=utf8 COMMENT='worker信息';
 
 -- ----------------------------
 -- Table structure for auv_worker_blacklist
 -- ----------------------------
 DROP TABLE IF EXISTS `auv_worker_blacklist`;
 CREATE TABLE `auv_worker_blacklist` (
-                                        `id` bigint NOT NULL AUTO_INCREMENT,
+                                        `id` bigint(20) NOT NULL AUTO_INCREMENT,
                                         `worker_code` varchar(100) NOT NULL DEFAULT '' COMMENT 'worker code',
                                         `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                         `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
                                         PRIMARY KEY (`id`),
                                         UNIQUE KEY `code` (`worker_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='worker黑名单列表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='worker黑名单列表';
 
 -- ----------------------------
 -- Table structure for error_log
 -- ----------------------------
 DROP TABLE IF EXISTS `error_log`;
 CREATE TABLE `error_log` (
-                             `id` bigint NOT NULL AUTO_INCREMENT,
-                             `heartbeat_time` bigint NOT NULL DEFAULT '0',
-                             `hostname` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-                             `host_ip` char(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-                             `log_code` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-                             `throwable` varchar(2048) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
-                             `count` int NOT NULL DEFAULT '0',
-                             `log_msg` varchar(256) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-                             `operator` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '',
+                             `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                             `heartbeat_time` bigint(20) NOT NULL DEFAULT '0',
+                             `hostname` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
+                             `host_ip` char(32) COLLATE utf8_bin NOT NULL DEFAULT '',
+                             `log_code` varchar(256) COLLATE utf8_bin NOT NULL DEFAULT '',
+                             `throwable` varchar(2048) COLLATE utf8_bin NOT NULL DEFAULT '',
+                             `count` int(11) NOT NULL DEFAULT '0',
+                             `log_msg` varchar(256) COLLATE utf8_bin NOT NULL,
+                             `operator` varchar(64) COLLATE utf8_bin NOT NULL DEFAULT '',
                              `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                              `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                              PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for operate_record
 -- ----------------------------
 DROP TABLE IF EXISTS `operate_record`;
 CREATE TABLE `operate_record` (
-                                  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键 自增',
-                                  `module_id` int NOT NULL DEFAULT '-1' COMMENT '模块id',
-                                  `operate_id` int NOT NULL DEFAULT '-1' COMMENT '操作id',
+                                  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键 自增',
+                                  `module_id` int(11) NOT NULL DEFAULT '-1' COMMENT '模块id',
+                                  `operate_id` int(11) NOT NULL DEFAULT '-1' COMMENT '操作id',
                                   `biz_id` varchar(100) NOT NULL DEFAULT '' COMMENT '业务id string类型',
-                                  `business_id` int NOT NULL DEFAULT '-1' COMMENT '业务id',
+                                  `business_id` int(11) NOT NULL DEFAULT '-1' COMMENT '业务id',
                                   `content` text COMMENT '操作内容',
                                   `operator` varchar(50) NOT NULL DEFAULT '' COMMENT '操作人',
                                   `operate_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
                                   PRIMARY KEY (`id`),
                                   KEY `idx_module_business` (`module_id`,`business_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_agent
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_agent`;
 CREATE TABLE `tb_agent` (
-                            `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                            `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                             `host_name` varchar(128) NOT NULL DEFAULT '' COMMENT 'Agent宿主机名',
                             `ip` varchar(64) NOT NULL DEFAULT '' COMMENT 'Agent宿主机ip',
-                            `collect_type` tinyint NOT NULL DEFAULT '0' COMMENT '采集方式：\n0：采集宿主机日志\n1：采集宿主机所有容器日志\n2：采集宿主机日志 & 宿主机所有容器日志\n',
-                            `cpu_limit_threshold` int DEFAULT '0' COMMENT '采集端限流 cpu 阈值',
-                            `byte_limit_threshold` bigint DEFAULT '0' COMMENT '采集端限流流量阈值 单位：字节',
-                            `agent_version_id` bigint NOT NULL DEFAULT '0' COMMENT 'Agent版本id',
+                            `collect_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '采集方式：\n0：采集宿主机日志\n1：采集宿主机所有容器日志\n2：采集宿主机日志 & 宿主机所有容器日志\n',
+                            `cpu_limit_threshold` int(11) DEFAULT '0' COMMENT '采集端限流 cpu 阈值',
+                            `byte_limit_threshold` bigint(20) DEFAULT '0' COMMENT '采集端限流流量阈值 单位：字节',
+                            `agent_version_id` bigint(20) NOT NULL DEFAULT '0' COMMENT 'Agent版本id',
                             `advanced_configuration_json_string` varchar(4096) DEFAULT '' COMMENT 'Agent高级配置项集，为json形式字符串',
                             `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                             `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                             `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-                            `configuration_version` int NOT NULL DEFAULT '0' COMMENT 'Agent 配置版本号',
+                            `configuration_version` int(11) NOT NULL DEFAULT '0' COMMENT 'Agent 配置版本号',
                             `metrics_send_topic` varchar(255) DEFAULT NULL COMMENT 'Agent指标信息发往的topic名',
-                            `metrics_send_receiver_id` bigint DEFAULT NULL COMMENT 'Agent指标信息发往的接收端id',
+                            `metrics_send_receiver_id` bigint(20) DEFAULT NULL COMMENT 'Agent指标信息发往的接收端id',
                             `error_logs_send_topic` varchar(255) DEFAULT NULL COMMENT 'Agent错误日志信息发往的topic名',
-                            `error_logs_send_receiver_id` bigint DEFAULT NULL COMMENT 'Agent错误日志信息发往的接收端id',
+                            `error_logs_send_receiver_id` bigint(20) DEFAULT NULL COMMENT 'Agent错误日志信息发往的接收端id',
                             `metrics_producer_configuration` varchar(256) DEFAULT '',
                             `error_logs_producer_configuration` varchar(256) DEFAULT '',
                             PRIMARY KEY (`id`) USING BTREE,
                             UNIQUE KEY `uniq_host_name` (`host_name`) COMMENT '主机名唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='采集端表：表示一个部署在某host上的采集端';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采集端表：表示一个部署在某host上的采集端';
 
 -- ----------------------------
 -- Table structure for tb_agent_health
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_agent_health`;
 CREATE TABLE `tb_agent_health` (
-                                   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-                                   `agent_id` bigint NOT NULL COMMENT '表tb_agent主键',
-                                   `agent_health_level` tinyint NOT NULL COMMENT ' agent健康等级',
+                                   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                   `agent_id` bigint(20) NOT NULL COMMENT '表tb_agent主键',
+                                   `agent_health_level` tinyint(4) NOT NULL COMMENT ' agent健康等级',
                                    `agent_health_description` varchar(1024) NOT NULL DEFAULT '' COMMENT ' agent健康描述信息',
-                                   `lastest_error_logs_exists_check_healthy_time` bigint NOT NULL COMMENT ' 近一次“错误日志存在健康检查”为健康时的时间点',
+                                   `lastest_error_logs_exists_check_healthy_time` bigint(20) NOT NULL COMMENT ' 近一次“错误日志存在健康检查”为健康时的时间点',
                                    `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                    `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                    `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-                                   `agent_startup_time` bigint DEFAULT NULL COMMENT ' agent启动时间',
-                                   `agent_startup_time_last_time` bigint DEFAULT NULL COMMENT ' agent上一次启动时间',
+                                   `agent_startup_time` bigint(20) DEFAULT NULL COMMENT ' agent启动时间',
+                                   `agent_startup_time_last_time` bigint(20) DEFAULT NULL COMMENT ' agent上一次启动时间',
                                    PRIMARY KEY (`id`) USING BTREE,
                                    KEY `idx_agent_id` (`agent_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_agent_operation_sub_task
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_agent_operation_sub_task`;
 CREATE TABLE `tb_agent_operation_sub_task` (
-                                               `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-                                               `agent_operation_task_id` bigint NOT NULL DEFAULT '-1' COMMENT '表tb_agent_operation_task主键 id',
+                                               `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                               `agent_operation_task_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '表tb_agent_operation_task主键 id',
                                                `host_name` varchar(128) NOT NULL DEFAULT '' COMMENT '主机名',
                                                `ip` varchar(64) NOT NULL,
-                                               `container` tinyint NOT NULL DEFAULT '0' COMMENT '标识是否为容器节点\n0：否\n1：是\n',
-                                               `source_agent_version_id` bigint DEFAULT NULL COMMENT '原 agent_version id',
+                                               `container` tinyint(4) NOT NULL DEFAULT '0' COMMENT '标识是否为容器节点\n0：否\n1：是\n',
+                                               `source_agent_version_id` bigint(20) DEFAULT NULL COMMENT '原 agent_version id',
                                                `task_start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '该主机任务开始执行时间',
                                                `task_end_time` timestamp NULL DEFAULT NULL COMMENT '该主机任务执行结束时间',
                                                `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                                `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                                `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-                                               `execute_status` tinyint DEFAULT NULL COMMENT '执行状态：见枚举类 AgentOperationTaskSubStateEnum\n\n',
+                                               `execute_status` tinyint(4) DEFAULT NULL COMMENT '执行状态：见枚举类 AgentOperationTaskSubStateEnum\n\n',
                                                PRIMARY KEY (`id`) USING BTREE,
                                                KEY `idx_agent_operation_task_id` (`agent_operation_task_id`) USING BTREE,
                                                KEY `idx_hostname_start_time` (`host_name`,`task_start_time`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='采集端操作任务 & 主机名关联关系表：表示采集端操作任务 &主机名的关联关系，agentOperationTask： hostName 一对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采集端操作任务 & 主机名关联关系表：表示采集端操作任务 &主机名的关联关系，agentOperationTask： hostName 一对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_agent_operation_task
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_agent_operation_task`;
 CREATE TABLE `tb_agent_operation_task` (
-                                           `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                           `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                                            `task_name` varchar(128) NOT NULL DEFAULT '' COMMENT '任务名',
-                                           `task_status` tinyint NOT NULL DEFAULT '-1' COMMENT '任务状态 30：执行中 100：已完成',
-                                           `task_type` tinyint NOT NULL DEFAULT '0' COMMENT '任务类型：0：安装 1：卸载 2：升级',
-                                           `hosts_number` int NOT NULL COMMENT '任务涉及主机数量',
-                                           `source_agent_version_id` bigint DEFAULT '0' COMMENT '安装任务时：无须传入；卸载任务时：无须传入；升级任务时：表示agent升级前agent对应agent_version id',
-                                           `target_agent_version_id` bigint DEFAULT NULL COMMENT '安装任务时：表示待安装 agent 对应 agent version id；卸载任务时：无须传入；升级任务时：表示agent升级后agent对应agent_version id',
-                                           `external_agent_task_id` bigint NOT NULL DEFAULT '-1' COMMENT '外部对应 agent 执行任务 id，如宙斯系统的 agent 任务 id',
+                                           `task_status` tinyint(4) NOT NULL DEFAULT '-1' COMMENT '任务状态 30：执行中 100：已完成',
+                                           `task_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '任务类型：0：安装 1：卸载 2：升级',
+                                           `hosts_number` int(11) NOT NULL COMMENT '任务涉及主机数量',
+                                           `source_agent_version_id` bigint(20) DEFAULT '0' COMMENT '安装任务时：无须传入；卸载任务时：无须传入；升级任务时：表示agent升级前agent对应agent_version id',
+                                           `target_agent_version_id` bigint(20) DEFAULT NULL COMMENT '安装任务时：表示待安装 agent 对应 agent version id；卸载任务时：无须传入；升级任务时：表示agent升级后agent对应agent_version id',
+                                           `external_agent_task_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '外部对应 agent 执行任务 id，如宙斯系统的 agent 任务 id',
                                            `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                            `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                            `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                            `task_start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '任务开始执行时间',
                                            `task_end_time` timestamp NULL DEFAULT NULL COMMENT '任务执行结束时间',
                                            PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='采集端操作任务表：表示针对某个host上的agent部署、卸载操作计划任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采集端操作任务表：表示针对某个host上的agent部署、卸载操作计划任务';
 
 -- ----------------------------
 -- Table structure for tb_agent_version
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_agent_version`;
 CREATE TABLE `tb_agent_version` (
-                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT ' pk',
+                                    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT ' pk',
                                     `file_name` varchar(128) NOT NULL DEFAULT '' COMMENT '文件名',
                                     `file_md5` varchar(256) NOT NULL DEFAULT '' COMMENT '文件md5',
-                                    `file_type` tinyint NOT NULL DEFAULT '0' COMMENT '0：agent安装压缩包 1：agent配置文件',
+                                    `file_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0：agent安装压缩包 1：agent配置文件',
                                     `description` varchar(4096) DEFAULT '' COMMENT '备注信息',
                                     `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -260,80 +260,80 @@ CREATE TABLE `tb_agent_version` (
                                     PRIMARY KEY (`id`) USING BTREE,
                                     UNIQUE KEY `unq_idx_version` (`version`) USING BTREE,
                                     UNIQUE KEY `unq_idx_file_md5` (`file_md5`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_collect_delay_monitor_black_list
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_collect_delay_monitor_black_list`;
 CREATE TABLE `tb_collect_delay_monitor_black_list` (
-                                                       `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-                                                       `collect_delay_monitor_black_list_type` tinyint NOT NULL DEFAULT '0' COMMENT '采集延迟检查黑名单类型：\n\n0：表示主机\n\n1：表示采集任务\n\n2：表示主机 + 采集任务',
+                                                       `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                                       `collect_delay_monitor_black_list_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '采集延迟检查黑名单类型：\n\n0：表示主机\n\n1：表示采集任务\n\n2：表示主机 + 采集任务',
                                                        `host_name` varchar(128) NOT NULL DEFAULT '' COMMENT '主机名',
-                                                       `log_collector_task_id` bigint NOT NULL COMMENT '表tb_log_collect_task 主键 id',
+                                                       `log_collector_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task 主键 id',
                                                        `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                                        `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                                        `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='采集延迟检查黑名单信息表：表示一个采集延迟检查黑名单信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='采集延迟检查黑名单信息表：表示一个采集延迟检查黑名单信息';
 
 -- ----------------------------
 -- Table structure for tb_directory_log_collect_path
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_directory_log_collect_path`;
 CREATE TABLE `tb_directory_log_collect_path` (
-                                                 `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-                                                 `log_collect_task_id` bigint NOT NULL COMMENT '表tb_log_collect_task主键',
+                                                 `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                                 `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task主键',
                                                  `path` varchar(255) NOT NULL DEFAULT '' COMMENT '待采集路径',
                                                  `collect_files_filter_regular_pipeline_json_string` varchar(4096) NOT NULL DEFAULT '' COMMENT '采集文件筛选正则集 pipeline json 形式字符串，集合中每一项为一个过滤正则项< filterRegular , type >，filterRegular表示过滤正则内容，type表示黑/白名单类型0：白名单 1：黑名单\n\n注：FilterRegular 须有序存储，过滤时按集合顺序进行过滤计算',
-                                                 `directory_collect_depth` int NOT NULL DEFAULT '1' COMMENT '目录采集深度',
+                                                 `directory_collect_depth` int(11) NOT NULL DEFAULT '1' COMMENT '目录采集深度',
                                                  `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                                  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                                  `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT ' 修改时间',
                                                  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='目录类型日志采集路径表：表示一个目录类型日志采集路径，DirectoryLogCollectPath：LogCollectorTask 多对一关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='目录类型日志采集路径表：表示一个目录类型日志采集路径，DirectoryLogCollectPath：LogCollectorTask 多对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_file_log_collect_path
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_file_log_collect_path`;
 CREATE TABLE `tb_file_log_collect_path` (
-                                            `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-                                            `log_collect_task_id` bigint NOT NULL COMMENT '表tb_log_collect_task主键',
+                                            `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                            `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task主键',
                                             `path` varchar(255) NOT NULL DEFAULT '' COMMENT '待采集路径',
                                             `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                             `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                             `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                             PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='文件类型日志采集路径表：表示一个文件类型日志采集路径，FileLogCollectPath：LogCollectorTask 多对一关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件类型日志采集路径表：表示一个文件类型日志采集路径，FileLogCollectPath：LogCollectorTask 多对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_global_config
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_global_config`;
 CREATE TABLE `tb_global_config` (
-                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                                     `key` varchar(255) NOT NULL DEFAULT '' COMMENT '键',
                                     `value` varchar(4096) NOT NULL DEFAULT '' COMMENT '值',
                                     `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                     `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='全局配置信息表：表示一个全局配置信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='全局配置信息表：表示一个全局配置信息';
 
 -- ----------------------------
 -- Table structure for tb_host
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_host`;
 CREATE TABLE `tb_host` (
-                           `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                           `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                            `host_name` varchar(128) NOT NULL DEFAULT '' COMMENT '主机名',
                            `ip` varchar(64) NOT NULL DEFAULT '' COMMENT '主机IP',
-                           `container` tinyint NOT NULL DEFAULT '0' COMMENT '标识是否为容器节点\n0：否\n1：是\n',
+                           `container` tinyint(4) NOT NULL DEFAULT '0' COMMENT '标识是否为容器节点\n0：否\n1：是\n',
                            `parent_host_name` varchar(128) NOT NULL DEFAULT '-1' COMMENT '针对容器场景，表示容器对应宿主机id',
                            `machine_zone` varchar(64) DEFAULT '' COMMENT '主机所属机器单元',
                            `department` varchar(64) DEFAULT '' COMMENT '机器所属部门',
-                           `external_id` bigint NOT NULL DEFAULT '0' COMMENT '外部id',
+                           `external_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '外部id',
                            `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                            `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                            `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -343,14 +343,14 @@ CREATE TABLE `tb_host` (
                            KEY `idx_ip` (`ip`) USING BTREE COMMENT '主机 ip 索引',
                            KEY `idx_container` (`container`) USING BTREE COMMENT '主机类型索引',
                            KEY `idx_parent_host_name` (`parent_host_name`) USING BTREE COMMENT '宿主机名索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='主机表：表示一台主机，可表示物理机、虚拟机、容器';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='主机表：表示一台主机，可表示物理机、虚拟机、容器';
 
 -- ----------------------------
 -- Table structure for tb_k8s_pod
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_k8s_pod`;
 CREATE TABLE `tb_k8s_pod` (
-                              `id` bigint NOT NULL AUTO_INCREMENT,
+                              `id` bigint(20) NOT NULL AUTO_INCREMENT,
                               `uuid` varchar(255) DEFAULT '' COMMENT ' pod 实例唯一键',
                               `name` varchar(255) DEFAULT '' COMMENT 'pod名称',
                               `namespace` varchar(255) DEFAULT '' COMMENT 'pod的namespace',
@@ -365,29 +365,29 @@ CREATE TABLE `tb_k8s_pod` (
                               `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                               `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_k8s_pod_host
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_k8s_pod_host`;
 CREATE TABLE `tb_k8s_pod_host` (
-                                   `id` bigint NOT NULL AUTO_INCREMENT COMMENT ' 主键 id',
-                                   `k8s_pod_id` bigint NOT NULL COMMENT ' 表 tb_k8s_pod 主键 id',
-                                   `host_id` bigint NOT NULL COMMENT ' 表 tb_host 主键 id',
+                                   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT ' 主键 id',
+                                   `k8s_pod_id` bigint(20) NOT NULL COMMENT ' 表 tb_k8s_pod 主键 id',
+                                   `host_id` bigint(20) NOT NULL COMMENT ' 表 tb_host 主键 id',
                                    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_kafka_cluster
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_kafka_cluster`;
 CREATE TABLE `tb_kafka_cluster` (
-                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                                     `kafka_cluster_name` varchar(128) NOT NULL DEFAULT '' COMMENT 'kafka 集群名',
                                     `kafka_cluster_broker_configuration` varchar(1024) NOT NULL DEFAULT '' COMMENT 'kafka 集群 broker 配置',
                                     `kafka_cluster_producer_init_configuration` varchar(4096) DEFAULT '' COMMENT 'kafka 集群对应生产端初始化配置',
-                                    `kafka_cluster_id` bigint DEFAULT NULL COMMENT '外部kafka集群表id字段',
+                                    `kafka_cluster_id` bigint(20) DEFAULT NULL COMMENT '外部kafka集群表id字段',
                                     `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                     `agent_metrics_send_topic` varchar(255) DEFAULT '' COMMENT 'Agent指标信息发往的topic名',
                                     `agent_error_logs_send_topic` varchar(255) DEFAULT '' COMMENT 'Agent错误日志信息发往的topic名',
@@ -396,154 +396,155 @@ CREATE TABLE `tb_kafka_cluster` (
                                     PRIMARY KEY (`id`) USING BTREE,
                                     UNIQUE KEY `unq_kafka_cluster_name` (`kafka_cluster_name`) USING BTREE,
                                     KEY `idx_kafka_cluster_id` (`kafka_cluster_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Kafka集群信息表：表示一个 kafka 集群信息，KafkaCluster：LogCollectorTask 一对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Kafka集群信息表：表示一个 kafka 集群信息，KafkaCluster：LogCollectorTask 一对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_log_collect_task`;
 CREATE TABLE `tb_log_collect_task` (
-                                       `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                       `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                                        `log_collect_task_name` varchar(255) NOT NULL DEFAULT '' COMMENT '采集任务名',
                                        `log_collect_task_remark` varchar(1024) DEFAULT '' COMMENT '采集任务备注',
-                                       `log_collect_task_type` tinyint NOT NULL DEFAULT '0' COMMENT '采集任务类型 0：常规流式采集 1：按指定时间范围采集',
-                                       `collect_start_time_business` bigint DEFAULT '0' COMMENT '采集任务对应采集开始业务时间\n\n注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 情况，该值不填',
-                                       `collect_end_time_business` bigint DEFAULT '0' COMMENT '采集任务对应采集结束业务时间\n\n注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 情况，该值不填',
-                                       `limit_priority` tinyint NOT NULL DEFAULT '0' COMMENT '采集任务限流保障优先级 0：高 1：中 2：低',
-                                       `log_collect_task_status` tinyint NOT NULL DEFAULT '0' COMMENT '日志采集任务状态 0：暂停 1：运行 2：已完成（状态2仅针对 "按指定时间范围采集" 类型）',
+                                       `log_collect_task_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '采集任务类型 0：常规流式采集 1：按指定时间范围采集',
+                                       `collect_start_time_business` bigint(20) DEFAULT '0' COMMENT '采集任务对应采集开始业务时间\n\n注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 情况，该值不填',
+                                       `collect_end_time_business` bigint(20) DEFAULT '0' COMMENT '采集任务对应采集结束业务时间\n\n注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 情况，该值不填',
+                                       `limit_priority` tinyint(4) NOT NULL DEFAULT '0' COMMENT '采集任务限流保障优先级 0：高 1：中 2：低',
+                                       `log_collect_task_status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '日志采集任务状态 0：暂停 1：运行 2：已完成（状态2仅针对 "按指定时间范围采集" 类型）',
                                        `send_topic` varchar(256) NOT NULL DEFAULT '' COMMENT '采集任务采集的日志需要发往的topic名',
-                                       `kafka_cluster_id` bigint NOT NULL COMMENT '表tb_kafka_cluster主键',
+                                       `kafka_cluster_id` bigint(20) NOT NULL COMMENT '表tb_kafka_cluster主键',
                                        `host_filter_rule_logic_json_string` varchar(4096) NOT NULL COMMENT '主机过滤规则信息（存储 BaseHostFilterRuleLogic 某具体实现类的 json 化形式）',
                                        `advanced_configuration_json_string` varchar(4096) DEFAULT '' COMMENT '采集任务高级配置项集，为json形式字符串',
                                        `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
-                                       `configuration_version` int NOT NULL DEFAULT '0' COMMENT '日志采集任务配置版本号',
-                                       `old_data_filter_type` tinyint NOT NULL COMMENT '历史数据过滤 0：不过滤 1：从当前时间开始采集 2：从自定义时间开始采集，自定义时间取collectStartBusinessTime属性值',
-                                       `log_collect_task_execute_timeout_ms` bigint DEFAULT NULL COMMENT '日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型"按指定时间范围采集"时才存在值',
+                                       `configuration_version` int(11) NOT NULL DEFAULT '0' COMMENT '日志采集任务配置版本号',
+                                       `old_data_filter_type` tinyint(4) NOT NULL COMMENT '历史数据过滤 0：不过滤 1：从当前时间开始采集 2：从自定义时间开始采集，自定义时间取collectStartBusinessTime属性值',
+                                       `log_collect_task_execute_timeout_ms` bigint(20) DEFAULT NULL COMMENT '日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型"按指定时间范围采集"时才存在值',
                                        `log_content_filter_rule_logic_json_string` varchar(255) DEFAULT NULL COMMENT '日志内容过滤规则信息（存储 BaseLogContentFilterRuleLogic 某具体实现类的 json 化形式）',
                                        `log_collect_task_finish_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '日志采集任务执行完成时间\n注：仅日志采集任务为时间范围采集类型时',
                                        `kafka_producer_configuration` varchar(1024) DEFAULT '' COMMENT '日志采集任务对应kafka生产端属性',
                                        `log_content_slice_rule_logic_json_string` varchar(1024) NOT NULL DEFAULT '' COMMENT '日志内容切片规则信息（存储 BaseLogContentSliceRuleLogic 某具体实现类的 json 化形式）',
                                        `file_name_suffix_match_rule_logic_json_string` varchar(1024) NOT NULL DEFAULT '' COMMENT '待采集文件后缀匹配规则信息（存储 BaseCollectFileSuffixMatchRuleLogic 某具体实现类的 json 化形式）',
-                                       `collect_delay_threshold_ms` bigint NOT NULL COMMENT '该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~ 当前时间间隔',
+                                       `collect_delay_threshold_ms` bigint(20) NOT NULL COMMENT '该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~ 当前时间间隔',
                                        `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                        `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='日志采集任务表：表示一个待运行在agent的采集任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志采集任务表：表示一个待运行在agent的采集任务';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_health
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_log_collect_task_health`;
 CREATE TABLE `tb_log_collect_task_health` (
-                                              `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-                                              `log_collect_task_id` bigint NOT NULL COMMENT '表tb_log_collect_task主键',
-                                              `log_collect_task_health_level` tinyint NOT NULL DEFAULT '0' COMMENT '采集任务健康等级\n\n0：绿色 表示：采集任务很健康，对业务没有任何影响，且运行该采集任务的 Agent 也健康\n\n1：黄色 表示：采集任务存在风险，该采集任务有对应错误日志输出\n\n2：红色 表示：采集任务不健康，对业务有影响，该采集任务需要做采集延迟监控但乱序输出，或该采集任务需要做采集延迟监控但延迟时间超过指定阈值、该采集任务对应 kafka 集群信息不存在 待维护',
+                                              `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                              `log_collect_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task主键',
+                                              `log_collect_task_health_level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '采集任务健康等级\n\n0：绿色 表示：采集任务很健康，对业务没有任何影响，且运行该采集任务的 Agent 也健康\n\n1：黄色 表示：采集任务存在风险，该采集任务有对应错误日志输出\n\n2：红色 表示：采集任务不健康，对业务有影响，该采集任务需要做采集延迟监控但乱序输出，或该采集任务需要做采集延迟监控但延迟时间超过指定阈值、该采集任务对应 kafka 集群信息不存在 待维护',
                                               `log_collect_task_health_description` varchar(1024) NOT NULL COMMENT '日志采集任务健康描述信息',
-                                              `log_collect_task_health_inspection_result_type` int DEFAULT NULL COMMENT '日志采集任务巡检结果类型',
+                                              `log_collect_task_health_inspection_result_type` int(11) DEFAULT NULL COMMENT '日志采集任务巡检结果类型',
                                               `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                               `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                               `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='日志采集任务健康度信息表：表示一个日志采集任务健康度信息，LogCollectorTaskHealth：LogCollectorTask 一对一关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志采集任务健康度信息表：表示一个日志采集任务健康度信息，LogCollectorTaskHealth：LogCollectorTask 一对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_health_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_log_collect_task_health_detail`;
 CREATE TABLE `tb_log_collect_task_health_detail` (
-                                                     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                                                     `log_collect_task_id` bigint DEFAULT NULL COMMENT '表tb_log_collect_task主键',
-                                                     `path_id` bigint DEFAULT NULL COMMENT '表tb_file_log_collect_path主键',
-                                                     `host_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
-                                                     `collect_dquality_time` bigint DEFAULT NULL COMMENT '完整性时间',
-                                                     `too_large_truncate_check_healthy_heartbeat_time` bigint DEFAULT NULL COMMENT '“日志过长截断健康检查”为健康时的时间点',
-                                                     `file_path_exists_check_healthy_heartbeat_time` bigint DEFAULT NULL COMMENT '“文件路径是否存在健康检查”为健康时的时间点',
-                                                     `file_disorder_check_healthy_heartbeat_time` bigint DEFAULT NULL COMMENT '“文件乱序健康检查”为健康时的时间点',
-                                                     `log_slice_check_healthy_heartbeat_time` bigint DEFAULT NULL COMMENT ' “日志切片健康检查”为健康时的时间点',
+                                                     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                                     `log_collect_task_id` bigint(20) DEFAULT NULL COMMENT '表tb_log_collect_task主键',
+                                                     `path_id` bigint(20) DEFAULT NULL COMMENT '表tb_file_log_collect_path主键',
+                                                     `host_name` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
+                                                     `collect_dquality_time` bigint(20) DEFAULT NULL COMMENT '完整性时间',
+                                                     `too_large_truncate_check_healthy_heartbeat_time` bigint(20) DEFAULT NULL COMMENT '“日志过长截断健康检查”为健康时的时间点',
+                                                     `file_path_exists_check_healthy_heartbeat_time` bigint(20) DEFAULT NULL COMMENT '“文件路径是否存在健康检查”为健康时的时间点',
+                                                     `file_disorder_check_healthy_heartbeat_time` bigint(20) DEFAULT NULL COMMENT '“文件乱序健康检查”为健康时的时间点',
+                                                     `log_slice_check_healthy_heartbeat_time` bigint(20) DEFAULT NULL COMMENT ' “日志切片健康检查”为健康时的时间点',
                                                      PRIMARY KEY (`id`) USING BTREE,
                                                      KEY `idx_taskId_pathId_hostName` (`log_collect_task_id`,`path_id`,`host_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_service
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_log_collect_task_service`;
 CREATE TABLE `tb_log_collect_task_service` (
-                                               `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
-                                               `log_collector_task_id` bigint NOT NULL COMMENT '表tb_log_collect_task 主键 id',
-                                               `service_id` bigint NOT NULL COMMENT '表 tb_service 主键 id',
+                                               `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                               `log_collector_task_id` bigint(20) NOT NULL COMMENT '表tb_log_collect_task 主键 id',
+                                               `service_id` bigint(20) NOT NULL COMMENT '表 tb_service 主键 id',
                                                PRIMARY KEY (`id`),
                                                KEY `idx_service_id` (`service_id`),
                                                KEY `idx_logcollecttask_id` (`log_collector_task_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='日志采集任务 & 服务关联关系表：表示服务 & 日志采集任务的关联关系，Service：LogCollectorTask 多对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志采集任务 & 服务关联关系表：表示服务 & 日志采集任务的关联关系，Service：LogCollectorTask 多对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_meta_table_version
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_meta_table_version`;
 CREATE TABLE `tb_meta_table_version` (
-                                         `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                                         `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                                          `table_name` varchar(255) NOT NULL DEFAULT '' COMMENT '表名',
-                                         `table_version` bigint NOT NULL DEFAULT '1' COMMENT '表对应版本号，该变每一次变更，其版本号+1',
+                                         `table_version` bigint(20) NOT NULL DEFAULT '1' COMMENT '表对应版本号，该变每一次变更，其版本号+1',
                                          `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                          `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                          `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                          PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='表版本号信息表：表示一个表当前版本号信息（ps：该表发生变动操作，其对应版本号 +1）';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='表版本号信息表：表示一个表当前版本号信息（ps：该表发生变动操作，其对应版本号 +1）';
 
 -- ----------------------------
 -- Table structure for tb_metrics_agent
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_metrics_agent`;
 CREATE TABLE `tb_metrics_agent` (
-                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                                    `hostName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'agent所在宿主机主机名',
-                                    `limitTps` bigint DEFAULT '0' COMMENT '当前限流阈值 单位：byte',
+                                    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                    `hostName` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'agent所在宿主机主机名',
+                                    `limitTps` bigint(20) DEFAULT '0' COMMENT '当前限流阈值 单位：byte',
                                     `cpuLimit` double DEFAULT '0' COMMENT 'cpu 限流阈值',
-                                    `agentVersion` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'agent版本号',
-                                    `readBytes` bigint DEFAULT NULL COMMENT '采样周期内入口采集流量 单位：bytes',
-                                    `readCount` bigint DEFAULT NULL COMMENT '采样周期内入口采集条数 单位：条',
-                                    `writeBytes` bigint DEFAULT NULL COMMENT '采样周期内出口采集流量 单位：bytes',
-                                    `writeCount` bigint DEFAULT NULL COMMENT '采样周期内出口采集条数 单位：条',
-                                    `errorLogsCount` bigint DEFAULT NULL COMMENT '采样周期内错误日志输出条数，当前值',
-                                    `errorLogsSendFailedCount` bigint DEFAULT NULL COMMENT '采样周期内错误日志发送失败次数，当前值',
-                                    `normalCollectThreadNumMax` int DEFAULT NULL COMMENT '流式采集线程池可容纳的最大线程数，当前值',
-                                    `normalCollectThreadNumSize` int DEFAULT NULL COMMENT '流式采集线程池实际运行线程数，当前值',
-                                    `normalCollectThreadQueueMax` int DEFAULT NULL COMMENT '流式采集线程池任务队列最大容量，当前值',
-                                    `normalCollectThreadQueueSize` int DEFAULT NULL COMMENT '流式采集线程池任务队列实际数量，当前值',
-                                    `temporaryCollectThreadNumMax` int DEFAULT NULL COMMENT '临时采集线程池可容纳的最大线程数，当前值',
-                                    `temporaryCollectThreadNumSize` int DEFAULT NULL COMMENT '临时采集线程池实际运行线程数，当前值',
-                                    `temporaryCollectThreadQueueMax` int DEFAULT NULL COMMENT '临时采集线程池任务队列最大容量，当前值',
-                                    `temporaryCollectThreadQueueSize` int DEFAULT NULL COMMENT '临时采集线程池任务队列实际数量，当前值',
-                                    `collectTaskNum` int DEFAULT NULL COMMENT '采集任务数，当前值',
-                                    `runningCollectTaskNum` int DEFAULT NULL COMMENT '运行状态采集任务数，当前值',
-                                    `pauseCollectTaskNum` int DEFAULT NULL COMMENT '停止状态采集任务数，当前值',
-                                    `collectPathNum` int DEFAULT NULL COMMENT '采集路径数，当前值',
-                                    `runningCollectPathNum` int DEFAULT NULL COMMENT '运行状态采集路径数，当前值',
-                                    `pauseCollectPathNum` int DEFAULT NULL COMMENT '停止状态采集路径数，当前值',
-                                    `heartbeatTime` bigint DEFAULT '0' COMMENT '心跳时间',
-                                    `heartbeatTimeMinute` bigint DEFAULT '0' COMMENT '心跳时间 精度：分钟',
-                                    `heartbeatTimeHour` bigint DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                    `agentVersion` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'agent版本号',
+                                    `readBytes` bigint(20) DEFAULT NULL COMMENT '采样周期内入口采集流量 单位：bytes',
+                                    `readCount` bigint(20) DEFAULT NULL COMMENT '采样周期内入口采集条数 单位：条',
+                                    `writeBytes` bigint(20) DEFAULT NULL COMMENT '采样周期内出口采集流量 单位：bytes',
+                                    `writeCount` bigint(20) DEFAULT NULL COMMENT '采样周期内出口采集条数 单位：条',
+                                    `errorLogsCount` bigint(20) DEFAULT NULL COMMENT '采样周期内错误日志输出条数，当前值',
+                                    `errorLogsSendFailedCount` bigint(20) DEFAULT NULL COMMENT '采样周期内错误日志发送失败次数，当前值',
+                                    `normalCollectThreadNumMax` int(11) DEFAULT NULL COMMENT '流式采集线程池可容纳的最大线程数，当前值',
+                                    `normalCollectThreadNumSize` int(11) DEFAULT NULL COMMENT '流式采集线程池实际运行线程数，当前值',
+                                    `normalCollectThreadQueueMax` int(11) DEFAULT NULL COMMENT '流式采集线程池任务队列最大容量，当前值',
+                                    `normalCollectThreadQueueSize` int(11) DEFAULT NULL COMMENT '流式采集线程池任务队列实际数量，当前值',
+                                    `temporaryCollectThreadNumMax` int(11) DEFAULT NULL COMMENT '临时采集线程池可容纳的最大线程数，当前值',
+                                    `temporaryCollectThreadNumSize` int(11) DEFAULT NULL COMMENT '临时采集线程池实际运行线程数，当前值',
+                                    `temporaryCollectThreadQueueMax` int(11) DEFAULT NULL COMMENT '临时采集线程池任务队列最大容量，当前值',
+                                    `temporaryCollectThreadQueueSize` int(11) DEFAULT NULL COMMENT '临时采集线程池任务队列实际数量，当前值',
+                                    `collectTaskNum` int(11) DEFAULT NULL COMMENT '采集任务数，当前值',
+                                    `runningCollectTaskNum` int(11) DEFAULT NULL COMMENT '运行状态采集任务数，当前值',
+                                    `pauseCollectTaskNum` int(11) DEFAULT NULL COMMENT '停止状态采集任务数，当前值',
+                                    `collectPathNum` int(11) DEFAULT NULL COMMENT '采集路径数，当前值',
+                                    `runningCollectPathNum` int(11) DEFAULT NULL COMMENT '运行状态采集路径数，当前值',
+                                    `pauseCollectPathNum` int(11) DEFAULT NULL COMMENT '停止状态采集路径数，当前值',
+                                    `heartbeatTime` bigint(20) DEFAULT '0' COMMENT '心跳时间',
+                                    `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
+                                    `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                    `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_disk
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_metrics_disk`;
 CREATE TABLE `tb_metrics_disk` (
-                                   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                                   `hostName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
-                                   `systemDiskPath` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '磁盘路径',
-                                   `systemDiskDevice` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '磁盘设备名',
-                                   `systemDiskFsType` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '磁盘文件系统类型',
-                                   `systemDiskBytesTotal` bigint DEFAULT NULL COMMENT '磁盘总量（单位：byte）',
-                                   `systemDiskBytesFree` bigint DEFAULT NULL COMMENT '磁盘余量大小（单位：byte）',
-                                   `systemDiskBytesUsed` bigint DEFAULT NULL COMMENT '磁盘用量大小（单位：byte）',
+                                   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                   `hostName` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
+                                   `systemDiskPath` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '磁盘路径',
+                                   `systemDiskDevice` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '磁盘设备名',
+                                   `systemDiskFsType` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '磁盘文件系统类型',
+                                   `systemDiskBytesTotal` bigint(20) DEFAULT NULL COMMENT '磁盘总量（单位：byte）',
+                                   `systemDiskBytesFree` bigint(20) DEFAULT NULL COMMENT '磁盘余量大小（单位：byte）',
+                                   `systemDiskBytesUsed` bigint(20) DEFAULT NULL COMMENT '磁盘用量大小（单位：byte）',
                                    `systemDiskUsedPercent` double DEFAULT NULL COMMENT '磁盘用量占比（单位：%）',
-                                   `systemDiskInodesTotal` int DEFAULT NULL COMMENT '各磁盘inode总数量',
-                                   `systemDiskInodesFree` int DEFAULT NULL COMMENT '各磁盘空闲inode数量',
-                                   `systemDiskInodesUsed` int DEFAULT NULL COMMENT '各磁盘已用inode数量',
+                                   `systemDiskInodesTotal` int(11) DEFAULT NULL COMMENT '各磁盘inode总数量',
+                                   `systemDiskInodesFree` int(11) DEFAULT NULL COMMENT '各磁盘空闲inode数量',
+                                   `systemDiskInodesUsed` int(11) DEFAULT NULL COMMENT '各磁盘已用inode数量',
                                    `systemDiskInodesUsedPercent` double DEFAULT NULL COMMENT '各磁盘已用inode占比（单位：%）',
                                    `systemIOAvgQuSz` double DEFAULT NULL COMMENT '磁盘平均队列长度 当前值',
                                    `systemIOAvgQuSzMin` double DEFAULT NULL COMMENT '磁盘平均队列长度 最小值',
@@ -707,35 +708,36 @@ CREATE TABLE `tb_metrics_disk` (
                                    `systemDiskWriteTimePercent75Quantile` double DEFAULT NULL COMMENT '磁盘写入磁盘时间百分比（单位：%）75分位数',
                                    `systemDiskWriteTimePercent95Quantile` double DEFAULT NULL COMMENT '磁盘写入磁盘时间百分比（单位：%）95分位数',
                                    `systemDiskWriteTimePercent99Quantile` double DEFAULT NULL COMMENT '磁盘写入磁盘时间百分比（单位：%）99分位数',
-                                   `heartbeatTime` bigint DEFAULT '0' COMMENT '心跳时间',
-                                   `heartbeatTimeMinute` bigint DEFAULT '0' COMMENT '心跳时间 精度：分钟',
-                                   `heartbeatTimeHour` bigint DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                   `heartbeatTime` bigint(20) DEFAULT '0' COMMENT '心跳时间',
+                                   `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
+                                   `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                   `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_log_collect_task
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_metrics_log_collect_task`;
 CREATE TABLE `tb_metrics_log_collect_task` (
-                                               `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                                               `collectTaskId` bigint DEFAULT NULL COMMENT '采集任务id',
-                                               `pathId` bigint DEFAULT NULL COMMENT '采集路径id',
-                                               `agentHostName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'agent所在主机对应主机名',
-                                               `collectTaskHostName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '采集任务对应的主机名',
-                                               `agentHostIp` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'agent所在主机 ip',
-                                               `businessTimestamp` bigint DEFAULT NULL COMMENT '采集业务时间 当前值',
-                                               `maxBusinessTimestampDelay` bigint DEFAULT NULL COMMENT '数据业务时间最大延迟 （单位：秒），当前值',
-                                               `limitTime` bigint DEFAULT NULL COMMENT '采样周期内限流时长 （单位：秒），当前值',
-                                               `tooLargeTruncateNum` bigint DEFAULT NULL COMMENT '采样周期内数据过长导致的截断条数（单位：条），当前值',
-                                               `tooLargeTruncateNumTotal` bigint DEFAULT NULL COMMENT 'agent启动以来数据过长导致的截断条数（单位：条），当前值',
-                                               `collectPathIsExists` tinyint DEFAULT NULL COMMENT '采样周期内采样周期内采集路径是否存在，当前值',
-                                               `disorderExists` tinyint DEFAULT NULL COMMENT '采样周期内待采集数据是否存在乱序打印，当前值',
-                                               `sliceErrorExists` tinyint DEFAULT NULL COMMENT '采样周期内是否存在时间戳切片配置错误，当前值',
-                                               `readBytes` bigint DEFAULT NULL COMMENT '采样周期内日志读取字节数，当前值',
-                                               `readCount` bigint DEFAULT NULL COMMENT '采样周期内日志读取条数，当前值',
-                                               `sendBytes` bigint DEFAULT NULL COMMENT '采样周期内日志发送字节数，当前值',
-                                               `sendCount` bigint DEFAULT NULL COMMENT '采样周期内日志发送条数，当前值',
+                                               `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                               `collectTaskId` bigint(20) DEFAULT NULL COMMENT '采集任务id',
+                                               `pathId` bigint(20) DEFAULT NULL COMMENT '采集路径id',
+                                               `agentHostName` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'agent所在主机对应主机名',
+                                               `collectTaskHostName` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '采集任务对应的主机名',
+                                               `agentHostIp` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'agent所在主机 ip',
+                                               `businessTimestamp` bigint(20) DEFAULT NULL COMMENT '采集业务时间 当前值',
+                                               `maxBusinessTimestampDelay` bigint(20) DEFAULT NULL COMMENT '数据业务时间最大延迟 （单位：秒），当前值',
+                                               `limitTime` bigint(20) DEFAULT NULL COMMENT '采样周期内限流时长 （单位：秒），当前值',
+                                               `tooLargeTruncateNum` bigint(20) DEFAULT NULL COMMENT '采样周期内数据过长导致的截断条数（单位：条），当前值',
+                                               `tooLargeTruncateNumTotal` bigint(20) DEFAULT NULL COMMENT 'agent启动以来数据过长导致的截断条数（单位：条），当前值',
+                                               `collectPathIsExists` tinyint(4) DEFAULT NULL COMMENT '采样周期内采样周期内采集路径是否存在，当前值',
+                                               `disorderExists` tinyint(4) DEFAULT NULL COMMENT '采样周期内待采集数据是否存在乱序打印，当前值',
+                                               `sliceErrorExists` tinyint(4) DEFAULT NULL COMMENT '采样周期内是否存在时间戳切片配置错误，当前值',
+                                               `readBytes` bigint(20) DEFAULT NULL COMMENT '采样周期内日志读取字节数，当前值',
+                                               `readCount` bigint(20) DEFAULT NULL COMMENT '采样周期内日志读取条数，当前值',
+                                               `sendBytes` bigint(20) DEFAULT NULL COMMENT '采样周期内日志发送字节数，当前值',
+                                               `sendCount` bigint(20) DEFAULT NULL COMMENT '采样周期内日志发送条数，当前值',
                                                `readTimePerEvent` double DEFAULT NULL COMMENT '采样周期内单 logevent 读取耗时 (单位：纳秒) 当前值',
                                                `readTimePerEventMin` double DEFAULT NULL COMMENT '采样周期内单 logevent 读取耗时 (单位：纳秒) 最小值',
                                                `readTimePerEventMax` double DEFAULT NULL COMMENT '采样周期内单 logevent 读取耗时 (单位：纳秒) 最大值',
@@ -772,11 +774,11 @@ CREATE TABLE `tb_metrics_log_collect_task` (
                                                `processTimePerEvent75Quantile` double DEFAULT NULL COMMENT '采样周期内单 logevent 处理耗时（单位：纳秒） 75分位数',
                                                `processTimePerEvent95Quantile` double DEFAULT NULL COMMENT '采样周期内单 logevent 处理耗时（单位：纳秒） 95分位数',
                                                `processTimePerEvent99Quantile` double DEFAULT NULL COMMENT '采样周期内单 logevent 处理耗时（单位：纳秒） 99分位数',
-                                               `flushTimes` bigint DEFAULT NULL COMMENT '采样周期内 flush 次数 当前值',
-                                               `flushFailedTimes` bigint DEFAULT NULL COMMENT '采样周期内 flush 失败次数 当前值',
-                                               `filterEventsNum` bigint DEFAULT NULL COMMENT '采样周期内数据过滤条数 当前值',
-                                               `channelBytesMax` bigint DEFAULT NULL COMMENT 'channel 最大容量 单位：bytes 当前值',
-                                               `channelCountMax` bigint DEFAULT NULL COMMENT 'channel 最大容量 单位：条 当前值',
+                                               `flushTimes` bigint(20) DEFAULT NULL COMMENT '采样周期内 flush 次数 当前值',
+                                               `flushFailedTimes` bigint(20) DEFAULT NULL COMMENT '采样周期内 flush 失败次数 当前值',
+                                               `filterEventsNum` bigint(20) DEFAULT NULL COMMENT '采样周期内数据过滤条数 当前值',
+                                               `channelBytesMax` bigint(20) DEFAULT NULL COMMENT 'channel 最大容量 单位：bytes 当前值',
+                                               `channelCountMax` bigint(20) DEFAULT NULL COMMENT 'channel 最大容量 单位：条 当前值',
                                                `channelBytesSize` double DEFAULT NULL COMMENT 'channel 实际大小 单位：bytes 当前值',
                                                `channelBytesSizeMin` double DEFAULT NULL COMMENT 'channel 实际大小 单位：bytes 最小值',
                                                `channelBytesSizeMax` double DEFAULT NULL COMMENT 'channel 实际大小 单位：bytes 最大值',
@@ -804,33 +806,35 @@ CREATE TABLE `tb_metrics_log_collect_task` (
   `channelUsedPercent75Quantile` double(255,0) DEFAULT NULL COMMENT 'channel 使用率 = max(channelBytesSize/maxChannelBytes, channelCountSize/maxChannelCount)75分位数',
   `channelUsedPercent95Quantile` double(255,0) DEFAULT NULL COMMENT 'channel 使用率 = max(channelBytesSize/maxChannelBytes, channelCountSize/maxChannelCount)95分位数',
   `channelUsedPercent99Quantile` double(255,0) DEFAULT NULL COMMENT 'channel 使用率 = max(channelBytesSize/maxChannelBytes, channelCountSize/maxChannelCount)99分位数',
-  `receiverClusterId` bigint DEFAULT NULL COMMENT '数据流接收端集群 id',
-  `receiverClusterTopic` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '数据流接收端 topic',
-  `collectFiles` varchar(4096) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '采集的文件信息',
-  `relatedFiles` int DEFAULT '0' COMMENT '符合采集规则的待采集文件组文件数',
-  `latestFile` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '待采集文件组最后一个待采集文件名',
-  `masterFile` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '待采集文件组主文件名',
-  `path` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT '' COMMENT '待采集文件组主文件路径',
-  `collectTaskType` int DEFAULT NULL COMMENT '采集任务类型',
-  `sinkNum` int DEFAULT '0' COMMENT '采集任务对应sink数',
-  `collectTaskVersion` int DEFAULT NULL COMMENT '采集任务版本号',
-  `dynamicLimiterThreshold` bigint DEFAULT NULL COMMENT '采集任务动态限流阈值 单位：byte',
-  `heartbeatTime` bigint DEFAULT '0' COMMENT '心跳时间',
-  `heartbeatTimeMinute` bigint DEFAULT '0' COMMENT '心跳时间 精度：分钟',
-  `heartbeatTimeHour` bigint DEFAULT '0' COMMENT '心跳时间 精度：小时',
+  `receiverClusterId` bigint(20) DEFAULT NULL COMMENT '数据流接收端集群 id',
+  `receiverClusterTopic` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '数据流接收端 topic',
+  `collectFiles` varchar(4096) CHARACTER SET utf8 DEFAULT '' COMMENT '采集的文件信息',
+  `relatedFiles` int(11) DEFAULT '0' COMMENT '符合采集规则的待采集文件组文件数',
+  `latestFile` varchar(255) CHARACTER SET utf8 DEFAULT '' COMMENT '待采集文件组最后一个待采集文件名',
+  `masterFile` varchar(255) CHARACTER SET utf8 DEFAULT '' COMMENT '待采集文件组主文件名',
+  `path` varchar(256) CHARACTER SET utf8 DEFAULT '' COMMENT '待采集文件组主文件路径',
+  `collectTaskType` int(11) DEFAULT NULL COMMENT '采集任务类型',
+  `sinkNum` int(11) DEFAULT '0' COMMENT '采集任务对应sink数',
+  `collectTaskVersion` int(11) DEFAULT NULL COMMENT '采集任务版本号',
+  `dynamicLimiterThreshold` bigint(20) DEFAULT NULL COMMENT '采集任务动态限流阈值 单位：byte',
+  `heartbeatTime` bigint(20) DEFAULT '0' COMMENT '心跳时间',
+  `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
+  `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
+  `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
+  `serviceId` bigint(20) DEFAULT NULL COMMENT '服务 id',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_net_card
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_metrics_net_card`;
 CREATE TABLE `tb_metrics_net_card` (
-                                       `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                                       `hostName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
-                                       `systemNetCardsBandMacAddress` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '网卡mac地址',
-                                       `systemNetCardsBandDevice` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '网卡设备名',
-                                       `systemNetCardsBandWidth` bigint DEFAULT NULL COMMENT '网卡最大带宽 单位：byte',
+                                       `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                       `hostName` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
+                                       `systemNetCardsBandMacAddress` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '网卡mac地址',
+                                       `systemNetCardsBandDevice` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '网卡设备名',
+                                       `systemNetCardsBandWidth` bigint(20) DEFAULT NULL COMMENT '网卡最大带宽 单位：byte',
                                        `systemNetCardsReceiveBytesPs` double DEFAULT NULL COMMENT '网卡网络每秒下行流量 单位：byte 当前值',
                                        `systemNetCardsReceiveBytesPsMin` double DEFAULT NULL COMMENT '网卡网络每秒下行流量 单位：byte 最小值',
                                        `systemNetCardsReceiveBytesPsMax` double DEFAULT NULL COMMENT '网卡网络每秒下行流量 单位：byte 最大值',
@@ -849,22 +853,23 @@ CREATE TABLE `tb_metrics_net_card` (
                                        `systemNetCardsSendBytesPs75Quantile` double DEFAULT NULL COMMENT '网卡网络每秒上行流量 单位：byte 最小值',
                                        `systemNetCardsSendBytesPs95Quantile` double DEFAULT NULL COMMENT '网卡网络每秒上行流量 单位：byte 最小值',
                                        `systemNetCardsSendBytesPs99Quantile` double DEFAULT NULL COMMENT '网卡网络每秒上行流量 单位：byte 最小值',
-                                       `heartbeatTime` bigint DEFAULT '0' COMMENT '心跳时间',
-                                       `heartbeatTimeMinute` bigint DEFAULT '0' COMMENT '心跳时间 精度：分钟',
-                                       `heartbeatTimeHour` bigint DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                       `heartbeatTime` bigint(20) DEFAULT '0' COMMENT '心跳时间',
+                                       `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
+                                       `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                       `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_process
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_metrics_process`;
 CREATE TABLE `tb_metrics_process` (
-                                      `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                                      `hostName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
-                                      `procStartupTime` bigint DEFAULT NULL COMMENT '当前进程启动时间 当前值',
-                                      `procUptime` bigint DEFAULT NULL COMMENT '当前进程运行时间 当前值',
-                                      `procPid` bigint DEFAULT NULL COMMENT '当前进程 pid 当前值',
+                                      `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                      `hostName` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
+                                      `procStartupTime` bigint(20) DEFAULT NULL COMMENT '当前进程启动时间 当前值',
+                                      `procUptime` bigint(20) DEFAULT NULL COMMENT '当前进程运行时间 当前值',
+                                      `procPid` bigint(20) DEFAULT NULL COMMENT '当前进程 pid 当前值',
                                       `procCpuUtil` double DEFAULT NULL COMMENT '当前进程cpu使用率(单位：%) 使用率采用全核方式计数，如进程使用一颗核，则返回100，如进程使用两颗核，则返回200 当前值',
                                       `procCpuUtilMin` double DEFAULT NULL COMMENT '当前进程cpu使用率(单位：%) 使用率采用全核方式计数，如进程使用一颗核，则返回100，如进程使用两颗核，则返回200 最小值',
                                       `procCpuUtilMax` double DEFAULT NULL COMMENT '当前进程cpu使用率(单位：%) 使用率采用全核方式计数，如进程使用一颗核，则返回100，如进程使用两颗核，则返回200 最大值',
@@ -928,20 +933,20 @@ CREATE TABLE `tb_metrics_process` (
                                       `procCpuNonVoluntarySwitchesPS75Quantile` double DEFAULT NULL COMMENT '当前进程cpu每秒非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）75分位数',
                                       `procCpuNonVoluntarySwitchesPS95Quantile` double DEFAULT NULL COMMENT '当前进程cpu每秒非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）95分位数',
                                       `procCpuNonVoluntarySwitchesPS99Quantile` double DEFAULT NULL COMMENT '当前进程cpu每秒非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）99分位数',
-                                      `procMemUsed` bigint DEFAULT NULL COMMENT '当前进程内存使用量（单位：byte）当前值',
+                                      `procMemUsed` bigint(20) DEFAULT NULL COMMENT '当前进程内存使用量（单位：byte）当前值',
                                       `procMemUtil` double DEFAULT NULL COMMENT '当前进程内存使用率(单位：%) 当前值',
-                                      `procMemData` bigint DEFAULT NULL COMMENT '当前进程data内存大小 当前值',
-                                      `procMemDirty` bigint DEFAULT NULL COMMENT '当前进程dirty内存大小 当前值',
-                                      `procMemLib` bigint DEFAULT NULL COMMENT '当前进程lib内存大小 当前值',
-                                      `procMemRss` bigint DEFAULT NULL COMMENT '当前进程常驻内存大小 当前值',
-                                      `procMemShared` bigint DEFAULT NULL COMMENT '当前进程共享内存大小 当前值',
-                                      `procMemSwap` bigint DEFAULT NULL COMMENT '当前进程交换空间大小 当前值',
-                                      `procMemText` bigint DEFAULT NULL COMMENT '当前进程Text内存大小 当前值',
-                                      `procMemVms` bigint DEFAULT NULL COMMENT '当前进程虚拟内存大小 当前值',
-                                      `jvmProcHeapMemoryUsed` bigint DEFAULT NULL COMMENT 'jvm进程堆内存使用量（单位：byte）当前值',
-                                      `jvmProcNonHeapMemoryUsed` bigint DEFAULT NULL COMMENT 'jvm进程堆外内存使用量（单位：byte）当前值',
-                                      `jvmProcHeapSizeXmx` bigint DEFAULT NULL COMMENT 'jvm进程最大可用堆内存，对应 jvm Xmx（单位：byte）当前值',
-                                      `jvmProcMemUsedPeak` bigint DEFAULT NULL COMMENT 'jvm进程启动以来内存使用量峰值（单位：byte）当前值',
+                                      `procMemData` bigint(20) DEFAULT NULL COMMENT '当前进程data内存大小 当前值',
+                                      `procMemDirty` bigint(20) DEFAULT NULL COMMENT '当前进程dirty内存大小 当前值',
+                                      `procMemLib` bigint(20) DEFAULT NULL COMMENT '当前进程lib内存大小 当前值',
+                                      `procMemRss` bigint(20) DEFAULT NULL COMMENT '当前进程常驻内存大小 当前值',
+                                      `procMemShared` bigint(20) DEFAULT NULL COMMENT '当前进程共享内存大小 当前值',
+                                      `procMemSwap` bigint(20) DEFAULT NULL COMMENT '当前进程交换空间大小 当前值',
+                                      `procMemText` bigint(20) DEFAULT NULL COMMENT '当前进程Text内存大小 当前值',
+                                      `procMemVms` bigint(20) DEFAULT NULL COMMENT '当前进程虚拟内存大小 当前值',
+                                      `jvmProcHeapMemoryUsed` bigint(20) DEFAULT NULL COMMENT 'jvm进程堆内存使用量（单位：byte）当前值',
+                                      `jvmProcNonHeapMemoryUsed` bigint(20) DEFAULT NULL COMMENT 'jvm进程堆外内存使用量（单位：byte）当前值',
+                                      `jvmProcHeapSizeXmx` bigint(20) DEFAULT NULL COMMENT 'jvm进程最大可用堆内存，对应 jvm Xmx（单位：byte）当前值',
+                                      `jvmProcMemUsedPeak` bigint(20) DEFAULT NULL COMMENT 'jvm进程启动以来内存使用量峰值（单位：byte）当前值',
                                       `jvmProcHeapMemUsedPercent` double DEFAULT NULL COMMENT 'jvm堆内存使用率 单位：% 当前值',
                                       `procIOReadRate` double DEFAULT NULL COMMENT '当前进程io读取频率（单位：hz）当前值',
                                       `procIOReadRateMin` double DEFAULT NULL COMMENT '当前进程io读取频率（单位：hz）最小值',
@@ -1006,14 +1011,14 @@ CREATE TABLE `tb_metrics_process` (
                                       `procIOAwaitTimePercent75Quantile` double DEFAULT NULL COMMENT '当前进程io读写等待时间占总时间百分比（单位：%） 对应 iotop IO 75分位数',
                                       `procIOAwaitTimePercent95Quantile` double DEFAULT NULL COMMENT '当前进程io读写等待时间占总时间百分比（单位：%） 对应 iotop IO 95分位数',
                                       `procIOAwaitTimePercent99Quantile` double DEFAULT NULL COMMENT '当前进程io读写等待时间占总时间百分比（单位：%） 对应 iotop IO 99分位数',
-                                      `jvmProcYoungGcCount` bigint DEFAULT NULL COMMENT '采样周期内 young gc 次数',
-                                      `jvmProcFullGcCount` bigint DEFAULT NULL COMMENT '采样周期内 full gc 次数',
-                                      `jvmProcYoungGcTime` bigint DEFAULT NULL COMMENT '采样周期内 young gc 耗时 单位：ms',
-                                      `jvmProcFullGcTime` bigint DEFAULT NULL COMMENT '采样周期内 full gc 耗时 单位：ms',
-                                      `jvmProcThreadNum` int DEFAULT NULL COMMENT '当前进程的线程数 当前值',
-                                      `jvmProcThreadNumPeak` int DEFAULT NULL COMMENT '当前jvm进程启动以来线程数峰值 当前值',
-                                      `procOpenFdCount` int DEFAULT NULL COMMENT '当前进程打开fd数量 当前值',
-                                      `procPortListen` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '当前进程监听端口列表 json 格式 当前值',
+                                      `jvmProcYoungGcCount` bigint(20) DEFAULT NULL COMMENT '采样周期内 young gc 次数',
+                                      `jvmProcFullGcCount` bigint(20) DEFAULT NULL COMMENT '采样周期内 full gc 次数',
+                                      `jvmProcYoungGcTime` bigint(20) DEFAULT NULL COMMENT '采样周期内 young gc 耗时 单位：ms',
+                                      `jvmProcFullGcTime` bigint(20) DEFAULT NULL COMMENT '采样周期内 full gc 耗时 单位：ms',
+                                      `jvmProcThreadNum` int(11) DEFAULT NULL COMMENT '当前进程的线程数 当前值',
+                                      `jvmProcThreadNumPeak` int(11) DEFAULT NULL COMMENT '当前jvm进程启动以来线程数峰值 当前值',
+                                      `procOpenFdCount` int(11) DEFAULT NULL COMMENT '当前进程打开fd数量 当前值',
+                                      `procPortListen` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '当前进程监听端口列表 json 格式 当前值',
                                       `procNetworkReceiveBytesPs` double DEFAULT NULL COMMENT '当前进程网络每秒下行流量 当前值',
                                       `procNetworkReceiveBytesPsMin` double DEFAULT NULL COMMENT '当前进程网络每秒下行流量 最小值',
                                       `procNetworkReceiveBytesPsMax` double DEFAULT NULL COMMENT '当前进程网络每秒下行流量 最大值',
@@ -1041,52 +1046,53 @@ CREATE TABLE `tb_metrics_process` (
                                       `procNetworkConnRate75Quantile` double DEFAULT NULL COMMENT '当前进程网络连接频率(单位：hz) 75分位数',
                                       `procNetworkConnRate95Quantile` double DEFAULT NULL COMMENT '当前进程网络连接频率(单位：hz) 95分位数',
                                       `procNetworkConnRate99Quantile` double DEFAULT NULL COMMENT '当前进程网络连接频率(单位：hz) 99分位数',
-                                      `procNetworkTcpConnectionNum` int DEFAULT NULL COMMENT '当前进程tcp连接数 当前值',
-                                      `procNetworkTcpListeningNum` int DEFAULT NULL COMMENT '当前进程处于 Listening 状态的 tcp 链接数 当前值',
-                                      `procNetworkTcpTimeWaitNum` int DEFAULT NULL COMMENT '当前进程处于 time wait 状态 tcp 连接数 当前值',
-                                      `procNetworkTcpCloseWaitNum` int DEFAULT NULL COMMENT '当前进程处于 close wait 状态 tcp 连接数 当前值',
-                                      `procNetworkTcpEstablishedNum` int DEFAULT NULL COMMENT '当前进程处于 ESTABLISHED 状态的 tcp 链接数 当前值',
-                                      `procNetworkTcpSynSentNum` int DEFAULT NULL COMMENT '当前进程处于 SYN_SENT 状态的 tcp 链接数 当前值',
-                                      `procNetworkTcpSynRecvNum` int DEFAULT NULL COMMENT '当前进程处于 SYN_RECV 状态的 tcp 链接数 当前值',
-                                      `procNetworkTcpFinWait1Num` int DEFAULT NULL COMMENT '当前进程处于 FIN_WAIT1 状态的 tcp 链接数 当前值',
-                                      `procNetworkTcpFinWait2Num` int DEFAULT NULL COMMENT '当前进程处于 FIN_WAIT2 状态的 tcp 链接数 当前值',
-                                      `procNetworkTcpClosedNum` int DEFAULT NULL COMMENT '当前进程处于 closed 状态 tcp 连接数 当前值',
-                                      `procNetworkTcpClosingNum` int DEFAULT NULL COMMENT '当前进程处于 closing 状态 tcp 连接数 当前值',
-                                      `procNetworkTcpLastAckNum` int DEFAULT NULL COMMENT '当前进程处于 last ack 状态 tcp 连接数 当前值',
-                                      `procNetworkTcpNoneNum` int DEFAULT NULL COMMENT '当前进程处于 none 状态 tcp 连接数 当前值',
-                                      `heartbeatTime` bigint DEFAULT '0' COMMENT '心跳时间',
-                                      `heartbeatTimeMinute` bigint DEFAULT '0' COMMENT '心跳时间 精度：分钟',
-                                      `heartbeatTimeHour` bigint DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                      `procNetworkTcpConnectionNum` int(11) DEFAULT NULL COMMENT '当前进程tcp连接数 当前值',
+                                      `procNetworkTcpListeningNum` int(11) DEFAULT NULL COMMENT '当前进程处于 Listening 状态的 tcp 链接数 当前值',
+                                      `procNetworkTcpTimeWaitNum` int(11) DEFAULT NULL COMMENT '当前进程处于 time wait 状态 tcp 连接数 当前值',
+                                      `procNetworkTcpCloseWaitNum` int(11) DEFAULT NULL COMMENT '当前进程处于 close wait 状态 tcp 连接数 当前值',
+                                      `procNetworkTcpEstablishedNum` int(11) DEFAULT NULL COMMENT '当前进程处于 ESTABLISHED 状态的 tcp 链接数 当前值',
+                                      `procNetworkTcpSynSentNum` int(11) DEFAULT NULL COMMENT '当前进程处于 SYN_SENT 状态的 tcp 链接数 当前值',
+                                      `procNetworkTcpSynRecvNum` int(11) DEFAULT NULL COMMENT '当前进程处于 SYN_RECV 状态的 tcp 链接数 当前值',
+                                      `procNetworkTcpFinWait1Num` int(11) DEFAULT NULL COMMENT '当前进程处于 FIN_WAIT1 状态的 tcp 链接数 当前值',
+                                      `procNetworkTcpFinWait2Num` int(11) DEFAULT NULL COMMENT '当前进程处于 FIN_WAIT2 状态的 tcp 链接数 当前值',
+                                      `procNetworkTcpClosedNum` int(11) DEFAULT NULL COMMENT '当前进程处于 closed 状态 tcp 连接数 当前值',
+                                      `procNetworkTcpClosingNum` int(11) DEFAULT NULL COMMENT '当前进程处于 closing 状态 tcp 连接数 当前值',
+                                      `procNetworkTcpLastAckNum` int(11) DEFAULT NULL COMMENT '当前进程处于 last ack 状态 tcp 连接数 当前值',
+                                      `procNetworkTcpNoneNum` int(11) DEFAULT NULL COMMENT '当前进程处于 none 状态 tcp 连接数 当前值',
+                                      `heartbeatTime` bigint(20) DEFAULT '0' COMMENT '心跳时间',
+                                      `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
+                                      `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                      `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_system
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_metrics_system`;
 CREATE TABLE `tb_metrics_system` (
-                                     `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
-                                     `osType` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '操作系统类型',
-                                     `osVersion` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '操作系统版本',
-                                     `osKernelVersion` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '操作系统内核版本',
-                                     `hostName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
-                                     `ips` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT 'ip地址列表 json 格式',
-                                     `systemNtpOffset` bigint DEFAULT NULL COMMENT '源时钟与本地时钟的时间差（毫秒）',
-                                     `systemStartupTime` bigint DEFAULT NULL COMMENT '系统启动时间',
-                                     `systemUptime` bigint DEFAULT NULL COMMENT '系统运行时间',
-                                     `processesBlocked` int DEFAULT NULL COMMENT '不可中断的睡眠状态下的进程数',
-                                     `processesSleeping` int DEFAULT NULL COMMENT '可中断的睡眠状态下的进程数',
-                                     `processesZombies` int DEFAULT NULL COMMENT '僵尸态进程数',
-                                     `processesStopped` int DEFAULT NULL COMMENT '暂停状态进程数',
-                                     `processesRunning` int DEFAULT NULL COMMENT '运行中的进程数',
-                                     `processesIdle` int DEFAULT NULL COMMENT '挂起的空闲进程数',
-                                     `processesWait` int DEFAULT NULL COMMENT '等待中的进程数',
-                                     `processesDead` int DEFAULT NULL COMMENT '回收中的进程数',
-                                     `processesPaging` int DEFAULT NULL COMMENT '分页进程数',
-                                     `processesUnknown` int DEFAULT NULL COMMENT '未知状态进程数',
-                                     `processesTotal` int DEFAULT NULL COMMENT '总进程数',
-                                     `processesTotalThreads` int DEFAULT NULL COMMENT '总线程数',
-                                     `cpuCores` int DEFAULT NULL COMMENT 'cpu核数',
+                                     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+                                     `osType` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '操作系统类型',
+                                     `osVersion` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '操作系统版本',
+                                     `osKernelVersion` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '操作系统内核版本',
+                                     `hostName` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '主机名',
+                                     `ips` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'ip地址列表 json 格式',
+                                     `systemNtpOffset` bigint(20) DEFAULT NULL COMMENT '源时钟与本地时钟的时间差（毫秒）',
+                                     `systemStartupTime` bigint(20) DEFAULT NULL COMMENT '系统启动时间',
+                                     `systemUptime` bigint(20) DEFAULT NULL COMMENT '系统运行时间',
+                                     `processesBlocked` int(11) DEFAULT NULL COMMENT '不可中断的睡眠状态下的进程数',
+                                     `processesSleeping` int(11) DEFAULT NULL COMMENT '可中断的睡眠状态下的进程数',
+                                     `processesZombies` int(11) DEFAULT NULL COMMENT '僵尸态进程数',
+                                     `processesStopped` int(11) DEFAULT NULL COMMENT '暂停状态进程数',
+                                     `processesRunning` int(11) DEFAULT NULL COMMENT '运行中的进程数',
+                                     `processesIdle` int(11) DEFAULT NULL COMMENT '挂起的空闲进程数',
+                                     `processesWait` int(11) DEFAULT NULL COMMENT '等待中的进程数',
+                                     `processesDead` int(11) DEFAULT NULL COMMENT '回收中的进程数',
+                                     `processesPaging` int(11) DEFAULT NULL COMMENT '分页进程数',
+                                     `processesUnknown` int(11) DEFAULT NULL COMMENT '未知状态进程数',
+                                     `processesTotal` int(11) DEFAULT NULL COMMENT '总进程数',
+                                     `processesTotalThreads` int(11) DEFAULT NULL COMMENT '总线程数',
+                                     `cpuCores` int(11) DEFAULT NULL COMMENT 'cpu核数',
                                      `systemCpuUtil` double DEFAULT NULL COMMENT '系统总体CPU使用率 单位：% 当前值，使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200',
                                      `systemCpuUtilMin` double DEFAULT NULL COMMENT '系统总体CPU使用率 单位：% 最小值，使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200',
                                      `systemCpuUtilMax` double DEFAULT NULL COMMENT '系统总体CPU使用率 单位：% 最大值，使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200',
@@ -1213,34 +1219,34 @@ CREATE TABLE `tb_metrics_system` (
                                      `systemCpuSteal75Quantile` double DEFAULT NULL COMMENT '虚拟CPU的竞争等待时间占比 单位：% 75分位数',
                                      `systemCpuSteal95Quantile` double DEFAULT NULL COMMENT '虚拟CPU的竞争等待时间占比 单位：% 95分位数',
                                      `systemCpuSteal99Quantile` double DEFAULT NULL COMMENT '虚拟CPU的竞争等待时间占比 单位：% 99分位数',
-                                     `systemMemCommitLimit` bigint DEFAULT NULL COMMENT '系统当前可分配的内存总量 单位：byte 当前值',
-                                     `systemMemCommittedAs` bigint DEFAULT NULL COMMENT '系统已分配的包括进程未使用的内存量 单位：byte 当前值',
-                                     `systemMemCommitted` bigint DEFAULT NULL COMMENT '返回在磁盘分页文件上保留的物理内存量 单位：byte 当前值',
-                                     `systemMemNonPaged` bigint DEFAULT NULL COMMENT '不能写入磁盘的物理内存量 单位：byte 当前值',
-                                     `systemMemPaged` bigint DEFAULT NULL COMMENT '没被使用是可以写入磁盘的物理内存量 单位：byte 当前值',
-                                     `systemMemShared` bigint DEFAULT NULL COMMENT '用作共享内存的物理RAM量 单位：byte 当前值',
-                                     `systemMemSlab` bigint DEFAULT NULL COMMENT '内核用来缓存数据结构供自己使用的内存量 单位：byte 当前值',
-                                     `systemMemTotal` bigint DEFAULT NULL COMMENT '系统物理内存总量 单位：byte 当前值',
-                                     `systemMemFree` bigint DEFAULT NULL COMMENT '系统空闲内存大小 单位：byte 当前值',
-                                     `systemMemUsed` bigint DEFAULT NULL COMMENT '系统已用内存大小 单位：byte 当前值',
-                                     `systemMemBuffered` bigint DEFAULT NULL COMMENT '块设备占用的缓存页，包括直接读写块设备、文件系统元数据、superblock（超级块中的数据其实就是文件卷的控制信息部分，也可以说它是卷资源表，有关文件卷的大部分信息都保存在这里。例如：硬盘分区中每个block的大小、硬盘分区上一共有多少个block group、以及每个block group中有多少个inode）所使用的缓存页 单位：byte 当前值',
-                                     `systemMemCached` bigint DEFAULT NULL COMMENT '普通文件所占用的缓存页 单位：byte 当前值',
+                                     `systemMemCommitLimit` bigint(20) DEFAULT NULL COMMENT '系统当前可分配的内存总量 单位：byte 当前值',
+                                     `systemMemCommittedAs` bigint(20) DEFAULT NULL COMMENT '系统已分配的包括进程未使用的内存量 单位：byte 当前值',
+                                     `systemMemCommitted` bigint(20) DEFAULT NULL COMMENT '返回在磁盘分页文件上保留的物理内存量 单位：byte 当前值',
+                                     `systemMemNonPaged` bigint(20) DEFAULT NULL COMMENT '不能写入磁盘的物理内存量 单位：byte 当前值',
+                                     `systemMemPaged` bigint(20) DEFAULT NULL COMMENT '没被使用是可以写入磁盘的物理内存量 单位：byte 当前值',
+                                     `systemMemShared` bigint(20) DEFAULT NULL COMMENT '用作共享内存的物理RAM量 单位：byte 当前值',
+                                     `systemMemSlab` bigint(20) DEFAULT NULL COMMENT '内核用来缓存数据结构供自己使用的内存量 单位：byte 当前值',
+                                     `systemMemTotal` bigint(20) DEFAULT NULL COMMENT '系统物理内存总量 单位：byte 当前值',
+                                     `systemMemFree` bigint(20) DEFAULT NULL COMMENT '系统空闲内存大小 单位：byte 当前值',
+                                     `systemMemUsed` bigint(20) DEFAULT NULL COMMENT '系统已用内存大小 单位：byte 当前值',
+                                     `systemMemBuffered` bigint(20) DEFAULT NULL COMMENT '块设备占用的缓存页，包括直接读写块设备、文件系统元数据、superblock（超级块中的数据其实就是文件卷的控制信息部分，也可以说它是卷资源表，有关文件卷的大部分信息都保存在这里。例如：硬盘分区中每个block的大小、硬盘分区上一共有多少个block group、以及每个block group中有多少个inode）所使用的缓存页 单位：byte 当前值',
+                                     `systemMemCached` bigint(20) DEFAULT NULL COMMENT '普通文件所占用的缓存页 单位：byte 当前值',
                                      `systemMemFreePercent` double DEFAULT NULL COMMENT '系统内存空闲率 单位：% 当前值',
                                      `systemMemUsedPercent` double DEFAULT NULL COMMENT '系统内存使用率 单位：% 当前值',
-                                     `systemSwapCached` bigint DEFAULT NULL COMMENT '系统用作缓存的交换空间 单位：byte 当前值',
-                                     `systemSwapFree` bigint DEFAULT NULL COMMENT '系统空闲swap大小 单位：byte 当前值',
+                                     `systemSwapCached` bigint(20) DEFAULT NULL COMMENT '系统用作缓存的交换空间 单位：byte 当前值',
+                                     `systemSwapFree` bigint(20) DEFAULT NULL COMMENT '系统空闲swap大小 单位：byte 当前值',
                                      `systemSwapFreePercent` double DEFAULT NULL COMMENT '系统空闲swap占比 单位：% 当前值',
-                                     `systemSwapTotal` bigint DEFAULT NULL COMMENT '系统swap总大小 单位：byte 当前值',
-                                     `systemSwapUsed` bigint DEFAULT NULL COMMENT '系统已用swap大小 单位：byte 当前值',
+                                     `systemSwapTotal` bigint(20) DEFAULT NULL COMMENT '系统swap总大小 单位：byte 当前值',
+                                     `systemSwapUsed` bigint(20) DEFAULT NULL COMMENT '系统已用swap大小 单位：byte 当前值',
                                      `systemSwapUsedPercent` double DEFAULT NULL COMMENT '系统已用swap占比 单位：% 当前值',
-                                     `systemDisks` int DEFAULT NULL COMMENT '磁盘数',
-                                     `systemFilesMax` int DEFAULT NULL COMMENT '系统可以打开的最大文件句柄数',
-                                     `systemFilesAllocated` int DEFAULT NULL COMMENT '系统已分配文件句柄数',
-                                     `systemFilesLeft` int DEFAULT NULL COMMENT '系统未分配文件句柄数',
+                                     `systemDisks` int(11) DEFAULT NULL COMMENT '磁盘数',
+                                     `systemFilesMax` int(11) DEFAULT NULL COMMENT '系统可以打开的最大文件句柄数',
+                                     `systemFilesAllocated` int(11) DEFAULT NULL COMMENT '系统已分配文件句柄数',
+                                     `systemFilesLeft` int(11) DEFAULT NULL COMMENT '系统未分配文件句柄数',
                                      `systemFilesUsedPercent` double DEFAULT NULL COMMENT '系统使用文件句柄占已分配百分比（单位：%）',
-                                     `systemFilesUsed` int DEFAULT NULL COMMENT '系统使用的已分配文件句柄数',
-                                     `systemFilesNotUsed` int DEFAULT NULL COMMENT '系统未使用的已分配文件句柄数',
-                                     `systemNetCards` int DEFAULT NULL COMMENT '网卡数',
+                                     `systemFilesUsed` int(11) DEFAULT NULL COMMENT '系统使用的已分配文件句柄数',
+                                     `systemFilesNotUsed` int(11) DEFAULT NULL COMMENT '系统未使用的已分配文件句柄数',
+                                     `systemNetCards` int(11) DEFAULT NULL COMMENT '网卡数',
                                      `systemNetworkReceiveBytesPs` double DEFAULT NULL COMMENT '系统网络每秒下行流量 单位：byte 当前值',
                                      `systemNetworkReceiveBytesPsMin` double DEFAULT NULL COMMENT '系统网络每秒下行流量 单位：byte 最小值',
                                      `systemNetworkReceiveBytesPsMax` double DEFAULT NULL COMMENT '系统网络每秒下行流量 单位：byte 最大值',
@@ -1259,74 +1265,94 @@ CREATE TABLE `tb_metrics_system` (
                                      `systemNetworkSendBytesPs75Quantile` double DEFAULT NULL COMMENT '系统网络每秒上行流量 单位：byte 75分位数',
                                      `systemNetworkSendBytesPs95Quantile` double DEFAULT NULL COMMENT '系统网络每秒上行流量 单位：byte 95分位数',
                                      `systemNetworkSendBytesPs99Quantile` double DEFAULT NULL COMMENT '系统网络每秒上行流量 单位：byte 99分位数',
-                                     `systemNetworkTcpConnectionNum` int DEFAULT NULL COMMENT '系统tcp连接数 当前值',
-                                     `systemNetworkTcpListeningNum` int DEFAULT NULL COMMENT '系统 Listening 状态的 tcp 链接数 当前值',
-                                     `systemNetworkTcpEstablishedNum` int DEFAULT NULL COMMENT '系统 ESTABLISHED 状态的 tcp 链接数 当前值',
-                                     `systemNetworkTcpSynSentNum` int DEFAULT NULL COMMENT '系统 SYN_SENT 状态的 tcp 链接数 当前值',
-                                     `systemNetworkTcpSynRecvNum` int DEFAULT NULL COMMENT '系统 SYN_RECV 状态的 tcp 链接数 当前值',
-                                     `systemNetworkTcpFinWait1Num` int DEFAULT NULL COMMENT '系统 FIN_WAIT1 状态的 tcp 链接数 当前值',
-                                     `systemNetworkTcpFinWait2Num` int DEFAULT NULL COMMENT '系统 FIN_WAIT2 状态的 tcp 链接数 当前值',
-                                     `systemNetworkTcpTimeWaitNum` int DEFAULT NULL COMMENT '系统处于 time wait 状态 tcp 连接数 当前值',
-                                     `systemNetworkTcpClosedNum` int DEFAULT NULL COMMENT '系统处于 closed 状态 tcp 连接数 当前值',
-                                     `systemNetworkTcpCloseWaitNum` int DEFAULT NULL COMMENT '系统处于 close wait 状态 tcp 连接数 当前值',
-                                     `systemNetworkTcpClosingNum` int DEFAULT NULL COMMENT '系统处于 closing 状态 tcp 连接数 当前值',
-                                     `systemNetworkTcpLastAckNum` int DEFAULT NULL COMMENT '系统处于 last ack 状态 tcp 连接数 当前值',
-                                     `systemNetworkTcpNoneNum` int DEFAULT NULL COMMENT '系统处于 none 状态 tcp 连接数 当前值',
-                                     `systemNetworkTcpActiveOpens` bigint DEFAULT NULL COMMENT '采样周期内 Tcp 主动连接次数',
-                                     `systemNetworkTcpPassiveOpens` bigint DEFAULT NULL COMMENT '采样周期内 Tcp 被动连接次数',
-                                     `systemNetworkTcpAttemptFails` bigint DEFAULT NULL COMMENT '采样周期内 Tcp 连接失败次数',
-                                     `systemNetworkTcpEstabResets` bigint DEFAULT NULL COMMENT '采样周期内 Tcp 连接异常断开次数',
-                                     `systemNetworkTcpRetransSegs` bigint DEFAULT NULL COMMENT '采样周期内 Tcp 重传的报文段总个数',
-                                     `systemNetworkTcpExtListenOverflows` bigint DEFAULT NULL COMMENT '采样周期内 Tcp 监听队列溢出次数',
-                                     `systemNetworkUdpInDatagrams` bigint DEFAULT NULL COMMENT '采样周期内 UDP 入包量',
-                                     `systemNetworkUdpOutDatagrams` bigint DEFAULT NULL COMMENT '采样周期内 UDP 出包量',
-                                     `systemNetworkUdpInErrors` bigint DEFAULT NULL COMMENT '采样周期内 UDP 入包错误数',
-                                     `systemNetworkUdpNoPorts` bigint DEFAULT NULL COMMENT '采样周期内 UDP 端口不可达个数',
-                                     `systemNetworkUdpSendBufferErrors` bigint DEFAULT NULL COMMENT '采样周期内 UDP 发送缓冲区满次数',
-                                     `heartbeatTime` bigint DEFAULT '0' COMMENT '心跳时间',
-                                     `heartbeatTimeMinute` bigint DEFAULT '0' COMMENT '心跳时间 精度：分钟',
-                                     `heartbeatTimeHour` bigint DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                     `systemNetworkTcpConnectionNum` int(11) DEFAULT NULL COMMENT '系统tcp连接数 当前值',
+                                     `systemNetworkTcpListeningNum` int(11) DEFAULT NULL COMMENT '系统 Listening 状态的 tcp 链接数 当前值',
+                                     `systemNetworkTcpEstablishedNum` int(11) DEFAULT NULL COMMENT '系统 ESTABLISHED 状态的 tcp 链接数 当前值',
+                                     `systemNetworkTcpSynSentNum` int(11) DEFAULT NULL COMMENT '系统 SYN_SENT 状态的 tcp 链接数 当前值',
+                                     `systemNetworkTcpSynRecvNum` int(11) DEFAULT NULL COMMENT '系统 SYN_RECV 状态的 tcp 链接数 当前值',
+                                     `systemNetworkTcpFinWait1Num` int(11) DEFAULT NULL COMMENT '系统 FIN_WAIT1 状态的 tcp 链接数 当前值',
+                                     `systemNetworkTcpFinWait2Num` int(11) DEFAULT NULL COMMENT '系统 FIN_WAIT2 状态的 tcp 链接数 当前值',
+                                     `systemNetworkTcpTimeWaitNum` int(11) DEFAULT NULL COMMENT '系统处于 time wait 状态 tcp 连接数 当前值',
+                                     `systemNetworkTcpClosedNum` int(11) DEFAULT NULL COMMENT '系统处于 closed 状态 tcp 连接数 当前值',
+                                     `systemNetworkTcpCloseWaitNum` int(11) DEFAULT NULL COMMENT '系统处于 close wait 状态 tcp 连接数 当前值',
+                                     `systemNetworkTcpClosingNum` int(11) DEFAULT NULL COMMENT '系统处于 closing 状态 tcp 连接数 当前值',
+                                     `systemNetworkTcpLastAckNum` int(11) DEFAULT NULL COMMENT '系统处于 last ack 状态 tcp 连接数 当前值',
+                                     `systemNetworkTcpNoneNum` int(11) DEFAULT NULL COMMENT '系统处于 none 状态 tcp 连接数 当前值',
+                                     `systemNetworkTcpActiveOpens` bigint(20) DEFAULT NULL COMMENT '采样周期内 Tcp 主动连接次数',
+                                     `systemNetworkTcpPassiveOpens` bigint(20) DEFAULT NULL COMMENT '采样周期内 Tcp 被动连接次数',
+                                     `systemNetworkTcpAttemptFails` bigint(20) DEFAULT NULL COMMENT '采样周期内 Tcp 连接失败次数',
+                                     `systemNetworkTcpEstabResets` bigint(20) DEFAULT NULL COMMENT '采样周期内 Tcp 连接异常断开次数',
+                                     `systemNetworkTcpRetransSegs` bigint(20) DEFAULT NULL COMMENT '采样周期内 Tcp 重传的报文段总个数',
+                                     `systemNetworkTcpExtListenOverflows` bigint(20) DEFAULT NULL COMMENT '采样周期内 Tcp 监听队列溢出次数',
+                                     `systemNetworkUdpInDatagrams` bigint(20) DEFAULT NULL COMMENT '采样周期内 UDP 入包量',
+                                     `systemNetworkUdpOutDatagrams` bigint(20) DEFAULT NULL COMMENT '采样周期内 UDP 出包量',
+                                     `systemNetworkUdpInErrors` bigint(20) DEFAULT NULL COMMENT '采样周期内 UDP 入包错误数',
+                                     `systemNetworkUdpNoPorts` bigint(20) DEFAULT NULL COMMENT '采样周期内 UDP 端口不可达个数',
+                                     `systemNetworkUdpSendBufferErrors` bigint(20) DEFAULT NULL COMMENT '采样周期内 UDP 发送缓冲区满次数',
+                                     `heartbeatTime` bigint(20) DEFAULT '0' COMMENT '心跳时间',
+                                     `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
+                                     `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
+                                     `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
+                                     `systemNetCardsBandWidth` double DEFAULT NULL COMMENT '系统网卡总带宽 单位：byte',
+                                     `systemNetworkSendAndReceiveBytesPs` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 当前值',
+                                     `systemNetworkSendAndReceiveBytesPsMin` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 最小值',
+                                     `systemNetworkSendAndReceiveBytesPsMax` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 最大值',
+                                     `systemNetworkSendAndReceiveBytesPsMean` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 均值',
+                                     `systemNetworkSendAndReceiveBytesPsStd` double DEFAULT NULL COMMENT '系统网络每秒总流量 标准差',
+                                     `systemNetworkSendAndReceiveBytesPs55Quantile` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 55分位数',
+                                     `systemNetworkSendAndReceiveBytesPs75Quantile` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 75分位数',
+                                     `systemNetworkSendAndReceiveBytesPs95Quantile` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 95分位数',
+                                     `systemNetworkSendAndReceiveBytesPs99Quantile` double DEFAULT NULL COMMENT '系统网络每秒总流量 单位：byte 99分位数',
+                                     `systemNetWorkBandWidthUsedPercent` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 当前值',
+                                     `systemNetWorkBandWidthUsedPercentMin` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 最小值',
+                                     `systemNetWorkBandWidthUsedPercentMax` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 最大值',
+                                     `systemNetWorkBandWidthUsedPercentMean` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 均值',
+                                     `systemNetWorkBandWidthUsedPercentStd` double DEFAULT NULL COMMENT '系统网络带宽使用率 标准差',
+                                     `systemNetWorkBandWidthUsedPercent55Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 55分位数',
+                                     `systemNetWorkBandWidthUsedPercent75Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 75分位数',
+                                     `systemNetWorkBandWidthUsedPercent95Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 95分位数',
+                                     `systemNetWorkBandWidthUsedPercent99Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 99分位数',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_service
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_service`;
 CREATE TABLE `tb_service` (
-                              `id` bigint NOT NULL AUTO_INCREMENT COMMENT '自增id',
+                              `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增id',
                               `service_name` varchar(255) NOT NULL DEFAULT '' COMMENT '服务名',
                               `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                               `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                               `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-                              `extenal_service_id` bigint DEFAULT '0' COMMENT '外部系统服务id，如：夜莺服务节点 id',
+                              `extenal_service_id` bigint(20) DEFAULT '0' COMMENT '外部系统服务id，如：夜莺服务节点 id',
                               PRIMARY KEY (`id`),
                               UNIQUE KEY `uniq_service_name` (`service_name`) COMMENT '服务名唯一索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='服务表：表示一个服务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='服务表：表示一个服务';
 
 -- ----------------------------
 -- Table structure for tb_service_host
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_service_host`;
 CREATE TABLE `tb_service_host` (
-                                   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '	\n自增id',
-                                   `service_id` bigint NOT NULL COMMENT '表 tb_service主键 id',
-                                   `host_id` bigint NOT NULL COMMENT '表 tb_host主键 id',
+                                   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '	\n自增id',
+                                   `service_id` bigint(20) NOT NULL COMMENT '表 tb_service主键 id',
+                                   `host_id` bigint(20) NOT NULL COMMENT '表 tb_host主键 id',
                                    PRIMARY KEY (`id`),
                                    KEY `idx_host_id` (`host_id`),
                                    KEY `idx_service_id` (`service_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='服务 & 主机关联关系表：表示服务 & 主机的关联关系，Service : Host多对多关联关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='服务 & 主机关联关系表：表示服务 & 主机的关联关系，Service : Host多对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_service_project
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_service_project`;
 CREATE TABLE `tb_service_project` (
-                                      `id` bigint NOT NULL AUTO_INCREMENT,
-                                      `service_id` bigint NOT NULL COMMENT '对应表 tb_service id',
-                                      `project_id` bigint NOT NULL COMMENT '项目id',
+                                      `id` bigint(20) NOT NULL AUTO_INCREMENT,
+                                      `service_id` bigint(20) NOT NULL COMMENT '对应表 tb_service id',
+                                      `project_id` bigint(20) NOT NULL COMMENT '项目id',
                                       PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 SET FOREIGN_KEY_CHECKS = 1;
 

@@ -201,6 +201,26 @@ public class MetricsLogCollectTaskPO {
 
     private Long heartbeattimehour;
 
+    private Long heartbeatTimeDay;
+
+    private Long serviceId;
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public Long getHeartbeatTimeDay() {
+        return heartbeatTimeDay;
+    }
+
+    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
+        this.heartbeatTimeDay = heartbeatTimeDay;
+    }
+
     public Long getId() {
         return id;
     }

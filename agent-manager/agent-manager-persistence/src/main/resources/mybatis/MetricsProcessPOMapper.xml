@@ -199,6 +199,7 @@
     <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
     <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
     <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" property="heartbeatTimeDay" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, hostName, procStartupTime, procUptime, procPid, procCpuUtil, procCpuUtilMin, 
@@ -254,7 +255,7 @@
     procNetworkTcpEstablishedNum, procNetworkTcpSynSentNum, procNetworkTcpSynRecvNum, 
     procNetworkTcpFinWait1Num, procNetworkTcpFinWait2Num, procNetworkTcpClosedNum, procNetworkTcpClosingNum, 
     procNetworkTcpLastAckNum, procNetworkTcpNoneNum, heartbeatTime, heartbeatTimeMinute, 
-    heartbeatTimeHour
+    heartbeatTimeHour, heartbeatTimeDay
   </sql>
 
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
@@ -480,7 +481,7 @@
       procNetworkTcpFinWait2Num, procNetworkTcpClosedNum, 
       procNetworkTcpClosingNum, procNetworkTcpLastAckNum, 
       procNetworkTcpNoneNum, heartbeatTime, heartbeatTimeMinute, 
-      heartbeatTimeHour)
+      heartbeatTimeHour, heartbeatTimeDay)
     values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{procstartuptime,jdbcType=BIGINT}, 
       #{procuptime,jdbcType=BIGINT}, #{procpid,jdbcType=BIGINT}, #{proccpuutil,jdbcType=DOUBLE}, 
       #{proccpuutilmin,jdbcType=DOUBLE}, #{proccpuutilmax,jdbcType=DOUBLE}, #{proccpuutilmean,jdbcType=DOUBLE}, 
@@ -570,7 +571,7 @@
       #{procnetworktcpfinwait2num,jdbcType=INTEGER}, #{procnetworktcpclosednum,jdbcType=INTEGER}, 
       #{procnetworktcpclosingnum,jdbcType=INTEGER}, #{procnetworktcplastacknum,jdbcType=INTEGER}, 
       #{procnetworktcpnonenum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
-      #{heartbeattimehour,jdbcType=BIGINT})
+      #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     insert into tb_metrics_process
@@ -1166,6 +1167,9 @@
       <if test="heartbeattimehour != null" >
         heartbeatTimeHour,
       </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1758,6 +1762,9 @@
       </if>
       <if test="heartbeattimehour != null" >
         #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
