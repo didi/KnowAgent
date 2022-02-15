@@ -60,4 +60,10 @@ public interface MetricsManageService {
      */
     List<List<MetricPoint>> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceId);
 
+    /**
+     * 清除给定时间前的指标数据
+     * @param metricsExpireDays 指标过期时间
+     */
+    void clearExpireMetrics(Integer metricsExpireDays);
+
 }

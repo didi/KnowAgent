@@ -1588,4 +1588,9 @@
     </trim>
   </insert>
 
+  <delete id="deleteBeforeTime" parameterType="java.lang.Long">
+    delete from tb_metrics_log_collect_task
+    where heartbeatTime &lt; #{heartBeatTime}
+  </delete>
+
 </mapper>

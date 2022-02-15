@@ -60,4 +60,11 @@ public interface MetricsDiskPOMapper {
     List<MetricsDiskTopPO> getTopNDiskPath(Map<String, Object> params);
 
     List<MetricsDiskPO> selectAll();
+
+    /**
+     * 删除给定心跳时间戳之前所有指标数据
+     * @param heartBeatTime 心跳时间戳
+     */
+    void deleteByLtHeartbeatTime(Long heartBeatTime);
+
 }

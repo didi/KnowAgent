@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
 
+import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "dashboard")
 public class DashboardController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("DashboardController");
+
     @Autowired
     private DashboardManageService dashboardManageService;
 
@@ -23,8 +26,11 @@ public class DashboardController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public Result<DashBoardVO> dashboard() {
-        DashBoardVO dashBoardVO = dashboardManageService.build();
-        return Result.buildSucc(dashBoardVO);
+        if(null == GlobalProperties.dashBoardVO) {
+            LOGGER.info("class=DashboardController||method=dashboard||msg=load dashboardVO from db.");
+            GlobalProperties.dashBoardVO = dashboardManageService.build();
+        }
+        return Result.buildSucc(GlobalProperties.dashBoardVO);
     }
 
 }

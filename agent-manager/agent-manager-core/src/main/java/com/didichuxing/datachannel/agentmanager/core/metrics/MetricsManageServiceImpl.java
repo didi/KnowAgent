@@ -109,7 +109,11 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             //TODO：
             throw new RuntimeException();
         }
-        return Double.valueOf(Math.ceil(value)).longValue();
+        if(null == value) {
+            return 0L;
+        } else {
+            return Double.valueOf(Math.ceil(value)).longValue();
+        }
     }
 
     @Override
@@ -130,6 +134,17 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             //TODO：
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public void clearExpireMetrics(Integer metricsExpireDays) {
+        Long heartBeatTime = DateUtils.getBeforeDays(new Date(), metricsExpireDays).getTime();
+        metricsLogCollectTaskDAO.deleteByLtHeartbeatTime(heartBeatTime);
+        metricsAgentDAO.deleteByLtHeartbeatTime(heartBeatTime);
+        metricsProcessDAO.deleteByLtHeartbeatTime(heartBeatTime);
+        metricsSystemDAO.deleteByLtHeartbeatTime(heartBeatTime);
+        metricsNetCardDAO.deleteByLtHeartbeatTime(heartBeatTime);
+        metricsDiskDAO.deleteByLtHeartbeatTime(heartBeatTime);
     }
 
     private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerServicekId(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
