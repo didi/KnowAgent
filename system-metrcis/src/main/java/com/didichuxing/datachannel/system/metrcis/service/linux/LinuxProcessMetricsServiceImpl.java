@@ -2,17 +2,8 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
 import com.didichuxing.datachannel.system.metrcis.bean.ProcMetrics;
-import com.didichuxing.datachannel.system.metrcis.service.ProcMetricsService;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.didichuxing.datachannel.system.metrcis.service.ProcessMetricsService;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.ThreadMXBean;
 import java.util.*;
 
 /**
@@ -21,10 +12,10 @@ import java.util.*;
  * @author Ronaldo
  * @Date 2021/11/3
  */
-public class LinuxProcMetricsServiceImpl implements ProcMetricsService {
+public class LinuxProcessMetricsServiceImpl implements ProcessMetricsService {
 
     @Override
-    public Long getProcStartupTime() {
+    public Long getProcessStartupTime() {
         return null;
     }
 
@@ -34,7 +25,7 @@ public class LinuxProcMetricsServiceImpl implements ProcMetricsService {
     }
 
     @Override
-    public Long getProcPid() {
+    public Long getProcessPid() {
         return null;
     }
 
@@ -44,37 +35,37 @@ public class LinuxProcMetricsServiceImpl implements ProcMetricsService {
     }
 
     @Override
-    public PeriodStatistics<Double> getProcCpuUtil() {
+    public PeriodStatistics getProcCpuUtil() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getProcCpuUtilTotalPercent() {
+    public PeriodStatistics getProcCpuUtilTotalPercent() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getProcCpuSys() {
+    public PeriodStatistics getProcCpuSys() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getProcCpuUser() {
+    public PeriodStatistics getProcCpuUser() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getProcCpuSwitchesPS() {
+    public PeriodStatistics getProcCpuSwitchesPS() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getProcCpuVoluntarySwitchesPS() {
+    public PeriodStatistics getProcCpuVoluntarySwitchesPS() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getProcCpuNonVoluntarySwitchesPS() {
+    public PeriodStatistics getProcCpuNonVoluntarySwitchesPS() {
         return null;
     }
 
@@ -149,32 +140,32 @@ public class LinuxProcMetricsServiceImpl implements ProcMetricsService {
     }
 
     @Override
-    public PeriodStatistics<Double> getProcIOReadRate() {
+    public PeriodStatistics getProcIOReadRate() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getProcIOReadBytesRate() {
+    public PeriodStatistics getProcIOReadBytesRate() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getProcIOWriteRate() {
+    public PeriodStatistics getProcIOWriteRate() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getProcIOWriteBytesRate() {
+    public PeriodStatistics getProcIOWriteBytesRate() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getProcIOReadWriteRate() {
+    public PeriodStatistics getProcIOReadWriteRate() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getProcIOAwaitTimePercent() {
+    public PeriodStatistics getProcIOAwaitTimePercent() {
         return null;
     }
 
@@ -219,17 +210,17 @@ public class LinuxProcMetricsServiceImpl implements ProcMetricsService {
     }
 
     @Override
-    public PeriodStatistics<Long> getProcNetworkReceiveBytesPs() {
+    public PeriodStatistics getProcNetworkReceiveBytesPs() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getProcNetworkSendBytesPs() {
+    public PeriodStatistics getProcNetworkSendBytesPs() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getProcNetworkConnRate() {
+    public PeriodStatistics getProcNetworkConnRate() {
         return null;
     }
 

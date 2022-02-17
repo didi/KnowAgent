@@ -10,6 +10,7 @@ import com.didichuxing.datachannel.agent.engine.channel.AbstractChannel;
 import com.didichuxing.datachannel.agent.engine.component.TaskComponent;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
 import com.didichuxing.datachannel.agent.engine.limit.TaskLimit;
+import com.didichuxing.datachannel.agent.engine.metrics.source.AgentStatistics;
 import com.didichuxing.datachannel.agent.engine.metrics.source.TaskPatternStatistics;
 import com.didichuxing.datachannel.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.agent.engine.sinker.AbstractSink;
@@ -46,6 +47,8 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
 
     private TaskPatternStatistics taskPatternStatistics;
 
+    private AgentStatistics agentStatistics;
+
     protected abstract List<Monitor> getMonitors();
 
     @Override
@@ -57,12 +60,14 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
         bulidUniqueKey();
         taskPatternStatistics = new TaskPatternStatistics(getUniqueKey(), this);
         source.setTaskPatternStatistics(taskPatternStatistics);
+        source.setAgentStatistics(agentStatistics);
 
         channel.init(null);
 
         configure(config);
         for (AbstractSink sinker : sinkers.values()) {
             sinker.setTaskPatternStatistics(taskPatternStatistics);
+            sinker.setAgentStatistics(agentStatistics);
             if (!sinker.init(config)) {
                 LOGGER.warn("sinker init error. sink is " + sinker);
                 return false;

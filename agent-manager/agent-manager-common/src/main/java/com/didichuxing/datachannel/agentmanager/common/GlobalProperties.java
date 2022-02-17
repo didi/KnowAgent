@@ -11,6 +11,6 @@ public class GlobalProperties {
     public static final List<Class<Processor>> LOG_COLLECT_TASK_HEALTH_CHECK_PROCESSOR_CLASS_LIST = new ArrayList<>();
     public static final List<Class<Processor>> AGENT_HEALTH_CHECK_PROCESSOR_CLASS_LIST = new ArrayList<>();
 
-    public static DashBoardVO dashBoardVO;
+    public static volatile DashBoardVO dashBoardVO;
 
 }

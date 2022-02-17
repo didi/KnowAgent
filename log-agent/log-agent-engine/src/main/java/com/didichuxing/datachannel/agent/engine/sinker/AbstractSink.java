@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
+import com.didichuxing.datachannel.agent.engine.metrics.source.AgentStatistics;
 import com.didichuxing.datachannel.agent.engine.utils.TimeUtils;
 import com.didichuxing.datachannel.agent.engine.channel.AbstractChannel;
 import com.didichuxing.datachannel.agent.engine.component.TaskComponent;
@@ -48,6 +49,8 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
     protected volatile boolean      COLLECT_ALL_WHEN_TEMPORALITY = false;
 
     protected TaskPatternStatistics taskPatternStatistics;
+
+    protected AgentStatistics agentStatistics;
 
     public AbstractSink(ModelConfig modelConfig, AbstractChannel channel, int orderNum) {
         this.channel = channel;
@@ -140,6 +143,14 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
 
     public void setTaskPatternStatistics(TaskPatternStatistics taskPatternStatistics) {
         this.taskPatternStatistics = taskPatternStatistics;
+    }
+
+    public AgentStatistics getAgentStatistics() {
+        return agentStatistics;
+    }
+
+    public void setAgentStatistics(AgentStatistics agentStatistics) {
+        this.agentStatistics = agentStatistics;
     }
 
     public int getOrderNum() {

@@ -37,7 +37,7 @@ public enum MetricFieldEnum {
     ),
 
     SYSTEM_NTP_OFFSET(
-            1,
+            2,
                     "system_ntp_offset",
                     "systemNtpOffset",
                     "源时钟与本地时钟的时间差 单位：毫秒",
@@ -60,9 +60,6 @@ public enum MetricFieldEnum {
 
     /*
      * process 相关
-     *
-     * TODO：
-     *
      */
 
     /*
@@ -70,7 +67,7 @@ public enum MetricFieldEnum {
      */
 //    SYSTEM_CPU_CORES("cpu_cores","cpuCores","cpu核数", MetricTypeEnum.SYSTEM_CPU, AggregationCalcFunctionEnum.NONE,MetricValueTypeEnum.CURRENT),
     SYSTEM_CPU_UTIL(
-            2,
+            3,
             "system_cpu_util",
             "systemCpuUtil",
             "系统总体CPU使用率(单位：%)，使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200",
@@ -88,7 +85,7 @@ public enum MetricFieldEnum {
      * memory 相关
      */
     SYSTEM_MEMORY_FREE(
-            3,
+            4,
             "system_memory_free",
             "systemMemFree",
             "系统空闲内存大小（单位：byte），当前值",
@@ -106,7 +103,7 @@ public enum MetricFieldEnum {
      * disk 相关
      */
     SYSTEM_DISK_BYTES_FREE(
-            4,
+            5,
             "system_disk_bytes_free",
             "systemDiskBytesFree",
             "磁盘余量大小（单位：MB）",
@@ -124,7 +121,7 @@ public enum MetricFieldEnum {
      * disk io 相关
      */
     SYSTEM_DISK_IO_IO_UTIL(
-            5,
+            6,
             "io_util",
             "systemIOUtil",
             "各磁盘I/O请求的时间百分比",
@@ -139,7 +136,7 @@ public enum MetricFieldEnum {
             ),
 
     SYSTEM_NET_CARD_SEND_BYTES_PS(
-            6,
+            7,
             "send_bytes/s",
             "systemNetCardsSendBytesPs",
             "各网卡每秒上行流量（单位：byte）",
@@ -154,7 +151,7 @@ public enum MetricFieldEnum {
     ),
 
     SYSTEM_NET_CARD_BAND_WIDTH(
-            7,
+            8,
             "band_width",
             "systemNetCardsBandWidth",
             "各网卡最大带宽（单位：byte）",
@@ -169,7 +166,7 @@ public enum MetricFieldEnum {
     ),
 
     SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS(
-            7,
+            9,
             "system_network_send_and_receive_bytes_ps",
             "systemNetworkSendAndReceiveBytesPs",
             "系统网络每秒总流量（单位：byte）",
@@ -184,7 +181,7 @@ public enum MetricFieldEnum {
     ),
 
     SYSTEM_NET_WORK_BAND_WIDTH_USED_PERCENT(
-            7,
+            10,
                     "system_net_work_band_width_used_percent",
                     "systemNetWorkBandWidthUsedPercent",
                     "系统网络带宽使用率（单位：%)",
@@ -204,7 +201,7 @@ public enum MetricFieldEnum {
      * 基础信息
      */
     PROCESS_START_UP_TIME(
-            8,
+            11,
             "process_startup_time",
             "procStartupTime",
             "当前进程启动时间",
@@ -222,7 +219,7 @@ public enum MetricFieldEnum {
      * cpu 相关
      */
     PROCESS_CPU_UTIL(
-            9,
+            12,
             "process_cpu_util",
             "procCpuUtil",
             "当前进程cpu使用率(单位：%) 使用率采用全核方式计数，如进程使用一颗核，则返回100，如进程使用两颗核，则返回200",
@@ -240,7 +237,7 @@ public enum MetricFieldEnum {
      * memory 相关
      */
     PROCESS_MEMORY_USED(
-            10,
+            13,
             "process_memory_used",
             "procMemUsed",
             "当前进程内存使用量（单位：byte）当前值",
@@ -255,7 +252,7 @@ public enum MetricFieldEnum {
     ),
 
     PROCESS_NET_WORK_SEND_BYTES_PS(
-            16,
+            14,
             "process_network_send_bytes_ps",
             "procNetworkSendBytesPs",
             "当前进程网络每秒上行流量",
@@ -270,7 +267,7 @@ public enum MetricFieldEnum {
     ),
 
     PROCESS_NET_WORK_RECEIVE_BYTES_PS(
-            16,
+            15,
             "process_network_receive_bytes_ps",
             "procNetworkReceiveBytesPs",
             "当前进程网络每秒下行流量",
@@ -300,7 +297,7 @@ public enum MetricFieldEnum {
     ),
 
     PROCESS_FD_USED(
-            12,
+            17,
             "process_open_fd_count",
             "procOpenFdCount",
             "当前进程打开fd数量",
@@ -317,7 +314,7 @@ public enum MetricFieldEnum {
     /*********************************** agent 相关 ***********************************/
 
     AGENT_VERSION(
-            11,
+            18,
             "agent_version",
             "agentVersion",
             "agent版本号",
@@ -332,7 +329,7 @@ public enum MetricFieldEnum {
     ),
 
     AGENT_WRITE_COUNT(
-            12,
+            19,
             "write_count",
             "writeCount",
             "采样周期内出口采集条数 单位：条",
@@ -347,7 +344,7 @@ public enum MetricFieldEnum {
     ),
 
     AGENT_WRITE_BYTES(
-            12,
+            20,
                     "write_bytes",
                     "writeBytes",
                     "采样周期内出口采集流量 单位：bytes",
@@ -362,7 +359,7 @@ public enum MetricFieldEnum {
     ),
 
     AGENT_RUNNING_COLLECT_TASK_COUNT(
-            12,
+            21,
             "running_collect_task_num",
             "runningCollectTaskNum",
             "运行状态采集任务数",
@@ -377,7 +374,7 @@ public enum MetricFieldEnum {
     ),
 
     AGENT_RUNNING_COLLECT_PATH_COUNT(
-            12,
+            22,
             "running_collect_path_num",
             "runningCollectPathNum",
             "运行状态采集路径数",
@@ -394,7 +391,7 @@ public enum MetricFieldEnum {
     /*********************************** 采集任务相关 ***********************************/
 
     LOG_COLLECT_TASK_BUSINESS_TIMESTAMP(
-            13,
+            23,
             "business_time",
             "businessTimestamp",
             "采集业务时间",
@@ -409,7 +406,7 @@ public enum MetricFieldEnum {
     ),
 
     LOG_COLLECT_TASK_SEND_BYTES(
-            14,
+            24,
      "send_bytes",
      "sendBytes",
      "日志发送字节数",
@@ -424,7 +421,7 @@ public enum MetricFieldEnum {
     ),
 
     LOG_COLLECT_TASK_SEND_COUNT(
-            14,
+            25,
             "send_count",
             "sendCount",
             "采样周期内日志发送条数",
@@ -439,7 +436,7 @@ public enum MetricFieldEnum {
     ),
 
     LOG_COLLECT_TASK_READ_TIME_PER_EVENT(
-            15,
+            26,
             "read_time_per_event",
             "readTimePerEvent",
             "采样周期内单 log event 读取耗时 (单位：纳秒)",
@@ -454,7 +451,7 @@ public enum MetricFieldEnum {
     ),
 
     LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY(
-            15,
+            27,
             "max_business_timestamp_delay",
             "maxBusinessTimestampDelay",
             "数据业务时间最大延迟 （单位：秒）",
@@ -469,7 +466,7 @@ public enum MetricFieldEnum {
     ),
 
     LOG_COLLECT_TASK_LIMIT_TIME(
-            15,
+            28,
             "limit_time",
             "limitTime",
             "采样周期内限流时长（单位：秒）",

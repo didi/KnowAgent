@@ -126,6 +126,7 @@ public enum MetricsField {
     VALID_TIME_CONFIG("collectFiles.validTimeConfig", "valid_time_config",
                       "collectFiles.validTimeConfig");
 
+
     /**
      * es存储字段，也是原生字段
      */

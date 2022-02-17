@@ -1,6 +1,6 @@
 package com.didichuxing.datachannel.system.metrcis.factory;
 
-import com.didichuxing.datachannel.system.metrcis.service.ProcMetricsService;
+import com.didichuxing.datachannel.system.metrcis.service.ProcessMetricsService;
 import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
 
 /**
@@ -17,6 +17,6 @@ public interface MetricsServiceFactory {
     /**
      * @return 创建进程指标服务
      */
-    ProcMetricsService createProcMetrics();
+    ProcessMetricsService createProcessMetrics();
 
 }

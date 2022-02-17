@@ -9,14 +9,17 @@ import java.util.List;
  * 进程级指标
  * @author william.hu
  */
-public interface ProcMetricsService {
+public interface ProcessMetricsService {
 
     /*********************** 总览 ***********************/
 
     /**
      * @return 返回当前Jvm进程启动时间
+     *
+     * TODO：william
+     *
      */
-    Long getProcStartupTime();
+    Long getProcessStartupTime();
 
     /**
      * @return 返回当前Jvm进程运行时间
@@ -25,8 +28,10 @@ public interface ProcMetricsService {
 
     /**
      * @return 返回当前Jvm进程对应pid
+     *
+     * //TODO：william
      */
-    Long getProcPid();
+    Long getProcessPid();
 
     /*********************** about cpu ***********************/
 
@@ -38,45 +43,51 @@ public interface ProcMetricsService {
     /**
      * @return 返回当前进程cpu使用率(单位：%)
      * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
+     *
+     * TODO：william
+     *
      */
-    PeriodStatistics<Double> getProcCpuUtil();
+    PeriodStatistics getProcCpuUtil();
 
     /**
      * @return 返回当前进程cpu使用率(单位：%)
      * 注意：使用率为总使用比率，如jvm进程使用一颗核，系统共10核，则返回0.1 = 10%
      */
-    PeriodStatistics<Double> getProcCpuUtilTotalPercent();
+    PeriodStatistics getProcCpuUtilTotalPercent();
 
     /**
      *
      * @return 返回当前进程系统态cpu使用率(单位：%)
      */
-    PeriodStatistics<Double> getProcCpuSys();
+    PeriodStatistics getProcCpuSys();
 
     /**
      * @return 返回当前进程用户态cpu使用率(单位：%)
      */
-    PeriodStatistics<Double> getProcCpuUser();
+    PeriodStatistics getProcCpuUser();
 
     /**
      * @return 返回当前进程cpu每秒上下文交换次数
      */
-    PeriodStatistics<Long> getProcCpuSwitchesPS();
+    PeriodStatistics getProcCpuSwitchesPS();
 
     /**
      * @return 返回当前进程cpu每秒自愿上下文交换次数（自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换。比如说， I/O、内存等系统资源不足时，就会发生自愿上下文切换 pidstat）
      */
-    PeriodStatistics<Long> getProcCpuVoluntarySwitchesPS();
+    PeriodStatistics getProcCpuVoluntarySwitchesPS();
 
     /**
      * @return 返回当前进程cpu每秒非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）
      */
-    PeriodStatistics<Long> getProcCpuNonVoluntarySwitchesPS();
+    PeriodStatistics getProcCpuNonVoluntarySwitchesPS();
 
     /*********************** about memory ***********************/
 
     /**
      * @return 返回当前进程内存使用量（单位：byte）
+     *
+     * TODO：william
+     *
      */
     Long getProcMemUsed();
 
@@ -150,32 +161,32 @@ public interface ProcMetricsService {
     /**
      * @return 返回当前进程io读取频率(单位：hz)
      */
-    PeriodStatistics<Double> getProcIOReadRate();
+    PeriodStatistics getProcIOReadRate();
 
     /**
      * @return 返回当前进程io读取速率(单位：b/s)
      */
-    PeriodStatistics<Long> getProcIOReadBytesRate();
+    PeriodStatistics getProcIOReadBytesRate();
 
     /**
      * @return 返回当前进程io写入频率(单位：hz)
      */
-    PeriodStatistics<Double> getProcIOWriteRate();
+    PeriodStatistics getProcIOWriteRate();
 
     /**
      * @return 返回当前进程io写入速率(单位：b/s)
      */
-    PeriodStatistics<Long> getProcIOWriteBytesRate();
+    PeriodStatistics getProcIOWriteBytesRate();
 
     /**
      * @return 返回当前进程io读、写频率（单位：hz）
      */
-    PeriodStatistics<Double> getProcIOReadWriteRate();
+    PeriodStatistics getProcIOReadWriteRate();
 
     /**
      * @return 返回当前进程io读写等待时间占总时间百分比（单位：%） 对应 iotop IO
      */
-    PeriodStatistics<Double> getProcIOAwaitTimePercent();
+    PeriodStatistics getProcIOAwaitTimePercent();
 
     /*********************** about gc ***********************/
 
@@ -186,6 +197,9 @@ public interface ProcMetricsService {
 
     /**
      * @return 返回当前jvm进程启动以来 full gc 次数
+     *
+     * TODO：william
+     *
      */
     Long getJvmProcFullGcCount();
 
@@ -215,6 +229,9 @@ public interface ProcMetricsService {
 
     /**
      * @return 返回当前进程打开fd数量
+     *
+     * TODO：william
+     *
      */
     Integer getProcOpenFdCount();
 
@@ -227,18 +244,24 @@ public interface ProcMetricsService {
 
     /**
      * @return 返回当前进程网络每秒下行流量
+     *
+     * TODO：william
+     *
      */
-    PeriodStatistics<Long> getProcNetworkReceiveBytesPs();
+    PeriodStatistics getProcNetworkReceiveBytesPs();
 
     /**
      * @return 返回当前进程网络每秒上行流量
+     *
+     * TODO：william
+     *
      */
-    PeriodStatistics<Long> getProcNetworkSendBytesPs();
+    PeriodStatistics getProcNetworkSendBytesPs();
 
     /**
      * @return 返回当前进程网络连接频率(单位：hz)
      */
-    PeriodStatistics<Long> getProcNetworkConnRate();
+    PeriodStatistics getProcNetworkConnRate();
 
     /**
      * @return 返回当前进程当前tcp连接数

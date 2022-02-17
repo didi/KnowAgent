@@ -1,11 +1,9 @@
 package com.didichuxing.datachannel.system.metrcis.service;
 
-import com.didichuxing.datachannel.system.metrcis.bean.DiskInfo;
-import com.didichuxing.datachannel.system.metrcis.bean.NetCardInfo;
-import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
-import com.didichuxing.datachannel.system.metrcis.bean.SystemMetrics;
+import com.didichuxing.datachannel.system.metrcis.bean.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统级指标
@@ -27,6 +25,9 @@ public interface SystemMetricsService {
 
     /**
      * @return 返回源时钟与本地时钟的时间差（毫秒）
+     *
+     * TODO：william
+     *
      */
     Long getSystemNtpOffset();
 
@@ -37,6 +38,8 @@ public interface SystemMetricsService {
 
     /**
      * @return 返回系统启动时间
+     *
+     * TODO：william
      */
     Long getSystemStartupTime();
 
@@ -111,80 +114,86 @@ public interface SystemMetricsService {
 
     /**
      * @return 返回系统CPU核心数
+     *
+     * TODO：william
+     *
      */
     Integer getSystemCpuCores();
 
     /**
      * @return 返回系统总体CPU使用率(单位：%)
      * 注：使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200
+     *
+     * TODO：william
+     *
      */
-    PeriodStatistics<Double> getSystemCpuUtil();
+    PeriodStatistics getSystemCpuUtil();
 
     /**
      * @return 返回系统总体CPU使用率(单位：%)
      * 注意：使用率为总使用比率，系统使用一颗核，系统共10核，则返回0.1 = 10%
      */
-    PeriodStatistics<Double> getSystemCpuUtilTotalPercent();
+    PeriodStatistics getSystemCpuUtilTotalPercent();
 
     /**
      * @return 返回内核态CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuSystem();
+    PeriodStatistics getSystemCpuSystem();
 
     /**
      * @return 返回用户态CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuUser();
+    PeriodStatistics getSystemCpuUser();
 
     /**
      * @return 返回总体cpu空闲率（单位：%）
      */
-    PeriodStatistics<Double> getSystemCpuIdle();
+    PeriodStatistics getSystemCpuIdle();
 
     /**
      * @return 返回cpu上下文交换次数
      */
-    PeriodStatistics<Long> getSystemCpuSwitches();
+    PeriodStatistics getSystemCpuSwitches();
 
     /**
      * @return 返回cpu处理硬中断的时间占比（单位：%）
      */
-    PeriodStatistics<Double> getSystemCpuUsageIrq();
+    PeriodStatistics getSystemCpuUsageIrq();
 
     /**
      * @return 返回cpu处理软中断的时间占比（单位：%），当前值、采样周期统计值
      */
-    PeriodStatistics<Double> getSystemCpuUsageSoftIrq();
+    PeriodStatistics getSystemCpuUsageSoftIrq();
 
     /**
      * @return 返回系统近1分钟平均负载
      */
-    PeriodStatistics<Double> getSystemLoad1();
+    PeriodStatistics getSystemLoad1();
 
     /**
      * @return 返回系统近5分钟平均负载
      */
-    PeriodStatistics<Double> getSystemLoad5();
+    PeriodStatistics getSystemLoad5();
 
     /**
      * @return 返回系统近15分钟平均负载
      */
-    PeriodStatistics<Double> getSystemLoad15();
+    PeriodStatistics getSystemLoad15();
 
     /**
      * @return 返回等待I/O的CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuIOWait();
+    PeriodStatistics getSystemCpuIOWait();
 
     /**
      * @return 返回虚拟处理器CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuGuest();
+    PeriodStatistics getSystemCpuGuest();
 
     /**
      * @return 返回等待处理其他虚拟核的时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuSteal();
+    PeriodStatistics getSystemCpuSteal();
 
     /*********************** about memory ***********************/
 
@@ -230,6 +239,9 @@ public interface SystemMetricsService {
 
     /**
      * @return 返回系统空闲内存大小（单位：byte）
+     *
+     * TODO：william
+     *
      */
     Long getSystemMemFree();
 
@@ -300,6 +312,11 @@ public interface SystemMetricsService {
      */
     List<DiskInfo> getSystemDiskInfoList();
 
+    /**
+     * @return 返回系统各磁盘、io 信息
+     */
+    List<DiskIOInfo> getSystemDiskIOInfoList();
+
     /*********************** about file handle ***********************/
 
     /**
@@ -347,12 +364,29 @@ public interface SystemMetricsService {
     /**
      * @return 返回系统网络每秒下行流量
      */
-    PeriodStatistics<Long> getSystemNetworkReceiveBytesPs();
+    PeriodStatistics getSystemNetworkReceiveBytesPs();
 
     /**
      * @return 返回系统网络每秒上行流量
      */
-    PeriodStatistics<Long> getSystemNetworkSendBytesPs();
+    PeriodStatistics getSystemNetworkSendBytesPs();
+
+    /**
+     * @return 返回系统网络每秒上、下行流量总流量
+     *
+     * TODO：william
+     *
+     */
+    PeriodStatistics getSystemNetworkSendAndReceiveBytesPs();
+
+    /**
+     * 返回系统网络带宽使用率
+     * @return
+     *
+     * TODO：william
+     *
+     */
+    PeriodStatistics getSystemNetWorkBandWidthUsedPercent();
 
     /**
      * @return 返回系统tcp连接数
@@ -479,5 +513,20 @@ public interface SystemMetricsService {
      * @return 返回当前系统指标集 如须获取全量系统指标，请调用该方法而非挨个调用各指标获取函数以提升其性能、降低消耗
      */
     SystemMetrics getSystemMetrics();
+
+
+    //==================================================================
+
+    /**
+     *
+     * @return 返回操作系统类型
+     */
+    String getOSType();
+
+    /**
+     *
+     * @return 返回操作系统版本
+     */
+    String getOSVersion();
 
 }

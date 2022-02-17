@@ -413,7 +413,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                     }
                 }
                 if (taskPatternStatistics != null) {
-                    taskPatternStatistics.sinkMutilRecord(kafkaEvents.size(), bytes, TimeUtils.getNanoTime() - start);
+                    Long cost = TimeUtils.getNanoTime() - start;
+                    taskPatternStatistics.sinkMutilRecord(kafkaEvents.size(), bytes, cost);
+                    agentStatistics.sinkMutilRecord(kafkaEvents.size(), bytes, cost);
                 }
             } else {
                 return producer.send(getTargetTopic(kafkaTargetConfig.getTopic()), key, content,
@@ -471,7 +473,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                 }
 
                 if (taskPatternStatistics != null) {
-                    taskPatternStatistics.sinkOneRecord(bytes, TimeUtils.getNanoTime() - start);
+                    Long cost = TimeUtils.getNanoTime() - start;
+                    taskPatternStatistics.sinkOneRecord(bytes, cost);
+                    agentStatistics.sinkOneRecord(bytes, cost);
                 }
             } else {
                 if (modelConfig.getTag().equals(Tags.TASK_LOG2KAFKA)) {

@@ -51,8 +51,9 @@ public class KafkaCallBack implements Callback {
         } else {
             // 记录metrics
             if (kafkaSink.getTaskPatternStatistics() != null) {
-                kafkaSink.getTaskPatternStatistics().sinkMutilRecord(size, bytes,
-                    TimeUtils.getNanoTime() - sendTime);
+                Long cost = TimeUtils.getNanoTime() - sendTime;
+                kafkaSink.getTaskPatternStatistics().sinkMutilRecord(size, bytes, cost);
+                kafkaSink.getAgentStatistics().sinkMutilRecord(size, bytes, cost);
             }
         }
     }

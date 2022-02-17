@@ -1,9 +1,6 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
-import com.didichuxing.datachannel.system.metrcis.bean.DiskInfo;
-import com.didichuxing.datachannel.system.metrcis.bean.NetCardInfo;
-import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
-import com.didichuxing.datachannel.system.metrcis.bean.SystemMetrics;
+import com.didichuxing.datachannel.system.metrcis.bean.*;
 import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -113,72 +110,72 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuUtil() {
+    public PeriodStatistics getSystemCpuUtil() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuUtilTotalPercent() {
+    public PeriodStatistics getSystemCpuUtilTotalPercent() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuSystem() {
+    public PeriodStatistics getSystemCpuSystem() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuUser() {
+    public PeriodStatistics getSystemCpuUser() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuIdle() {
+    public PeriodStatistics getSystemCpuIdle() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getSystemCpuSwitches() {
+    public PeriodStatistics getSystemCpuSwitches() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuUsageIrq() {
+    public PeriodStatistics getSystemCpuUsageIrq() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuUsageSoftIrq() {
+    public PeriodStatistics getSystemCpuUsageSoftIrq() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemLoad1() {
+    public PeriodStatistics getSystemLoad1() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemLoad5() {
+    public PeriodStatistics getSystemLoad5() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemLoad15() {
+    public PeriodStatistics getSystemLoad15() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuIOWait() {
+    public PeriodStatistics getSystemCpuIOWait() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuGuest() {
+    public PeriodStatistics getSystemCpuGuest() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Double> getSystemCpuSteal() {
+    public PeriodStatistics getSystemCpuSteal() {
         return null;
     }
 
@@ -293,6 +290,11 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     @Override
+    public List<DiskIOInfo> getSystemDiskIOInfoList() {
+        return null;
+    }
+
+    @Override
     public Integer getSystemFilesMax() {
         return null;
     }
@@ -333,12 +335,22 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     @Override
-    public PeriodStatistics<Long> getSystemNetworkReceiveBytesPs() {
+    public PeriodStatistics getSystemNetworkReceiveBytesPs() {
         return null;
     }
 
     @Override
-    public PeriodStatistics<Long> getSystemNetworkSendBytesPs() {
+    public PeriodStatistics getSystemNetworkSendBytesPs() {
+        return null;
+    }
+
+    @Override
+    public PeriodStatistics getSystemNetworkSendAndReceiveBytesPs() {
+        return null;
+    }
+
+    @Override
+    public PeriodStatistics getSystemNetWorkBandWidthUsedPercent() {
         return null;
     }
 
@@ -464,6 +476,16 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
     public SystemMetrics getSystemMetrics() {
+        return null;
+    }
+
+    @Override
+    public String getOSType() {
+        return null;
+    }
+
+    @Override
+    public String getOSVersion() {
         return null;
     }
 }

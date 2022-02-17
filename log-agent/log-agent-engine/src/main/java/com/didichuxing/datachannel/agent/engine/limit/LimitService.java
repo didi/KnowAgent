@@ -182,10 +182,6 @@ public enum LimitService {
         return config;
     }
 
-    public float getCurrentCpuUsage() {
-        return limitCpuThread.getCurrentCpuUsage();
-    }
-
     public long getAllQps() {
         return limitCpuThread.getAllQps();
     }

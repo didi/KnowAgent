@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agent.engine.bean.Event;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
 import com.didichuxing.datachannel.agent.engine.component.TaskComponent;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.sourceConfig.SourceConfig;
+import com.didichuxing.datachannel.agent.engine.metrics.source.AgentStatistics;
 import com.didichuxing.datachannel.agent.engine.metrics.source.TaskPatternStatistics;
 
 /**
@@ -14,6 +15,8 @@ import com.didichuxing.datachannel.agent.engine.metrics.source.TaskPatternStatis
 public abstract class AbstractSource extends TaskComponent implements Configurable {
 
     protected TaskPatternStatistics taskPatternStatistics;
+
+    protected AgentStatistics agentStatistics;
 
     protected SourceConfig          sourceConfig;
 
@@ -29,6 +32,14 @@ public abstract class AbstractSource extends TaskComponent implements Configurab
 
     public void setTaskPatternStatistics(TaskPatternStatistics taskPatternStatistics) {
         this.taskPatternStatistics = taskPatternStatistics;
+    }
+
+    public AgentStatistics getAgentStatistics() {
+        return agentStatistics;
+    }
+
+    public void setAgentStatistics(AgentStatistics agentStatistics) {
+        this.agentStatistics = agentStatistics;
     }
 
     public abstract boolean specialDelete(Object object);
