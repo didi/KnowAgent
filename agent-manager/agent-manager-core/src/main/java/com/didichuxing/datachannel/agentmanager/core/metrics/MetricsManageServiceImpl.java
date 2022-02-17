@@ -37,6 +37,9 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     @Autowired
     private MetricsLogCollectTaskPOMapper metricsLogCollectTaskDAO;
 
+    @Autowired
+    private MetricsDiskIOPOMapper metricsDiskIODAO;
+
     /**
      * top n 默认值
      */
@@ -145,6 +148,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         metricsSystemDAO.deleteByLtHeartbeatTime(heartBeatTime);
         metricsNetCardDAO.deleteByLtHeartbeatTime(heartBeatTime);
         metricsDiskDAO.deleteByLtHeartbeatTime(heartBeatTime);
+        metricsDiskIODAO.deleteByLtHeartbeatTime(heartBeatTime);
     }
 
     private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerServicekId(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
@@ -549,10 +553,9 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         /*
          * 根据普通系统级、disk/io相关、net card相关，进行分别处理
          */
-        if(
-                metricFieldEnum.getMetricType().equals(MetricTypeEnum.SYSTEM_DISK_IO) ||
-                        metricFieldEnum.getMetricType().equals(MetricTypeEnum.SYSTEM_DISK)
-        ) {//disk/io相关
+        if(metricFieldEnum.getMetricType().equals(MetricTypeEnum.SYSTEM_DISK)) {//disk相关
+            return getAgentSystemDiskMetric(metricQueryDTO, metricFieldEnum);
+        } else if(metricFieldEnum.getMetricType().equals(MetricTypeEnum.SYSTEM_DISK_IO)) {//disk/io相关
             return getAgentSystemDiskIOMetric(metricQueryDTO, metricFieldEnum);
         } else if(metricFieldEnum.getMetricType().equals(MetricTypeEnum.SYSTEM_NET_CARD)) {//net card相关
             return getAgentSystemNetCardMetric(metricQueryDTO, metricFieldEnum);
@@ -563,6 +566,91 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     String.format("class=MetricsServiceImpl||method=getAgentSystemMetric||msg={%s, metricCode=%d非法，必须为系统disk/io级、系统net card级、普通系统指标}", ErrorCodeEnum.METRICS_QUERY_ERROR.getMessage(), metricFieldEnum.getCode()),
                     ErrorCodeEnum.METRICS_QUERY_ERROR.getCode()
             );
+        }
+    }
+
+    /**
+     * 根据给定指标查询条件获取agent系统级disk/io相关指标数据
+     * @param metricQueryDTO 指标查询条件
+     * @param metricFieldEnum 待查询指标枚举定义
+     * @return 返回根据给定指标查询条件获取agent系统级disk/io相关指标数据
+     */
+    private MetricPanel getAgentSystemDiskIOMetric(BusinessMetricsQueryDTO metricQueryDTO, MetricFieldEnum metricFieldEnum) {
+        /*
+         * 如下几种情况分别处理：
+         *  1.lable
+         *  2.多根折线图：
+         *      1.）附带统计值指标
+         *      2.）不附带统计值指标
+         *  3.单根折线图：not support
+         *
+         */
+        if(metricFieldEnum.getMetricDisplayType().equals(MetricDisplayTypeEnum.LABLE)) {
+            //TODO：不支持lable指标
+            throw new RuntimeException();
+        } else if(metricFieldEnum.getMetricDisplayType().equals(MetricDisplayTypeEnum.MULTI_LINE_CHAT)) {
+            /*
+             * 1.）获取 top n device
+             */
+            Map<String, Object> params = new HashMap<>();
+            params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+            Integer sortMetricType;
+            if(null == metricQueryDTO.getSortMetricType()) {
+                sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
+            } else {
+                sortMetricType = metricQueryDTO.getSortMetricType();
+            }
+            params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
+            params.put("hostName", metricQueryDTO.getHostName());
+            if(null == metricQueryDTO.getSortTime() || metricQueryDTO.getSortTime().equals(0L)) {//排序时间点未设置值，将采用时间范围最后时间
+                params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(metricQueryDTO.getEndTime()));
+            } else {
+                params.put("sortTime", metricQueryDTO.getSortTime());
+            }
+            if(null == metricQueryDTO.getTopN()) {
+                params.put("topN", TOP_N_DEFAULT_VALUE);
+            } else {
+                params.put("topN", metricQueryDTO.getTopN());
+            }
+            params.put("sortType", metricFieldEnum.getSortTypeEnum().getType());
+            List<MetricsDiskIOTopPO> metricsDiskIOTopPOList = metricsDiskIODAO.getTopNDiskDevice(params);
+            /*
+             * 2.）根据 top n disk，挨个获取单条线
+             */
+            List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+            for (MetricsDiskIOTopPO metricsDiskIOTopPO : metricsDiskIOTopPOList) {
+                String device = metricsDiskIOTopPO.getDevice();
+                if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
+                    params = new HashMap<>();
+                    params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                    params.put("fieldName", metricFieldEnum.getFieldName());
+                    params.put("hostName", metricQueryDTO.getHostName());
+                    params.put("device", device);
+                    params.put("startTime", metricQueryDTO.getStartTime());
+                    params.put("endTime", metricQueryDTO.getEndTime());
+                    List<MetricPoint> result = metricsDiskIODAO.getSingleChatStatisticByDevice(params);
+                    multiLineChatValue.add(result);
+                } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
+                    params = new HashMap<>();
+                    params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
+                    params.put("fieldName", metricFieldEnum.getFieldName());
+                    params.put("hostName", metricQueryDTO.getHostName());
+                    params.put("device", device);
+                    params.put("startTime", metricQueryDTO.getStartTime());
+                    params.put("endTime", metricQueryDTO.getEndTime());
+                    List<MetricPoint> result = metricsDiskIODAO.getSingleChatNonStatisticByDevice(params);
+                    multiLineChatValue.add(result);
+                } else {
+                    //TODO：throw exception 未知MetricValueTypeEnum类型
+                }
+            }
+            return getMetricsPanel(metricFieldEnum, null, multiLineChatValue, null);
+        } else if(metricFieldEnum.getMetricDisplayType().equals(MetricDisplayTypeEnum.SINGLE_LINE_CHAT)) {
+            //TODO：不支持单条线指标
+            throw new RuntimeException();
+        } else {
+            //TODO：throw exception 未知MetricDisplayTypeEnum类型
+            throw new RuntimeException();
         }
     }
 
@@ -707,12 +795,12 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     /**
-     * 根据给定指标查询条件获取agent系统级disk/io相关指标数据
+     * 根据给定指标查询条件获取agent系统级disk相关指标数据
      * @param metricQueryDTO 指标查询条件
      * @param metricFieldEnum 待查询指标枚举定义
-     * @return 返回根据给定指标查询条件获取agent系统级disk/io相关指标数据
+     * @return 返回根据给定指标查询条件获取agent系统级disk相关指标数据
      */
-    private MetricPanel getAgentSystemDiskIOMetric(BusinessMetricsQueryDTO metricQueryDTO, MetricFieldEnum metricFieldEnum) {
+    private MetricPanel getAgentSystemDiskMetric(BusinessMetricsQueryDTO metricQueryDTO, MetricFieldEnum metricFieldEnum) {
         /*
          * 如下几种情况分别处理：
          *  1.lable
