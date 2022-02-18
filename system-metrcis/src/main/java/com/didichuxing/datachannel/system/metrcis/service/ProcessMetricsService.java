@@ -15,6 +15,9 @@ public interface ProcessMetricsService {
 
     /**
      * @return 返回当前Jvm进程启动时间
+     *
+     * TODO：william
+     *
      */
     Long getProcessStartupTime();
 
@@ -25,6 +28,8 @@ public interface ProcessMetricsService {
 
     /**
      * @return 返回当前Jvm进程对应pid
+     *
+     * //TODO：william
      */
     Long getProcessPid();
 
@@ -38,6 +43,9 @@ public interface ProcessMetricsService {
     /**
      * @return 返回当前进程cpu使用率(单位：%)
      * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
+     *
+     * TODO：william
+     *
      */
     PeriodStatistics getProcCpuUtil();
 
@@ -77,6 +85,9 @@ public interface ProcessMetricsService {
 
     /**
      * @return 返回当前进程内存使用量（单位：byte）
+     *
+     * TODO：william
+     *
      */
     Long getProcMemUsed();
 
@@ -186,6 +197,9 @@ public interface ProcessMetricsService {
 
     /**
      * @return 返回当前jvm进程启动以来 full gc 次数
+     *
+     * TODO：william
+     *
      */
     Long getJvmProcFullGcCount();
 
@@ -215,6 +229,9 @@ public interface ProcessMetricsService {
 
     /**
      * @return 返回当前进程打开fd数量
+     *
+     * TODO：william
+     *
      */
     Integer getProcOpenFdCount();
 
@@ -227,11 +244,17 @@ public interface ProcessMetricsService {
 
     /**
      * @return 返回当前进程网络每秒下行流量
+     *
+     * TODO：william
+     *
      */
     PeriodStatistics getProcNetworkReceiveBytesPs();
 
     /**
      * @return 返回当前进程网络每秒上行流量
+     *
+     * TODO：william
+     *
      */
     PeriodStatistics getProcNetworkSendBytesPs();
 
