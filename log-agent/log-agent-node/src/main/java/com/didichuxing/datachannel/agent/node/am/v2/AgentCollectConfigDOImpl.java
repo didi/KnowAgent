@@ -174,6 +174,7 @@ public class AgentCollectConfigDOImpl extends AgentCollectConfigDO {
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.setEncodeType(logCollectTaskAdvancedConfiguration.getEncodeType());
         commonConfig.setModelId(logCollectTaskConfiguration.getLogCollectTaskId());
+        commonConfig.setServiceNames(logCollectTaskConfiguration.getServiceNames());
         commonConfig.setModelType(
                 logCollectTaskConfiguration.getLogCollectTaskType().equals(LogCollectTaskTypeEnum.NORMAL_COLLECT.getCode()) ? LogConfigConstants.COLLECT_TYPE_PERIODICITY : LogConfigConstants.COLLECT_TYPE_TEMPORALITY
         );

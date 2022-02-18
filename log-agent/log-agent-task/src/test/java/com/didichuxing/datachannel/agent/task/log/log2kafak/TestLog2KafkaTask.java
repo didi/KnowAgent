@@ -10,6 +10,7 @@ import com.didichuxing.datachannel.agent.common.configs.v2.component.ComponentCo
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
 import com.didichuxing.datachannel.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.agent.engine.sinker.AbstractSink;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaSink;
@@ -148,6 +149,11 @@ public class TestLog2KafkaTask extends AbstractTask {
     @Override
     public boolean canStop() {
         return false;
+    }
+
+    @Override
+    public void setMetrics(TaskMetrics taskMetrics) {
+
     }
 
     @Override

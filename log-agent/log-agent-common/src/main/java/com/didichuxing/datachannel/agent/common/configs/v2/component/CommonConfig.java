@@ -56,6 +56,19 @@ public class CommonConfig implements Cloneable {
      */
     private boolean isStop     = false;
 
+    /**
+     * 服务名集
+     */
+    private String  serviceNames;
+
+    public String getServiceNames() {
+        return serviceNames;
+    }
+
+    public void setServiceNames(String serviceNames) {
+        this.serviceNames = serviceNames;
+    }
+
     public Long getModelId() {
         return modelId;
     }

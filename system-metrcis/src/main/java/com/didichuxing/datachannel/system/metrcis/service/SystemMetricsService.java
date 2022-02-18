@@ -1,11 +1,9 @@
 package com.didichuxing.datachannel.system.metrcis.service;
 
-import com.didichuxing.datachannel.system.metrcis.bean.DiskInfo;
-import com.didichuxing.datachannel.system.metrcis.bean.NetCardInfo;
-import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
-import com.didichuxing.datachannel.system.metrcis.bean.SystemMetrics;
+import com.didichuxing.datachannel.system.metrcis.bean.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统级指标
@@ -16,323 +14,328 @@ public interface SystemMetricsService {
     /*********************** 总览 ***********************/
 
     /**
-     * agent宿主机cpu核（逻辑核）
+     * @return 返回主机名
      */
-    int CPU_NUM = Runtime.getRuntime().availableProcessors();
+    String getHostName();
 
     /**
      * @return 返回源时钟与本地时钟的时间差（毫秒）
      */
-    long getSystemNtpOffset();
+    Long getSystemNtpOffset();
 
     /**
      * @return 返回系统进程个数
      */
-    int getSystemProcCount();
+    Integer getSystemProcCount();
 
     /**
      * @return 返回系统启动时间
      */
-    long getSystemStartupTime();
+    Long getSystemStartupTime();
 
     /**
      * @return 返回系统运行时间
      */
-    long getSystemUptime();
+    Long getSystemUptime();
 
     /*********************** about process ***********************/
 
     /**
      * @return 返回当前不可中断的睡眠状态下的进程数
      */
-    int getProcessesBlocked();
+    Integer getProcessesBlocked();
 
     /**
      * @return 返回当前可中断的睡眠状态下的进程数
      */
-    int getProcessesSleeping();
+    Integer getProcessesSleeping();
 
     /**
      * @return 返回当前僵尸态进程数
      */
-    int getProcessesZombies();
+    Integer getProcessesZombies();
 
     /**
      * @return 返回当前暂停状态进程数
      */
-    int getProcessesStopped();
+    Integer getProcessesStopped();
 
     /**
      * @return 返回当前运行中的进程数
      */
-    int getProcessesRunning();
+    Integer getProcessesRunning();
 
     /**
      * @return 返回当前挂起的空闲进程数
      */
-    int getProcessesIdle();
+    Integer getProcessesIdle();
 
     /**
      * @return 返回当前等待中的进程数
      */
-    int getProcessesWait();
+    Integer getProcessesWait();
 
     /**
      * @return 返回当前回收中的进程数
      */
-    int getProcessesDead();
+    Integer getProcessesDead();
 
     /**
      * @return 返回当前分页进程数
      */
-    int getProcessesPaging();
+    Integer getProcessesPaging();
 
     /**
      * @return 返回当前未知状态进程数
      */
-    int getProcessesUnknown();
+    Integer getProcessesUnknown();
 
     /**
      * @return 返回当前总进程数
      */
-    int getProcessesTotal();
+    Integer getProcessesTotal();
 
     /**
      * @return 返回当前总线程数
      */
-    int getProcessesTotalThreads();
+    Integer getProcessesTotalThreads();
 
     /*********************** about cpu ***********************/
 
     /**
      * @return 返回系统CPU核心数
      */
-    int getSystemCpuCores();
+    Integer getSystemCpuCores();
 
     /**
      * @return 返回系统总体CPU使用率(单位：%)
      * 注：使用率采用全核方式计数，如系统使用一颗核，则返回100，如使用两颗核，则返回200
      */
-    PeriodStatistics<Double> getSystemCpuUtil();
+    PeriodStatistics getSystemCpuUtil();
 
     /**
      * @return 返回系统总体CPU使用率(单位：%)
      * 注意：使用率为总使用比率，系统使用一颗核，系统共10核，则返回0.1 = 10%
      */
-    PeriodStatistics<Double> getSystemCpuUtilTotalPercent();
+    PeriodStatistics getSystemCpuUtilTotalPercent();
 
     /**
      * @return 返回内核态CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuSystem();
+    PeriodStatistics getSystemCpuSystem();
 
     /**
      * @return 返回用户态CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuUser();
+    PeriodStatistics getSystemCpuUser();
 
     /**
      * @return 返回总体cpu空闲率（单位：%）
      */
-    PeriodStatistics<Double> getSystemCpuIdle();
+    PeriodStatistics getSystemCpuIdle();
 
     /**
      * @return 返回cpu上下文交换次数
      */
-    PeriodStatistics<Long> getSystemCpuSwitches();
+    PeriodStatistics getSystemCpuSwitches();
 
     /**
      * @return 返回cpu处理硬中断的时间占比（单位：%）
      */
-    PeriodStatistics<Double> getSystemCpuUsageIrq();
+    PeriodStatistics getSystemCpuUsageIrq();
 
     /**
      * @return 返回cpu处理软中断的时间占比（单位：%），当前值、采样周期统计值
      */
-    PeriodStatistics<Double> getSystemCpuUsageSoftIrq();
+    PeriodStatistics getSystemCpuUsageSoftIrq();
 
     /**
      * @return 返回系统近1分钟平均负载
      */
-    PeriodStatistics<Double> getSystemLoad1();
+    PeriodStatistics getSystemLoad1();
 
     /**
      * @return 返回系统近5分钟平均负载
      */
-    PeriodStatistics<Double> getSystemLoad5();
+    PeriodStatistics getSystemLoad5();
 
     /**
      * @return 返回系统近15分钟平均负载
      */
-    PeriodStatistics<Double> getSystemLoad15();
+    PeriodStatistics getSystemLoad15();
 
     /**
      * @return 返回等待I/O的CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuIOWait();
+    PeriodStatistics getSystemCpuIOWait();
 
     /**
      * @return 返回虚拟处理器CPU时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuGuest();
+    PeriodStatistics getSystemCpuGuest();
 
     /**
      * @return 返回等待处理其他虚拟核的时间占比(单位：%)
      */
-    PeriodStatistics<Double> getSystemCpuSteal();
+    PeriodStatistics getSystemCpuSteal();
 
     /*********************** about memory ***********************/
 
     /**
      * @return 返回系统当前可分配的内存总量（单位：byte）
      */
-    long getSystemMemCommitLimit();
+    Long getSystemMemCommitLimit();
 
     /**
      * @return 返回系统已分配的包括进程未使用的内存量（单位：byte）
      */
-    long getSystemMemCommittedAs();
+    Long getSystemMemCommittedAs();
 
     /**
      * @return 返回在磁盘分页文件上保留的物理内存量（单位：byte）
      */
-    long getSystemMemCommitted();
+    Long getSystemMemCommitted();
 
     /**
      * @return 返回不能写入磁盘的物理内存量（单位：byte）
      */
-    long getSystemMemNonPaged();
+    Long getSystemMemNonPaged();
 
     /**
      * @return 返回没被使用是可以写入磁盘的物理内存量（单位：byte）
      */
-    long getSystemMemPaged();
+    Long getSystemMemPaged();
 
     /**
      * @return 返回用作共享内存的物理RAM量（单位：byte）
      */
-    long getSystemMemShared();
+    Long getSystemMemShared();
 
     /**
      * @return 返回内核用来缓存数据结构供自己使用的内存量（单位：byte）
      */
-    long getSystemMemSlab();
+    Long getSystemMemSlab();
 
     /**
      * @return 返回系统物理内存总量（单位：byte）
      */
-    long getSystemMemTotal();
+    Long getSystemMemTotal();
 
     /**
      * @return 返回系统空闲内存大小（单位：byte）
      */
-    long getSystemMemFree();
+    Long getSystemMemFree();
 
     /**
      * @return 返回系统已用内存大小（单位：byte）
      */
-    long getSystemMemUsed();
+    Long getSystemMemUsed();
 
     /**
      * @return 返回系统文件缓冲区的物理RAM量（单位：byte）
      */
-    long getSystemMemBuffered();
+    Long getSystemMemBuffered();
 
     /**
      * @return 返回缓存内存的物理RAM量（单位：byte）
      */
-    long getSystemMemCached();
+    Long getSystemMemCached();
 
     /**
      * @return 返回系统内存空闲率
      */
-    double getSystemMemFreePercent();
+    Double getSystemMemFreePercent();
 
     /**
      * @return 返回系统内存使用率
      */
-    double getSystemMemUsedPercent();
+    Double getSystemMemUsedPercent();
 
     /**
      * @return 返回系统用作缓存的交换空间
      */
-    long getSystemSwapCached();
+    Long getSystemSwapCached();
 
     /**
      * @return 返回系统空闲swap大小（单位：byte）
      */
-    long getSystemSwapFree();
+    Long getSystemSwapFree();
 
     /**
      * @return 返回系统空闲swap占比
      */
-    double getSystemSwapFreePercent();
+    Double getSystemSwapFreePercent();
 
     /**
      * @return 返回系统swap总大小（单位：byte）
      */
-    long getSystemSwapTotal();
+    Long getSystemSwapTotal();
 
     /**
      * @return 返回系统已用swap大小（单位：byte）
      */
-    long getSystemSwapUsed();
+    Long getSystemSwapUsed();
 
     /**
      * @return 返回系统已用swap占比（单位：%）
      */
-    double getSystemSwapUsedPercent();
+    Double getSystemSwapUsedPercent();
 
     /*********************** about disk、disk io ***********************/
 
     /**
      * @return 返回系统磁盘数
      */
-    int getSystemDisks();
+    Integer getSystemDisks();
 
     /**
      * @return 返回系统各磁盘信息
      */
     List<DiskInfo> getSystemDiskInfoList();
 
+    /**
+     * @return 返回系统各磁盘、io 信息
+     */
+    List<DiskIOInfo> getSystemDiskIOInfoList();
+
     /*********************** about file handle ***********************/
 
     /**
      * @return 返回系统可以打开的最大文件句柄数
      */
-    int getSystemFilesMax();
+    Integer getSystemFilesMax();
 
     /**
      * @return 返回系统已分配文件句柄数
      */
-    int getSystemFilesAllocated();
+    Integer getSystemFilesAllocated();
 
     /**
      * @return 返回系统未分配文件句柄数
      */
-    int getSystemFilesLeft();
+    Integer getSystemFilesLeft();
 
     /**
      * @return 返回系统使用文件句柄占已分配百分比（单位：%）
      */
-    double getSystemFilesUsedPercent();
+    Double getSystemFilesUsedPercent();
 
     /**
      * @return 返回系统使用的已分配文件句柄数
      */
-    int getSystemFilesUsed();
+    Integer getSystemFilesUsed();
 
     /**
      * @return 返回系统未使用的已分配文件句柄数
      */
-    int getSystemFilesNotUsed();
+    Integer getSystemFilesNotUsed();
 
     /*********************** about network ***********************/
 
     /**
      * @return 返回系统网卡数
      */
-    int getSystemNetCards();
+    Integer getSystemNetCards();
 
     /**
      * @return 返回系统各网卡信息
@@ -342,12 +345,23 @@ public interface SystemMetricsService {
     /**
      * @return 返回系统网络每秒下行流量
      */
-    PeriodStatistics<Long> getSystemNetworkReceiveBytesPs();
+    PeriodStatistics getSystemNetworkReceiveBytesPs();
 
     /**
      * @return 返回系统网络每秒上行流量
      */
-    PeriodStatistics<Long> getSystemNetworkSendBytesPs();
+    PeriodStatistics getSystemNetworkSendBytesPs();
+
+    /**
+     * @return 返回系统网络每秒上、下行流量总流量
+     */
+    PeriodStatistics getSystemNetworkSendAndReceiveBytesPs();
+
+    /**
+     * 返回系统网络带宽使用率
+     * @return
+     */
+    PeriodStatistics getSystemNetWorkBandWidthUsedPercent();
 
     /**
      * @return 返回系统tcp连接数
@@ -474,5 +488,20 @@ public interface SystemMetricsService {
      * @return 返回当前系统指标集 如须获取全量系统指标，请调用该方法而非挨个调用各指标获取函数以提升其性能、降低消耗
      */
     SystemMetrics getSystemMetrics();
+
+
+    //==================================================================
+
+    /**
+     *
+     * @return 返回操作系统类型
+     */
+    String getOSType();
+
+    /**
+     *
+     * @return 返回操作系统版本
+     */
+    String getOSVersion();
 
 }

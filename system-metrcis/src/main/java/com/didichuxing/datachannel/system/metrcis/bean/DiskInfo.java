@@ -12,11 +12,6 @@ public class DiskInfo {
     private String path;
 
     /**
-     * 磁盘设备名
-     */
-    private String device;
-
-    /**
      * 磁盘文件系统类型
      */
     private String fsType;
@@ -61,25 +56,12 @@ public class DiskInfo {
      */
     private Long inodesUsedPercent;
 
-    /**
-     * 磁盘io信息
-     */
-    private DiskIOInfo diskIOInfo;
-
     public String getPath() {
         return path;
     }
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getDevice() {
-        return device;
-    }
-
-    public void setDevice(String device) {
-        this.device = device;
     }
 
     public String getFsType() {
@@ -154,11 +136,4 @@ public class DiskInfo {
         this.inodesUsedPercent = inodesUsedPercent;
     }
 
-    public DiskIOInfo getDiskIOInfo() {
-        return diskIOInfo;
-    }
-
-    public void setDiskIOInfo(DiskIOInfo diskIOInfo) {
-        this.diskIOInfo = diskIOInfo;
-    }
 }

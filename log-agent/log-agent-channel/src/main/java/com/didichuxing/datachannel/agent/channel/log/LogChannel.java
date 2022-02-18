@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -90,6 +91,19 @@ public class LogChannel extends AbstractChannel {
     @Override
     public int size() {
         return size.get();
+    }
+
+    @Override
+    public void setMetrics(TaskMetrics taskMetrics) {
+        taskMetrics.setChannelbytesmax(this.channelConfig.getMaxBytes());
+        taskMetrics.setChannelcountmax(this.channelConfig.getMaxNum().longValue());
+        taskMetrics.setChannelbytessize(Long.valueOf(storage.get()).doubleValue());
+        taskMetrics.setChannelcountsize(Integer.valueOf(size.get()).doubleValue());
+        Double channelUsedPercent = Math.max(
+                taskMetrics.getChannelcountsize() / taskMetrics.getChannelcountmax(),
+                taskMetrics.getChannelbytessize() / taskMetrics.getChannelbytesmax()
+        );
+        taskMetrics.setChannelusedpercent(channelUsedPercent);
     }
 
     @Override
@@ -265,12 +279,8 @@ public class LogChannel extends AbstractChannel {
 
     @Override
     public Map<String, Object> metric() {
-        Map<String, Object> ret = new HashMap<>();
 
-        ret.put(LogChannelMetricsFields.PREFIX_TYPE, "logChannel");
-        ret.put(LogChannelMetricsFields.PREFIX_SIZE, size);
-        ret.put(LogChannelMetricsFields.PREFIX_CAPACITY, storage);
-        return ret;
+        return null;
     }
 
     private void resetUnavailable() {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
 import com.didichuxing.datachannel.agent.task.log.metrics.ModelMetricsFields;
 import org.apache.commons.lang.StringUtils;
 
@@ -145,6 +146,30 @@ public class Log2KafkaTask extends AbstractTask {
     }
 
     @Override
+    public void setMetrics(TaskMetrics taskMetrics) {
+
+        // common metrics
+        taskMetrics.setCollecttaskid(modelConfig.getCommonConfig().getModelId());
+        taskMetrics.setCollecttaskversion(modelConfig.getVersion());
+        String logModelHostName = StringUtils.isNotBlank(modelConfig.getHostname()) ? modelConfig
+            .getHostname() : StringUtils.EMPTY;
+        taskMetrics.setCollecttaskhostname(logModelHostName);
+        taskMetrics.setDynamiclimiterthreshold(taskLimter.getCurrentRate());
+        taskMetrics.setServiceNames(modelConfig.getCommonConfig().getServiceNames());
+        taskMetrics.setCollecttasktype(modelConfig.getCommonConfig().getModelType());
+
+        // source metrics
+        this.source.setMetrics(taskMetrics);
+
+        // channel metrics
+        this.channel.setMetrics(taskMetrics);
+
+        // sink metrics
+        sinkMetricMerge(taskMetrics);
+
+    }
+
+    @Override
     public boolean flush() {
         clearChannel();
         boolean result = true;
@@ -196,95 +221,21 @@ public class Log2KafkaTask extends AbstractTask {
 
     @Override
     public Map<String, Object> metric() {
-        Map<String, Object> ret = new HashMap<>();
-        // common metrics
-        ret.put(ModelMetricsFields.NS_NAME, modelConfig.getEventMetricsConfig().getOriginalAppName());
-        ret.put(ModelMetricsFields.NS_LEAF_NAME, modelConfig.getEventMetricsConfig().getOdinLeaf());
-        ret.put(ModelMetricsFields.MODEL_ID, modelConfig.getCommonConfig().getModelId());
-        ret.put(ModelMetricsFields.MODEL_VERSION, modelConfig.getVersion());
 
-        //TODO：添加日志模型采集的主机名指标 注：该主机名不一定为 agent 对应宿主机名，如采集宿主机上对应容器场景
-        String logModelHostName = StringUtils.isNotBlank(modelConfig.getHostname()) ? modelConfig.getHostname() : StringUtils.EMPTY;
-        ret.put(ModelMetricsFields.MODEL_HOST_NAME, logModelHostName);
-
-        EventMetricsConfig eventMetricsConfig = modelConfig.getEventMetricsConfig();
-        if (eventMetricsConfig != null && eventMetricsConfig.getOtherMetrics() != null
-                && eventMetricsConfig.getOtherMetrics().size() != 0) {
-            for (Map.Entry<String, String> entry : eventMetricsConfig.getOtherMetrics().entrySet()) {
-                if (StringUtils.isNotBlank(entry.getValue()) && StringUtils.isNotBlank(entry.getKey())) {
-                    ret.put(entry.getKey(), entry.getValue());
-                }
-            }
-        }
-
-        ret.put(ModelMetricsFields.DYNAMIC_LIMITER, taskLimter.getCurrentRate());
-        ret.put(ModelMetricsFields.LIMIT_RATE, modelConfig.getModelLimitConfig().getRate());
-
-        // source metrics
-        ret.putAll(this.source.metric());
-
-        // channel metrics
-        ret.putAll(this.channel.metric());
-
-        // sink metrics
-        ret.putAll(sinkMetricMerge());
-
-        return ret;
+        return null;
     }
 
-    private Map<String, Object> sinkMetricMerge() {
-        Map<String, Object> ret = new HashMap<>();
-        ret.put(KafkaMetricsFields.PREFIX_SINK_NUM, sinkers.size());
+    private void sinkMetricMerge(TaskMetrics taskMetrics) {
+        taskMetrics.setSinknum(sinkers.size());
         int i = 0;
         for (AbstractSink sink : sinkers.values()) {
             KafkaSink kafkaSink = (KafkaSink) sink;
             if (i == 0) {
-                ret.putAll(kafkaSink.metric());
+                kafkaSink.setMetrics(taskMetrics);
                 i++;
                 continue;
             }
-            Map<String, Object> map = kafkaSink.metric();
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                if (key.equals(KafkaMetricsFields.FILTER_REMAINED)) {
-                    ret.put(KafkaMetricsFields.FILTER_REMAINED,
-                            (int) ret.get(KafkaMetricsFields.FILTER_REMAINED) + (int) value);
-                    continue;
-                }
-
-                if (key.equals(KafkaMetricsFields.LOSS_COUNT)) {
-                    ret.put(KafkaMetricsFields.LOSS_COUNT, (int) ret.get(KafkaMetricsFields.LOSS_COUNT) + (int) value);
-                    continue;
-                }
-
-                if (key.equals(KafkaMetricsFields.FILTER_TOO_LARGE_COUNT)) {
-                    ret.put(KafkaMetricsFields.FILTER_TOO_LARGE_COUNT,
-                            (int) ret.get(KafkaMetricsFields.FILTER_TOO_LARGE_COUNT) + (int) value);
-                    continue;
-                }
-
-                if (key.equals(KafkaMetricsFields.FILTER_TOTAL_TOO_LARGE_COUNT)) {
-                    ret.put(KafkaMetricsFields.FILTER_TOTAL_TOO_LARGE_COUNT,
-                            (int) ret.get(KafkaMetricsFields.FILTER_TOTAL_TOO_LARGE_COUNT + (int) value));
-                    continue;
-                }
-
-                if (key.equals(KafkaMetricsFields.SINK_STAT_TIME)) {
-                    if ((int) ret.get(KafkaMetricsFields.SINK_STAT_TIME) > (int) value) {
-                        ret.put(KafkaMetricsFields.SINK_STAT_TIME, value);
-                    }
-                    continue;
-                }
-
-                if (key.equals(KafkaMetricsFields.CONTROL_STAT_TIME)) {
-                    if ((int) ret.get(KafkaMetricsFields.CONTROL_STAT_TIME) > (int) value) {
-                        ret.put(KafkaMetricsFields.CONTROL_STAT_TIME, value);
-                    }
-                }
-            }
         }
-        return ret;
     }
 
     public LogSourceConfig getLogSourceConfig() {

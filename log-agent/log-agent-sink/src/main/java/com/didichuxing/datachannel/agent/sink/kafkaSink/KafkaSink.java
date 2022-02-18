@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.didichuxing.datachannel.agent.common.api.TopicPartitionKeyTypeEnum;
 import com.didichuxing.datachannel.agent.common.constants.Tags;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
 import com.didichuxing.datachannel.agent.sink.utils.EventUtils;
 import com.didichuxing.datachannel.agent.sink.utils.StringFilter;
 import com.didichuxing.datachannel.agent.sink.utils.serializer.JsonMqEventSerializer;
@@ -413,7 +414,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                     }
                 }
                 if (taskPatternStatistics != null) {
-                    taskPatternStatistics.sinkMutilRecord(kafkaEvents.size(), bytes, TimeUtils.getNanoTime() - start);
+                    Long cost = TimeUtils.getNanoTime() - start;
+                    taskPatternStatistics.sinkMutilRecord(kafkaEvents.size(), bytes, cost);
+                    agentStatistics.sinkMutilRecord(kafkaEvents.size(), bytes, cost);
                 }
             } else {
                 return producer.send(getTargetTopic(kafkaTargetConfig.getTopic()), key, content,
@@ -471,7 +474,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
                 }
 
                 if (taskPatternStatistics != null) {
-                    taskPatternStatistics.sinkOneRecord(bytes, TimeUtils.getNanoTime() - start);
+                    Long cost = TimeUtils.getNanoTime() - start;
+                    taskPatternStatistics.sinkOneRecord(bytes, cost);
+                    agentStatistics.sinkOneRecord(bytes, cost);
                 }
             } else {
                 if (modelConfig.getTag().equals(Tags.TASK_LOG2KAFKA)) {
@@ -624,6 +629,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
         return result;
     }
 
+    @Override
+    public void setMetrics(TaskMetrics taskMetrics) {
+        taskMetrics.setReceiverclusterid(kafkaTargetConfig.getClusterId().longValue());
+        taskMetrics.setReceiverclustertopic((kafkaTargetConfig.getTopic()));
+    }
+
     /**
      * 拷贝失败的rate信息
      */
@@ -731,12 +742,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSink.class.get
 
     @Override
     public Map<String, Object> metric() {
-        Map<String, Object> ret = new HashMap<>();
 
-        ret.put(KafkaMetricsFields.PREFIX_TYPE, Tags.TARGET_KAFKA);
-        ret.put(KafkaMetricsFields.PREFIX_TARGET_ID, kafkaTargetConfig.getClusterId());
-        ret.put(KafkaMetricsFields.PREFIX_TARGET_TOPIC, getTargetTopic(kafkaTargetConfig.getTopic()));
-        return ret;
+        return null;
     }
 
     @Override

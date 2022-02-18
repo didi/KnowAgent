@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agent.engine.channel;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
 import com.didichuxing.datachannel.agent.engine.component.TaskComponent;
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
 
 /**
  * @description:
@@ -22,4 +23,7 @@ public abstract class AbstractChannel extends TaskComponent implements Configura
     abstract public void commit();
 
     abstract public int size();
+
+    public abstract void setMetrics(TaskMetrics taskMetrics);
+
 }

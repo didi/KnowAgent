@@ -32,4 +32,3 @@ public class MetricConsumerResetTask implements Job {
         return "success";
     }
 }
-

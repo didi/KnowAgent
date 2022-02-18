@@ -8,7 +8,6 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckPr
 import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsElasticsearchDAOImpl;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ import java.util.*;
 @EnableAsync
 @EnableScheduling
 @ServletComponentScan
-@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager", "com.didiglobal.logi.auvjob"})
+@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager"})
 public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
@@ -60,6 +59,9 @@ public class AgentManagerApplication {
             LOGGER.info("Spring Boot use profile: {}", profile);
         }
         LOGGER.info("agent-manager Application started");
+
+        SimpleConsumer.print();
+
     }
 
     private static void loadHealthCheckProcessors() throws Exception {
@@ -127,7 +129,8 @@ public class AgentManagerApplication {
     @Bean
     public AgentMetricsDAO getMetricReader() {
         if ("es".equals(type)) {
-            return new AgentMetricsElasticsearchDAOImpl();
+//            return new AgentMetricsElasticsearchDAOImpl();
+            return null;
         } else {
             return new AgentMetricsRDSImpl();
         }

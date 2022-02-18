@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
@@ -254,6 +255,11 @@ public class TestSink extends AbstractSink<KafkaEvent> {
             }
         }
         return result;
+    }
+
+    @Override
+    public void setMetrics(TaskMetrics taskMetrics) {
+
     }
 
     /**

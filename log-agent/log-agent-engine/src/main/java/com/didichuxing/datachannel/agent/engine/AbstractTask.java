@@ -6,15 +6,19 @@ import com.didichuxing.datachannel.agent.common.configs.v2.component.ComponentCo
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
+import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.channel.AbstractChannel;
 import com.didichuxing.datachannel.agent.engine.component.TaskComponent;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
 import com.didichuxing.datachannel.agent.engine.limit.TaskLimit;
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
+import com.didichuxing.datachannel.agent.engine.metrics.source.AgentStatistics;
 import com.didichuxing.datachannel.agent.engine.metrics.source.TaskPatternStatistics;
 import com.didichuxing.datachannel.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.agent.engine.sinker.AbstractSink;
 import com.didichuxing.datachannel.agent.engine.source.AbstractSource;
 import com.didichuxing.datachannel.agent.engine.utils.TimeUtils;
+import com.didichuxing.datachannel.system.metrcis.exception.MetricsException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,14 +59,22 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
         source.init(config);
 
         bulidUniqueKey();
-        taskPatternStatistics = new TaskPatternStatistics(getUniqueKey(), this);
+        try {
+            taskPatternStatistics = new TaskPatternStatistics(getUniqueKey(), this);
+        } catch (MetricsException ex) {
+            LOGGER.warn("taskPatternStatistics init error. taskPatternStatistics is " + taskPatternStatistics);
+            return false;
+        }
+
         source.setTaskPatternStatistics(taskPatternStatistics);
+        source.setAgentStatistics(GlobalProperties.getAgentStatistics());
 
         channel.init(null);
 
         configure(config);
         for (AbstractSink sinker : sinkers.values()) {
             sinker.setTaskPatternStatistics(taskPatternStatistics);
+            sinker.setAgentStatistics(GlobalProperties.getAgentStatistics());
             if (!sinker.init(config)) {
                 LOGGER.warn("sinker init error. sink is " + sinker);
                 return false;
@@ -425,5 +437,7 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
     public void setTaskLimter(TaskLimit taskLimter) {
         this.taskLimter = taskLimter;
     }
+
+    public abstract void setMetrics(TaskMetrics taskMetrics);
 
 }

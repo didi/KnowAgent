@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.api.CollectLocation;
 import com.didichuxing.datachannel.agent.common.api.CollectType;
 import com.didichuxing.datachannel.agent.common.api.FileType;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
 import org.apache.commons.lang3.StringUtils;
 
 import com.didichuxing.datachannel.agent.common.beans.LogPath;
@@ -924,31 +926,13 @@ public class LogSource extends AbstractSource {
         return true;
     }
 
-    private void close() {
-        for (WorkingFileNode wfd : collectingFileNodeList) {
-            wfd.close();
-        }
-    }
-
-    public void syncOffset() {
-        LOGGER.info("sync offset. logPath is " + logPath);
-        if (collectingFileNodeList != null) {
-            for (WorkingFileNode wfn : collectingFileNodeList) {
-                wfn.seek(wfn.getFileNode().getOffset());
-            }
-        }
-    }
-
     @Override
-    public Map<String, Object> metric() {
-        Map<String, Object> ret = new HashMap<>();
+    public void setMetrics(TaskMetrics taskMetrics) {
 
-        ret.put(FileMetricsFields.PREFIX_TYPE, "log");
-
-        ret.put(FileMetricsFields.PATH_STR, logPath.getPath());
-        ret.put(FileMetricsFields.PATH_ID_STR, logPath.getPathId());
-        ret.put(FileMetricsFields.IS_FILE_EXIST, collectingFileNodeMap.size() != 0);
-        ret.put(FileMetricsFields.MASTER_FILE, masterFileName);
+        taskMetrics.setPath(logPath.getPath());
+        taskMetrics.setPathid(logPath.getPathId());
+        taskMetrics.setMasterfile(masterFileName);
+        taskMetrics.setCollectpathisexists(collectingFileNodeMap.size() != 0 ? 1 : 0);
 
         List<FileStatistic> collectFiles = new ArrayList<>();
         String latestFileName = "null";
@@ -970,11 +954,11 @@ public class LogSource extends AbstractSource {
                 LOGGER.error("get source metrics error. wfn is " + wfn, e);
             }
             FileStatistic fileStatistic = new FileStatistic(fileNode.getFileName(),
-                                                            wfn.isFileEnd() && wfn.checkFileCollectEnd(),
-                                                            fileNode.getModifyTime(), wfn.getIsFileOrder(),
-                                                            wfn.getIsVaildTimeConfig(), wfn.getLatestLogTime(),
-                                                            fileLength == 0L ? 0L : fileNode.getOffset() * 100
-                                                                                    / fileLength);
+                    wfn.isFileEnd() && wfn.checkFileCollectEnd(),
+                    fileNode.getModifyTime(), wfn.getIsFileOrder(),
+                    wfn.getIsVaildTimeConfig(), wfn.getLatestLogTime(),
+                    fileLength == 0L ? 0L : fileNode.getOffset() * 100
+                            / fileLength);
 
             collectFiles.add(fileStatistic);
             if (wfn.getLatestLogTime() != null && latestLogTime < wfn.getLatestLogTime()) {
@@ -985,36 +969,55 @@ public class LogSource extends AbstractSource {
 
         // 最新的文件
         File latestFile = FileUtils.getLatestRelatedFile(FileUtils.getPathDir(logPath.getRealPath()),
-                                                         FileUtils.getMasterFile(logPath.getRealPath()),
-                                                         logSourceConfig.getMatchConfig());
+                FileUtils.getMasterFile(logPath.getRealPath()),
+                logSourceConfig.getMatchConfig());
         if (latestFile != null) {
             latestFileName = latestFile.getName();
-            ret.put(FileMetricsFields.LATEST_MODIFY_TIME, latestFile.lastModified());
+//            ret.put(FileMetricsFields.LATEST_MODIFY_TIME, latestFile.lastModified());
+            //TODO：后期如需要，进行添加
         }
 
         // metrics内容
-        EventMetricsConfig eventMetricsConfig = modelConfig.getEventMetricsConfig();
-        if (eventMetricsConfig != null && eventMetricsConfig.getOtherMetrics() != null
-            && eventMetricsConfig.getOtherMetrics().size() != 0) {
-            for (Map.Entry<String, String> entry : eventMetricsConfig.getOtherMetrics().entrySet()) {
-                if (org.apache.commons.lang.StringUtils.isNotBlank(entry.getValue())
-                    && org.apache.commons.lang.StringUtils.isNotBlank(entry.getKey())) {
-                    ret.put(entry.getKey(), entry.getValue());
-                }
-            }
-        }
+//        EventMetricsConfig eventMetricsConfig = modelConfig.getEventMetricsConfig();
+//        if (eventMetricsConfig != null && eventMetricsConfig.getOtherMetrics() != null
+//                && eventMetricsConfig.getOtherMetrics().size() != 0) {
+//            for (Map.Entry<String, String> entry : eventMetricsConfig.getOtherMetrics().entrySet()) {
+//                if (org.apache.commons.lang.StringUtils.isNotBlank(entry.getValue())
+//                        && org.apache.commons.lang.StringUtils.isNotBlank(entry.getKey())) {
+//                    ret.put(entry.getKey(), entry.getValue());
+//                }
+//            }
+//        }
+        //TODO：后期如需要，进行添加
 
-        ret.put(FileMetricsFields.COLLECT_FILE_NAMES_STR, collectFiles);
-        ret.put(FileMetricsFields.LATEST_FILE_NAME_STR, latestFileName);
-        ret.put(FileMetricsFields.MAX_TIME_GAP_STR, maxLogTime);
-        ret.put(FileMetricsFields.LATEST_LOG_TIME_STR, logTimeStr);
-        ret.put(FileMetricsFields.LATEST_LOG_TIME, latestLogTime);
-        ret.put(FileMetricsFields.RELATED_FILES, relatedFileNodeMap.size());
-        ret.put(FileMetricsFields.LOG_PATH_KEY, logPath.getLogPathKey());
+        taskMetrics.setCollectfiles(JSON.toJSONString(collectFiles));
+        taskMetrics.setLatestfile(latestFileName);
+        taskMetrics.setMaxbusinesstimestampdelay(maxLogTime);
+        taskMetrics.setBusinesstimestamp(latestLogTime);
+        taskMetrics.setRelatedfiles(relatedFileNodeMap.size());
 
         resetMaxLogTime();
 
-        return ret;
+    }
+
+    private void close() {
+        for (WorkingFileNode wfd : collectingFileNodeList) {
+            wfd.close();
+        }
+    }
+
+    public void syncOffset() {
+        LOGGER.info("sync offset. logPath is " + logPath);
+        if (collectingFileNodeList != null) {
+            for (WorkingFileNode wfn : collectingFileNodeList) {
+                wfn.seek(wfn.getFileNode().getOffset());
+            }
+        }
+    }
+
+    @Override
+    public Map<String, Object> metric() {
+        return null;
     }
 
     public LogPath getLogPath() {

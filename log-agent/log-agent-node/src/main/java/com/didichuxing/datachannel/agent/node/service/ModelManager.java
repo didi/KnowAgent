@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agent.node.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,8 +8,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.didichuxing.datachannel.agent.common.constants.Tags;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
-import com.didichuxing.datachannel.agent.engine.metrics.source.SystemStatistics;
+import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
+import com.didichuxing.datachannel.agent.engine.metrics.source.*;
 import com.didichuxing.datachannel.agent.node.Agent;
+import com.didichuxing.datachannel.agent.source.log.config.LogSourceConfig;
+import com.didichuxing.datachannel.system.metrcis.exception.MetricsException;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.agent.common.configs.v2.AgentConfig;
@@ -16,9 +20,7 @@ import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig
 import com.didichuxing.datachannel.agent.engine.AbstractModel;
 import com.didichuxing.datachannel.agent.engine.component.AgentComponent;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
-import com.didichuxing.datachannel.agent.engine.metrics.source.AgentStatistics;
 import com.didichuxing.datachannel.agent.engine.utils.CollectUtils;
-import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.agent.source.log.offset.OffsetManager;
 import com.didichuxing.datachannel.agent.task.log.log2kafak.Log2KafkaModel;
 
@@ -38,40 +40,20 @@ public class ModelManager extends AgentComponent {
 
     private Map<String, AbstractModel> models;
 
-    private AgentStatistics            agentStatistics;
-
-    private SystemStatistics           systemStatistics;
-
     @Override
     public boolean init(AgentConfig config) {
         LOGGER.info("begin to init model manager. config is " + config);
         this.agentConfig = config;
 
         try {
-            if (CommonUtils.getSystemType().equals("linux")) {
-                /*
-                 * 根据限流配置初始化限流服务
-                 */
-                LimitService.LIMITER.init(config.getLimitConfig());
-            } else if(CommonUtils.getSystemType().equals("mac os x")) {
-                LimitService.LIMITER.init(config.getLimitConfig());
-            }
             /*
-             * 构建 agent 统计信息对象
+             * 根据限流配置初始化限流服务
              */
-            agentStatistics = new AgentStatistics("basic", LimitService.LIMITER, Agent.START_TIME);
+            LimitService.LIMITER.init(config.getLimitConfig());
             /*
-             * 初始化 agent 统计信息对象
+             * 构建 system，process，agent business，disk/io，net card 相关统计信息对象
              */
-            agentStatistics.init();
-
-            if (config.getSystemStatisticsStatus() != 0) {
-                /*
-                 * 构建并初始化system统计信息对象
-                 */
-                systemStatistics = new SystemStatistics("systemBasic");
-                systemStatistics.init();
-            }
+            buildAgentStatistics();
         } catch (Exception e) {
             LogGather.recordErrorLog("ModelManager error!", "ModelManager init error!", e);
         }
@@ -87,21 +69,66 @@ public class ModelManager extends AgentComponent {
         List<ModelConfig> modelConfigs = this.agentConfig.getModelConfigs();
         models = new ConcurrentHashMap<>();
         if (modelConfigs != null && modelConfigs.size() != 0) {
-            for (ModelConfig mc : modelConfigs) {
-                AbstractModel model = getByTag(mc);
+            for (ModelConfig modelConfig : modelConfigs) {
+                AbstractModel model = getByTag(modelConfig);
                 if (model != null) {
                     models.put(model.getModelConfig().getModelConfigKey(), model);
-                    if (mc.getCommonConfig().isStop()) {
+                    if (modelConfig.getCommonConfig().isStop()) {
                         LOGGER.warn("modelConfig is stoped. ignore! logModelId is "
-                                    + mc.getCommonConfig().getModelId());
+                                    + modelConfig.getCommonConfig().getModelId());
                         continue;
                     }
-                    model.init(mc);
+
+                    model.init(modelConfig);
                 }
             }
         }
 
         return true;
+    }
+
+    /**
+     * 构建 system，process，agent business，disk/io，net card 相关统计信息对象
+     */
+    private void buildAgentStatistics() throws MetricsException {
+        /*
+         * 构建并初始化agent统计信息对象
+         */
+        GlobalProperties.setAgentStatistics(new AgentStatistics("agentBasic", LimitService.LIMITER,
+            Agent.START_TIME, getRunningCollectTaskNum(), getRunningCollectPathNum()));
+        GlobalProperties.getAgentStatistics().init();
+    }
+
+    /**
+     * @return 根据当前agent采集配置，获取对应运行状态日志采集任务数
+     */
+    private Integer getRunningCollectTaskNum() {
+        return getRunningCollectTaskList().size();
+    }
+
+    /**
+     * @return 根据当前agent采集配置，获取对应运行状态日志采集路径数
+     */
+    private Integer getRunningCollectPathNum() {
+        Integer runningCollectPathNum = 0;
+        for (ModelConfig modelConfig : getRunningCollectTaskList()) {
+            LogSourceConfig logSourceConfig = (LogSourceConfig) modelConfig.getSourceConfig();
+            runningCollectPathNum += logSourceConfig.getLogPaths().size();
+        }
+        return runningCollectPathNum;
+    }
+
+    /**
+     * @return 根据当前agent采集配置，获取对应运行状态日志采集任务集
+     */
+    private List<ModelConfig> getRunningCollectTaskList() {
+        List<ModelConfig> runningModelConfigList = new ArrayList<>();
+        for(ModelConfig modelConfig : this.agentConfig.getModelConfigs()) {
+            if(!modelConfig.getCommonConfig().isStop()) {
+                runningModelConfigList.add(modelConfig);
+            }
+        }
+        return runningModelConfigList;
     }
 
     private AbstractModel getByTag(ModelConfig taskConfig) {
@@ -182,10 +209,8 @@ public class ModelManager extends AgentComponent {
 
         LimitService.LIMITER.stop();
 
-        this.agentStatistics.destory();
-        if (this.agentConfig.getSystemStatisticsStatus() != 0) {
-            this.systemStatistics.destory();
-        }
+        GlobalProperties.getAgentStatistics().destory();
+
         LOGGER.info("stop modelManager success!");
         return true;
     }
@@ -210,6 +235,9 @@ public class ModelManager extends AgentComponent {
 
         prepare(newConfig);
         this.agentConfig = newConfig;
+
+        //更新 agentStatistics
+        updateAgentStatistics();
 
         LOGGER.info("old model config map size {}, new model config map size {}, models size {}",
             oldMap.size(), newMap.size(), models.size());
@@ -272,6 +300,11 @@ public class ModelManager extends AgentComponent {
             }
         }
         return isConfigChanged;
+    }
+
+    private void updateAgentStatistics() {
+        GlobalProperties.getAgentStatistics().setRunningCollectPathNum(getRunningCollectPathNum());
+        GlobalProperties.getAgentStatistics().setRunningCollectTaskNum(getRunningCollectTaskNum());
     }
 
     public Map<String, AbstractModel> getModels() {

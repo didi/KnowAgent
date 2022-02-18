@@ -5,22 +5,23 @@ package com.didichuxing.datachannel.system.metrcis.bean;
  * 统计周内的统计量
  * @author william.
  */
-public class PeriodStatistics<T extends Number> {
+
+public class PeriodStatistics {
 
     /**
      * 统计周期内最后一次采样值
      */
-    private T last;
+    private Double last;
 
     /**
      * 统计周期内样本最大值
      */
-    private T max;
+    private Double max;
 
     /**
      * 统计周期内样本最小值
      */
-    private T min;
+    private Double min;
 
     /**
      * 统计周期内样本均值
@@ -35,44 +36,62 @@ public class PeriodStatistics<T extends Number> {
     /**
      * 统计周期内样本55分位数
      */
-    private T quantile55;
+    private Double quantile55;
 
     /**
      * 统计周期内样本75分位数
      */
-    private T quantile75;
+    private Double quantile75;
 
     /**
      * 统计周期内样本95分位数
      */
-    private T quantile95;
+    private Double quantile95;
 
     /**
      * 统计周期内样本99分位数
      */
-    private T quantile99;
+    private Double quantile99;
 
-    public T getLast() {
+    /**
+     * @return 采用0作为各维度默认值PeriodStatistics对象
+     */
+    public static PeriodStatistics defaultValue() {
+        double value = 0d;
+        PeriodStatistics periodStatistics = new PeriodStatistics();
+        periodStatistics.setLast(value);
+        periodStatistics.setMin(value);
+        periodStatistics.setMax(value);
+        periodStatistics.setAvg(value);
+        periodStatistics.setStdDev(value);
+        periodStatistics.setQuantile55(value);
+        periodStatistics.setQuantile75(value);
+        periodStatistics.setQuantile95(value);
+        periodStatistics.setQuantile99(value);
+        return periodStatistics;
+    }
+
+    public Double getLast() {
         return last;
     }
 
-    public void setLast(T last) {
+    public void setLast(Double last) {
         this.last = last;
     }
 
-    public T getMax() {
+    public Double getMax() {
         return max;
     }
 
-    public void setMax(T max) {
+    public void setMax(Double max) {
         this.max = max;
     }
 
-    public T getMin() {
+    public Double getMin() {
         return min;
     }
 
-    public void setMin(T min) {
+    public void setMin(Double min) {
         this.min = min;
     }
 
@@ -92,36 +111,35 @@ public class PeriodStatistics<T extends Number> {
         this.stdDev = stdDev;
     }
 
-    public T getQuantile55() {
+    public Double getQuantile55() {
         return quantile55;
     }
 
-    public void setQuantile55(T quantile55) {
+    public void setQuantile55(Double quantile55) {
         this.quantile55 = quantile55;
     }
 
-    public T getQuantile75() {
+    public Double getQuantile75() {
         return quantile75;
     }
 
-    public void setQuantile75(T quantile75) {
+    public void setQuantile75(Double quantile75) {
         this.quantile75 = quantile75;
     }
 
-    public T getQuantile95() {
+    public Double getQuantile95() {
         return quantile95;
     }
 
-    public void setQuantile95(T quantile95) {
+    public void setQuantile95(Double quantile95) {
         this.quantile95 = quantile95;
     }
 
-    public T getQuantile99() {
+    public Double getQuantile99() {
         return quantile99;
     }
 
-    public void setQuantile99(T quantile99) {
+    public void setQuantile99(Double quantile99) {
         this.quantile99 = quantile99;
     }
-
 }

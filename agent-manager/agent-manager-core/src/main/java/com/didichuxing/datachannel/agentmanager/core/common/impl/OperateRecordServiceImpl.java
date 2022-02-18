@@ -11,7 +11,7 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.optrecord.OperateRecordDAO;
+import com.didichuxing.datachannel.agentmanager.persistence.mysql.OperateRecordDAO;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

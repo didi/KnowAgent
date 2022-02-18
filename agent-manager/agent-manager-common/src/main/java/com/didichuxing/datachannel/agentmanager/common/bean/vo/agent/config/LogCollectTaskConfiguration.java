@@ -53,7 +53,7 @@ public class LogCollectTaskConfiguration {
     private String logContentSliceRuleLogicJsonString;
 
     @ApiModelProperty(value = "日志内容切片规则信息（存储 BaseLogContentSliceRuleLogic 某具体实现类的 json 化形式）")
-    private String serviceNamesJsonString;
+    private String serviceNames;
 
     @ApiModelProperty(value = "待采集文件后缀匹配规则信息（存储 BaseCollectFileSuffixMatchRuleLogic 某具体实现类的 json 化形式）")
     private String fileNameSuffixMatchRuleLogicJsonString;
@@ -170,11 +170,11 @@ public class LogCollectTaskConfiguration {
         this.logContentSliceRuleLogicJsonString = logContentSliceRuleLogicJsonString;
     }
 
-    public String getServiceNamesJsonString() {
-        return serviceNamesJsonString;
+    public String getServiceNames() {
+        return serviceNames;
     }
 
-    public void setServiceNamesJsonString(String serviceNamesJsonString) {
-        this.serviceNamesJsonString = serviceNamesJsonString;
+    public void setServiceNames(String serviceNames) {
+        this.serviceNames = serviceNames;
     }
 }

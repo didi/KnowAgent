@@ -946,12 +946,12 @@ public class LogCollectTaskManageServiceTest extends ApplicationTests {
 //
 //    }
 
-    @Test
-    public void checkHealthTest() {
-        List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
-        for (LogCollectTaskDO task : logCollectTaskDOList) {
-            logCollectTaskManageService.checkLogCollectTaskHealth(task);
-        }
-    }
+//    @Test
+//    public void checkHealthTest() {
+//        List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
+//        for (LogCollectTaskDO task : logCollectTaskDOList) {
+//            logCollectTaskManageService.checkLogCollectTaskHealth(task);
+//        }
+//    }
 
 }

@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentUpdateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.AgentVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
@@ -34,6 +35,15 @@ public class OpAgentController {
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
+
+    @ApiOperation(value = "获取系统全量Agent信息", notes = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<AgentVO>> getAllAgents() {
+        List<AgentDO> agentDOList = agentManageService.list();
+        List<AgentVO> agentVOList = ConvertUtil.list2List(agentDOList, AgentVO.class);
+        return Result.buildSucc(agentVOList);
+    }
 
     @ApiOperation(value = "修改Agent信息", notes = "")
     @RequestMapping(value = "", method = RequestMethod.PUT)

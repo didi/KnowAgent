@@ -29,7 +29,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.Lo
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogContentFilterRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -117,7 +116,6 @@ public class NormalLogCollectTaskController {
     @ApiOperation(value = "查询日志采集任务列表", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_TASK_LIST)
     public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
         String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
         Long projectId = null;
@@ -150,11 +148,12 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "根据给定LogCollectTask对象id，获取给定时间范围（startTime ~ endTime）内的LogCollectTask运行指标集", notes = "")
-    @RequestMapping(value = "/{logCollectTaskId}/metrics/{startTime}/{endTime}", method = RequestMethod.GET)
+    @ApiOperation(value = "获取系统全量日志采集任务", notes = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public Result<List<MetricPanelGroup>> listLogCollectTaskMetrics(@PathVariable Long logCollectTaskId, @PathVariable Long startTime, @PathVariable Long endTime) {
-        return Result.buildSucc(logCollectTaskManageService.listLogCollectTaskMetrics(logCollectTaskId, startTime, endTime));
+    public Result<List<LogCollectTaskVO>> getAll() {
+        List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAll();
+        return Result.buildSucc(ConvertUtil.list2List(logCollectTaskDOList, LogCollectTaskVO.class));
     }
 
     /**

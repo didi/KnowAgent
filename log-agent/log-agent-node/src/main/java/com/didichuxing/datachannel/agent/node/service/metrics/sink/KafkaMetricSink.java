@@ -30,12 +30,10 @@ import org.slf4j.LoggerFactory;
 
 public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
 
-    private static final Logger LOGGER             = LoggerFactory.getLogger("perfLogger");
+    private static final Logger LOGGER         = LoggerFactory.getLogger("perfLogger");
     private KafkaTopicSink      sink;
 
-    private static final String LIMIT_TIME_TAG     = "limitTime";
-    private static final String NEW_LIMIT_TIME_TAG = TaskMetricsFields.PREFIX_METRICS_
-                                                     + LIMIT_TIME_TAG;
+    private static final String LIMIT_TIME_TAG = "limitTime";
 
     @Override
     public void init(SubsetConfiguration conf) {
@@ -93,126 +91,13 @@ public class KafkaMetricSink extends AbstractMetricSink implements MetricsSink {
 
     @Override
     public void putMetrics(MetricsRecord record) {
-
-        /*
-         * TODO：指标统一采用 agent-manager 侧定义指标名，去掉新、老指标对应版本兼容逻辑
-         */
-
-        Iterable<Metric> metrics = record.metrics();
-        Iterable<MetricsTag> tags = record.tags();
         Map<String, Object> result = new HashMap<>();
-
-        // tag
-        if (tags != null) {
-            for (MetricsTag loopTag : record.tags()) {
-                if (loopTag.getValue() != null) {
-                    if (loopTag.getName().equals(FileMetricsFields.COLLECT_FILE_NAMES_STR)) {
-                        List<FileStatistic> list = JSON.parseArray(loopTag.getValue().replace("\\", ""),
-                                FileStatistic.class);
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
-                        result.put(name, list);
-                    } else if (loopTag.getName().equals(FileMetricsFields.RELATED_FILES)
-                            && StringUtils.isNotBlank(loopTag.getValue())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
-                        result.put(name, Long.parseLong(loopTag.getValue()));
-                    } else if (loopTag.getName().equals(FileMetricsFields.MAX_TIME_GAP_STR)
-                            && StringUtils.isNotBlank(loopTag.getValue())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
-                        result.put(name, Long.parseLong(loopTag.getValue()));
-                    } else if (loopTag.getName().equals(FileMetricsFields.LATEST_LOG_TIME)
-                            && StringUtils.isNotBlank(loopTag.getValue())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
-                        result.put(name, Long.parseLong(loopTag.getValue()));
-                    } else if (loopTag.getName().equals(ModelMetricsFields.MODEL_VERSION)
-                            && StringUtils.isNotBlank(loopTag.getValue())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
-                        result.put(name, Long.parseLong(loopTag.getValue()));
-                    } else if (loopTag.getName().equals(FileMetricsFields.LATEST_MODIFY_TIME)
-                            && StringUtils.isNotBlank(loopTag.getValue())) {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
-                        result.put(name, Long.parseLong(loopTag.getValue()));
-                    } else {
-                        String name = metricConfig.isTransfer() ? getOldName(loopTag.getName()) : loopTag.getName();
-                        result.put(name, loopTag.getValue());
-                    }
-                }
-            }
-            result.put(MetricsFields.HEARTBEAT_TIME, System.currentTimeMillis());
-            result.put(MetricsFields.HOST_NAME, CommonUtils.getHOSTNAME());
-            result.put(MetricsFields.HOST_IP, CommonUtils.getHOSTIP());
-
-            if (!result.containsKey(ModelMetricsFields.MODEL_VERSION)
-                    && !record.name().equals(MetricsFields.KEY_BASIC)) {
-                String name = metricConfig.isTransfer() ? getOldName(ModelMetricsFields.MODEL_VERSION) : ModelMetricsFields.MODEL_VERSION;
-                if (!result.containsKey(name)) {
-                    result.put(name, -1);
-                }
-            }
-
-            if (!result.containsKey(MetricsFields.LOG_MODEL_ID_STR)) {
-                String name = metricConfig.isTransfer() ? getOldName(FileMetricsFields.LOG_ID_STR) : FileMetricsFields.LOG_ID_STR;
-                if (!result.containsKey(name)) {
-                    result.put(name, -1);
-                }
-            }
-
-            if (!result.containsKey(FileMetricsFields.PATH_ID_STR)) {
-                String name = metricConfig.isTransfer() ? getOldName(FileMetricsFields.PATH_ID_STR) : FileMetricsFields.PATH_ID_STR;
-                if (!result.containsKey(name)) {
-                    result.put(name, -1);
-                }
-            }
-
-            if (!result.containsKey(FileMetricsFields.LOG_PATH_KEY)) {
-                String name = metricConfig.isTransfer() ? getOldName(FileMetricsFields.LOG_PATH_KEY) : FileMetricsFields.LOG_PATH_KEY;
-                if (!result.containsKey(name)) {
-                    result.put(name, "-1");
-                }
-            }
+        for (MetricsTag metricsTag : record.tags()) {
+            result.put(metricsTag.getName(), metricsTag.getValue());
         }
-
-        // metrics
-        if (metrics != null) {
-            for (Metric loopMetric : metrics) {
-                if (loopMetric.value() != null) {
-                    String name = metricConfig.isTransfer() ? getOldName(loopMetric.name()) : loopMetric.name();
-                    if (name.equals(LIMIT_TIME_TAG) || name.equals(NEW_LIMIT_TIME_TAG)) {
-                        result.put(name, (Long) loopMetric.value() / 1000);
-                    } else {
-                        result.put(name, loopMetric.value());
-                    }
-                }
-            }
+        for (Metric metric : record.metrics()) {
+            result.put(metric.name(), metric.value());
         }
-
-        // 统一hostName
-        if (result.containsKey(MetricsFields.HOST_NAME_TO_DEL)) {
-            result.remove(MetricsFields.HOST_NAME_TO_DEL);
-        }
-
         sendMetrics(JSON.toJSONString(result));
-    }
-
-    private String getOldName(String newName) {
-        if (StringUtils.isNotBlank(newName)) {
-            if (newName.startsWith(SourceMetricsFields.PREFIX_METRICS_)) {
-                return newName.substring(SourceMetricsFields.PREFIX_METRICS_.length()).replace(
-                    ComponentType.SOURCE, "read");
-            } else if (newName.startsWith(SinkMetricsFields.PREFIX_METRICS_)) {
-                return newName.substring(SinkMetricsFields.PREFIX_METRICS_.length()).replace(
-                    ComponentType.SINK, "send");
-            } else if (newName.startsWith(TaskMetricsFields.PREFIX_METRICS_)) {
-                return newName.substring(TaskMetricsFields.PREFIX_METRICS_.length());
-            } else if (newName.startsWith(TaskMetricsFields.PREFIX_LIMIT_)) {
-                return newName.substring(TaskMetricsFields.PREFIX_LIMIT_.length());
-            } else if (newName.startsWith(ChannelMetricsFields.PREFIX_METRICS_)) {
-                return newName.substring(ChannelMetricsFields.PREFIX_METRICS_.length());
-            } else if (newName.startsWith(SinkMetricsFields.PREFIX_)) {
-                return newName.substring(SinkMetricsFields.PREFIX_.length());
-            } else {
-                return newName;
-            }
-        }
-        return null;
     }
 }

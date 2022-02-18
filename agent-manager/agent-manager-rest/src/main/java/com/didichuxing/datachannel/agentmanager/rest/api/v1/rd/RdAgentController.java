@@ -4,7 +4,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.version.AgentVersionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.AgentVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
@@ -27,13 +26,6 @@ public class RdAgentController {
 
     @Autowired
     private AgentVersionManageService agentVersionManageService;
-
-    @ApiOperation(value = "根据给定Agent对象id，获取给定时间范围（startTime ~ endTime）内的Agent运行指标集", notes = "")
-    @RequestMapping(value = "/{agentId}/metrics/{startTime}/{endTime}", method = RequestMethod.GET)
-    @ResponseBody
-    public Result<List<MetricPanelGroup>> listAgentMetrics(@PathVariable Long agentId, @PathVariable Long startTime, @PathVariable Long endTime) {
-        return Result.buildSucc(agentManageService.listAgentMetrics(agentId, startTime, endTime));
-    }
 
     @ApiOperation(value = "根据id获取Agent对象信息", notes = "")
     @RequestMapping(value = "/{agentId}", method = RequestMethod.GET)
