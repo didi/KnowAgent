@@ -418,7 +418,7 @@
       latestFile, masterFile, path, 
       collectTaskType, sinkNum, collectTaskVersion, 
       dynamicLimiterThreshold, heartbeatTime, heartbeatTimeMinute, 
-      heartbeatTimeHour, heartbeatTimeDay, serviceId)
+      heartbeatTimeHour, heartbeatTimeDay, serviceNames)
     values (#{id,jdbcType=BIGINT}, #{collecttaskid,jdbcType=BIGINT}, #{pathid,jdbcType=BIGINT}, 
       #{agenthostname,jdbcType=VARCHAR}, #{collecttaskhostname,jdbcType=VARCHAR}, #{agenthostip,jdbcType=VARCHAR}, 
       #{businesstimestamp,jdbcType=BIGINT}, #{maxbusinesstimestampdelay,jdbcType=BIGINT}, 
@@ -462,7 +462,7 @@
       #{dynamiclimiterthreshold,jdbcType=BIGINT}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
       #{heartbeattimehour,jdbcType=BIGINT},
       #{heartbeatTimeDay,jdbcType=BIGINT},
-      #{serviceId,jdbcType=BIGINT})
+      #{serviceNames,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     insert into tb_metrics_log_collect_task
@@ -770,8 +770,8 @@
       <if test="heartbeatTimeDay != null" >
         heartbeatTimeDay,
       </if>
-      <if test="serviceId != null" >
-        serviceId,
+      <if test="serviceNames != null" >
+        serviceNames,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -1078,8 +1078,8 @@
       <if test="heartbeatTimeDay != null" >
         #{heartbeatTimeDay,jdbcType=BIGINT},
       </if>
-      <if test="serviceId != null" >
-        #{serviceId,jdbcType=BIGINT},
+      <if test="serviceNames != null" >
+        #{serviceNames,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
