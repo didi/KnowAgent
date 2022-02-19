@@ -2087,7 +2087,7 @@
   </insert>
 
   <delete id="deleteBeforeTime" parameterType="java.lang.Long">
-    delete from tb_metrics_log_collect_task
+    delete from tb_metrics_system
     where heartbeatTime &lt; #{heartBeatTime}
   </delete>
 

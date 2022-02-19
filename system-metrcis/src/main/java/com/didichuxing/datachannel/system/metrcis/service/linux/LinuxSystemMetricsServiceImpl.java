@@ -6,8 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 
@@ -24,11 +27,17 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     /**
      * agent宿主机cpu核（逻辑核）
      */
-    Integer CPU_NUM = Runtime.getRuntime().availableProcessors();
+    private Integer CPU_NUM = Runtime.getRuntime().availableProcessors();
+
+    private String                   HOSTNAME;
+
+    public LinuxSystemMetricsServiceImpl() {
+        setHostName();
+    }
 
     @Override
     public String getHostName() {
-        return null;
+        return HOSTNAME;
     }
 
     @Override
@@ -682,6 +691,41 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
                 LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程失败", resourceMessage, resourceMessage, ex);
             }
         }
+    }
+
+    private void setHostName() {
+        try {
+            String hostname = getHostnameByexec();
+            if (StringUtils.isNotBlank(hostname)) {
+                HOSTNAME = hostname.trim();
+            } else {
+                HOSTNAME = InetAddress.getLocalHost().getHostName();
+            }
+        } catch (UnknownHostException e) {
+            HOSTNAME = "LocalHost";
+        }
+    }
+
+    private String getHostnameByexec() {
+        StringBuffer buf = new StringBuffer();
+        try {
+            Runtime run = Runtime.getRuntime();
+            Process proc = run.exec("hostname");
+            BufferedInputStream in = new BufferedInputStream(proc.getInputStream());
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String s;
+            while ((s = br.readLine()) != null) {
+                buf.append(s);
+            }
+            String hostname = buf.toString();
+            if (StringUtils.isBlank(hostname) || hostname.contains("localhost")
+                    || hostname.indexOf("请求超时") != -1) {
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return buf.toString();
     }
 
 }

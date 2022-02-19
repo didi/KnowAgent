@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.config.*;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
@@ -378,7 +379,7 @@ public class AgentCollectConfigManageServiceImpl implements AgentCollectConfigMa
         logCollectTaskConfiguration.setOldDataFilterType(logCollectTask.getOldDataFilterType());
         logCollectTaskConfiguration.setFileNameSuffixMatchRuleLogicJsonString(logCollectTask.getFileNameSuffixMatchRuleLogicJsonString());
         logCollectTaskConfiguration.setLogContentSliceRuleLogicJsonString(logCollectTask.getLogContentSliceRuleLogicJsonString());
-        logCollectTaskConfiguration.setServiceNames(getSortedServiceNames(logCollectTask.getServiceIdList()));
+        logCollectTaskConfiguration.setServiceNames(getSortedServiceNames(logCollectTask.getId()));
         if (CollectionUtils.isEmpty(logCollectTask.getDirectoryLogCollectPathList()) && CollectionUtils.isEmpty(logCollectTask.getFileLogCollectPathList())) {
             throw new ServiceException(
                     String.format("LogCollectTask={id=%d}关联的目录型采集路径集 & 文件型采集路径集不可都为空", logCollectTask.getId()),
@@ -397,12 +398,13 @@ public class AgentCollectConfigManageServiceImpl implements AgentCollectConfigMa
         return logCollectTaskConfiguration;
     }
 
-    private String getSortedServiceNames(List<Long> serviceIdList) {
-        Collections.sort(serviceIdList);
-        String[] serviceNameArray = new String[serviceIdList.size()];
-        for (int i = 0; i < serviceIdList.size(); i++) {
-            serviceNameArray[i] = serviceManageService.getServiceById(serviceIdList.get(i)).getServicename();
+    private String getSortedServiceNames(Long logCollectTaskId) {
+        List<ServiceDO> serviceDOList = serviceManageService.getServicesByLogCollectTaskId(logCollectTaskId);
+        String[] serviceNameArray = new String[serviceDOList.size()];
+        for (int i = 0; i < serviceDOList.size(); i++) {
+            serviceNameArray[i] = serviceDOList.get(i).getServicename();
         }
+        Arrays.sort(serviceNameArray);
         return StringUtils.join(serviceNameArray, CommonConstant.COMMA);
     }
 

@@ -35,7 +35,6 @@ public class DateUtils {
         if (time == null) {
             return null;
         }
-        time = org.apache.commons.lang3.time.DateUtils.setMinutes(time, 0);
         time = org.apache.commons.lang3.time.DateUtils.setSeconds(time, 0);
         time = org.apache.commons.lang3.time.DateUtils.setMilliseconds(time, 0);
         return time.getTime();

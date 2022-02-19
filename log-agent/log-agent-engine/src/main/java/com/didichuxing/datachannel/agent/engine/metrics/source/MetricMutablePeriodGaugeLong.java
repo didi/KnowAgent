@@ -2,7 +2,7 @@ package com.didichuxing.datachannel.agent.engine.metrics.source;
 
 public class MetricMutablePeriodGaugeLong {
 
-    private volatile long value;
+    private volatile long    value;
     private volatile boolean changed = true;
 
     /**

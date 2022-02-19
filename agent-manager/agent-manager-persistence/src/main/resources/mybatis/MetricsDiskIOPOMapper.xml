@@ -331,7 +331,7 @@
   </select>
 
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
-    insert into tb_metrics_disk (id, hostName,
+    insert into tb_metrics_disk_io (id, hostName,
       systemDiskDevice, systemIOAvgQuSz,
       systemIOAvgQuSzMin, systemIOAvgQuSzMax, systemIOAvgQuSzMean, 
       systemIOAvgQuSzStd, systemIOAvgQuSz55Quantile, 
@@ -488,8 +488,9 @@
       #{systemdiskwritetimepercent99quantile,jdbcType=DOUBLE}, #{heartbeattime,jdbcType=BIGINT}, 
       #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT})
   </insert>
+
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
-    insert into tb_metrics_disk
+    insert into tb_metrics_disk_io
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,

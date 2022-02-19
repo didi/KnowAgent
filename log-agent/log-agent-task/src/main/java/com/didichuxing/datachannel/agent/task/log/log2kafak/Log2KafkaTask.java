@@ -1,19 +1,16 @@
 package com.didichuxing.datachannel.agent.task.log.log2kafak;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
-import com.didichuxing.datachannel.agent.task.log.metrics.ModelMetricsFields;
+import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.agent.channel.log.LogChannel;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ComponentConfig;
-import com.didichuxing.datachannel.agent.common.configs.v2.component.EventMetricsConfig;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
@@ -21,7 +18,6 @@ import com.didichuxing.datachannel.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.agent.engine.sinker.AbstractSink;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaSink;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaTargetConfig;
-import com.didichuxing.datachannel.agent.sink.kafkaSink.metrics.KafkaMetricsFields;
 import com.didichuxing.datachannel.agent.source.log.LogSource;
 import com.didichuxing.datachannel.agent.source.log.beans.WorkingFileNode;
 import com.didichuxing.datachannel.agent.source.log.config.LogSourceConfig;

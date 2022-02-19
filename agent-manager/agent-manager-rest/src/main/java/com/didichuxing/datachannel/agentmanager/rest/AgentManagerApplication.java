@@ -8,9 +8,11 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckPr
 import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +23,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * william.
@@ -60,7 +65,21 @@ public class AgentManagerApplication {
         }
         LOGGER.info("agent-manager Application started");
 
-        SimpleConsumer.print();
+        /**
+         * TODO：定时任务 fix
+         */
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
+        pool.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MetricService metricService = ctx.getBean(MetricService.class);
+                    metricService.resetMetricConsumers();
+                } catch (Exception ex) {
+                    LOGGER.error(String.format(" write metrics to db error, root cause is: %s", ex.getMessage()), ex);
+                }
+            }
+        },0, 10, TimeUnit.MINUTES);
 
     }
 
@@ -124,7 +143,6 @@ public class AgentManagerApplication {
         GlobalProperties.AGENT_HEALTH_CHECK_PROCESSOR_CLASS_LIST.sort(comparator);
 
     }
-
 
     @Bean
     public AgentMetricsDAO getMetricReader() {

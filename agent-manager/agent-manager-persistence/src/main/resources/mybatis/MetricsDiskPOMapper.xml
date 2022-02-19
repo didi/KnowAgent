@@ -191,6 +191,56 @@
         systemDiskInodesUsedPercent,
       </if>
       <if test="heartbeattime != null" >
+        heartbeatTime,
+      </if>
+      <if test="heartbeattimeminute != null" >
+        heartbeatTimeMinute,
+      </if>
+      <if test="heartbeattimehour != null" >
+        heartbeatTimeHour,
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hostname != null" >
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="systemdiskpath != null" >
+        #{systemdiskpath,jdbcType=VARCHAR},
+      </if>
+      <if test="systemdiskfstype != null" >
+        #{systemdiskfstype,jdbcType=VARCHAR},
+      </if>
+      <if test="systemdiskbytestotal != null" >
+        #{systemdiskbytestotal,jdbcType=BIGINT},
+      </if>
+      <if test="systemdiskbytesfree != null" >
+        #{systemdiskbytesfree,jdbcType=BIGINT},
+      </if>
+      <if test="systemdiskbytesused != null" >
+        #{systemdiskbytesused,jdbcType=BIGINT},
+      </if>
+      <if test="systemdiskusedpercent != null" >
+        #{systemdiskusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemdiskinodestotal != null" >
+        #{systemdiskinodestotal,jdbcType=INTEGER},
+      </if>
+      <if test="systemdiskinodesfree != null" >
+        #{systemdiskinodesfree,jdbcType=INTEGER},
+      </if>
+      <if test="systemdiskinodesused != null" >
+        #{systemdiskinodesused,jdbcType=INTEGER},
+      </if>
+      <if test="systemdiskinodesusedpercent != null" >
+        #{systemdiskinodesusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="heartbeattime != null" >
         #{heartbeattime,jdbcType=BIGINT},
       </if>
       <if test="heartbeattimeminute != null" >

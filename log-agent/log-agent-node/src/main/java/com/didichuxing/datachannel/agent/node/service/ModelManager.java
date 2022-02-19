@@ -90,7 +90,7 @@ public class ModelManager extends AgentComponent {
     /**
      * 构建 system，process，agent business，disk/io，net card 相关统计信息对象
      */
-    private void buildAgentStatistics() throws MetricsException {
+    private void buildAgentStatistics() {
         /*
          * 构建并初始化agent统计信息对象
          */

@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.didichuxing.datachannel.agent.common.api.TopicPartitionKeyTypeEnum;
 import com.didichuxing.datachannel.agent.common.constants.Tags;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
-import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
+import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import com.didichuxing.datachannel.agent.sink.utils.EventUtils;
 import com.didichuxing.datachannel.agent.sink.utils.StringFilter;
 import com.didichuxing.datachannel.agent.sink.utils.serializer.JsonMqEventSerializer;
@@ -25,7 +25,6 @@ import com.didichuxing.datachannel.agent.engine.bean.LogEvent;
 import com.didichuxing.datachannel.agent.engine.channel.AbstractChannel;
 import com.didichuxing.datachannel.agent.engine.sinker.AbstractSink;
 import com.didichuxing.datachannel.agent.engine.utils.TimeUtils;
-import com.didichuxing.datachannel.agent.sink.kafkaSink.metrics.KafkaMetricsFields;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

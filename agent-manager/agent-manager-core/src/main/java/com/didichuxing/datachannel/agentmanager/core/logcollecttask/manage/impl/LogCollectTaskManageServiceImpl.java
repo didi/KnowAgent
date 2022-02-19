@@ -588,17 +588,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                     }
                 }
                 logCollectTaskDO.setFileLogCollectPathList(fileLogCollectPathDOList);
-                /*
-                 * 设置日志采集任务关联的 service id 集
-                 *
-                 * TODO：去掉 serviceIdList 直接获取对应 serviceNames
-                 */
-                List<ServiceDO> serviceDOList = serviceManageService.getServicesByLogCollectTaskId(logCollectTaskDO.getId());
-                List<Long> serviceIdList = new ArrayList(serviceDOList.size());
-                for (ServiceDO serviceDO : serviceDOList) {
-                    serviceIdList.add(serviceDO.getId());
-                }
-                logCollectTaskDO.setServiceIdList(serviceIdList);
                 logCollectTaskList.add(logCollectTaskDO);
             }
         }

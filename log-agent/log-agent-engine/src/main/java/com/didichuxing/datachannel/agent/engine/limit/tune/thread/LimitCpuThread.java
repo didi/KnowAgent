@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agent.engine.limit.tune.thread;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 
@@ -13,29 +14,26 @@ import org.slf4j.LoggerFactory;
 
 public class LimitCpuThread implements Runnable {
 
-    private static final Logger   LOGGER     = LoggerFactory.getLogger(LimitCpuThread.class
-                                                 .getName());
-    private static final float    FACTOR     = 0.1f;
-    private static final float    TPS_FACTOR = 0.2f;
+    private static final Logger LOGGER     = LoggerFactory
+                                               .getLogger(LimitCpuThread.class.getName());
+    private static final float  FACTOR     = 0.1f;
+    private static final float  TPS_FACTOR = 0.2f;
     // 最大10G/s
-    private static final long     maxQPS     = 10 * 1024 * 1024 * 1024L;
+    private static final long   maxQPS     = 10 * 1024 * 1024 * 1024L;
 
-    private boolean               isStop     = false;
-    private LimitService          limiter;
+    private boolean             isStop     = false;
+    private LimitService        limiter;
 
-    private long                  allQps;                               // 当前整体的限制阀值
-    private double                currentCpuUsage;                      // 当前cpu利用率
+    private long                allQps;                                                   // 当前整体的限制阀值
+    private double              currentCpuUsage;                                          // 当前cpu利用率
 
-    private String                period     = "cpu.period";
-    private long                  interval   = 30 * 1000;
-
-    private ProcessMetricsService processMetricsService;
+    private String              period     = "cpu.period";
+    private long                interval   = 30 * 1000;
 
     public LimitCpuThread(LimitService limiter, long qps) throws Exception {
         this.limiter = limiter;
         this.allQps = qps;
         this.interval = Long.parseLong(CommonUtils.readSettings().get(period));
-        this.processMetricsService = Metrics.getMetricsServiceFactory().createProcessMetrics();
     }
 
     @Override
@@ -52,7 +50,8 @@ public class LimitCpuThread implements Runnable {
                 float threshold = limiter.getCpuThreshold();
 
                 // 2. 获得cpu利用率
-                double cpuUsage = processMetricsService.getProcCpuUtil().getLast();
+                double cpuUsage = GlobalProperties.getProcessMetricsService().getProcCpuUtil()
+                    .getLast();
 
                 // 3. 根据cpu利用率调整qps阀值
                 if (cpuUsage > (threshold * (FACTOR + 1))) {

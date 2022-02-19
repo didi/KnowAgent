@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
+import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;

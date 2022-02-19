@@ -3,13 +3,13 @@ package com.didichuxing.datachannel.agent.engine.metrics.source;
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsBuilder;
 import com.didichuxing.datachannel.agent.engine.AbstractTask;
+import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.metrics.metric.*;
 import com.didichuxing.datachannel.agent.engine.metrics.stat.MetricMutablePeriodGaugeLong;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
+import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
-import com.didichuxing.datachannel.system.metrcis.Metrics;
 import com.didichuxing.datachannel.system.metrcis.exception.MetricsException;
-import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,11 +63,6 @@ public class TaskPatternStatistics extends AbstractStatistics {
     private volatile MetricMutablePeriodGaugeLong flushCountPerPeriod;
     private volatile MetricMutablePeriodGaugeLong flushFailedCountPerPeriod;
 
-    /**
-     * 系统相关指标服务
-     */
-    private SystemMetricsService                  systemMetricsService;
-
     public TaskPatternStatistics(String name, AbstractTask abstractTask) throws MetricsException {
         super(name);
 
@@ -99,8 +94,6 @@ public class TaskPatternStatistics extends AbstractStatistics {
         //        flushTime = new MetricMutableTimeStat(SinkMetricsFields.PREFIX_METRICS_ + "flushTime", null);
         flushCountPerPeriod = new MetricMutablePeriodGaugeLong();
         flushFailedCountPerPeriod = new MetricMutablePeriodGaugeLong();
-
-        this.systemMetricsService = Metrics.getMetricsServiceFactory().createSystemMetrics();
 
     }
 
@@ -200,7 +193,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
         Long heartbeatTimeHour = DateUtils.getHourUnitTimeStamp(current);
         Long heartbeatTimeDay = DateUtils.getDayUnitTimeStamp(current);
 
-        taskMetrics.setAgenthostname(systemMetricsService.getHostName());
+        taskMetrics.setAgenthostname(CommonUtils.getHOSTNAME());//(GlobalProperties.getSystemMetricsService().getHostName());
         taskMetrics.setAgenthostip(CommonUtils.getHOSTIP());
         taskMetrics.setHeartbeattime(heartbeatTime);
         taskMetrics.setHeartbeattimeminute(heartbeatTimeMinute);

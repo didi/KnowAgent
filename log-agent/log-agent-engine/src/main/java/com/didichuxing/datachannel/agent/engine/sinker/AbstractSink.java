@@ -5,7 +5,7 @@ import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
-import com.didichuxing.datachannel.agent.engine.metrics.metric.TaskMetrics;
+import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import com.didichuxing.datachannel.agent.engine.metrics.source.AgentStatistics;
 import com.didichuxing.datachannel.agent.engine.utils.TimeUtils;
 import com.didichuxing.datachannel.agent.engine.channel.AbstractChannel;

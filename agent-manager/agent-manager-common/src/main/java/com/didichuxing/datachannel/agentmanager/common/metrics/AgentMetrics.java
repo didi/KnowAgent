@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agent.engine.metrics.metric;
+package com.didichuxing.datachannel.agentmanager.common.metrics;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class AgentMetrics {
     /**
      * 系统级指标
      */
-    private SystemMetrics        systemMetrics;
+    private SystemMetrics systemMetrics;
 
     /**
      * 进程级指标
@@ -58,6 +58,10 @@ public class AgentMetrics {
 
     }
 
+    public List<DiskMetrics> getDiskMetricsList() {
+        return diskMetricsList;
+    }
+
     public SystemMetrics getSystemMetrics() {
         return systemMetrics;
     }
@@ -78,4 +82,27 @@ public class AgentMetrics {
         return agentBusinessMetrics;
     }
 
+    public void setSystemMetrics(SystemMetrics systemMetrics) {
+        this.systemMetrics = systemMetrics;
+    }
+
+    public void setProcessMetrics(ProcessMetrics processMetrics) {
+        this.processMetrics = processMetrics;
+    }
+
+    public void setDiskIOMetricsList(List<DiskIOMetrics> diskIOMetricsList) {
+        this.diskIOMetricsList = diskIOMetricsList;
+    }
+
+    public void setDiskMetricsList(List<DiskMetrics> diskMetricsList) {
+        this.diskMetricsList = diskMetricsList;
+    }
+
+    public void setNetCardMetricsList(List<NetCardMetrics> netCardMetricsList) {
+        this.netCardMetricsList = netCardMetricsList;
+    }
+
+    public void setAgentBusinessMetrics(AgentBusinessMetrics agentBusinessMetrics) {
+        this.agentBusinessMetrics = agentBusinessMetrics;
+    }
 }
