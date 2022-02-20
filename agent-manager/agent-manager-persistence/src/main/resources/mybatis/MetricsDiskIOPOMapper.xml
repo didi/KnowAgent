@@ -1511,7 +1511,7 @@
     </trim>
   </insert>
 
-  <delete id="deleteBeforeTime" parameterType="java.lang.Long">
+  <delete id="deleteByLtHeartbeatTime" parameterType="java.lang.Long">
     delete from tb_metrics_disk_io
     where heartbeatTime &lt; #{heartBeatTime}
   </delete>

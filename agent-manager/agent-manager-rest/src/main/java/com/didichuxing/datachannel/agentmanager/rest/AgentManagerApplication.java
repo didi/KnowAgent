@@ -2,10 +2,13 @@ package com.didichuxing.datachannel.agentmanager.rest;
 
 import cn.hutool.core.lang.ClassScanner;
 import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
+import com.didichuxing.datachannel.agentmanager.core.dashboard.impl.DashboardManageServiceImpl;
+import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
@@ -80,6 +83,30 @@ public class AgentManagerApplication {
                 }
             }
         },0, 10, TimeUnit.MINUTES);
+
+        pool.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DashboardManageServiceImpl dashboardManageServiceImpl = ctx.getBean(DashboardManageServiceImpl.class);
+                    GlobalProperties.dashBoardVO = dashboardManageServiceImpl.build();
+                } catch (Exception ex) {
+                    LOGGER.error(String.format(" build dashboard error, root cause is: %s", ex.getMessage()), ex);
+                }
+            }
+        },0, 1, TimeUnit.MINUTES);
+
+        pool.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    MetricsManageServiceImpl metricsManageService = ctx.getBean(MetricsManageServiceImpl.class);
+                    metricsManageService.clearExpireMetrics(7);
+                } catch (Exception ex) {
+                    LOGGER.error(String.format(" delete expire metrics error, root cause is: %s", ex.getMessage()), ex);
+                }
+            }
+        },0, 1, TimeUnit.DAYS);
 
     }
 

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
+import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -100,6 +102,11 @@ public class SimpleConsumer {
             } catch (Throwable ignored) {
             }
         }
+    }
+
+    public static void main(String[] args) {
+        System.err.println(DateUtils.getBeforeDays(new Date(), 60 * 60).getTime());
+        System.err.println(System.currentTimeMillis());
     }
 
 }
