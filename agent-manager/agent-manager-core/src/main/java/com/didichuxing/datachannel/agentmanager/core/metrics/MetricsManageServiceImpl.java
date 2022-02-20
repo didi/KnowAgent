@@ -159,7 +159,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
         Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
         params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
-        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("sortTime", getSortTime(sortTimeField, endTime));
         params.put("topN", TOP_N_DEFAULT_VALUE);
         params.put("sortType", SortTypeEnum.DESC.getType());
         params.put("sortTimeField", sortTimeField);
@@ -203,7 +203,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
         Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
         params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
-        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("sortTime", getSortTime(sortTimeField, endTime));
         params.put("topN", TOP_N_DEFAULT_VALUE);
         params.put("sortType", SortTypeEnum.DESC.getType());
         params.put("sortTimeField", sortTimeField);
@@ -247,7 +247,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
         Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
         params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
-        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("sortTime", getSortTime(sortTimeField, endTime));
         params.put("topN", TOP_N_DEFAULT_VALUE);
         params.put("sortType", SortTypeEnum.DESC.getType());
         params.put("sortTimeField", sortTimeField);
@@ -291,7 +291,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
         Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
         params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
-        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("sortTime", getSortTime(sortTimeField, endTime));
         params.put("topN", TOP_N_DEFAULT_VALUE);
         params.put("sortType", SortTypeEnum.DESC.getType());
         params.put("sortTimeField", sortTimeField);
@@ -335,7 +335,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
         Integer sortMetricType = SORT_METRIC_TYPE_DEFAULT_VALUE;
         params.put("fieldName", getSortFieldName(metricFieldEnum.getFieldName(), sortMetricType));
-        params.put("sortTime", DateUtils.getMinuteUnitTimeStamp(endTime));
+        params.put("sortTime", getSortTime(sortTimeField, endTime));
         params.put("topN", TOP_N_DEFAULT_VALUE);
         params.put("sortType", SortTypeEnum.DESC.getType());
         params.put("sortTimeField", sortTimeField);
@@ -369,6 +369,19 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             }
         }
         return multiLineChatValue;
+    }
+
+    private Long getSortTime(String sortTimeField, Long time) {
+        if(SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName().equals(sortTimeField)) {
+            return DateUtils.getDayUnitTimeStamp(time);
+        } else if(SortTimeFieldEnum.HEARTBEAT_TIME_HOUR.getFieldName().equals(sortTimeField)) {
+            return DateUtils.getHourUnitTimeStamp(time);
+        } else if(SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName().equals(sortTimeField)) {
+            return DateUtils.getMinuteUnitTimeStamp(time);
+        } else {
+            //TODO：
+            throw new RuntimeException();
+        }
     }
 
     /**
@@ -1107,6 +1120,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         metricNodeVO.setMetricDesc(metricFieldEnum.getDescription());
         metricNodeVO.setCode(metricFieldEnum.getCode());
         metricNodeVO.setChecked(metricFieldEnum.isChecked());
+        metricNodeVO.setIsLeafNode(true);
         return metricNodeVO;
     }
 
@@ -1119,6 +1133,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         metricNodeVO.setMetricName(metricTypeEnum.getType());
         metricNodeVO.setMetricDesc(metricTypeEnum.getDescription());
         metricNodeVO.setCode(metricTypeEnum.getCode());
+        metricNodeVO.setIsLeafNode(false);
         return metricNodeVO;
     }
 

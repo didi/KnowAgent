@@ -23,4 +23,7 @@ public class MetricNodeVO {
     @ApiModelProperty(value = "是否默认选中")
     private Boolean checked;
 
+    @ApiModelProperty(value = "是否叶节点")
+    private Boolean isLeafNode;
+
 }

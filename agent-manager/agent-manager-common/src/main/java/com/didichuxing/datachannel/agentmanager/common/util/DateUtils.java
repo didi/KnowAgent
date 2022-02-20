@@ -362,4 +362,8 @@ public class DateUtils {
         return getZeroDate(current).getTime();
     }
 
+    public static Long getDayUnitTimeStamp(Long time) {
+        return getDayUnitTimeStamp(new Date(time));
+    }
+
 }
