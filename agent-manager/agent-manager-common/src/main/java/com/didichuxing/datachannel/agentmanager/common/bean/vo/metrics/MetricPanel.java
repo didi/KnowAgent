@@ -15,7 +15,7 @@ public class MetricPanel {
     @ApiModelProperty(value = "指标名")
     private String name;
 
-    @ApiModelProperty(value = "指标类型 0：lable 1：单根折线图 2：多根折线图")
+    @ApiModelProperty(value = "指标类型 1：lable 2：多根折线图 3：单根折线图")
     private Integer type;
 
     @ApiModelProperty(value = "基础单位")

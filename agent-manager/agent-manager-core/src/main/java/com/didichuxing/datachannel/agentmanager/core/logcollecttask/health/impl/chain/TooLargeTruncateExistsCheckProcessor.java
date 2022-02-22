@@ -1,7 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain;
 
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
-import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
@@ -10,11 +9,11 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
 /**
- * 是否存在采集端出口限流检查
+ * 日志异常截断检查
  * @author Ronaldo
  */
-@HealthCheckProcessorAnnotation(seq = 9, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
-public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
+@HealthCheckProcessorAnnotation(seq = 5, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
 
     @Override
     protected void process(LogCollectTaskHealthCheckContext context) {
@@ -28,63 +27,65 @@ public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
             return;
         }
         /*
-         * 校验 logcollecttask + logpath 在 host 端是否存在采集端出口限流
+         * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断
          */
-        boolean byteLimitOnHostExists = checkByteLimitOnHostExists(
+        boolean tooLargeTruncateExists = checkTooLargeTruncateExists(
                 context.getLogCollectTaskDO().getId(),
                 context.getFileLogCollectPathDO().getId(),
                 context.getHostDO().getHostName(),
+                context.getLogCollectTaskHealthDetailDO().getTooLargeTruncateCheckHealthyHeartbeatTime(),
+                context.getLogCollectTaskHealthCheckTimeEnd(),
                 context.getMetricsManageService()
         );
-        if (byteLimitOnHostExists) {//存在采集端出口流量阈值限流
-            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum());
+        if (tooLargeTruncateExists) {// 存在异常截断
+            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getLogCollectTaskHealthLevelEnum());
             String logCollectTaskHealthDescription = String.format(
                     "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                    LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(),
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS.getDescription(),
                     context.getLogCollectTaskDO().getId(),
                     context.getFileLogCollectPathDO().getId(),
                     context.getHostDO().getHostName()
             );
             context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS);
+            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS);
         }
     }
 
     /**
-     * 校验 logcollecttask + logpath 在 host 端是否存在采集端出口流量阈值限流
+     * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断
      *
-     * @param logCollectTaskId     日志采集任务 id
+     * @param logCollectTaskId 日志采集任务 id
      * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName             主机名
+     * @param hostName 日志采集任务运行主机名
+     * @param healthCheckTimeStart 心跳开始时间戳
+     * @param healthCheckTimeEnd 心跳结束时间戳
      * @param metricsManageService MetricsManageService 对象
-     * @return true：存在出口流量阈值限流 false：不存在出口流量阈值限流
+     * @return 返回logCollectTaskId+fileLogCollectPathId在host上是否存在日志被异常截断 true：存在 异常截断 false：不存在 异常截断
      */
-    private boolean checkByteLimitOnHostExists(
+    private boolean checkTooLargeTruncateExists(
             Long logCollectTaskId,
             Long fileLogCollectPathId,
             String hostName,
+            Long healthCheckTimeStart,
+            Long healthCheckTimeEnd,
             MetricsManageService metricsManageService
     ) {
         /*
-         * 获取近 LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD 时间范围内 logCollectTaskId+fileLogCollectPathId+hostName 指标集中，
-         * 总限流时间是否超过阈值 LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD
+         * 获取自上次"异常截断"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在异常截断
          */
-        Long currentTime = System.currentTimeMillis();
-        Long startTime = currentTime - LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
-        Double limitMs = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Double tooLargeTruncateCount = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
-                startTime,
-                currentTime,
+                healthCheckTimeStart,
+                healthCheckTimeEnd,
                 AggregationCalcFunctionEnum.SUM.getValue(),
-                "limitTime"
+                "tooLargeTruncateNum"
         );
-        if(null == limitMs) {
-            limitMs = 0d;
+        if(null == tooLargeTruncateCount) {
+            tooLargeTruncateCount = 0d;
         }
-        //主机cpu限流时长 单位：ms
-        return limitMs.longValue() > LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
+        return tooLargeTruncateCount.longValue() != 0L;
     }
 
 }

@@ -66,4 +66,38 @@ public interface MetricsManageService {
      */
     void clearExpireMetrics(Integer metricsExpireDays);
 
+    /**
+     *
+     * @param logCollectTaskId 日志采集任务 id
+     * @param fileLogCollectPathId 日志采集路径 id
+     * @param logCollectTaskHostName 日志采集任务运行主机名
+     * @param heartbeatTimeStart 心跳开始时间戳（>）
+     * @param heartbeatTimeEnd 心跳结束时间戳（<=）
+     * @param aggregationFunction 聚合函数名
+     * @param aggregationField 聚合字段名
+     * @return SELECT #{aggregationFunction}(#{aggregationFunction})
+     *          FROM tb_metrics_log_collect_task
+     *          WHERE collectTaskId = #{logCollectTaskId} AND
+     *                pathId = #{fileLogCollectPathId} AND
+     *                collectTaskHostName = #{logCollectTaskHostName} AND
+     *                heartbeatTime > #{heartbeatTimeStart} AND heartbeatTime <= #{heartbeatTimeEnd}
+     */
+    Double getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+            Long logCollectTaskId,
+            Long fileLogCollectPathId,
+            String logCollectTaskHostName,
+            Long heartbeatTimeStart,
+            Long heartbeatTimeEnd,
+            String aggregationFunction,
+            String aggregationField
+    );
+
+    /**
+     * @param logCollectTaskId 日志采集任务 id
+     * @param pathId 日志采集路径 id
+     * @param hostName 日志采集任务运行主机名
+     * @return 返回最后一个日志采集任务指标数据
+     */
+    MetricsLogCollectTaskPO getLastLogCollectTaskMetric(Long logCollectTaskId, Long pathId, String hostName);
+
 }

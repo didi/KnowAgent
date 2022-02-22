@@ -147,4 +147,25 @@ public interface MetricsLogCollectTaskPOMapper {
      */
     void deleteByLtHeartbeatTime(Long heartBeatTime);
 
+    /**
+     * @param params
+     *  logCollectTaskId：日志采集任务 id
+     *  pathId：日志采集路径 id
+     *  hostName：日志采集任务运行主机名
+     *  startTime：心跳开始时间（>）
+     *  endTime：心跳结束时间(<=)
+     *  function：聚合函数名
+     *  fieldName：聚合字段名
+     */
+    Double aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  logCollectTaskId：日志采集任务 id
+     *  pathId：日志采集路径 id
+     *  hostName：日志采集任务运行主机名
+     * @return 返回最后一个日志采集任务指标数据
+     */
+    MetricsLogCollectTaskPO getLastRecord(Map<String, Object> params);
+
 }

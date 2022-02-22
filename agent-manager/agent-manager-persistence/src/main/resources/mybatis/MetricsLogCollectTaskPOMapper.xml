@@ -376,6 +376,36 @@
       tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.serviceNames = #{serviceNames,jdbcType=VARCHAR}
   </select>
 
+  <select id="aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask" resultType="java.lang.Double" parameterType="java.util.Map" >
+    select
+    ${function}(${fieldName})
+    from tb_metrics_log_collect_task
+    where
+    collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+    and
+    pathId = #{pathId,jdbcType=BIGINT}
+    and
+    collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    and
+    heartbeatTime &gt; #{startTime}
+    and
+    heartbeatTime &lt;= #{endTime}
+  </select>
+
+  <select id="getLastRecord" resultType="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_log_collect_task
+    where
+        collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+        and
+        pathId = #{pathId,jdbcType=BIGINT}
+        and
+        collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    order by heartbeatTime desc
+    limit 1
+  </select>
+
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
     insert into tb_metrics_log_collect_task (id, collectTaskId, pathId, 
       agentHostName, collectTaskHostName, agentHostIp, 

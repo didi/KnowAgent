@@ -19,9 +19,11 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
+import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskHealthMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.health.extension.LogCollectTaskHealthManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
@@ -51,6 +53,12 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
 
     @Autowired
     private HostManageService hostManageService;
+
+    @Autowired
+    private LogCollectTaskHealthDetailManageService logCollectTaskHealthDetailManageService;
+
+    @Autowired
+    private MetricsManageService metricsManageService;
 
     @Override
     @Transactional
@@ -218,51 +226,48 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
          */
         LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = LogCollectTaskHealthLevelEnum.GREEN;//日志采集任务健康度检查结果
         String logCollectTaskHealthDescription = "";//日志采集任务健康检查描述
-        Long logCollectTaskHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //日志采集任务健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
-
-        // 构建上下文对象
+        LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum = LogCollectTaskHealthInspectionResultEnum.HEALTHY;//日志采集任务检查明细项枚举对象
 
         if (CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {
             for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
                 for (HostDO hostDO : hostDOList) {
-
                     /*
-                     * 构建 处理链 & 上下文对象
+                     * 构建 处理链 & 处理链对应上下文对象
                      */
                     ProcessorChain processorChain = getLogCollectTaskHealthCheckProcessorChain();
-                    LogCollectTaskHealthCheckContext context = new LogCollectTaskHealthCheckContext();
-                    context.setLogCollectTaskDO(logCollectTaskDO);
-                    context.setCheckCollectDelay(checkCollectDelay);
-                    context.setLogCollectTaskHealthCheckTimeEnd(logCollectTaskHealthCheckTimeEnd);
-                    context.setAgentMetricsManageService(null);//TODO：
-                    context.setLogCollectTaskHealthLevelEnum(logCollectTaskHealthLevelEnum);
-                    context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-                    context.setFileLogCollectPathDO(fileLogCollectPathDO);
-
-                    context.setHostDO(hostDO);
-
+                    LogCollectTaskHealthCheckContext context = buildProcessChainContext(
+                            logCollectTaskDO,
+                            checkCollectDelay,
+                            logCollectTaskHealthLevelEnum,
+                            logCollectTaskHealthDescription,
+                            fileLogCollectPathDO,
+                            hostDO,
+                            logCollectTaskHealthInspectionResultEnum
+                    );
                     /*
                      * 执行巡检流程
                      */
                     processorChain.process(context, processorChain);
-
                     /*
                      * 判断巡检结果
                      */
                     if (context.getLogCollectTaskHealthLevelEnum() != LogCollectTaskHealthLevelEnum.GREEN) {
                         /*
                          * 更新日志采集任务健康信息
-                         * TODO：
                          */
-                        logCollectTaskHealthLevelEnum = context.getLogCollectTaskHealthLevelEnum();
-                        logCollectTaskHealthDescription = context.getLogCollectTaskHealthDescription();
-                        return logCollectTaskHealthLevelEnum;
+                        updateLogCollectHealth(logCollectTaskHealthDO, context.getLogCollectTaskHealthLevelEnum(), context.getLogCollectTaskHealthDescription(), context.getLogCollectTaskHealthInspectionResultEnum());
+                        return context.getLogCollectTaskHealthLevelEnum();
                     }
                 }
             }
         }
-
-        if (null != logCollectTaskHealthLevelEnum && (logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) || logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode()))) {
+        if (
+                null != logCollectTaskHealthLevelEnum &&
+                        (
+                                logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.RED.getCode()) ||
+                                        logCollectTaskHealthLevelEnum.getCode().equals(LogCollectTaskHealthLevelEnum.YELLOW.getCode())
+                        )
+        ) {
             //表示健康度已被检测为 red or yellow，此时，无须再进行校验
             //do nothing
         } else {
@@ -279,6 +284,7 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
                         logCollectTaskDO.getKafkaClusterId(),
                         logCollectTaskDO.getSendTopic()
                 );
+                logCollectTaskHealthInspectionResultEnum = LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS;
             }
             /*
              * 校验 logcollecttask 是否未关联主机
@@ -291,18 +297,47 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
                         LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getDescription(),
                         logCollectTaskDO.getId()
                 );
+                logCollectTaskHealthInspectionResultEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST;
             }
         }
-
         /*
          * 更新日志采集任务健康信息
-         * TODO：
          */
+        updateLogCollectHealth(logCollectTaskHealthDO, logCollectTaskHealthLevelEnum, logCollectTaskHealthDescription, logCollectTaskHealthInspectionResultEnum);
+        return logCollectTaskHealthLevelEnum;
+    }
+
+    /**
+     * 根据给定参数更新对应LogCollectTaskHealthDO对象
+     * @param logCollectTaskHealthDO 待更新LogCollectTaskHealthDO对象
+     * @param logCollectTaskHealthLevelEnum 日志采集任务健康度枚举对象
+     * @param logCollectTaskHealthDescription 日志采集任务健康度描述信息
+     * @param logCollectTaskHealthInspectionResultEnum 日志采集任务健康度巡检结果枚举对象
+     */
+    private void updateLogCollectHealth(
+            LogCollectTaskHealthDO logCollectTaskHealthDO,
+            LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum,
+            String logCollectTaskHealthDescription,
+            LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum
+    ) {
         logCollectTaskHealthDO.setLogCollectTaskHealthLevel(logCollectTaskHealthLevelEnum.getCode());
         logCollectTaskHealthDO.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
+        logCollectTaskHealthDO.setLogCollectTaskHealthInspectionResultType(logCollectTaskHealthInspectionResultEnum.getCode());
         updateLogCollectorTaskHealth(logCollectTaskHealthDO, CommonConstant.getOperator(null));
-        return logCollectTaskHealthLevelEnum;
+    }
 
+    private LogCollectTaskHealthCheckContext buildProcessChainContext(LogCollectTaskDO logCollectTaskDO, boolean checkCollectDelay, LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum, String logCollectTaskHealthDescription, FileLogCollectPathDO fileLogCollectPathDO, HostDO hostDO, LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum) {
+        LogCollectTaskHealthCheckContext context = new LogCollectTaskHealthCheckContext();
+        context.setLogCollectTaskDO(logCollectTaskDO);
+        context.setFileLogCollectPathDO(fileLogCollectPathDO);
+        context.setHostDO(hostDO);
+        context.setCheckCollectDelay(checkCollectDelay);
+        context.setLogCollectTaskHealthLevelEnum(logCollectTaskHealthLevelEnum);
+        context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
+        context.setLogCollectTaskHealthInspectionResultEnum(logCollectTaskHealthInspectionResultEnum);
+        context.setLogCollectTaskHealthDetailManageService(logCollectTaskHealthDetailManageService);
+        context.setMetricsManageService(metricsManageService);
+        return context;
     }
 
     /**

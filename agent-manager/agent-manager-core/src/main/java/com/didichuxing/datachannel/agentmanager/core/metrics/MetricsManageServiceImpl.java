@@ -151,6 +151,36 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         metricsDiskIODAO.deleteByLtHeartbeatTime(heartBeatTime);
     }
 
+    @Override
+    public Double getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+            Long logCollectTaskId,
+            Long fileLogCollectPathId,
+            String logCollectTaskHostName,
+            Long heartbeatTimeStart,
+            Long heartbeatTimeEnd,
+            String aggregationFunction,
+            String aggregationField
+    ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("logCollectTaskId", logCollectTaskId);
+        params.put("pathId", fileLogCollectPathId);
+        params.put("hostName", logCollectTaskHostName);
+        params.put("startTime", heartbeatTimeStart);
+        params.put("endTime", heartbeatTimeEnd);
+        params.put("function", aggregationFunction);
+        params.put("fieldName", aggregationField);
+        return metricsLogCollectTaskDAO.aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(params);
+    }
+
+    @Override
+    public MetricsLogCollectTaskPO getLastLogCollectTaskMetric(Long logCollectTaskId, Long pathId, String hostName) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("logCollectTaskId", logCollectTaskId);
+        params.put("pathId", pathId);
+        params.put("hostName", hostName);
+        return metricsLogCollectTaskDAO.getLastRecord(params);
+    }
+
     private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerServiceNames(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n logcollecttask

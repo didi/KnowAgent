@@ -109,41 +109,6 @@ public class AgentMetricsManageServiceImpl implements AgentMetricsManageService 
         }
     }
 
-    @Override
-    public Long getHostByteLimitDurationByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logModelHostName) {
-        return agentMetricsDAO.getHostByteLimitDuration(startTime, endTime, logModelHostName, logCollectTaskId, fileLogCollectPathId);
-    }
-
-    @Override
-    public Long getHeartbeatTimesByTimeFrame(Long startTime, Long endTime, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        return agentMetricsDAO.getHeartbeatTimesByTimeFrame(startTime, endTime, logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName);
-    }
-
-    @Override
-    public Long getLastestCollectTime(Long logCollectTaskId, Long fileLogCollectPathId, String hostName) {
-        return agentMetricsDAO.selectLatestMetric(logCollectTaskId).getBusinesstimestamp();
-    }
-
-    @Override
-    public Integer getFilePathNotExistsCountByTimeFrame(Long logCollectTaskHealthLastestCheckTime, Long logCollectTaskHealthCheckTimeEnd, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskhostName) {
-        return agentMetricsDAO.getFilePathNotExistsCountByTimeFrame(logCollectTaskHealthLastestCheckTime, logCollectTaskHealthCheckTimeEnd, logCollectTaskId, fileLogCollectPathId, logCollectTaskhostName);
-    }
-
-    @Override
-    public Integer getFileDisorderCountByTimeFrame(Long logCollectTaskHealthLastestCheckTime, Long logCollectTaskHealthCheckTimeEnd, Long logCollectTaskId, Long fileLogCollectPathId, String hostName) {
-        return agentMetricsDAO.getFileDisorderCount(logCollectTaskHealthLastestCheckTime, logCollectTaskHealthCheckTimeEnd, logCollectTaskId, fileLogCollectPathId, hostName);
-    }
-
-    @Override
-    public Integer getSliceErrorCount(Long logCollectTaskHealthLastestCheckTime, Long logCollectTaskHealthCheckTimeEnd, Long logCollectTaskId, Long fileLogCollectPathId, String hostName) {
-        return agentMetricsDAO.getSliceErrorCount(logCollectTaskHealthLastestCheckTime, logCollectTaskHealthCheckTimeEnd, logCollectTaskId, fileLogCollectPathId, hostName);
-    }
-
-    @Override
-    public Integer getAbnormalTruncationCountByTimeFrame(Long logCollectTaskHealthLastestCheckTime, Long logCollectTaskHealthCheckTimeEnd, Long logCollectTaskId, Long fileLogCollectPathId, String logCollectTaskHostName) {
-        return agentMetricsDAO.getAbnormalTruncationCountByTimeFrame(logCollectTaskHealthLastestCheckTime, logCollectTaskHealthCheckTimeEnd, logCollectTaskId, fileLogCollectPathId, logCollectTaskHostName);
-    }
-
     public boolean containerCompleteCollect(String containerHostName, String parentHostName, Long logCollectTaskId, Long fileLogCollectPathId) {
         /*
          * 获取近距当前时间近5mins关于 "parentHostName+containerHostName+logCollectTaskId+fileLogCollectPathId"

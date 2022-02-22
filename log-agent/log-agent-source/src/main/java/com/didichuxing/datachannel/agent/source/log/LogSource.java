@@ -5,10 +5,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
-import com.didichuxing.datachannel.agent.common.api.CollectLocation;
-import com.didichuxing.datachannel.agent.common.api.CollectType;
-import com.didichuxing.datachannel.agent.common.api.FileType;
-import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
+import com.didichuxing.datachannel.agent.common.api.*;
 import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import org.apache.commons.lang3.StringUtils;
@@ -937,6 +934,9 @@ public class LogSource extends AbstractSource {
         Long latestLogTime = 0L;
         String logTimeStr = "";
 
+        Integer isFileOrder = OrderFile.OrderFile.getStatus();
+        Integer sliceErrorExists = 0;
+
         // 采集中的文件
         for (Map.Entry<String, WorkingFileNode> entry : collectingFileNodeMap.entrySet()) {
             WorkingFileNode wfn = entry.getValue();
@@ -957,7 +957,12 @@ public class LogSource extends AbstractSource {
                     wfn.getIsVaildTimeConfig(), wfn.getLatestLogTime(),
                     fileLength == 0L ? 0L : fileNode.getOffset() * 100
                             / fileLength);
-
+            if(wfn.getIsFileOrder().equals(OrderFile.OutOfOrderFile.getStatus())) {
+                isFileOrder = OrderFile.OutOfOrderFile.getStatus();
+            }
+            if(wfn.getIsVaildTimeConfig() == false) {
+                sliceErrorExists = 1;
+            }
             collectFiles.add(fileStatistic);
             if (wfn.getLatestLogTime() != null && latestLogTime < wfn.getLatestLogTime()) {
                 latestLogTime = wfn.getLatestLogTime();
@@ -988,6 +993,8 @@ public class LogSource extends AbstractSource {
 //        }
         //TODO：后期如需要，进行添加
 
+        taskMetrics.setDisorderexists(isFileOrder);
+        taskMetrics.setSliceerrorexists(sliceErrorExists);
         taskMetrics.setCollectfiles(JSON.toJSONString(collectFiles));
         taskMetrics.setLatestfile(latestFileName);
         taskMetrics.setMaxbusinesstimestampdelay(maxLogTime);
