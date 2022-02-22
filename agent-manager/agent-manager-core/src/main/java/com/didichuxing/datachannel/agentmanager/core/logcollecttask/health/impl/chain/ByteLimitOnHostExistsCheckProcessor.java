@@ -71,7 +71,7 @@ public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
          */
         Long currentTime = System.currentTimeMillis();
         Long startTime = currentTime - LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
-        Double limitMs = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object limitMsObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
@@ -80,11 +80,12 @@ public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
                 AggregationCalcFunctionEnum.SUM.getValue(),
                 "limitTime"
         );
-        if(null == limitMs) {
-            limitMs = 0d;
+        Long limitMs = 0L;
+        if(null != limitMsObj) {
+            limitMs = Long.valueOf(limitMsObj.toString());
         }
         //主机cpu限流时长 单位：ms
-        return limitMs.longValue() > LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
+        return limitMs > LogCollectTaskHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
     }
 
 }

@@ -376,7 +376,7 @@
       tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.serviceNames = #{serviceNames,jdbcType=VARCHAR}
   </select>
 
-  <select id="aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask" resultType="java.lang.Double" parameterType="java.util.Map" >
+  <select id="aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask" resultType="java.lang.Object" parameterType="java.util.Map" >
     select
     ${function}(${fieldName})
     from tb_metrics_log_collect_task

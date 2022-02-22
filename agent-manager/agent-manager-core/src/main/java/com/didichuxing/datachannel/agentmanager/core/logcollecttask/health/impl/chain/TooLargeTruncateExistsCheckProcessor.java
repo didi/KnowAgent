@@ -73,7 +73,7 @@ public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"异常截断"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在异常截断
          */
-        Double tooLargeTruncateCount = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object tooLargeTruncateCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
@@ -82,10 +82,11 @@ public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
                 AggregationCalcFunctionEnum.SUM.getValue(),
                 "tooLargeTruncateNum"
         );
-        if(null == tooLargeTruncateCount) {
-            tooLargeTruncateCount = 0d;
+        Long tooLargeTruncateCount = 0L;
+        if(null != tooLargeTruncateCountObj) {
+            tooLargeTruncateCount = Long.valueOf(tooLargeTruncateCountObj.toString());
         }
-        return tooLargeTruncateCount.longValue() != 0L;
+        return tooLargeTruncateCount != 0L;
     }
 
 }

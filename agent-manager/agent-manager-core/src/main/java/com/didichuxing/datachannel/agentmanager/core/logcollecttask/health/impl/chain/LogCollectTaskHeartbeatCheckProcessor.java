@@ -71,7 +71,7 @@ public class LogCollectTaskHeartbeatCheckProcessor extends BaseProcessor {
          * 获取近 LogCollectTaskHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD 时间范围内 logCollectTaskId + fileLogCollectPathId + hostName 心跳数，
          * 心跳数量 == 0，表示 logCollectTaskId+fileLogCollectPathId 在 host 上不存在心跳
          */
-        Double heartbeatTimes = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object heartbeatTimesObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 logCollectTaskHostName,
@@ -80,11 +80,11 @@ public class LogCollectTaskHeartbeatCheckProcessor extends BaseProcessor {
                 AggregationCalcFunctionEnum.COUNT.getValue(),
                 "*"
         );
-        if(null == heartbeatTimes) {
-            heartbeatTimes = 0d;
+        Long heartbeatTimes = 0L;
+        if(null != heartbeatTimesObj) {
+            heartbeatTimes = Long.valueOf(heartbeatTimesObj.toString());
         }
-        return heartbeatTimes.longValue() != 0L;
+        return heartbeatTimes != 0L;
     }
 
 }
-

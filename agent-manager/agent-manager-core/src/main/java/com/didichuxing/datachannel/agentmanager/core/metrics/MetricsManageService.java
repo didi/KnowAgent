@@ -82,7 +82,7 @@ public interface MetricsManageService {
      *                collectTaskHostName = #{logCollectTaskHostName} AND
      *                heartbeatTime > #{heartbeatTimeStart} AND heartbeatTime <= #{heartbeatTimeEnd}
      */
-    Double getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+    Object getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
             Long logCollectTaskId,
             Long fileLogCollectPathId,
             String logCollectTaskHostName,

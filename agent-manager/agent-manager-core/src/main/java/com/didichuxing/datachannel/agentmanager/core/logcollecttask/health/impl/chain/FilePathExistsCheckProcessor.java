@@ -73,7 +73,7 @@ public class FilePathExistsCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"日志采集路径存在"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在对应待采集日志文件
          */
-        Double filePathExistsCount = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object filePathExistsCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
@@ -82,10 +82,11 @@ public class FilePathExistsCheckProcessor extends BaseProcessor {
                 AggregationCalcFunctionEnum.SUM.getValue(),
                 "collectPathIsExists"
         );
-        if(null == filePathExistsCount) {
-            filePathExistsCount = 0d;
+        Long filePathExistsCount = 0L;
+        if(null != filePathExistsCountObj) {
+            filePathExistsCount = Long.valueOf(filePathExistsCountObj.toString());
         }
-        return filePathExistsCount.longValue() != 0L;
+        return filePathExistsCount != 0L;
     }
 
 }

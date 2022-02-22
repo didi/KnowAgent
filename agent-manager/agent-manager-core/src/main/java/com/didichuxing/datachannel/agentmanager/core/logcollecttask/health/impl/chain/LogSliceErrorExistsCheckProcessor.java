@@ -72,7 +72,7 @@ public class LogSliceErrorExistsCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"错误日志输出存在"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片错误
          */
-        Double sliceErrorExists = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object sliceErrorExistsObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
@@ -81,10 +81,11 @@ public class LogSliceErrorExistsCheckProcessor extends BaseProcessor {
                 AggregationCalcFunctionEnum.SUM.getValue(),
                 "sliceErrorExists"
         );
-        if(null == sliceErrorExists) {
-            sliceErrorExists = 0d;
+        Long sliceErrorExists = 0L;
+        if(null != sliceErrorExistsObj) {
+            sliceErrorExists = Long.valueOf(sliceErrorExistsObj.toString());
         }
-        return sliceErrorExists.longValue() != 0L;
+        return sliceErrorExists != 0L;
     }
 
 }

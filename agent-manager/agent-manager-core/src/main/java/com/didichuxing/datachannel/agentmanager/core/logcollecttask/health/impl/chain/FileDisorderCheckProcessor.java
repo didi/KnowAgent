@@ -74,7 +74,7 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"文件乱序"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在日志乱序
          */
-        Double fileDisorderCount = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object fileDisorderCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
@@ -83,10 +83,11 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
                 AggregationCalcFunctionEnum.SUM.getValue(),
                 "disorderExists"
         );
-        if(null == fileDisorderCount) {
-            fileDisorderCount = 0d;
+        Long fileDisorderCount = 0L;
+        if(null != fileDisorderCountObj) {
+            fileDisorderCount = Long.valueOf(fileDisorderCountObj.toString());
         }
-        return fileDisorderCount.longValue() != 0L;
+        return fileDisorderCount != 0L;
     }
 
 }

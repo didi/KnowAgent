@@ -69,7 +69,7 @@ public class ConcurrentCollectExistsCheckProcessor extends BaseProcessor {
          * 心跳数量 > LogCollectTaskHealthCheckConstant.HOST_CPU_LIMIT_CHECK_LASTEST_MS_THRESHOLD，表示 logCollectTaskId+fileLogCollectPathId 在 host 上是否存在多 agent 并发采集
          */
         Long startTime = logCollectTaskHealthCheckTimeEnd - LogCollectTaskHealthCheckConstant.CONCURRENT_COLLECT_CHECK_LASTEST_MS_THRESHOLD;
-        Double heartbeatTimes = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object heartbeatTimesObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
@@ -78,10 +78,11 @@ public class ConcurrentCollectExistsCheckProcessor extends BaseProcessor {
                 AggregationCalcFunctionEnum.COUNT.getValue(),
                 "*"
         );
-        if(null == heartbeatTimes) {
-            heartbeatTimes = 0d;
+        Long heartbeatTimes = 0L;
+        if(null != heartbeatTimesObj) {
+            heartbeatTimes = Long.valueOf(heartbeatTimesObj.toString());
         }
-        return heartbeatTimes.longValue() > LogCollectTaskHealthCheckConstant.CONCURRENT_COLLECT_CHECK_HEARTBEAT_TIMES_THRESHOLD;
+        return heartbeatTimes > LogCollectTaskHealthCheckConstant.CONCURRENT_COLLECT_CHECK_HEARTBEAT_TIMES_THRESHOLD;
     }
 
 }

@@ -157,7 +157,7 @@ public interface MetricsLogCollectTaskPOMapper {
      *  function：聚合函数名
      *  fieldName：聚合字段名
      */
-    Double aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(Map<String, Object> params);
+    Object aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(Map<String, Object> params);
 
     /**
      * @param params

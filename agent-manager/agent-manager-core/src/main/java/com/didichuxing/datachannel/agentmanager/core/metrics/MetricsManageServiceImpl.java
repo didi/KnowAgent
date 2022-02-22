@@ -152,7 +152,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     @Override
-    public Double getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+    public Object getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
             Long logCollectTaskId,
             Long fileLogCollectPathId,
             String logCollectTaskHostName,
