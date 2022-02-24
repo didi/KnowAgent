@@ -15,6 +15,17 @@ public class PaginationRequestDTO {
     @ApiModelProperty(value = "当前第几页")
     private Integer pageNo;
 
+    @ApiModelProperty(value = "检索关键字")
+    private String queryTerm;
+
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public void setQueryTerm(String queryTerm) {
+        this.queryTerm = queryTerm;
+    }
+
     public Integer getPageSize() {
         return pageSize;
     }

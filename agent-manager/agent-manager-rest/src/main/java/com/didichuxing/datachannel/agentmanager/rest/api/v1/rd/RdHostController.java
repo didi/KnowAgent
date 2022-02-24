@@ -17,7 +17,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.host.HostPaginat
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostAgentVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
-import com.didichuxing.datachannel.agentmanager.common.constant.ProjectConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
@@ -34,7 +33,6 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,16 +98,8 @@ public class RdHostController {
     @ApiOperation(value = "查询主机&Agent列表", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_MACHINE_LIST)
-    public Result<PaginationResult<HostAgentVO>> listHostsAndAgents(@RequestBody HostPaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
-        //TODO：获取 projectId
-        String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
-        Long projectId = null;
-        if(StringUtils.isNotBlank(projectIdStr)) {
-            projectId = Long.valueOf(projectIdStr);
-        }
+    public Result<PaginationResult<HostAgentVO>> listHostsAndAgents(@RequestBody HostPaginationRequestDTO dto) {
         HostPaginationQueryConditionDO hostPaginationQueryConditionDO = hostPaginationRequestDTO2HostPaginationQueryConditionDO(dto);
-        hostPaginationQueryConditionDO.setProjectId(projectId);
         List<HostAgentDO> hostAgentDOList = hostManageService.paginationQueryByConditon(hostPaginationQueryConditionDO);
         List<HostAgentVO> resultSet = hostAgentDOList2HostAgentVOList(hostAgentDOList);
         PaginationResult<HostAgentVO> paginationResult = new PaginationResult<>(resultSet, hostManageService.queryCountByCondition(hostPaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
@@ -171,11 +161,17 @@ public class RdHostController {
         if (CollectionUtils.isNotEmpty(dto.getAgentHealthLevelList())) {
             hostPaginationQueryConditionDO.setAgentHealthLevelList(dto.getAgentHealthLevelList());
         }
+        if(CollectionUtils.isNotEmpty(dto.getMachineZoneList())) {
+            hostPaginationQueryConditionDO.setMachineZoneList(dto.getMachineZoneList());
+        }
         if (null != dto.getHostCreateTimeEnd()) {
             hostPaginationQueryConditionDO.setCreateTimeEnd(new Date(dto.getHostCreateTimeEnd()));
         }
         if (null != dto.getHostCreateTimeStart()) {
             hostPaginationQueryConditionDO.setCreateTimeStart(new Date(dto.getHostCreateTimeStart()));
+        }
+        if(StringUtils.isNotBlank(dto.getQueryTerm())) {
+            hostPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
         hostPaginationQueryConditionDO.setSortColumn(dto.getSortColumn());
         hostPaginationQueryConditionDO.setAsc(dto.getAsc());
