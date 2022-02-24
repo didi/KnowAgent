@@ -22,8 +22,6 @@ public interface LogCollectTaskHealthDetailPOMapper {
 
     int updateByPrimaryKey(LogCollectTaskHealthDetailPO record);
 
-    LogCollectTaskHealthDetailDO select(Long logCollectTaskId, Long pathId, String hostName);
-
     List<LogCollectTaskHealthDetailPO> selectByLogCollectTaskId(Long logCollectTaskId);
 
     /**

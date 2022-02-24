@@ -34,7 +34,11 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
 
     @Override
     public LogCollectTaskHealthDetailDO get(Long logCollectTaskId, Long pathId, String hostName) {
-        return logCollectTaskHealthDetailDAO.select(logCollectTaskId, pathId, hostName);
+        Map<String, Object> params = new HashMap<>();
+        params.put("logCollectTaskId", logCollectTaskId);
+        params.put("pathId", pathId);
+        params.put("hostName", hostName);
+        return ConvertUtil.obj2Obj(logCollectTaskHealthDetailDAO.get(params), LogCollectTaskHealthDetailDO.class);
     }
 
     @Override

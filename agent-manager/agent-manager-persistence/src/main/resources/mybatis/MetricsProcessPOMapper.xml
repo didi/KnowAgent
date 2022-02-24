@@ -392,7 +392,7 @@
       tb_metrics_process as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR}
   </select>
 
-  <select id="getLastRecord" resultType="BaseResultMap" parameterType="java.util.Map">
+  <select id="getLastRecord" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
     <include refid="Base_Column_List" />
     from tb_metrics_process

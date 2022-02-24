@@ -42,7 +42,7 @@ public class AgentHostSystemTimeCheckProcessor extends BaseProcessor {
      */
     private boolean checkHostSystemTime(MetricsSystemPO metricsSystemPO) {
         Long systemNtpOffset = metricsSystemPO.getSystemntpoffset();
-        if(systemNtpOffset > AgentHealthCheckConstant.AGENT_SYSTEM_TIME_GAP_CHECK_THRESHOLD) {
+        if(Math.abs(systemNtpOffset) > AgentHealthCheckConstant.AGENT_SYSTEM_TIME_GAP_CHECK_THRESHOLD) {
             return false;
         }
         return true;

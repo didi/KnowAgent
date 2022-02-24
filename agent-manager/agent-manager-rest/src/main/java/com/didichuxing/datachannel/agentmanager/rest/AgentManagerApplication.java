@@ -2,17 +2,27 @@ package com.didichuxing.datachannel.agentmanager.rest;
 
 import cn.hutool.core.lang.ClassScanner;
 import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.AgentHealthManageServiceImpl;
+import com.didichuxing.datachannel.agentmanager.core.agent.manage.impl.AgentManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.impl.DashboardManageServiceImpl;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.LogCollectTaskHealthManageServiceImpl;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl.LogCollectTaskManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +34,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * william.
@@ -71,7 +80,7 @@ public class AgentManagerApplication {
         /**
          * TODO：定时任务 fix
          */
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(5);
         pool.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
@@ -107,6 +116,64 @@ public class AgentManagerApplication {
                 }
             }
         },0, 1, TimeUnit.DAYS);
+
+        ExecutorService logCollectTaskHealthCheckThreadPool = Executors.newFixedThreadPool(2);
+        pool.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    LogCollectTaskManageServiceImpl logCollectTaskManageService = ctx.getBean(LogCollectTaskManageServiceImpl.class);
+                    LogCollectTaskHealthManageServiceImpl logCollectTaskHealthManageService = ctx.getBean(LogCollectTaskHealthManageServiceImpl.class);
+                    List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
+                    if (CollectionUtils.isEmpty(logCollectTaskDOList)) {
+                        LOGGER.warn("class=LogCollectTaskHealthCheckTask||method=execute||msg=LogCollectTaskDO List task is empty!!");
+                    }
+                    List<Future> futures = Lists.newArrayList();
+                    for (LogCollectTaskDO logCollectTaskDO : logCollectTaskDOList) {
+                        futures.add(logCollectTaskHealthCheckThreadPool.submit(() -> {
+                            LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = logCollectTaskHealthManageService.checkLogCollectTaskHealth(logCollectTaskDO);
+                            LOGGER.info("class=LogCollectTaskHealthCheckTask||method=execute||logCollectTaskId={}||"
+                                    + "logCollectTaskHealthLevel={}", logCollectTaskDO.getId(), logCollectTaskHealthLevelEnum.getDescription());
+                            return logCollectTaskHealthLevelEnum;
+                        }));
+                    }
+                    for (Future future : futures) {
+                        future.get();
+                    }
+                } catch (Exception ex) {
+                    LOGGER.error(String.format(" check logCollectTask health error, root cause is: %s", ex.getMessage()), ex);
+                }
+            }
+        },0, 10, TimeUnit.MINUTES);
+
+        ExecutorService agentHealthCheckThreadPool = Executors.newFixedThreadPool(2);
+        pool.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AgentManageServiceImpl agentManageService = ctx.getBean(AgentManageServiceImpl.class);
+                    AgentHealthManageServiceImpl agentHealthManageService = ctx.getBean(AgentHealthManageServiceImpl.class);
+                    List<AgentDO> agentDOList = agentManageService.list();
+                    if (CollectionUtils.isEmpty(agentDOList)) {
+                        LOGGER.warn("class=AgentHealthCheckTask||method=execute||msg=AgentDO List task is empty!!");
+                    }
+                    List<Future> futures = Lists.newArrayList();
+                    for (AgentDO agentDO : agentDOList) {
+                        futures.add(agentHealthCheckThreadPool.submit(() -> {
+                            AgentHealthLevelEnum agentHealthLevelEnum = agentHealthManageService.checkAgentHealth(agentDO);
+                            LOGGER.info("class=AgentHealthCheckTask||method=execute||agentId={}||"
+                                    + "agentHealthLevelEnum={}", agentDO.getId(), agentHealthLevelEnum.getDescription());
+                            return agentHealthLevelEnum;
+                        }));
+                    }
+                    for (Future future : futures) {
+                        future.get();
+                    }
+                } catch (Exception ex) {
+                    LOGGER.error(String.format(" check agent health error, root cause is: %s", ex.getMessage()), ex);
+                }
+            }
+        },0, 10, TimeUnit.MINUTES);
 
     }
 
