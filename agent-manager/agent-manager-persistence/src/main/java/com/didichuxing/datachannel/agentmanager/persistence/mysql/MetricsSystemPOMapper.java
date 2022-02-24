@@ -84,4 +84,11 @@ public interface MetricsSystemPOMapper {
      */
     void deleteByLtHeartbeatTime(Long heartBeatTime);
 
+    /**
+     * @param params
+     *  hostName：主机名
+     * @return 返回最后一个 system 指标数据
+     */
+    MetricsSystemPO getLastRecord(Map<String, Object> params);
+
 }

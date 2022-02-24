@@ -10,11 +10,11 @@ import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.con
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
 /**
- * Agent心跳检查
+ * agent的errorlogs流对应的下游接收端是否存在写入失败情况
  * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 2, type = HealthCheckProcessorEnum.AGENT)
-public class AgentHeartBeatCheckProcessor extends BaseProcessor {
+@HealthCheckProcessorAnnotation(seq = 4, type = HealthCheckProcessorEnum.AGENT)
+public class ErrorLogsSendFailedExistsCheckProcessor extends BaseProcessor {
 
     @Override
     protected void process(AgentHealthCheckContext context) {
@@ -30,39 +30,35 @@ public class AgentHeartBeatCheckProcessor extends BaseProcessor {
         /*
          * 校验在距当前时间的心跳存活判定周期内，agent 是否存在心跳
          */
-        boolean alive = checkAliveByHeartbeat(
-                context.getAgentDO().getHostName(),
-                context.getMetricsManageService()
+        boolean errorLogsSendExceptionExists = checkErrorLogsSendExceptionExists(
+                context.getMetricsManageService(),
+                context.getAgentDO().getHostName()
         );
-        if(!alive) {// 如不存活
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_HEART_BEAT_NOT_EXISTS, context);
+        if(errorLogsSendExceptionExists) {//  存在
+            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_SEND_FAILED_EXISTS, context);
         }
     }
 
     /**
-     * 校验在距当前时间的心跳存活判定周期内，agent 是否存或
-     * @param hostName agent 主机名
+     * 检查 agent error logs 发送对应下游接收端是否存在错误
      * @param metricsManageService MetricsManageService 对象
-     * @return true：存活 false：不存活
+     * @param hostName 主机名
+     * @return true：存在 false：不存在
      */
-    private boolean checkAliveByHeartbeat(String hostName, MetricsManageService metricsManageService) {
-        /*
-         * 获取近 AgentHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD 时间范围内 agent 心跳数，
-         * 心跳数量 == 0，表示 agent 不存在心跳
-         */
+    private boolean checkErrorLogsSendExceptionExists(MetricsManageService metricsManageService, String hostName) {
         Long currentTime = System.currentTimeMillis();
-        Object heartbeatTimesObj = metricsManageService.getAggregationQueryPerHostNameFromMetricsAgent(
+        Object errorLogsSendFailedCountObj = metricsManageService.getAggregationQueryPerHostNameFromMetricsAgent(
                 hostName,
-                currentTime - AgentHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD,
+                currentTime - AgentHealthCheckConstant.AGENT_ERROR_LOGS_SEND_FAILED_CHECK_LASTEST_MS_THRESHOLD,
                 currentTime,
-                AggregationCalcFunctionEnum.COUNT.getValue(),
-                "*"
+                AggregationCalcFunctionEnum.SUM.getValue(),
+                "errorLogsSendFailedCount"
         );
-        Long heartbeatTimes = 0L;
-        if(null != heartbeatTimesObj) {
-            heartbeatTimes = Long.valueOf(heartbeatTimesObj.toString());
+        Long errorLogsSendFailedCount = 0L;
+        if(null != errorLogsSendFailedCountObj) {
+            errorLogsSendFailedCount = Long.valueOf(errorLogsSendFailedCountObj.toString());
         }
-        return heartbeatTimes != 0L;
+        return errorLogsSendFailedCount != 0;
     }
 
 }

@@ -92,4 +92,21 @@ public interface MetricsProcessPOMapper {
      */
     void deleteByLtHeartbeatTime(Long heartBeatTime);
 
+    /**
+     * @param params
+     *  hostName：主机名
+     * @return 返回最后一个 process 指标数据
+     */
+    MetricsProcessPO getLastRecord(Map<String, Object> params);
+
+    /**
+     * @param params
+     *  hostName：日志采集任务运行主机名
+     *  startTime：心跳开始时间（>）
+     *  endTime：心跳结束时间(<=)
+     *  function：聚合函数名
+     *  fieldName：聚合字段名
+     */
+    Object getAggregationQueryPerHostNameFromMetricsProcess(Map<String, Object> params);
+
 }

@@ -181,6 +181,55 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return metricsLogCollectTaskDAO.getLastRecord(params);
     }
 
+    @Override
+    public Object getAggregationQueryPerHostNameFromMetricsAgent(
+            String hostName,
+            Long heartbeatTimeStart,
+            Long heartbeatTimeEnd,
+            String aggregationFunction,
+            String aggregationField
+    ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("hostName", hostName);
+        params.put("startTime", heartbeatTimeStart);
+        params.put("endTime", heartbeatTimeEnd);
+        params.put("function", aggregationFunction);
+        params.put("fieldName", aggregationField);
+        return metricsAgentDAO.getAggregationQueryPerHostNameFromMetricsAgent(params);
+    }
+
+    @Override
+    public MetricsAgentPO getLastAgentMetric(String hostName) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("hostName", hostName);
+        return metricsAgentDAO.getLastRecord(params);
+    }
+
+    @Override
+    public MetricsSystemPO getLastSystemMetric(String hostName) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("hostName", hostName);
+        return metricsSystemDAO.getLastRecord(params);
+    }
+
+    @Override
+    public MetricsProcessPO getLastProcessMetric(String hostName) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("hostName", hostName);
+        return metricsProcessDAO.getLastRecord(params);
+    }
+
+    @Override
+    public Object getAggregationQueryPerHostNameFromMetricsProcess(String hostName, Long heartbeatTimeStart, Long heartbeatTimeEnd, String aggregationFunction, String aggregationField) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("hostName", hostName);
+        params.put("startTime", heartbeatTimeStart);
+        params.put("endTime", heartbeatTimeEnd);
+        params.put("function", aggregationFunction);
+        params.put("fieldName", aggregationField);
+        return metricsProcessDAO.getAggregationQueryPerHostNameFromMetricsProcess(params);
+    }
+
     private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerServiceNames(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n logcollecttask

@@ -1,7 +1,10 @@
 package com.didichuxing.datachannel.agentmanager.core.metrics;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.BusinessMetricsQueryDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
@@ -99,5 +102,61 @@ public interface MetricsManageService {
      * @return 返回最后一个日志采集任务指标数据
      */
     MetricsLogCollectTaskPO getLastLogCollectTaskMetric(Long logCollectTaskId, Long pathId, String hostName);
+
+    /**
+     * @param hostName 主机名
+     * @param heartbeatTimeStart 心跳开始时间戳（>）
+     * @param heartbeatTimeEnd 心跳结束时间戳（<=）
+     * @param aggregationFunction 聚合函数名
+     * @param aggregationField 聚合字段名
+     * @return SELECT #{aggregationFunction}(#{aggregationFunction})
+     *          FROM tb_metrics_agent
+     *          WHERE hostName = #{hostName} AND
+     *                heartbeatTime > #{heartbeatTimeStart} AND heartbeatTime <= #{heartbeatTimeEnd}
+     */
+    Object getAggregationQueryPerHostNameFromMetricsAgent(
+            String hostName,
+            Long heartbeatTimeStart,
+            Long heartbeatTimeEnd,
+            String aggregationFunction,
+            String aggregationField
+    );
+
+    /**
+     * @param hostName 主机名
+     * @return 返回最后一个 agent 指标数据
+     */
+    MetricsAgentPO getLastAgentMetric(String hostName);
+
+    /**
+     * @param hostName 主机名
+     * @return 返回最后一个 system 指标数据
+     */
+    MetricsSystemPO getLastSystemMetric(String hostName);
+
+    /**
+     * @param hostName 主机名
+     * @return 返回最后一个 process 指标数据
+     */
+    MetricsProcessPO getLastProcessMetric(String hostName);
+
+    /**
+     * @param hostName 主机名
+     * @param heartbeatTimeStart 心跳开始时间戳（>）
+     * @param heartbeatTimeEnd 心跳结束时间戳（<=）
+     * @param aggregationFunction 聚合函数名
+     * @param aggregationField 聚合字段名
+     * @return SELECT #{aggregationFunction}(#{aggregationFunction})
+     *          FROM tb_metrics_process
+     *          WHERE hostName = #{hostName} AND
+     *                heartbeatTime > #{heartbeatTimeStart} AND heartbeatTime <= #{heartbeatTimeEnd}
+     */
+    Object getAggregationQueryPerHostNameFromMetricsProcess(
+            String hostName,
+            Long heartbeatTimeStart,
+            Long heartbeatTimeEnd,
+            String aggregationFunction,
+            String aggregationField
+    );
 
 }

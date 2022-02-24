@@ -176,6 +176,28 @@
       tb_metrics_agent as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR}
   </select>
 
+  <select id="getAggregationQueryPerHostNameFromMetricsAgent" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName})
+    from tb_metrics_agent
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime}
+      and
+      heartbeatTime &lt;= #{endTime}
+  </select>
+
+  <select id="getLastRecord" resultType="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_agent
+    where
+    hostName = #{hostName,jdbcType=VARCHAR}
+    order by heartbeatTime desc
+    limit 1
+  </select>
+
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
     insert into tb_metrics_agent (id, hostName, limitTps, 
       cpuLimit, agentVersion, readBytes, 

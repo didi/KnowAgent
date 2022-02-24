@@ -32,6 +32,18 @@ public class AgentHealthDO extends BaseDO {
      *  agent上一次启动时间
      */
     private Long agentStartupTimeLastTime;
+    /**
+     * agent 巡检结果类型
+     */
+    private Integer agentHealthInspectionResultType;
+
+    public Integer getAgentHealthInspectionResultType() {
+        return agentHealthInspectionResultType;
+    }
+
+    public void setAgentHealthInspectionResultType(Integer agentHealthInspectionResultType) {
+        this.agentHealthInspectionResultType = agentHealthInspectionResultType;
+    }
 
     public Long getAgentStartupTime() {
         return agentStartupTime;
