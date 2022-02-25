@@ -160,14 +160,18 @@
     from tb_agent_version
     <where>
       1 = 1
+      <if test="queryTerm != null">
+        and (
+            file_name like concat('%',#{queryTerm},'%')
+            or
+            description like concat('%',#{queryTerm},'%')
+        )
+      </if>
       <if test="agentVersionList != null">
         and version in
         <foreach collection="agentVersionList" item="agentVersion" index="index" open="(" close=")" separator=",">
           #{agentVersion}
         </foreach>
-      </if>
-      <if test="agentPackageName != null">
-        and file_name like concat('%',#{agentPackageName},'%')
       </if>
       <if test="agentVersionCreateTimeStart != null">
         and create_time >= #{agentVersionCreateTimeStart}
@@ -202,14 +206,18 @@
     from tb_agent_version
     <where>
       1 = 1
+      <if test="queryTerm != null">
+        and (
+        file_name like concat('%',#{queryTerm},'%')
+        or
+        description like concat('%',#{queryTerm},'%')
+        )
+      </if>
       <if test="agentVersionList != null">
         and version in
         <foreach collection="agentVersionList" item="agentVersion" index="index" open="(" close=")" separator=",">
           #{agentVersion}
         </foreach>
-      </if>
-      <if test="agentPackageName != null">
-        and file_name like concat('%',#{agentPackageName},'%')
       </if>
       <if test="agentVersionCreateTimeStart != null">
         and create_time >= #{agentVersionCreateTimeStart}

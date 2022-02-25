@@ -35,14 +35,20 @@
     from tb_kafka_cluster
     <where>
       1 = 1
-      <if test="kafkaClusterName != null">
-        and kafka_cluster_name like concat('%',#{kafkaClusterName},'%')
+      <if test="queryTerm != null">
+          and (
+            kafka_cluster_name like concat('%',#{queryTerm},'%')
+            or
+            kafka_cluster_broker_configuration like concat('%',#{queryTerm},'%')
+            or
+            kafka_cluster_producer_init_configuration like concat('%',#{queryTerm},'%')
+          )
       </if>
       <if test="createTimeStart != null">
-        and create_time >= #{createTimeStart}
+          and create_time >= #{createTimeStart}
       </if>
       <if test="createTimeEnd != null">
-        and #{createTimeEnd} >= create_time
+          and #{createTimeEnd} >= create_time
       </if>
     </where>
     order by
@@ -71,8 +77,14 @@
     from tb_kafka_cluster
     <where>
       1 = 1
-      <if test="kafkaClusterName != null">
-        and kafka_cluster_name like concat('%',#{kafkaClusterName},'%')
+      <if test="queryTerm != null">
+        and (
+        kafka_cluster_name like concat('%',#{queryTerm},'%')
+        or
+        kafka_cluster_broker_configuration like concat('%',#{queryTerm},'%')
+        or
+        kafka_cluster_producer_init_configuration like concat('%',#{queryTerm},'%')
+        )
       </if>
       <if test="createTimeStart != null">
         and create_time >= #{createTimeStart}

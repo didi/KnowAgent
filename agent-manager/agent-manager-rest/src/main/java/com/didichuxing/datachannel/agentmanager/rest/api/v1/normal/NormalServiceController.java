@@ -47,15 +47,8 @@ public class NormalServiceController {
     @ApiOperation(value = "查询服务列表 & 各服务关联的主机数", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    public Result<PaginationResult<ServicePaginationRecordVO>> listServicesAndRelationHostCount(@RequestBody ServicePaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
-        //TODO：获取 projectId
-        String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
-        Long projectId = null;
-        if(StringUtils.isNotBlank(projectIdStr)) {
-            projectId = Long.valueOf(projectIdStr);
-        }
+    public Result<PaginationResult<ServicePaginationRecordVO>> listServicesAndRelationHostCount(@RequestBody ServicePaginationRequestDTO dto) {
         ServicePaginationQueryConditionDO servicePaginationQueryConditionDO = servicePaginationRequestDTO2ServicePaginationQueryConditionDO(dto);
-        servicePaginationQueryConditionDO.setProjectId(projectId);
         List<ServicePaginationRecordVO> servicePaginationRecordVOList = servicePaginationRecordDOList2ServicePaginationRecordVOList(serviceManageService.paginationQueryByConditon(servicePaginationQueryConditionDO));
         PaginationResult<ServicePaginationRecordVO> paginationResult = new PaginationResult<>(servicePaginationRecordVOList, serviceManageService.queryCountByCondition(servicePaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
         return Result.buildSucc(paginationResult);
@@ -86,6 +79,9 @@ public class NormalServiceController {
         }
         if (StringUtils.isNotBlank(dto.getServicename())) {
             servicePaginationQueryConditionDO.setServiceName(dto.getServicename().replace("_", "\\_").replace("%", "\\%"));
+        }
+        if(StringUtils.isNotBlank(dto.getQueryTerm())) {
+            servicePaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
         servicePaginationQueryConditionDO.setSortColumn(dto.getSortColumn());
         servicePaginationQueryConditionDO.setAsc(dto.getAsc());

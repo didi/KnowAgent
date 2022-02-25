@@ -24,10 +24,6 @@ public class ServicePaginationQueryConditionDO {
      * 获取满足条件的 top limitSize 结果集行数
      */
     private Integer limitSize;
-    /**
-     * 项目id
-     */
-    private Long projectId;
 
     /**
      * 排序依照的字段
@@ -38,6 +34,11 @@ public class ServicePaginationQueryConditionDO {
      * 排序是否升序
      */
     private Boolean asc;
+
+    /**
+     * 查询关键字
+     */
+    private String queryTerm;
 
     public ServicePaginationQueryConditionDO() {
     }
@@ -90,14 +91,6 @@ public class ServicePaginationQueryConditionDO {
         this.limitSize = limitSize;
     }
 
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
     public String getSortColumn() {
         return sortColumn;
     }
@@ -115,4 +108,11 @@ public class ServicePaginationQueryConditionDO {
         this.asc = asc;
     }
 
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public void setQueryTerm(String queryTerm) {
+        this.queryTerm = queryTerm;
+    }
 }

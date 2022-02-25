@@ -104,49 +104,41 @@
             t1.ip like concat('%',#{queryTerm},'%')
         )
       </if>
-      <if test="queryTerm == null">
-        <if test="hostName != null">
-          and t1.host_name like concat('%',#{hostName},'%')
-        </if>
-        <if test="ip != null">
-          and t1.ip like concat('%',#{ip},'%')
-        </if>
-        <if test="agentVersionIdList != null">
+      <if test="agentVersionIdList != null">
           and t3.agent_version_id in
           <foreach collection="agentVersionIdList" item="agentVersionId" index="index" open="(" close=")" separator=",">
             #{agentVersionId}
           </foreach>
-        </if>
-        <if test="agentHealthLevelList != null">
+      </if>
+      <if test="agentHealthLevelList != null">
           and t5.agent_health_level in
           <foreach collection="agentHealthLevelList" item="agentHealthLevel" index="index" open="(" close=")" separator=",">
             #{agentHealthLevel}
           </foreach>
-        </if>
-        <if test="containerList != null">
+      </if>
+      <if test="containerList != null">
           and t1.container in
           <foreach collection="containerList" item="container" index="index" open="(" close=")" separator=",">
             #{container}
           </foreach>
-        </if>
-        <if test="serviceIdList != null">
+      </if>
+      <if test="serviceIdList != null">
           and t2.service_id in
           <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
             #{serviceId}
           </foreach>
-        </if>
-        <if test="machineZoneList != null">
+      </if>
+      <if test="machineZoneList != null">
           and t1.machine_zone in
           <foreach collection="machineZoneList" item="machineZone" index="index" open="(" close=")" separator=",">
             #{machineZone}
           </foreach>
-        </if>
-        <if test="createTimeStart != null">
+      </if>
+      <if test="createTimeStart != null">
           and t1.create_time >= #{createTimeStart}
-        </if>
-        <if test="createTimeEnd != null">
+      </if>
+      <if test="createTimeEnd != null">
           and #{createTimeEnd} >= t1.create_time
-        </if>
       </if>
     </where>
     order by
@@ -186,49 +178,41 @@
         t1.ip like concat('%',#{queryTerm},'%')
         )
       </if>
-      <if test="queryTerm == null">
-        <if test="hostName != null">
-          and t1.host_name like concat('%',#{hostName},'%')
-        </if>
-        <if test="ip != null">
-          and t1.ip like concat('%',#{ip},'%')
-        </if>
-        <if test="agentVersionIdList != null">
-          and t3.agent_version_id in
-          <foreach collection="agentVersionIdList" item="agentVersionId" index="index" open="(" close=")" separator=",">
-            #{agentVersionId}
-          </foreach>
-        </if>
-        <if test="agentHealthLevelList != null">
-          and t5.agent_health_level in
-          <foreach collection="agentHealthLevelList" item="agentHealthLevel" index="index" open="(" close=")" separator=",">
-            #{agentHealthLevel}
-          </foreach>
-        </if>
-        <if test="containerList != null">
-          and t1.container in
-          <foreach collection="containerList" item="container" index="index" open="(" close=")" separator=",">
-            #{container}
-          </foreach>
-        </if>
-        <if test="serviceIdList != null">
-          and t2.service_id in
-          <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
-            #{serviceId}
-          </foreach>
-        </if>
-        <if test="machineZoneList != null">
-          and t1.machine_zone in
-          <foreach collection="machineZoneList" item="machineZone" index="index" open="(" close=")" separator=",">
-            #{machineZone}
-          </foreach>
-        </if>
-        <if test="createTimeStart != null">
-          and t1.create_time >= #{createTimeStart}
-        </if>
-        <if test="createTimeEnd != null">
-          and #{createTimeEnd} >= t1.create_time
-        </if>
+      <if test="agentVersionIdList != null">
+        and t3.agent_version_id in
+        <foreach collection="agentVersionIdList" item="agentVersionId" index="index" open="(" close=")" separator=",">
+          #{agentVersionId}
+        </foreach>
+      </if>
+      <if test="agentHealthLevelList != null">
+        and t5.agent_health_level in
+        <foreach collection="agentHealthLevelList" item="agentHealthLevel" index="index" open="(" close=")" separator=",">
+          #{agentHealthLevel}
+        </foreach>
+      </if>
+      <if test="containerList != null">
+        and t1.container in
+        <foreach collection="containerList" item="container" index="index" open="(" close=")" separator=",">
+          #{container}
+        </foreach>
+      </if>
+      <if test="serviceIdList != null">
+        and t2.service_id in
+        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+          #{serviceId}
+        </foreach>
+      </if>
+      <if test="machineZoneList != null">
+        and t1.machine_zone in
+        <foreach collection="machineZoneList" item="machineZone" index="index" open="(" close=")" separator=",">
+          #{machineZone}
+        </foreach>
+      </if>
+      <if test="createTimeStart != null">
+        and t1.create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= t1.create_time
       </if>
     </where>
     ) as t4

@@ -45,7 +45,6 @@ public class NormalReceiverController {
     @ApiOperation(value = "查询接收端", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_KAFKA_CLUSTER_LIST)
     public Result<PaginationResult<ReceiverVO>> listReceivers(@RequestBody ReceiverPaginationRequestDTO dto) {
         ReceiverPaginationQueryConditionDO receiverPaginationQueryConditionDO = receiverPaginationRequestDTO2ReceiverPaginationQueryConditionDO(dto);
         List<ReceiverVO> receiverVOList = receiverDOList2ReceiverVOList(kafkaClusterManageService.paginationQueryByCondition(receiverPaginationQueryConditionDO));
@@ -153,6 +152,9 @@ public class NormalReceiverController {
         }
         if(null != dto.getReceiverCreateTimeStart()) {
             receiverPaginationQueryConditionDO.setCreateTimeStart(new Date(dto.getReceiverCreateTimeStart()));
+        }
+        if(StringUtils.isNotBlank(dto.getQueryTerm())) {
+            receiverPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
         receiverPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         receiverPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());

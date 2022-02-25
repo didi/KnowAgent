@@ -35,6 +35,19 @@ public class ReceiverPaginationQueryConditionDO {
      */
     private Boolean asc;
 
+    /**
+     * 查询关键字
+     */
+    private String queryTerm;
+
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public void setQueryTerm(String queryTerm) {
+        this.queryTerm = queryTerm;
+    }
+
     public ReceiverPaginationQueryConditionDO() {
     }
 

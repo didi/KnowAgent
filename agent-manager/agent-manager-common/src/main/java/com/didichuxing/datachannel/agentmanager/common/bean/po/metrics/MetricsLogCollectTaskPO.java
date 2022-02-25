@@ -23,11 +23,11 @@ public class MetricsLogCollectTaskPO {
 
     private Long toolargetruncatenumtotal;
 
-    private Byte collectpathisexists;
+    private Integer collectpathisexists;
 
-    private Byte disorderexists;
+    private Integer disorderexists;
 
-    private Byte sliceerrorexists;
+    private Integer sliceerrorexists;
 
     private Long readbytes;
 
@@ -309,27 +309,27 @@ public class MetricsLogCollectTaskPO {
         this.toolargetruncatenumtotal = toolargetruncatenumtotal;
     }
 
-    public Byte getCollectpathisexists() {
+    public Integer getCollectpathisexists() {
         return collectpathisexists;
     }
 
-    public void setCollectpathisexists(Byte collectpathisexists) {
+    public void setCollectpathisexists(Integer collectpathisexists) {
         this.collectpathisexists = collectpathisexists;
     }
 
-    public Byte getDisorderexists() {
+    public Integer getDisorderexists() {
         return disorderexists;
     }
 
-    public void setDisorderexists(Byte disorderexists) {
+    public void setDisorderexists(Integer disorderexists) {
         this.disorderexists = disorderexists;
     }
 
-    public Byte getSliceerrorexists() {
+    public Integer getSliceerrorexists() {
         return sliceerrorexists;
     }
 
-    public void setSliceerrorexists(Byte sliceerrorexists) {
+    public void setSliceerrorexists(Integer sliceerrorexists) {
         this.sliceerrorexists = sliceerrorexists;
     }
 

@@ -90,37 +90,29 @@
             t1.id like concat('%',#{queryTerm},'%')
           )
       </if>
-      <if test="queryTerm == null">
-        <if test="logCollectTaskName != null">
-          and t1.log_collect_task_name like concat('%',#{logCollectTaskName},'%')
-        </if>
-        <if test="logCollectTaskId != null">
-          and t1.id = #{logCollectTaskId}
-        </if>
-        <if test="logCollectTaskTypeList != null">
+      <if test="logCollectTaskTypeList != null">
           and t1.log_collect_task_type in
           <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
             #{logCollectTaskType}
           </foreach>
-        </if>
-        <if test="logCollectTaskHealthLevelList != null">
+      </if>
+      <if test="logCollectTaskHealthLevelList != null">
           and t3.log_collect_task_health_level in
           <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
             #{logCollectTaskHealthLevel}
           </foreach>
-        </if>
-        <if test="serviceIdList != null">
+      </if>
+      <if test="serviceIdList != null">
           and t2.service_id in
           <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
             #{serviceId}
           </foreach>
-        </if>
-        <if test="createTimeStart != null">
+      </if>
+      <if test="createTimeStart != null">
           and t1.create_time >= #{createTimeStart}
-        </if>
-        <if test="createTimeEnd != null">
+      </if>
+      <if test="createTimeEnd != null">
           and #{createTimeEnd} >= t1.create_time
-        </if>
       </if>
     </where>
     ORDER BY
@@ -160,37 +152,29 @@
         t1.id like concat('%',#{queryTerm},'%')
         )
       </if>
-      <if test="queryTerm == null">
-        <if test="logCollectTaskName != null">
-          and t1.log_collect_task_name like concat('%',#{logCollectTaskName},'%')
-        </if>
-        <if test="logCollectTaskId != null">
-          and t1.id = #{logCollectTaskId}
-        </if>
-        <if test="logCollectTaskTypeList != null">
-          and t1.log_collect_task_type in
-          <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
-            #{logCollectTaskType}
-          </foreach>
-        </if>
-        <if test="logCollectTaskHealthLevelList != null">
-          and t3.log_collect_task_health_level in
-          <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
-            #{logCollectTaskHealthLevel}
-          </foreach>
-        </if>
-        <if test="serviceIdList != null">
-          and t2.service_id in
-          <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
-            #{serviceId}
-          </foreach>
-        </if>
-        <if test="createTimeStart != null">
-          and t1.create_time >= #{createTimeStart}
-        </if>
-        <if test="createTimeEnd != null">
-          and #{createTimeEnd} >= t1.create_time
-        </if>
+      <if test="logCollectTaskTypeList != null">
+        and t1.log_collect_task_type in
+        <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskType}
+        </foreach>
+      </if>
+      <if test="logCollectTaskHealthLevelList != null">
+        and t3.log_collect_task_health_level in
+        <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskHealthLevel}
+        </foreach>
+      </if>
+      <if test="serviceIdList != null">
+        and t2.service_id in
+        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+          #{serviceId}
+        </foreach>
+      </if>
+      <if test="createTimeStart != null">
+        and t1.create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= t1.create_time
       </if>
     </where>
     ) as t4

@@ -13,9 +13,9 @@
     <result column="limitTime" property="limittime" jdbcType="BIGINT" />
     <result column="tooLargeTruncateNum" property="toolargetruncatenum" jdbcType="BIGINT" />
     <result column="tooLargeTruncateNumTotal" property="toolargetruncatenumtotal" jdbcType="BIGINT" />
-    <result column="collectPathIsExists" property="collectpathisexists" jdbcType="TINYINT" />
-    <result column="disorderExists" property="disorderexists" jdbcType="TINYINT" />
-    <result column="sliceErrorExists" property="sliceerrorexists" jdbcType="TINYINT" />
+    <result column="collectPathIsExists" property="collectpathisexists" jdbcType="INTEGER" />
+    <result column="disorderExists" property="disorderexists" jdbcType="INTEGER" />
+    <result column="sliceErrorExists" property="sliceerrorexists" jdbcType="INTEGER" />
     <result column="readBytes" property="readbytes" jdbcType="BIGINT" />
     <result column="readCount" property="readcount" jdbcType="BIGINT" />
     <result column="sendBytes" property="sendbytes" jdbcType="BIGINT" />
@@ -453,7 +453,7 @@
       #{agenthostname,jdbcType=VARCHAR}, #{collecttaskhostname,jdbcType=VARCHAR}, #{agenthostip,jdbcType=VARCHAR}, 
       #{businesstimestamp,jdbcType=BIGINT}, #{maxbusinesstimestampdelay,jdbcType=BIGINT}, 
       #{limittime,jdbcType=BIGINT}, #{toolargetruncatenum,jdbcType=BIGINT}, #{toolargetruncatenumtotal,jdbcType=BIGINT}, 
-      #{collectpathisexists,jdbcType=TINYINT}, #{disorderexists,jdbcType=TINYINT}, #{sliceerrorexists,jdbcType=TINYINT}, 
+      #{collectpathisexists,jdbcType=INTEGER}, #{disorderexists,jdbcType=INTEGER}, #{sliceerrorexists,jdbcType=INTEGER},
       #{readbytes,jdbcType=BIGINT}, #{readcount,jdbcType=BIGINT}, #{sendbytes,jdbcType=BIGINT}, 
       #{sendcount,jdbcType=BIGINT}, #{readtimeperevent,jdbcType=BIGINT}, #{readtimepereventmin,jdbcType=BIGINT}, 
       #{readtimepereventmax,jdbcType=BIGINT}, #{readtimepereventmean,jdbcType=BIGINT}, 
@@ -839,13 +839,13 @@
         #{toolargetruncatenumtotal,jdbcType=BIGINT},
       </if>
       <if test="collectpathisexists != null" >
-        #{collectpathisexists,jdbcType=TINYINT},
+        #{collectpathisexists,jdbcType=INTEGER},
       </if>
       <if test="disorderexists != null" >
-        #{disorderexists,jdbcType=TINYINT},
+        #{disorderexists,jdbcType=INTEGER},
       </if>
       <if test="sliceerrorexists != null" >
-        #{sliceerrorexists,jdbcType=TINYINT},
+        #{sliceerrorexists,jdbcType=INTEGER},
       </if>
       <if test="readbytes != null" >
         #{readbytes,jdbcType=BIGINT},

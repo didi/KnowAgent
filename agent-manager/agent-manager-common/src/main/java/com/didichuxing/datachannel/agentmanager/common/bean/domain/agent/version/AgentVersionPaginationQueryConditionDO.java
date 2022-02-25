@@ -40,6 +40,19 @@ public class AgentVersionPaginationQueryConditionDO {
      */
     private Boolean asc;
 
+    /**
+     * 检索关键字
+     */
+    private String queryTerm;
+
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public void setQueryTerm(String queryTerm) {
+        this.queryTerm = queryTerm;
+    }
+
     public AgentVersionPaginationQueryConditionDO() {
     }
 
