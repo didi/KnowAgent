@@ -51,10 +51,11 @@ public class LogCollectTaskPaginationQueryConditionDO {
      * 是否升序
      */
     private Boolean asc;
+
     /**
-     * 项目id
+     * 查询关键字
      */
-    private Long projectId;
+    private String queryTerm;
 
     public LogCollectTaskPaginationQueryConditionDO() {
     }
@@ -103,14 +104,6 @@ public class LogCollectTaskPaginationQueryConditionDO {
         return createTimeStart;
     }
 
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
     public void setCreateTimeStart(Date createTimeStart) {
         this.createTimeStart = createTimeStart;
     }
@@ -153,5 +146,13 @@ public class LogCollectTaskPaginationQueryConditionDO {
 
     public void setAsc(Boolean asc) {
         this.asc = asc;
+    }
+
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public void setQueryTerm(String queryTerm) {
+        this.queryTerm = queryTerm;
     }
 }

@@ -33,14 +33,12 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.Receiver
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskConstant;
-import com.didichuxing.datachannel.agentmanager.common.constant.ProjectConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
-import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
@@ -58,7 +56,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,9 +78,6 @@ public class NormalLogCollectTaskController {
 
     @Autowired
     private LogCollectTaskHealthManageService logCollectTaskHealthManageService;
-
-    @Autowired
-    private HostManageService hostManageService;
 
     @ApiOperation(value = "新增日志采集任务", notes = "")
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -116,16 +110,17 @@ public class NormalLogCollectTaskController {
     @ApiOperation(value = "查询日志采集任务列表", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
-        String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
-        Long projectId = null;
-        if (StringUtils.isNotBlank(projectIdStr)) {
-            projectId = Long.valueOf(projectIdStr);
-        }
+    public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto) {
         LogCollectTaskPaginationQueryConditionDO logCollectTaskPaginationQueryConditionDO = LogCollectTaskPaginationRequestDTO2LogCollectTaskPaginationQueryConditionDO(dto);
-        logCollectTaskPaginationQueryConditionDO.setProjectId(projectId);
-        List<LogCollectTaskPaginationRecordVO> logCollectTaskPaginationRecordVOList = logCollectTaskPaginationRecordDOList2LogCollectTaskPaginationRecordVOList(logCollectTaskManageService.paginationQueryByConditon(logCollectTaskPaginationQueryConditionDO));
-        PaginationResult<LogCollectTaskPaginationRecordVO> paginationResult = new PaginationResult<>(logCollectTaskPaginationRecordVOList, logCollectTaskManageService.queryCountByCondition(logCollectTaskPaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
+        List<LogCollectTaskPaginationRecordVO> logCollectTaskPaginationRecordVOList = logCollectTaskPaginationRecordDOList2LogCollectTaskPaginationRecordVOList(
+                logCollectTaskManageService.paginationQueryByConditon(logCollectTaskPaginationQueryConditionDO)
+        );
+        PaginationResult<LogCollectTaskPaginationRecordVO> paginationResult = new PaginationResult<>(
+                logCollectTaskPaginationRecordVOList,
+                logCollectTaskManageService.queryCountByCondition(logCollectTaskPaginationQueryConditionDO),
+                dto.getPageNo(),
+                dto.getPageSize()
+        );
         return Result.buildSucc(paginationResult);
     }
 
@@ -324,6 +319,9 @@ public class NormalLogCollectTaskController {
         }
         if (null != dto.getLocCollectTaskCreateTimeStart()) {
             logCollectTaskPaginationQueryConditionDO.setCreateTimeStart(new Date(dto.getLocCollectTaskCreateTimeStart()));
+        }
+        if(StringUtils.isNotBlank(dto.getQueryTerm())) {
+            logCollectTaskPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
         logCollectTaskPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         logCollectTaskPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());
