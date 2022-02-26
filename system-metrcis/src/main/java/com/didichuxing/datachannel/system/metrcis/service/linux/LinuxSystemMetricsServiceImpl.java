@@ -1,6 +1,11 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
+import com.didichuxing.datachannel.system.metrcis.Metrics;
 import com.didichuxing.datachannel.system.metrcis.bean.*;
+import com.didichuxing.datachannel.system.metrcis.exception.MetricsException;
+import com.didichuxing.datachannel.system.metrcis.service.DiskIOMetricsService;
+import com.didichuxing.datachannel.system.metrcis.service.DiskMetricsService;
+import com.didichuxing.datachannel.system.metrcis.service.NetCardMetricsService;
 import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,8 +36,43 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     private String                   HOSTNAME;
 
-    public LinuxSystemMetricsServiceImpl() {
+    private LinuxNetFlow lastLinuxNetFlow;
+
+    /**************************** 待计算字段 ****************************/
+
+    private PeriodStatistics systemCpuUtil = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuIdle = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuUtilTotalPercent = new PeriodStatistics();
+
+    private PeriodStatistics systemNetworkReceiveBytesPs = new PeriodStatistics();
+
+    private PeriodStatistics systemNetworkSendBytesPs = new PeriodStatistics();
+
+    private PeriodStatistics systemNetworkSendAndReceiveBytesPs = new PeriodStatistics();
+
+    private PeriodStatistics systemNetWorkBandWidthUsedPercent = new PeriodStatistics();
+
+    /**************************** 指标计算服务对象 ****************************/
+
+    private DiskIOMetricsService diskIOMetricsService;
+
+    private DiskMetricsService diskMetricsService;
+
+    private NetCardMetricsService netCardMetricsService;
+
+    public LinuxSystemMetricsServiceImpl() throws MetricsException {
         setHostName();
+        diskIOMetricsService = Metrics.getMetricsServiceFactory().createDiskIOMetricsService();
+        diskMetricsService = Metrics.getMetricsServiceFactory().createDiskMetricsService();
+        netCardMetricsService = Metrics.getMetricsServiceFactory().createNetCardMetricsService();
+        try {
+            lastLinuxNetFlow = new LinuxNetFlow();// 记录上次的收发字节数
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsService||method=LinuxSystemMetricsServiceImpl()||msg=NetFlow init failed",
+                    e);
+        }
     }
 
     @Override
@@ -142,34 +182,26 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
         return CPU_NUM;
     }
 
+    private void calcSystemCpuUtil() {
+        systemCpuUtil.add(getSystemCpuUtilTotalPercentOnly() * getSystemCpuCores());
+    }
+
     @Override
     public PeriodStatistics getSystemCpuUtil() {
-        PeriodStatistics periodStatistics = getSystemCpuUtilTotalPercent();
-        periodStatistics.setLast(periodStatistics.getLast() * getSystemCpuCores());
-        periodStatistics.setMin(periodStatistics.getMin() * getSystemCpuCores());
-        periodStatistics.setMax(periodStatistics.getMax() * getSystemCpuCores());
-        periodStatistics.setAvg(periodStatistics.getAvg() * getSystemCpuCores());
-        periodStatistics.setStdDev(periodStatistics.getStdDev() * getSystemCpuCores());
-        periodStatistics.setQuantile55(periodStatistics.getQuantile55() * getSystemCpuCores());
-        periodStatistics.setQuantile75(periodStatistics.getQuantile75() * getSystemCpuCores());
-        periodStatistics.setQuantile95(periodStatistics.getQuantile95() * getSystemCpuCores());
-        periodStatistics.setQuantile99(periodStatistics.getQuantile99() * getSystemCpuCores());
-        return periodStatistics;
+        return systemCpuUtil.snapshot();
+    }
+
+    private Double getSystemCpuUtilTotalPercentOnly() {
+        return 100.0d - getSystemCpuIdleOnly();
+    }
+
+    private void calcSystemCpuUtilTotalPercent() {
+        systemCpuUtilTotalPercent.add(100.0d - getSystemCpuIdleOnly());
     }
 
     @Override
     public PeriodStatistics getSystemCpuUtilTotalPercent() {
-        PeriodStatistics periodStatistics = getSystemCpuIdle();
-        periodStatistics.setLast(100.0d - periodStatistics.getLast());
-        periodStatistics.setMin(100.0d - periodStatistics.getMin());
-        periodStatistics.setMax(100.0d - periodStatistics.getMax());
-        periodStatistics.setAvg(100.0d - periodStatistics.getAvg());
-        periodStatistics.setStdDev(100.0d - periodStatistics.getStdDev());
-        periodStatistics.setQuantile55(100.0d - periodStatistics.getQuantile55());
-        periodStatistics.setQuantile75(100.0d - periodStatistics.getQuantile75());
-        periodStatistics.setQuantile95(100.0d - periodStatistics.getQuantile95());
-        periodStatistics.setQuantile99(100.0d - periodStatistics.getQuantile99());
-        return periodStatistics;
+        return systemCpuUtilTotalPercent.snapshot();
     }
 
     @Override
@@ -182,30 +214,23 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
         return null;
     }
 
-    @Override
-    public PeriodStatistics getSystemCpuIdle() {
+    private Double getSystemCpuIdleOnly() {
         List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $12}'", "总体cpu空闲率");
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            Double systemCpuIdle = Double.parseDouble(lines.get(0));
-            PeriodStatistics periodStatistics = new PeriodStatistics();
-            periodStatistics.setLast(systemCpuIdle);
-
-            //TODO：
-            periodStatistics.setMin(systemCpuIdle);
-            periodStatistics.setMax(systemCpuIdle);
-            periodStatistics.setAvg(systemCpuIdle);
-            periodStatistics.setStdDev(systemCpuIdle);
-            periodStatistics.setQuantile55(systemCpuIdle);
-            periodStatistics.setQuantile75(systemCpuIdle);
-            periodStatistics.setQuantile95(systemCpuIdle);
-            periodStatistics.setQuantile99(systemCpuIdle);
-
-            return periodStatistics;
-
+            return Double.parseDouble(lines.get(0));
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdle||msg=data is null");
-            return PeriodStatistics.defaultValue();
+            return 0d;
         }
+    }
+
+    private void calcSystemCpuIdle() {
+        systemCpuIdle.add(getSystemCpuIdleOnly());
+    }
+
+    @Override
+    public PeriodStatistics getSystemCpuIdle() {
+        return systemCpuIdle.snapshot();
     }
 
     @Override
@@ -366,43 +391,39 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
     public List<DiskInfo> getSystemDiskInfoList() {
-
-        //TODO：
-
-        List<DiskInfo> diskInfoList = new ArrayList<>();
-        DiskInfo diskInfo = new DiskInfo();
-        diskInfo.setFsType("ext3");
-        diskInfo.setPath("/");
-        diskInfo.setBytesFree(999 * 1024 * 1024 * 1024L);
-        diskInfoList.add(diskInfo);
-
+        Map<String, String> path2FsTypeMap = diskMetricsService.getFsType();
+        Map<String, Long> path2BytesFreeMap = diskMetricsService.getBytesFree();
+        List<DiskInfo> diskInfoList = new ArrayList<>(path2FsTypeMap.size());
+        for (Map.Entry<String, String> path2FsTypeEntry : path2FsTypeMap.entrySet()) {
+            String path = path2FsTypeEntry.getKey();
+            String fsType = path2FsTypeEntry.getValue();
+            Long bytesFree = path2BytesFreeMap.get(path);
+            if(null == bytesFree) {
+                //TODO：
+                throw new RuntimeException();
+            }
+            DiskInfo diskInfo = new DiskInfo();
+            diskInfo.setFsType(fsType);
+            diskInfo.setPath(path);
+            diskInfo.setBytesFree(bytesFree);
+            diskInfoList.add(diskInfo);
+        }
         return diskInfoList;
-
     }
 
     @Override
     public List<DiskIOInfo> getSystemDiskIOInfoList() {
-
-        //TODO：
-
-        List<DiskIOInfo> diskIOInfoList = new ArrayList<>();
-        DiskIOInfo diskIOInfo = new DiskIOInfo();
-        diskIOInfo.setDevice("vda");
-        PeriodStatistics iOUtil = new PeriodStatistics();
-        iOUtil.setLast(0.55d);
-        iOUtil.setMin(0.55d);
-        iOUtil.setMax(0.55d);
-        iOUtil.setAvg(0.55d);
-        iOUtil.setStdDev(0.55d);
-        iOUtil.setQuantile55(0.55d);
-        iOUtil.setQuantile75(0.55d);
-        iOUtil.setQuantile95(0.55d);
-        iOUtil.setQuantile99(0.55d);
-        diskIOInfo.setiOUtil(iOUtil);
-        diskIOInfoList.add(diskIOInfo);
-
+        Map<String, PeriodStatistics> device2IOUtilMap = diskIOMetricsService.getIOUtil();
+        List<DiskIOInfo> diskIOInfoList = new ArrayList<>(device2IOUtilMap.size());
+        for (Map.Entry<String, PeriodStatistics> device2IOUtilEntry : device2IOUtilMap.entrySet()) {
+            String device = device2IOUtilEntry.getKey();
+            PeriodStatistics iOUtil = device2IOUtilEntry.getValue();
+            DiskIOInfo diskIOInfo = new DiskIOInfo();
+            diskIOInfo.setDevice(device);
+            diskIOInfo.setiOUtil(iOUtil);
+            diskIOInfoList.add(diskIOInfo);
+        }
         return diskIOInfoList;
-
     }
 
     @Override
@@ -442,79 +463,110 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
     public List<NetCardInfo> getSystemNetCardInfoList() {
+        Map<String, PeriodStatistics> device2SendBytesPsMap = netCardMetricsService.getSendBytesPs();
+        Map<String, String> device2MacAddressMap = netCardMetricsService.getMacAddress();
+        Map<String, Long> device2BandWidthMap = netCardMetricsService.getBandWidth();
+        List<NetCardInfo> netCardInfoList = new ArrayList<>(device2MacAddressMap.size());
 
-        //TODO：
-
-        List<NetCardInfo> netCardInfoList = new ArrayList<>();
-
-        NetCardInfo netCardInfo = new NetCardInfo();
-        netCardInfo.setSystemNetCardsBandDevice("en0");
-        netCardInfo.setSystemNetCardsBandMacAddress("88:66:5a:3d:4d:42");
-        netCardInfo.setSystemNetCardsBandWidth(87 * 1024 * 1024L);
-        PeriodStatistics systemNetCardsSendBytesPs = new PeriodStatistics();
-        Double value = 1 * 1024 * 1024d;
-        systemNetCardsSendBytesPs.setLast(value);
-        systemNetCardsSendBytesPs.setMin(value);
-        systemNetCardsSendBytesPs.setMax(value);
-        systemNetCardsSendBytesPs.setAvg(value);
-        systemNetCardsSendBytesPs.setStdDev(value);
-        systemNetCardsSendBytesPs.setQuantile55(value);
-        systemNetCardsSendBytesPs.setQuantile75(value);
-        systemNetCardsSendBytesPs.setQuantile95(value);
-        systemNetCardsSendBytesPs.setQuantile99(value);
-        netCardInfo.setSystemNetCardsSendBytesPs(systemNetCardsSendBytesPs);
-        netCardInfoList.add(netCardInfo);
-
+        for (Map.Entry<String, String> device2MacAddressEntry : device2MacAddressMap.entrySet()) {
+            String device = device2MacAddressEntry.getKey();
+            String macAddress = device2MacAddressEntry.getValue();
+            Long bandWidth = device2BandWidthMap.get(device);
+            PeriodStatistics sendBytesPs = device2SendBytesPsMap.get(device);
+            if(null == sendBytesPs || null == bandWidth) {
+                //TODO：
+                throw new RuntimeException();
+            }
+            NetCardInfo netCardInfo = new NetCardInfo();
+            netCardInfo.setSystemNetCardsBandDevice(device);
+            netCardInfo.setSystemNetCardsBandMacAddress(macAddress);
+            netCardInfo.setSystemNetCardsBandWidth(bandWidth);
+            netCardInfo.setSystemNetCardsSendBytesPs(sendBytesPs);
+            netCardInfoList.add(netCardInfo);
+        }
         return netCardInfoList;
 
     }
 
+    private void calcSystemNetworkReceiveBytesPs() {
+        systemNetworkReceiveBytesPs.add(getSystemNetworkReceiveBytesPsOnly());
+    }
+
+    private Double getSystemNetworkReceiveBytesPsOnly() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
+            double processReceiveBytesPs = curLinuxNetFlow.getSystemReceiveBytesPs(lastLinuxNetFlow);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return  processReceiveBytesPs;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkReceiveBytesPsOnly()||msg=获取系统网络每秒下行流量失败",
+                    e);
+            return 0d;
+        }
+    }
+
     @Override
     public PeriodStatistics getSystemNetworkReceiveBytesPs() {
-        return null;
+        return systemNetworkReceiveBytesPs.snapshot();
+    }
+
+    private void calcSystemNetworkSendBytesPs() {
+        systemNetworkSendBytesPs.add(getSystemNetworkSendBytesPsOnly());
+    }
+
+    private Double getSystemNetworkSendBytesPsOnly() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
+            double processTransmitBytesPs = curLinuxNetFlow.getSystemTransmitBytesPs(lastLinuxNetFlow);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            return  processTransmitBytesPs;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkSendBytesPsOnly()||msg=获取系统网络每秒上行流量失败",
+                    e);
+            return 0d;
+        }
     }
 
     @Override
     public PeriodStatistics getSystemNetworkSendBytesPs() {
-        return null;
+        return systemNetworkSendBytesPs.snapshot();
+    }
+
+    private void calcSystemNetworkSendAndReceiveBytesPs() {
+        systemNetworkSendAndReceiveBytesPs.add(getSystemNetworkSendAndReceiveBytesPsOnly());
+    }
+
+    private Double getSystemNetworkSendAndReceiveBytesPsOnly() {
+        return this.getSystemNetworkSendBytesPsOnly() + this.getSystemNetworkReceiveBytesPsOnly();
     }
 
     @Override
     public PeriodStatistics getSystemNetworkSendAndReceiveBytesPs() {
+        return systemNetworkSendAndReceiveBytesPs.snapshot();
+    }
 
-        //TODO：
+    private void calcSystemNetWorkBandWidthUsedPercent() {
+        systemNetWorkBandWidthUsedPercent.add(getSystemNetWorkBandWidthUsedPercentOnly());
+    }
 
-        PeriodStatistics periodStatistics = new PeriodStatistics();
-        periodStatistics.setLast(1 * 1024 * 1024d);
-        periodStatistics.setMin(1 * 1024 * 1024d);
-        periodStatistics.setMax(1 * 1024 * 1024d);
-        periodStatistics.setAvg(1 * 1024 * 1024d);
-        periodStatistics.setStdDev(1 * 1024 * 1024d);
-        periodStatistics.setQuantile55(1 * 1024 * 1024d);
-        periodStatistics.setQuantile75(1 * 1024 * 1024d);
-        periodStatistics.setQuantile95(1 * 1024 * 1024d);
-        periodStatistics.setQuantile99(1 * 1024 * 1024d);
-
-        return periodStatistics;
-
+    private Double getSystemNetWorkBandWidthUsedPercentOnly() {
+        Long systemNetWorkBand = 0L;
+        /*
+         * 1.）获取系统全部网卡对应带宽之和
+         */
+        for(NetCardInfo netCardInfo : this.getSystemNetCardInfoList()) {
+            systemNetWorkBand += netCardInfo.getSystemNetCardsBandWidth();
+        }
+        /*
+         * 2.）获取系统当前上、下行总流量
+         */
+        Double systemNetworkSendAndReceiveBytesPs = getSystemNetworkSendAndReceiveBytesPsOnly();
+        return systemNetworkSendAndReceiveBytesPs / systemNetWorkBand;
     }
 
     @Override
     public PeriodStatistics getSystemNetWorkBandWidthUsedPercent() {
-
-        //TODO：
-
-        PeriodStatistics periodStatistics = new PeriodStatistics();
-        periodStatistics.setLast(0.1);
-        periodStatistics.setMin(0.1);
-        periodStatistics.setMax(0.1);
-        periodStatistics.setAvg(0.1);
-        periodStatistics.setStdDev(0.1);
-        periodStatistics.setQuantile55(0.1);
-        periodStatistics.setQuantile75(0.1);
-        periodStatistics.setQuantile95(0.1);
-        periodStatistics.setQuantile99(0.1);
-        return periodStatistics;
+        return systemNetWorkBandWidthUsedPercent.snapshot();
     }
 
     @Override

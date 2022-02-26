@@ -38,6 +38,14 @@ public class LinuxProcessMetricsServiceImpl implements ProcessMetricsService {
      */
     private final int CPU_NUM;
 
+    /**************************** 待计算字段 ****************************/
+
+    private PeriodStatistics procCpuUtil = new PeriodStatistics();
+
+    private PeriodStatistics procNetworkReceiveBytesPs = new PeriodStatistics();
+
+    private PeriodStatistics procNetworkSendBytesPs = new PeriodStatistics();
+
     public LinuxProcessMetricsServiceImpl() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
@@ -80,30 +88,24 @@ public class LinuxProcessMetricsServiceImpl implements ProcessMetricsService {
         return CPU_NUM;
     }
 
+    private void calcProcCpuUtil() {
+        procCpuUtil.add(getCurrentProcCpuUtil());
+    }
+
     @Override
     public PeriodStatistics getProcCpuUtil() {
+        return procCpuUtil.snapshot();
+    }
+
+    @Override
+    public Double getCurrentProcCpuUtil() {
         try {
             LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getProcessPid(), getSystemCpuNumCores());
             float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
             lastLinuxCpuTime = curLinuxCpuTime;
-            PeriodStatistics periodStatistics = new PeriodStatistics();
-            periodStatistics.setLast(Float.valueOf(cpuUsage).doubleValue());
-
-            //TODO：
-
-            periodStatistics.setMin(Float.valueOf(cpuUsage).doubleValue());
-            periodStatistics.setMax(Float.valueOf(cpuUsage).doubleValue());
-            periodStatistics.setAvg(Float.valueOf(cpuUsage).doubleValue());
-            periodStatistics.setStdDev(Float.valueOf(cpuUsage).doubleValue());
-            periodStatistics.setQuantile55(Float.valueOf(cpuUsage).doubleValue());
-            periodStatistics.setQuantile75(Float.valueOf(cpuUsage).doubleValue());
-            periodStatistics.setQuantile95(Float.valueOf(cpuUsage).doubleValue());
-            periodStatistics.setQuantile99(Float.valueOf(cpuUsage).doubleValue());
-            return periodStatistics;
-        } catch (Exception e) {
-            LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=getProcCpuUtil||msg=current process's cpu usage get failed",
-                    e);
-            return PeriodStatistics.defaultValue();
+            return Float.valueOf(cpuUsage).doubleValue();
+        } catch (Exception ex) {
+            return 0d;
         }
     }
 
@@ -303,61 +305,36 @@ public class LinuxProcessMetricsServiceImpl implements ProcessMetricsService {
         return null;
     }
 
-    @Override
-    public PeriodStatistics getProcNetworkReceiveBytesPs() {
+    private void calcProcNetworkReceiveBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getProcessPid());
             double processReceiveBytesPs = curLinuxNetFlow.getProcessReceiveBytesPs(lastLinuxNetFlow);
             lastLinuxNetFlow = curLinuxNetFlow;
-            PeriodStatistics periodStatistics = new PeriodStatistics();
-            periodStatistics.setLast(processReceiveBytesPs);
-
-            //TODO：
-
-            periodStatistics.setMin(processReceiveBytesPs);
-            periodStatistics.setMax(processReceiveBytesPs);
-            periodStatistics.setAvg(processReceiveBytesPs);
-            periodStatistics.setStdDev(processReceiveBytesPs);
-            periodStatistics.setQuantile55(processReceiveBytesPs);
-            periodStatistics.setQuantile75(processReceiveBytesPs);
-            periodStatistics.setQuantile95(processReceiveBytesPs);
-            periodStatistics.setQuantile99(processReceiveBytesPs);
-
-            return periodStatistics;
-
+            procNetworkReceiveBytesPs.add(processReceiveBytesPs);
         } catch (Exception e) {
-            LOGGER.error("class=LinuxOSResourceService||method=getProcNetworkReceiveBytesPs||msg=data is null",
-                    e);
-            return PeriodStatistics.defaultValue();
+            procNetworkReceiveBytesPs.add(0d);
+        }
+    }
+
+    @Override
+    public PeriodStatistics getProcNetworkReceiveBytesPs() {
+        return procNetworkReceiveBytesPs.snapshot();
+    }
+
+    private void calcProcNetworkSendBytesPs() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getProcessPid());
+            double processTransmitBytesPs = curLinuxNetFlow.getProcessTransmitBytesPs(lastLinuxNetFlow);
+            lastLinuxNetFlow = curLinuxNetFlow;
+            procNetworkSendBytesPs.add(processTransmitBytesPs);
+        } catch (Exception e) {
+            procNetworkSendBytesPs.add(0d);
         }
     }
 
     @Override
     public PeriodStatistics getProcNetworkSendBytesPs() {
-        try {
-            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getProcessPid());
-            double processTransmitBytesPs = curLinuxNetFlow.getProcessTransmitBytesPs(lastLinuxNetFlow);
-            lastLinuxNetFlow = curLinuxNetFlow;
-            PeriodStatistics periodStatistics = new PeriodStatistics();
-            periodStatistics.setLast(processTransmitBytesPs);
-
-            //TODO：
-            periodStatistics.setMin(processTransmitBytesPs);
-            periodStatistics.setMax(processTransmitBytesPs);
-            periodStatistics.setAvg(processTransmitBytesPs);
-            periodStatistics.setStdDev(processTransmitBytesPs);
-            periodStatistics.setQuantile55(processTransmitBytesPs);
-            periodStatistics.setQuantile75(processTransmitBytesPs);
-            periodStatistics.setQuantile95(processTransmitBytesPs);
-            periodStatistics.setQuantile99(processTransmitBytesPs);
-
-            return periodStatistics;
-
-        } catch (Exception e) {
-            LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=getProcNetworkSendBytesPs||msg=data is null",
-                    e);
-            return PeriodStatistics.defaultValue();
-        }
+        return procNetworkSendBytesPs.snapshot();
     }
 
     @Override

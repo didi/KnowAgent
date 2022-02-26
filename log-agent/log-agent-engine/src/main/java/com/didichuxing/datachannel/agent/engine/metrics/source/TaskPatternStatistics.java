@@ -162,6 +162,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
          * 填充初始化时缓存的指标
          */
         setInitMetrics(taskMetrics);
+
         /*
          * 将 log collect task 相关指标存入待发送缓存队列
          */

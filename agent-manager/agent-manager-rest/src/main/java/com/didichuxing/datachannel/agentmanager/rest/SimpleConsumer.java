@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -106,7 +104,7 @@ public class SimpleConsumer {
 
     public static void main(String[] args) {
 
-        String str = "{\"hostName\":\"localhost\",\"taskMetrics\":\"{\\\"agenthostip\\\":\\\"127.0.0.1\\\",\\\"agenthostname\\\":\\\"10-255-1-196\\\",\\\"businesstimestamp\\\":1645431960629,\\\"channelbytesmax\\\":10485760,\\\"channelbytessize\\\":0.0,\\\"channelcountmax\\\":1000,\\\"channelcountsize\\\":0.0,\\\"channelusedpercent\\\":0.0,\\\"collectfiles\\\":\\\"[{\\\\\\\"fileEnd\\\\\\\":false,\\\\\\\"fileName\\\\\\\":\\\\\\\"output.log\\\\\\\",\\\\\\\"isFileOrder\\\\\\\":0,\\\\\\\"lastModifyTime\\\\\\\":1645431902000,\\\\\\\"logTime\\\\\\\":1645431960629,\\\\\\\"rate\\\\\\\":99,\\\\\\\"vaildTimeConfig\\\\\\\":false}]\\\",\\\"collectpathisexists\\\":1,\\\"collecttaskhostname\\\":\\\"10-255-1-196\\\",\\\"collecttaskid\\\":1,\\\"collecttasktype\\\":1,\\\"collecttaskversion\\\":0,\\\"dynamiclimiterthreshold\\\":1000000,\\\"filtereventsnum\\\":0,\\\"flushfailedtimes\\\":0,\\\"flushtimes\\\":7,\\\"heartbeatTimeDay\\\":1645372800000,\\\"heartbeattime\\\":1645431961403,\\\"heartbeattimehour\\\":1645430400000,\\\"heartbeattimeminute\\\":1645431960000,\\\"latestfile\\\":\\\"output.log\\\",\\\"limittime\\\":0,\\\"masterfile\\\":\\\"output.log\\\",\\\"maxbusinesstimestampdelay\\\":1,\\\"path\\\":\\\"/home/dc2-user/kafka/work/info/output.log\\\",\\\"pathid\\\":1,\\\"readbytes\\\":976122,\\\"readcount\\\":3843,\\\"receiverclusterid\\\":1,\\\"receiverclustertopic\\\":\\\"data\\\",\\\"relatedfiles\\\":1,\\\"sendbytes\\\":976122,\\\"sendcount\\\":3843,\\\"serviceNames\\\":\\\"应用_测试\\\",\\\"sinknum\\\":1,\\\"toolargetruncatenum\\\":0}\"}";
+        String str = "{\"agenthostip\":\"127.0.0.1\",\"agenthostname\":\"10-255-1-196\",\"businesstimestamp\":1645775999357,\"channelbytesmax\":10485760,\"channelbytessize\":0.0,\"channelcountmax\":1000,\"channelcountsize\":0.0,\"channelusedpercent\":0.0,\"collectfiles\":\"[{\\\"fileEnd\\\":false,\\\"fileName\\\":\\\"output.log\\\",\\\"isFileOrder\\\":0,\\\"lastModifyTime\\\":1645775942000,\\\"logTime\\\":1645775999357,\\\"rate\\\":99,\\\"vaildTimeConfig\\\":false}]\",\"collectpathisexists\":1,\"collecttaskhostname\":\"10-255-1-196\",\"collecttaskid\":2,\"collecttasktype\":1,\"collecttaskversion\":0,\"disorderexists\":0,\"dynamiclimiterthreshold\":1000000,\"filtereventsnum\":0,\"flushfailedtimes\":0,\"flushtimes\":15,\"heartbeatTimeDay\":1645718400000,\"heartbeattime\":1645776001831,\"heartbeattimehour\":1645776000000,\"heartbeattimeminute\":1645776000000,\"latestfile\":\"output.log\",\"limittime\":920448,\"masterfile\":\"output.log\",\"maxbusinesstimestampdelay\":3,\"path\":\"/home/dc2-user/kafka/work/info/output.log\",\"pathid\":2,\"readbytes\":2272637,\"readcount\":8848,\"receiverclusterid\":3,\"receiverclustertopic\":\"data\",\"relatedfiles\":1,\"sendbytes\":2272637,\"sendcount\":8848,\"serviceNames\":\"应用_测试\",\"sinknum\":1,\"sliceerrorexists\":1,\"toolargetruncatenum\":0}";
         System.err.println(JSON.parseObject(str));
 
     }

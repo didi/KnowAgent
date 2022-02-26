@@ -50,8 +50,7 @@ public class LimitCpuThread implements Runnable {
                 float threshold = limiter.getCpuThreshold();
 
                 // 2. 获得cpu利用率
-                double cpuUsage = GlobalProperties.getProcessMetricsService().getProcCpuUtil()
-                    .getLast();
+                double cpuUsage = GlobalProperties.getProcessMetricsService().getCurrentProcCpuUtil();
 
                 // 3. 根据cpu利用率调整qps阀值
                 if (cpuUsage > (threshold * (FACTOR + 1))) {
