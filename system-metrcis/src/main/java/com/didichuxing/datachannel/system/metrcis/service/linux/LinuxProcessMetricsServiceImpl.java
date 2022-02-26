@@ -20,7 +20,7 @@ import java.util.*;
  * @author Ronaldo
  * @Date 2021/11/3
  */
-public class LinuxProcessMetricsServiceImpl implements ProcessMetricsService {
+public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implements ProcessMetricsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxProcessMetricsServiceImpl.class);
 
@@ -291,7 +291,7 @@ public class LinuxProcessMetricsServiceImpl implements ProcessMetricsService {
 
     @Override
     public Integer getProcOpenFdCount() {
-        List<String> lines = getOutputByCmd("ls /proc/%d/fd | wc -l", "jvm进程当前fd使用数");
+        List<String> lines = getOutputByCmd("ls /proc/%d/fd | wc -l", "jvm进程当前fd使用数", PID);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Integer.parseInt(lines.get(0));
         } else {
@@ -422,48 +422,6 @@ public class LinuxProcessMetricsServiceImpl implements ProcessMetricsService {
         } catch (final NumberFormatException e) {
             LOGGER.warn(String.format("failed parsing PID from [{}]", name), e);
             return -1;
-        }
-    }
-
-    /**
-     * linux 根据shell命令获取系统或者进程资源
-     * @param procFDShell shell命令
-     * @param resourceMessage    资源描述信息
-     * @return
-     */
-    private List<String> getOutputByCmd(String procFDShell, String resourceMessage) {
-        Process process = null;
-        BufferedReader br = null;
-        List<String> lines = new ArrayList<>();
-        try {
-            procFDShell = String.format(procFDShell, PID);
-            String[] cmd = new String[] { "sh", "-c", procFDShell };
-            process = Runtime.getRuntime().exec(cmd);
-            int resultCode = process.waitFor();
-            br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                lines.add(line.trim());
-            }
-            return lines;
-        } catch (Exception ex) {
-            LOGGER.error("获取系统资源项[{}]失败", resourceMessage, ex);
-            return Collections.emptyList();
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程对应输入流失败", resourceMessage, resourceMessage, ex);
-            }
-            try {
-                if (process != null) {
-                    process.destroy();
-                }
-            } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程失败", resourceMessage, resourceMessage, ex);
-            }
         }
     }
 

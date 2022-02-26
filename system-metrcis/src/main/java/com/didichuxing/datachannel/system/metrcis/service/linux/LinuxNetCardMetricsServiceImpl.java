@@ -6,6 +6,7 @@ import com.didichuxing.datachannel.system.metrcis.service.NetCardMetricsService;
 import java.util.Map;
 
 public class LinuxNetCardMetricsServiceImpl implements NetCardMetricsService {
+
     @Override
     public Map<String, String> getMacAddress() {
         return null;

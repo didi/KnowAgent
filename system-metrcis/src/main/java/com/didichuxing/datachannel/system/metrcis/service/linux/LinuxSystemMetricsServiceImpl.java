@@ -25,7 +25,7 @@ import java.util.*;
  * @author Ronaldo
  * @Date 2021/11/3
  */
-public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
+public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implements SystemMetricsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsServiceImpl.class);
 
@@ -86,7 +86,7 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
         //TODO：
 
         List<String> output = getOutputByCmd("clock | awk '{print $4}'",
-                "系统时间偏移量");
+                "系统时间偏移量", null);
         if (!output.isEmpty() && StringUtils.isNotBlank(output.get(0))) {
             double v =  1000 * Double.parseDouble(output.get(0));
             return (long) v;
@@ -107,7 +107,7 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     @Override
     public Long getSystemUptime() {
         List<String> systemUpTime = getOutputByCmd(
-                "awk '{print $1}' /proc/uptime", "系统运行时间");
+                "awk '{print $1}' /proc/uptime", "系统运行时间", null);
         if (!systemUpTime.isEmpty() && StringUtils.isNotBlank(systemUpTime.get(0))) {
             double v =  1000 * Double.parseDouble(systemUpTime.get(0));
             return (long) v;
@@ -215,7 +215,7 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     private Double getSystemCpuIdleOnly() {
-        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $12}'", "总体cpu空闲率");
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $12}'", "总体cpu空闲率", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Double.parseDouble(lines.get(0));
         } else {
@@ -320,7 +320,7 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
     public Long getSystemMemFree() {
-        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'MemFree:' | awk '{print $2}'", "系系统空闲内存大小");
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'MemFree:' | awk '{print $2}'", "系系统空闲内存大小", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Long.parseLong(lines.get(0));
         } else {
@@ -702,47 +702,6 @@ public class LinuxSystemMetricsServiceImpl implements SystemMetricsService {
     @Override
     public String getOSVersion() {
         return null;
-    }
-
-    /**
-     * linux 根据shell命令获取系统或者进程资源
-     * @param procFDShell shell命令
-     * @param resourceMessage    资源描述信息
-     * @return
-     */
-    private List<String> getOutputByCmd(String procFDShell, String resourceMessage) {
-        Process process = null;
-        BufferedReader br = null;
-        List<String> lines = new ArrayList<>();
-        try {
-            String[] cmd = new String[] { "sh", "-c", procFDShell };
-            process = Runtime.getRuntime().exec(cmd);
-            int resultCode = process.waitFor();
-            br = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line = null;
-            while ((line = br.readLine()) != null) {
-                lines.add(line.trim());
-            }
-            return lines;
-        } catch (Exception ex) {
-            LOGGER.error("获取系统资源项[{}]失败", resourceMessage, ex);
-            return Collections.emptyList();
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程对应输入流失败", resourceMessage, resourceMessage, ex);
-            }
-            try {
-                if (process != null) {
-                    process.destroy();
-                }
-            } catch (Exception ex) {
-                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程失败", resourceMessage, resourceMessage, ex);
-            }
-        }
     }
 
     private void setHostName() {
