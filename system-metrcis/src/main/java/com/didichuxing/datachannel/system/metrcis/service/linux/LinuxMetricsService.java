@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +32,42 @@ public abstract class LinuxMetricsService {
             String[] cmd = new String[] { "sh", "-c", procFDShell };
             process = Runtime.getRuntime().exec(cmd);
             int resultCode = process.waitFor();
+            br = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                lines.add(line.trim());
+            }
+            return lines;
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[{}]失败", resourceMessage, ex);
+            return Collections.emptyList();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (Exception ex) {
+                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程对应输入流失败", resourceMessage, resourceMessage, ex);
+            }
+            try {
+                if (process != null) {
+                    process.destroy();
+                }
+            } catch (Exception ex) {
+                LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程失败", resourceMessage, resourceMessage, ex);
+            }
+        }
+    }
+
+    protected List<String> getOutputByScript(String script, String workspace, String resourceMessage) {
+        Process process = null;
+        BufferedReader br = null;
+        List<String> lines = new ArrayList<>();
+        try {
+            String cmd = "sh " + script;
+            File dir = new File(workspace);
+            String[] evnp = {"val=2", "call=Bash Shell"};
+            process = Runtime.getRuntime().exec(cmd, evnp, dir);
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = null;
             while ((line = br.readLine()) != null) {

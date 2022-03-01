@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
+import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
 import com.didichuxing.datachannel.system.metrcis.bean.ProcMetrics;
 import com.didichuxing.datachannel.system.metrcis.service.ProcessMetricsService;
@@ -88,6 +89,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
         return CPU_NUM;
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcProcCpuUtil() {
         procCpuUtil.add(getCurrentProcCpuUtil());
     }
@@ -305,6 +307,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
         return null;
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcProcNetworkReceiveBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getProcessPid());
@@ -321,6 +324,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
         return procNetworkReceiveBytesPs.snapshot();
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcProcNetworkSendBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getProcessPid());

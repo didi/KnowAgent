@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.Metrics;
+import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.*;
 import com.didichuxing.datachannel.system.metrcis.exception.MetricsException;
 import com.didichuxing.datachannel.system.metrcis.service.DiskIOMetricsService;
@@ -182,6 +183,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         return CPU_NUM;
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemCpuUtil() {
         systemCpuUtil.add(getSystemCpuUtilTotalPercentOnly() * getSystemCpuCores());
     }
@@ -195,6 +197,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         return 100.0d - getSystemCpuIdleOnly();
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemCpuUtilTotalPercent() {
         systemCpuUtilTotalPercent.add(100.0d - getSystemCpuIdleOnly());
     }
@@ -224,6 +227,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         }
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemCpuIdle() {
         systemCpuIdle.add(getSystemCpuIdleOnly());
     }
@@ -488,6 +492,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemNetworkReceiveBytesPs() {
         systemNetworkReceiveBytesPs.add(getSystemNetworkReceiveBytesPsOnly());
     }
@@ -510,6 +515,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         return systemNetworkReceiveBytesPs.snapshot();
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemNetworkSendBytesPs() {
         systemNetworkSendBytesPs.add(getSystemNetworkSendBytesPsOnly());
     }
@@ -532,6 +538,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         return systemNetworkSendBytesPs.snapshot();
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemNetworkSendAndReceiveBytesPs() {
         systemNetworkSendAndReceiveBytesPs.add(getSystemNetworkSendAndReceiveBytesPsOnly());
     }
@@ -545,6 +552,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         return systemNetworkSendAndReceiveBytesPs.snapshot();
     }
 
+    @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemNetWorkBandWidthUsedPercent() {
         systemNetWorkBandWidthUsedPercent.add(getSystemNetWorkBandWidthUsedPercentOnly());
     }
@@ -560,8 +568,12 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         /*
          * 2.）获取系统当前上、下行总流量
          */
-        Double systemNetworkSendAndReceiveBytesPs = getSystemNetworkSendAndReceiveBytesPsOnly();
-        return systemNetworkSendAndReceiveBytesPs / systemNetWorkBand;
+        if(0 == systemNetWorkBand) {
+            return 0d;
+        } else {
+            Double systemNetworkSendAndReceiveBytesPs = getSystemNetworkSendAndReceiveBytesPsOnly();
+            return systemNetworkSendAndReceiveBytesPs / systemNetWorkBand;
+        }
     }
 
     @Override

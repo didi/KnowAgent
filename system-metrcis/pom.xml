@@ -28,7 +28,19 @@
             <version>4.4</version>
         </dependency>
 
-    </dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.69</version>
+        </dependency>
 
+        <!-- 扫描指定包获取附带给定注解类 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.4.3</version>
+        </dependency>
+
+    </dependencies>
 
 </project>
