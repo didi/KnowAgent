@@ -64,10 +64,9 @@ public abstract class LinuxMetricsService {
         BufferedReader br = null;
         List<String> lines = new ArrayList<>();
         try {
-            String cmd = "sh " + script;
-            File dir = new File(workspace);
-            String[] evnp = {"val=2", "call=Bash Shell"};
-            process = Runtime.getRuntime().exec(cmd, evnp, dir);
+            String scriptFilePath = workspace + script;
+            process = Runtime.getRuntime().exec(scriptFilePath);
+            int resultCode = process.waitFor();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = null;
             while ((line = br.readLine()) != null) {

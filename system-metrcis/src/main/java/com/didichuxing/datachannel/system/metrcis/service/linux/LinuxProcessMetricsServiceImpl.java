@@ -47,7 +47,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private PeriodStatistics procNetworkSendBytesPs = new PeriodStatistics();
 
-    public LinuxProcessMetricsServiceImpl() {
+    private static LinuxProcessMetricsServiceImpl instance;
+
+    public static synchronized LinuxProcessMetricsServiceImpl getInstance() {
+        if(null == instance) {
+            instance = new LinuxProcessMetricsServiceImpl();
+        }
+        return instance;
+    }
+
+    private LinuxProcessMetricsServiceImpl() {
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {

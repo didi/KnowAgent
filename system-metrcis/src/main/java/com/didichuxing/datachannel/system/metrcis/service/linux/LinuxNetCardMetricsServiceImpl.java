@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
+import com.didichuxing.datachannel.system.metrcis.constant.Constants;
 import com.didichuxing.datachannel.system.metrcis.service.NetCardMetricsService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +20,20 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
 
     private Map<String, PeriodStatistics> sendBytesPs = new HashMap<>();
 
+    private static LinuxNetCardMetricsServiceImpl instance;
+
+    private LinuxNetCardMetricsServiceImpl() {
+
+    }
+
+    public static synchronized LinuxNetCardMetricsServiceImpl getInstance() {
+        if(null == instance) {
+            instance = new LinuxNetCardMetricsServiceImpl();
+        }
+        return instance;
+    }
+
+
     @Override
     public Map<String, String> getMacAddress() {
         List<String> lines = getOutputByScript("mac-addresses.sh", this.getClass().getResource("/").getPath(), "获取系统各网卡信息");
@@ -30,6 +45,7 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
                     String macAddress = lines.get(i+1).split(":")[1].trim();
                     result.put(device, macAddress);
                 }
+                LOGGER.error(String.format("getMacAddress() => %s", JSON.toJSONString(result)));
                 return result;
             } else {
                 LOGGER.error(
@@ -50,7 +66,7 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
     public Map<String, Long> getBandWidth() {
         List<String> lines = getOutputByScript("port-speed.sh", this.getClass().getResource("/").getPath(), "获取系统各网卡信息");
         if(CollectionUtils.isNotEmpty(lines)) {
-            if(lines.size() % 2 == 0) {
+            if(com.didichuxing.datachannel.system.metrcis.util.StringUtils.contains(lines, "Mb/s")) {
                 Map<String, Long> result = new HashMap<>();
                 for (int i = 0; i < lines.size() - 2; i+=2) {
                     String device = lines.get(i).substring(0, lines.indexOf(":"));
@@ -58,15 +74,24 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
                     Long bandWidth = Long.valueOf(bandWidthStr.substring(0, bandWidthStr.indexOf("Mb/s")));
                     result.put(device, bandWidth);
                 }
+                LOGGER.error(String.format("getBandWidth() => %s", JSON.toJSONString(result)));
                 return result;
             } else {
-                LOGGER.error(
+                /*
+                 * 无法获取到网卡带宽信息，将采用默认值进行返回
+                 */
+                Map<String, String> device2MacAddressMap = getMacAddress();
+                Map<String, Long> result = new HashMap<>();
+                for (String device: device2MacAddressMap.keySet()) {
+                    result.put(device, Constants.NET_CARD_BAND_WIDTH_BYTES_DEFAULT_VALUE);
+                }
+                LOGGER.warn(
                         String.format(
-                                "class=LinuxNetCardMetricsServiceImpl||method=getMacAddress||errMsg=获取网卡信息[%s]错误，网卡信息行数须为偶数行",
-                                JSON.toJSONString(lines)
+                                "class=LinuxNetCardMetricsServiceImpl||method=getMacAddress||errMsg=无法获取网卡带宽信息，各网卡带宽将采用默认值=%d(bytes)",
+                                Constants.NET_CARD_BAND_WIDTH_BYTES_DEFAULT_VALUE
                         )
                 );
-                return new HashMap<>();
+                return result;
             }
         } else {
             LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getMacAddress||errMsg=获取网卡信息错误，网卡信息为空");
@@ -121,7 +146,7 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
                     if(StringUtils.isNotBlank(lines.get(i))) {
                         String[] infos = lines.get(i).split("\\s+");
                         String device = infos[1];
-                        Double sendBytes = Double.valueOf(infos[5]);
+                        Double sendBytes = Double.valueOf(infos[5]) * 1024;
                         result.put(device, sendBytes);
                     }
                 }

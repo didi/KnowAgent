@@ -4,7 +4,6 @@ import cn.hutool.core.lang.ClassScanner;
 import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
@@ -15,9 +14,8 @@ import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.AgentHeal
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.impl.AgentManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.impl.DashboardManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.LogCollectTaskHealthManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl.LogCollectTaskManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServiceImpl;
+import com.didichuxing.datachannel.agentmanager.core.metrics.impl.MetricsManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
@@ -25,7 +23,6 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.Age
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

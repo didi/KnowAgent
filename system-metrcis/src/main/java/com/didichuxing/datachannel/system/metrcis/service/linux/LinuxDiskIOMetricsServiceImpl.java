@@ -16,6 +16,17 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, PeriodStatistics> iOUtil = new HashMap<>();
 
+    private static LinuxDiskIOMetricsServiceImpl instance;
+
+    private LinuxDiskIOMetricsServiceImpl() {}
+
+    public static synchronized LinuxDiskIOMetricsServiceImpl getInstance() {
+        if(null == instance) {
+            instance = new LinuxDiskIOMetricsServiceImpl();
+        }
+        return instance;
+    }
+
     @PeriodMethod(periodMs = 5 * 1000)
     private void calcIOUtil() {
         Map<String, Double> device2IOUtilMap = getIOUtilOnly();

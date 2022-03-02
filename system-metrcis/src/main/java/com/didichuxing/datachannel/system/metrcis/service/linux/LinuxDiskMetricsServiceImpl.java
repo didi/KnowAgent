@@ -12,6 +12,16 @@ public class LinuxDiskMetricsServiceImpl extends LinuxMetricsService implements 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxDiskMetricsServiceImpl.class);
 
+    private static LinuxDiskMetricsServiceImpl instance;
+
+    public static synchronized LinuxDiskMetricsServiceImpl getInstance() {
+        if(null == instance) {
+            instance = new LinuxDiskMetricsServiceImpl();
+        }
+        return instance;
+    }
+
+    private LinuxDiskMetricsServiceImpl() {}
     @Override
     public Map<String, String> getFsType() {
         Map<String, String> result = new HashMap<>();

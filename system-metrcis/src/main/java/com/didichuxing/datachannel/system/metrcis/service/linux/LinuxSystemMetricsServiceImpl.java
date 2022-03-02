@@ -63,11 +63,20 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     private NetCardMetricsService netCardMetricsService;
 
-    public LinuxSystemMetricsServiceImpl() throws MetricsException {
+    private static LinuxSystemMetricsServiceImpl instance;
+
+    public static synchronized LinuxSystemMetricsServiceImpl getInstance() {
+        if(null == instance) {
+            instance = new LinuxSystemMetricsServiceImpl();
+        }
+        return instance;
+    }
+
+    private LinuxSystemMetricsServiceImpl() {
         setHostName();
-        diskIOMetricsService = Metrics.getMetricsServiceFactory().createDiskIOMetricsService();
-        diskMetricsService = Metrics.getMetricsServiceFactory().createDiskMetricsService();
-        netCardMetricsService = Metrics.getMetricsServiceFactory().createNetCardMetricsService();
+        diskIOMetricsService = LinuxDiskIOMetricsServiceImpl.getInstance();
+        diskMetricsService = LinuxDiskMetricsServiceImpl.getInstance();
+        netCardMetricsService = LinuxNetCardMetricsServiceImpl.getInstance();
         try {
             lastLinuxNetFlow = new LinuxNetFlow();// 记录上次的收发字节数
         } catch (Exception e) {

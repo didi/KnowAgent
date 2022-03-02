@@ -9,14 +9,12 @@ import com.didichuxing.datachannel.system.metrcis.factory.MetricsServiceFactory;
 import com.didichuxing.datachannel.system.metrcis.factory.linux.LinuxMetricsServiceFactory;
 import com.didichuxing.datachannel.system.metrcis.factory.linux.mac.MacOSMetricsServiceFactory;
 import com.didichuxing.datachannel.system.metrcis.service.linux.LinuxMetricsService;
-import com.didichuxing.datachannel.system.metrcis.service.linux.LinuxNetCardMetricsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -28,13 +26,13 @@ public class Metrics {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Metrics.class);
 
-    public static MetricsServiceFactory getMetricsServiceFactory() throws MetricsException {
+    public static MetricsServiceFactory getMetricsServiceFactory() {
         //根据 os 类型进行对应实例化
         String osName = ManagementFactory.getOperatingSystemMXBean().getName().toLowerCase();
         if (osName.contains(OSTypeEnum.LINUX.getDesc())) {
             //初始化定时计算线程池 & 需要定时计算函数对象
-            initLinuxAutoComputeComponent();
-            return new LinuxMetricsServiceFactory();
+            initLinuxAutoComputeComponent(LinuxMetricsServiceFactory.getInstance());
+            return LinuxMetricsServiceFactory.getInstance();
         } else if (osName.contains(OSTypeEnum.AIX.getDesc())) {
             throw new MetricsException(String.format(
                     "class=Metrics||method=getMetricsServiceFactory||errMsg=os={%s} not support",
@@ -44,7 +42,9 @@ public class Metrics {
                     "class=Metrics||method=getMetricsServiceFactory||errMsg=os={%s} not support",
                     osName), ExceptionCodeEnum.SYSTEM_NOT_SUPPORT.getCode());
         } else if (osName.contains(OSTypeEnum.MAC_OS.getDesc())) {
-            return new MacOSMetricsServiceFactory();
+            LinuxMetricsServiceFactory linuxMetricsServiceFactory = LinuxMetricsServiceFactory.getInstance();
+            initLinuxAutoComputeComponent(linuxMetricsServiceFactory);
+            return linuxMetricsServiceFactory;
         } else {
             throw new MetricsException(String.format(
                     "class=Metrics||method=getMetricsServiceFactory||errMsg=os={%s} not support",
@@ -52,11 +52,10 @@ public class Metrics {
         }
     }
 
-    private static Map<Class, Map<Method, Integer>> autoComputeMethodsMap = new HashMap<>();
-
     private static ScheduledExecutorService autoComputeThreadPool;
 
-    private static void initLinuxAutoComputeComponent() {
+    private static void initLinuxAutoComputeComponent(LinuxMetricsServiceFactory linuxMetricsServiceFactory) {
+        Map<Class, Map<Method, Integer>> autoComputeMethodsMap = new HashMap<>();
         String basePackage = "com.didichuxing.datachannel.system.metrcis.service.linux";
         Set<Class<? extends  Object>> clazzSet = ClassScanner.scanPackageBySuper(basePackage, LinuxMetricsService.class);
         for (Class clazz : clazzSet) {
@@ -73,13 +72,21 @@ public class Metrics {
                 }
             }
         }
-        autoComputeThreadPool = Executors.newScheduledThreadPool(clazzSet.size());
-        submitPeriodMethodTask();
+        autoComputeThreadPool = Executors.newSingleThreadScheduledExecutor();
+        submitLinuxPeriodMethodTask(linuxMetricsServiceFactory, autoComputeMethodsMap);
     }
 
-    private static void submitPeriodMethodTask() {
+    private static void submitLinuxPeriodMethodTask(LinuxMetricsServiceFactory linuxMetricsServiceFactory, Map<Class, Map<Method, Integer>> autoComputeMethodsMap) {
+        Map<Class, Object> metricsServiceClass2MetricsServiceInstanceMap = linuxMetricsServiceFactory.getMetricsServiceMap();
         for (Map.Entry<Class, Map<Method, Integer>> entry : autoComputeMethodsMap.entrySet()) {
             Class clazz = entry.getKey();
+            Object instance = metricsServiceClass2MetricsServiceInstanceMap.get(clazz);
+            if(null == instance) {
+                LOGGER.error(
+                        String.format("%s类型的对象在LinuxMetricsServiceFactory.metricsServiceClass2MetricsServiceInstanceMap中未注册", clazz.getName())
+                );
+                continue;
+            }
             Map<Method, Integer> method2PeriodMsMap = entry.getValue();
             for (Map.Entry<Method, Integer> method2PeriodMsEntry : method2PeriodMsMap.entrySet()) {
                 Method method = method2PeriodMsEntry.getKey();
@@ -88,7 +95,7 @@ public class Metrics {
                     @Override
                     public void run() {
                         try {
-                            method.invoke(clazz.newInstance());
+                            method.invoke(instance);
                         } catch (Exception ex) {
                             LOGGER.error(
                                     String.format(

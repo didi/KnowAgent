@@ -8,15 +8,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLo
 import com.didichuxing.datachannel.agentmanager.common.chain.Context;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
-import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsLogCollectTaskService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsLogCollectTaskPOMapper;
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * @author Ronaldo
