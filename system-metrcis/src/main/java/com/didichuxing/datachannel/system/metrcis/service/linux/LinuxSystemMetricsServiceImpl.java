@@ -92,21 +92,21 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemNtpOffset() {
         List<String> output = getOutputByCmd("ntpq -p",
                 "系统时间偏移量", null);
-        Long offset = Long.MIN_VALUE;
+        Double offset = Double.MIN_VALUE;
         if (!output.isEmpty() && output.size() > 2) {
             for(int i = 2; i < output.size(); i++) {
                 String[] properties = output.get(i).split("\\s+");
                 if(properties.length != 10) {
                     return 0L;
                 } else {
-                    offset = Math.max(offset, Long.valueOf(properties[8]));
+                    offset = Math.max(offset, Double.valueOf(properties[8]));
                 }
             }
         }
         if(offset.equals(Long.MIN_VALUE)) {
             return 0L;
         }
-        return offset;
+        return offset.longValue();
     }
 
     @Override
