@@ -42,7 +42,7 @@ function make_output() {
     (
         cp -rf bin/* $output &&         # 拷贝至output目录
         tar -zxf log-agent-node/target/${app}.tar.gz -C ${output} &&     # 解压war包到output目录
-        cp -rf properties/*.properties ${output}/properties &&  
+        cp -rf properties/*.properties ${output}/properties &&
         echo -e "make output ok."
     ) || { echo -e "make output failed!"; exit 2; } # 填充output目录失败后, 退出码为 非0
 }

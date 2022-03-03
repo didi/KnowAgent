@@ -82,7 +82,12 @@ public class LinuxIORate {
     public double getIOReadTimesRate(LinuxIORate before) {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOReadTimes - before.processIOReadTimes;
-        return 1000.0 * readTimesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * readTimesGap / timeGap;
+        } else {
+            return 1000.0 * readTimesGap;
+        }
+
     }
 
     /**
@@ -93,7 +98,11 @@ public class LinuxIORate {
     public double getIOWriteTimesRate(LinuxIORate before) {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOWriteTimes - before.processIOWriteTimes;
-        return 1000.0 * readTimesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * readTimesGap / timeGap;
+        } else {
+            return 1000.0 * readTimesGap;
+        }
     }
 
     /**
@@ -104,7 +113,11 @@ public class LinuxIORate {
     public double getIOReadBytesRate(LinuxIORate before) {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOReadBytes - before.processIOReadBytes;
-        return 1000.0 * readTimesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * readTimesGap / timeGap;
+        } else {
+            return 1000.0 * readTimesGap;
+        }
     }
 
     /**
@@ -115,6 +128,11 @@ public class LinuxIORate {
     public double getIOWriteBytesRate(LinuxIORate before) {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOWriteBytes - before.processIOWriteBytes;
-        return 1000.0 * readTimesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * readTimesGap / timeGap;
+        } else {
+            return 1000.0 * readTimesGap;
+        }
+
     }
 }

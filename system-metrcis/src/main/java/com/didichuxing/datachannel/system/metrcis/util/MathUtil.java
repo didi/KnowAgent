@@ -14,15 +14,15 @@ public class MathUtil {
      * @return 返回待计算样本值集均值
      */
     public static Double getMean(List<Double> values) {
-        int len = values.size();
-        if(0 == len) {
+        int count = values.size();
+        if(0 == count) {
             return 0d;
         } else {
             double sum = 0d;
             for (Double value : values) {
                 sum += value;
             }
-            Double mean = new BigDecimal(sum).divide(new BigDecimal(len), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            Double mean = new BigDecimal(sum).divide(new BigDecimal(count), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
             return mean;
         }
     }
@@ -33,6 +33,9 @@ public class MathUtil {
      */
     public static Double getStdDev(List<Double> values) {
         int count = values.size();
+        if(0 == count) {
+            return 0d;
+        }
         double sum = 0;
         for(int i=0; i<count; i++){//求和
             sum += values.get(i);
@@ -85,14 +88,20 @@ public class MathUtil {
      */
     private static Double percentile(List<Double> values,double p){
         int count = values.size();
-        Collections.sort(values);
-        double px =  p * (count-1);
-        int i = (int) java.lang.Math.floor(px);
-        double g = px - i;
-        if(g == 0){
-            return values.get(i);
-        }else{
-            return (1-g) * values.get(i) + g * values.get(i+1);
+        if(0 == count) {
+            return 0d;
+        } else if(1 == count) {
+            return values.get(0);
+        } else {
+            Collections.sort(values);
+            double px =  p * (count-1);
+            int i = (int) java.lang.Math.floor(px);
+            double g = px - i;
+            if(g == 0) {
+                return values.get(i);
+            } else {
+                return (1-g) * values.get(i) + g * values.get(i+1);
+            }
         }
     }
 

@@ -79,7 +79,11 @@ public class LinuxNetFlow {
     public double getSystemReceiveBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.systemReceiveBytes - before.systemReceiveBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * bytesGap / timeGap;
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
 
     /**
@@ -88,7 +92,11 @@ public class LinuxNetFlow {
     public double getSystemTransmitBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.systemTransmitBytes - before.systemTransmitBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * bytesGap / timeGap;
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
 
     /**
@@ -97,7 +105,11 @@ public class LinuxNetFlow {
     public double getProcessReceiveBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.processReceiveBytes - before.processReceiveBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * bytesGap / timeGap;
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
 
     /**
@@ -106,6 +118,11 @@ public class LinuxNetFlow {
     public double getProcessTransmitBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.processTransmitBytes - before.processTransmitBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return 1000.0 * bytesGap / timeGap;
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
+
 }

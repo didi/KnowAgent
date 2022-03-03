@@ -40,12 +40,11 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
         if(CollectionUtils.isNotEmpty(lines)) {
             if(lines.size() % 2 == 0) {
                 Map<String, String> result = new HashMap<>();
-                for (int i = 0; i < lines.size() - 2; i+=2) {
-                    String device = lines.get(i).substring(0, lines.indexOf(":"));
-                    String macAddress = lines.get(i+1).split(":")[1].trim();
+                for (int i = 0; i < lines.size() - 1; i+=2) {
+                    String device = lines.get(i).substring(0, lines.get(i).indexOf(":"));
+                    String macAddress = lines.get(i+1).substring(lines.get(i+1).indexOf(":") + 1, lines.get(i+1).length()).trim();
                     result.put(device, macAddress);
                 }
-                LOGGER.error(String.format("getMacAddress() => %s", JSON.toJSONString(result)));
                 return result;
             } else {
                 LOGGER.error(
@@ -68,13 +67,12 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
         if(CollectionUtils.isNotEmpty(lines)) {
             if(com.didichuxing.datachannel.system.metrcis.util.StringUtils.contains(lines, "Mb/s")) {
                 Map<String, Long> result = new HashMap<>();
-                for (int i = 0; i < lines.size() - 2; i+=2) {
-                    String device = lines.get(i).substring(0, lines.indexOf(":"));
+                for (int i = 0; i < lines.size() - 1; i+=2) {
+                    String device = lines.get(i).substring(0, lines.get(i).indexOf(":"));
                     String bandWidthStr = lines.get(i+1).split(":")[1].trim();
                     Long bandWidth = Long.valueOf(bandWidthStr.substring(0, bandWidthStr.indexOf("Mb/s")));
                     result.put(device, bandWidth);
                 }
-                LOGGER.error(String.format("getBandWidth() => %s", JSON.toJSONString(result)));
                 return result;
             } else {
                 /*

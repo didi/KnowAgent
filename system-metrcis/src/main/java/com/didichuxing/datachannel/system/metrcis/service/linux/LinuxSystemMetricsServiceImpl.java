@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.system.metrcis.Metrics;
 import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.*;
@@ -476,9 +477,11 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public List<NetCardInfo> getSystemNetCardInfoList() {
+
         Map<String, PeriodStatistics> device2SendBytesPsMap = netCardMetricsService.getSendBytesPs();
         Map<String, String> device2MacAddressMap = netCardMetricsService.getMacAddress();
         Map<String, Long> device2BandWidthMap = netCardMetricsService.getBandWidth();
+
         List<NetCardInfo> netCardInfoList = new ArrayList<>(device2MacAddressMap.size());
 
         for (Map.Entry<String, String> device2MacAddressEntry : device2MacAddressMap.entrySet()) {
@@ -486,9 +489,10 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             String macAddress = device2MacAddressEntry.getValue();
             Long bandWidth = device2BandWidthMap.get(device);
             PeriodStatistics sendBytesPs = device2SendBytesPsMap.get(device);
+
             if(null == sendBytesPs || null == bandWidth) {
                 //TODO：
-                throw new RuntimeException();
+                throw new RuntimeException("sendBytesPs or bandWidth is null");
             }
             NetCardInfo netCardInfo = new NetCardInfo();
             netCardInfo.setSystemNetCardsBandDevice(device);
@@ -497,6 +501,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             netCardInfo.setSystemNetCardsSendBytesPs(sendBytesPs);
             netCardInfoList.add(netCardInfo);
         }
+
         return netCardInfoList;
 
     }
@@ -553,7 +558,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemNetworkSendAndReceiveBytesPsOnly() {
-        return this.getSystemNetworkSendBytesPsOnly() + this.getSystemNetworkReceiveBytesPsOnly();
+        Double sendBytesPs = this.getSystemNetworkSendBytesPsOnly();;
+        Double receiveBytesPs = this.getSystemNetworkReceiveBytesPsOnly();
+        return sendBytesPs + receiveBytesPs;
     }
 
     @Override
@@ -563,17 +570,21 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemNetWorkBandWidthUsedPercent() {
-        systemNetWorkBandWidthUsedPercent.add(getSystemNetWorkBandWidthUsedPercentOnly());
+        Double bandWidthUsedPercent = getSystemNetWorkBandWidthUsedPercentOnly();
+        systemNetWorkBandWidthUsedPercent.add(bandWidthUsedPercent);
     }
 
     private Double getSystemNetWorkBandWidthUsedPercentOnly() {
         Long systemNetWorkBand = 0L;
+        List<NetCardInfo> netCardInfoList = this.getSystemNetCardInfoList();
+
         /*
          * 1.）获取系统全部网卡对应带宽之和
          */
-        for(NetCardInfo netCardInfo : this.getSystemNetCardInfoList()) {
+        for(NetCardInfo netCardInfo : netCardInfoList) {
             systemNetWorkBand += netCardInfo.getSystemNetCardsBandWidth();
         }
+
         /*
          * 2.）获取系统当前上、下行总流量
          */
