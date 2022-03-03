@@ -49,9 +49,10 @@ public class PeriodMetricAutoComputeComponent {
                 }
             }
         }
+        start();
     }
 
-    public void start() {
+    private void start() {
         Map<Class, Object> metricsServiceClass2MetricsServiceInstanceMap = Metrics.getMetricsServiceFactory().getMetricsServiceMap();
         for (Map.Entry<Class, Map<Method, Integer>> entry : autoComputeMethodsMap.entrySet()) {
             Class clazz = entry.getKey();
