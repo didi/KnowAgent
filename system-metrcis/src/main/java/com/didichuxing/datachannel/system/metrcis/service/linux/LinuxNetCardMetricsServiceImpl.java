@@ -3,7 +3,6 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
-import com.didichuxing.datachannel.system.metrcis.constant.Constants;
 import com.didichuxing.datachannel.system.metrcis.service.NetCardMetricsService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,65 +35,42 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Map<String, String> getMacAddress() {
-        List<String> lines = getOutputByScript("mac-addresses.sh", this.getClass().getResource("/").getPath(), "获取系统各网卡信息");
-        if(CollectionUtils.isNotEmpty(lines)) {
-            if(lines.size() % 2 == 0) {
-                Map<String, String> result = new HashMap<>();
-                for (int i = 0; i < lines.size() - 1; i+=2) {
-                    String device = lines.get(i).substring(0, lines.get(i).indexOf(":"));
-                    String macAddress = lines.get(i+1).substring(lines.get(i+1).indexOf(":") + 1, lines.get(i+1).length()).trim();
-                    result.put(device, macAddress);
-                }
-                return result;
-            } else {
-                LOGGER.error(
-                        String.format(
-                                "class=LinuxNetCardMetricsServiceImpl||method=getMacAddress||errMsg=获取网卡信息[%s]错误，网卡信息行数须为偶数行",
-                                JSON.toJSONString(lines)
-                        )
-                );
-                return new HashMap<>();
-            }
-        } else {
-            LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getMacAddress||errMsg=获取网卡信息错误，网卡信息为空");
-            return new HashMap<>();
+        Map<String, Double> device2SendBytesPsMap = getSendBytesPsOnly();
+        Map<String, String> result = new HashMap<>();
+        for (String device : device2SendBytesPsMap.keySet()) {
+            List<String> lines = getOutputByCmd(
+                    String.format("ip link show dev %s |awk '/link/{print $2}'", device),
+                    String.format("获取设备%s对应mac地址", device),
+                    null
+            );
+            assert CollectionUtils.isNotEmpty(lines) && lines.size() == 1;
+            String macAddress = lines.get(0);
+            result.put(device, macAddress);
         }
+        return result;
     }
 
     @Override
     public Map<String, Long> getBandWidth() {
-        List<String> lines = getOutputByScript("port-speed.sh", this.getClass().getResource("/").getPath(), "获取系统各网卡信息");
-        if(CollectionUtils.isNotEmpty(lines)) {
-            if(com.didichuxing.datachannel.system.metrcis.util.StringUtils.contains(lines, "Mb/s")) {
-                Map<String, Long> result = new HashMap<>();
-                for (int i = 0; i < lines.size() - 1; i+=2) {
-                    String device = lines.get(i).substring(0, lines.get(i).indexOf(":"));
-                    String bandWidthStr = lines.get(i+1).split(":")[1].trim();
-                    Long bandWidth = Long.valueOf(bandWidthStr.substring(0, bandWidthStr.indexOf("Mb/s")));
-                    result.put(device, bandWidth);
+        Map<String, Double> device2SendBytesPsMap = getSendBytesPsOnly();
+        Map<String, Long> result = new HashMap<>();
+        for (String device : device2SendBytesPsMap.keySet()) {
+            List<String> lines = getOutputByCmd(
+                    String.format("ethtool %s |grep \"Speed:\"", device),
+                    String.format("获取设备%s对应带宽信息", device),
+                    null
+            );
+            Long bandWidth = 0L;
+            for (String line : lines) {
+                if(line.contains("Mb/s")) {
+                    String bandWidthStr = line.split(":")[1];
+                    bandWidth = Long.valueOf(bandWidthStr.substring(0, bandWidthStr.indexOf("Mb/s")).trim());
+                    break;
                 }
-                return result;
-            } else {
-                /*
-                 * 无法获取到网卡带宽信息，将采用默认值进行返回
-                 */
-                Map<String, String> device2MacAddressMap = getMacAddress();
-                Map<String, Long> result = new HashMap<>();
-                for (String device: device2MacAddressMap.keySet()) {
-                    result.put(device, Constants.NET_CARD_BAND_WIDTH_BYTES_DEFAULT_VALUE);
-                }
-                LOGGER.warn(
-                        String.format(
-                                "class=LinuxNetCardMetricsServiceImpl||method=getMacAddress||errMsg=无法获取网卡带宽信息，各网卡带宽将采用默认值=%d(bytes)",
-                                Constants.NET_CARD_BAND_WIDTH_BYTES_DEFAULT_VALUE
-                        )
-                );
-                return result;
             }
-        } else {
-            LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getMacAddress||errMsg=获取网卡信息错误，网卡信息为空");
-            return new HashMap<>();
+            result.put(device, bandWidth);
         }
+        return result;
     }
 
     @Override

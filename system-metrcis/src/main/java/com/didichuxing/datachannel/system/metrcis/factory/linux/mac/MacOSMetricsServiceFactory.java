@@ -5,6 +5,8 @@ import com.didichuxing.datachannel.system.metrcis.factory.MetricsServiceFactory;
 import com.didichuxing.datachannel.system.metrcis.service.*;
 import com.didichuxing.datachannel.system.metrcis.service.macos.*;
 
+import java.util.Map;
+
 public class MacOSMetricsServiceFactory implements MetricsServiceFactory {
     @Override
     public SystemMetricsService createSystemMetrics() throws MetricsException {
@@ -29,5 +31,10 @@ public class MacOSMetricsServiceFactory implements MetricsServiceFactory {
     @Override
     public NetCardMetricsService createNetCardMetricsService() {
         return new MacOSNetCardMetricsServiceImpl();
+    }
+
+    @Override
+    public Map<Class, Object> getMetricsServiceMap() {
+        return null;
     }
 }
