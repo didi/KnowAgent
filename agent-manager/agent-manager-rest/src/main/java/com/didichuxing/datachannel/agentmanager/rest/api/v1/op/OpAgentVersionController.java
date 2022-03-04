@@ -69,7 +69,6 @@ public class OpAgentVersionController {
     @ApiOperation(value = "下载Agent版本", notes = "")
     @RequestMapping(value = "/{agentVersionId}", method = RequestMethod.GET)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_VERSION_DOWNLOAD)
     public Result<String> downloadAgentVersion(@PathVariable Long agentVersionId, HttpServletResponse response) {
         Result<String> result = Result.buildSucc();
         result.setData(agentVersionManageService.getAgentInstallFileDownloadUrl(agentVersionId));
@@ -124,6 +123,9 @@ public class OpAgentVersionController {
         }
         if(null != dto.getAgentVersionCreateTimeStart()) {
             agentVersionPaginationQueryConditionDO.setAgentVersionCreateTimeStart(new Date(dto.getAgentVersionCreateTimeStart()));
+        }
+        if(null != dto.getQueryTerm()) {
+            agentVersionPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
         agentVersionPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         agentVersionPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());
