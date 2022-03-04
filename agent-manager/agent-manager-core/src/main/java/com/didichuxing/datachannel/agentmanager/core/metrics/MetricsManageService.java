@@ -7,7 +7,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsPr
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointLine;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 

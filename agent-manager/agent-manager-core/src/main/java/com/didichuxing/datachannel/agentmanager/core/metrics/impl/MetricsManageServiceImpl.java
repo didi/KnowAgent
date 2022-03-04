@@ -11,6 +11,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
@@ -45,6 +46,9 @@ public class MetricsManageServiceImpl implements MetricsManageService {
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
+
+    @Autowired
+    private FileLogCollectPathManageService fileLogCollectPathManageService;
 
     /**
      * top n 默认值
@@ -566,7 +570,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsAgentDAO.getSingleChatStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(metricQueryDTO.getHostName());
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -575,7 +582,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsAgentDAO.getSingleChatNonStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(metricQueryDTO.getHostName());
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
                 throw new RuntimeException();
@@ -621,7 +631,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsProcessDAO.getSingleChatStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(metricQueryDTO.getHostName());
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -630,7 +643,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsProcessDAO.getSingleChatNonStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(metricQueryDTO.getHostName());
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
                 throw new RuntimeException();
@@ -653,7 +669,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             MetricFieldEnum metricFieldEnum,
             Object lableValue,
             List<MetricPointLine> multiLineChatValue,
-            List<MetricPoint> singleLineChatValue
+            MetricPointLine singleLineChatValue
             ) {
         MetricPanel metricPanel = new MetricPanel();
         metricPanel.setBaseUnit(metricFieldEnum.getBaseUnit().getCode());
@@ -823,7 +839,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsSystemDAO.getSingleChatStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(metricQueryDTO.getHostName());
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -832,7 +851,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsSystemDAO.getSingleChatNonStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(metricQueryDTO.getHostName());
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
                 throw new RuntimeException();
@@ -1192,7 +1214,16 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                String metricPointLineName = String.format(
+                        "%s:%s:%s",
+                        logCollectTaskManageService.getById(metricQueryDTO.getLogCollectTaskId()).getLogCollectTaskName(),
+                        fileLogCollectPathManageService.getById(metricQueryDTO.getPathId()).getPath(),
+                        metricQueryDTO.getHostName()
+                );
+                metricPointLine.setName(metricPointLineName);
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -1203,7 +1234,16 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", metricQueryDTO.getStartTime());
                 params.put("endTime", metricQueryDTO.getEndTime());
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatNonStatistic(params);
-                return getMetricsPanel(metricFieldEnum, null, null, result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                String metricPointLineName = String.format(
+                        "%s:%s:%s",
+                        logCollectTaskManageService.getById(metricQueryDTO.getLogCollectTaskId()).getLogCollectTaskName(),
+                        fileLogCollectPathManageService.getById(metricQueryDTO.getPathId()).getPath(),
+                        metricQueryDTO.getHostName()
+                );
+                metricPointLine.setName(metricPointLineName);
+                return getMetricsPanel(metricFieldEnum, null, null, metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
                 throw new RuntimeException();
