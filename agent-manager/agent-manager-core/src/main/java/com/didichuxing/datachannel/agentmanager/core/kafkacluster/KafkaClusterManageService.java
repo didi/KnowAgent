@@ -44,11 +44,11 @@ public interface KafkaClusterManageService {
 
     /**
      * 根据 id 删除对应 KafkaClusterPO 对象
-     * @param id 待删除 id
+     * @param receiverIdList 待删除 id 集
      * @param ignoreLogCollectTaskAndAgentRelationCheck 是否忽略待删除kafkaCluster存在关联的LogCollectTask & Agent
      * @param operator 操作人
      */
-    void deleteKafkaClusterById(Long id, boolean ignoreLogCollectTaskAndAgentRelationCheck, String operator);
+    void deleteKafkaClusterById(List<Long> receiverIdList, boolean ignoreLogCollectTaskAndAgentRelationCheck, String operator);
 
     /**
      * 注：由于KafkaCluster同步操作可能会涉及大量KafkaCluster对象持久化，将持续较长时间，时长不可控，可能导致事务超时 回滚，因而，该函

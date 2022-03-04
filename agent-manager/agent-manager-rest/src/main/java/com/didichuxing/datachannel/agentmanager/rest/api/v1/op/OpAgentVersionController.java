@@ -51,11 +51,18 @@ public class OpAgentVersionController {
     }
 
     @ApiOperation(value = "删除Agent版本", notes = "")
-    @RequestMapping(value = "/{agentVersionId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
     @CheckPermission(permission = AGENT_VERSION_DELETE)
-    public Result deleteAgentVersion(@PathVariable Long agentVersionId) {
-        agentVersionManageService.deleteAgentVersion(agentVersionId, SpringTool.getUserName());
+    public Result deleteAgentVersion(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> agentVersionIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                agentVersionIdList.add(Long.valueOf(id));
+            }
+            agentVersionManageService.deleteAgentVersion(agentVersionIdList, SpringTool.getUserName());
+        }
         return Result.buildSucc();
     }
 

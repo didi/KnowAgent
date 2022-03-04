@@ -15,6 +15,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.*;
+import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
@@ -29,10 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author huqidong
@@ -289,8 +287,10 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
 
     @Override
     @Transactional
-    public void deleteKafkaClusterById(Long id, boolean ignoreLogCollectTaskAndAgentRelationCheck, String operator) {
-        this.handleRemoveKafkaClusterById(id, ignoreLogCollectTaskAndAgentRelationCheck, operator);
+    public void deleteKafkaClusterById(List<Long> receiverIdList, boolean ignoreLogCollectTaskAndAgentRelationCheck, String operator) {
+        for (Long receiverId : receiverIdList) {
+            this.handleRemoveKafkaClusterById(receiverId, ignoreLogCollectTaskAndAgentRelationCheck, operator);
+        }
     }
 
     /**
@@ -399,7 +399,7 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         //处理待删除对象集
         List<ReceiverDO> removeList = listCompareResult.getRemoveList();
         for (ReceiverDO receiverDO : removeList) {
-            this.deleteKafkaClusterById(receiverDO.getId(), true, null);
+            this.deleteKafkaClusterById(Arrays.asList(receiverDO.getId()), true, null);
             removeScucessCount++;
         }
         long persistTime = System.currentTimeMillis() - persistStartTime;

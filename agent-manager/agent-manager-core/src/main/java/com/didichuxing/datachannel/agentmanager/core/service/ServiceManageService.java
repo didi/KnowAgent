@@ -34,11 +34,11 @@ public interface ServiceManageService {
 
     /**
      * 删除服务
-     * @param id 待删除服务对象id
+     * @param serviceIdList 待删除服务对象id集
      * @param cascadeDeleteHostAndLogCollectTaskRelation 是否级联删除 Service & Host、Service & LogCollectTask 关联关系
      * @param operator 操作人
      */
-    void deleteService(Long id, boolean cascadeDeleteHostAndLogCollectTaskRelation, String operator);
+    void deleteServices(List<Long> serviceIdList, boolean cascadeDeleteHostAndLogCollectTaskRelation, String operator);
 
     /**
      * 获取系统全量Service集（注：不包括服务关联的主机对象集）

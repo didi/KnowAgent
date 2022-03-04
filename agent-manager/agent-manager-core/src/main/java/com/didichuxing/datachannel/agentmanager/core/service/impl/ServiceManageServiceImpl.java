@@ -87,8 +87,10 @@ public class ServiceManageServiceImpl implements ServiceManageService {
 
     @Override
     @Transactional
-    public void deleteService(Long id, boolean cascadeDeleteHostAndLogCollectTaskRelation, String operator) {
-        handleDeleteService(id, cascadeDeleteHostAndLogCollectTaskRelation, operator);
+    public void deleteServices(List<Long> serviceIdList, boolean cascadeDeleteHostAndLogCollectTaskRelation, String operator) {
+        for (Long serviceId : serviceIdList) {
+            handleDeleteService(serviceId, cascadeDeleteHostAndLogCollectTaskRelation, operator);
+        }
     }
 
     @Override

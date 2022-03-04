@@ -100,8 +100,10 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
 
     @Override
     @Transactional
-    public void deleteAgentVersion(Long agentVersionId, String operator) {
-        handleDeleteAgentVersion(agentVersionId, operator);
+    public void deleteAgentVersion(List<Long> agentVersionIdList, String operator) {
+        for (Long agentVersionId : agentVersionIdList) {
+            handleDeleteAgentVersion(agentVersionId, operator);
+        }
     }
 
     @Override
