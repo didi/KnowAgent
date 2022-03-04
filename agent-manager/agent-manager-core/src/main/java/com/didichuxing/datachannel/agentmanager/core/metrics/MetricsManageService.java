@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSy
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointLine;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public interface MetricsManageService {
      * @param logCollectTaskByServiceNames 日志采集任务相关指标是否按 serviceNames 进行分组统计 true：service names 分组统计 false：logCollectTask id 分组统计，非日志采集任务相关指标忽略该属性
      * @return 返回给定指标 topN agent 对应指标时序
      */
-    List<List<MetricPoint>> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceNames);
+    List<MetricPointLine> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceNames);
 
     /**
      * 清除给定时间前的指标数据

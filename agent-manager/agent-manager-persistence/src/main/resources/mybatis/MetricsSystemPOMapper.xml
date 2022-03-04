@@ -394,8 +394,7 @@
   </select>
 
   <select id="getSingleChatNonStatisticByHostName" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.hostName as 'hostName' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
                heartbeatTimeMinute
        from tb_metrics_system
@@ -403,13 +402,10 @@
          hostName = #{hostName,jdbcType=VARCHAR}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_system as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR}
+       group by heartbeatTimeMinute
   </select>
   <select id="getSingleChatStatisticByHostName" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.hostName as 'hostName' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
                ${function}(${fieldName}Min) as 'min',
                ${function}(${fieldName}Max) as 'max',
@@ -425,9 +421,7 @@
          hostName = #{hostName,jdbcType=VARCHAR}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_system as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR}
+       group by heartbeatTimeMinute
   </select>
 
   <select id="getLastRecord" resultMap="BaseResultMap" parameterType="java.util.Map">

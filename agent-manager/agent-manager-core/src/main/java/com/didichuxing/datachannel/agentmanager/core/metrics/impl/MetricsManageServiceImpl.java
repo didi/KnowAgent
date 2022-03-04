@@ -6,10 +6,12 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointLine;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -40,6 +42,9 @@ public class MetricsManageServiceImpl implements MetricsManageService {
 
     @Autowired
     private MetricsDiskIOPOMapper metricsDiskIODAO;
+
+    @Autowired
+    private LogCollectTaskManageService logCollectTaskManageService;
 
     /**
      * top n 默认值
@@ -121,7 +126,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     @Override
-    public List<List<MetricPoint>> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceNames) {
+    public List<MetricPointLine> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceNames) {
         if(isSystemMetric(metricFieldEnum)) {
             return handleGetTopNBySystemMetric(metricFieldEnum, startTime, endTime, sortTimeField);
         } else if(isProcessMetric(metricFieldEnum)) {
@@ -231,7 +236,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return metricsProcessDAO.getAggregationQueryPerHostNameFromMetricsProcess(params);
     }
 
-    private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerServiceNames(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+    private List<MetricPointLine> handleGetTopNByLogCollectTaskMetricPerServiceNames(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n logcollecttask
          */
@@ -247,7 +252,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         /*
          * 2.）根据 top n host name，挨个获取单条线
          */
-        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        List<MetricPointLine> multiLineChatValue = new ArrayList<>();
         for (MetricsServiceNamesTopPO metricsServiceNamesTopPO : metricsServiceNamesTopPOList) {
             String serviceNames = metricsServiceNamesTopPO.getServiceNames();
             if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -258,7 +263,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatStatisticByServiceNames(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(serviceNames);
+                multiLineChatValue.add(metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -267,7 +275,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatNonStatisticByServiceNames(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(serviceNames);
+                multiLineChatValue.add(metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
             }
@@ -275,7 +286,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return multiLineChatValue;
     }
 
-    private List<List<MetricPoint>> handleGetTopNByLogCollectTaskMetricPerLogCollectTaskId(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+    private List<MetricPointLine> handleGetTopNByLogCollectTaskMetricPerLogCollectTaskId(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n logcollecttask
          */
@@ -291,7 +302,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         /*
          * 2.）根据 top n host name，挨个获取单条线
          */
-        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        List<MetricPointLine> multiLineChatValue = new ArrayList<>();
         for (MetricsLogCollectTaskIdTopPO metricsLogCollectTaskIdTopPO : metricsLogCollectTaskIdTopPOList) {
             Long logCollectTaskId = metricsLogCollectTaskIdTopPO.getLogCollectTaskId();
             if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -302,7 +313,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatStatisticByLogCollectTaskId(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setName(logCollectTaskManageService.getById(logCollectTaskId).getLogCollectTaskName());
+                metricPointLine.setMetricPointList(result);
+                multiLineChatValue.add(metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -311,7 +325,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatNonStatisticByLogCollectTaskId(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setName(logCollectTaskManageService.getById(logCollectTaskId).getLogCollectTaskName());
+                metricPointLine.setMetricPointList(result);
+                multiLineChatValue.add(metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
             }
@@ -319,7 +336,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return multiLineChatValue;
     }
 
-    private List<List<MetricPoint>> handleGetTopNByAgentBusinessMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+    private List<MetricPointLine> handleGetTopNByAgentBusinessMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n host name
          */
@@ -335,7 +352,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         /*
          * 2.）根据 top n host name，挨个获取单条线
          */
-        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        List<MetricPointLine> multiLineChatValue = new ArrayList<>();
         for (MetricsLogCollectTaskTopPO metricsLogCollectTaskTopPO : metricsLogCollectTaskTopPOList) {
             String hostName = metricsLogCollectTaskTopPO.getHostName();
             if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -346,7 +363,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsAgentDAO.getSingleChatStatisticByHostName(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(hostName);
+                multiLineChatValue.add(metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -355,7 +375,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsAgentDAO.getSingleChatNonStatisticByHostName(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(hostName);
+                multiLineChatValue.add(metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
             }
@@ -363,7 +386,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return multiLineChatValue;
     }
 
-    private List<List<MetricPoint>> handleGetTopNByProcessMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+    private List<MetricPointLine> handleGetTopNByProcessMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n host name
          */
@@ -379,7 +402,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         /*
          * 2.）根据 top n host name，挨个获取单条线
          */
-        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        List<MetricPointLine> multiLineChatValue = new ArrayList<>();
         for (MetricsLogCollectTaskTopPO metricsLogCollectTaskTopPO : metricsLogCollectTaskTopPOList) {
             String hostName = metricsLogCollectTaskTopPO.getHostName();
             if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -390,7 +413,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsProcessDAO.getSingleChatStatisticByHostName(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(hostName);
+                multiLineChatValue.add(metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -399,7 +425,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsProcessDAO.getSingleChatNonStatisticByHostName(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(hostName);
+                multiLineChatValue.add(metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
             }
@@ -407,7 +436,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return multiLineChatValue;
     }
 
-    private List<List<MetricPoint>> handleGetTopNBySystemMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
+    private List<MetricPointLine> handleGetTopNBySystemMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n host name
          */
@@ -423,7 +452,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         /*
          * 2.）根据 top n host name，挨个获取单条线
          */
-        List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+        List<MetricPointLine> multiLineChatValue = new ArrayList<>();
         for (MetricsLogCollectTaskTopPO metricsLogCollectTaskTopPO : metricsLogCollectTaskTopPOList) {
             String hostName = metricsLogCollectTaskTopPO.getHostName();
             if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -434,7 +463,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsSystemDAO.getSingleChatStatisticByHostName(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(hostName);
+                multiLineChatValue.add(metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                 params = new HashMap<>();
                 params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -443,7 +475,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("startTime", startTime);
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsSystemDAO.getSingleChatNonStatisticByHostName(params);
-                multiLineChatValue.add(result);
+                MetricPointLine metricPointLine = new MetricPointLine();
+                metricPointLine.setMetricPointList(result);
+                metricPointLine.setName(hostName);
+                multiLineChatValue.add(metricPointLine);
             } else {
                 //TODO：throw exception 未知MetricValueTypeEnum类型
             }
@@ -617,7 +652,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     private MetricPanel getMetricsPanel(
             MetricFieldEnum metricFieldEnum,
             Object lableValue,
-            List<List<MetricPoint>> multiLineChatValue,
+            List<MetricPointLine> multiLineChatValue,
             List<MetricPoint> singleLineChatValue
             ) {
         MetricPanel metricPanel = new MetricPanel();
@@ -710,7 +745,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             /*
              * 2.）根据 top n disk，挨个获取单条线
              */
-            List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+            List<MetricPointLine> multiLineChatValue = new ArrayList<>();
             for (MetricsDiskIOTopPO metricsDiskIOTopPO : metricsDiskIOTopPOList) {
                 String device = metricsDiskIOTopPO.getDevice();
                 if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -722,7 +757,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsDiskIODAO.getSingleChatStatisticByDevice(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(device);
+                    multiLineChatValue.add(metricPointLine);
                 } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                     params = new HashMap<>();
                     params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -732,7 +770,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsDiskIODAO.getSingleChatNonStatisticByDevice(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(device);
+                    multiLineChatValue.add(metricPointLine);
                 } else {
                     //TODO：throw exception 未知MetricValueTypeEnum类型
                 }
@@ -850,7 +891,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             /*
              * 2.）根据 top n net card，挨个获取单条线
              */
-            List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+            List<MetricPointLine> multiLineChatValue = new ArrayList<>();
             for (MetricsNetCardTopPO metricsNetCardTopPO : MetricsNetCardTopPOList) {
                 String macAddress = metricsNetCardTopPO.getMacAddress();
                 if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -862,7 +903,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsNetCardDAO.getSingleChatStatisticByMacAddress(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(macAddress);
+                    multiLineChatValue.add(metricPointLine);
                 } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                     params = new HashMap<>();
                     params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -872,7 +916,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsNetCardDAO.getSingleChatNonStatisticByMacAddress(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(macAddress);
+                    multiLineChatValue.add(metricPointLine);
                 } else {
                     //TODO：throw exception 未知MetricValueTypeEnum类型
                 }
@@ -935,7 +982,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             /*
              * 2.）根据 top n disk，挨个获取单条线
              */
-            List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+            List<MetricPointLine> multiLineChatValue = new ArrayList<>();
             for (MetricsDiskTopPO metricsDiskTopPO : metricsDiskTopPOList) {
                 String path = metricsDiskTopPO.getPath();
                 if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -947,7 +994,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsDiskDAO.getSingleChatStatisticByPath(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(path);
+                    multiLineChatValue.add(metricPointLine);
                 } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                     params = new HashMap<>();
                     params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -957,7 +1007,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsDiskDAO.getSingleChatNonStatisticByPath(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(path);
+                    multiLineChatValue.add(metricPointLine);
                 } else {
                     //TODO：throw exception 未知MetricValueTypeEnum类型
                 }
@@ -1090,9 +1143,9 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             params.put("sortType", metricFieldEnum.getSortTypeEnum().getType());
             List<MetricsLogCollectTaskTopPO> metricsLogCollectTaskTopPOList = metricsLogCollectTaskDAO.getTopNByHostName(params);
             /*
-             * 2.）根据 top n disk，挨个获取单条线
+             * 2.）根据 top n host name，挨个获取单条线
              */
-            List<List<MetricPoint>> multiLineChatValue = new ArrayList<>();
+            List<MetricPointLine> multiLineChatValue = new ArrayList<>();
             for (MetricsLogCollectTaskTopPO metricsLogCollectTaskTopPO : metricsLogCollectTaskTopPOList) {
                 String hostName = metricsLogCollectTaskTopPO.getHostName();
                 if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.STATISTICS)) {
@@ -1105,7 +1158,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatStatistic(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(hostName);
+                    multiLineChatValue.add(metricPointLine);
                 } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
                     params = new HashMap<>();
                     params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
@@ -1116,7 +1172,10 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                     params.put("startTime", metricQueryDTO.getStartTime());
                     params.put("endTime", metricQueryDTO.getEndTime());
                     List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatNonStatistic(params);
-                    multiLineChatValue.add(result);
+                    MetricPointLine metricPointLine = new MetricPointLine();
+                    metricPointLine.setMetricPointList(result);
+                    metricPointLine.setName(hostName);
+                    multiLineChatValue.add(metricPointLine);
                 } else {
                     //TODO：throw exception 未知MetricValueTypeEnum类型
                 }

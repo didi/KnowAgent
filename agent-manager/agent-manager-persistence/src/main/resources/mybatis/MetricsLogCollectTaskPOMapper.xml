@@ -284,8 +284,7 @@
     </if>
   </select>
   <select id="getSingleChatNonStatisticByLogCollectTaskId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.collectTaskId as 'logCollectTaskId' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
                heartbeatTimeMinute
        from tb_metrics_log_collect_task
@@ -293,13 +292,10 @@
          collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+       group by heartbeatTimeMinute
   </select>
   <select id="getSingleChatStatisticByLogCollectTaskId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.collectTaskId as 'logCollectTaskId' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
                ${function}(${fieldName}Min) as 'min',
                ${function}(${fieldName}Max) as 'max',
@@ -315,9 +311,7 @@
          collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+       group by heartbeatTimeMinute
   </select>
 
   <resultMap id="TopNByMetricPerServiceNamesResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsServiceNamesTopPO">
@@ -340,8 +334,7 @@
     </if>
   </select>
   <select id="getSingleChatNonStatisticByServiceNames" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.serviceNames as 'serviceNames' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
                heartbeatTimeMinute
        from tb_metrics_log_collect_task
@@ -349,13 +342,10 @@
          serviceNames = #{serviceNames,jdbcType=VARCHAR}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.serviceNames = #{serviceNames,jdbcType=VARCHAR}
+       group by heartbeatTimeMinute
   </select>
   <select id="getSingleChatStatisticByServiceNames" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.serviceNames as 'serviceNames' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
                ${function}(${fieldName}Min) as 'min',
                ${function}(${fieldName}Max) as 'max',
@@ -371,9 +361,7 @@
          serviceNames = #{serviceNames,jdbcType=VARCHAR}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_log_collect_task as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.serviceNames = #{serviceNames,jdbcType=VARCHAR}
+       group by heartbeatTimeMinute
   </select>
 
   <select id="aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask" resultType="java.lang.Object" parameterType="java.util.Map" >

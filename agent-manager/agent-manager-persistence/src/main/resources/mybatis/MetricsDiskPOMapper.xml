@@ -59,8 +59,7 @@
       limit 1
   </select>
   <select id="getSingleChatNonStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.systemDiskPath as 'path', t2.systemDiskFsType as 'fsType' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
          heartbeatTimeMinute
        from tb_metrics_disk
@@ -70,13 +69,10 @@
          systemDiskPath = #{path,jdbcType=VARCHAR}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_disk as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemDiskPath = #{path,jdbcType=VARCHAR}
+       group by heartbeatTimeMinute
   </select>
   <select id="getSingleChatStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.systemDiskPath as 'path', t2.systemDiskFsType as 'fsType' FROM
-    (select
+    select
       ${function}(${fieldName}) as 'last',
             ${function}(${fieldName}Min) as 'min',
             ${function}(${fieldName}Max) as 'max',
@@ -94,9 +90,7 @@
       systemDiskPath = #{path,jdbcType=VARCHAR}
       and
       heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-    group by heartbeatTimeMinute) as t1
-    LEFT JOIN
-    tb_metrics_disk as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemDiskPath = #{path,jdbcType=VARCHAR}
+    group by heartbeatTimeMinute
   </select>
 
   <resultMap id="TopNDiskPathResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskTopPO" >

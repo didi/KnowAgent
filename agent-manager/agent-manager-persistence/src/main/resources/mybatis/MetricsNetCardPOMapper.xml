@@ -73,8 +73,7 @@
       limit 1
   </select>
   <select id="getSingleChatNonStatisticByMacAddress" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.systemNetCardsBandMacAddress as 'macAddress', t2.systemNetCardsBandDevice as 'device' FROM
-    (select
+    select
       ${function}(${fieldName}) as 'last',
       heartbeatTimeMinute
     from tb_metrics_net_card
@@ -84,13 +83,10 @@
       systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
       and
       heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-    group by heartbeatTimeMinute) as t1
-    LEFT JOIN
-      tb_metrics_net_card as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
+    group by heartbeatTimeMinute
   </select>
   <select id="getSingleChatStatisticByMacAddress" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
-    SELECT t1.*, t2.systemNetCardsBandMacAddress as 'macAddress', t2.systemNetCardsBandDevice as 'device' FROM
-      (select
+    select
          ${function}(${fieldName}) as 'last',
                ${function}(${fieldName}Min) as 'min',
                ${function}(${fieldName}Max) as 'max',
@@ -108,9 +104,7 @@
          systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
          and
          heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
-       group by heartbeatTimeMinute) as t1
-        LEFT JOIN
-      tb_metrics_net_card as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemNetCardsBandMacAddress = #{macAddress,jdbcType=VARCHAR}
+       group by heartbeatTimeMinute
   </select>
   <resultMap id="TopNMacAddressResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsNetCardTopPO" >
     <result column="macAddress" property="macAddress" jdbcType="VARCHAR" />

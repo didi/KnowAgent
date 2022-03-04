@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.Servi
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointLine;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricDisplayTypeEnum;
@@ -140,7 +141,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendLogEventsDayTop5Services(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),true
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -153,7 +154,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendBytesDayTop5Services(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),true
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -166,7 +167,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendLogEventsLast1MinuteTop5Services(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),true
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -179,7 +180,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendBytesLast1MinuteTop5Services(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),true
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -192,7 +193,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendLogEventsDayTop5LogCollectTasks(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -205,7 +206,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendBytesDayTop5LogCollectTasks(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -218,7 +219,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendLogEventsLast1MinuteTop5LogCollectTasks(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -231,7 +232,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendBytesTop5LogCollectTasks(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_SEND_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -244,7 +245,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getLimitTimeTop5LogCollectTasks(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_LIMIT_TIME, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -257,7 +258,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getLogTimeDelayTop5LogCollectTasks(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -270,7 +271,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getRunningLogCollectPathsTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -283,7 +284,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getRunningLogCollectTasksTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -296,7 +297,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendLogEventsDayTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -309,7 +310,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendBytesDayTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.AGENT_WRITE_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -322,7 +323,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getSendLogEventsLast1MinuteTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -335,7 +336,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getUplinkBytesTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -348,7 +349,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getFdUsedTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.PROCESS_FD_USED, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -361,7 +362,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getFullGcTimesDayTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.JVM_FULL_GC_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -374,7 +375,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getBandWidthUsageTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.SYSTEM_NET_WORK_BAND_WIDTH_USED_PERCENT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -387,7 +388,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getBandWidthUsedTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -400,7 +401,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getMemoryUsedTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.PROCESS_MEMORY_USED, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -413,7 +414,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getCpuUsageTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.PROCESS_CPU_UTIL, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
@@ -426,7 +427,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private MetricPanel getNtpGapTop5Agents(Long startTime, Long endTime) {
-        List<List<MetricPoint>> multiLineChatValue = metricsManageService.getTopNByMetric(
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
                 MetricFieldEnum.SYSTEM_NTP_OFFSET, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();

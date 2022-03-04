@@ -31,6 +31,6 @@ public class MetricPanel {
     private List<MetricPoint> singleLineChatValue;
 
     @ApiModelProperty(value = "多根折线图类型指标值")
-    private List<List<MetricPoint>> multiLineChatValue;
+    private List<MetricPointLine> multiLineChatValue;
 
 }
