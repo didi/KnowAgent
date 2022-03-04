@@ -275,6 +275,8 @@ public class NormalLogCollectTaskController {
                 }
             }
             logCollectTaskPaginationRecordVO.setLogCollectTaskHealthLevel(logCollectTaskPaginationRecordDO.getLogCollectTaskHealthLevel());
+            logCollectTaskPaginationRecordVO.setLogCollectTaskHealthDescription(logCollectTaskPaginationRecordDO.getLogCollectTaskHealthDescription());
+            logCollectTaskPaginationRecordVO.setLogCollectTaskHealthInspectionResultType(logCollectTaskPaginationRecordDO.getLogCollectTaskHealthInspectionResultType());
             logCollectTaskPaginationRecordVO.setLogCollectTaskId(logCollectTaskPaginationRecordDO.getLogCollectTaskId());
             logCollectTaskPaginationRecordVO.setLogCollectTaskName(logCollectTaskPaginationRecordDO.getLogCollectTaskName());
             logCollectTaskPaginationRecordVO.setLogCollectTaskType(logCollectTaskPaginationRecordDO.getLogCollectTaskType());

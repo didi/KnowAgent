@@ -56,12 +56,38 @@ public class LogCollectTaskPaginationRecordDO extends BaseDO {
      */
     private Long kafkaClusterId;
 
+    /**
+     * 日志采集任务健康描述信息
+     */
+    private String logCollectTaskHealthDescription;
+
+    /**
+     * 日志采集任务巡检结果类型
+     */
+    private Integer logCollectTaskHealthInspectionResultType;
+
     public Long getKafkaClusterId() {
         return kafkaClusterId;
     }
 
     public void setKafkaClusterId(Long kafkaClusterId) {
         this.kafkaClusterId = kafkaClusterId;
+    }
+
+    public Integer getLogCollectTaskHealthInspectionResultType() {
+        return logCollectTaskHealthInspectionResultType;
+    }
+
+    public void setLogCollectTaskHealthInspectionResultType(Integer logCollectTaskHealthInspectionResultType) {
+        this.logCollectTaskHealthInspectionResultType = logCollectTaskHealthInspectionResultType;
+    }
+
+    public String getLogCollectTaskHealthDescription() {
+        return logCollectTaskHealthDescription;
+    }
+
+    public void setLogCollectTaskHealthDescription(String logCollectTaskHealthDescription) {
+        this.logCollectTaskHealthDescription = logCollectTaskHealthDescription;
     }
 
     public Integer getLogCollectTaskStatus() {

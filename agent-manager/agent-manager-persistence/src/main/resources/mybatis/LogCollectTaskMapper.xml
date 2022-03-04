@@ -70,12 +70,15 @@
     <result column="log_collect_task_status" property="logCollectTaskStatus" jdbcType="INTEGER" />
     <result column="kafka_cluster_id" property="kafkaClusterId" jdbcType="BIGINT" />
     <result column="log_collect_task_finish_time" property="logCollectTaskFinishTime" jdbcType="TIMESTAMP"/>
+    <result column="log_collect_task_health_description" property="logCollectTaskHealthDescription" jdbcType="VARCHAR"/>
+    <result column="log_collect_task_health_inspection_result_type" property="logCollectTaskHealthInspectionResultType" jdbcType="INTEGER"/>
   </resultMap>
 
   <select id="paginationQueryByConditon" resultMap="PaginationQueryByConditonResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO" >
     SELECT
       distinct t1.id as log_collect_task_id, t1.log_collect_task_name, t1.log_collect_task_type,
-      t3.log_collect_task_health_level,t1.create_time create_time, t1.send_topic, t1.log_collect_task_status, t1.kafka_cluster_id, t1.log_collect_task_finish_time log_collect_task_finish_time
+      t3.log_collect_task_health_level,t1.create_time create_time, t1.send_topic, t1.log_collect_task_status, t1.kafka_cluster_id, t1.log_collect_task_finish_time log_collect_task_finish_time,
+      t3.log_collect_task_health_description, t3.log_collect_task_health_inspection_result_type
       FROM tb_log_collect_task as t1
     <if test="serviceIdList != null">
       INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id

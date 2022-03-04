@@ -31,6 +31,12 @@ public class LogCollectTaskPaginationRecordVO {
     @ApiModelProperty(value = "日志采集任务健康度 ", notes="")
     private Integer logCollectTaskHealthLevel;
 
+    @ApiModelProperty(value = "日志采集任务健康描述信息", notes="")
+    private String logCollectTaskHealthDescription;
+
+    @ApiModelProperty(value = "日志采集任务巡检结果类型", notes="")
+    private Integer logCollectTaskHealthInspectionResultType;
+
     @ApiModelProperty(value = "日志采集任务创建时间 格式：unix 13 位时间戳", notes="")
     private Long logCollectTaskCreateTime;
 
@@ -86,6 +92,22 @@ public class LogCollectTaskPaginationRecordVO {
 
     public Long getLogCollectTaskId() {
         return logCollectTaskId;
+    }
+
+    public String getLogCollectTaskHealthDescription() {
+        return logCollectTaskHealthDescription;
+    }
+
+    public void setLogCollectTaskHealthDescription(String logCollectTaskHealthDescription) {
+        this.logCollectTaskHealthDescription = logCollectTaskHealthDescription;
+    }
+
+    public Integer getLogCollectTaskHealthInspectionResultType() {
+        return logCollectTaskHealthInspectionResultType;
+    }
+
+    public void setLogCollectTaskHealthInspectionResultType(Integer logCollectTaskHealthInspectionResultType) {
+        this.logCollectTaskHealthInspectionResultType = logCollectTaskHealthInspectionResultType;
     }
 
     public String getLogCollectTaskName() {
