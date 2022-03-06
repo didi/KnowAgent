@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.metrics;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricsLogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.BusinessMetricsQueryDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
@@ -158,5 +159,12 @@ public interface MetricsManageService {
             String aggregationFunction,
             String aggregationField
     );
+
+    /**
+     * 获取给定agent关联的最近采集任务指标集
+     * @param hostName 主机名
+     * @return 返回获取到的给定agent关联的最近采集任务指标集
+     */
+    List<MetricsLogCollectTaskDO> getLastCollectTaskMetricsByAgentHostName(String hostName);
 
 }

@@ -168,4 +168,14 @@ public interface MetricsLogCollectTaskPOMapper {
      */
     MetricsLogCollectTaskPO getLastRecord(Map<String, Object> params);
 
+    /**
+     * 根据给定日志采集任务id、日志采集路径id、日志采集任务对应主机名，获取对应日志采集任务的最近一次指标集
+     * @param params
+     *  logCollectTaskId：日志采集任务 id
+     *  logCollectPathId：日志采集路径 id
+     *  hostName：日志采集任务对应主机名
+     * @return 返回根据给定日志采集任务id、日志采集路径id、日志采集任务对应主机名，获取到的对应日志采集任务的最近一次指标集
+     */
+    MetricsLogCollectTaskPO getLatestMetrics(Map<String, Object> params);
+
 }

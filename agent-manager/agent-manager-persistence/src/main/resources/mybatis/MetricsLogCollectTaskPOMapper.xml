@@ -248,6 +248,20 @@
     from tb_metrics_log_collect_task
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="getLatestMetrics" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_log_collect_task
+    where collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+          and
+          pathId = #{logCollectPathId,jdbcType=BIGINT}
+          and
+          collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+          order by heartbeatTime desc
+          limit 1
+  </select>
+
   <select id="getErrorMetrics" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />

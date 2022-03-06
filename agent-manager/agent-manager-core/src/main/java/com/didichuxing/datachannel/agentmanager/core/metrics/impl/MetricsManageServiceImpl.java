@@ -1,6 +1,10 @@
 package com.didichuxing.datachannel.agentmanager.core.metrics.impl;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricsLogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.BusinessMetricsQueryDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
@@ -10,7 +14,10 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoi
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
+import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
+import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
@@ -49,6 +56,12 @@ public class MetricsManageServiceImpl implements MetricsManageService {
 
     @Autowired
     private FileLogCollectPathManageService fileLogCollectPathManageService;
+
+    @Autowired
+    private HostManageService hostManageService;
+
+    @Autowired
+    private AgentManageService agentManageService;
 
     /**
      * top n 默认值
@@ -238,6 +251,30 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         params.put("function", aggregationFunction);
         params.put("fieldName", aggregationField);
         return metricsProcessDAO.getAggregationQueryPerHostNameFromMetricsProcess(params);
+    }
+
+    @Override
+    public List<MetricsLogCollectTaskDO> getLastCollectTaskMetricsByAgentHostName(String hostName) {
+        List<LogCollectTaskDO> taskList = logCollectTaskManageService.getLogCollectTaskListByAgentHostName(hostName);
+        List<HostDO> hostDOList = hostManageService.getRelationHostListByAgent(agentManageService.getAgentByHostName(hostName));
+        List<MetricsLogCollectTaskDO> list = new ArrayList<>();
+        for (LogCollectTaskDO logCollectTaskDO : taskList) {
+            for (FileLogCollectPathDO fileLogCollectPathDO : logCollectTaskDO.getFileLogCollectPathList()) {
+                for (HostDO hostDO : hostDOList) {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("logCollectTaskId", logCollectTaskDO.getId());
+                    params.put("logCollectPathId", fileLogCollectPathDO.getId());
+                    params.put("hostName", hostDO.getHostName());
+                    MetricsLogCollectTaskPO metricsLogCollectTaskPO = metricsLogCollectTaskDAO.getLatestMetrics(params);
+                    if(null != metricsLogCollectTaskPO) {
+                        MetricsLogCollectTaskDO metricsLogCollectTaskDO = ConvertUtil.obj2Obj(metricsLogCollectTaskPO, MetricsLogCollectTaskDO.class);
+                        metricsLogCollectTaskDO.setTaskStatus(logCollectTaskDO.getLogCollectTaskStatus());
+                        list.add(metricsLogCollectTaskDO);
+                    }
+                }
+            }
+        }
+        return list;
     }
 
     private List<MetricPointLine> handleGetTopNByLogCollectTaskMetricPerServiceNames(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
