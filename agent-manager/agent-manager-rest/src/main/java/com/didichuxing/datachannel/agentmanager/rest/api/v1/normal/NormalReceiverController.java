@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.receiver.Receive
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
@@ -82,25 +83,35 @@ public class NormalReceiverController {
     }
 
     @ApiOperation(value = "根据id查询对应KafkaCluster对象是否关联LogCollectTask true：存在 false：不存在", notes = "")
-    @RequestMapping(value = "/rela-logcollecttask-exists/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/rela-logcollecttask-exists/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Boolean> relaLogCollectTaskExists(@PathVariable Long id) {
-        if(CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByKafkaClusterId(id))) {
-            return Result.buildSucc(Boolean.TRUE);
-        } else {
-            return Result.buildSucc(Boolean.FALSE);
+    public Result<Boolean> relaLogCollectTaskExists(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            for (String id : idArray) {
+                Long kafkaClusterId = Long.valueOf(id);
+                if(CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByKafkaClusterId(kafkaClusterId))) {
+                    return Result.buildSucc(Boolean.TRUE);
+                }
+            }
         }
+        return Result.buildSucc(Boolean.FALSE);
     }
 
     @ApiOperation(value = "根据id查询对应KafkaCluster对象是否关联Agent true：存在 false：不存在", notes = "")
-    @RequestMapping(value = "/rela-agent-exists/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/rela-agent-exists/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Boolean> relaAgentExists(@PathVariable Long id) {
-        if(CollectionUtils.isNotEmpty(agentManageService.getAgentListByKafkaClusterId(id))) {
-            return Result.buildSucc(Boolean.TRUE);
-        } else {
-            return Result.buildSucc(Boolean.FALSE);
+    public Result<Boolean> relaAgentExists(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            for (String id : idArray) {
+                Long kafkaClusterId = Long.valueOf(id);
+                if(CollectionUtils.isNotEmpty(agentManageService.getAgentListByKafkaClusterId(kafkaClusterId))) {
+                    return Result.buildSucc(Boolean.TRUE);
+                }
+            }
         }
+        return Result.buildSucc(Boolean.FALSE);
     }
 
     @ApiOperation(value = "校验是否已配置系统全局 agent errorlogs & metrics 流对应配置 true：是 false：否", notes = "")

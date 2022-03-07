@@ -122,14 +122,19 @@ public class NormalServiceController {
     }
 
     @ApiOperation(value = "根据id查询对应Service对象是否关联LogCollectTask true：存在 false：不存在", notes = "")
-    @RequestMapping(value = "/rela-logcollecttask-exists/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/rela-logcollecttask-exists/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Boolean> relaLogCollectTaskExists(@PathVariable Long id) {
-        if (CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByServiceId(id))) {
-            return Result.buildSucc(Boolean.TRUE);
-        } else {
-            return Result.buildSucc(Boolean.FALSE);
+    public Result<Boolean> relaLogCollectTaskExists(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            for (String id : idArray) {
+                Long serviceId = Long.valueOf(id);
+                if(CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByServiceId(serviceId))) {
+                    return Result.buildSucc(Boolean.TRUE);
+                }
+            }
         }
+        return Result.buildSucc(Boolean.FALSE);
     }
 
     @ApiOperation(value = "根据id查询对应Service对象是否关联Host true：存在 false：不存在", notes = "")
