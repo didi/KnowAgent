@@ -261,7 +261,7 @@ CREATE TABLE `tb_agent_version` (
                                     PRIMARY KEY (`id`) USING BTREE,
                                     UNIQUE KEY `unq_idx_version` (`version`) USING BTREE,
                                     UNIQUE KEY `unq_idx_file_md5` (`file_md5`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_collect_delay_monitor_black_list
@@ -527,7 +527,7 @@ CREATE TABLE `tb_metrics_agent` (
                                     `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                     `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                     PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4084 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_disk
@@ -551,7 +551,7 @@ CREATE TABLE `tb_metrics_disk` (
                                    `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                    `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                    PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4075 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4117 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_disk_io
@@ -728,7 +728,7 @@ CREATE TABLE `tb_metrics_disk_io` (
                                       `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                       `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4078 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4084 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for tb_metrics_log_collect_task
@@ -838,7 +838,7 @@ CREATE TABLE `tb_metrics_log_collect_task` (
   `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
   `serviceNames` varchar(4096) COLLATE utf8_bin DEFAULT NULL COMMENT '服务名集',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4071 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4077 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_net_card
@@ -873,7 +873,7 @@ CREATE TABLE `tb_metrics_net_card` (
                                        `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                        `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4074 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4086 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_process
@@ -1078,8 +1078,20 @@ CREATE TABLE `tb_metrics_process` (
                                       `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
                                       `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                       `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
+                                      `jvmProcS0C` double DEFAULT NULL COMMENT 'jvm 第一个幸存区大小',
+                                      `jvmProcS1C` double DEFAULT NULL COMMENT 'jvm 第二个幸存区大小',
+                                      `jvmProcS0U` double DEFAULT NULL COMMENT 'jvm 第一个幸存区使用大小',
+                                      `jvmProcS1U` double DEFAULT NULL COMMENT 'jvm 第二个幸存区使用大小',
+                                      `jvmProcEC` double DEFAULT NULL COMMENT 'jvm Eden 区大小',
+                                      `jvmProcEU` double DEFAULT NULL COMMENT 'jvm Eden 区使用大小',
+                                      `jvmProcOC` double DEFAULT NULL COMMENT 'jvm 老年代大小',
+                                      `jvmProcOU` double DEFAULT NULL COMMENT 'jvm 老年代使用大小',
+                                      `jvmProcMC` double DEFAULT NULL COMMENT 'jvm 方法区大小',
+                                      `jvmProcMU` double DEFAULT NULL COMMENT 'jvm 方法区使用大小',
+                                      `jvmProcCCSC` double DEFAULT NULL COMMENT 'jvm 压缩类空间大小',
+                                      `jvmProcCCSU` double DEFAULT NULL COMMENT 'jvm 压缩类空间使用大小',
                                       PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4084 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_system
@@ -1328,7 +1340,7 @@ CREATE TABLE `tb_metrics_system` (
                                      `systemNetWorkBandWidthUsedPercent95Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 95分位数',
                                      `systemNetWorkBandWidthUsedPercent99Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 99分位数',
                                      PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4084 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_service
