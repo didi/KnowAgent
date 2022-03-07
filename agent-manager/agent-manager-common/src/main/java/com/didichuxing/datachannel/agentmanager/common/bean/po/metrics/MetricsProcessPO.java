@@ -397,6 +397,30 @@ public class MetricsProcessPO {
 
     private Long heartbeatTimeDay;
 
+    private Double jvmProcS0C;
+
+    private Double jvmProcS1C;
+
+    private Double jvmProcS0U;
+
+    private Double jvmProcS1U;
+
+    private Double jvmProcEC;
+
+    private Double jvmProcEU;
+
+    private Double jvmProcOC;
+
+    private Double jvmProcOU;
+
+    private Double jvmProcMC;
+
+    private Double jvmProcMU;
+
+    private Double jvmProcCCSC;
+
+    private Double jvmProcCCSU;
+
     public Long getHeartbeatTimeDay() {
         return heartbeatTimeDay;
     }
@@ -587,6 +611,102 @@ public class MetricsProcessPO {
 
     public void setProccpuutiltotalpercent99quantile(Double proccpuutiltotalpercent99quantile) {
         this.proccpuutiltotalpercent99quantile = proccpuutiltotalpercent99quantile;
+    }
+
+    public Double getJvmProcS0C() {
+        return jvmProcS0C;
+    }
+
+    public void setJvmProcS0C(Double jvmProcS0C) {
+        this.jvmProcS0C = jvmProcS0C;
+    }
+
+    public Double getJvmProcS1C() {
+        return jvmProcS1C;
+    }
+
+    public void setJvmProcS1C(Double jvmProcS1C) {
+        this.jvmProcS1C = jvmProcS1C;
+    }
+
+    public Double getJvmProcS0U() {
+        return jvmProcS0U;
+    }
+
+    public void setJvmProcS0U(Double jvmProcS0U) {
+        this.jvmProcS0U = jvmProcS0U;
+    }
+
+    public Double getJvmProcS1U() {
+        return jvmProcS1U;
+    }
+
+    public void setJvmProcS1U(Double jvmProcS1U) {
+        this.jvmProcS1U = jvmProcS1U;
+    }
+
+    public Double getJvmProcEC() {
+        return jvmProcEC;
+    }
+
+    public void setJvmProcEC(Double jvmProcEC) {
+        this.jvmProcEC = jvmProcEC;
+    }
+
+    public Double getJvmProcEU() {
+        return jvmProcEU;
+    }
+
+    public void setJvmProcEU(Double jvmProcEU) {
+        this.jvmProcEU = jvmProcEU;
+    }
+
+    public Double getJvmProcOC() {
+        return jvmProcOC;
+    }
+
+    public void setJvmProcOC(Double jvmProcOC) {
+        this.jvmProcOC = jvmProcOC;
+    }
+
+    public Double getJvmProcOU() {
+        return jvmProcOU;
+    }
+
+    public void setJvmProcOU(Double jvmProcOU) {
+        this.jvmProcOU = jvmProcOU;
+    }
+
+    public Double getJvmProcMC() {
+        return jvmProcMC;
+    }
+
+    public void setJvmProcMC(Double jvmProcMC) {
+        this.jvmProcMC = jvmProcMC;
+    }
+
+    public Double getJvmProcMU() {
+        return jvmProcMU;
+    }
+
+    public void setJvmProcMU(Double jvmProcMU) {
+        this.jvmProcMU = jvmProcMU;
+    }
+
+    public Double getJvmProcCCSC() {
+        return jvmProcCCSC;
+    }
+
+    public void setJvmProcCCSC(Double jvmProcCCSC) {
+        this.jvmProcCCSC = jvmProcCCSC;
+    }
+
+    public Double getJvmProcCCSU() {
+        return jvmProcCCSU;
+    }
+
+    public void setJvmProcCCSU(Double jvmProcCCSU) {
+        this.jvmProcCCSU = jvmProcCCSU;
     }
 
     public Double getProccpusys() {

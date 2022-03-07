@@ -200,6 +200,18 @@
     <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
     <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
     <result column="heartbeatTimeDay" property="heartbeatTimeDay" jdbcType="BIGINT" />
+    <result column="jvmProcS0C" property="jvmProcS0C" jdbcType="DOUBLE" />
+    <result column="jvmProcS1C" property="jvmProcS1C" jdbcType="DOUBLE" />
+    <result column="jvmProcS0U" property="jvmProcS0U" jdbcType="DOUBLE" />
+    <result column="jvmProcS1U" property="jvmProcS1U" jdbcType="DOUBLE" />
+    <result column="jvmProcEC" property="jvmProcEC" jdbcType="DOUBLE" />
+    <result column="jvmProcEU" property="jvmProcEU" jdbcType="DOUBLE" />
+    <result column="jvmProcOC" property="jvmProcOC" jdbcType="DOUBLE" />
+    <result column="jvmProcOU" property="jvmProcOU" jdbcType="DOUBLE" />
+    <result column="jvmProcMC" property="jvmProcMC" jdbcType="DOUBLE" />
+    <result column="jvmProcMU" property="jvmProcMU" jdbcType="DOUBLE" />
+    <result column="jvmProcCCSC" property="jvmProcCCSC" jdbcType="DOUBLE" />
+    <result column="jvmProcCCSU" property="jvmProcCCSU" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, hostName, procStartupTime, procUptime, procPid, procCpuUtil, procCpuUtilMin, 
@@ -255,7 +267,8 @@
     procNetworkTcpEstablishedNum, procNetworkTcpSynSentNum, procNetworkTcpSynRecvNum, 
     procNetworkTcpFinWait1Num, procNetworkTcpFinWait2Num, procNetworkTcpClosedNum, procNetworkTcpClosingNum, 
     procNetworkTcpLastAckNum, procNetworkTcpNoneNum, heartbeatTime, heartbeatTimeMinute, 
-    heartbeatTimeHour, heartbeatTimeDay
+    heartbeatTimeHour, heartbeatTimeDay,
+    jvmProcS0C, jvmProcS1C, jvmProcS0U, jvmProcS1U, jvmProcEC, jvmProcEU, jvmProcOC, jvmProcOU, jvmProcMC, jvmProcMU, jvmProcCCSC, jvmProcCCSU
   </sql>
 
   <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
@@ -498,7 +511,8 @@
       procNetworkTcpFinWait2Num, procNetworkTcpClosedNum, 
       procNetworkTcpClosingNum, procNetworkTcpLastAckNum, 
       procNetworkTcpNoneNum, heartbeatTime, heartbeatTimeMinute, 
-      heartbeatTimeHour, heartbeatTimeDay)
+      heartbeatTimeHour, heartbeatTimeDay,
+      jvmProcS0C, jvmProcS1C, jvmProcS0U, jvmProcS1U, jvmProcEC, jvmProcEU, jvmProcOC, jvmProcOU, jvmProcMC, jvmProcMU, jvmProcCCSC, jvmProcCCSU)
     values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{procstartuptime,jdbcType=BIGINT}, 
       #{procuptime,jdbcType=BIGINT}, #{procpid,jdbcType=BIGINT}, #{proccpuutil,jdbcType=DOUBLE}, 
       #{proccpuutilmin,jdbcType=DOUBLE}, #{proccpuutilmax,jdbcType=DOUBLE}, #{proccpuutilmean,jdbcType=DOUBLE}, 
@@ -588,7 +602,19 @@
       #{procnetworktcpfinwait2num,jdbcType=INTEGER}, #{procnetworktcpclosednum,jdbcType=INTEGER}, 
       #{procnetworktcpclosingnum,jdbcType=INTEGER}, #{procnetworktcplastacknum,jdbcType=INTEGER}, 
       #{procnetworktcpnonenum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
-      #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT})
+      #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT},
+      #{jvmProcS0C,jdbcType=DOUBLE},
+      #{jvmProcS1C,jdbcType=DOUBLE},
+      #{jvmProcS0U,jdbcType=DOUBLE},
+      #{jvmProcS1U,jdbcType=DOUBLE},
+      #{jvmProcEC,jdbcType=DOUBLE},
+      #{jvmProcEU,jdbcType=DOUBLE},
+      #{jvmProcOC,jdbcType=DOUBLE},
+      #{jvmProcOU,jdbcType=DOUBLE},
+      #{jvmProcMC,jdbcType=DOUBLE},
+      #{jvmProcMU,jdbcType=DOUBLE},
+      #{jvmProcCCSC,jdbcType=DOUBLE},
+      #{jvmProcCCSU,jdbcType=DOUBLE})
   </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     insert into tb_metrics_process
@@ -1187,6 +1213,42 @@
       <if test="heartbeatTimeDay != null" >
         heartbeatTimeDay,
       </if>
+      <if test="jvmProcS0C != null" >
+        jvmProcS0C,
+      </if>
+      <if test="jvmProcS1C != null" >
+        jvmProcS1C,
+      </if>
+      <if test="jvmProcS0U != null" >
+        jvmProcS0U,
+      </if>
+      <if test="jvmProcS1U != null" >
+        jvmProcS1U,
+      </if>
+      <if test="jvmProcEC != null" >
+        jvmProcEC,
+      </if>
+      <if test="jvmProcEU != null" >
+        jvmProcEU,
+      </if>
+      <if test="jvmProcOC != null" >
+        jvmProcOC,
+      </if>
+      <if test="jvmProcOU != null" >
+        jvmProcOU,
+      </if>
+      <if test="jvmProcMC != null" >
+        jvmProcMC,
+      </if>
+      <if test="jvmProcMU != null" >
+        jvmProcMU,
+      </if>
+      <if test="jvmProcCCSC != null" >
+        jvmProcCCSC,
+      </if>
+      <if test="jvmProcCCSU != null" >
+        jvmProcCCSU,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -1782,6 +1844,42 @@
       </if>
       <if test="heartbeatTimeDay != null" >
         #{heartbeatTimeDay,jdbcType=BIGINT},
+      </if>
+      <if test="jvmProcS0C != null" >
+        #{jvmProcS0C,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcS1C != null" >
+        #{jvmProcS1C,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcS0U != null" >
+        #{jvmProcS0U,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcS1U != null" >
+        #{jvmProcS1U,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcEC != null" >
+        #{jvmProcEC,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcEU != null" >
+        #{jvmProcEU,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcOC != null" >
+        #{jvmProcOC,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcOU != null" >
+        #{jvmProcOU,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcMC != null" >
+        #{jvmProcMC,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcMU != null" >
+        #{jvmProcMU,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcCCSC != null" >
+        #{jvmProcCCSC,jdbcType=DOUBLE},
+      </if>
+      <if test="jvmProcCCSU != null" >
+        #{jvmProcCCSU,jdbcType=DOUBLE},
       </if>
     </trim>
   </insert>
