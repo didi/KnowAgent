@@ -57,7 +57,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {
-            lastLinuxCpuTime = new LinuxCpuTime(getProcessPid(), getSystemCpuNumCores());// 记录上次的cpu耗时
+            lastLinuxCpuTime = new LinuxCpuTime(getProcessPid(), CPU_NUM);// 记录上次的cpu耗时
         } catch (Exception e) {
             LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=LinuxProcessMetricsServiceImpl()||msg=CpuTime init failed",
                     e);
@@ -90,11 +90,6 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
         return PID;
     }
 
-    @Override
-    public Integer getSystemCpuNumCores() {
-        return CPU_NUM;
-    }
-
     @PeriodMethod(periodMs = 5 * 1000)
     private void calcProcCpuUtil() {
         procCpuUtil.add(getCurrentProcCpuUtil());
@@ -108,7 +103,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     @Override
     public Double getCurrentProcCpuUtil() {
         try {
-            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getProcessPid(), getSystemCpuNumCores());
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getProcessPid(), CPU_NUM);
             float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
             lastLinuxCpuTime = curLinuxCpuTime;
             return Float.valueOf(cpuUsage).doubleValue();
@@ -230,6 +225,11 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     @Override
+    public Double getJvmProcHeapMemUsedPercent() {
+        return null;
+    }
+
+    @Override
     public PeriodStatistics getProcIOReadRate() {
         return null;
     }
@@ -251,6 +251,11 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOReadWriteRate() {
+        return null;
+    }
+
+    @Override
+    public PeriodStatistics getProcIOReadWriteBytesRate() {
         return null;
     }
 
@@ -284,6 +289,66 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getJvmProcFullGcTime() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcS0C() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcS1C() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcS0U() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcS1U() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcEC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcEU() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcOC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcOU() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcMC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcMU() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcCCSC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcCCSU() {
         return null;
     }
 

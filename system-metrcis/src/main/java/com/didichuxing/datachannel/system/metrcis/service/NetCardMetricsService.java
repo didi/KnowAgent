@@ -23,6 +23,12 @@ public interface NetCardMetricsService {
     Map<String, Long> getBandWidth();
 
     /**
+     * @return 返回系统各网卡每秒下行流量（单位：字节）
+     *  key：net card device value：网卡对应每秒下行流量（单位：字节）
+     */
+    Map<String, PeriodStatistics> getReceiveBytesPs();
+
+    /**
      * @return 返回系统各网卡对应每秒上行流量（单位：字节）
      *  key：net card device value：网卡对应每秒上行流量（单位：字节）
      */

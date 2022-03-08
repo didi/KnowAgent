@@ -23,6 +23,11 @@ public class MacOSNetCardMetricsServiceImpl implements NetCardMetricsService {
     }
 
     @Override
+    public Map<String, PeriodStatistics> getReceiveBytesPs() {
+        return null;
+    }
+
+    @Override
     public Map<String, PeriodStatistics> getSendBytesPs() {
         Map<String, PeriodStatistics> map = new HashMap<>();
         map.put("eth0", PeriodStatistics.defaultValue());

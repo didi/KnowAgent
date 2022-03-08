@@ -28,11 +28,6 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsServiceImpl.class);
 
-    /**
-     * agent宿主机cpu核（逻辑核）
-     */
-    private Integer CPU_NUM = Runtime.getRuntime().availableProcessors();
-
     private String                   HOSTNAME;
 
     private LinuxNetFlow lastLinuxNetFlow;
@@ -84,8 +79,28 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     @Override
+    public String getOsType() {
+        return null;
+    }
+
+    @Override
+    public String getOsVersion() {
+        return null;
+    }
+
+    @Override
+    public String getOsKernelVersion() {
+        return null;
+    }
+
+    @Override
     public String getHostName() {
         return HOSTNAME;
+    }
+
+    @Override
+    public String getIps() {
+        return null;
     }
 
     @Override
@@ -107,11 +122,6 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             return 0L;
         }
         return offset.longValue();
-    }
-
-    @Override
-    public Integer getSystemProcCount() {
-        return null;
     }
 
     @Override
@@ -480,6 +490,11 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     @Override
+    public Double getSystemNetCardsBandWidth() {
+        return null;
+    }
+
+    @Override
     public List<NetCardInfo> getSystemNetCardInfoList() {
 
         Map<String, PeriodStatistics> device2SendBytesPsMap = netCardMetricsService.getSendBytesPs();
@@ -727,16 +742,6 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public SystemMetrics getSystemMetrics() {
-        return null;
-    }
-
-    @Override
-    public String getOSType() {
-        return null;
-    }
-
-    @Override
-    public String getOSVersion() {
         return null;
     }
 

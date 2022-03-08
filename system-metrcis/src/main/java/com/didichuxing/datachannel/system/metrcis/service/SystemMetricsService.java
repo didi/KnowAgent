@@ -14,19 +14,34 @@ public interface SystemMetricsService {
     /*********************** 总览 ***********************/
 
     /**
+     * @return 返回操作系统类型
+     */
+    String getOsType();
+
+    /**
+     * @return 返回操作系统版本
+     */
+    String getOsVersion();
+
+    /**
+     * @return 操作系统内核版本
+     */
+    String getOsKernelVersion();
+
+    /**
      * @return 返回主机名
      */
     String getHostName();
 
     /**
+     * @return 返回 ip 地址列表（json 格式）
+     */
+    String getIps();
+
+    /**
      * @return 返回源时钟与本地时钟的时间差（毫秒）
      */
     Long getSystemNtpOffset();
-
-    /**
-     * @return 返回系统进程个数
-     */
-    Integer getSystemProcCount();
 
     /**
      * @return 返回系统启动时间
@@ -338,6 +353,11 @@ public interface SystemMetricsService {
     Integer getSystemNetCards();
 
     /**
+     * @return 返回系统网卡总带宽（单位：byte）
+     */
+    Double getSystemNetCardsBandWidth();
+
+    /**
      * @return 返回系统各网卡信息
      */
     List<NetCardInfo> getSystemNetCardInfoList();
@@ -358,8 +378,7 @@ public interface SystemMetricsService {
     PeriodStatistics getSystemNetworkSendAndReceiveBytesPs();
 
     /**
-     * 返回系统网络带宽使用率
-     * @return
+     * @return 返回系统网络带宽使用率
      */
     PeriodStatistics getSystemNetWorkBandWidthUsedPercent();
 
@@ -384,7 +403,6 @@ public interface SystemMetricsService {
     Integer getSystemNetworkTcpSynSentNum();
 
     /**
-     *
      * @return 返回系统处于 SYN_RECV 状态的 tcp 链接数
      */
     Integer getSystemNetworkTcpSynRecvNum();
@@ -488,20 +506,5 @@ public interface SystemMetricsService {
      * @return 返回当前系统指标集 如须获取全量系统指标，请调用该方法而非挨个调用各指标获取函数以提升其性能、降低消耗
      */
     SystemMetrics getSystemMetrics();
-
-
-    //==================================================================
-
-    /**
-     *
-     * @return 返回操作系统类型
-     */
-    String getOSType();
-
-    /**
-     *
-     * @return 返回操作系统版本
-     */
-    String getOSVersion();
 
 }

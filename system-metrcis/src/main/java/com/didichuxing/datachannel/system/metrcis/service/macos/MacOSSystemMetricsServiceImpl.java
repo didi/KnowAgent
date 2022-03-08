@@ -9,18 +9,33 @@ import java.util.List;
 public class MacOSSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
+    public String getOsType() {
+        return null;
+    }
+
+    @Override
+    public String getOsVersion() {
+        return null;
+    }
+
+    @Override
+    public String getOsKernelVersion() {
+        return null;
+    }
+
+    @Override
     public String getHostName() {
         return "";
     }
 
     @Override
-    public Long getSystemNtpOffset() {
-        return 100L;
+    public String getIps() {
+        return null;
     }
 
     @Override
-    public Integer getSystemProcCount() {
-        return null;
+    public Long getSystemNtpOffset() {
+        return 100L;
     }
 
     @Override
@@ -332,6 +347,11 @@ public class MacOSSystemMetricsServiceImpl implements SystemMetricsService {
     }
 
     @Override
+    public Double getSystemNetCardsBandWidth() {
+        return null;
+    }
+
+    @Override
     public List<NetCardInfo> getSystemNetCardInfoList() {
         List<NetCardInfo> netCardInfoList = new ArrayList<>();
 
@@ -487,16 +507,6 @@ public class MacOSSystemMetricsServiceImpl implements SystemMetricsService {
 
     @Override
     public SystemMetrics getSystemMetrics() {
-        return null;
-    }
-
-    @Override
-    public String getOSType() {
-        return null;
-    }
-
-    @Override
-    public String getOSVersion() {
         return null;
     }
 

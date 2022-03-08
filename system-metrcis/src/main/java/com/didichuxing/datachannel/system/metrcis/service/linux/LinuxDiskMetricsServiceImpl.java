@@ -40,6 +40,11 @@ public class LinuxDiskMetricsServiceImpl extends LinuxMetricsService implements 
     }
 
     @Override
+    public Map<String, Long> getBytesTotal() {
+        return null;
+    }
+
+    @Override
     public Map<String, Long> getBytesFree() {
         Map<String, Long> result = new HashMap<>();
         List<String> lines = getOutputByCmd("df -k | awk 'NR>1{print $1,$4,$6}'", "磁盘各分区余量大小", null);
@@ -54,6 +59,36 @@ public class LinuxDiskMetricsServiceImpl extends LinuxMetricsService implements 
             result.put(key, value);
         }
         return result;
+    }
+
+    @Override
+    public Map<String, Long> getBytesUsed() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Double> getBytesUsedPercent() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Integer> getInodesTotal() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Integer> getInodesFree() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Integer> getInodesUsed() {
+        return null;
+    }
+
+    @Override
+    public Map<String, Double> getInodesUsedPercent() {
+        return null;
     }
 
 }

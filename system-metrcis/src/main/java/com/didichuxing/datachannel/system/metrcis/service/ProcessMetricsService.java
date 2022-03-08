@@ -31,11 +31,6 @@ public interface ProcessMetricsService {
     /*********************** about cpu ***********************/
 
     /**
-     * @return 系统cpu核数
-     */
-    Integer getSystemCpuNumCores();
-
-    /**
      * @return 返回当前进程cpu使用率(单位：%)
      * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
      */
@@ -43,15 +38,15 @@ public interface ProcessMetricsService {
 
     /**
      * @return 返回当前进程cpu使用率(单位：%)
-     * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
-     */
-    Double getCurrentProcCpuUtil();
-
-    /**
-     * @return 返回当前进程cpu使用率(单位：%)
      * 注意：使用率为总使用比率，如jvm进程使用一颗核，系统共10核，则返回0.1 = 10%
      */
     PeriodStatistics getProcCpuUtilTotalPercent();
+
+    /**
+     * @return 返回当前进程cpu使用率(单位：%)
+     * 注：使用率采用全核方式计数，如jvm进程使用一颗核，则返回100，如jvm进程使用两颗核，则返回200
+     */
+    Double getCurrentProcCpuUtil();
 
     /**
      *
@@ -151,6 +146,11 @@ public interface ProcessMetricsService {
      */
     Long getJvmProcMemUsedPeak();
 
+    /**
+     * @return 返回jvm堆内存使用率（单位：%）
+     */
+    Double getJvmProcHeapMemUsedPercent();
+
     /*********************** about disk io ***********************/
 
     /**
@@ -179,6 +179,11 @@ public interface ProcessMetricsService {
     PeriodStatistics getProcIOReadWriteRate();
 
     /**
+     * @return 返回当前进程io读、写速率（单位：bytes/s）
+     */
+    PeriodStatistics getProcIOReadWriteBytesRate();
+
+    /**
      * @return 返回当前进程io读写等待时间占总时间百分比（单位：%） 对应 iotop IO
      */
     PeriodStatistics getProcIOAwaitTimePercent();
@@ -204,6 +209,67 @@ public interface ProcessMetricsService {
      * @return 返回当前jvm进程启动以来 full gc 耗时 单位：ms
      */
     Long getJvmProcFullGcTime();
+
+    /**
+     * @return 返回 jvm 第一个幸存区大小
+     */
+    Double getJvmProcS0C();
+
+    /**
+     * @return 返回 jvm 第二个幸存区大小
+     */
+    Double getJvmProcS1C();
+
+    /**
+     * @return 返回 jvm 第一个幸存区使用大小
+     */
+    Double getJvmProcS0U();
+
+    /**
+     * @return 返回 jvm 第二个幸存区使用大小
+     */
+    Double getJvmProcS1U();
+
+    /**
+     * @return 返回 jvm Eden 区大小
+     */
+    Double getJvmProcEC();
+
+    /**
+     * @return 返回 jvm Eden 区使用大小
+     */
+    Double getJvmProcEU();
+
+    /**
+     * @return 返回 jvm 老年代大小
+     */
+    Double getJvmProcOC();
+
+    /**
+     * @return 返回 jvm 老年代使用大小
+     */
+    Double getJvmProcOU();
+
+    /**
+     * @return 返回 jvm 方法区大小
+     */
+    Double getJvmProcMC();
+
+    /**
+     * @return 返回 jvm 方法区使用大小
+     */
+    Double getJvmProcMU();
+
+    /**
+     * @return 返回 jvm 压缩类空间大小
+     */
+    Double getJvmProcCCSC();
+
+    /**
+     * @return 返回 jvm 压缩类空间使用大小
+     */
+    Double getJvmProcCCSU();
+
 
     /*********************** about thread ***********************/
 
@@ -257,6 +323,16 @@ public interface ProcessMetricsService {
     Integer getProcNetworkTcpListeningNum();
 
     /**
+     * @return 返回当前进程当前处于 time wait 状态 tcp 连接数
+     */
+    Integer getProcNetworkTcpTimeWaitNum();
+
+    /**
+     * @return 返回当前进程当前处于 close wait 状态 tcp 连接数
+     */
+    Integer getProcNetworkTcpCloseWaitNum();
+
+    /**
      * @return 返回当前进程处于 ESTABLISHED 状态的 tcp 链接数
      */
     Integer getProcNetworkTcpEstablishedNum();
@@ -282,19 +358,9 @@ public interface ProcessMetricsService {
     Integer getProcNetworkTcpFinWait2Num();
 
     /**
-     * @return 返回当前进程当前处于 time wait 状态 tcp 连接数
-     */
-    Integer getProcNetworkTcpTimeWaitNum();
-
-    /**
      * @return 返回当前进程处于 closed 状态 tcp 连接数
      */
     Integer getProcNetworkTcpClosedNum();
-
-    /**
-     * @return 返回当前进程当前处于 close wait 状态 tcp 连接数
-     */
-    Integer getProcNetworkTcpCloseWaitNum();
 
     /**
      * @return 返回当前进程处于 closing 状态 tcp 连接数

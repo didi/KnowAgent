@@ -14,6 +14,11 @@ public abstract class LinuxMetricsService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxMetricsService.class);
 
     /**
+     * cpu 核数（逻辑核）
+     */
+    protected Integer CPU_NUM = Runtime.getRuntime().availableProcessors();
+
+    /**
      * linux 根据shell命令获取系统或者进程资源
      * @param procFDShell shell命令
      * @param resourceMessage    资源描述信息

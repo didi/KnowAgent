@@ -24,11 +24,6 @@ public class MacOSProcessMetricsServiceImpl implements ProcessMetricsService {
     }
 
     @Override
-    public Integer getSystemCpuNumCores() {
-        return 1;
-    }
-
-    @Override
     public PeriodStatistics getProcCpuUtil() {
         return PeriodStatistics.defaultValue();
     }
@@ -139,6 +134,11 @@ public class MacOSProcessMetricsServiceImpl implements ProcessMetricsService {
     }
 
     @Override
+    public Double getJvmProcHeapMemUsedPercent() {
+        return null;
+    }
+
+    @Override
     public PeriodStatistics getProcIOReadRate() {
         return PeriodStatistics.defaultValue();
     }
@@ -164,6 +164,11 @@ public class MacOSProcessMetricsServiceImpl implements ProcessMetricsService {
     }
 
     @Override
+    public PeriodStatistics getProcIOReadWriteBytesRate() {
+        return null;
+    }
+
+    @Override
     public PeriodStatistics getProcIOAwaitTimePercent() {
         return PeriodStatistics.defaultValue();
     }
@@ -186,6 +191,66 @@ public class MacOSProcessMetricsServiceImpl implements ProcessMetricsService {
     @Override
     public Long getJvmProcFullGcTime() {
         return 100000L;
+    }
+
+    @Override
+    public Double getJvmProcS0C() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcS1C() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcS0U() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcS1U() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcEC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcEU() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcOC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcOU() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcMC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcMU() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcCCSC() {
+        return null;
+    }
+
+    @Override
+    public Double getJvmProcCCSU() {
+        return null;
     }
 
     @Override

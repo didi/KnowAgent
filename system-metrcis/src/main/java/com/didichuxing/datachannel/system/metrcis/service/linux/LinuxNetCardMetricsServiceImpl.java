@@ -74,6 +74,11 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     @Override
+    public Map<String, PeriodStatistics> getReceiveBytesPs() {
+        return null;
+    }
+
+    @Override
     public Map<String, PeriodStatistics> getSendBytesPs() {
         for (PeriodStatistics value : sendBytesPs.values()) {
             value.snapshot();
