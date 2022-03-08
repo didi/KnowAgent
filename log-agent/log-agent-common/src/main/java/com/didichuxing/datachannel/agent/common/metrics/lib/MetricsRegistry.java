@@ -148,20 +148,6 @@ public class MetricsRegistry {
     }
 
     /**
-     * Create a mutable long integer gauge
-     * @param name  of the metric
-     * @param description of the metric
-     * @param initValue of the metric
-     * @return  a new gauge object
-     */
-    public MetricMutableGaugeLong newGauge(String name, String description, long initValue) {
-        checkMetricName(name);
-        MetricMutableGaugeLong ret = mf.newGauge(name, description, initValue);
-        metricsMap.put(name, ret);
-        return ret;
-    }
-
-    /**
      * Create a mutable integer gauge
      * @param name  of the metric
      * @param description of the metric

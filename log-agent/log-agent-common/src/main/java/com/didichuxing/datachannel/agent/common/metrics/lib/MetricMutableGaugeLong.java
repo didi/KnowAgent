@@ -23,19 +23,13 @@ import com.didichuxing.datachannel.agent.common.metrics.MetricsRecordBuilder;
 /**
  * A mutable long gauge
  */
-public class MetricMutableGaugeLong extends MetricMutableGauge<Long> {
+public class MetricMutableGaugeLong {
 
     private volatile long value;
+    private volatile boolean changed = true;
 
-    /**
-     * Construct a mutable long gauge metric
-     * @param name  of the gauge
-     * @param description of the gauge
-     * @param initValue the initial value of the gauge
-     */
-    public MetricMutableGaugeLong(String name, String description, long initValue) {
-        super(name, description);
-        this.value = initValue;
+    public MetricMutableGaugeLong() {
+        this.value = 0;
     }
 
     public synchronized void incr() {
@@ -75,11 +69,32 @@ public class MetricMutableGaugeLong extends MetricMutableGauge<Long> {
         setChanged();
     }
 
-    public void snapshot(MetricsRecordBuilder builder, boolean all) {
-        if (all || changed()) {
-            builder.addGauge(name, description, value);
+    public synchronized long snapshot() {
+        if (changed()) {
             clearChanged();
         }
+        return this.value;
+    }
+
+    /**
+     * Set the changed flag in mutable operations
+     */
+    private void setChanged() {
+        changed = true;
+    }
+
+    /**
+     * Clear the changed flag in the snapshot operations
+     */
+    private void clearChanged() {
+        changed = false;
+    }
+
+    /**
+     * @return  true if metric is changed since last snapshot/snapshot
+     */
+    private boolean changed() {
+        return changed;
     }
 
 }

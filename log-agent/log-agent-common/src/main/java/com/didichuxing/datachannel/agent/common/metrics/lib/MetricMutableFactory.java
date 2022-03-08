@@ -139,27 +139,6 @@ public class MetricMutableFactory {
      * @param initValue of the metric
      * @return  a new metric object
      */
-    public MetricMutableGaugeLong newGauge(String name, String description, long initValue) {
-        return new MetricMutableGaugeLong(name, description, initValue);
-    }
-
-    /**
-     * Create a mutable long integer gauge with name only.
-     * Usually gets overridden.
-     * @param name  of the metric
-     * @return  a new metric object
-     */
-    public MetricMutableGaugeLong newGaugeLong(String name) {
-        return new MetricMutableGaugeLong(name, Metric.NO_DESCRIPTION, 0L);
-    }
-
-    /**
-     * Create a mutable long integer gauge
-     * @param name  of the metric
-     * @param description of the metric
-     * @param initValue of the metric
-     * @return  a new metric object
-     */
     public MetricMutablePeriodGaugeLong newPeriodGauge(String name, String description,
                                                        long initValue) {
         return new MetricMutablePeriodGaugeLong(name, description, initValue);

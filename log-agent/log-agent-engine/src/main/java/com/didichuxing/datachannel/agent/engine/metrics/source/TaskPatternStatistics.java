@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agent.engine.metrics.source;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.metrics.MetricsBuilder;
+import com.didichuxing.datachannel.agent.common.metrics.lib.MetricMutableGaugeLong;
 import com.didichuxing.datachannel.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.metrics.metric.*;
@@ -39,7 +40,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
     private volatile MetricMutablePeriodGaugeLong filterRemainedPerPeriod;
     private volatile MetricMutablePeriodGaugeLong filterOutPerPeriod;
     private volatile MetricMutablePeriodGaugeLong filterTooLargeCountPerPeriod;
-    //    private volatile MetricMutableGaugeLong       filterTotalTooLargeCount;
+    private volatile MetricMutableGaugeLong filterTotalTooLargeCount;
     //    private volatile MetricMutableTimeStat        filterTime;
 
     private volatile MetricMutablePeriodGaugeLong limitCountPerPeriod;
@@ -77,7 +78,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
         filterRemainedPerPeriod = new MetricMutablePeriodGaugeLong();
         filterOutPerPeriod = new MetricMutablePeriodGaugeLong();
         filterTooLargeCountPerPeriod = new MetricMutablePeriodGaugeLong();
-        //        filterTotalTooLargeCount = metricsRegistry.newGauge(SinkMetricsFields.PREFIX_METRICS_ + "filterTotalTooLargeCount", null, 0L);
+        filterTotalTooLargeCount = new MetricMutableGaugeLong();
         //        filterTime = new MetricMutableTimeStat(SinkMetricsFields.PREFIX_METRICS_ + "filterTime", null);
 
         // limit
@@ -110,7 +111,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
 
     public void tooLarge() {
         filterTooLargeCountPerPeriod.incr();
-        //        filterTotalTooLargeCount.incr();
+        filterTotalTooLargeCount.incr();
     }
 
     public void limitOneRecord(long num) {
@@ -182,6 +183,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
         taskMetrics.setReadcount(sourceCountPerPeriod.snapshot());
         taskMetrics.setFiltereventsnum(filterOutPerPeriod.snapshot());
         taskMetrics.setToolargetruncatenum(filterTooLargeCountPerPeriod.snapshot());
+        taskMetrics.setToolargetruncatenumtotal(filterTotalTooLargeCount.snapshot());
         taskMetrics.setLimittime(limitCountPerPeriod.snapshot());
         taskMetrics.setSendbytes(sinkBytePerPeriod.snapshot());
         taskMetrics.setSendcount(sinkCountPerPeriod.snapshot());
