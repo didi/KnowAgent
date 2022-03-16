@@ -99,6 +99,7 @@ public class FileReader {
                 }
                 if (this.logSource.getTaskPatternStatistics() != null) {
                     this.logSource.getTaskPatternStatistics().sourceOneRecord(result.length(), gap);
+                    this.logSource.getAgentStatistics().sourceOneRecord(result.length(), gap);
                 }
             }
             return result;

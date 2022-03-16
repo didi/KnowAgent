@@ -10,6 +10,10 @@ public class AgentBusinessMetrics {
 
     private Long    writebytes;
 
+    private Long readbytes;
+
+    private Long readcount;
+
     private Integer runningcollecttasknum;
 
     private Integer runningcollectpathnum;
@@ -21,6 +25,22 @@ public class AgentBusinessMetrics {
     private Long    heartbeattimehour;
 
     private Long    heartbeatTimeDay;
+
+    public Long getReadbytes() {
+        return readbytes;
+    }
+
+    public void setReadbytes(Long readbytes) {
+        this.readbytes = readbytes;
+    }
+
+    public Long getReadcount() {
+        return readcount;
+    }
+
+    public void setReadcount(Long readcount) {
+        this.readcount = readcount;
+    }
 
     public String getHostname() {
         return hostname;

@@ -10,6 +10,7 @@ import com.didichuxing.datachannel.agent.engine.metrics.stat.MetricMutablePeriod
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
+import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
 import com.didichuxing.datachannel.system.metrcis.exception.MetricsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
      */
     private volatile MetricMutablePeriodGaugeLong sourceCountPerPeriod;
     private volatile MetricMutablePeriodGaugeLong sourceBytePerPeriod;
-    //    private volatile MetricMutableTimeStat        sourceTime;
+    private volatile PeriodStatistics sourceTime;
 
     /*
      * filterCountPerPerod 每分钟被过滤的总的条数 filterTotalCount logAgent启动后被过滤的总的条数 filterTooLargeCount 每分钟超过一定大小后被截断的总的日志条数
@@ -50,17 +51,17 @@ public class TaskPatternStatistics extends AbstractStatistics {
      */
     private volatile MetricMutablePeriodGaugeLong sinkCountPerPeriod;
     private volatile MetricMutablePeriodGaugeLong sinkBytePerPeriod;
-    //    private volatile MetricMutableTimeStat        sinkTime;
+    private volatile PeriodStatistics        sinkTime;
 
     /*
      * controlCountPerPeriod 每个周期处理的日志总条数 controlTime处理耗时统计
      */
-    //    private volatile MetricMutableTimeStat        controlTime;
+    private volatile PeriodStatistics        controlTime;
 
     /**
      * flushTime flush耗时， flushCountPerPeriod 每个周期flush次数 flushFailedCountPerPeriod 每个周期flush失败次数
      */
-    //    private volatile MetricMutableTimeStat        flushTime;
+    private volatile PeriodStatistics        flushTime;
     private volatile MetricMutablePeriodGaugeLong flushCountPerPeriod;
     private volatile MetricMutablePeriodGaugeLong flushFailedCountPerPeriod;
 
@@ -72,7 +73,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
         // source
         this.sourceCountPerPeriod = new MetricMutablePeriodGaugeLong();
         this.sourceBytePerPeriod = new MetricMutablePeriodGaugeLong();
-        //        this.sourceTime = new MetricMutableTimeStat(SourceMetricsFields.PREFIX_METRICS_ + "sourceTime", null);
+        this.sourceTime = new PeriodStatistics();
 
         // filter
         filterRemainedPerPeriod = new MetricMutablePeriodGaugeLong();
@@ -87,12 +88,12 @@ public class TaskPatternStatistics extends AbstractStatistics {
         // sink
         sinkCountPerPeriod = new MetricMutablePeriodGaugeLong();
         sinkBytePerPeriod = new MetricMutablePeriodGaugeLong();
-        //        sinkTime = new MetricMutableTimeStat(SinkMetricsFields.PREFIX_METRICS_ + "sinkTime", null);
+        sinkTime = new PeriodStatistics();
 
         // control 整体耗时
-        //        controlTime = new MetricMutableTimeStat(SinkMetricsFields.PREFIX_METRICS_ + "controlTime", null);
+        controlTime = new PeriodStatistics();
 
-        //        flushTime = new MetricMutableTimeStat(SinkMetricsFields.PREFIX_METRICS_ + "flushTime", null);
+        flushTime = new PeriodStatistics();
         flushCountPerPeriod = new MetricMutablePeriodGaugeLong();
         flushFailedCountPerPeriod = new MetricMutablePeriodGaugeLong();
 
@@ -106,7 +107,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
     public void sourceOneRecord(long bytes, long cost) {
         sourceCountPerPeriod.incr();
         sourceBytePerPeriod.incr(bytes);
-        //        sourceTime.add(cost);
+        sourceTime.add(Double.valueOf(cost));
     }
 
     public void tooLarge() {
@@ -121,13 +122,13 @@ public class TaskPatternStatistics extends AbstractStatistics {
     public void sinkOneRecord(long bytes, long cost) {
         sinkCountPerPeriod.incr();
         sinkBytePerPeriod.incr(bytes);
-        //        sinkTime.add(cost);
+        sinkTime.add(Double.valueOf(cost));
     }
 
     public void sinkMutilRecord(int num, long bytes, long cost) {
         sinkCountPerPeriod.incr(num);
         sinkBytePerPeriod.incr(bytes);
-        //        sinkTime.add(cost, num);
+        sinkTime.add(Double.valueOf(cost));
     }
 
     public void filterOneRecord(long cost, boolean isFiltered) {
@@ -140,16 +141,16 @@ public class TaskPatternStatistics extends AbstractStatistics {
     }
 
     public void controlOneRecord(long cost) {
-        //        controlTime.add(cost);
+        controlTime.add(Double.valueOf(cost));
     }
 
     public void flushOneRecord(long cost) {
-        //        flushTime.add(cost);
+        flushTime.add(Double.valueOf(cost));
         flushCountPerPeriod.incr();
     }
 
     public void flushFailedRecord(long cost) {
-        //        flushTime.add(cost);
+        flushTime.add(Double.valueOf(cost));
         flushFailedCountPerPeriod.incr();
     }
 
@@ -177,8 +178,11 @@ public class TaskPatternStatistics extends AbstractStatistics {
     }
 
     private TaskMetrics buildAgentMetrics() {
+
         TaskMetrics taskMetrics = new TaskMetrics();
+
         abstractTask.setMetrics(taskMetrics);
+
         taskMetrics.setReadbytes(sourceBytePerPeriod.snapshot());
         taskMetrics.setReadcount(sourceCountPerPeriod.snapshot());
         taskMetrics.setFiltereventsnum(filterOutPerPeriod.snapshot());
@@ -189,6 +193,53 @@ public class TaskPatternStatistics extends AbstractStatistics {
         taskMetrics.setSendcount(sinkCountPerPeriod.snapshot());
         taskMetrics.setFlushtimes(flushCountPerPeriod.snapshot());
         taskMetrics.setFlushfailedtimes(flushFailedCountPerPeriod.snapshot());
+
+        PeriodStatistics sourceTimePeriodStatistics = sourceTime.snapshot();
+        taskMetrics.setReadtimeperevent(sourceTimePeriodStatistics.getLast());
+        taskMetrics.setReadtimepereventmin(sourceTimePeriodStatistics.getMin());
+        taskMetrics.setReadtimepereventmax(sourceTimePeriodStatistics.getMax());
+        taskMetrics.setReadtimepereventmean(sourceTimePeriodStatistics.getAvg());
+        taskMetrics.setReadtimepereventstd(sourceTimePeriodStatistics.getStdDev());
+        taskMetrics.setReadtimeperevent55quantile(sourceTimePeriodStatistics.getQuantile55());
+        taskMetrics.setReadtimeperevent75quantile(sourceTimePeriodStatistics.getQuantile75());
+        taskMetrics.setReadtimeperevent95quantile(sourceTimePeriodStatistics.getQuantile95());
+        taskMetrics.setReadtimeperevent99quantile(sourceTimePeriodStatistics.getQuantile99());
+
+        PeriodStatistics sinkTimePeriodStatistics = sinkTime.snapshot();
+        taskMetrics.setSendtime(sinkTimePeriodStatistics.getLast());
+        taskMetrics.setSendtimemin(sinkTimePeriodStatistics.getMin());
+        taskMetrics.setSendtimemax(sinkTimePeriodStatistics.getMax());
+        taskMetrics.setSendtimemean(sinkTimePeriodStatistics.getAvg());
+        taskMetrics.setSendtimestd(sinkTimePeriodStatistics.getStdDev());
+        taskMetrics.setSendtime55quantile(sinkTimePeriodStatistics.getQuantile55());
+        taskMetrics.setSendtime75quantile(sinkTimePeriodStatistics.getQuantile75());
+        taskMetrics.setSendtime95quantile(sinkTimePeriodStatistics.getQuantile95());
+        taskMetrics.setSendtime99quantile(sinkTimePeriodStatistics.getQuantile99());
+
+        PeriodStatistics flushTimePeriodStatistics = flushTime.snapshot();
+        taskMetrics.setFlushtime(flushTimePeriodStatistics.getLast());
+        taskMetrics.setFlushtimemin(flushTimePeriodStatistics.getMin());
+        taskMetrics.setFlushtimemax(flushTimePeriodStatistics.getMax());
+        taskMetrics.setFlushtimemean(flushTimePeriodStatistics.getAvg());
+        taskMetrics.setFlushtimestd(flushTimePeriodStatistics.getStdDev());
+        taskMetrics.setFlushtime55quantile(flushTimePeriodStatistics.getQuantile55());
+        taskMetrics.setFlushtime75quantile(flushTimePeriodStatistics.getQuantile75());
+        taskMetrics.setFlushtime95quantile(flushTimePeriodStatistics.getQuantile95());
+        taskMetrics.setFlushtime99quantile(flushTimePeriodStatistics.getQuantile99());
+
+        PeriodStatistics controlTimePeriodStatistics = controlTime.snapshot();
+        taskMetrics.setProcesstimeperevent(controlTimePeriodStatistics.getLast());
+        taskMetrics.setProcesstimepereventmin(controlTimePeriodStatistics.getMin());
+        taskMetrics.setProcesstimepereventmax(controlTimePeriodStatistics.getMax());
+        taskMetrics.setProcesstimepereventmean(controlTimePeriodStatistics.getAvg());
+        taskMetrics.setProcesstimepereventstd(controlTimePeriodStatistics.getStdDev());
+        taskMetrics.setProcesstimeperevent55quantile(controlTimePeriodStatistics.getQuantile55());
+        taskMetrics.setProcesstimeperevent75quantile(controlTimePeriodStatistics.getQuantile75());
+        taskMetrics.setProcesstimeperevent95quantile(controlTimePeriodStatistics.getQuantile95());
+        taskMetrics.setProcesstimeperevent99quantile(controlTimePeriodStatistics.getQuantile99());
+
+
+        //TODO：
 
         Date current = new Date();
         Long heartbeatTime = current.getTime();

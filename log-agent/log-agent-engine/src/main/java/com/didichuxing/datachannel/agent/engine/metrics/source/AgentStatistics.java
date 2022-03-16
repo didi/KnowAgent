@@ -78,6 +78,16 @@ public class AgentStatistics extends AbstractStatistics {
      */
     private volatile MetricMutablePeriodGaugeLong agentSendBytePerPeriod;
 
+    /**
+     * agent 两次指标数据发送周期内发送日志量
+     */
+    private volatile MetricMutablePeriodGaugeLong agentReadCountPerPeriod;
+
+    /**
+     * agent 两次指标数据发送周期内发送日志量
+     */
+    private volatile MetricMutablePeriodGaugeLong agentReadBytePerPeriod;
+
     public AgentStatistics(String name, LimitService limiter, Long startTime,
                            Integer runningCollectTaskNum, Integer runningCollectPathNum) {
         super(name);
@@ -87,6 +97,8 @@ public class AgentStatistics extends AbstractStatistics {
         this.agentSendBytePerPeriod = new MetricMutablePeriodGaugeLong();
         this.runningCollectTaskNum = runningCollectTaskNum;
         this.runningCollectPathNum = runningCollectPathNum;
+        this.agentReadBytePerPeriod = new MetricMutablePeriodGaugeLong();
+        this.agentReadCountPerPeriod = new MetricMutablePeriodGaugeLong();
     }
 
     @Override
@@ -139,6 +151,8 @@ public class AgentStatistics extends AbstractStatistics {
         agentBusinessMetrics.setWritebytes(agentSendBytePerPeriod.snapshot());
         agentBusinessMetrics.setRunningcollecttasknum(runningCollectTaskNum);
         agentBusinessMetrics.setRunningcollectpathnum(runningCollectPathNum);
+        agentBusinessMetrics.setReadbytes(agentReadBytePerPeriod.snapshot());
+        agentBusinessMetrics.setReadcount(agentReadCountPerPeriod.snapshot());
         agentBusinessMetrics.setHeartbeattime(heartbeatTime);
         agentBusinessMetrics.setHeartbeattimeminute(heartbeatTimeMinute);
         agentBusinessMetrics.setHeartbeattimehour(heartbeatTimeHour);
@@ -471,6 +485,11 @@ public class AgentStatistics extends AbstractStatistics {
 
     public void setRunningCollectPathNum(Integer runningCollectPathNum) {
         this.runningCollectPathNum = runningCollectPathNum;
+    }
+
+    public void sourceOneRecord(long bytes, long cost) {
+        agentReadCountPerPeriod.incr();
+        agentReadBytePerPeriod.incr(bytes);
     }
 
 }
