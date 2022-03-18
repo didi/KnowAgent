@@ -1,10 +1,9 @@
 package com.didichuxing.datachannel.agent.engine.metrics.source;
 
 import com.alibaba.fastjson.JSON;
-import com.didichuxing.datachannel.agent.common.metrics.MetricsBuilder;
-import com.didichuxing.datachannel.agent.common.metrics.lib.MetricMutableGaugeLong;
+import com.didichuxing.datachannel.agent.engine.metrics.system.MetricsBuilder;
+import com.didichuxing.datachannel.agent.engine.metrics.system.lib.MetricMutableGaugeLong;
 import com.didichuxing.datachannel.agent.engine.AbstractTask;
-import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.metrics.metric.*;
 import com.didichuxing.datachannel.agent.engine.metrics.stat.MetricMutablePeriodGaugeLong;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
@@ -32,7 +31,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
      */
     private volatile MetricMutablePeriodGaugeLong sourceCountPerPeriod;
     private volatile MetricMutablePeriodGaugeLong sourceBytePerPeriod;
-    private volatile PeriodStatistics sourceTime;
+    private volatile PeriodStatistics             sourceTime;
 
     /*
      * filterCountPerPerod 每分钟被过滤的总的条数 filterTotalCount logAgent启动后被过滤的总的条数 filterTooLargeCount 每分钟超过一定大小后被截断的总的日志条数
@@ -41,7 +40,7 @@ public class TaskPatternStatistics extends AbstractStatistics {
     private volatile MetricMutablePeriodGaugeLong filterRemainedPerPeriod;
     private volatile MetricMutablePeriodGaugeLong filterOutPerPeriod;
     private volatile MetricMutablePeriodGaugeLong filterTooLargeCountPerPeriod;
-    private volatile MetricMutableGaugeLong filterTotalTooLargeCount;
+    private volatile MetricMutableGaugeLong       filterTotalTooLargeCount;
     //    private volatile MetricMutableTimeStat        filterTime;
 
     private volatile MetricMutablePeriodGaugeLong limitCountPerPeriod;
@@ -51,17 +50,17 @@ public class TaskPatternStatistics extends AbstractStatistics {
      */
     private volatile MetricMutablePeriodGaugeLong sinkCountPerPeriod;
     private volatile MetricMutablePeriodGaugeLong sinkBytePerPeriod;
-    private volatile PeriodStatistics        sinkTime;
+    private volatile PeriodStatistics             sinkTime;
 
     /*
      * controlCountPerPeriod 每个周期处理的日志总条数 controlTime处理耗时统计
      */
-    private volatile PeriodStatistics        controlTime;
+    private volatile PeriodStatistics             controlTime;
 
     /**
      * flushTime flush耗时， flushCountPerPeriod 每个周期flush次数 flushFailedCountPerPeriod 每个周期flush失败次数
      */
-    private volatile PeriodStatistics        flushTime;
+    private volatile PeriodStatistics             flushTime;
     private volatile MetricMutablePeriodGaugeLong flushCountPerPeriod;
     private volatile MetricMutablePeriodGaugeLong flushFailedCountPerPeriod;
 
@@ -237,7 +236,6 @@ public class TaskPatternStatistics extends AbstractStatistics {
         taskMetrics.setProcesstimeperevent75quantile(controlTimePeriodStatistics.getQuantile75());
         taskMetrics.setProcesstimeperevent95quantile(controlTimePeriodStatistics.getQuantile95());
         taskMetrics.setProcesstimeperevent99quantile(controlTimePeriodStatistics.getQuantile99());
-
 
         //TODO：
 

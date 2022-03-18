@@ -15,9 +15,8 @@ import java.util.regex.Pattern;
 
 import com.didichuxing.datachannel.agent.common.api.StandardLogType;
 import com.didichuxing.datachannel.agent.common.beans.LogPath;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
-import com.didichuxing.datachannel.agent.engine.utils.OSTypeEnum;
 import com.didichuxing.datachannel.agent.engine.utils.ProcessUtils;
 import com.didichuxing.datachannel.agent.source.log.beans.FileDirNode;
 import com.didichuxing.datachannel.agent.source.log.config.MatchConfig;

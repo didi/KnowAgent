@@ -1,23 +1,19 @@
 package com.didichuxing.datachannel.agent.sink.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.common.api.StandardLogType;
 import com.didichuxing.datachannel.agent.common.api.TopicPartitionKeyTypeEnum;
-import com.didichuxing.datachannel.agent.common.api.TransFormate;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaEvent;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaSink;
-import com.didichuxing.datachannel.agent.sink.utils.serializer.EventItemSerializer;
 import com.didichuxing.datachannel.agent.sink.utils.serializer.EventListSerializer;
 import com.didichuxing.datachannel.agent.sink.utils.serializer.LogEventSerializerObject;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

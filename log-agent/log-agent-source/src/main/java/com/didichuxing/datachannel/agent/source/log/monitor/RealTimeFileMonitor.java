@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.agent.source.log.offset.OffsetManager;
 import org.apache.commons.lang3.StringUtils;

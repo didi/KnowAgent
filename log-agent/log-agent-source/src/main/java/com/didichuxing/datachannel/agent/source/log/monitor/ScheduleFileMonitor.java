@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import org.apache.commons.lang3.StringUtils;
 
 import com.didichuxing.datachannel.agent.common.beans.LogPath;

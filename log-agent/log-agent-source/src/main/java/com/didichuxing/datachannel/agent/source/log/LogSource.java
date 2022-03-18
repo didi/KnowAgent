@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.api.*;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import org.apache.commons.lang3.StringUtils;
 

@@ -7,9 +7,9 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 
-import com.didichuxing.datachannel.agent.common.metrics.MetricsBuilder;
+import com.didichuxing.datachannel.agent.engine.metrics.system.MetricsBuilder;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.agent.engine.metrics.metric.*;
@@ -79,14 +79,19 @@ public class AgentStatistics extends AbstractStatistics {
     private volatile MetricMutablePeriodGaugeLong agentSendBytePerPeriod;
 
     /**
-     * agent 两次指标数据发送周期内发送日志量
+     * agent 两次指标数据发送周期内采集日志条数
      */
     private volatile MetricMutablePeriodGaugeLong agentReadCountPerPeriod;
 
     /**
-     * agent 两次指标数据发送周期内发送日志量
+     * agent 两次指标数据发送周期内采集日志量
      */
     private volatile MetricMutablePeriodGaugeLong agentReadBytePerPeriod;
+
+    /**
+     * agent 两次指标数据发送周期内错误日志发送量
+     */
+    private volatile MetricMutablePeriodGaugeLong errorLogsCountPerPeriod;
 
     public AgentStatistics(String name, LimitService limiter, Long startTime,
                            Integer runningCollectTaskNum, Integer runningCollectPathNum) {
@@ -99,6 +104,7 @@ public class AgentStatistics extends AbstractStatistics {
         this.runningCollectPathNum = runningCollectPathNum;
         this.agentReadBytePerPeriod = new MetricMutablePeriodGaugeLong();
         this.agentReadCountPerPeriod = new MetricMutablePeriodGaugeLong();
+        this.errorLogsCountPerPeriod = new MetricMutablePeriodGaugeLong();
     }
 
     @Override
@@ -157,6 +163,7 @@ public class AgentStatistics extends AbstractStatistics {
         agentBusinessMetrics.setHeartbeattimeminute(heartbeatTimeMinute);
         agentBusinessMetrics.setHeartbeattimehour(heartbeatTimeHour);
         agentBusinessMetrics.setHeartbeatTimeDay(heartbeatTimeDay);
+        agentBusinessMetrics.setErrorlogscount(errorLogsCountPerPeriod.snapshot());
         return agentBusinessMetrics;
     }
 
@@ -490,6 +497,10 @@ public class AgentStatistics extends AbstractStatistics {
     public void sourceOneRecord(long bytes, long cost) {
         agentReadCountPerPeriod.incr();
         agentReadBytePerPeriod.incr(bytes);
+    }
+
+    public void sendErrorLogsRecord() {
+        this.errorLogsCountPerPeriod.incr();
     }
 
 }

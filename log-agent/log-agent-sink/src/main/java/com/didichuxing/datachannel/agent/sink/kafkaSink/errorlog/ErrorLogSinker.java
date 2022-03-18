@@ -2,8 +2,8 @@ package com.didichuxing.datachannel.agent.sink.kafkaSink.errorlog;
 
 import com.didichuxing.datachannel.agent.common.configs.v2.ErrorLogConfig;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
-import com.didichuxing.datachannel.agent.common.loggather.LogSink;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogSink;
 import org.apache.commons.lang.StringUtils;
 
 import com.alibaba.fastjson.JSON;

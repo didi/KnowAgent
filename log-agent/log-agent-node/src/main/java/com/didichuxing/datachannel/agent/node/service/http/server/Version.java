@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 
 import com.sun.net.httpserver.HttpExchange;

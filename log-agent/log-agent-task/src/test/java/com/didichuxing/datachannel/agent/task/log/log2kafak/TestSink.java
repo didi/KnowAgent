@@ -23,7 +23,7 @@ import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaSink;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaTargetConfig;
 import com.didichuxing.datachannel.agent.sink.utils.StringFilter;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

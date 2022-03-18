@@ -2,7 +2,7 @@ package com.didichuxing.datachannel.agent.sink.utils.serializer;
 
 import com.didichuxing.datachannel.agent.common.api.TransFormate;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.metrics.source.TaskPatternStatistics;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaEvent;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaSink;

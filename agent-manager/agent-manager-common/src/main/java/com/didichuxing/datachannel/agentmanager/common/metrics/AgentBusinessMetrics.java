@@ -18,6 +18,8 @@ public class AgentBusinessMetrics {
 
     private Integer runningcollectpathnum;
 
+    private Long errorlogscount;
+
     private Long    heartbeattime;
 
     private Long    heartbeattimeminute;
@@ -25,6 +27,14 @@ public class AgentBusinessMetrics {
     private Long    heartbeattimehour;
 
     private Long    heartbeatTimeDay;
+
+    public Long getErrorlogscount() {
+        return errorlogscount;
+    }
+
+    public void setErrorlogscount(Long errorlogscount) {
+        this.errorlogscount = errorlogscount;
+    }
 
     public Long getReadbytes() {
         return readbytes;

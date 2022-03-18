@@ -19,7 +19,7 @@ import com.didichuxing.datachannel.agent.source.log.LogSource;
 import com.didichuxing.datachannel.agent.source.log.beans.WorkingFileNode;
 import com.didichuxing.datachannel.agent.source.log.config.LogSourceConfig;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

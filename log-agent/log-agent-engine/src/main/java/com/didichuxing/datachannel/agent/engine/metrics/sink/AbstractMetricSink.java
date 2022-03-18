@@ -2,7 +2,7 @@ package com.didichuxing.datachannel.agent.engine.metrics.sink;
 
 import org.apache.commons.configuration.SubsetConfiguration;
 
-import com.didichuxing.datachannel.agent.common.metrics.MetricsSink;
+import com.didichuxing.datachannel.agent.engine.metrics.system.MetricsSink;
 import com.didichuxing.datachannel.agent.common.configs.v2.MetricConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

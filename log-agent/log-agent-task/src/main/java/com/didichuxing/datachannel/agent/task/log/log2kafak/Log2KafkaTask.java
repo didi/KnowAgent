@@ -25,7 +25,7 @@ import com.didichuxing.datachannel.agent.source.log.monitor.FileCloseMonitor;
 import com.didichuxing.datachannel.agent.source.log.monitor.RealTimeFileMonitor;
 import com.didichuxing.datachannel.agent.source.log.monitor.ScheduleFileMonitor;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

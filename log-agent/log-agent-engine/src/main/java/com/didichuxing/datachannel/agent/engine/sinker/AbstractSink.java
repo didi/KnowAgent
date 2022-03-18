@@ -2,7 +2,7 @@ package com.didichuxing.datachannel.agent.engine.sinker;
 
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ComponentConfig;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
 import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;

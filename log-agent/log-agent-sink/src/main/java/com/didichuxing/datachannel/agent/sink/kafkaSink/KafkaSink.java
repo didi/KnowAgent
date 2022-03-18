@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.didichuxing.datachannel.agent.common.api.TopicPartitionKeyTypeEnum;
 import com.didichuxing.datachannel.agent.common.constants.Tags;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import com.didichuxing.datachannel.agent.sink.utils.EventUtils;
 import com.didichuxing.datachannel.agent.sink.utils.StringFilter;

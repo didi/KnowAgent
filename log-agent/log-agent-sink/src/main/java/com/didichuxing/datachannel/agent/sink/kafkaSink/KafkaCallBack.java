@@ -4,7 +4,7 @@ import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.RecordMetadata;
 
 import com.didichuxing.datachannel.agent.engine.utils.TimeUtils;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 
 /**
  * @description: kafka回调方法

@@ -9,7 +9,7 @@ import com.didichuxing.datachannel.agent.common.api.FileReadType;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.common.api.StandardLogType;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.CommonConfig;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.LogEvent;
 import com.didichuxing.datachannel.agent.engine.utils.TimeUtils;
 import com.didichuxing.datachannel.agent.source.log.LogSource;

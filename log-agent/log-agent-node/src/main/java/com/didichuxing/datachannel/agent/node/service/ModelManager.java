@@ -7,12 +7,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.didichuxing.datachannel.agent.common.constants.Tags;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.metrics.source.*;
 import com.didichuxing.datachannel.agent.node.Agent;
 import com.didichuxing.datachannel.agent.source.log.config.LogSourceConfig;
-import com.didichuxing.datachannel.system.metrcis.exception.MetricsException;
 import org.apache.commons.lang.StringUtils;
 
 import com.didichuxing.datachannel.agent.common.configs.v2.AgentConfig;

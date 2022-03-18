@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.agent.engine.limit.tune.TuneNode;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;

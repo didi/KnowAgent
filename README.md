@@ -1,11 +1,11 @@
 **面向云原生的一站式日志采集配置及运维平台**
 
-阅读本README文档，您可以了解到滴滴LogiAM的用户群体、产品定位等信息，并通过体验地址，快速体验以“应用/服务”为采集粒度，从应用维度批量下发采集任务全流程。
-若滴滴LogiAM已在贵司的生产环境进行使用，并想要获得官方更好地支持和指导，可以通过[OCE认证](http://obsuite.didiyun.com/open/openAuth)，加入官方交流平台。
+阅读本README文档，您可以了解到Know Agent的用户群体、产品定位等信息，并通过体验地址，快速体验以“应用/服务”为采集粒度，从应用维度批量下发采集任务全流程。
+若Know Agent已在贵司的生产环境进行使用，并想要获得官方更好地支持和指导，可以通过[OCE认证](http://obsuite.didiyun.com/open/openAuth)，加入官方交流平台。
 
 # 1 产品简介
 
-滴滴LogiAM来源于滴滴多年来大量的运维实践经验。经历过多方考验，对于大规模Agent日志采集治理管控及巡检诊断已经沉淀出一套完善的解决方案。在云原生时代背景下，LogiAM以“应用/服务”为采集粒度，满足了从业务层面创建采集任务的需求。
+Know Agent来源于滴滴多年来大量的运维实践经验。经历过多方考验，对于大规模Agent日志采集治理管控及巡检诊断已经沉淀出一套完善的解决方案。在云原生时代背景下，Know Agent以“应用/服务”为采集粒度，满足了从业务层面创建采集任务的需求。
 
 ## 1.1 快速体验地址
 
@@ -37,15 +37,15 @@
 # 2 相关文档
 ## 2.1 产品文档
 
-[LogiAM安装部署手册](doc/LogiAM安装部署手册.md)
+[Know Agent安装部署手册](doc/Know Agent安装部署手册.md)
 
-[k8s容器采集接入手册](doc/k8s容器采集接入手册.md)
+[Know Agent-k8s容器采集接入手册](doc/k8s容器采集接入手册.md)
 
-[LogiAM开发手册](doc/LogiAM开发手册.md)
+[Know Agent开发手册](doc/Know Agent开发手册.md)
 
-[LogiAM用户使用手册](doc/user_guide/user_guide_cn.md)
+[Know Agent用户使用手册](doc/user_guide/user_guide_cn.md)
 
-# 3 滴滴Logi开源用户交流群
+# 3 Know Agent开源用户交流群
 
 ![logi开源用户交流群](doc/assets/logi开源用户交流群.png)
 
@@ -57,5 +57,5 @@ OCE是一个认证机制和交流平台，为滴滴Logi产品生产用户量身�
 
 # 5 协议
 
-`agent-manager`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)
+`Know Agent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)
 

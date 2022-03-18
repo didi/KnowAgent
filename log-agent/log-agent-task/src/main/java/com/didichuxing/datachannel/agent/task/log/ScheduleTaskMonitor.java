@@ -9,7 +9,7 @@ import com.didichuxing.datachannel.agent.engine.component.TaskComponent;
 import com.didichuxing.datachannel.agent.engine.monitor.Monitor;
 import com.didichuxing.datachannel.agent.engine.service.DefaultThreadFactory;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
 package com.didichuxing.datachannel.agent.node;
 
 import com.didichuxing.datachannel.agent.common.configs.v2.AgentConfig;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.component.AgentComponent;
 import com.didichuxing.datachannel.agent.engine.metrics.MetricService;
 import com.didichuxing.datachannel.agent.node.service.ModelManager;

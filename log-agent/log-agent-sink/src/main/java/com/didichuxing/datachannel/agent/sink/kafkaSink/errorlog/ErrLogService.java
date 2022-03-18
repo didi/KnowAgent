@@ -2,7 +2,7 @@ package com.didichuxing.datachannel.agent.sink.kafkaSink.errorlog;
 
 import com.didichuxing.datachannel.agent.common.configs.v2.ErrorLogConfig;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -13,7 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.node.ConfigService;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;

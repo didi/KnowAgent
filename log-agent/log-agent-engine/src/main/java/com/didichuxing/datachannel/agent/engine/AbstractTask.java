@@ -4,7 +4,7 @@ import com.didichuxing.datachannel.agent.common.api.ComponentStatus;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ComponentConfig;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.bean.Event;
 import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.channel.AbstractChannel;

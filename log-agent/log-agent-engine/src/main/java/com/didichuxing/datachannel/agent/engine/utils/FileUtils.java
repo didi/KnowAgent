@@ -1,6 +1,6 @@
 package com.didichuxing.datachannel.agent.engine.utils;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.io.BufferedReader;

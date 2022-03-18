@@ -3,7 +3,7 @@ package com.didichuxing.datachannel.agent.integration.test.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 
 /**
  * @description:

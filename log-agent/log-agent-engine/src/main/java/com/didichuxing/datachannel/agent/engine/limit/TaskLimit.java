@@ -3,7 +3,7 @@ package com.didichuxing.datachannel.agent.engine.limit;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ComponentConfig;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelLimitConfig;
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.AbstractTask;
 import com.didichuxing.datachannel.agent.engine.conf.Configurable;
 

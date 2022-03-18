@@ -1,6 +1,6 @@
 package com.didichuxing.datachannel.agent.node;
 
-import com.didichuxing.datachannel.agent.common.loggather.LogGather;
+import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.node.service.http.server.HttpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
