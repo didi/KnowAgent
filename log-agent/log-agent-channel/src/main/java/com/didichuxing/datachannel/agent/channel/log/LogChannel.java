@@ -1,14 +1,15 @@
 package com.didichuxing.datachannel.agent.channel.log;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
+import com.didichuxing.datachannel.system.metrcis.Metrics;
+import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
+import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -32,7 +33,6 @@ import org.slf4j.LoggerFactory;
 public class LogChannel extends AbstractChannel {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogChannel.class);
-    private static final Logger WARN_LOGGER = LoggerFactory.getLogger("channel");
 
     private Map<String, FileNodeOffset> lastestOffsetMap = new ConcurrentHashMap<>(3);
 
@@ -50,9 +50,23 @@ public class LogChannel extends AbstractChannel {
 
     private volatile CompletableFuture<?> availableFuture = new CompletableFuture<>();
 
+    private String channelId;
+
+    /**
+     * metrics 自动计算
+     */
+    private PeriodStatistics channelBytesSize = new PeriodStatistics();
+    private PeriodStatistics channelCountSize = new PeriodStatistics();
+    private PeriodStatistics channelUsedPercent = new PeriodStatistics();
+
     public LogChannel(LogSource logSource, ChannelConfig channelConfig) {
         this.logSource = logSource;
         this.channelConfig = channelConfig;
+        this.channelId = UUID.randomUUID().toString();
+        Metrics.getPeriodMetricAutoComputeComponent().registerAutoComputeTask(
+                this.channelId,
+                this
+        );
     }
 
     @Override
@@ -82,6 +96,16 @@ public class LogChannel extends AbstractChannel {
     @Override
     public boolean stop(boolean force) {
         LOGGER.info("begin to stop logChannel. uniqueKey is " + uniqueKey + ", force is " + force);
+        if(!Metrics.getPeriodMetricAutoComputeComponent().unRegisterAutoComputeTask(
+                this.channelId,
+                this
+        )) {
+            LOGGER.error(
+                    String.format("stop the channel's auto compute metrics task failed, uniqueKey is: %s",
+                            uniqueKey
+                    )
+            );
+        }
         isStop = true;
         return false;
     }
@@ -93,15 +117,57 @@ public class LogChannel extends AbstractChannel {
 
     @Override
     public void setMetrics(TaskMetrics taskMetrics) {
+
         taskMetrics.setChannelbytesmax(this.channelConfig.getMaxBytes());
         taskMetrics.setChannelcountmax(this.channelConfig.getMaxNum().longValue());
-        taskMetrics.setChannelbytessize(Long.valueOf(storage.get()).doubleValue());
-        taskMetrics.setChannelcountsize(Integer.valueOf(size.get()).doubleValue());
+
+        PeriodStatistics channelBytesSizePeriodStatistics = channelBytesSize.snapshot();
+        taskMetrics.setChannelbytessize(channelBytesSizePeriodStatistics.getLast());
+        taskMetrics.setChannelbytessizemin(channelBytesSizePeriodStatistics.getMin());
+        taskMetrics.setChannelbytessizemax(channelBytesSizePeriodStatistics.getMax());
+        taskMetrics.setChannelbytessizemean(channelBytesSizePeriodStatistics.getAvg());
+        taskMetrics.setChannelbytessizestd(channelBytesSizePeriodStatistics.getStdDev());
+        taskMetrics.setChannelbytessize55quantile(channelBytesSizePeriodStatistics.getQuantile55());
+        taskMetrics.setChannelbytessize75quantile(channelBytesSizePeriodStatistics.getQuantile75());
+        taskMetrics.setChannelbytessize95quantile(channelBytesSizePeriodStatistics.getQuantile95());
+        taskMetrics.setChannelbytessize99quantile(channelBytesSizePeriodStatistics.getQuantile99());
+
+
+        PeriodStatistics channelCountSizePeriodStatistics = channelCountSize.snapshot();
+        taskMetrics.setChannelcountsize(channelCountSizePeriodStatistics.getLast());
+        taskMetrics.setChannelcountsizemin(channelCountSizePeriodStatistics.getMin());
+        taskMetrics.setChannelcountsizemax(channelCountSizePeriodStatistics.getMax());
+        taskMetrics.setChannelcountsizemean(channelCountSizePeriodStatistics.getAvg());
+        taskMetrics.setChannelcountsizestd(channelCountSizePeriodStatistics.getStdDev());
+        taskMetrics.setChannelcountsize55quantile(channelCountSizePeriodStatistics.getQuantile55());
+        taskMetrics.setChannelcountsize75quantile(channelCountSizePeriodStatistics.getQuantile75());
+        taskMetrics.setChannelcountsize95quantile(channelCountSizePeriodStatistics.getQuantile95());
+        taskMetrics.setChannelcountsize99quantile(channelCountSizePeriodStatistics.getQuantile99());
+
+        PeriodStatistics channelUsedPercentPeriodStatistics = channelUsedPercent.snapshot();
+        taskMetrics.setChannelusedpercent(channelUsedPercentPeriodStatistics.getLast());
+        taskMetrics.setChannelusedpercentmin(channelUsedPercentPeriodStatistics.getMin());
+        taskMetrics.setChannelusedpercentmax(channelUsedPercentPeriodStatistics.getMax());
+        taskMetrics.setChannelusedpercentmean(channelUsedPercentPeriodStatistics.getAvg());
+        taskMetrics.setChannelusedpercentstd(channelUsedPercentPeriodStatistics.getStdDev());
+        taskMetrics.setChannelusedpercent55quantile(channelUsedPercentPeriodStatistics.getQuantile55());
+        taskMetrics.setChannelusedpercent75quantile(channelUsedPercentPeriodStatistics.getQuantile75());
+        taskMetrics.setChannelusedpercent95quantile(channelUsedPercentPeriodStatistics.getQuantile95());
+        taskMetrics.setChannelusedpercent99quantile(channelUsedPercentPeriodStatistics.getQuantile99());
+
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcChannelMetrics() {
+        Double channelCountSizeCurrent = Double.valueOf(size.get());
+        Double channelBytesSizeCurrent = Double.valueOf(storage.get());
+        channelBytesSize.add(channelBytesSizeCurrent);
+        channelCountSize.add(channelCountSizeCurrent);
         Double channelUsedPercent = Math.max(
-                taskMetrics.getChannelcountsize() / taskMetrics.getChannelcountmax(),
-                taskMetrics.getChannelbytessize() / taskMetrics.getChannelbytesmax()
+                channelCountSizeCurrent / this.channelConfig.getMaxNum(),
+                channelBytesSizeCurrent / this.channelConfig.getMaxBytes()
         );
-        taskMetrics.setChannelusedpercent(channelUsedPercent);
+        this.channelUsedPercent.add(channelUsedPercent);
     }
 
     @Override
