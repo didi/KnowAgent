@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.alibaba.fastjson.JSON;
 
@@ -14,6 +17,7 @@ import com.didichuxing.datachannel.agent.engine.bean.GlobalProperties;
 import com.didichuxing.datachannel.agent.engine.limit.LimitService;
 import com.didichuxing.datachannel.agent.engine.metrics.metric.*;
 import com.didichuxing.datachannel.agent.engine.metrics.stat.MetricMutablePeriodGaugeLong;
+import com.didichuxing.datachannel.agent.engine.service.TaskRunningPool;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 
 import com.didichuxing.datachannel.agentmanager.common.metrics.*;
@@ -69,6 +73,16 @@ public class AgentStatistics extends AbstractStatistics {
     private volatile Integer                      runningCollectPathNum;
 
     /**
+     * 初始化字段 日志采集任务数
+     */
+    private volatile Integer collectTaskNum;
+
+    /**
+     * 初始化字段 日志采集路径数
+     */
+    private volatile Integer collectPathNum;
+
+    /**
      * agent 两次指标数据发送周期内发送日志条数
      */
     private volatile MetricMutablePeriodGaugeLong agentSendCountPerPeriod;
@@ -99,7 +113,7 @@ public class AgentStatistics extends AbstractStatistics {
     private volatile MetricMutablePeriodGaugeLong errorLogsSendFailedCount;
 
     public AgentStatistics(String name, LimitService limiter, Long startTime,
-                           Integer runningCollectTaskNum, Integer runningCollectPathNum) {
+                           Integer runningCollectTaskNum, Integer runningCollectPathNum, Integer collectTaskNum, Integer collectPathNum) {
         super(name);
         this.limiter = limiter;
         this.startTime = startTime;
@@ -111,6 +125,8 @@ public class AgentStatistics extends AbstractStatistics {
         this.agentReadCountPerPeriod = new MetricMutablePeriodGaugeLong();
         this.errorLogsCountPerPeriod = new MetricMutablePeriodGaugeLong();
         this.errorLogsSendFailedCount = new MetricMutablePeriodGaugeLong();
+        this.collectTaskNum = collectTaskNum;
+        this.collectPathNum = collectPathNum;
     }
 
     @Override
@@ -171,8 +187,70 @@ public class AgentStatistics extends AbstractStatistics {
         agentBusinessMetrics.setHeartbeatTimeDay(heartbeatTimeDay);
         agentBusinessMetrics.setErrorlogscount(errorLogsCountPerPeriod.snapshot());
         agentBusinessMetrics.setErrorlogssendfailedcount(errorLogsSendFailedCount.snapshot());
+        agentBusinessMetrics.setNormalcollectthreadnummax(getNormalCollectThreadNumMax());
+        agentBusinessMetrics.setNormalcollectthreadnumsize(getNormalCollectThreadNumSize());
+        agentBusinessMetrics.setNormalcollectthreadqueuemax(getNormalCollectThreadQueueMax());
+        agentBusinessMetrics.setNormalcollectthreadqueuesize(getNormalCollectThreadQueueSize());
+        agentBusinessMetrics.setTemporarycollectthreadnummax(getTemporaryCollectThreadNumMax());
+        agentBusinessMetrics.setTemporarycollectthreadnumsize(getTemporaryCollectThreadNumSize());
+        agentBusinessMetrics.setTemporarycollectthreadqueuemax(getTemporaryCollectThreadQueueMax());
+        agentBusinessMetrics.setTemporarycollectthreadqueuesize(getTemporaryCollectThreadQueueSize());
+        agentBusinessMetrics.setCollecttasknum(collectTaskNum);
+        agentBusinessMetrics.setPausecollecttasknum(getPauseCollectTaskNum());
+        agentBusinessMetrics.setCollectpathnum(collectPathNum);
+        agentBusinessMetrics.setPausecollectpathnum(getPauseCollectPathNum());
 
         return agentBusinessMetrics;
+    }
+
+    private Integer getPauseCollectPathNum() {
+        return this.collectPathNum - this.runningCollectPathNum;
+    }
+
+    private Integer getPauseCollectTaskNum() {
+        return this.collectTaskNum - this.runningCollectTaskNum;
+    }
+
+    private Integer getTemporaryCollectThreadQueueSize() {
+        ExecutorService executorService = TaskRunningPool.getTempExecutorService();
+        return ((ThreadPoolExecutor) executorService).getQueue().size();
+    }
+
+    private Integer getTemporaryCollectThreadQueueMax() {
+        ExecutorService executorService = TaskRunningPool.getTempExecutorService();
+        BlockingQueue<Runnable> queue = ((ThreadPoolExecutor) executorService).getQueue();
+        return queue.size() + queue.remainingCapacity();
+    }
+
+    private Integer getTemporaryCollectThreadNumSize() {
+        ExecutorService executorService = TaskRunningPool.getTempExecutorService();
+        return ((ThreadPoolExecutor) executorService).getActiveCount();
+    }
+
+    private Integer getTemporaryCollectThreadNumMax() {
+        ExecutorService executorService = TaskRunningPool.getTempExecutorService();
+        return ((ThreadPoolExecutor) executorService).getMaximumPoolSize();
+    }
+
+    private Integer getNormalCollectThreadQueueSize() {
+        ExecutorService executorService = TaskRunningPool.getExecutorService();
+        return ((ThreadPoolExecutor) executorService).getQueue().size();
+    }
+
+    private Integer getNormalCollectThreadQueueMax() {
+        ExecutorService executorService = TaskRunningPool.getExecutorService();
+        BlockingQueue<Runnable> queue = ((ThreadPoolExecutor) executorService).getQueue();
+        return queue.size() + queue.remainingCapacity();
+    }
+
+    private Integer getNormalCollectThreadNumSize() {
+        ExecutorService executorService = TaskRunningPool.getExecutorService();
+        return ((ThreadPoolExecutor) executorService).getActiveCount();
+    }
+
+    private Integer getNormalCollectThreadNumMax() {
+        ExecutorService executorService = TaskRunningPool.getExecutorService();
+        return ((ThreadPoolExecutor) executorService).getMaximumPoolSize();
     }
 
     /**
@@ -496,6 +574,14 @@ public class AgentStatistics extends AbstractStatistics {
 
     public void setRunningCollectTaskNum(Integer runningCollectTaskNum) {
         this.runningCollectTaskNum = runningCollectTaskNum;
+    }
+
+    public void setCollectTaskNum(Integer collectTaskNum) {
+        this.collectTaskNum = collectTaskNum;
+    }
+
+    public void setCollectPathNum(Integer collectPathNum) {
+        this.collectPathNum = collectPathNum;
     }
 
     public void setRunningCollectPathNum(Integer runningCollectPathNum) {

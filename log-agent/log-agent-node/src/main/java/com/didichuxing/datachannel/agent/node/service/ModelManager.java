@@ -94,7 +94,7 @@ public class ModelManager extends AgentComponent {
          * 构建并初始化agent统计信息对象
          */
         GlobalProperties.setAgentStatistics(new AgentStatistics("agentBasic", LimitService.LIMITER,
-            Agent.START_TIME, getRunningCollectTaskNum(), getRunningCollectPathNum()));
+            Agent.START_TIME, getRunningCollectTaskNum(), getRunningCollectPathNum(), this.agentConfig.getModelConfigs().size(), getCollectPathNum()));
         GlobalProperties.getAgentStatistics().init();
     }
 
@@ -304,6 +304,17 @@ public class ModelManager extends AgentComponent {
     private void updateAgentStatistics() {
         GlobalProperties.getAgentStatistics().setRunningCollectPathNum(getRunningCollectPathNum());
         GlobalProperties.getAgentStatistics().setRunningCollectTaskNum(getRunningCollectTaskNum());
+        GlobalProperties.getAgentStatistics().setCollectTaskNum(this.agentConfig.getModelConfigs().size());
+        GlobalProperties.getAgentStatistics().setCollectPathNum(getCollectPathNum());
+    }
+
+    private Integer getCollectPathNum() {
+        Integer collectPathNum = 0;
+        for (ModelConfig modelConfig : this.agentConfig.getModelConfigs()) {
+            LogSourceConfig logSourceConfig = (LogSourceConfig) modelConfig.getSourceConfig();
+            collectPathNum += logSourceConfig.getLogPaths().size();
+        }
+        return collectPathNum;
     }
 
     public Map<String, AbstractModel> getModels() {
