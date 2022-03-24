@@ -420,23 +420,57 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     @Override
     public List<DiskInfo> getSystemDiskInfoList() {
         Map<String, String> path2FsTypeMap = diskMetricsService.getFsType();
-        Map<String, Long> path2BytesFreeMap = diskMetricsService.getBytesFree();
         List<DiskInfo> diskInfoList = new ArrayList<>(path2FsTypeMap.size());
         for (Map.Entry<String, String> path2FsTypeEntry : path2FsTypeMap.entrySet()) {
             String path = path2FsTypeEntry.getKey();
             String fsType = path2FsTypeEntry.getValue();
-            Long bytesFree = path2BytesFreeMap.get(path);
-            if(null == bytesFree) {
-                //TODO：
-                throw new RuntimeException();
-            }
             DiskInfo diskInfo = new DiskInfo();
             diskInfo.setFsType(fsType);
             diskInfo.setPath(path);
-            diskInfo.setBytesFree(bytesFree);
+            diskInfo.setBytesFree(
+                    getDiskMetricValueByPath(diskMetricsService.getBytesFree(), path, "diskBytesFree", 0L)
+            );
+            diskInfo.setBytesTotal(
+                    getDiskMetricValueByPath(diskMetricsService.getBytesTotal(), path, "diskBytesTotal", 0L)
+            );
+            diskInfo.setBytesUsed(
+                    getDiskMetricValueByPath(diskMetricsService.getBytesUsed(), path, "diskBytesUsed", 0L)
+            );
+            diskInfo.setBytesUsedPercent(
+                    getDiskMetricValueByPath(diskMetricsService.getBytesUsedPercent(), path, "diskBytesUsedPercent", 0d)
+            );
+            diskInfo.setInodesTotal(
+                    getDiskMetricValueByPath(diskMetricsService.getInodesTotal(), path, "diskInodesTotal", 0)
+            );
+            diskInfo.setInodesFree(
+                    getDiskMetricValueByPath(diskMetricsService.getInodesFree(), path, "diskInodesFree", 0)
+            );
+            diskInfo.setInodesUsed(
+                    getDiskMetricValueByPath(diskMetricsService.getInodesUsed(), path, "diskInodesUsed", 0)
+            );
+            diskInfo.setInodesUsedPercent(
+                    getDiskMetricValueByPath(diskMetricsService.getInodesUsedPercent(), path, "diskInodesUsedPercent", 0d)
+            );
             diskInfoList.add(diskInfo);
         }
         return diskInfoList;
+    }
+
+    private <T> T getDiskMetricValueByPath(Map<String, T> path2BytesFreeMap, String path, String metricName, T defaultValue) {
+        T metricValue = path2BytesFreeMap.get(path);
+        if(null == metricValue) {
+            metricValue = defaultValue;
+            LOGGER.error(
+                    String.format(
+                            "class=%s|method=%s|errorMsg=get metric %s value of path:%s is null",
+                            "LinuxSystemMetricsServiceImpl",
+                            "getDiskMetricValueByPath",
+                            metricName,
+                            "path"
+                    )
+            );
+        }
+        return metricValue;
     }
 
     @Override
@@ -496,19 +530,15 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public List<NetCardInfo> getSystemNetCardInfoList() {
-
         Map<String, PeriodStatistics> device2SendBytesPsMap = netCardMetricsService.getSendBytesPs();
         Map<String, String> device2MacAddressMap = netCardMetricsService.getMacAddress();
         Map<String, Long> device2BandWidthMap = netCardMetricsService.getBandWidth();
-
         List<NetCardInfo> netCardInfoList = new ArrayList<>(device2MacAddressMap.size());
-
         for (Map.Entry<String, String> device2MacAddressEntry : device2MacAddressMap.entrySet()) {
             String device = device2MacAddressEntry.getKey();
             String macAddress = device2MacAddressEntry.getValue();
             Long bandWidth = device2BandWidthMap.get(device);
             PeriodStatistics sendBytesPs = device2SendBytesPsMap.get(device);
-
             if(null == sendBytesPs || null == bandWidth) {
                 //TODO：
                 throw new RuntimeException("sendBytesPs or bandWidth is null");

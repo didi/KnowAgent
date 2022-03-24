@@ -18,8 +18,78 @@ public class DiskMetrics {
 
     private Long   systemdiskbytesfree;
 
+    private Long systemdiskbytestotal;
+
+    private Long systemdiskbytesused;
+
+    private Double systemdiskusedpercent;
+
+    private Integer systemdiskinodestotal;
+
+    private Integer systemdiskinodesfree;
+
+    private Integer systemdiskinodesused;
+
+    private Double systemdiskinodesusedpercent;
+
     public String getHostname() {
         return hostname;
+    }
+
+    public Long getSystemdiskbytestotal() {
+        return systemdiskbytestotal;
+    }
+
+    public void setSystemdiskbytestotal(Long systemdiskbytestotal) {
+        this.systemdiskbytestotal = systemdiskbytestotal;
+    }
+
+    public Long getSystemdiskbytesused() {
+        return systemdiskbytesused;
+    }
+
+    public void setSystemdiskbytesused(Long systemdiskbytesused) {
+        this.systemdiskbytesused = systemdiskbytesused;
+    }
+
+    public Double getSystemdiskusedpercent() {
+        return systemdiskusedpercent;
+    }
+
+    public void setSystemdiskusedpercent(Double systemdiskusedpercent) {
+        this.systemdiskusedpercent = systemdiskusedpercent;
+    }
+
+    public Integer getSystemdiskinodestotal() {
+        return systemdiskinodestotal;
+    }
+
+    public void setSystemdiskinodestotal(Integer systemdiskinodestotal) {
+        this.systemdiskinodestotal = systemdiskinodestotal;
+    }
+
+    public Integer getSystemdiskinodesfree() {
+        return systemdiskinodesfree;
+    }
+
+    public void setSystemdiskinodesfree(Integer systemdiskinodesfree) {
+        this.systemdiskinodesfree = systemdiskinodesfree;
+    }
+
+    public Integer getSystemdiskinodesused() {
+        return systemdiskinodesused;
+    }
+
+    public void setSystemdiskinodesused(Integer systemdiskinodesused) {
+        this.systemdiskinodesused = systemdiskinodesused;
+    }
+
+    public Double getSystemdiskinodesusedpercent() {
+        return systemdiskinodesusedpercent;
+    }
+
+    public void setSystemdiskinodesusedpercent(Double systemdiskinodesusedpercent) {
+        this.systemdiskinodesusedpercent = systemdiskinodesusedpercent;
     }
 
     public void setHostname(String hostname) {

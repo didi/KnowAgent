@@ -75,12 +75,12 @@ public class AgentStatistics extends AbstractStatistics {
     /**
      * 初始化字段 日志采集任务数
      */
-    private volatile Integer collectTaskNum;
+    private volatile Integer                      collectTaskNum;
 
     /**
      * 初始化字段 日志采集路径数
      */
-    private volatile Integer collectPathNum;
+    private volatile Integer                      collectPathNum;
 
     /**
      * agent 两次指标数据发送周期内发送日志条数
@@ -113,7 +113,8 @@ public class AgentStatistics extends AbstractStatistics {
     private volatile MetricMutablePeriodGaugeLong errorLogsSendFailedCount;
 
     public AgentStatistics(String name, LimitService limiter, Long startTime,
-                           Integer runningCollectTaskNum, Integer runningCollectPathNum, Integer collectTaskNum, Integer collectPathNum) {
+                           Integer runningCollectTaskNum, Integer runningCollectPathNum,
+                           Integer collectTaskNum, Integer collectPathNum) {
         super(name);
         this.limiter = limiter;
         this.startTime = startTime;
@@ -194,7 +195,8 @@ public class AgentStatistics extends AbstractStatistics {
         agentBusinessMetrics.setTemporarycollectthreadnummax(getTemporaryCollectThreadNumMax());
         agentBusinessMetrics.setTemporarycollectthreadnumsize(getTemporaryCollectThreadNumSize());
         agentBusinessMetrics.setTemporarycollectthreadqueuemax(getTemporaryCollectThreadQueueMax());
-        agentBusinessMetrics.setTemporarycollectthreadqueuesize(getTemporaryCollectThreadQueueSize());
+        agentBusinessMetrics
+            .setTemporarycollectthreadqueuesize(getTemporaryCollectThreadQueueSize());
         agentBusinessMetrics.setCollecttasknum(collectTaskNum);
         agentBusinessMetrics.setPausecollecttasknum(getPauseCollectTaskNum());
         agentBusinessMetrics.setCollectpathnum(collectPathNum);
@@ -526,6 +528,13 @@ public class AgentStatistics extends AbstractStatistics {
             diskMetrics.setHeartbeattimehour(heartbeatTimeHour);
             diskMetrics.setHeartbeatTimeDay(heartbeatTimeDay);
             diskMetrics.setSystemdiskbytesfree(diskInfo.getBytesFree());
+            diskMetrics.setSystemdiskbytestotal(diskInfo.getBytesTotal());
+            diskMetrics.setSystemdiskbytesused(diskInfo.getBytesUsed());
+            diskMetrics.setSystemdiskusedpercent(diskInfo.getBytesUsedPercent());
+            diskMetrics.setSystemdiskinodestotal(diskInfo.getInodesTotal());
+            diskMetrics.setSystemdiskinodesfree(diskInfo.getInodesFree());
+            diskMetrics.setSystemdiskinodesused(diskInfo.getInodesUsed());
+            diskMetrics.setSystemdiskinodesusedpercent(diskInfo.getInodesUsedPercent());
             diskMetricsList.add(diskMetrics);
         }
         return diskMetricsList;

@@ -59,7 +59,8 @@ public class KafkaSender {
 
         if (producer != null) {
             producer.send(config.getTopic(), CommonUtils.getHOSTNAME(),
-                content.getBytes(StandardCharsets.UTF_8), new ErrorLogKafkaCallBack(config.getTopic()));
+                content.getBytes(StandardCharsets.UTF_8),
+                new ErrorLogKafkaCallBack(config.getTopic()));
 
         }
     }

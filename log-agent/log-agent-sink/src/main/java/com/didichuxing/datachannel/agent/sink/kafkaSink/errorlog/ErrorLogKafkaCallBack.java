@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
  */
 public class ErrorLogKafkaCallBack implements Callback {
 
-    private static final Logger LOGGER        = LoggerFactory.getLogger(ErrorLogKafkaCallBack.class
-            .getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorLogKafkaCallBack.class
+                                           .getName());
 
-    private String topic;
+    private String              topic;
 
     public ErrorLogKafkaCallBack(String topic) {
         this.topic = topic;
@@ -29,26 +29,21 @@ public class ErrorLogKafkaCallBack implements Callback {
         if (metadata == null || exception != null) {
             // 记录metrics
             AgentStatistics agentStatistics = GlobalProperties.getAgentStatistics();
-            if(null != agentStatistics) {
+            if (null != agentStatistics) {
                 agentStatistics.sendErrorLogsFailedRecord();
             } else {
-                LOGGER.error(
-                        String.format(
-                                "ErrorLogKafkaCallBack error, send error log message to kafka error! metadata is %s, topic is %s, because agentStatistics is null",
-                                JSON.toJSONString(metadata),
-                                topic
-                        )
-                );
+                LOGGER
+                    .error(String
+                        .format(
+                            "ErrorLogKafkaCallBack error, send error log message to kafka error! metadata is %s, topic is %s, because agentStatistics is null",
+                            JSON.toJSONString(metadata), topic));
             }
-            LOGGER.error(
-                    String.format(
+            LOGGER
+                .error(
+                    String
+                        .format(
                             "ErrorLogKafkaCallBack error, send error log message to kafka error! metadata is %s, and exception is %s, topic is %s",
-                            JSON.toJSONString(metadata),
-                            exception.getMessage(),
-                            topic
-                    ),
-                    exception
-            );
+                            JSON.toJSONString(metadata), exception.getMessage(), topic), exception);
         }
     }
 }
