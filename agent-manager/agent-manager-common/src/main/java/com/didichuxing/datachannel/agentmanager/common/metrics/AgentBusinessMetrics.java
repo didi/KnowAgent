@@ -20,6 +20,8 @@ public class AgentBusinessMetrics {
 
     private Long errorlogscount;
 
+    private Long errorlogssendfailedcount;
+
     private Long    heartbeattime;
 
     private Long    heartbeattimeminute;
@@ -34,6 +36,14 @@ public class AgentBusinessMetrics {
 
     public void setErrorlogscount(Long errorlogscount) {
         this.errorlogscount = errorlogscount;
+    }
+
+    public Long getErrorlogssendfailedcount() {
+        return errorlogssendfailedcount;
+    }
+
+    public void setErrorlogssendfailedcount(Long errorlogssendfailedcount) {
+        this.errorlogssendfailedcount = errorlogssendfailedcount;
     }
 
     public Long getReadbytes() {

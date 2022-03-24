@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agent.sink.kafkaSink.errorlog;
 
 import com.didichuxing.datachannel.agent.common.configs.v2.ErrorLogConfig;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
+import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaCallBack;
 import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,8 @@ public class KafkaSender {
 
         if (producer != null) {
             producer.send(config.getTopic(), CommonUtils.getHOSTNAME(),
-                content.getBytes(StandardCharsets.UTF_8));
+                content.getBytes(StandardCharsets.UTF_8), new ErrorLogKafkaCallBack(config.getTopic()));
+
         }
     }
 

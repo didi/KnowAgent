@@ -93,6 +93,11 @@ public class AgentStatistics extends AbstractStatistics {
      */
     private volatile MetricMutablePeriodGaugeLong errorLogsCountPerPeriod;
 
+    /**
+     * agent 两次指标数据发送周期内错误日志发送失败量
+     */
+    private volatile MetricMutablePeriodGaugeLong errorLogsSendFailedCount;
+
     public AgentStatistics(String name, LimitService limiter, Long startTime,
                            Integer runningCollectTaskNum, Integer runningCollectPathNum) {
         super(name);
@@ -105,6 +110,7 @@ public class AgentStatistics extends AbstractStatistics {
         this.agentReadBytePerPeriod = new MetricMutablePeriodGaugeLong();
         this.agentReadCountPerPeriod = new MetricMutablePeriodGaugeLong();
         this.errorLogsCountPerPeriod = new MetricMutablePeriodGaugeLong();
+        this.errorLogsSendFailedCount = new MetricMutablePeriodGaugeLong();
     }
 
     @Override
@@ -164,6 +170,8 @@ public class AgentStatistics extends AbstractStatistics {
         agentBusinessMetrics.setHeartbeattimehour(heartbeatTimeHour);
         agentBusinessMetrics.setHeartbeatTimeDay(heartbeatTimeDay);
         agentBusinessMetrics.setErrorlogscount(errorLogsCountPerPeriod.snapshot());
+        agentBusinessMetrics.setErrorlogssendfailedcount(errorLogsSendFailedCount.snapshot());
+
         return agentBusinessMetrics;
     }
 
@@ -501,6 +509,10 @@ public class AgentStatistics extends AbstractStatistics {
 
     public void sendErrorLogsRecord() {
         this.errorLogsCountPerPeriod.incr();
+    }
+
+    public void sendErrorLogsFailedRecord() {
+        this.errorLogsSendFailedCount.incr();
     }
 
 }
