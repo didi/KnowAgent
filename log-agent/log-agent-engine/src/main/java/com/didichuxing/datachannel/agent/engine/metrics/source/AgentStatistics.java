@@ -318,6 +318,18 @@ public class AgentStatistics extends AbstractStatistics {
             diskIOMetrics.setSystemioutil75quantile(diskIOInfo.getiOUtil().getQuantile75());
             diskIOMetrics.setSystemioutil95quantile(diskIOInfo.getiOUtil().getQuantile95());
             diskIOMetrics.setSystemioutil99quantile(diskIOInfo.getiOUtil().getQuantile99());
+            diskIOMetrics.setSystemioavgqusz(diskIOInfo.getiOAvgQuSz().getLast());
+            diskIOMetrics.setSystemioavgquszmin(diskIOInfo.getiOAvgQuSz().getMin());
+            diskIOMetrics.setSystemioavgquszmax(diskIOInfo.getiOAvgQuSz().getMax());
+            diskIOMetrics.setSystemioavgquszmean(diskIOInfo.getiOAvgQuSz().getAvg());
+            diskIOMetrics.setSystemioavgquszstd(diskIOInfo.getiOAvgQuSz().getStdDev());
+            diskIOMetrics.setSystemioavgqusz55quantile(diskIOInfo.getiOAvgQuSz().getQuantile55());
+            diskIOMetrics.setSystemioavgqusz75quantile(diskIOInfo.getiOAvgQuSz().getQuantile75());
+            diskIOMetrics.setSystemioavgqusz95quantile(diskIOInfo.getiOAvgQuSz().getQuantile95());
+            diskIOMetrics.setSystemioavgqusz99quantile(diskIOInfo.getiOAvgQuSz().getQuantile99());
+            diskIOMetrics.setSystemioavgrqsz(diskIOInfo.getiOAvgRqSz().getLast());
+
+
             diskIOMetricsList.add(diskIOMetrics);
         }
         return diskIOMetricsList;
