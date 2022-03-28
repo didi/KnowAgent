@@ -18,6 +18,7 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxNetCardMetricsServiceImpl.class);
 
     private Map<String, PeriodStatistics> sendBytesPs = new HashMap<>();
+    private Map<String, PeriodStatistics> receiveBytesPs = new HashMap<>();
 
     private static LinuxNetCardMetricsServiceImpl instance;
 
@@ -75,7 +76,61 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Map<String, PeriodStatistics> getReceiveBytesPs() {
-        return null;
+        for (PeriodStatistics value : receiveBytesPs.values()) {
+            value.snapshot();
+        }
+        return receiveBytesPs;
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcReceiveBytesPs() {
+        Map<String, Double> device2ReceiveBytesPsMap = getReceiveBytesPsOnly();
+        for (Map.Entry<String, Double> entry : device2ReceiveBytesPsMap.entrySet()) {
+            String device = entry.getKey();
+            Double value = entry.getValue();
+            if(this.receiveBytesPs.containsKey(device)) {
+                this.receiveBytesPs.get(device).add(value);
+            } else {
+                PeriodStatistics sendBytesPsPeriodStatistics = new PeriodStatistics();
+                sendBytesPsPeriodStatistics.add(value);
+                this.receiveBytesPs.put(device, sendBytesPsPeriodStatistics);
+            }
+        }
+    }
+
+    private Map<String, Double> getReceiveBytesPsOnly() {
+        List<String> lines = getOutputByCmd("sar -n DEV 1 1", "获取各网卡下行流量", null);
+        if(CollectionUtils.isNotEmpty(lines)) {
+            int startIndex = -1;
+            for (int i = 0; i < lines.size(); i++) {
+                if(lines.get(i).contains("IFACE")) {
+                    startIndex = i + 1;
+                }
+            }
+            if(startIndex == -1 || startIndex == lines.size() - 1) {
+                LOGGER.error(
+                        String.format(
+                                "class=LinuxNetCardMetricsServiceImpl||method=getReceiveBytesPsOnly||errMsg=获取网卡实时下行流量错误，网卡实时下行流量信息[%s]不符合预期格式",
+                                JSON.toJSONString(lines)
+                        )
+                );
+                return new HashMap<>();
+            } else {
+                Map<String, Double> result = new HashMap<>();
+                for (int i = startIndex; i < lines.size(); i++) {
+                    if(StringUtils.isNotBlank(lines.get(i))) {
+                        String[] infos = lines.get(i).split("\\s+");
+                        String device = infos[1];
+                        Double sendBytes = Double.valueOf(infos[4]) * 1024;
+                        result.put(device, sendBytes);
+                    }
+                }
+                return result;
+            }
+        } else {
+            LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getReceiveBytesPsOnly||errMsg=获取网卡实时下行流量错误，网卡实时下行流量为空");
+            return new HashMap<>();
+        }
     }
 
     @Override

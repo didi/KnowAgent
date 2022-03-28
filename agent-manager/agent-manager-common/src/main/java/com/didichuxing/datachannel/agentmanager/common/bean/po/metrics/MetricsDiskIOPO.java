@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.po.metrics;
 
 public class MetricsDiskIOPO {
+
     private Long id;
 
     private String hostname;
@@ -43,113 +44,113 @@ public class MetricsDiskIOPO {
 
     private Double systemioavgrqsz99quantile;
 
-    private Long systemioawait;
+    private Double systemioawait;
 
-    private Long systemioawaitmin;
+    private Double systemioawaitmin;
 
-    private Long systemioawaitmax;
+    private Double systemioawaitmax;
 
     private Double systemioawaitmean;
 
     private Double systemioawaitstd;
 
-    private Long systemioawait55quantile;
+    private Double systemioawait55quantile;
 
-    private Long systemioawait75quantile;
+    private Double systemioawait75quantile;
 
-    private Long systemioawait95quantile;
+    private Double systemioawait95quantile;
 
-    private Long systemioawait99quantile;
+    private Double systemioawait99quantile;
 
-    private Long systemiorawait;
+    private Double systemiorawait;
 
-    private Long systemiorawaitmin;
+    private Double systemiorawaitmin;
 
-    private Long systemiorawaitmax;
+    private Double systemiorawaitmax;
 
     private Double systemiorawaitmean;
 
     private Double systemiorawaitstd;
 
-    private Long systemiorawait55quantile;
+    private Double systemiorawait55quantile;
 
-    private Long systemiorawait75quantile;
+    private Double systemiorawait75quantile;
 
-    private Long systemiorawait95quantile;
+    private Double systemiorawait95quantile;
 
-    private Long systemiorawait99quantile;
+    private Double systemiorawait99quantile;
 
-    private Long systemioreadrequest;
+    private Double systemioreadrequest;
 
-    private Long systemioreadrequestmin;
+    private Double systemioreadrequestmin;
 
-    private Long systemioreadrequestmax;
+    private Double systemioreadrequestmax;
 
     private Double systemioreadrequestmean;
 
     private Double systemioreadrequeststd;
 
-    private Long systemioreadrequest55quantile;
+    private Double systemioreadrequest55quantile;
 
-    private Long systemioreadrequest75quantile;
+    private Double systemioreadrequest75quantile;
 
-    private Long systemioreadrequest95quantile;
+    private Double systemioreadrequest95quantile;
 
-    private Long systemioreadrequest99quantile;
+    private Double systemioreadrequest99quantile;
 
-    private Long systemioreadbytes;
+    private Double systemioreadbytes;
 
-    private Long systemioreadbytesmin;
+    private Double systemioreadbytesmin;
 
-    private Long systemioreadbytesmax;
+    private Double systemioreadbytesmax;
 
     private Double systemioreadbytesmean;
 
     private Double systemioreadbytesstd;
 
-    private Long systemioreadbytes55quantile;
+    private Double systemioreadbytes55quantile;
 
-    private Long systemioreadbytes75quantile;
+    private Double systemioreadbytes75quantile;
 
-    private Long systemioreadbytes95quantile;
+    private Double systemioreadbytes95quantile;
 
-    private Long systemioreadbytes99quantile;
+    private Double systemioreadbytes99quantile;
 
-    private Long systemiorrqms;
+    private Double systemiorrqms;
 
-    private Long systemiorrqmsmin;
+    private Double systemiorrqmsmin;
 
-    private Long systemiorrqmsmax;
+    private Double systemiorrqmsmax;
 
     private Double systemiorrqmsmean;
 
     private Double systemiorrqmsstd;
 
-    private Long systemiorrqms55quantile;
+    private Double systemiorrqms55quantile;
 
-    private Long systemiorrqms75quantile;
+    private Double systemiorrqms75quantile;
 
-    private Long systemiorrqms95quantile;
+    private Double systemiorrqms95quantile;
 
-    private Long systemiorrqms99quantile;
+    private Double systemiorrqms99quantile;
 
-    private Long systemiosvctm;
+    private Double systemiosvctm;
 
-    private Long systemiosvctmmin;
+    private Double systemiosvctmmin;
 
-    private Long systemiosvctmmax;
+    private Double systemiosvctmmax;
 
     private Double systemiosvctmmean;
 
     private Double systemiosvctmstd;
 
-    private Long systemiosvctm55quantile;
+    private Double systemiosvctm55quantile;
 
-    private Long systemiosvctm75quantile;
+    private Double systemiosvctm75quantile;
 
-    private Long systemiosvctm95quantile;
+    private Double systemiosvctm95quantile;
 
-    private Long systemiosvctm99quantile;
+    private Double systemiosvctm99quantile;
 
     private Double systemioutil;
 
@@ -169,113 +170,113 @@ public class MetricsDiskIOPO {
 
     private Double systemioutil99quantile;
 
-    private Long systemiowawait;
+    private Double systemiowawait;
 
-    private Long systemiowawaitmin;
+    private Double systemiowawaitmin;
 
-    private Long systemiowawaitmax;
+    private Double systemiowawaitmax;
 
     private Double systemiowawaitmean;
 
     private Double systemiowawaitstd;
 
-    private Long systemiowawait55quantile;
+    private Double systemiowawait55quantile;
 
-    private Long systemiowawait75quantile;
+    private Double systemiowawait75quantile;
 
-    private Long systemiowawait95quantile;
+    private Double systemiowawait95quantile;
 
-    private Long systemiowawait99quantile;
+    private Double systemiowawait99quantile;
 
-    private Long systemiowriterequest;
+    private Double systemiowriterequest;
 
-    private Long systemiowriterequestmin;
+    private Double systemiowriterequestmin;
 
-    private Long systemiowriterequestmax;
+    private Double systemiowriterequestmax;
 
     private Double systemiowriterequestmean;
 
     private Double systemiowriterequeststd;
 
-    private Long systemiowriterequest55quantile;
+    private Double systemiowriterequest55quantile;
 
-    private Long systemiowriterequest75quantile;
+    private Double systemiowriterequest75quantile;
 
-    private Long systemiowriterequest95quantile;
+    private Double systemiowriterequest95quantile;
 
-    private Long systemiowriterequest99quantile;
+    private Double systemiowriterequest99quantile;
 
-    private Long systemiowritebytes;
+    private Double systemiowritebytes;
 
-    private Long systemiowritebytesmin;
+    private Double systemiowritebytesmin;
 
-    private Long systemiowritebytesmax;
+    private Double systemiowritebytesmax;
 
     private Double systemiowritebytesmean;
 
     private Double systemiowritebytesstd;
 
-    private Long systemiowritebytes55quantile;
+    private Double systemiowritebytes55quantile;
 
-    private Long systemiowritebytes75quantile;
+    private Double systemiowritebytes75quantile;
 
-    private Long systemiowritebytes95quantile;
+    private Double systemiowritebytes95quantile;
 
-    private Long systemiowritebytes99quantile;
+    private Double systemiowritebytes99quantile;
 
-    private Long systemioreadwritebytes;
+    private Double systemioreadwritebytes;
 
-    private Long systemioreadwritebytesmin;
+    private Double systemioreadwritebytesmin;
 
-    private Long systemioreadwritebytesmax;
+    private Double systemioreadwritebytesmax;
 
     private Double systemioreadwritebytesmean;
 
     private Double systemioreadwritebytesstd;
 
-    private Long systemioreadwritebytes55quantile;
+    private Double systemioreadwritebytes55quantile;
 
-    private Long systemioreadwritebytes75quantile;
+    private Double systemioreadwritebytes75quantile;
 
-    private Long systemioreadwritebytes95quantile;
+    private Double systemioreadwritebytes95quantile;
 
-    private Long systemioreadwritebytes99quantile;
+    private Double systemioreadwritebytes99quantile;
 
-    private Long systemiowrqms;
+    private Double systemiowrqms;
 
-    private Long systemiowrqmsmin;
+    private Double systemiowrqmsmin;
 
-    private Long systemiowrqmsmax;
+    private Double systemiowrqmsmax;
 
     private Double systemiowrqmsmean;
 
     private Double systemiowrqmsstd;
 
-    private Long systemiowrqms55quantile;
+    private Double systemiowrqms55quantile;
 
-    private Long systemiowrqms75quantile;
+    private Double systemiowrqms75quantile;
 
-    private Long systemiowrqms95quantile;
+    private Double systemiowrqms95quantile;
 
-    private Long systemiowrqms99quantile;
+    private Double systemiowrqms99quantile;
 
-    private Long systemdiskreadtime;
+    private Double systemdiskreadtime;
 
-    private Long systemdiskreadtimemin;
+    private Double systemdiskreadtimemin;
 
-    private Long systemdiskreadtimemax;
+    private Double systemdiskreadtimemax;
 
     private Double systemdiskreadtimemean;
 
     private Double systemdiskreadtimestd;
 
-    private Long systemdiskreadtime55quantile;
+    private Double systemdiskreadtime55quantile;
 
-    private Long systemdiskreadtime75quantile;
+    private Double systemdiskreadtime75quantile;
 
-    private Long systemdiskreadtime95quantile;
+    private Double systemdiskreadtime95quantile;
 
-    private Long systemdiskreadtime99quantile;
+    private Double systemdiskreadtime99quantile;
 
     private Double systemdiskreadtimepercent;
 
@@ -295,23 +296,23 @@ public class MetricsDiskIOPO {
 
     private Double systemdiskreadtimepercent99quantile;
 
-    private Long systemdiskwritetime;
+    private Double systemdiskwritetime;
 
-    private Long systemdiskwritetimemin;
+    private Double systemdiskwritetimemin;
 
-    private Long systemdiskwritetimemax;
+    private Double systemdiskwritetimemax;
 
     private Double systemdiskwritetimemean;
 
     private Double systemdiskwritetimestd;
 
-    private Long systemdiskwritetime55quantile;
+    private Double systemdiskwritetime55quantile;
 
-    private Long systemdiskwritetime75quantile;
+    private Double systemdiskwritetime75quantile;
 
-    private Long systemdiskwritetime95quantile;
+    private Double systemdiskwritetime95quantile;
 
-    private Long systemdiskwritetime99quantile;
+    private Double systemdiskwritetime99quantile;
 
     private Double systemdiskwritetimepercent;
 
@@ -338,14 +339,6 @@ public class MetricsDiskIOPO {
     private Long heartbeattimehour;
 
     private Long heartbeatTimeDay;
-
-    public Long getHeartbeatTimeDay() {
-        return heartbeatTimeDay;
-    }
-
-    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
-        this.heartbeatTimeDay = heartbeatTimeDay;
-    }
 
     public Long getId() {
         return id;
@@ -515,27 +508,27 @@ public class MetricsDiskIOPO {
         this.systemioavgrqsz99quantile = systemioavgrqsz99quantile;
     }
 
-    public Long getSystemioawait() {
+    public Double getSystemioawait() {
         return systemioawait;
     }
 
-    public void setSystemioawait(Long systemioawait) {
+    public void setSystemioawait(Double systemioawait) {
         this.systemioawait = systemioawait;
     }
 
-    public Long getSystemioawaitmin() {
+    public Double getSystemioawaitmin() {
         return systemioawaitmin;
     }
 
-    public void setSystemioawaitmin(Long systemioawaitmin) {
+    public void setSystemioawaitmin(Double systemioawaitmin) {
         this.systemioawaitmin = systemioawaitmin;
     }
 
-    public Long getSystemioawaitmax() {
+    public Double getSystemioawaitmax() {
         return systemioawaitmax;
     }
 
-    public void setSystemioawaitmax(Long systemioawaitmax) {
+    public void setSystemioawaitmax(Double systemioawaitmax) {
         this.systemioawaitmax = systemioawaitmax;
     }
 
@@ -555,59 +548,59 @@ public class MetricsDiskIOPO {
         this.systemioawaitstd = systemioawaitstd;
     }
 
-    public Long getSystemioawait55quantile() {
+    public Double getSystemioawait55quantile() {
         return systemioawait55quantile;
     }
 
-    public void setSystemioawait55quantile(Long systemioawait55quantile) {
+    public void setSystemioawait55quantile(Double systemioawait55quantile) {
         this.systemioawait55quantile = systemioawait55quantile;
     }
 
-    public Long getSystemioawait75quantile() {
+    public Double getSystemioawait75quantile() {
         return systemioawait75quantile;
     }
 
-    public void setSystemioawait75quantile(Long systemioawait75quantile) {
+    public void setSystemioawait75quantile(Double systemioawait75quantile) {
         this.systemioawait75quantile = systemioawait75quantile;
     }
 
-    public Long getSystemioawait95quantile() {
+    public Double getSystemioawait95quantile() {
         return systemioawait95quantile;
     }
 
-    public void setSystemioawait95quantile(Long systemioawait95quantile) {
+    public void setSystemioawait95quantile(Double systemioawait95quantile) {
         this.systemioawait95quantile = systemioawait95quantile;
     }
 
-    public Long getSystemioawait99quantile() {
+    public Double getSystemioawait99quantile() {
         return systemioawait99quantile;
     }
 
-    public void setSystemioawait99quantile(Long systemioawait99quantile) {
+    public void setSystemioawait99quantile(Double systemioawait99quantile) {
         this.systemioawait99quantile = systemioawait99quantile;
     }
 
-    public Long getSystemiorawait() {
+    public Double getSystemiorawait() {
         return systemiorawait;
     }
 
-    public void setSystemiorawait(Long systemiorawait) {
+    public void setSystemiorawait(Double systemiorawait) {
         this.systemiorawait = systemiorawait;
     }
 
-    public Long getSystemiorawaitmin() {
+    public Double getSystemiorawaitmin() {
         return systemiorawaitmin;
     }
 
-    public void setSystemiorawaitmin(Long systemiorawaitmin) {
+    public void setSystemiorawaitmin(Double systemiorawaitmin) {
         this.systemiorawaitmin = systemiorawaitmin;
     }
 
-    public Long getSystemiorawaitmax() {
+    public Double getSystemiorawaitmax() {
         return systemiorawaitmax;
     }
 
-    public void setSystemiorawaitmax(Long systemiorawaitmax) {
+    public void setSystemiorawaitmax(Double systemiorawaitmax) {
         this.systemiorawaitmax = systemiorawaitmax;
     }
 
@@ -627,59 +620,59 @@ public class MetricsDiskIOPO {
         this.systemiorawaitstd = systemiorawaitstd;
     }
 
-    public Long getSystemiorawait55quantile() {
+    public Double getSystemiorawait55quantile() {
         return systemiorawait55quantile;
     }
 
-    public void setSystemiorawait55quantile(Long systemiorawait55quantile) {
+    public void setSystemiorawait55quantile(Double systemiorawait55quantile) {
         this.systemiorawait55quantile = systemiorawait55quantile;
     }
 
-    public Long getSystemiorawait75quantile() {
+    public Double getSystemiorawait75quantile() {
         return systemiorawait75quantile;
     }
 
-    public void setSystemiorawait75quantile(Long systemiorawait75quantile) {
+    public void setSystemiorawait75quantile(Double systemiorawait75quantile) {
         this.systemiorawait75quantile = systemiorawait75quantile;
     }
 
-    public Long getSystemiorawait95quantile() {
+    public Double getSystemiorawait95quantile() {
         return systemiorawait95quantile;
     }
 
-    public void setSystemiorawait95quantile(Long systemiorawait95quantile) {
+    public void setSystemiorawait95quantile(Double systemiorawait95quantile) {
         this.systemiorawait95quantile = systemiorawait95quantile;
     }
 
-    public Long getSystemiorawait99quantile() {
+    public Double getSystemiorawait99quantile() {
         return systemiorawait99quantile;
     }
 
-    public void setSystemiorawait99quantile(Long systemiorawait99quantile) {
+    public void setSystemiorawait99quantile(Double systemiorawait99quantile) {
         this.systemiorawait99quantile = systemiorawait99quantile;
     }
 
-    public Long getSystemioreadrequest() {
+    public Double getSystemioreadrequest() {
         return systemioreadrequest;
     }
 
-    public void setSystemioreadrequest(Long systemioreadrequest) {
+    public void setSystemioreadrequest(Double systemioreadrequest) {
         this.systemioreadrequest = systemioreadrequest;
     }
 
-    public Long getSystemioreadrequestmin() {
+    public Double getSystemioreadrequestmin() {
         return systemioreadrequestmin;
     }
 
-    public void setSystemioreadrequestmin(Long systemioreadrequestmin) {
+    public void setSystemioreadrequestmin(Double systemioreadrequestmin) {
         this.systemioreadrequestmin = systemioreadrequestmin;
     }
 
-    public Long getSystemioreadrequestmax() {
+    public Double getSystemioreadrequestmax() {
         return systemioreadrequestmax;
     }
 
-    public void setSystemioreadrequestmax(Long systemioreadrequestmax) {
+    public void setSystemioreadrequestmax(Double systemioreadrequestmax) {
         this.systemioreadrequestmax = systemioreadrequestmax;
     }
 
@@ -699,59 +692,59 @@ public class MetricsDiskIOPO {
         this.systemioreadrequeststd = systemioreadrequeststd;
     }
 
-    public Long getSystemioreadrequest55quantile() {
+    public Double getSystemioreadrequest55quantile() {
         return systemioreadrequest55quantile;
     }
 
-    public void setSystemioreadrequest55quantile(Long systemioreadrequest55quantile) {
+    public void setSystemioreadrequest55quantile(Double systemioreadrequest55quantile) {
         this.systemioreadrequest55quantile = systemioreadrequest55quantile;
     }
 
-    public Long getSystemioreadrequest75quantile() {
+    public Double getSystemioreadrequest75quantile() {
         return systemioreadrequest75quantile;
     }
 
-    public void setSystemioreadrequest75quantile(Long systemioreadrequest75quantile) {
+    public void setSystemioreadrequest75quantile(Double systemioreadrequest75quantile) {
         this.systemioreadrequest75quantile = systemioreadrequest75quantile;
     }
 
-    public Long getSystemioreadrequest95quantile() {
+    public Double getSystemioreadrequest95quantile() {
         return systemioreadrequest95quantile;
     }
 
-    public void setSystemioreadrequest95quantile(Long systemioreadrequest95quantile) {
+    public void setSystemioreadrequest95quantile(Double systemioreadrequest95quantile) {
         this.systemioreadrequest95quantile = systemioreadrequest95quantile;
     }
 
-    public Long getSystemioreadrequest99quantile() {
+    public Double getSystemioreadrequest99quantile() {
         return systemioreadrequest99quantile;
     }
 
-    public void setSystemioreadrequest99quantile(Long systemioreadrequest99quantile) {
+    public void setSystemioreadrequest99quantile(Double systemioreadrequest99quantile) {
         this.systemioreadrequest99quantile = systemioreadrequest99quantile;
     }
 
-    public Long getSystemioreadbytes() {
+    public Double getSystemioreadbytes() {
         return systemioreadbytes;
     }
 
-    public void setSystemioreadbytes(Long systemioreadbytes) {
+    public void setSystemioreadbytes(Double systemioreadbytes) {
         this.systemioreadbytes = systemioreadbytes;
     }
 
-    public Long getSystemioreadbytesmin() {
+    public Double getSystemioreadbytesmin() {
         return systemioreadbytesmin;
     }
 
-    public void setSystemioreadbytesmin(Long systemioreadbytesmin) {
+    public void setSystemioreadbytesmin(Double systemioreadbytesmin) {
         this.systemioreadbytesmin = systemioreadbytesmin;
     }
 
-    public Long getSystemioreadbytesmax() {
+    public Double getSystemioreadbytesmax() {
         return systemioreadbytesmax;
     }
 
-    public void setSystemioreadbytesmax(Long systemioreadbytesmax) {
+    public void setSystemioreadbytesmax(Double systemioreadbytesmax) {
         this.systemioreadbytesmax = systemioreadbytesmax;
     }
 
@@ -771,59 +764,59 @@ public class MetricsDiskIOPO {
         this.systemioreadbytesstd = systemioreadbytesstd;
     }
 
-    public Long getSystemioreadbytes55quantile() {
+    public Double getSystemioreadbytes55quantile() {
         return systemioreadbytes55quantile;
     }
 
-    public void setSystemioreadbytes55quantile(Long systemioreadbytes55quantile) {
+    public void setSystemioreadbytes55quantile(Double systemioreadbytes55quantile) {
         this.systemioreadbytes55quantile = systemioreadbytes55quantile;
     }
 
-    public Long getSystemioreadbytes75quantile() {
+    public Double getSystemioreadbytes75quantile() {
         return systemioreadbytes75quantile;
     }
 
-    public void setSystemioreadbytes75quantile(Long systemioreadbytes75quantile) {
+    public void setSystemioreadbytes75quantile(Double systemioreadbytes75quantile) {
         this.systemioreadbytes75quantile = systemioreadbytes75quantile;
     }
 
-    public Long getSystemioreadbytes95quantile() {
+    public Double getSystemioreadbytes95quantile() {
         return systemioreadbytes95quantile;
     }
 
-    public void setSystemioreadbytes95quantile(Long systemioreadbytes95quantile) {
+    public void setSystemioreadbytes95quantile(Double systemioreadbytes95quantile) {
         this.systemioreadbytes95quantile = systemioreadbytes95quantile;
     }
 
-    public Long getSystemioreadbytes99quantile() {
+    public Double getSystemioreadbytes99quantile() {
         return systemioreadbytes99quantile;
     }
 
-    public void setSystemioreadbytes99quantile(Long systemioreadbytes99quantile) {
+    public void setSystemioreadbytes99quantile(Double systemioreadbytes99quantile) {
         this.systemioreadbytes99quantile = systemioreadbytes99quantile;
     }
 
-    public Long getSystemiorrqms() {
+    public Double getSystemiorrqms() {
         return systemiorrqms;
     }
 
-    public void setSystemiorrqms(Long systemiorrqms) {
+    public void setSystemiorrqms(Double systemiorrqms) {
         this.systemiorrqms = systemiorrqms;
     }
 
-    public Long getSystemiorrqmsmin() {
+    public Double getSystemiorrqmsmin() {
         return systemiorrqmsmin;
     }
 
-    public void setSystemiorrqmsmin(Long systemiorrqmsmin) {
+    public void setSystemiorrqmsmin(Double systemiorrqmsmin) {
         this.systemiorrqmsmin = systemiorrqmsmin;
     }
 
-    public Long getSystemiorrqmsmax() {
+    public Double getSystemiorrqmsmax() {
         return systemiorrqmsmax;
     }
 
-    public void setSystemiorrqmsmax(Long systemiorrqmsmax) {
+    public void setSystemiorrqmsmax(Double systemiorrqmsmax) {
         this.systemiorrqmsmax = systemiorrqmsmax;
     }
 
@@ -843,59 +836,59 @@ public class MetricsDiskIOPO {
         this.systemiorrqmsstd = systemiorrqmsstd;
     }
 
-    public Long getSystemiorrqms55quantile() {
+    public Double getSystemiorrqms55quantile() {
         return systemiorrqms55quantile;
     }
 
-    public void setSystemiorrqms55quantile(Long systemiorrqms55quantile) {
+    public void setSystemiorrqms55quantile(Double systemiorrqms55quantile) {
         this.systemiorrqms55quantile = systemiorrqms55quantile;
     }
 
-    public Long getSystemiorrqms75quantile() {
+    public Double getSystemiorrqms75quantile() {
         return systemiorrqms75quantile;
     }
 
-    public void setSystemiorrqms75quantile(Long systemiorrqms75quantile) {
+    public void setSystemiorrqms75quantile(Double systemiorrqms75quantile) {
         this.systemiorrqms75quantile = systemiorrqms75quantile;
     }
 
-    public Long getSystemiorrqms95quantile() {
+    public Double getSystemiorrqms95quantile() {
         return systemiorrqms95quantile;
     }
 
-    public void setSystemiorrqms95quantile(Long systemiorrqms95quantile) {
+    public void setSystemiorrqms95quantile(Double systemiorrqms95quantile) {
         this.systemiorrqms95quantile = systemiorrqms95quantile;
     }
 
-    public Long getSystemiorrqms99quantile() {
+    public Double getSystemiorrqms99quantile() {
         return systemiorrqms99quantile;
     }
 
-    public void setSystemiorrqms99quantile(Long systemiorrqms99quantile) {
+    public void setSystemiorrqms99quantile(Double systemiorrqms99quantile) {
         this.systemiorrqms99quantile = systemiorrqms99quantile;
     }
 
-    public Long getSystemiosvctm() {
+    public Double getSystemiosvctm() {
         return systemiosvctm;
     }
 
-    public void setSystemiosvctm(Long systemiosvctm) {
+    public void setSystemiosvctm(Double systemiosvctm) {
         this.systemiosvctm = systemiosvctm;
     }
 
-    public Long getSystemiosvctmmin() {
+    public Double getSystemiosvctmmin() {
         return systemiosvctmmin;
     }
 
-    public void setSystemiosvctmmin(Long systemiosvctmmin) {
+    public void setSystemiosvctmmin(Double systemiosvctmmin) {
         this.systemiosvctmmin = systemiosvctmmin;
     }
 
-    public Long getSystemiosvctmmax() {
+    public Double getSystemiosvctmmax() {
         return systemiosvctmmax;
     }
 
-    public void setSystemiosvctmmax(Long systemiosvctmmax) {
+    public void setSystemiosvctmmax(Double systemiosvctmmax) {
         this.systemiosvctmmax = systemiosvctmmax;
     }
 
@@ -915,35 +908,35 @@ public class MetricsDiskIOPO {
         this.systemiosvctmstd = systemiosvctmstd;
     }
 
-    public Long getSystemiosvctm55quantile() {
+    public Double getSystemiosvctm55quantile() {
         return systemiosvctm55quantile;
     }
 
-    public void setSystemiosvctm55quantile(Long systemiosvctm55quantile) {
+    public void setSystemiosvctm55quantile(Double systemiosvctm55quantile) {
         this.systemiosvctm55quantile = systemiosvctm55quantile;
     }
 
-    public Long getSystemiosvctm75quantile() {
+    public Double getSystemiosvctm75quantile() {
         return systemiosvctm75quantile;
     }
 
-    public void setSystemiosvctm75quantile(Long systemiosvctm75quantile) {
+    public void setSystemiosvctm75quantile(Double systemiosvctm75quantile) {
         this.systemiosvctm75quantile = systemiosvctm75quantile;
     }
 
-    public Long getSystemiosvctm95quantile() {
+    public Double getSystemiosvctm95quantile() {
         return systemiosvctm95quantile;
     }
 
-    public void setSystemiosvctm95quantile(Long systemiosvctm95quantile) {
+    public void setSystemiosvctm95quantile(Double systemiosvctm95quantile) {
         this.systemiosvctm95quantile = systemiosvctm95quantile;
     }
 
-    public Long getSystemiosvctm99quantile() {
+    public Double getSystemiosvctm99quantile() {
         return systemiosvctm99quantile;
     }
 
-    public void setSystemiosvctm99quantile(Long systemiosvctm99quantile) {
+    public void setSystemiosvctm99quantile(Double systemiosvctm99quantile) {
         this.systemiosvctm99quantile = systemiosvctm99quantile;
     }
 
@@ -1019,27 +1012,27 @@ public class MetricsDiskIOPO {
         this.systemioutil99quantile = systemioutil99quantile;
     }
 
-    public Long getSystemiowawait() {
+    public Double getSystemiowawait() {
         return systemiowawait;
     }
 
-    public void setSystemiowawait(Long systemiowawait) {
+    public void setSystemiowawait(Double systemiowawait) {
         this.systemiowawait = systemiowawait;
     }
 
-    public Long getSystemiowawaitmin() {
+    public Double getSystemiowawaitmin() {
         return systemiowawaitmin;
     }
 
-    public void setSystemiowawaitmin(Long systemiowawaitmin) {
+    public void setSystemiowawaitmin(Double systemiowawaitmin) {
         this.systemiowawaitmin = systemiowawaitmin;
     }
 
-    public Long getSystemiowawaitmax() {
+    public Double getSystemiowawaitmax() {
         return systemiowawaitmax;
     }
 
-    public void setSystemiowawaitmax(Long systemiowawaitmax) {
+    public void setSystemiowawaitmax(Double systemiowawaitmax) {
         this.systemiowawaitmax = systemiowawaitmax;
     }
 
@@ -1059,59 +1052,59 @@ public class MetricsDiskIOPO {
         this.systemiowawaitstd = systemiowawaitstd;
     }
 
-    public Long getSystemiowawait55quantile() {
+    public Double getSystemiowawait55quantile() {
         return systemiowawait55quantile;
     }
 
-    public void setSystemiowawait55quantile(Long systemiowawait55quantile) {
+    public void setSystemiowawait55quantile(Double systemiowawait55quantile) {
         this.systemiowawait55quantile = systemiowawait55quantile;
     }
 
-    public Long getSystemiowawait75quantile() {
+    public Double getSystemiowawait75quantile() {
         return systemiowawait75quantile;
     }
 
-    public void setSystemiowawait75quantile(Long systemiowawait75quantile) {
+    public void setSystemiowawait75quantile(Double systemiowawait75quantile) {
         this.systemiowawait75quantile = systemiowawait75quantile;
     }
 
-    public Long getSystemiowawait95quantile() {
+    public Double getSystemiowawait95quantile() {
         return systemiowawait95quantile;
     }
 
-    public void setSystemiowawait95quantile(Long systemiowawait95quantile) {
+    public void setSystemiowawait95quantile(Double systemiowawait95quantile) {
         this.systemiowawait95quantile = systemiowawait95quantile;
     }
 
-    public Long getSystemiowawait99quantile() {
+    public Double getSystemiowawait99quantile() {
         return systemiowawait99quantile;
     }
 
-    public void setSystemiowawait99quantile(Long systemiowawait99quantile) {
+    public void setSystemiowawait99quantile(Double systemiowawait99quantile) {
         this.systemiowawait99quantile = systemiowawait99quantile;
     }
 
-    public Long getSystemiowriterequest() {
+    public Double getSystemiowriterequest() {
         return systemiowriterequest;
     }
 
-    public void setSystemiowriterequest(Long systemiowriterequest) {
+    public void setSystemiowriterequest(Double systemiowriterequest) {
         this.systemiowriterequest = systemiowriterequest;
     }
 
-    public Long getSystemiowriterequestmin() {
+    public Double getSystemiowriterequestmin() {
         return systemiowriterequestmin;
     }
 
-    public void setSystemiowriterequestmin(Long systemiowriterequestmin) {
+    public void setSystemiowriterequestmin(Double systemiowriterequestmin) {
         this.systemiowriterequestmin = systemiowriterequestmin;
     }
 
-    public Long getSystemiowriterequestmax() {
+    public Double getSystemiowriterequestmax() {
         return systemiowriterequestmax;
     }
 
-    public void setSystemiowriterequestmax(Long systemiowriterequestmax) {
+    public void setSystemiowriterequestmax(Double systemiowriterequestmax) {
         this.systemiowriterequestmax = systemiowriterequestmax;
     }
 
@@ -1131,59 +1124,59 @@ public class MetricsDiskIOPO {
         this.systemiowriterequeststd = systemiowriterequeststd;
     }
 
-    public Long getSystemiowriterequest55quantile() {
+    public Double getSystemiowriterequest55quantile() {
         return systemiowriterequest55quantile;
     }
 
-    public void setSystemiowriterequest55quantile(Long systemiowriterequest55quantile) {
+    public void setSystemiowriterequest55quantile(Double systemiowriterequest55quantile) {
         this.systemiowriterequest55quantile = systemiowriterequest55quantile;
     }
 
-    public Long getSystemiowriterequest75quantile() {
+    public Double getSystemiowriterequest75quantile() {
         return systemiowriterequest75quantile;
     }
 
-    public void setSystemiowriterequest75quantile(Long systemiowriterequest75quantile) {
+    public void setSystemiowriterequest75quantile(Double systemiowriterequest75quantile) {
         this.systemiowriterequest75quantile = systemiowriterequest75quantile;
     }
 
-    public Long getSystemiowriterequest95quantile() {
+    public Double getSystemiowriterequest95quantile() {
         return systemiowriterequest95quantile;
     }
 
-    public void setSystemiowriterequest95quantile(Long systemiowriterequest95quantile) {
+    public void setSystemiowriterequest95quantile(Double systemiowriterequest95quantile) {
         this.systemiowriterequest95quantile = systemiowriterequest95quantile;
     }
 
-    public Long getSystemiowriterequest99quantile() {
+    public Double getSystemiowriterequest99quantile() {
         return systemiowriterequest99quantile;
     }
 
-    public void setSystemiowriterequest99quantile(Long systemiowriterequest99quantile) {
+    public void setSystemiowriterequest99quantile(Double systemiowriterequest99quantile) {
         this.systemiowriterequest99quantile = systemiowriterequest99quantile;
     }
 
-    public Long getSystemiowritebytes() {
+    public Double getSystemiowritebytes() {
         return systemiowritebytes;
     }
 
-    public void setSystemiowritebytes(Long systemiowritebytes) {
+    public void setSystemiowritebytes(Double systemiowritebytes) {
         this.systemiowritebytes = systemiowritebytes;
     }
 
-    public Long getSystemiowritebytesmin() {
+    public Double getSystemiowritebytesmin() {
         return systemiowritebytesmin;
     }
 
-    public void setSystemiowritebytesmin(Long systemiowritebytesmin) {
+    public void setSystemiowritebytesmin(Double systemiowritebytesmin) {
         this.systemiowritebytesmin = systemiowritebytesmin;
     }
 
-    public Long getSystemiowritebytesmax() {
+    public Double getSystemiowritebytesmax() {
         return systemiowritebytesmax;
     }
 
-    public void setSystemiowritebytesmax(Long systemiowritebytesmax) {
+    public void setSystemiowritebytesmax(Double systemiowritebytesmax) {
         this.systemiowritebytesmax = systemiowritebytesmax;
     }
 
@@ -1203,59 +1196,59 @@ public class MetricsDiskIOPO {
         this.systemiowritebytesstd = systemiowritebytesstd;
     }
 
-    public Long getSystemiowritebytes55quantile() {
+    public Double getSystemiowritebytes55quantile() {
         return systemiowritebytes55quantile;
     }
 
-    public void setSystemiowritebytes55quantile(Long systemiowritebytes55quantile) {
+    public void setSystemiowritebytes55quantile(Double systemiowritebytes55quantile) {
         this.systemiowritebytes55quantile = systemiowritebytes55quantile;
     }
 
-    public Long getSystemiowritebytes75quantile() {
+    public Double getSystemiowritebytes75quantile() {
         return systemiowritebytes75quantile;
     }
 
-    public void setSystemiowritebytes75quantile(Long systemiowritebytes75quantile) {
+    public void setSystemiowritebytes75quantile(Double systemiowritebytes75quantile) {
         this.systemiowritebytes75quantile = systemiowritebytes75quantile;
     }
 
-    public Long getSystemiowritebytes95quantile() {
+    public Double getSystemiowritebytes95quantile() {
         return systemiowritebytes95quantile;
     }
 
-    public void setSystemiowritebytes95quantile(Long systemiowritebytes95quantile) {
+    public void setSystemiowritebytes95quantile(Double systemiowritebytes95quantile) {
         this.systemiowritebytes95quantile = systemiowritebytes95quantile;
     }
 
-    public Long getSystemiowritebytes99quantile() {
+    public Double getSystemiowritebytes99quantile() {
         return systemiowritebytes99quantile;
     }
 
-    public void setSystemiowritebytes99quantile(Long systemiowritebytes99quantile) {
+    public void setSystemiowritebytes99quantile(Double systemiowritebytes99quantile) {
         this.systemiowritebytes99quantile = systemiowritebytes99quantile;
     }
 
-    public Long getSystemioreadwritebytes() {
+    public Double getSystemioreadwritebytes() {
         return systemioreadwritebytes;
     }
 
-    public void setSystemioreadwritebytes(Long systemioreadwritebytes) {
+    public void setSystemioreadwritebytes(Double systemioreadwritebytes) {
         this.systemioreadwritebytes = systemioreadwritebytes;
     }
 
-    public Long getSystemioreadwritebytesmin() {
+    public Double getSystemioreadwritebytesmin() {
         return systemioreadwritebytesmin;
     }
 
-    public void setSystemioreadwritebytesmin(Long systemioreadwritebytesmin) {
+    public void setSystemioreadwritebytesmin(Double systemioreadwritebytesmin) {
         this.systemioreadwritebytesmin = systemioreadwritebytesmin;
     }
 
-    public Long getSystemioreadwritebytesmax() {
+    public Double getSystemioreadwritebytesmax() {
         return systemioreadwritebytesmax;
     }
 
-    public void setSystemioreadwritebytesmax(Long systemioreadwritebytesmax) {
+    public void setSystemioreadwritebytesmax(Double systemioreadwritebytesmax) {
         this.systemioreadwritebytesmax = systemioreadwritebytesmax;
     }
 
@@ -1275,59 +1268,59 @@ public class MetricsDiskIOPO {
         this.systemioreadwritebytesstd = systemioreadwritebytesstd;
     }
 
-    public Long getSystemioreadwritebytes55quantile() {
+    public Double getSystemioreadwritebytes55quantile() {
         return systemioreadwritebytes55quantile;
     }
 
-    public void setSystemioreadwritebytes55quantile(Long systemioreadwritebytes55quantile) {
+    public void setSystemioreadwritebytes55quantile(Double systemioreadwritebytes55quantile) {
         this.systemioreadwritebytes55quantile = systemioreadwritebytes55quantile;
     }
 
-    public Long getSystemioreadwritebytes75quantile() {
+    public Double getSystemioreadwritebytes75quantile() {
         return systemioreadwritebytes75quantile;
     }
 
-    public void setSystemioreadwritebytes75quantile(Long systemioreadwritebytes75quantile) {
+    public void setSystemioreadwritebytes75quantile(Double systemioreadwritebytes75quantile) {
         this.systemioreadwritebytes75quantile = systemioreadwritebytes75quantile;
     }
 
-    public Long getSystemioreadwritebytes95quantile() {
+    public Double getSystemioreadwritebytes95quantile() {
         return systemioreadwritebytes95quantile;
     }
 
-    public void setSystemioreadwritebytes95quantile(Long systemioreadwritebytes95quantile) {
+    public void setSystemioreadwritebytes95quantile(Double systemioreadwritebytes95quantile) {
         this.systemioreadwritebytes95quantile = systemioreadwritebytes95quantile;
     }
 
-    public Long getSystemioreadwritebytes99quantile() {
+    public Double getSystemioreadwritebytes99quantile() {
         return systemioreadwritebytes99quantile;
     }
 
-    public void setSystemioreadwritebytes99quantile(Long systemioreadwritebytes99quantile) {
+    public void setSystemioreadwritebytes99quantile(Double systemioreadwritebytes99quantile) {
         this.systemioreadwritebytes99quantile = systemioreadwritebytes99quantile;
     }
 
-    public Long getSystemiowrqms() {
+    public Double getSystemiowrqms() {
         return systemiowrqms;
     }
 
-    public void setSystemiowrqms(Long systemiowrqms) {
+    public void setSystemiowrqms(Double systemiowrqms) {
         this.systemiowrqms = systemiowrqms;
     }
 
-    public Long getSystemiowrqmsmin() {
+    public Double getSystemiowrqmsmin() {
         return systemiowrqmsmin;
     }
 
-    public void setSystemiowrqmsmin(Long systemiowrqmsmin) {
+    public void setSystemiowrqmsmin(Double systemiowrqmsmin) {
         this.systemiowrqmsmin = systemiowrqmsmin;
     }
 
-    public Long getSystemiowrqmsmax() {
+    public Double getSystemiowrqmsmax() {
         return systemiowrqmsmax;
     }
 
-    public void setSystemiowrqmsmax(Long systemiowrqmsmax) {
+    public void setSystemiowrqmsmax(Double systemiowrqmsmax) {
         this.systemiowrqmsmax = systemiowrqmsmax;
     }
 
@@ -1347,59 +1340,59 @@ public class MetricsDiskIOPO {
         this.systemiowrqmsstd = systemiowrqmsstd;
     }
 
-    public Long getSystemiowrqms55quantile() {
+    public Double getSystemiowrqms55quantile() {
         return systemiowrqms55quantile;
     }
 
-    public void setSystemiowrqms55quantile(Long systemiowrqms55quantile) {
+    public void setSystemiowrqms55quantile(Double systemiowrqms55quantile) {
         this.systemiowrqms55quantile = systemiowrqms55quantile;
     }
 
-    public Long getSystemiowrqms75quantile() {
+    public Double getSystemiowrqms75quantile() {
         return systemiowrqms75quantile;
     }
 
-    public void setSystemiowrqms75quantile(Long systemiowrqms75quantile) {
+    public void setSystemiowrqms75quantile(Double systemiowrqms75quantile) {
         this.systemiowrqms75quantile = systemiowrqms75quantile;
     }
 
-    public Long getSystemiowrqms95quantile() {
+    public Double getSystemiowrqms95quantile() {
         return systemiowrqms95quantile;
     }
 
-    public void setSystemiowrqms95quantile(Long systemiowrqms95quantile) {
+    public void setSystemiowrqms95quantile(Double systemiowrqms95quantile) {
         this.systemiowrqms95quantile = systemiowrqms95quantile;
     }
 
-    public Long getSystemiowrqms99quantile() {
+    public Double getSystemiowrqms99quantile() {
         return systemiowrqms99quantile;
     }
 
-    public void setSystemiowrqms99quantile(Long systemiowrqms99quantile) {
+    public void setSystemiowrqms99quantile(Double systemiowrqms99quantile) {
         this.systemiowrqms99quantile = systemiowrqms99quantile;
     }
 
-    public Long getSystemdiskreadtime() {
+    public Double getSystemdiskreadtime() {
         return systemdiskreadtime;
     }
 
-    public void setSystemdiskreadtime(Long systemdiskreadtime) {
+    public void setSystemdiskreadtime(Double systemdiskreadtime) {
         this.systemdiskreadtime = systemdiskreadtime;
     }
 
-    public Long getSystemdiskreadtimemin() {
+    public Double getSystemdiskreadtimemin() {
         return systemdiskreadtimemin;
     }
 
-    public void setSystemdiskreadtimemin(Long systemdiskreadtimemin) {
+    public void setSystemdiskreadtimemin(Double systemdiskreadtimemin) {
         this.systemdiskreadtimemin = systemdiskreadtimemin;
     }
 
-    public Long getSystemdiskreadtimemax() {
+    public Double getSystemdiskreadtimemax() {
         return systemdiskreadtimemax;
     }
 
-    public void setSystemdiskreadtimemax(Long systemdiskreadtimemax) {
+    public void setSystemdiskreadtimemax(Double systemdiskreadtimemax) {
         this.systemdiskreadtimemax = systemdiskreadtimemax;
     }
 
@@ -1419,35 +1412,35 @@ public class MetricsDiskIOPO {
         this.systemdiskreadtimestd = systemdiskreadtimestd;
     }
 
-    public Long getSystemdiskreadtime55quantile() {
+    public Double getSystemdiskreadtime55quantile() {
         return systemdiskreadtime55quantile;
     }
 
-    public void setSystemdiskreadtime55quantile(Long systemdiskreadtime55quantile) {
+    public void setSystemdiskreadtime55quantile(Double systemdiskreadtime55quantile) {
         this.systemdiskreadtime55quantile = systemdiskreadtime55quantile;
     }
 
-    public Long getSystemdiskreadtime75quantile() {
+    public Double getSystemdiskreadtime75quantile() {
         return systemdiskreadtime75quantile;
     }
 
-    public void setSystemdiskreadtime75quantile(Long systemdiskreadtime75quantile) {
+    public void setSystemdiskreadtime75quantile(Double systemdiskreadtime75quantile) {
         this.systemdiskreadtime75quantile = systemdiskreadtime75quantile;
     }
 
-    public Long getSystemdiskreadtime95quantile() {
+    public Double getSystemdiskreadtime95quantile() {
         return systemdiskreadtime95quantile;
     }
 
-    public void setSystemdiskreadtime95quantile(Long systemdiskreadtime95quantile) {
+    public void setSystemdiskreadtime95quantile(Double systemdiskreadtime95quantile) {
         this.systemdiskreadtime95quantile = systemdiskreadtime95quantile;
     }
 
-    public Long getSystemdiskreadtime99quantile() {
+    public Double getSystemdiskreadtime99quantile() {
         return systemdiskreadtime99quantile;
     }
 
-    public void setSystemdiskreadtime99quantile(Long systemdiskreadtime99quantile) {
+    public void setSystemdiskreadtime99quantile(Double systemdiskreadtime99quantile) {
         this.systemdiskreadtime99quantile = systemdiskreadtime99quantile;
     }
 
@@ -1523,27 +1516,27 @@ public class MetricsDiskIOPO {
         this.systemdiskreadtimepercent99quantile = systemdiskreadtimepercent99quantile;
     }
 
-    public Long getSystemdiskwritetime() {
+    public Double getSystemdiskwritetime() {
         return systemdiskwritetime;
     }
 
-    public void setSystemdiskwritetime(Long systemdiskwritetime) {
+    public void setSystemdiskwritetime(Double systemdiskwritetime) {
         this.systemdiskwritetime = systemdiskwritetime;
     }
 
-    public Long getSystemdiskwritetimemin() {
+    public Double getSystemdiskwritetimemin() {
         return systemdiskwritetimemin;
     }
 
-    public void setSystemdiskwritetimemin(Long systemdiskwritetimemin) {
+    public void setSystemdiskwritetimemin(Double systemdiskwritetimemin) {
         this.systemdiskwritetimemin = systemdiskwritetimemin;
     }
 
-    public Long getSystemdiskwritetimemax() {
+    public Double getSystemdiskwritetimemax() {
         return systemdiskwritetimemax;
     }
 
-    public void setSystemdiskwritetimemax(Long systemdiskwritetimemax) {
+    public void setSystemdiskwritetimemax(Double systemdiskwritetimemax) {
         this.systemdiskwritetimemax = systemdiskwritetimemax;
     }
 
@@ -1563,35 +1556,35 @@ public class MetricsDiskIOPO {
         this.systemdiskwritetimestd = systemdiskwritetimestd;
     }
 
-    public Long getSystemdiskwritetime55quantile() {
+    public Double getSystemdiskwritetime55quantile() {
         return systemdiskwritetime55quantile;
     }
 
-    public void setSystemdiskwritetime55quantile(Long systemdiskwritetime55quantile) {
+    public void setSystemdiskwritetime55quantile(Double systemdiskwritetime55quantile) {
         this.systemdiskwritetime55quantile = systemdiskwritetime55quantile;
     }
 
-    public Long getSystemdiskwritetime75quantile() {
+    public Double getSystemdiskwritetime75quantile() {
         return systemdiskwritetime75quantile;
     }
 
-    public void setSystemdiskwritetime75quantile(Long systemdiskwritetime75quantile) {
+    public void setSystemdiskwritetime75quantile(Double systemdiskwritetime75quantile) {
         this.systemdiskwritetime75quantile = systemdiskwritetime75quantile;
     }
 
-    public Long getSystemdiskwritetime95quantile() {
+    public Double getSystemdiskwritetime95quantile() {
         return systemdiskwritetime95quantile;
     }
 
-    public void setSystemdiskwritetime95quantile(Long systemdiskwritetime95quantile) {
+    public void setSystemdiskwritetime95quantile(Double systemdiskwritetime95quantile) {
         this.systemdiskwritetime95quantile = systemdiskwritetime95quantile;
     }
 
-    public Long getSystemdiskwritetime99quantile() {
+    public Double getSystemdiskwritetime99quantile() {
         return systemdiskwritetime99quantile;
     }
 
-    public void setSystemdiskwritetime99quantile(Long systemdiskwritetime99quantile) {
+    public void setSystemdiskwritetime99quantile(Double systemdiskwritetime99quantile) {
         this.systemdiskwritetime99quantile = systemdiskwritetime99quantile;
     }
 
@@ -1691,4 +1684,11 @@ public class MetricsDiskIOPO {
         this.heartbeattimehour = heartbeattimehour;
     }
 
+    public Long getHeartbeatTimeDay() {
+        return heartbeatTimeDay;
+    }
+
+    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
+        this.heartbeatTimeDay = heartbeatTimeDay;
+    }
 }

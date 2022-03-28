@@ -428,61 +428,112 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             diskInfo.setFsType(fsType);
             diskInfo.setPath(path);
             diskInfo.setBytesFree(
-                    getDiskMetricValueByPath(diskMetricsService.getBytesFree(), path, "diskBytesFree", 0L)
+                    getMetricValueByKey(diskMetricsService.getBytesFree(), path, "diskBytesFree", 0L)
             );
             diskInfo.setBytesTotal(
-                    getDiskMetricValueByPath(diskMetricsService.getBytesTotal(), path, "diskBytesTotal", 0L)
+                    getMetricValueByKey(diskMetricsService.getBytesTotal(), path, "diskBytesTotal", 0L)
             );
             diskInfo.setBytesUsed(
-                    getDiskMetricValueByPath(diskMetricsService.getBytesUsed(), path, "diskBytesUsed", 0L)
+                    getMetricValueByKey(diskMetricsService.getBytesUsed(), path, "diskBytesUsed", 0L)
             );
             diskInfo.setBytesUsedPercent(
-                    getDiskMetricValueByPath(diskMetricsService.getBytesUsedPercent(), path, "diskBytesUsedPercent", 0d)
+                    getMetricValueByKey(diskMetricsService.getBytesUsedPercent(), path, "diskBytesUsedPercent", 0d)
             );
             diskInfo.setInodesTotal(
-                    getDiskMetricValueByPath(diskMetricsService.getInodesTotal(), path, "diskInodesTotal", 0)
+                    getMetricValueByKey(diskMetricsService.getInodesTotal(), path, "diskInodesTotal", 0)
             );
             diskInfo.setInodesFree(
-                    getDiskMetricValueByPath(diskMetricsService.getInodesFree(), path, "diskInodesFree", 0)
+                    getMetricValueByKey(diskMetricsService.getInodesFree(), path, "diskInodesFree", 0)
             );
             diskInfo.setInodesUsed(
-                    getDiskMetricValueByPath(diskMetricsService.getInodesUsed(), path, "diskInodesUsed", 0)
+                    getMetricValueByKey(diskMetricsService.getInodesUsed(), path, "diskInodesUsed", 0)
             );
             diskInfo.setInodesUsedPercent(
-                    getDiskMetricValueByPath(diskMetricsService.getInodesUsedPercent(), path, "diskInodesUsedPercent", 0d)
+                    getMetricValueByKey(diskMetricsService.getInodesUsedPercent(), path, "diskInodesUsedPercent", 0d)
             );
             diskInfoList.add(diskInfo);
         }
         return diskInfoList;
     }
 
-    private <T> T getDiskMetricValueByPath(Map<String, T> path2BytesFreeMap, String path, String metricName, T defaultValue) {
-        T metricValue = path2BytesFreeMap.get(path);
-        if(null == metricValue) {
-            metricValue = defaultValue;
-            LOGGER.error(
-                    String.format(
-                            "class=%s|method=%s|errorMsg=get metric %s value of path:%s is null",
-                            "LinuxSystemMetricsServiceImpl",
-                            "getDiskMetricValueByPath",
-                            metricName,
-                            "path"
-                    )
-            );
-        }
-        return metricValue;
-    }
-
     @Override
     public List<DiskIOInfo> getSystemDiskIOInfoList() {
         Map<String, PeriodStatistics> device2IOUtilMap = diskIOMetricsService.getIOUtil();
+        Map<String, PeriodStatistics> device2AvgQuSzMap = diskIOMetricsService.getAvgQuSz();
+        Map<String, PeriodStatistics> device2AvgRqSzMap = diskIOMetricsService.getAvgRqSz();
+        Map<String, PeriodStatistics> device2IOAwaitMap = diskIOMetricsService.getIOAwait();
+        Map<String, PeriodStatistics> device2IORAwaitMap = diskIOMetricsService.getIORAwait();
+        Map<String, PeriodStatistics> device2IOReadRequestMap = diskIOMetricsService.getIOReadRequest();
+        Map<String, PeriodStatistics> device2IOReadBytesMap = diskIOMetricsService.getIOReadBytes();
+        Map<String, PeriodStatistics> device2IORRQMSMap = diskIOMetricsService.getIORRQMS();
+        Map<String, PeriodStatistics> device2IOSVCTMMap = diskIOMetricsService.getIOSVCTM();
+        Map<String, PeriodStatistics> device2IOWAwaitMap = diskIOMetricsService.getIOWAwait();
+        Map<String, PeriodStatistics> device2IOWriteRequestMap = diskIOMetricsService.getIOWriteRequest();
+        Map<String, PeriodStatistics> device2IOWriteBytesMap = diskIOMetricsService.getIOWriteBytes();
+        Map<String, PeriodStatistics> device2IOReadWriteBytesMap = diskIOMetricsService.getIOReadWriteBytes();
+        Map<String, PeriodStatistics> device2IOWRQMSMap = diskIOMetricsService.getIOWRQMS();
+        Map<String, PeriodStatistics> device2DiskReadTimeMap = diskIOMetricsService.getDiskReadTime();
+        Map<String, PeriodStatistics> device2DiskReadTimePercentMap = diskIOMetricsService.getDiskReadTimePercent();
+        Map<String, PeriodStatistics> device2DiskWriteTimeMap = diskIOMetricsService.getDiskWriteTime();
+        Map<String, PeriodStatistics> device2DiskWriteTimePercentMap = diskIOMetricsService.getDiskWriteTimePercent();
         List<DiskIOInfo> diskIOInfoList = new ArrayList<>(device2IOUtilMap.size());
         for (Map.Entry<String, PeriodStatistics> device2IOUtilEntry : device2IOUtilMap.entrySet()) {
             String device = device2IOUtilEntry.getKey();
             PeriodStatistics iOUtil = device2IOUtilEntry.getValue();
             DiskIOInfo diskIOInfo = new DiskIOInfo();
             diskIOInfo.setDevice(device);
+            diskIOInfo.setiOAvgQuSz(
+                    getMetricValueByKey(device2AvgQuSzMap, device, "iOAvgQuSz", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOAvgRqSz(
+                    getMetricValueByKey(device2AvgRqSzMap, device, "iOAvgRqSz", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOAwait(
+                    getMetricValueByKey(device2IOAwaitMap, device, "iOAwait", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiORAwait(
+                    getMetricValueByKey(device2IORAwaitMap, device, "iORAwait", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOReadRequest(
+                    getMetricValueByKey(device2IOReadRequestMap, device, "iOReadRequest", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOReadBytes(
+                    getMetricValueByKey(device2IOReadBytesMap, device, "iOReadBytes", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiORRQMS(
+                    getMetricValueByKey(device2IORRQMSMap, device, "iORRQMS", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOSVCTM(
+                    getMetricValueByKey(device2IOSVCTMMap, device, "iOSVCTM", PeriodStatistics.defaultValue())
+            );
             diskIOInfo.setiOUtil(iOUtil);
+            diskIOInfo.setiOWAwait(
+                    getMetricValueByKey(device2IOWAwaitMap, device, "iOWAwait", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOWriteRequest(
+                    getMetricValueByKey(device2IOWriteRequestMap, device, "iOWriteRequest", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOWriteBytes(
+                    getMetricValueByKey(device2IOWriteBytesMap, device, "iOWriteBytes", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOReadWriteBytes(
+                    getMetricValueByKey(device2IOReadWriteBytesMap, device, "iOReadWriteBytes", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setiOWRQMS(
+                    getMetricValueByKey(device2IOWRQMSMap, device, "iOWRQMS", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setReadTime(
+                    getMetricValueByKey(device2DiskReadTimeMap, device, "readTime", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setReadTimePercent(
+                    getMetricValueByKey(device2DiskReadTimePercentMap, device, "readTimePercent", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setWriteTime(
+                    getMetricValueByKey(device2DiskWriteTimeMap, device, "writeTime", PeriodStatistics.defaultValue())
+            );
+            diskIOInfo.setWriteTimePercent(
+                    getMetricValueByKey(device2DiskWriteTimePercentMap, device, "writeTimePercent", PeriodStatistics.defaultValue())
+            );
             diskIOInfoList.add(diskIOInfo);
         }
         return diskIOInfoList;
@@ -533,26 +584,23 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         Map<String, PeriodStatistics> device2SendBytesPsMap = netCardMetricsService.getSendBytesPs();
         Map<String, String> device2MacAddressMap = netCardMetricsService.getMacAddress();
         Map<String, Long> device2BandWidthMap = netCardMetricsService.getBandWidth();
+        Map<String, PeriodStatistics> device2ReceiveBytesPsMap = netCardMetricsService.getReceiveBytesPs();
         List<NetCardInfo> netCardInfoList = new ArrayList<>(device2MacAddressMap.size());
         for (Map.Entry<String, String> device2MacAddressEntry : device2MacAddressMap.entrySet()) {
             String device = device2MacAddressEntry.getKey();
             String macAddress = device2MacAddressEntry.getValue();
-            Long bandWidth = device2BandWidthMap.get(device);
-            PeriodStatistics sendBytesPs = device2SendBytesPsMap.get(device);
-            if(null == sendBytesPs || null == bandWidth) {
-                //TODO：
-                throw new RuntimeException("sendBytesPs or bandWidth is null");
-            }
+            Long bandWidth = getMetricValueByKey(device2BandWidthMap, device, "bandWidth", 0L);
+            PeriodStatistics sendBytesPs = getMetricValueByKey(device2SendBytesPsMap, device, "sendBytesPs", PeriodStatistics.defaultValue());
+            PeriodStatistics receiveBytesPs = getMetricValueByKey(device2ReceiveBytesPsMap, device, "receiveBytesPs", PeriodStatistics.defaultValue());
             NetCardInfo netCardInfo = new NetCardInfo();
-            netCardInfo.setSystemNetCardsBandDevice(device);
             netCardInfo.setSystemNetCardsBandMacAddress(macAddress);
+            netCardInfo.setSystemNetCardsBandDevice(device);
             netCardInfo.setSystemNetCardsBandWidth(bandWidth);
+            netCardInfo.setSystemNetCardsReceiveBytesPs(receiveBytesPs);
             netCardInfo.setSystemNetCardsSendBytesPs(sendBytesPs);
             netCardInfoList.add(netCardInfo);
         }
-
         return netCardInfoList;
-
     }
 
     @PeriodMethod(periodMs = 5 * 1000)

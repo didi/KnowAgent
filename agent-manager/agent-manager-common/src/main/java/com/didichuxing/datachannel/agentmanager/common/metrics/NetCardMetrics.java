@@ -16,25 +16,43 @@ public class NetCardMetrics {
 
     private Long   heartbeatTimeDay;
 
-    private Long   systemnetcardssendbytesps;
+    private Double   systemnetcardssendbytesps;
 
-    private Long   systemnetcardssendbytespsmin;
+    private Double   systemnetcardssendbytespsmin;
 
-    private Long   systemnetcardssendbytespsmax;
+    private Double   systemnetcardssendbytespsmax;
 
     private Double systemnetcardssendbytespsmean;
 
     private Double systemnetcardssendbytespsstd;
 
-    private Long   systemnetcardssendbytesps55quantile;
+    private Double   systemnetcardssendbytesps55quantile;
 
-    private Long   systemnetcardssendbytesps75quantile;
+    private Double   systemnetcardssendbytesps75quantile;
 
-    private Long   systemnetcardssendbytesps95quantile;
+    private Double   systemnetcardssendbytesps95quantile;
 
-    private Long   systemnetcardssendbytesps99quantile;
+    private Double   systemnetcardssendbytesps99quantile;
 
     private Long   systemnetcardsbandwidth;
+
+    private Double systemnetcardsreceivebytesps;
+
+    private Double systemnetcardsreceivebytespsmin;
+
+    private Double systemnetcardsreceivebytespsmax;
+
+    private Double systemnetcardsreceivebytespsmean;
+
+    private Double systemnetcardsreceivebytespsstd;
+
+    private Double systemnetcardsreceivebytesps55quantile;
+
+    private Double systemnetcardsreceivebytesps75quantile;
+
+    private Double systemnetcardsreceivebytesps95quantile;
+
+    private Double systemnetcardsreceivebytesps99quantile;
 
     public String getHostname() {
         return hostname;
@@ -92,27 +110,27 @@ public class NetCardMetrics {
         this.heartbeatTimeDay = heartbeatTimeDay;
     }
 
-    public Long getSystemnetcardssendbytesps() {
+    public Double getSystemnetcardssendbytesps() {
         return systemnetcardssendbytesps;
     }
 
-    public void setSystemnetcardssendbytesps(Long systemnetcardssendbytesps) {
+    public void setSystemnetcardssendbytesps(Double systemnetcardssendbytesps) {
         this.systemnetcardssendbytesps = systemnetcardssendbytesps;
     }
 
-    public Long getSystemnetcardssendbytespsmin() {
+    public Double getSystemnetcardssendbytespsmin() {
         return systemnetcardssendbytespsmin;
     }
 
-    public void setSystemnetcardssendbytespsmin(Long systemnetcardssendbytespsmin) {
+    public void setSystemnetcardssendbytespsmin(Double systemnetcardssendbytespsmin) {
         this.systemnetcardssendbytespsmin = systemnetcardssendbytespsmin;
     }
 
-    public Long getSystemnetcardssendbytespsmax() {
+    public Double getSystemnetcardssendbytespsmax() {
         return systemnetcardssendbytespsmax;
     }
 
-    public void setSystemnetcardssendbytespsmax(Long systemnetcardssendbytespsmax) {
+    public void setSystemnetcardssendbytespsmax(Double systemnetcardssendbytespsmax) {
         this.systemnetcardssendbytespsmax = systemnetcardssendbytespsmax;
     }
 
@@ -132,35 +150,35 @@ public class NetCardMetrics {
         this.systemnetcardssendbytespsstd = systemnetcardssendbytespsstd;
     }
 
-    public Long getSystemnetcardssendbytesps55quantile() {
+    public Double getSystemnetcardssendbytesps55quantile() {
         return systemnetcardssendbytesps55quantile;
     }
 
-    public void setSystemnetcardssendbytesps55quantile(Long systemnetcardssendbytesps55quantile) {
+    public void setSystemnetcardssendbytesps55quantile(Double systemnetcardssendbytesps55quantile) {
         this.systemnetcardssendbytesps55quantile = systemnetcardssendbytesps55quantile;
     }
 
-    public Long getSystemnetcardssendbytesps75quantile() {
+    public Double getSystemnetcardssendbytesps75quantile() {
         return systemnetcardssendbytesps75quantile;
     }
 
-    public void setSystemnetcardssendbytesps75quantile(Long systemnetcardssendbytesps75quantile) {
+    public void setSystemnetcardssendbytesps75quantile(Double systemnetcardssendbytesps75quantile) {
         this.systemnetcardssendbytesps75quantile = systemnetcardssendbytesps75quantile;
     }
 
-    public Long getSystemnetcardssendbytesps95quantile() {
+    public Double getSystemnetcardssendbytesps95quantile() {
         return systemnetcardssendbytesps95quantile;
     }
 
-    public void setSystemnetcardssendbytesps95quantile(Long systemnetcardssendbytesps95quantile) {
+    public void setSystemnetcardssendbytesps95quantile(Double systemnetcardssendbytesps95quantile) {
         this.systemnetcardssendbytesps95quantile = systemnetcardssendbytesps95quantile;
     }
 
-    public Long getSystemnetcardssendbytesps99quantile() {
+    public Double getSystemnetcardssendbytesps99quantile() {
         return systemnetcardssendbytesps99quantile;
     }
 
-    public void setSystemnetcardssendbytesps99quantile(Long systemnetcardssendbytesps99quantile) {
+    public void setSystemnetcardssendbytesps99quantile(Double systemnetcardssendbytesps99quantile) {
         this.systemnetcardssendbytesps99quantile = systemnetcardssendbytesps99quantile;
     }
 
@@ -171,4 +189,77 @@ public class NetCardMetrics {
     public void setSystemnetcardsbandwidth(Long systemnetcardsbandwidth) {
         this.systemnetcardsbandwidth = systemnetcardsbandwidth;
     }
+
+    public Double getSystemnetcardsreceivebytesps() {
+        return systemnetcardsreceivebytesps;
+    }
+
+    public void setSystemnetcardsreceivebytesps(Double systemnetcardsreceivebytesps) {
+        this.systemnetcardsreceivebytesps = systemnetcardsreceivebytesps;
+    }
+
+    public Double getSystemnetcardsreceivebytespsmin() {
+        return systemnetcardsreceivebytespsmin;
+    }
+
+    public void setSystemnetcardsreceivebytespsmin(Double systemnetcardsreceivebytespsmin) {
+        this.systemnetcardsreceivebytespsmin = systemnetcardsreceivebytespsmin;
+    }
+
+    public Double getSystemnetcardsreceivebytespsmax() {
+        return systemnetcardsreceivebytespsmax;
+    }
+
+    public void setSystemnetcardsreceivebytespsmax(Double systemnetcardsreceivebytespsmax) {
+        this.systemnetcardsreceivebytespsmax = systemnetcardsreceivebytespsmax;
+    }
+
+    public Double getSystemnetcardsreceivebytespsmean() {
+        return systemnetcardsreceivebytespsmean;
+    }
+
+    public void setSystemnetcardsreceivebytespsmean(Double systemnetcardsreceivebytespsmean) {
+        this.systemnetcardsreceivebytespsmean = systemnetcardsreceivebytespsmean;
+    }
+
+    public Double getSystemnetcardsreceivebytespsstd() {
+        return systemnetcardsreceivebytespsstd;
+    }
+
+    public void setSystemnetcardsreceivebytespsstd(Double systemnetcardsreceivebytespsstd) {
+        this.systemnetcardsreceivebytespsstd = systemnetcardsreceivebytespsstd;
+    }
+
+    public Double getSystemnetcardsreceivebytesps55quantile() {
+        return systemnetcardsreceivebytesps55quantile;
+    }
+
+    public void setSystemnetcardsreceivebytesps55quantile(Double systemnetcardsreceivebytesps55quantile) {
+        this.systemnetcardsreceivebytesps55quantile = systemnetcardsreceivebytesps55quantile;
+    }
+
+    public Double getSystemnetcardsreceivebytesps75quantile() {
+        return systemnetcardsreceivebytesps75quantile;
+    }
+
+    public void setSystemnetcardsreceivebytesps75quantile(Double systemnetcardsreceivebytesps75quantile) {
+        this.systemnetcardsreceivebytesps75quantile = systemnetcardsreceivebytesps75quantile;
+    }
+
+    public Double getSystemnetcardsreceivebytesps95quantile() {
+        return systemnetcardsreceivebytesps95quantile;
+    }
+
+    public void setSystemnetcardsreceivebytesps95quantile(Double systemnetcardsreceivebytesps95quantile) {
+        this.systemnetcardsreceivebytesps95quantile = systemnetcardsreceivebytesps95quantile;
+    }
+
+    public Double getSystemnetcardsreceivebytesps99quantile() {
+        return systemnetcardsreceivebytesps99quantile;
+    }
+
+    public void setSystemnetcardsreceivebytesps99quantile(Double systemnetcardsreceivebytesps99quantile) {
+        this.systemnetcardsreceivebytesps99quantile = systemnetcardsreceivebytesps99quantile;
+    }
+
 }

@@ -7,24 +7,24 @@
     <result column="systemNetCardsBandMacAddress" property="systemnetcardsbandmacaddress" jdbcType="VARCHAR" />
     <result column="systemNetCardsBandDevice" property="systemnetcardsbanddevice" jdbcType="VARCHAR" />
     <result column="systemNetCardsBandWidth" property="systemnetcardsbandwidth" jdbcType="BIGINT" />
-    <result column="systemNetCardsReceiveBytesPs" property="systemnetcardsreceivebytesps" jdbcType="BIGINT" />
-    <result column="systemNetCardsReceiveBytesPsMin" property="systemnetcardsreceivebytespsmin" jdbcType="BIGINT" />
-    <result column="systemNetCardsReceiveBytesPsMax" property="systemnetcardsreceivebytespsmax" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPs" property="systemnetcardsreceivebytesps" jdbcType="DOUBLE" />
+    <result column="systemNetCardsReceiveBytesPsMin" property="systemnetcardsreceivebytespsmin" jdbcType="DOUBLE" />
+    <result column="systemNetCardsReceiveBytesPsMax" property="systemnetcardsreceivebytespsmax" jdbcType="DOUBLE" />
     <result column="systemNetCardsReceiveBytesPsMean" property="systemnetcardsreceivebytespsmean" jdbcType="DOUBLE" />
     <result column="systemNetCardsReceiveBytesPsStd" property="systemnetcardsreceivebytespsstd" jdbcType="DOUBLE" />
-    <result column="systemNetCardsReceiveBytesPs55Quantile" property="systemnetcardsreceivebytesps55quantile" jdbcType="BIGINT" />
-    <result column="systemNetCardsReceiveBytesPs75Quantile" property="systemnetcardsreceivebytesps75quantile" jdbcType="BIGINT" />
-    <result column="systemNetCardsReceiveBytesPs95Quantile" property="systemnetcardsreceivebytesps95quantile" jdbcType="BIGINT" />
-    <result column="systemNetCardsReceiveBytesPs99Quantile" property="systemnetcardsreceivebytesps99quantile" jdbcType="BIGINT" />
-    <result column="systemNetCardsSendBytesPs" property="systemnetcardssendbytesps" jdbcType="BIGINT" />
-    <result column="systemNetCardsSendBytesPsMin" property="systemnetcardssendbytespsmin" jdbcType="BIGINT" />
-    <result column="systemNetCardsSendBytesPsMax" property="systemnetcardssendbytespsmax" jdbcType="BIGINT" />
+    <result column="systemNetCardsReceiveBytesPs55Quantile" property="systemnetcardsreceivebytesps55quantile" jdbcType="DOUBLE" />
+    <result column="systemNetCardsReceiveBytesPs75Quantile" property="systemnetcardsreceivebytesps75quantile" jdbcType="DOUBLE" />
+    <result column="systemNetCardsReceiveBytesPs95Quantile" property="systemnetcardsreceivebytesps95quantile" jdbcType="DOUBLE" />
+    <result column="systemNetCardsReceiveBytesPs99Quantile" property="systemnetcardsreceivebytesps99quantile" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPs" property="systemnetcardssendbytesps" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPsMin" property="systemnetcardssendbytespsmin" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPsMax" property="systemnetcardssendbytespsmax" jdbcType="DOUBLE" />
     <result column="systemNetCardsSendBytesPsMean" property="systemnetcardssendbytespsmean" jdbcType="DOUBLE" />
     <result column="systemNetCardsSendBytesPsStd" property="systemnetcardssendbytespsstd" jdbcType="DOUBLE" />
-    <result column="systemNetCardsSendBytesPs55Quantile" property="systemnetcardssendbytesps55quantile" jdbcType="BIGINT" />
-    <result column="systemNetCardsSendBytesPs75Quantile" property="systemnetcardssendbytesps75quantile" jdbcType="BIGINT" />
-    <result column="systemNetCardsSendBytesPs95Quantile" property="systemnetcardssendbytesps95quantile" jdbcType="BIGINT" />
-    <result column="systemNetCardsSendBytesPs99Quantile" property="systemnetcardssendbytesps99quantile" jdbcType="BIGINT" />
+    <result column="systemNetCardsSendBytesPs55Quantile" property="systemnetcardssendbytesps55quantile" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPs75Quantile" property="systemnetcardssendbytesps75quantile" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPs95Quantile" property="systemnetcardssendbytesps95quantile" jdbcType="DOUBLE" />
+    <result column="systemNetCardsSendBytesPs99Quantile" property="systemnetcardssendbytesps99quantile" jdbcType="DOUBLE" />
     <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
     <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
     <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
@@ -149,15 +149,15 @@
       )
     values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{systemnetcardsbandmacaddress,jdbcType=VARCHAR}, 
       #{systemnetcardsbanddevice,jdbcType=VARCHAR}, #{systemnetcardsbandwidth,jdbcType=BIGINT}, 
-      #{systemnetcardsreceivebytesps,jdbcType=BIGINT}, #{systemnetcardsreceivebytespsmin,jdbcType=BIGINT}, 
-      #{systemnetcardsreceivebytespsmax,jdbcType=BIGINT}, #{systemnetcardsreceivebytespsmean,jdbcType=DOUBLE}, 
-      #{systemnetcardsreceivebytespsstd,jdbcType=DOUBLE}, #{systemnetcardsreceivebytesps55quantile,jdbcType=BIGINT}, 
-      #{systemnetcardsreceivebytesps75quantile,jdbcType=BIGINT}, #{systemnetcardsreceivebytesps95quantile,jdbcType=BIGINT}, 
-      #{systemnetcardsreceivebytesps99quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps,jdbcType=BIGINT}, 
-      #{systemnetcardssendbytespsmin,jdbcType=BIGINT}, #{systemnetcardssendbytespsmax,jdbcType=BIGINT}, 
+      #{systemnetcardsreceivebytesps,jdbcType=DOUBLE}, #{systemnetcardsreceivebytespsmin,jdbcType=DOUBLE},
+      #{systemnetcardsreceivebytespsmax,jdbcType=DOUBLE}, #{systemnetcardsreceivebytespsmean,jdbcType=DOUBLE},
+      #{systemnetcardsreceivebytespsstd,jdbcType=DOUBLE}, #{systemnetcardsreceivebytesps55quantile,jdbcType=DOUBLE},
+      #{systemnetcardsreceivebytesps75quantile,jdbcType=DOUBLE}, #{systemnetcardsreceivebytesps95quantile,jdbcType=DOUBLE},
+      #{systemnetcardsreceivebytesps99quantile,jdbcType=DOUBLE}, #{systemnetcardssendbytesps,jdbcType=DOUBLE},
+      #{systemnetcardssendbytespsmin,jdbcType=DOUBLE}, #{systemnetcardssendbytespsmax,jdbcType=DOUBLE},
       #{systemnetcardssendbytespsmean,jdbcType=DOUBLE}, #{systemnetcardssendbytespsstd,jdbcType=DOUBLE}, 
-      #{systemnetcardssendbytesps55quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps75quantile,jdbcType=BIGINT}, 
-      #{systemnetcardssendbytesps95quantile,jdbcType=BIGINT}, #{systemnetcardssendbytesps99quantile,jdbcType=BIGINT}, 
+      #{systemnetcardssendbytesps55quantile,jdbcType=DOUBLE}, #{systemnetcardssendbytesps75quantile,jdbcType=DOUBLE},
+      #{systemnetcardssendbytesps95quantile,jdbcType=DOUBLE}, #{systemnetcardssendbytesps99quantile,jdbcType=DOUBLE},
       #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT},
       #{heartbeatTimeDay,jdbcType=BIGINT}
       )
@@ -264,13 +264,13 @@
         #{systemnetcardsbandwidth,jdbcType=BIGINT},
       </if>
       <if test="systemnetcardsreceivebytesps != null" >
-        #{systemnetcardsreceivebytesps,jdbcType=BIGINT},
+        #{systemnetcardsreceivebytesps,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardsreceivebytespsmin != null" >
-        #{systemnetcardsreceivebytespsmin,jdbcType=BIGINT},
+        #{systemnetcardsreceivebytespsmin,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardsreceivebytespsmax != null" >
-        #{systemnetcardsreceivebytespsmax,jdbcType=BIGINT},
+        #{systemnetcardsreceivebytespsmax,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardsreceivebytespsmean != null" >
         #{systemnetcardsreceivebytespsmean,jdbcType=DOUBLE},
@@ -279,25 +279,25 @@
         #{systemnetcardsreceivebytespsstd,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardsreceivebytesps55quantile != null" >
-        #{systemnetcardsreceivebytesps55quantile,jdbcType=BIGINT},
+        #{systemnetcardsreceivebytesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardsreceivebytesps75quantile != null" >
-        #{systemnetcardsreceivebytesps75quantile,jdbcType=BIGINT},
+        #{systemnetcardsreceivebytesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardsreceivebytesps95quantile != null" >
-        #{systemnetcardsreceivebytesps95quantile,jdbcType=BIGINT},
+        #{systemnetcardsreceivebytesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardsreceivebytesps99quantile != null" >
-        #{systemnetcardsreceivebytesps99quantile,jdbcType=BIGINT},
+        #{systemnetcardsreceivebytesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytesps != null" >
-        #{systemnetcardssendbytesps,jdbcType=BIGINT},
+        #{systemnetcardssendbytesps,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytespsmin != null" >
-        #{systemnetcardssendbytespsmin,jdbcType=BIGINT},
+        #{systemnetcardssendbytespsmin,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytespsmax != null" >
-        #{systemnetcardssendbytespsmax,jdbcType=BIGINT},
+        #{systemnetcardssendbytespsmax,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytespsmean != null" >
         #{systemnetcardssendbytespsmean,jdbcType=DOUBLE},
@@ -306,16 +306,16 @@
         #{systemnetcardssendbytespsstd,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytesps55quantile != null" >
-        #{systemnetcardssendbytesps55quantile,jdbcType=BIGINT},
+        #{systemnetcardssendbytesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytesps75quantile != null" >
-        #{systemnetcardssendbytesps75quantile,jdbcType=BIGINT},
+        #{systemnetcardssendbytesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytesps95quantile != null" >
-        #{systemnetcardssendbytesps95quantile,jdbcType=BIGINT},
+        #{systemnetcardssendbytesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetcardssendbytesps99quantile != null" >
-        #{systemnetcardssendbytesps99quantile,jdbcType=BIGINT},
+        #{systemnetcardssendbytesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="heartbeattime != null" >
         #{heartbeattime,jdbcType=BIGINT},

@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public abstract class LinuxMetricsService {
 
@@ -61,6 +62,23 @@ public abstract class LinuxMetricsService {
                 LOGGER.error("获取系统资源项[{}]失败，原因为关闭执行获取{}的脚本进程失败", resourceMessage, resourceMessage, ex);
             }
         }
+    }
+
+    protected  <T> T getMetricValueByKey(Map<String, T> key2MetricValueMap, String key, String metricName, T defaultValue) {
+        T metricValue = key2MetricValueMap.get(key);
+        if(null == metricValue) {
+            metricValue = defaultValue;
+            LOGGER.error(
+                    String.format(
+                            "class=%s|method=%s|errorMsg=get metric %s value of key:%s is null",
+                            "LinuxMetricsService",
+                            "getMetricValueByKey",
+                            metricName,
+                            key
+                    )
+            );
+        }
+        return metricValue;
     }
 
 }

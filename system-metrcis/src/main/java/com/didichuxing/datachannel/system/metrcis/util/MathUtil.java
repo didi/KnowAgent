@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.system.metrcis.util;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,6 +79,19 @@ public class MathUtil {
      */
     public static Double getQuantile99(List<Double> values) {
         return percentile(values, 0.99);
+    }
+
+    /**
+     *
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return 分子 / 分母结果 保留2位小数
+     */
+    public static Double divideWith2Digit(Double numerator, Double denominator) {
+        if(denominator.equals(0d)) {
+            return 0d;
+        }
+        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
     }
 
     /**
