@@ -6,6 +6,7 @@ import com.didichuxing.datachannel.system.metrcis.service.DiskIOMetricsService;
 import com.didichuxing.datachannel.system.metrcis.service.DiskMetricsService;
 import com.didichuxing.datachannel.system.metrcis.service.NetCardMetricsService;
 import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,7 @@ import java.util.*;
 /**
  * 获取系统级指标
  * 包括按需获取指标数据和一次性获取所有指标数据
- * @author Ronaldo
- * @Date 2021/11/3
+ * @author william.
  */
 public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implements SystemMetricsService {
 
@@ -47,6 +47,26 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     private PeriodStatistics systemNetworkSendAndReceiveBytesPs = new PeriodStatistics();
 
     private PeriodStatistics systemNetWorkBandWidthUsedPercent = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuSystem = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuUser = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuSwitches = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuUsageIrq = new PeriodStatistics();
+
+    private PeriodStatistics systemLoad1 = new PeriodStatistics();
+
+    private PeriodStatistics systemLoad5 = new PeriodStatistics();
+
+    private PeriodStatistics systemLoad15 = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuIOWait = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuGuest = new PeriodStatistics();
+
+    private PeriodStatistics systemCpuSteal = new PeriodStatistics();
 
     /**************************** 指标计算服务对象 ****************************/
 
@@ -233,12 +253,43 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuSystem() {
-        return null;
+        return systemCpuSystem.snapshot();
     }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuSystem() {
+        systemCpuSystem.add(getSystemCpuSystemOnly());
+    }
+
+    private Double getSystemCpuSystemOnly() {
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $5}'", "内核态CPU时间占比", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null");
+            return 0.0d;
+        }
+    }
+
 
     @Override
     public PeriodStatistics getSystemCpuUser() {
-        return null;
+        return systemCpuUser.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuUser() {
+        systemCpuUser.add(getSystemCpuUserOnly());
+    }
+
+    private Double getSystemCpuUserOnly() {
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $3}'", "用户态CPU时间占比", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null");
+            return 0.0d;
+        }
     }
 
     private Double getSystemCpuIdleOnly() {
@@ -263,87 +314,251 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuSwitches() {
-        return null;
+        return systemCpuSwitches.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuSwitches() {
+        systemCpuSwitches.add(getSystemCpuSwitchesOnly());
+    }
+
+    private Double getSystemCpuSwitchesOnly() {
+        List<String> output = getOutputByCmd("cat /proc/stat | grep 'ctxt' | awk '{print $2}'",
+                "cpu上下文交换次数", null);
+        if (!output.isEmpty() && StringUtils.isNotBlank(output.get(0))) {
+            return Double.parseDouble(output.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSwitchesOnly||msg=data is null");
+        }
+        return 0d;
     }
 
     @Override
     public PeriodStatistics getSystemCpuUsageIrq() {
+        return systemCpuUsageIrq.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuUsageIrq() {
+        systemCpuUsageIrq.add(getSystemCpuUsageIrqOnly());
+    }
+
+    private Double getSystemCpuUsageIrqOnly() {
+
+        //TODO：
+
         return null;
+
     }
 
     @Override
     public PeriodStatistics getSystemCpuUsageSoftIrq() {
+
+        //TODO：
+
         return null;
+
     }
 
     @Override
     public PeriodStatistics getSystemLoad1() {
-        return null;
+        return systemLoad1.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemLoad1() {
+        systemLoad1.add(getSystemLoad1Only());
+    }
+
+    private Double getSystemLoad1Only() {
+        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $4}'", "系统近1分钟平均负载", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad1Only||msg=获取系统近1分钟平均负载失败");
+            return 0.0d;
+        }
     }
 
     @Override
     public PeriodStatistics getSystemLoad5() {
-        return null;
+        return systemLoad5.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemLoad5() {
+        systemLoad5.add(getSystemLoad5Only());
+    }
+
+    private Double getSystemLoad5Only() {
+        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $5}'", "系统近5分钟平均负载", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad5Only||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public PeriodStatistics getSystemLoad15() {
-        return null;
+        return systemLoad15.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemLoad15() {
+        systemLoad15.add(getSystemLoad15Only());
+    }
+
+    private Double getSystemLoad15Only() {
+        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $6}'", "系统近15分钟平均负载", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad15Only||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public PeriodStatistics getSystemCpuIOWait() {
-        return null;
+        return systemCpuIOWait.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuIOWait() {
+        systemCpuIOWait.add(getSystemCpuIOWaitOnly());
+    }
+    private Double getSystemCpuIOWaitOnly() {
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $6}'", "等待I/O的CPU时间占比", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIOWaitOnly||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public PeriodStatistics getSystemCpuGuest() {
-        return null;
+        return systemCpuGuest.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuGuest() {
+        systemCpuGuest.add(getSystemCpuGuestOnly());
+    }
+
+    private Double getSystemCpuGuestOnly() {
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $10}'", "虚拟处理器CPU时间占比", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuGuestOnly||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public PeriodStatistics getSystemCpuSteal() {
-        return null;
+        return systemCpuSteal.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuSteal() {
+        systemCpuSteal.add(getSystemCpuStealOnly());
+    }
+
+    private Double getSystemCpuStealOnly() {
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $9}'", "等待处理其他虚拟核的时间占比", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuStealOnly||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public Long getSystemMemCommitLimit() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'CommitLimit:' | awk '{print $2}'", "系统当前可分配的内存总量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCommitLimit()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemMemCommittedAs() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Committed_AS:' | awk '{print $2}'", "系统已分配的包括进程未使用的内存量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCommittedAs()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemMemCommitted() {
-        return null;
+        return getSystemMemCommitLimit() - getSystemMemCommittedAs();
     }
 
     @Override
     public Long getSystemMemNonPaged() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'KernelStack:' | awk '{print $2}'", "写入磁盘的物理内存量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemNonPaged()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemMemPaged() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Writeback:' | awk '{print $2}'", "没被使用是可以写入磁盘的物理内存量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemPaged()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemMemShared() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Shmem:' | awk '{print $2}'", "用作共享内存的物理RAM量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemShared()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemMemSlab() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Slab:' | awk '{print $2}'", "内核用来缓存数据结构供自己使用的内存量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemSlab()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemMemTotal() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'MemTotal:' | awk '{print $2}'", "系统物理内存总量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemTotal()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
@@ -359,57 +574,107 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Long getSystemMemUsed() {
-        return null;
+        return getSystemMemTotal() - getSystemMemFree();
     }
 
     @Override
     public Long getSystemMemBuffered() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Buffers:' | awk '{print $2}'", "系统文件缓冲区的物理RAM量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemBuffered()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemMemCached() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Cached:' | awk '{print $2}'", "缓存内存的物理RAM量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCached()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Double getSystemMemFreePercent() {
-        return null;
+        long memTotal = getSystemMemTotal();
+        if (memTotal == 0) {
+            LOGGER.warn("SystemMemoryTotal is zero");
+            return 0.0d;
+        }
+        return MathUtil.divideWith2Digit(getSystemMemFree(), getSystemMemTotal());
     }
 
     @Override
     public Double getSystemMemUsedPercent() {
-        return null;
+        long memTotal = getSystemMemTotal();
+        if (memTotal == 0) {
+            LOGGER.warn("SystemMemoryTotal is zero");
+            return 0.0d;
+        }
+        return MathUtil.divideWith2Digit(getSystemMemUsed(), getSystemMemTotal());
     }
 
     @Override
     public Long getSystemSwapCached() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapCached:' | awk '{print $2}'", "系统用作缓存的交换空间", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapCached()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemSwapFree() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapFree:' | awk '{print $2}'", "系统空闲swap大小", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapFree()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Double getSystemSwapFreePercent() {
-        return null;
+        long swapTotal = getSystemSwapTotal();
+        if (swapTotal == 0) {
+            LOGGER.warn("SystemSwapMemoryTotal is zero");
+            return 0.0d;
+        }
+        return MathUtil.divideWith2Digit(getSystemSwapFree(), swapTotal);
     }
 
     @Override
     public Long getSystemSwapTotal() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapTotal:' | awk '{print $2}'", "系统swap总大小", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapTotal()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getSystemSwapUsed() {
-        return null;
+        return getSystemSwapTotal() - getSystemSwapFree();
     }
 
     @Override
     public Double getSystemSwapUsedPercent() {
-        return null;
+        long swapTotal = getSystemSwapTotal();
+        if (swapTotal == 0) {
+            LOGGER.warn("SystemSwapMemoryTotal is zero");
+            return 0.0d;
+        }
+        return MathUtil.divideWith2Digit(getSystemSwapUsed(), swapTotal);
     }
 
     @Override
@@ -541,32 +806,50 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemFilesMax() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/sys/fs/file-nr | awk '{print $3}'", "系统可以打开的最大文件句柄数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemFilesMax()||msg=data is null");
+        }
+        return 0;
     }
 
     @Override
     public Integer getSystemFilesAllocated() {
-        return null;
+        return getSystemFilesUsed() + getSystemFilesNotUsed();
     }
 
     @Override
     public Integer getSystemFilesLeft() {
-        return null;
+        return getSystemFilesMax() - getSystemFilesAllocated();
     }
 
     @Override
     public Double getSystemFilesUsedPercent() {
-        return null;
+        return MathUtil.divideWith2Digit(getSystemFilesUsed(), getSystemFilesAllocated());
     }
 
     @Override
     public Integer getSystemFilesUsed() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/sys/fs/file-nr | awk '{print $1}'", "系统使用的已分配文件句柄数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemFilesUsed()||msg=data is null");
+        }
+        return 0;
     }
 
     @Override
     public Integer getSystemFilesNotUsed() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/sys/fs/file-nr | awk '{print $2}'", "系统未使用的已分配文件句柄数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemFilesNotUsed()||msg=获取系统未使用的已分配文件句柄数失败");
+        }
+        return 0;
     }
 
     @Override
@@ -700,7 +983,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemNetworkTcpConnectionNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | grep -c 'tcp'", "系统tcp连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpConnectionNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
@@ -735,7 +1024,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemNetworkTcpTimeWaitNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'TIME_WAIT'", "系统处于 time wait 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpTimeWaitNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
@@ -745,7 +1040,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemNetworkTcpCloseWaitNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'CLOSE_WAIT'", "系统处于 close wait 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpCloseWaitNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
@@ -765,62 +1066,123 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Long getSystemNetworkTcpActiveOpens() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $6}'", "系统启动以来 Tcp 主动连接次数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpActiveOpens()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkTcpPassiveOpens() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $7}'", "系统启动以来 Tcp 被动连接次数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpPassiveOpens()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkTcpAttemptFails() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $8}'", "系统启动以来 Tcp 连接失败次数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpAttemptFails()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkTcpEstabResets() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $9}'", "系统启动以来 Tcp 连接异常断开次数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpEstabResets()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkTcpRetransSegs() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Tcp:' | awk 'NR==2{print $13}'", "系统启动以来 Tcp 重传的报文段总个数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpRetransSegs()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkTcpExtListenOverflows() {
-        return null;
+        List<String> lines = getOutputByCmd(
+                "netstat -s | egrep \"listen|LISTEN\" | awk '{a+=$1}{print a}'",
+                "系统启动以来 Tcp 监听队列溢出次数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        }
+        return 0l;
     }
 
     @Override
     public Long getSystemNetworkUdpInDatagrams() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $2}'", "系统启动以来 UDP 入包量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpInDatagrams()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkUdpOutDatagrams() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $5}'", "系统启动以来 UDP 出包量", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpOutDatagrams()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkUdpInErrors() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $4}'", "系统启动以来 UDP 入包错误数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpInErrors()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkUdpNoPorts() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $3}'", "系统启动以来 UDP 端口不可达个数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpNoPorts()||msg=data is null");
+            return 0l;
+        }
     }
 
     @Override
     public Long getSystemNetworkUdpSendBufferErrors() {
-        return null;
-    }
-
-    @Override
-    public SystemMetrics getSystemMetrics() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/net/snmp | grep 'Udp:' | awk 'NR==2{print $7}'", "系统启动以来 UDP 发送缓冲区满次数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpSendBufferErrors()||msg=data is null");
+            return 0l;
+        }
     }
 
     private void setHostName() {

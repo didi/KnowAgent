@@ -502,9 +502,4 @@ public interface SystemMetricsService {
      */
     Long getSystemNetworkUdpSendBufferErrors();
 
-    /**
-     * @return 返回当前系统指标集 如须获取全量系统指标，请调用该方法而非挨个调用各指标获取函数以提升其性能、降低消耗
-     */
-    SystemMetrics getSystemMetrics();
-
 }
