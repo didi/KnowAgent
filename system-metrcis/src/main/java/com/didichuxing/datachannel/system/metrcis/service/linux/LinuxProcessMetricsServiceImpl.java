@@ -4,12 +4,14 @@ import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
 import com.didichuxing.datachannel.system.metrcis.bean.ProcMetrics;
 import com.didichuxing.datachannel.system.metrcis.service.ProcessMetricsService;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.lang.management.ThreadMXBean;
 import java.util.*;
 
 /**
@@ -31,6 +33,8 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private LinuxNetFlow lastLinuxNetFlow;
 
+    private LinuxIORate lastLinuxIORate;
+
     /**
      * agent宿主机cpu核（逻辑核）
      */
@@ -43,6 +47,32 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     private PeriodStatistics procNetworkReceiveBytesPs = new PeriodStatistics();
 
     private PeriodStatistics procNetworkSendBytesPs = new PeriodStatistics();
+
+    private PeriodStatistics procCpuUtilTotalPercent = new PeriodStatistics();
+
+    private PeriodStatistics procCpuSys = new PeriodStatistics();
+
+    private PeriodStatistics procCpuUser = new PeriodStatistics();
+
+    private PeriodStatistics procCpuSwitchesPS = new PeriodStatistics();
+
+    private PeriodStatistics procCpuVoluntarySwitchesPS = new PeriodStatistics();
+
+    private PeriodStatistics procCpuNonVoluntarySwitchesPS = new PeriodStatistics();
+
+    private PeriodStatistics procIOReadRate = new PeriodStatistics();
+
+    private PeriodStatistics procIOReadBytesRate = new PeriodStatistics();
+
+    private PeriodStatistics procIOWriteRate = new PeriodStatistics();
+
+    private PeriodStatistics procIOWriteBytesRate = new PeriodStatistics();
+
+    private PeriodStatistics procIOReadWriteRate = new PeriodStatistics();
+
+    private PeriodStatistics procIOReadWriteBytesRate = new PeriodStatistics();
+
+    private PeriodStatistics procIOAwaitTimePercent = new PeriodStatistics();
 
     private static LinuxProcessMetricsServiceImpl instance;
 
@@ -68,6 +98,12 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
             LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=LinuxProcessMetricsServiceImpl()||msg=NetFlow init failed",
                     e);
         }
+        try {
+            lastLinuxIORate = new LinuxIORate(getProcessPid());// 记录上次IO速率
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=LinuxProcessMetricsServiceImpl()||msg=processIORate init failed",
+                    e);
+        }
     }
 
     @Override
@@ -82,7 +118,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getProcUptime() {
-        return null;
+        return System.currentTimeMillis() - getProcessStartupTime();
     }
 
     @Override
@@ -114,32 +150,110 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuUtilTotalPercent() {
-        return null;
+        return procCpuUtilTotalPercent.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcCpuUtilTotalPercent() {
+        procCpuUtilTotalPercent.add(getProcCpuUtilTotalPercentOnly());
+    }
+
+    private Double getProcCpuUtilTotalPercentOnly() {
+        return MathUtil.divideWith2Digit(getCurrentProcCpuUtil(), CPU_NUM);
     }
 
     @Override
     public PeriodStatistics getProcCpuSys() {
-        return null;
+        return procCpuSys.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcCpuSys() {
+        procCpuSys.add(getProcCpuSysOnly());
+    }
+
+    private Double getProcCpuSysOnly() {
+        List<String> lines = getOutputByCmd("pidstat -p %d | awk 'NR==4{print $5}'", "当前进程系统态cpu使用率", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuSysOnly()||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public PeriodStatistics getProcCpuUser() {
-        return null;
+        return procCpuUser.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcCpuUser() {
+        procCpuUser.add(getProcCpuUserOnly());
+    }
+
+    private Double getProcCpuUserOnly() {
+        List<String> lines = getOutputByCmd("pidstat -p %d | awk 'NR==4{print $4}'", "当前进程系统态cpu使用率", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuUserOnly||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @Override
     public PeriodStatistics getProcCpuSwitchesPS() {
-        return null;
+        return procCpuSwitchesPS.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcCpuSwitchesPS() {
+        procCpuSwitchesPS.add(getProcCpuSwitchesPSOnly());
+    }
+
+    private Double getProcCpuSwitchesPSOnly() {
+        return getProcCpuVoluntarySwitchesPSOnly() + getProcCpuNonVoluntarySwitchesPSOnly();
     }
 
     @Override
     public PeriodStatistics getProcCpuVoluntarySwitchesPS() {
-        return null;
+        return procCpuVoluntarySwitchesPS.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcCpuVoluntarySwitchesPS() {
+        procCpuVoluntarySwitchesPS.add(getProcCpuVoluntarySwitchesPSOnly());
+    }
+
+    private Double getProcCpuVoluntarySwitchesPSOnly() {
+        List<String> lines = getOutputByCmd("pidstat -w -p %d | awk 'NR==4{print $4}'", "进程CPU每秒上下文自愿切换次数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuVoluntarySwitchesPSOnly||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public PeriodStatistics getProcCpuNonVoluntarySwitchesPS() {
-        return null;
+        return procCpuNonVoluntarySwitchesPS.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcCpuNonVoluntarySwitchesPS() {
+        procCpuNonVoluntarySwitchesPS.add(getProcCpuNonVoluntarySwitchesPSOnly());
+    }
+
+    private Double getProcCpuNonVoluntarySwitchesPSOnly() {
+        List<String> lines = getOutputByCmd("pidstat -w -p %d | awk 'NR==4{print $5}'", "进程CPU每秒上下文非自愿切换次数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuNonVoluntarySwitchesPSOnly||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
@@ -149,47 +263,100 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Double getProcMemUtil() {
-        return null;
+        long memTotal = getSystemMemTotal();
+        if (memTotal == 0) {
+            LOGGER.warn("SystemMemoryTotal is zero");
+            return 0.0d;
+        }
+        return MathUtil.divideWith2Digit(getProcMemUsed(), memTotal);
     }
 
     @Override
     public Long getProcMemData() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'VmData' | awk '{print $2}'", "当前进程data内存大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemData()||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getProcMemDirty() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'RssAnon' | awk '{print $2}'", "当前进程dirty内存大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemDirty||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getProcMemLib() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'VmLib' | awk '{print $2}'", "当前进程lib内存大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemLib||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getProcMemRss() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'VmRSS' | awk '{print $2}'", "当前进程常驻内存大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemRss||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getProcMemShared() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'RssShmem' | awk '{print $2}'", "当前进程共享内存大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemShared||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getProcMemSwap() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'VmSwap' | awk '{print $2}'", "当前进程交换空间大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemSwap||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getProcMemText() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'VmExe' | awk '{print $2}'", "当前进程Text内存大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemText||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Long getProcMemVms() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'VmSize' | awk '{print $2}'", "当前进程虚拟内存大小", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return 1024 * Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcMemVms||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
@@ -216,57 +383,183 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getJvmProcHeapSizeXmx() {
-        return null;
+        try {
+            MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+            return memoryMXBean.getHeapMemoryUsage().getMax();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前进程最大可用堆内存]失败", ex);
+            return 0l;
+        }
     }
 
     @Override
     public Long getJvmProcMemUsedPeak() {
-        return null;
+        List<String> lines = getOutputByCmd("cat /proc/%d/status | grep 'VmPeak' | awk '{print $2}'", "当前jvm进程启动以来内存使用量峰值", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Long.parseLong(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcMemUsedPeak||msg=data is null");
+            return 0L;
+        }
     }
 
     @Override
     public Double getJvmProcHeapMemUsedPercent() {
-        return null;
+        return MathUtil.divideWith2Digit(getJvmProcHeapMemoryUsed(), getJvmProcHeapSizeXmx());
     }
 
     @Override
     public PeriodStatistics getProcIOReadRate() {
-        return null;
+        return procIOReadRate.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcIOReadRate() {
+        procIOReadRate.add(getProcIOReadRateOnly());
+    }
+
+    private Double getProcIOReadRateOnly() {
+        try {
+            LinuxIORate curLinuxIORate = new LinuxIORate(PID);
+            double ioReadTimesRate = curLinuxIORate.getIOReadTimesRate(lastLinuxIORate);
+            this.lastLinuxIORate = curLinuxIORate;
+            return ioReadTimesRate;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getProcIOReadRateOnly||msg=failed to get process IO read rate",
+                    e);
+        }
+        return 0.0d;
     }
 
     @Override
     public PeriodStatistics getProcIOReadBytesRate() {
-        return null;
+        return procIOReadBytesRate.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcIOReadBytesRate() {
+        procIOReadBytesRate.add(getProcIOReadBytesRateOnly());
+    }
+
+    private Double getProcIOReadBytesRateOnly() {
+        try {
+            LinuxIORate curLinuxIORate = new LinuxIORate(PID);
+            double ioReadBytesRate = curLinuxIORate.getIOReadBytesRate(lastLinuxIORate);
+            this.lastLinuxIORate = curLinuxIORate;
+            return ioReadBytesRate;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getProcIOReadBytesRateOnly||msg=failed to get process IO read bytes rate",
+                    e);
+        }
+        return 0d;
     }
 
     @Override
     public PeriodStatistics getProcIOWriteRate() {
-        return null;
+        return procIOWriteRate.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcIOWriteRate() {
+        procIOWriteRate.add(getProcIOWriteRateOnly());
+    }
+
+    private Double getProcIOWriteRateOnly() {
+        try {
+            LinuxIORate curLinuxIORate = new LinuxIORate(PID);
+            double ioWriteTimesRate = curLinuxIORate.getIOWriteTimesRate(lastLinuxIORate);
+            this.lastLinuxIORate = curLinuxIORate;
+            return ioWriteTimesRate;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getProcIOWriteRateOnly||msg=failed to get process IO write rate",
+                    e);
+        }
+        return 0d;
     }
 
     @Override
     public PeriodStatistics getProcIOWriteBytesRate() {
-        return null;
+        return procIOWriteBytesRate.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcIOWriteBytesRate() {
+        procIOWriteBytesRate.add(getProcIOWriteBytesRateOnly());
+    }
+
+    private Double getProcIOWriteBytesRateOnly() {
+        try {
+            LinuxIORate curLinuxIORate = new LinuxIORate(PID);
+            double ioWriteBytesRate = curLinuxIORate.getIOWriteBytesRate(lastLinuxIORate);
+            this.lastLinuxIORate = curLinuxIORate;
+            return ioWriteBytesRate;
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getProcIOWriteBytesRateOnly||msg=failed to get process IO write bytes rate",
+                    e);
+        }
+        return 0d;
     }
 
     @Override
     public PeriodStatistics getProcIOReadWriteRate() {
-        return null;
+        return procIOReadWriteRate.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcIOReadWriteRate() {
+        procIOReadWriteRate.add(getProcIOReadWriteRateOnly());
+    }
+
+    private Double getProcIOReadWriteRateOnly() {
+        return getProcIOReadRateOnly() + getProcIOWriteRateOnly();
     }
 
     @Override
     public PeriodStatistics getProcIOReadWriteBytesRate() {
-        return null;
+        return procIOReadWriteBytesRate.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcIOReadWriteBytesRate() {
+        procIOReadWriteBytesRate.add(getProcIOReadWriteBytesRateOnly());
+    }
+
+    private Double getProcIOReadWriteBytesRateOnly() {
+        return getProcIOReadBytesRateOnly() + getProcIOWriteBytesRateOnly();
     }
 
     @Override
     public PeriodStatistics getProcIOAwaitTimePercent() {
-        return null;
+        return procIOAwaitTimePercent.snapshot();
+    }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcProcIOAwaitTimePercent() {
+        procIOAwaitTimePercent.add(getProcIOAwaitTimePercentOnly());
+    }
+
+    private Double getProcIOAwaitTimePercentOnly() {
+        List<String> lines = getOutputByCmd("iotop -p %d -P -b -n 1 | awk 'NR==4{print $10}'",
+                "当前进程io读写等待时间占总时间百分比", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcIOAwaitTimePercent||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Long getJvmProcYoungGcCount() {
-        return null;
+        long gcCounts = 0L;
+        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                .getGarbageCollectorMXBeans()) {
+            String name = garbageCollector.getName();
+            if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
+                gcCounts += garbageCollector.getCollectionCount();
+            }
+        }
+        return gcCounts;
     }
 
     @Override
@@ -284,17 +577,48 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getJvmProcYoungGcTime() {
-        return null;
+        long gcTime = 0L;
+        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                .getGarbageCollectorMXBeans()) {
+            String name = garbageCollector.getName();
+            if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
+                gcTime += garbageCollector.getCollectionTime();
+            }
+        }
+        return gcTime;
     }
 
     @Override
     public Long getJvmProcFullGcTime() {
-        return null;
+        long gcTime = 0L;
+        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                .getGarbageCollectorMXBeans()) {
+            String name = garbageCollector.getName();
+            if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
+                gcTime += garbageCollector.getCollectionTime();
+            }
+        }
+        return gcTime;
     }
 
     @Override
     public Double getJvmProcS0C() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程S0C", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[0]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcS0C||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcS0C||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
@@ -354,12 +678,24 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Integer getJvmProcThreadNum() {
-        return null;
+        try {
+            ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
+            return mxBean.getThreadCount();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[当前jvm进程线程使用数]失败", ex);
+            return 0;
+        }
     }
 
     @Override
     public Integer getJvmProcThreadNumPeak() {
-        return null;
+        try {
+            ThreadMXBean mxBean = ManagementFactory.getThreadMXBean();
+            return mxBean.getPeakThreadCount();
+        } catch (Exception ex) {
+            LOGGER.error("获取系统资源项[jvm进程启动以来线程数峰值]失败", ex);
+            return 0;
+        }
     }
 
     @Override
@@ -375,7 +711,15 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public List<Integer> getProcPortListen() {
-        return null;
+        List<Integer> result = new ArrayList<>();
+        List<String> output = getOutputByCmd("netstat -nltp | grep %d | awk '{print $4}' | awk -F: '{print $NF}'",
+                "当前Jvm进程监听端口", PID);
+        if (!output.isEmpty()) {
+            for (String s : output) {
+                result.add(Integer.parseInt(s));
+            }
+        }
+        return result;
     }
 
     @PeriodMethod(periodMs = 5 * 1000)
@@ -479,11 +823,6 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Integer getProcNetworkTcpNoneNum() {
-        return null;
-    }
-
-    @Override
-    public ProcMetrics getProcMetrics() {
         return null;
     }
 

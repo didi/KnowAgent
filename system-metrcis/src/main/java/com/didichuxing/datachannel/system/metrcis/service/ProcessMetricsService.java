@@ -377,9 +377,4 @@ public interface ProcessMetricsService {
      */
     Integer getProcNetworkTcpNoneNum();
 
-    /**
-     * @return 返回当前进程指标集 如须获取全量当前进程指标，请调用该方法而非挨个调用各指标获取函数以提升其性能、降低消耗
-     */
-    ProcMetrics getProcMetrics();
-
 }
