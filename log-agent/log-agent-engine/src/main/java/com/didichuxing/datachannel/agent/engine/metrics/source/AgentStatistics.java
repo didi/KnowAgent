@@ -557,6 +557,7 @@ public class AgentStatistics extends AbstractStatistics {
             .getJvmProcFullGcCount());
         processMetrics.setProcopenfdcount(GlobalProperties.getProcessMetricsService()
             .getProcOpenFdCount());
+        processMetrics.setJvmProcS0C(GlobalProperties.getProcessMetricsService().getJvmProcS0C());
         processMetrics.setHeartbeattime(heartbeatTime);
         processMetrics.setHeartbeattimeminute(heartbeatTimeMinute);
         processMetrics.setHeartbeattimehour(heartbeatTimeHour);

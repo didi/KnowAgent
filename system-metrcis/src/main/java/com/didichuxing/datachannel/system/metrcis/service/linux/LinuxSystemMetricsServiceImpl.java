@@ -347,7 +347,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
         //TODO：
 
-        return null;
+        return 0d;
 
     }
 

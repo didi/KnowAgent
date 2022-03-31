@@ -539,7 +539,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcIOAwaitTimePercentOnly() {
-        List<String> lines = getOutputByCmd("iotop -p %d -P -b -n 1 | awk 'NR==4{print $10}'",
+        List<String> lines = getOutputByCmd("iotop -P -b -n 1 | grep %d | awk 'NR==1{print $10}'",
                 "当前进程io读写等待时间占总时间百分比", PID);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Double.parseDouble(lines.get(0));
@@ -623,57 +623,222 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Double getJvmProcS1C() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程S1C", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[1]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcS1C||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcS1C||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcS0U() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程S0U", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[2]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcS0U||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcS0U||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcS1U() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程S1U", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[3]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcS1U||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcS1U||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcEC() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程EC", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[4]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcEC||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcEC||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcEU() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程EU", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[5]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcEU||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcEU||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcOC() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程OC", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[6]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcOC||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcOC||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcOU() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程OU", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[7]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcOU||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcOU||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcMC() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程MC", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[8]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcMC||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcMC||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcMU() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程MU", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[9]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcMU||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcMU||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcCCSC() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程CCSC", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[10]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcCCSC||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcCCSC||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
     public Double getJvmProcCCSU() {
-        return null;
+        List<String> lines = getOutputByCmd("jstat -gc %d",
+                "当前jvm进程CCSU", PID);
+        if (!lines.isEmpty() && 2 == lines.size() && StringUtils.isNotBlank(lines.get(1))) {
+            String[] properties = lines.get(1).split("\\s+");
+            if(19 == properties.length) {
+                return Double.parseDouble(properties[11]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getJvmProcCCSU||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getJvmProcCCSU||msg=data is null");
+            return 0d;
+        }
     }
 
     @Override
@@ -763,67 +928,145 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Integer getProcNetworkTcpConnectionNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep -c %d", "当前Jvm进程当前tcp连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpConnectionNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpListeningNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'LISTEN'", "当前Jvm进程当前处于 listening 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpListeningNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpEstablishedNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'ESTABLISHED'", "当前Jvm进程当前处于 ESTABLISHED 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpEstablishedNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpSynSentNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'SYN_SENT'", "当前Jvm进程当前处于 SYN_SENT 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpSynSentNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpSynRecvNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'SYN_RCVD'", "当前Jvm进程当前处于 SYN_RCVD 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpSynRecvNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpFinWait1Num() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'FIN_WAIT1'", "当前Jvm进程当前处于 FIN_WAIT1 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpFinWait1Num||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpFinWait2Num() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'FIN_WAIT2'", "当前Jvm进程当前处于 FIN_WAIT2 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpFinWait2Num||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpTimeWaitNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'TIME_WAIT'", "当前Jvm进程当前处于 time wait 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpTimeWaitNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpClosedNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'CLOSED'", "当前Jvm进程当前处于 CLOSED 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpClosedNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpCloseWaitNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'CLOSE_WAIT'", "当前Jvm进程当前处于 close wait 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpCloseWaitNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpClosingNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'CLOSING'", "当前Jvm进程当前处于 CLOSING 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpClosingNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpLastAckNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'LAST_ACK'", "当前Jvm进程当前处于 LAST_ACK 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpLastAckNum||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcNetworkTcpNoneNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -antp | grep %d | grep -c 'NONE'", "当前Jvm进程当前处于 NONE 状态 tcp 连接数", PID);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getProcNetworkTcpNoneNum||msg=data is null");
+            return 0;
+        }
     }
 
     /**

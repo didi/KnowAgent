@@ -505,9 +505,4 @@ public class MacOSSystemMetricsServiceImpl implements SystemMetricsService {
         return null;
     }
 
-    @Override
-    public SystemMetrics getSystemMetrics() {
-        return null;
-    }
-
 }

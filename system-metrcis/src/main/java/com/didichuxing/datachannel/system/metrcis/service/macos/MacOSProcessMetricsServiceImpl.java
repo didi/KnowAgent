@@ -353,8 +353,4 @@ public class MacOSProcessMetricsServiceImpl implements ProcessMetricsService {
         return null;
     }
 
-    @Override
-    public ProcMetrics getProcMetrics() {
-        return null;
-    }
 }

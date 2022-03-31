@@ -68,6 +68,8 @@ public class ProcessMetrics {
 
     private Integer procopenfdcount;
 
+    private Double jvmProcS0C;
+
     private Long    heartbeattime;
 
     private Long    heartbeattimeminute;
@@ -98,6 +100,14 @@ public class ProcessMetrics {
 
     public void setProcstartuptime(Long procstartuptime) {
         this.procstartuptime = procstartuptime;
+    }
+
+    public Double getJvmProcS0C() {
+        return jvmProcS0C;
+    }
+
+    public void setJvmProcS0C(Double jvmProcS0C) {
+        this.jvmProcS0C = jvmProcS0C;
     }
 
     public Double getProccpuutil() {
