@@ -69,15 +69,15 @@
     <result column="systemCpuIdle75Quantile" property="systemcpuidle75quantile" jdbcType="DOUBLE" />
     <result column="systemCpuIdle95Quantile" property="systemcpuidle95quantile" jdbcType="DOUBLE" />
     <result column="systemCpuIdle99Quantile" property="systemcpuidle99quantile" jdbcType="DOUBLE" />
-    <result column="systemCpuSwitches" property="systemcpuswitches" jdbcType="BIGINT" />
-    <result column="systemCpuSwitchesMin" property="systemcpuswitchesmin" jdbcType="BIGINT" />
-    <result column="systemCpuSwitchesMax" property="systemcpuswitchesmax" jdbcType="BIGINT" />
+    <result column="systemCpuSwitches" property="systemcpuswitches" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitchesMin" property="systemcpuswitchesmin" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitchesMax" property="systemcpuswitchesmax" jdbcType="DOUBLE" />
     <result column="systemCpuSwitchesMean" property="systemcpuswitchesmean" jdbcType="DOUBLE" />
     <result column="systemCpuSwitchesStd" property="systemcpuswitchesstd" jdbcType="DOUBLE" />
-    <result column="systemCpuSwitches55Quantile" property="systemcpuswitches55quantile" jdbcType="BIGINT" />
-    <result column="systemCpuSwitches75Quantile" property="systemcpuswitches75quantile" jdbcType="BIGINT" />
-    <result column="systemCpuSwitches95Quantile" property="systemcpuswitches95quantile" jdbcType="BIGINT" />
-    <result column="systemCpuSwitches99Quantile" property="systemcpuswitches99quantile" jdbcType="BIGINT" />
+    <result column="systemCpuSwitches55Quantile" property="systemcpuswitches55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches75Quantile" property="systemcpuswitches75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches95Quantile" property="systemcpuswitches95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches99Quantile" property="systemcpuswitches99quantile" jdbcType="DOUBLE" />
     <result column="systemCpuUsageIrq" property="systemcpuusageirq" jdbcType="DOUBLE" />
     <result column="systemCpuUsageIrqMin" property="systemcpuusageirqmin" jdbcType="DOUBLE" />
     <result column="systemCpuUsageIrqMax" property="systemcpuusageirqmax" jdbcType="DOUBLE" />
@@ -178,24 +178,24 @@
     <result column="systemFilesUsed" property="systemfilesused" jdbcType="INTEGER" />
     <result column="systemFilesNotUsed" property="systemfilesnotused" jdbcType="INTEGER" />
     <result column="systemNetCards" property="systemnetcards" jdbcType="INTEGER" />
-    <result column="systemNetworkReceiveBytesPs" property="systemnetworkreceivebytesps" jdbcType="BIGINT" />
-    <result column="systemNetworkReceiveBytesPsMin" property="systemnetworkreceivebytespsmin" jdbcType="BIGINT" />
-    <result column="systemNetworkReceiveBytesPsMax" property="systemnetworkreceivebytespsmax" jdbcType="BIGINT" />
+    <result column="systemNetworkReceiveBytesPs" property="systemnetworkreceivebytesps" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPsMin" property="systemnetworkreceivebytespsmin" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPsMax" property="systemnetworkreceivebytespsmax" jdbcType="DOUBLE" />
     <result column="systemNetworkReceiveBytesPsMean" property="systemnetworkreceivebytespsmean" jdbcType="DOUBLE" />
     <result column="systemNetworkReceiveBytesPsStd" property="systemnetworkreceivebytespsstd" jdbcType="DOUBLE" />
-    <result column="systemNetworkReceiveBytesPs55Quantile" property="systemnetworkreceivebytesps55quantile" jdbcType="BIGINT" />
-    <result column="systemNetworkReceiveBytesPs75Quantile" property="systemnetworkreceivebytesps75quantile" jdbcType="BIGINT" />
-    <result column="systemNetworkReceiveBytesPs95Quantile" property="systemnetworkreceivebytesps95quantile" jdbcType="BIGINT" />
-    <result column="systemNetworkReceiveBytesPs99Quantile" property="systemnetworkreceivebytesps99quantile" jdbcType="BIGINT" />
-    <result column="systemNetworkSendBytesPs" property="systemnetworksendbytesps" jdbcType="BIGINT" />
-    <result column="systemNetworkSendBytesPsMin" property="systemnetworksendbytespsmin" jdbcType="BIGINT" />
-    <result column="systemNetworkSendBytesPsMax" property="systemnetworksendbytespsmax" jdbcType="BIGINT" />
+    <result column="systemNetworkReceiveBytesPs55Quantile" property="systemnetworkreceivebytesps55quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPs75Quantile" property="systemnetworkreceivebytesps75quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPs95Quantile" property="systemnetworkreceivebytesps95quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPs99Quantile" property="systemnetworkreceivebytesps99quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs" property="systemnetworksendbytesps" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPsMin" property="systemnetworksendbytespsmin" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPsMax" property="systemnetworksendbytespsmax" jdbcType="DOUBLE" />
     <result column="systemNetworkSendBytesPsMean" property="systemnetworksendbytespsmean" jdbcType="DOUBLE" />
     <result column="systemNetworkSendBytesPsStd" property="systemnetworksendbytespsstd" jdbcType="DOUBLE" />
-    <result column="systemNetworkSendBytesPs55Quantile" property="systemnetworksendbytesps55quantile" jdbcType="BIGINT" />
-    <result column="systemNetworkSendBytesPs75Quantile" property="systemnetworksendbytesps75quantile" jdbcType="BIGINT" />
-    <result column="systemNetworkSendBytesPs95Quantile" property="systemnetworksendbytesps95quantile" jdbcType="BIGINT" />
-    <result column="systemNetworkSendBytesPs99Quantile" property="systemnetworksendbytesps99quantile" jdbcType="BIGINT" />
+    <result column="systemNetworkSendBytesPs55Quantile" property="systemnetworksendbytesps55quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs75Quantile" property="systemnetworksendbytesps75quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs95Quantile" property="systemnetworksendbytesps95quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs99Quantile" property="systemnetworksendbytesps99quantile" jdbcType="DOUBLE" />
     <result column="systemNetworkTcpConnectionNum" property="systemnetworktcpconnectionnum" jdbcType="INTEGER" />
     <result column="systemNetworkTcpListeningNum" property="systemnetworktcplisteningnum" jdbcType="INTEGER" />
     <result column="systemNetworkTcpEstablishedNum" property="systemnetworktcpestablishednum" jdbcType="INTEGER" />
@@ -434,208 +434,6 @@
     limit 1
   </select>
 
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
-    insert into tb_metrics_system (id, osType, osVersion, 
-      osKernelVersion, hostName, ips, 
-      systemNtpOffset, systemStartupTime, systemUptime, 
-      processesBlocked, processesSleeping, processesZombies, 
-      processesStopped, processesRunning, processesIdle, 
-      processesWait, processesDead, processesPaging, 
-      processesUnknown, processesTotal, processesTotalThreads, 
-      cpuCores, systemCpuUtil, systemCpuUtilMin, 
-      systemCpuUtilMax, systemCpuUtilMean, systemCpuUtilStd, 
-      systemCpuUtil55Quantile, systemCpuUtil75Quantile, 
-      systemCpuUtil95Quantile, systemCpuUtil99Quantile, 
-      systemCpuUtilTotalPercent, systemCpuUtilTotalPercentMin, 
-      systemCpuUtilTotalPercentMax, systemCpuUtilTotalPercentMean, 
-      systemCpuUtilTotalPercentStd, systemCpuUtilTotalPercent55Quantile, 
-      systemCpuUtilTotalPercent75Quantile, systemCpuUtilTotalPercent95Quantile, 
-      systemCpuUtilTotalPercent99Quantile, systemCpuSystem, 
-      systemCpuSystemMin, systemCpuSystemMax, systemCpuSystemMean, 
-      systemCpuSystemStd, systemCpuSystem55Quantile, 
-      systemCpuSystem75Quantile, systemCpuSystem95Quantile, 
-      systemCpuSystem99Quantile, systemCpuUser, 
-      systemCpuUserMin, systemCpuUserMax, systemCpuUserMean, 
-      systemCpuUserStd, systemCpuUser55Quantile, 
-      systemCpuUser75Quantile, systemCpuUser95Quantile, 
-      systemCpuUser99Quantile, systemCpuIdle, systemCpuIdleMin, 
-      systemCpuIdleMax, systemCpuIdleMean, systemCpuIdleStd, 
-      systemCpuIdle55Quantile, systemCpuIdle75Quantile, 
-      systemCpuIdle95Quantile, systemCpuIdle99Quantile, 
-      systemCpuSwitches, systemCpuSwitchesMin, 
-      systemCpuSwitchesMax, systemCpuSwitchesMean, 
-      systemCpuSwitchesStd, systemCpuSwitches55Quantile, 
-      systemCpuSwitches75Quantile, systemCpuSwitches95Quantile, 
-      systemCpuSwitches99Quantile, systemCpuUsageIrq, 
-      systemCpuUsageIrqMin, systemCpuUsageIrqMax, 
-      systemCpuUsageIrqMean, systemCpuUsageIrqStd, 
-      systemCpuUsageIrq55Quantile, systemCpuUsageIrq75Quantile, 
-      systemCpuUsageIrq95Quantile, systemCpuUsageIrq99Quantile, 
-      systemCpuUsageSoftIrq, systemCpuUsageSoftIrqMin, 
-      systemCpuUsageSoftIrqMax, systemCpuUsageSoftIrqMean, 
-      systemCpuUsageSoftIrqStd, systemCpuUsageSoftIrq55Quantile, 
-      systemCpuUsageSoftIrq75Quantile, systemCpuUsageSoftIrq95Quantile, 
-      systemCpuUsageSoftIrq99Quantile, systemLoad1, 
-      systemLoad1Min, systemLoad1Max, systemLoad1Mean, 
-      systemLoad1Std, systemLoad155Quantile, systemLoad175Quantile, 
-      systemLoad195Quantile, systemLoad199Quantile, 
-      systemLoad5, systemLoad5Min, systemLoad5Max, 
-      systemLoad5Mean, systemLoad5Std, systemLoad555Quantile, 
-      systemLoad575Quantile, systemLoad595Quantile, 
-      systemLoad599Quantile, systemLoad15, systemLoad15Min, 
-      systemLoad15Max, systemLoad15Mean, systemLoad15Std, 
-      systemLoad1555Quantile, systemLoad1575Quantile, 
-      systemLoad1595Quantile, systemLoad1599Quantile, 
-      systemCpuIOWait, systemCpuIOWaitMin, systemCpuIOWaitMax, 
-      systemCpuIOWaitMean, systemCpuIOWaitStd, 
-      systemCpuIOWait55Quantile, systemCpuIOWait75Quantile, 
-      systemCpuIOWait95Quantile, systemCpuIOWait99Quantile, 
-      systemCpuGuest, systemCpuGuestMin, systemCpuGuestMax, 
-      systemCpuGuestMean, systemCpuGuestStd, systemCpuGuest55Quantile, 
-      systemCpuGuest75Quantile, systemCpuGuest95Quantile, 
-      systemCpuGuest99Quantile, systemCpuSteal, 
-      systemCpuStealMin, systemCpuStealMax, systemCpuStealMean, 
-      systemCpuStealStd, systemCpuSteal55Quantile, 
-      systemCpuSteal75Quantile, systemCpuSteal95Quantile, 
-      systemCpuSteal99Quantile, systemMemCommitLimit, 
-      systemMemCommittedAs, systemMemCommitted, 
-      systemMemNonPaged, systemMemPaged, systemMemShared, 
-      systemMemSlab, systemMemTotal, systemMemFree, 
-      systemMemUsed, systemMemBuffered, systemMemCached, 
-      systemMemFreePercent, systemMemUsedPercent, 
-      systemSwapCached, systemSwapFree, systemSwapFreePercent, 
-      systemSwapTotal, systemSwapUsed, systemSwapUsedPercent, 
-      systemDisks, systemFilesMax, systemFilesAllocated, 
-      systemFilesLeft, systemFilesUsedPercent, 
-      systemFilesUsed, systemFilesNotUsed, systemNetCards, 
-      systemNetworkReceiveBytesPs, systemNetworkReceiveBytesPsMin, 
-      systemNetworkReceiveBytesPsMax, systemNetworkReceiveBytesPsMean, 
-      systemNetworkReceiveBytesPsStd, systemNetworkReceiveBytesPs55Quantile, 
-      systemNetworkReceiveBytesPs75Quantile, systemNetworkReceiveBytesPs95Quantile, 
-      systemNetworkReceiveBytesPs99Quantile, systemNetworkSendBytesPs, 
-      systemNetworkSendBytesPsMin, systemNetworkSendBytesPsMax, 
-      systemNetworkSendBytesPsMean, systemNetworkSendBytesPsStd, 
-      systemNetworkSendBytesPs55Quantile, systemNetworkSendBytesPs75Quantile, 
-      systemNetworkSendBytesPs95Quantile, systemNetworkSendBytesPs99Quantile, 
-      systemNetworkTcpConnectionNum, systemNetworkTcpListeningNum, 
-      systemNetworkTcpEstablishedNum, systemNetworkTcpSynSentNum, 
-      systemNetworkTcpSynRecvNum, systemNetworkTcpFinWait1Num, 
-      systemNetworkTcpFinWait2Num, systemNetworkTcpTimeWaitNum, 
-      systemNetworkTcpClosedNum, systemNetworkTcpCloseWaitNum, 
-      systemNetworkTcpClosingNum, systemNetworkTcpLastAckNum, 
-      systemNetworkTcpNoneNum, systemNetworkTcpActiveOpens, 
-      systemNetworkTcpPassiveOpens, systemNetworkTcpAttemptFails, 
-      systemNetworkTcpEstabResets, systemNetworkTcpRetransSegs, 
-      systemNetworkTcpExtListenOverflows, systemNetworkUdpInDatagrams, 
-      systemNetworkUdpOutDatagrams, systemNetworkUdpInErrors, 
-      systemNetworkUdpNoPorts, systemNetworkUdpSendBufferErrors, 
-      heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour,
-      heartbeatTimeDay, systemNetCardsBandWidth, systemNetworkSendAndReceiveBytesPs, systemNetworkSendAndReceiveBytesPsMin, systemNetworkSendAndReceiveBytesPsMax,
-      systemNetworkSendAndReceiveBytesPsMean, systemNetworkSendAndReceiveBytesPsStd, systemNetworkSendAndReceiveBytesPs55Quantile, systemNetworkSendAndReceiveBytesPs75Quantile, systemNetworkSendAndReceiveBytesPs95Quantile,
-      systemNetworkSendAndReceiveBytesPs99Quantile, systemNetWorkBandWidthUsedPercent, systemNetWorkBandWidthUsedPercentMin, systemNetWorkBandWidthUsedPercentMax, systemNetWorkBandWidthUsedPercentMean, systemNetWorkBandWidthUsedPercentStd,
-      systemNetWorkBandWidthUsedPercent55Quantile, systemNetWorkBandWidthUsedPercent75Quantile, systemNetWorkBandWidthUsedPercent95Quantile, systemNetWorkBandWidthUsedPercent99Quantile)
-    values (#{id,jdbcType=BIGINT}, #{ostype,jdbcType=VARCHAR}, #{osversion,jdbcType=VARCHAR}, 
-      #{oskernelversion,jdbcType=VARCHAR}, #{hostname,jdbcType=VARCHAR}, #{ips,jdbcType=VARCHAR}, 
-      #{systemntpoffset,jdbcType=BIGINT}, #{systemstartuptime,jdbcType=BIGINT}, #{systemuptime,jdbcType=BIGINT}, 
-      #{processesblocked,jdbcType=INTEGER}, #{processessleeping,jdbcType=INTEGER}, #{processeszombies,jdbcType=INTEGER}, 
-      #{processesstopped,jdbcType=INTEGER}, #{processesrunning,jdbcType=INTEGER}, #{processesidle,jdbcType=INTEGER}, 
-      #{processeswait,jdbcType=INTEGER}, #{processesdead,jdbcType=INTEGER}, #{processespaging,jdbcType=INTEGER}, 
-      #{processesunknown,jdbcType=INTEGER}, #{processestotal,jdbcType=INTEGER}, #{processestotalthreads,jdbcType=INTEGER}, 
-      #{cpucores,jdbcType=INTEGER}, #{systemcpuutil,jdbcType=DOUBLE}, #{systemcpuutilmin,jdbcType=DOUBLE}, 
-      #{systemcpuutilmax,jdbcType=DOUBLE}, #{systemcpuutilmean,jdbcType=DOUBLE}, #{systemcpuutilstd,jdbcType=DOUBLE}, 
-      #{systemcpuutil55quantile,jdbcType=DOUBLE}, #{systemcpuutil75quantile,jdbcType=DOUBLE}, 
-      #{systemcpuutil95quantile,jdbcType=DOUBLE}, #{systemcpuutil99quantile,jdbcType=DOUBLE}, 
-      #{systemcpuutiltotalpercent,jdbcType=DOUBLE}, #{systemcpuutiltotalpercentmin,jdbcType=DOUBLE}, 
-      #{systemcpuutiltotalpercentmax,jdbcType=DOUBLE}, #{systemcpuutiltotalpercentmean,jdbcType=DOUBLE}, 
-      #{systemcpuutiltotalpercentstd,jdbcType=DOUBLE}, #{systemcpuutiltotalpercent55quantile,jdbcType=DOUBLE}, 
-      #{systemcpuutiltotalpercent75quantile,jdbcType=DOUBLE}, #{systemcpuutiltotalpercent95quantile,jdbcType=DOUBLE}, 
-      #{systemcpuutiltotalpercent99quantile,jdbcType=DOUBLE}, #{systemcpusystem,jdbcType=DOUBLE}, 
-      #{systemcpusystemmin,jdbcType=DOUBLE}, #{systemcpusystemmax,jdbcType=DOUBLE}, #{systemcpusystemmean,jdbcType=DOUBLE}, 
-      #{systemcpusystemstd,jdbcType=DOUBLE}, #{systemcpusystem55quantile,jdbcType=DOUBLE}, 
-      #{systemcpusystem75quantile,jdbcType=DOUBLE}, #{systemcpusystem95quantile,jdbcType=DOUBLE}, 
-      #{systemcpusystem99quantile,jdbcType=DOUBLE}, #{systemcpuuser,jdbcType=DOUBLE}, 
-      #{systemcpuusermin,jdbcType=DOUBLE}, #{systemcpuusermax,jdbcType=DOUBLE}, #{systemcpuusermean,jdbcType=DOUBLE}, 
-      #{systemcpuuserstd,jdbcType=DOUBLE}, #{systemcpuuser55quantile,jdbcType=DOUBLE}, 
-      #{systemcpuuser75quantile,jdbcType=DOUBLE}, #{systemcpuuser95quantile,jdbcType=DOUBLE}, 
-      #{systemcpuuser99quantile,jdbcType=DOUBLE}, #{systemcpuidle,jdbcType=DOUBLE}, #{systemcpuidlemin,jdbcType=DOUBLE}, 
-      #{systemcpuidlemax,jdbcType=DOUBLE}, #{systemcpuidlemean,jdbcType=DOUBLE}, #{systemcpuidlestd,jdbcType=DOUBLE}, 
-      #{systemcpuidle55quantile,jdbcType=DOUBLE}, #{systemcpuidle75quantile,jdbcType=DOUBLE}, 
-      #{systemcpuidle95quantile,jdbcType=DOUBLE}, #{systemcpuidle99quantile,jdbcType=DOUBLE}, 
-      #{systemcpuswitches,jdbcType=BIGINT}, #{systemcpuswitchesmin,jdbcType=BIGINT}, 
-      #{systemcpuswitchesmax,jdbcType=BIGINT}, #{systemcpuswitchesmean,jdbcType=DOUBLE}, 
-      #{systemcpuswitchesstd,jdbcType=DOUBLE}, #{systemcpuswitches55quantile,jdbcType=BIGINT}, 
-      #{systemcpuswitches75quantile,jdbcType=BIGINT}, #{systemcpuswitches95quantile,jdbcType=BIGINT}, 
-      #{systemcpuswitches99quantile,jdbcType=BIGINT}, #{systemcpuusageirq,jdbcType=DOUBLE}, 
-      #{systemcpuusageirqmin,jdbcType=DOUBLE}, #{systemcpuusageirqmax,jdbcType=DOUBLE}, 
-      #{systemcpuusageirqmean,jdbcType=DOUBLE}, #{systemcpuusageirqstd,jdbcType=DOUBLE}, 
-      #{systemcpuusageirq55quantile,jdbcType=DOUBLE}, #{systemcpuusageirq75quantile,jdbcType=DOUBLE}, 
-      #{systemcpuusageirq95quantile,jdbcType=DOUBLE}, #{systemcpuusageirq99quantile,jdbcType=DOUBLE}, 
-      #{systemcpuusagesoftirq,jdbcType=DOUBLE}, #{systemcpuusagesoftirqmin,jdbcType=DOUBLE}, 
-      #{systemcpuusagesoftirqmax,jdbcType=DOUBLE}, #{systemcpuusagesoftirqmean,jdbcType=DOUBLE}, 
-      #{systemcpuusagesoftirqstd,jdbcType=DOUBLE}, #{systemcpuusagesoftirq55quantile,jdbcType=DOUBLE}, 
-      #{systemcpuusagesoftirq75quantile,jdbcType=DOUBLE}, #{systemcpuusagesoftirq95quantile,jdbcType=DOUBLE}, 
-      #{systemcpuusagesoftirq99quantile,jdbcType=DOUBLE}, #{systemload1,jdbcType=DOUBLE}, 
-      #{systemload1min,jdbcType=DOUBLE}, #{systemload1max,jdbcType=DOUBLE}, #{systemload1mean,jdbcType=DOUBLE}, 
-      #{systemload1std,jdbcType=DOUBLE}, #{systemload155quantile,jdbcType=DOUBLE}, #{systemload175quantile,jdbcType=DOUBLE}, 
-      #{systemload195quantile,jdbcType=DOUBLE}, #{systemload199quantile,jdbcType=DOUBLE}, 
-      #{systemload5,jdbcType=DOUBLE}, #{systemload5min,jdbcType=DOUBLE}, #{systemload5max,jdbcType=DOUBLE}, 
-      #{systemload5mean,jdbcType=DOUBLE}, #{systemload5std,jdbcType=DOUBLE}, #{systemload555quantile,jdbcType=DOUBLE}, 
-      #{systemload575quantile,jdbcType=DOUBLE}, #{systemload595quantile,jdbcType=DOUBLE}, 
-      #{systemload599quantile,jdbcType=DOUBLE}, #{systemload15,jdbcType=DOUBLE}, #{systemload15min,jdbcType=DOUBLE}, 
-      #{systemload15max,jdbcType=DOUBLE}, #{systemload15mean,jdbcType=DOUBLE}, #{systemload15std,jdbcType=DOUBLE}, 
-      #{systemload1555quantile,jdbcType=DOUBLE}, #{systemload1575quantile,jdbcType=DOUBLE}, 
-      #{systemload1595quantile,jdbcType=DOUBLE}, #{systemload1599quantile,jdbcType=DOUBLE}, 
-      #{systemcpuiowait,jdbcType=DOUBLE}, #{systemcpuiowaitmin,jdbcType=DOUBLE}, #{systemcpuiowaitmax,jdbcType=DOUBLE}, 
-      #{systemcpuiowaitmean,jdbcType=DOUBLE}, #{systemcpuiowaitstd,jdbcType=DOUBLE}, 
-      #{systemcpuiowait55quantile,jdbcType=DOUBLE}, #{systemcpuiowait75quantile,jdbcType=DOUBLE}, 
-      #{systemcpuiowait95quantile,jdbcType=DOUBLE}, #{systemcpuiowait99quantile,jdbcType=DOUBLE}, 
-      #{systemcpuguest,jdbcType=DOUBLE}, #{systemcpuguestmin,jdbcType=DOUBLE}, #{systemcpuguestmax,jdbcType=DOUBLE}, 
-      #{systemcpuguestmean,jdbcType=DOUBLE}, #{systemcpugueststd,jdbcType=DOUBLE}, #{systemcpuguest55quantile,jdbcType=DOUBLE}, 
-      #{systemcpuguest75quantile,jdbcType=DOUBLE}, #{systemcpuguest95quantile,jdbcType=DOUBLE}, 
-      #{systemcpuguest99quantile,jdbcType=DOUBLE}, #{systemcpusteal,jdbcType=DOUBLE}, 
-      #{systemcpustealmin,jdbcType=DOUBLE}, #{systemcpustealmax,jdbcType=DOUBLE}, #{systemcpustealmean,jdbcType=DOUBLE}, 
-      #{systemcpustealstd,jdbcType=DOUBLE}, #{systemcpusteal55quantile,jdbcType=DOUBLE}, 
-      #{systemcpusteal75quantile,jdbcType=DOUBLE}, #{systemcpusteal95quantile,jdbcType=DOUBLE}, 
-      #{systemcpusteal99quantile,jdbcType=DOUBLE}, #{systemmemcommitlimit,jdbcType=BIGINT}, 
-      #{systemmemcommittedas,jdbcType=BIGINT}, #{systemmemcommitted,jdbcType=BIGINT}, 
-      #{systemmemnonpaged,jdbcType=BIGINT}, #{systemmempaged,jdbcType=BIGINT}, #{systemmemshared,jdbcType=BIGINT}, 
-      #{systemmemslab,jdbcType=BIGINT}, #{systemmemtotal,jdbcType=BIGINT}, #{systemmemfree,jdbcType=BIGINT}, 
-      #{systemmemused,jdbcType=BIGINT}, #{systemmembuffered,jdbcType=BIGINT}, #{systemmemcached,jdbcType=BIGINT}, 
-      #{systemmemfreepercent,jdbcType=DOUBLE}, #{systemmemusedpercent,jdbcType=DOUBLE}, 
-      #{systemswapcached,jdbcType=BIGINT}, #{systemswapfree,jdbcType=BIGINT}, #{systemswapfreepercent,jdbcType=DOUBLE}, 
-      #{systemswaptotal,jdbcType=BIGINT}, #{systemswapused,jdbcType=BIGINT}, #{systemswapusedpercent,jdbcType=DOUBLE}, 
-      #{systemdisks,jdbcType=INTEGER}, #{systemfilesmax,jdbcType=INTEGER}, #{systemfilesallocated,jdbcType=INTEGER}, 
-      #{systemfilesleft,jdbcType=INTEGER}, #{systemfilesusedpercent,jdbcType=DOUBLE}, 
-      #{systemfilesused,jdbcType=INTEGER}, #{systemfilesnotused,jdbcType=INTEGER}, #{systemnetcards,jdbcType=INTEGER}, 
-      #{systemnetworkreceivebytesps,jdbcType=BIGINT}, #{systemnetworkreceivebytespsmin,jdbcType=BIGINT}, 
-      #{systemnetworkreceivebytespsmax,jdbcType=BIGINT}, #{systemnetworkreceivebytespsmean,jdbcType=DOUBLE}, 
-      #{systemnetworkreceivebytespsstd,jdbcType=DOUBLE}, #{systemnetworkreceivebytesps55quantile,jdbcType=BIGINT}, 
-      #{systemnetworkreceivebytesps75quantile,jdbcType=BIGINT}, #{systemnetworkreceivebytesps95quantile,jdbcType=BIGINT}, 
-      #{systemnetworkreceivebytesps99quantile,jdbcType=BIGINT}, #{systemnetworksendbytesps,jdbcType=BIGINT}, 
-      #{systemnetworksendbytespsmin,jdbcType=BIGINT}, #{systemnetworksendbytespsmax,jdbcType=BIGINT}, 
-      #{systemnetworksendbytespsmean,jdbcType=DOUBLE}, #{systemnetworksendbytespsstd,jdbcType=DOUBLE}, 
-      #{systemnetworksendbytesps55quantile,jdbcType=BIGINT}, #{systemnetworksendbytesps75quantile,jdbcType=BIGINT}, 
-      #{systemnetworksendbytesps95quantile,jdbcType=BIGINT}, #{systemnetworksendbytesps99quantile,jdbcType=BIGINT}, 
-      #{systemnetworktcpconnectionnum,jdbcType=INTEGER}, #{systemnetworktcplisteningnum,jdbcType=INTEGER}, 
-      #{systemnetworktcpestablishednum,jdbcType=INTEGER}, #{systemnetworktcpsynsentnum,jdbcType=INTEGER}, 
-      #{systemnetworktcpsynrecvnum,jdbcType=INTEGER}, #{systemnetworktcpfinwait1num,jdbcType=INTEGER}, 
-      #{systemnetworktcpfinwait2num,jdbcType=INTEGER}, #{systemnetworktcptimewaitnum,jdbcType=INTEGER}, 
-      #{systemnetworktcpclosednum,jdbcType=INTEGER}, #{systemnetworktcpclosewaitnum,jdbcType=INTEGER}, 
-      #{systemnetworktcpclosingnum,jdbcType=INTEGER}, #{systemnetworktcplastacknum,jdbcType=INTEGER}, 
-      #{systemnetworktcpnonenum,jdbcType=INTEGER}, #{systemnetworktcpactiveopens,jdbcType=BIGINT}, 
-      #{systemnetworktcppassiveopens,jdbcType=BIGINT}, #{systemnetworktcpattemptfails,jdbcType=BIGINT}, 
-      #{systemnetworktcpestabresets,jdbcType=BIGINT}, #{systemnetworktcpretranssegs,jdbcType=BIGINT}, 
-      #{systemnetworktcpextlistenoverflows,jdbcType=BIGINT}, #{systemnetworkudpindatagrams,jdbcType=BIGINT}, 
-      #{systemnetworkudpoutdatagrams,jdbcType=BIGINT}, #{systemnetworkudpinerrors,jdbcType=BIGINT}, 
-      #{systemnetworkudpnoports,jdbcType=BIGINT}, #{systemnetworkudpsendbuffererrors,jdbcType=BIGINT}, 
-      #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT},
-      #{systemNetCardsBandWidth,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPsMin,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPsMax,jdbcType=DOUBLE},
-      #{systemNetworkSendAndReceiveBytesPsMean,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPsStd,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs55Quantile,jdbcType=DOUBLE},
-      #{systemNetworkSendAndReceiveBytesPs75Quantile,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs95Quantile,jdbcType=DOUBLE}, #{systemNetworkSendAndReceiveBytesPs99Quantile,jdbcType=DOUBLE},
-      #{systemNetWorkBandWidthUsedPercent,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercentMin,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercentMax,jdbcType=DOUBLE},
-      #{systemNetWorkBandWidthUsedPercentMean,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercentStd,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercent55Quantile,jdbcType=DOUBLE},
-      #{systemNetWorkBandWidthUsedPercent75Quantile,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercent95Quantile,jdbcType=DOUBLE}, #{systemNetWorkBandWidthUsedPercent99Quantile,jdbcType=DOUBLE})
-  </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
     insert into tb_metrics_system
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -1566,13 +1364,13 @@
         #{systemcpuidle99quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitches != null" >
-        #{systemcpuswitches,jdbcType=BIGINT},
+        #{systemcpuswitches,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitchesmin != null" >
-        #{systemcpuswitchesmin,jdbcType=BIGINT},
+        #{systemcpuswitchesmin,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitchesmax != null" >
-        #{systemcpuswitchesmax,jdbcType=BIGINT},
+        #{systemcpuswitchesmax,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitchesmean != null" >
         #{systemcpuswitchesmean,jdbcType=DOUBLE},
@@ -1581,16 +1379,16 @@
         #{systemcpuswitchesstd,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitches55quantile != null" >
-        #{systemcpuswitches55quantile,jdbcType=BIGINT},
+        #{systemcpuswitches55quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitches75quantile != null" >
-        #{systemcpuswitches75quantile,jdbcType=BIGINT},
+        #{systemcpuswitches75quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitches95quantile != null" >
-        #{systemcpuswitches95quantile,jdbcType=BIGINT},
+        #{systemcpuswitches95quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuswitches99quantile != null" >
-        #{systemcpuswitches99quantile,jdbcType=BIGINT},
+        #{systemcpuswitches99quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemcpuusageirq != null" >
         #{systemcpuusageirq,jdbcType=DOUBLE},
@@ -1893,13 +1691,13 @@
         #{systemnetcards,jdbcType=INTEGER},
       </if>
       <if test="systemnetworkreceivebytesps != null" >
-        #{systemnetworkreceivebytesps,jdbcType=BIGINT},
+        #{systemnetworkreceivebytesps,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworkreceivebytespsmin != null" >
-        #{systemnetworkreceivebytespsmin,jdbcType=BIGINT},
+        #{systemnetworkreceivebytespsmin,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworkreceivebytespsmax != null" >
-        #{systemnetworkreceivebytespsmax,jdbcType=BIGINT},
+        #{systemnetworkreceivebytespsmax,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworkreceivebytespsmean != null" >
         #{systemnetworkreceivebytespsmean,jdbcType=DOUBLE},
@@ -1908,25 +1706,25 @@
         #{systemnetworkreceivebytespsstd,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworkreceivebytesps55quantile != null" >
-        #{systemnetworkreceivebytesps55quantile,jdbcType=BIGINT},
+        #{systemnetworkreceivebytesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworkreceivebytesps75quantile != null" >
-        #{systemnetworkreceivebytesps75quantile,jdbcType=BIGINT},
+        #{systemnetworkreceivebytesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworkreceivebytesps95quantile != null" >
-        #{systemnetworkreceivebytesps95quantile,jdbcType=BIGINT},
+        #{systemnetworkreceivebytesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworkreceivebytesps99quantile != null" >
-        #{systemnetworkreceivebytesps99quantile,jdbcType=BIGINT},
+        #{systemnetworkreceivebytesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytesps != null" >
-        #{systemnetworksendbytesps,jdbcType=BIGINT},
+        #{systemnetworksendbytesps,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytespsmin != null" >
-        #{systemnetworksendbytespsmin,jdbcType=BIGINT},
+        #{systemnetworksendbytespsmin,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytespsmax != null" >
-        #{systemnetworksendbytespsmax,jdbcType=BIGINT},
+        #{systemnetworksendbytespsmax,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytespsmean != null" >
         #{systemnetworksendbytespsmean,jdbcType=DOUBLE},
@@ -1935,16 +1733,16 @@
         #{systemnetworksendbytespsstd,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytesps55quantile != null" >
-        #{systemnetworksendbytesps55quantile,jdbcType=BIGINT},
+        #{systemnetworksendbytesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytesps75quantile != null" >
-        #{systemnetworksendbytesps75quantile,jdbcType=BIGINT},
+        #{systemnetworksendbytesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytesps95quantile != null" >
-        #{systemnetworksendbytesps95quantile,jdbcType=BIGINT},
+        #{systemnetworksendbytesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworksendbytesps99quantile != null" >
-        #{systemnetworksendbytesps99quantile,jdbcType=BIGINT},
+        #{systemnetworksendbytesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="systemnetworktcpconnectionnum != null" >
         #{systemnetworktcpconnectionnum,jdbcType=INTEGER},

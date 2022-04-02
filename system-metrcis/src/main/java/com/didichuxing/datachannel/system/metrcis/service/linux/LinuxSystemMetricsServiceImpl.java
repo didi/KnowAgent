@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.system.metrcis.service.DiskMetricsService;
 import com.didichuxing.datachannel.system.metrcis.service.NetCardMetricsService;
 import com.didichuxing.datachannel.system.metrcis.service.SystemMetricsService;
 import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -27,8 +29,6 @@ import java.util.*;
 public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implements SystemMetricsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsServiceImpl.class);
-
-    private String                   HOSTNAME;
 
     private LinuxNetFlow lastLinuxNetFlow;
 
@@ -86,7 +86,6 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private LinuxSystemMetricsServiceImpl() {
-        setHostName();
         diskIOMetricsService = LinuxDiskIOMetricsServiceImpl.getInstance();
         diskMetricsService = LinuxDiskMetricsServiceImpl.getInstance();
         netCardMetricsService = LinuxNetCardMetricsServiceImpl.getInstance();
@@ -100,27 +99,50 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public String getOsType() {
-        return null;
+        return ManagementFactory.getOperatingSystemMXBean().getName();
     }
 
     @Override
     public String getOsVersion() {
-        return null;
+        return ManagementFactory.getOperatingSystemMXBean().getVersion();
     }
 
     @Override
     public String getOsKernelVersion() {
-        return null;
+        List<String> osKernelVersion = getOutputByCmd(
+                "uname -r", "linux内核版本", null);
+        if (!osKernelVersion.isEmpty() && StringUtils.isNotBlank(osKernelVersion.get(0))) {
+            return osKernelVersion.get(0);
+        }else {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl()||method=getOsKernelVersion()||msg=data is null");
+        }
+        return StringUtils.EMPTY;
     }
 
     @Override
     public String getHostName() {
-        return HOSTNAME;
+        List<String> hostName = getOutputByCmd(
+                "hostname", "主机名", null);
+        if (!hostName.isEmpty() && StringUtils.isNotBlank(hostName.get(0))) {
+            return hostName.get(0);
+        }else {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl()||method=getHostName()||msg=data is null");
+        }
+        return StringUtils.EMPTY;
     }
 
     @Override
     public String getIps() {
-        return null;
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            return ip.getHostAddress();
+        } catch (UnknownHostException ex) {
+            LOGGER.error(
+                    String.format("class=LinuxSystemMetricsServiceImpl()||method=getIps()||errMsg=%s", ex.getMessage()),
+                    ex
+            );
+            return StringUtils.EMPTY;
+        }
     }
 
     @Override
@@ -673,7 +695,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemDisks() {
-        return null;
+        return diskMetricsService.getFsType().size();
     }
 
     @Override
@@ -848,12 +870,21 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemNetCards() {
-        return null;
+        return netCardMetricsService.getMacAddress().size();
     }
 
     @Override
     public Double getSystemNetCardsBandWidth() {
-        return null;
+        Map<String, Long> map = netCardMetricsService.getBandWidth();
+        if(MapUtils.isNotEmpty(map)) {
+            Double bandWidthSum = 0d;
+            for (Long bandWidth : map.values()) {
+                bandWidthSum += bandWidth;
+            }
+            return bandWidthSum;
+        } else {
+            return 0d;
+        }
     }
 
     @Override
@@ -988,32 +1019,68 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemNetworkTcpListeningNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'LISTEN'", "系统处于 LISTEN 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpListeningNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getSystemNetworkTcpEstablishedNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'ESTABLISHED'", "系统处于 Established 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpEstablishedNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getSystemNetworkTcpSynSentNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'SYN_SENT'", "系统处于 SYN_SENT 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpSynSentNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getSystemNetworkTcpSynRecvNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'SYN_RCVD'", "系统处于 SYN_RCVD 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpSynRecvNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getSystemNetworkTcpFinWait1Num() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'FIN_WAIT1'", "系统处于 FIN_WAIT1 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpFinWait1Num()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getSystemNetworkTcpFinWait2Num() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'FIN_WAIT2'", "系统处于 FIN_WAIT2 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpFinWait2Num()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
@@ -1029,7 +1096,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemNetworkTcpClosedNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'CLOSED'", "系统处于 CLOSED 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpClosedNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
@@ -1045,17 +1118,35 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getSystemNetworkTcpClosingNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'CLOSING'", "系统处于 CLOSING 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpClosingNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getSystemNetworkTcpLastAckNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'LAST_ACK'", "系统处于 LAST_ACK 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpLastAckNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getSystemNetworkTcpNoneNum() {
-        return null;
+        List<String> lines = getOutputByCmd("netstat -an | awk '/^tcp/' | grep -c 'NONE'", "系统处于 NONE 状态 tcp 连接数", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.parseInt(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkTcpNoneNum()||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
@@ -1177,41 +1268,6 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemNetworkUdpSendBufferErrors()||msg=data is null");
             return 0l;
         }
-    }
-
-    private void setHostName() {
-        try {
-            String hostname = getHostnameByexec();
-            if (StringUtils.isNotBlank(hostname)) {
-                HOSTNAME = hostname.trim();
-            } else {
-                HOSTNAME = InetAddress.getLocalHost().getHostName();
-            }
-        } catch (UnknownHostException e) {
-            HOSTNAME = "LocalHost";
-        }
-    }
-
-    private String getHostnameByexec() {
-        StringBuffer buf = new StringBuffer();
-        try {
-            Runtime run = Runtime.getRuntime();
-            Process proc = run.exec("hostname");
-            BufferedInputStream in = new BufferedInputStream(proc.getInputStream());
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String s;
-            while ((s = br.readLine()) != null) {
-                buf.append(s);
-            }
-            String hostname = buf.toString();
-            if (StringUtils.isBlank(hostname) || hostname.contains("localhost")
-                    || hostname.indexOf("请求超时") != -1) {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-        return buf.toString();
     }
 
 }

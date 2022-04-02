@@ -43,33 +43,33 @@
     <result column="procCpuUser75Quantile" property="proccpuuser75quantile" jdbcType="DOUBLE" />
     <result column="procCpuUser95Quantile" property="proccpuuser95quantile" jdbcType="DOUBLE" />
     <result column="procCpuUser99Quantile" property="proccpuuser99quantile" jdbcType="DOUBLE" />
-    <result column="procCpuSwitchesPS" property="proccpuswitchesps" jdbcType="BIGINT" />
-    <result column="procCpuSwitchesPSMin" property="proccpuswitchespsmin" jdbcType="BIGINT" />
-    <result column="procCpuSwitchesPSMax" property="proccpuswitchespsmax" jdbcType="BIGINT" />
+    <result column="procCpuSwitchesPS" property="proccpuswitchesps" jdbcType="DOUBLE" />
+    <result column="procCpuSwitchesPSMin" property="proccpuswitchespsmin" jdbcType="DOUBLE" />
+    <result column="procCpuSwitchesPSMax" property="proccpuswitchespsmax" jdbcType="DOUBLE" />
     <result column="procCpuSwitchesPSMean" property="proccpuswitchespsmean" jdbcType="DOUBLE" />
     <result column="procCpuSwitchesPSStd" property="proccpuswitchespsstd" jdbcType="DOUBLE" />
-    <result column="procCpuSwitchesPS55Quantile" property="proccpuswitchesps55quantile" jdbcType="BIGINT" />
-    <result column="procCpuSwitchesPS75Quantile" property="proccpuswitchesps75quantile" jdbcType="BIGINT" />
-    <result column="procCpuSwitchesPS95Quantile" property="proccpuswitchesps95quantile" jdbcType="BIGINT" />
-    <result column="procCpuSwitchesPS99Quantile" property="proccpuswitchesps99quantile" jdbcType="BIGINT" />
-    <result column="procCpuVoluntarySwitchesPS" property="proccpuvoluntaryswitchesps" jdbcType="BIGINT" />
-    <result column="procCpuVoluntarySwitchesPSMin" property="proccpuvoluntaryswitchespsmin" jdbcType="BIGINT" />
-    <result column="procCpuVoluntarySwitchesPSMax" property="proccpuvoluntaryswitchespsmax" jdbcType="BIGINT" />
+    <result column="procCpuSwitchesPS55Quantile" property="proccpuswitchesps55quantile" jdbcType="DOUBLE" />
+    <result column="procCpuSwitchesPS75Quantile" property="proccpuswitchesps75quantile" jdbcType="DOUBLE" />
+    <result column="procCpuSwitchesPS95Quantile" property="proccpuswitchesps95quantile" jdbcType="DOUBLE" />
+    <result column="procCpuSwitchesPS99Quantile" property="proccpuswitchesps99quantile" jdbcType="DOUBLE" />
+    <result column="procCpuVoluntarySwitchesPS" property="proccpuvoluntaryswitchesps" jdbcType="DOUBLE" />
+    <result column="procCpuVoluntarySwitchesPSMin" property="proccpuvoluntaryswitchespsmin" jdbcType="DOUBLE" />
+    <result column="procCpuVoluntarySwitchesPSMax" property="proccpuvoluntaryswitchespsmax" jdbcType="DOUBLE" />
     <result column="procCpuVoluntarySwitchesPSMean" property="proccpuvoluntaryswitchespsmean" jdbcType="DOUBLE" />
     <result column="procCpuVoluntarySwitchesPSStd" property="proccpuvoluntaryswitchespsstd" jdbcType="DOUBLE" />
-    <result column="procCpuVoluntarySwitchesPS55Quantile" property="proccpuvoluntaryswitchesps55quantile" jdbcType="BIGINT" />
-    <result column="procCpuVoluntarySwitchesPS75Quantile" property="proccpuvoluntaryswitchesps75quantile" jdbcType="BIGINT" />
-    <result column="procCpuVoluntarySwitchesPS95Quantile" property="proccpuvoluntaryswitchesps95quantile" jdbcType="BIGINT" />
-    <result column="procCpuVoluntarySwitchesPS99Quantile" property="proccpuvoluntaryswitchesps99quantile" jdbcType="BIGINT" />
-    <result column="procCpuNonVoluntarySwitchesPS" property="proccpunonvoluntaryswitchesps" jdbcType="BIGINT" />
-    <result column="procCpuNonVoluntarySwitchesPSMin" property="proccpunonvoluntaryswitchespsmin" jdbcType="BIGINT" />
-    <result column="procCpuNonVoluntarySwitchesPSMax" property="proccpunonvoluntaryswitchespsmax" jdbcType="BIGINT" />
+    <result column="procCpuVoluntarySwitchesPS55Quantile" property="proccpuvoluntaryswitchesps55quantile" jdbcType="DOUBLE" />
+    <result column="procCpuVoluntarySwitchesPS75Quantile" property="proccpuvoluntaryswitchesps75quantile" jdbcType="DOUBLE" />
+    <result column="procCpuVoluntarySwitchesPS95Quantile" property="proccpuvoluntaryswitchesps95quantile" jdbcType="DOUBLE" />
+    <result column="procCpuVoluntarySwitchesPS99Quantile" property="proccpuvoluntaryswitchesps99quantile" jdbcType="DOUBLE" />
+    <result column="procCpuNonVoluntarySwitchesPS" property="proccpunonvoluntaryswitchesps" jdbcType="DOUBLE" />
+    <result column="procCpuNonVoluntarySwitchesPSMin" property="proccpunonvoluntaryswitchespsmin" jdbcType="DOUBLE" />
+    <result column="procCpuNonVoluntarySwitchesPSMax" property="proccpunonvoluntaryswitchespsmax" jdbcType="DOUBLE" />
     <result column="procCpuNonVoluntarySwitchesPSMean" property="proccpunonvoluntaryswitchespsmean" jdbcType="DOUBLE" />
     <result column="procCpuNonVoluntarySwitchesPSStd" property="proccpunonvoluntaryswitchespsstd" jdbcType="DOUBLE" />
-    <result column="procCpuNonVoluntarySwitchesPS55Quantile" property="proccpunonvoluntaryswitchesps55quantile" jdbcType="BIGINT" />
-    <result column="procCpuNonVoluntarySwitchesPS75Quantile" property="proccpunonvoluntaryswitchesps75quantile" jdbcType="BIGINT" />
-    <result column="procCpuNonVoluntarySwitchesPS95Quantile" property="proccpunonvoluntaryswitchesps95quantile" jdbcType="BIGINT" />
-    <result column="procCpuNonVoluntarySwitchesPS99Quantile" property="proccpunonvoluntaryswitchesps99quantile" jdbcType="BIGINT" />
+    <result column="procCpuNonVoluntarySwitchesPS55Quantile" property="proccpunonvoluntaryswitchesps55quantile" jdbcType="DOUBLE" />
+    <result column="procCpuNonVoluntarySwitchesPS75Quantile" property="proccpunonvoluntaryswitchesps75quantile" jdbcType="DOUBLE" />
+    <result column="procCpuNonVoluntarySwitchesPS95Quantile" property="proccpunonvoluntaryswitchesps95quantile" jdbcType="DOUBLE" />
+    <result column="procCpuNonVoluntarySwitchesPS99Quantile" property="proccpunonvoluntaryswitchesps99quantile" jdbcType="DOUBLE" />
     <result column="procMemUsed" property="procmemused" jdbcType="BIGINT" />
     <result column="procMemUtil" property="procmemutil" jdbcType="DOUBLE" />
     <result column="procMemData" property="procmemdata" jdbcType="BIGINT" />
@@ -94,15 +94,15 @@
     <result column="procIOReadRate75Quantile" property="procioreadrate75quantile" jdbcType="DOUBLE" />
     <result column="procIOReadRate95Quantile" property="procioreadrate95quantile" jdbcType="DOUBLE" />
     <result column="procIOReadRate99Quantile" property="procioreadrate99quantile" jdbcType="DOUBLE" />
-    <result column="procIOReadBytesRate" property="procioreadbytesrate" jdbcType="BIGINT" />
-    <result column="procIOReadBytesRateMin" property="procioreadbytesratemin" jdbcType="BIGINT" />
-    <result column="procIOReadBytesRateMax" property="procioreadbytesratemax" jdbcType="BIGINT" />
+    <result column="procIOReadBytesRate" property="procioreadbytesrate" jdbcType="DOUBLE" />
+    <result column="procIOReadBytesRateMin" property="procioreadbytesratemin" jdbcType="DOUBLE" />
+    <result column="procIOReadBytesRateMax" property="procioreadbytesratemax" jdbcType="DOUBLE" />
     <result column="procIOReadBytesRateMean" property="procioreadbytesratemean" jdbcType="DOUBLE" />
     <result column="procIOReadBytesRateStd" property="procioreadbytesratestd" jdbcType="DOUBLE" />
-    <result column="procIOReadBytesRate55Quantile" property="procioreadbytesrate55quantile" jdbcType="BIGINT" />
-    <result column="procIOReadBytesRate75Quantile" property="procioreadbytesrate75quantile" jdbcType="BIGINT" />
-    <result column="procIOReadBytesRate95Quantile" property="procioreadbytesrate95quantile" jdbcType="BIGINT" />
-    <result column="procIOReadBytesRate99Quantile" property="procioreadbytesrate99quantile" jdbcType="BIGINT" />
+    <result column="procIOReadBytesRate55Quantile" property="procioreadbytesrate55quantile" jdbcType="DOUBLE" />
+    <result column="procIOReadBytesRate75Quantile" property="procioreadbytesrate75quantile" jdbcType="DOUBLE" />
+    <result column="procIOReadBytesRate95Quantile" property="procioreadbytesrate95quantile" jdbcType="DOUBLE" />
+    <result column="procIOReadBytesRate99Quantile" property="procioreadbytesrate99quantile" jdbcType="DOUBLE" />
     <result column="procIOWriteRate" property="prociowriterate" jdbcType="DOUBLE" />
     <result column="procIOWriteRateMin" property="prociowriteratemin" jdbcType="DOUBLE" />
     <result column="procIOWriteRateMax" property="prociowriteratemax" jdbcType="DOUBLE" />
@@ -112,15 +112,15 @@
     <result column="procIOWriteRate75Quantile" property="prociowriterate75quantile" jdbcType="DOUBLE" />
     <result column="procIOWriteRate95Quantile" property="prociowriterate95quantile" jdbcType="DOUBLE" />
     <result column="procIOWriteRate99Quantile" property="prociowriterate99quantile" jdbcType="DOUBLE" />
-    <result column="procIOWriteBytesRate" property="prociowritebytesrate" jdbcType="BIGINT" />
-    <result column="procIOWriteBytesRateMin" property="prociowritebytesratemin" jdbcType="BIGINT" />
-    <result column="procIOWriteBytesRateMax" property="prociowritebytesratemax" jdbcType="BIGINT" />
+    <result column="procIOWriteBytesRate" property="prociowritebytesrate" jdbcType="DOUBLE" />
+    <result column="procIOWriteBytesRateMin" property="prociowritebytesratemin" jdbcType="DOUBLE" />
+    <result column="procIOWriteBytesRateMax" property="prociowritebytesratemax" jdbcType="DOUBLE" />
     <result column="procIOWriteBytesRateMean" property="prociowritebytesratemean" jdbcType="DOUBLE" />
     <result column="procIOWriteBytesRateStd" property="prociowritebytesratestd" jdbcType="DOUBLE" />
-    <result column="procIOWriteBytesRate55Quantile" property="prociowritebytesrate55quantile" jdbcType="BIGINT" />
-    <result column="procIOWriteBytesRate75Quantile" property="prociowritebytesrate75quantile" jdbcType="BIGINT" />
-    <result column="procIOWriteBytesRate95Quantile" property="prociowritebytesrate95quantile" jdbcType="BIGINT" />
-    <result column="procIOWriteBytesRate99Quantile" property="prociowritebytesrate99quantile" jdbcType="BIGINT" />
+    <result column="procIOWriteBytesRate55Quantile" property="prociowritebytesrate55quantile" jdbcType="DOUBLE" />
+    <result column="procIOWriteBytesRate75Quantile" property="prociowritebytesrate75quantile" jdbcType="DOUBLE" />
+    <result column="procIOWriteBytesRate95Quantile" property="prociowritebytesrate95quantile" jdbcType="DOUBLE" />
+    <result column="procIOWriteBytesRate99Quantile" property="prociowritebytesrate99quantile" jdbcType="DOUBLE" />
     <result column="procIOReadWriteRate" property="procioreadwriterate" jdbcType="DOUBLE" />
     <result column="procIOReadWriteRateMin" property="procioreadwriteratemin" jdbcType="DOUBLE" />
     <result column="procIOReadWriteRateMax" property="procioreadwriteratemax" jdbcType="DOUBLE" />
@@ -130,15 +130,15 @@
     <result column="procIOReadWriteRate75Quantile" property="procioreadwriterate75quantile" jdbcType="DOUBLE" />
     <result column="procIOReadWriteRate95Quantile" property="procioreadwriterate95quantile" jdbcType="DOUBLE" />
     <result column="procIOReadWriteRate99Quantile" property="procioreadwriterate99quantile" jdbcType="DOUBLE" />
-    <result column="procIOReadWriteBytesRate" property="procioreadwritebytesrate" jdbcType="BIGINT" />
-    <result column="procIOReadWriteBytesRateMin" property="procioreadwritebytesratemin" jdbcType="BIGINT" />
-    <result column="procIOReadWriteBytesRateMax" property="procioreadwritebytesratemax" jdbcType="BIGINT" />
+    <result column="procIOReadWriteBytesRate" property="procioreadwritebytesrate" jdbcType="DOUBLE" />
+    <result column="procIOReadWriteBytesRateMin" property="procioreadwritebytesratemin" jdbcType="DOUBLE" />
+    <result column="procIOReadWriteBytesRateMax" property="procioreadwritebytesratemax" jdbcType="DOUBLE" />
     <result column="procIOReadWriteBytesRateMean" property="procioreadwritebytesratemean" jdbcType="DOUBLE" />
     <result column="procIOReadWriteBytesRateStd" property="procioreadwritebytesratestd" jdbcType="DOUBLE" />
-    <result column="procIOReadWriteBytesRate55Quantile" property="procioreadwritebytesrate55quantile" jdbcType="BIGINT" />
-    <result column="procIOReadWriteBytesRate75Quantile" property="procioreadwritebytesrate75quantile" jdbcType="BIGINT" />
-    <result column="procIOReadWriteBytesRate95Quantile" property="procioreadwritebytesrate95quantile" jdbcType="BIGINT" />
-    <result column="procIOReadWriteBytesRate99Quantile" property="procioreadwritebytesrate99quantile" jdbcType="BIGINT" />
+    <result column="procIOReadWriteBytesRate55Quantile" property="procioreadwritebytesrate55quantile" jdbcType="DOUBLE" />
+    <result column="procIOReadWriteBytesRate75Quantile" property="procioreadwritebytesrate75quantile" jdbcType="DOUBLE" />
+    <result column="procIOReadWriteBytesRate95Quantile" property="procioreadwritebytesrate95quantile" jdbcType="DOUBLE" />
+    <result column="procIOReadWriteBytesRate99Quantile" property="procioreadwritebytesrate99quantile" jdbcType="DOUBLE" />
     <result column="procIOAwaitTimePercent" property="procioawaittimepercent" jdbcType="DOUBLE" />
     <result column="procIOAwaitTimePercentMin" property="procioawaittimepercentmin" jdbcType="DOUBLE" />
     <result column="procIOAwaitTimePercentMax" property="procioawaittimepercentmax" jdbcType="DOUBLE" />
@@ -156,33 +156,33 @@
     <result column="jvmProcThreadNumPeak" property="jvmprocthreadnumpeak" jdbcType="INTEGER" />
     <result column="procOpenFdCount" property="procopenfdcount" jdbcType="INTEGER" />
     <result column="procPortListen" property="procportlisten" jdbcType="VARCHAR" />
-    <result column="procNetworkReceiveBytesPs" property="procnetworkreceivebytesps" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPsMin" property="procnetworkreceivebytespsmin" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPsMax" property="procnetworkreceivebytespsmax" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPsMean" property="procnetworkreceivebytespsmean" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPsStd" property="procnetworkreceivebytespsstd" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPs55Quantile" property="procnetworkreceivebytesps55quantile" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPs75Quantile" property="procnetworkreceivebytesps75quantile" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPs95Quantile" property="procnetworkreceivebytesps95quantile" jdbcType="BIGINT" />
-    <result column="procNetworkReceiveBytesPs99Quantile" property="procnetworkreceivebytesps99quantile" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPs" property="procnetworksendbytesps" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPsMin" property="procnetworksendbytespsmin" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPsMax" property="procnetworksendbytespsmax" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPsMean" property="procnetworksendbytespsmean" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPsStd" property="procnetworksendbytespsstd" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPs55Quantile" property="procnetworksendbytesps55quantile" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPs75Quantile" property="procnetworksendbytesps75quantile" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPs95Quantile" property="procnetworksendbytesps95quantile" jdbcType="BIGINT" />
-    <result column="procNetworkSendBytesPs99Quantile" property="procnetworksendbytesps99quantile" jdbcType="BIGINT" />
-    <result column="procNetworkConnRate" property="procnetworkconnrate" jdbcType="BIGINT" />
-    <result column="procNetworkConnRateMin" property="procnetworkconnratemin" jdbcType="BIGINT" />
-    <result column="procNetworkConnRateMax" property="procnetworkconnratemax" jdbcType="BIGINT" />
-    <result column="procNetworkConnRateMean" property="procnetworkconnratemean" jdbcType="BIGINT" />
-    <result column="procNetworkConnRateStd" property="procnetworkconnratestd" jdbcType="BIGINT" />
-    <result column="procNetworkConnRate55Quantile" property="procnetworkconnrate55quantile" jdbcType="BIGINT" />
-    <result column="procNetworkConnRate75Quantile" property="procnetworkconnrate75quantile" jdbcType="BIGINT" />
-    <result column="procNetworkConnRate95Quantile" property="procnetworkconnrate95quantile" jdbcType="BIGINT" />
-    <result column="procNetworkConnRate99Quantile" property="procnetworkconnrate99quantile" jdbcType="BIGINT" />
+    <result column="procNetworkReceiveBytesPs" property="procnetworkreceivebytesps" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPsMin" property="procnetworkreceivebytespsmin" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPsMax" property="procnetworkreceivebytespsmax" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPsMean" property="procnetworkreceivebytespsmean" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPsStd" property="procnetworkreceivebytespsstd" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPs55Quantile" property="procnetworkreceivebytesps55quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPs75Quantile" property="procnetworkreceivebytesps75quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPs95Quantile" property="procnetworkreceivebytesps95quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkReceiveBytesPs99Quantile" property="procnetworkreceivebytesps99quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPs" property="procnetworksendbytesps" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPsMin" property="procnetworksendbytespsmin" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPsMax" property="procnetworksendbytespsmax" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPsMean" property="procnetworksendbytespsmean" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPsStd" property="procnetworksendbytespsstd" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPs55Quantile" property="procnetworksendbytesps55quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPs75Quantile" property="procnetworksendbytesps75quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPs95Quantile" property="procnetworksendbytesps95quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkSendBytesPs99Quantile" property="procnetworksendbytesps99quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRate" property="procnetworkconnrate" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRateMin" property="procnetworkconnratemin" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRateMax" property="procnetworkconnratemax" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRateMean" property="procnetworkconnratemean" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRateStd" property="procnetworkconnratestd" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRate55Quantile" property="procnetworkconnrate55quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRate75Quantile" property="procnetworkconnrate75quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRate95Quantile" property="procnetworkconnrate95quantile" jdbcType="DOUBLE" />
+    <result column="procNetworkConnRate99Quantile" property="procnetworkconnrate99quantile" jdbcType="DOUBLE" />
     <result column="procNetworkTcpConnectionNum" property="procnetworktcpconnectionnum" jdbcType="INTEGER" />
     <result column="procNetworkTcpListeningNum" property="procnetworktcplisteningnum" jdbcType="INTEGER" />
     <result column="procNetworkTcpTimeWaitNum" property="procnetworktcptimewaitnum" jdbcType="INTEGER" />
@@ -421,201 +421,6 @@
       heartbeatTime &lt;= #{endTime}
   </select>
 
-  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
-    insert into tb_metrics_process (id, hostName, procStartupTime, 
-      procUptime, procPid, procCpuUtil, 
-      procCpuUtilMin, procCpuUtilMax, procCpuUtilMean, 
-      procCpuUtilStd, procCpuUtil55Quantile, procCpuUtil75Quantile, 
-      procCpuUtil95Quantile, procCpuUtil99Quantile, 
-      procCpuUtilTotalPercent, procCpuUtilTotalPercentMin, 
-      procCpuUtilTotalPercentMax, procCpuUtilTotalPercentMean, 
-      procCpuUtilTotalPercentStd, procCpuUtilTotalPercent55Quantile, 
-      procCpuUtilTotalPercent75Quantile, procCpuUtilTotalPercent95Quantile, 
-      procCpuUtilTotalPercent99Quantile, procCpuSys, 
-      procCpuSysMin, procCpuSysMax, procCpuSysMean, 
-      procCpuSysStd, procCpuSys55Quantile, procCpuSys75Quantile, 
-      procCpuSys95Quantile, procCpuSys99Quantile, 
-      procCpuUser, procCpuUserMin, procCpuUserMax, 
-      procCpuUserMean, procCpuUserStd, procCpuUser55Quantile, 
-      procCpuUser75Quantile, procCpuUser95Quantile, 
-      procCpuUser99Quantile, procCpuSwitchesPS, 
-      procCpuSwitchesPSMin, procCpuSwitchesPSMax, 
-      procCpuSwitchesPSMean, procCpuSwitchesPSStd, 
-      procCpuSwitchesPS55Quantile, procCpuSwitchesPS75Quantile, 
-      procCpuSwitchesPS95Quantile, procCpuSwitchesPS99Quantile, 
-      procCpuVoluntarySwitchesPS, procCpuVoluntarySwitchesPSMin, 
-      procCpuVoluntarySwitchesPSMax, procCpuVoluntarySwitchesPSMean, 
-      procCpuVoluntarySwitchesPSStd, procCpuVoluntarySwitchesPS55Quantile, 
-      procCpuVoluntarySwitchesPS75Quantile, procCpuVoluntarySwitchesPS95Quantile, 
-      procCpuVoluntarySwitchesPS99Quantile, procCpuNonVoluntarySwitchesPS, 
-      procCpuNonVoluntarySwitchesPSMin, procCpuNonVoluntarySwitchesPSMax, 
-      procCpuNonVoluntarySwitchesPSMean, procCpuNonVoluntarySwitchesPSStd, 
-      procCpuNonVoluntarySwitchesPS55Quantile, procCpuNonVoluntarySwitchesPS75Quantile, 
-      procCpuNonVoluntarySwitchesPS95Quantile, procCpuNonVoluntarySwitchesPS99Quantile, 
-      procMemUsed, procMemUtil, procMemData, 
-      procMemDirty, procMemLib, procMemRss, 
-      procMemShared, procMemSwap, procMemText, 
-      procMemVms, jvmProcHeapMemoryUsed, jvmProcNonHeapMemoryUsed, 
-      jvmProcHeapSizeXmx, jvmProcMemUsedPeak, jvmProcHeapMemUsedPercent, 
-      procIOReadRate, procIOReadRateMin, procIOReadRateMax, 
-      procIOReadRateMean, procIOReadRateStd, procIOReadRate55Quantile, 
-      procIOReadRate75Quantile, procIOReadRate95Quantile, 
-      procIOReadRate99Quantile, procIOReadBytesRate, 
-      procIOReadBytesRateMin, procIOReadBytesRateMax, 
-      procIOReadBytesRateMean, procIOReadBytesRateStd, 
-      procIOReadBytesRate55Quantile, procIOReadBytesRate75Quantile, 
-      procIOReadBytesRate95Quantile, procIOReadBytesRate99Quantile, 
-      procIOWriteRate, procIOWriteRateMin, procIOWriteRateMax, 
-      procIOWriteRateMean, procIOWriteRateStd, 
-      procIOWriteRate55Quantile, procIOWriteRate75Quantile, 
-      procIOWriteRate95Quantile, procIOWriteRate99Quantile, 
-      procIOWriteBytesRate, procIOWriteBytesRateMin, 
-      procIOWriteBytesRateMax, procIOWriteBytesRateMean, 
-      procIOWriteBytesRateStd, procIOWriteBytesRate55Quantile, 
-      procIOWriteBytesRate75Quantile, procIOWriteBytesRate95Quantile, 
-      procIOWriteBytesRate99Quantile, procIOReadWriteRate, 
-      procIOReadWriteRateMin, procIOReadWriteRateMax, 
-      procIOReadWriteRateMean, procIOReadWriteRateStd, 
-      procIOReadWriteRate55Quantile, procIOReadWriteRate75Quantile, 
-      procIOReadWriteRate95Quantile, procIOReadWriteRate99Quantile, 
-      procIOReadWriteBytesRate, procIOReadWriteBytesRateMin, 
-      procIOReadWriteBytesRateMax, procIOReadWriteBytesRateMean, 
-      procIOReadWriteBytesRateStd, procIOReadWriteBytesRate55Quantile, 
-      procIOReadWriteBytesRate75Quantile, procIOReadWriteBytesRate95Quantile, 
-      procIOReadWriteBytesRate99Quantile, procIOAwaitTimePercent, 
-      procIOAwaitTimePercentMin, procIOAwaitTimePercentMax, 
-      procIOAwaitTimePercentMean, procIOAwaitTimePercentStd, 
-      procIOAwaitTimePercent55Quantile, procIOAwaitTimePercent75Quantile, 
-      procIOAwaitTimePercent95Quantile, procIOAwaitTimePercent99Quantile, 
-      jvmProcYoungGcCount, jvmProcFullGcCount, 
-      jvmProcYoungGcTime, jvmProcFullGcTime, jvmProcThreadNum, 
-      jvmProcThreadNumPeak, procOpenFdCount, 
-      procPortListen, procNetworkReceiveBytesPs, 
-      procNetworkReceiveBytesPsMin, procNetworkReceiveBytesPsMax, 
-      procNetworkReceiveBytesPsMean, procNetworkReceiveBytesPsStd, 
-      procNetworkReceiveBytesPs55Quantile, procNetworkReceiveBytesPs75Quantile, 
-      procNetworkReceiveBytesPs95Quantile, procNetworkReceiveBytesPs99Quantile, 
-      procNetworkSendBytesPs, procNetworkSendBytesPsMin, 
-      procNetworkSendBytesPsMax, procNetworkSendBytesPsMean, 
-      procNetworkSendBytesPsStd, procNetworkSendBytesPs55Quantile, 
-      procNetworkSendBytesPs75Quantile, procNetworkSendBytesPs95Quantile, 
-      procNetworkSendBytesPs99Quantile, procNetworkConnRate, 
-      procNetworkConnRateMin, procNetworkConnRateMax, 
-      procNetworkConnRateMean, procNetworkConnRateStd, 
-      procNetworkConnRate55Quantile, procNetworkConnRate75Quantile, 
-      procNetworkConnRate95Quantile, procNetworkConnRate99Quantile, 
-      procNetworkTcpConnectionNum, procNetworkTcpListeningNum, 
-      procNetworkTcpTimeWaitNum, procNetworkTcpCloseWaitNum, 
-      procNetworkTcpEstablishedNum, procNetworkTcpSynSentNum, 
-      procNetworkTcpSynRecvNum, procNetworkTcpFinWait1Num, 
-      procNetworkTcpFinWait2Num, procNetworkTcpClosedNum, 
-      procNetworkTcpClosingNum, procNetworkTcpLastAckNum, 
-      procNetworkTcpNoneNum, heartbeatTime, heartbeatTimeMinute, 
-      heartbeatTimeHour, heartbeatTimeDay,
-      jvmProcS0C, jvmProcS1C, jvmProcS0U, jvmProcS1U, jvmProcEC, jvmProcEU, jvmProcOC, jvmProcOU, jvmProcMC, jvmProcMU, jvmProcCCSC, jvmProcCCSU)
-    values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{procstartuptime,jdbcType=BIGINT}, 
-      #{procuptime,jdbcType=BIGINT}, #{procpid,jdbcType=BIGINT}, #{proccpuutil,jdbcType=DOUBLE}, 
-      #{proccpuutilmin,jdbcType=DOUBLE}, #{proccpuutilmax,jdbcType=DOUBLE}, #{proccpuutilmean,jdbcType=DOUBLE}, 
-      #{proccpuutilstd,jdbcType=VARCHAR}, #{proccpuutil55quantile,jdbcType=DOUBLE}, #{proccpuutil75quantile,jdbcType=DOUBLE}, 
-      #{proccpuutil95quantile,jdbcType=DOUBLE}, #{proccpuutil99quantile,jdbcType=DOUBLE}, 
-      #{proccpuutiltotalpercent,jdbcType=DOUBLE}, #{proccpuutiltotalpercentmin,jdbcType=DOUBLE}, 
-      #{proccpuutiltotalpercentmax,jdbcType=DOUBLE}, #{proccpuutiltotalpercentmean,jdbcType=DOUBLE}, 
-      #{proccpuutiltotalpercentstd,jdbcType=DOUBLE}, #{proccpuutiltotalpercent55quantile,jdbcType=DOUBLE}, 
-      #{proccpuutiltotalpercent75quantile,jdbcType=DOUBLE}, #{proccpuutiltotalpercent95quantile,jdbcType=DOUBLE}, 
-      #{proccpuutiltotalpercent99quantile,jdbcType=DOUBLE}, #{proccpusys,jdbcType=DOUBLE}, 
-      #{proccpusysmin,jdbcType=DOUBLE}, #{proccpusysmax,jdbcType=DOUBLE}, #{proccpusysmean,jdbcType=DOUBLE}, 
-      #{proccpusysstd,jdbcType=DOUBLE}, #{proccpusys55quantile,jdbcType=DOUBLE}, #{proccpusys75quantile,jdbcType=DOUBLE}, 
-      #{proccpusys95quantile,jdbcType=DOUBLE}, #{proccpusys99quantile,jdbcType=DOUBLE}, 
-      #{proccpuuser,jdbcType=DOUBLE}, #{proccpuusermin,jdbcType=DOUBLE}, #{proccpuusermax,jdbcType=DOUBLE}, 
-      #{proccpuusermean,jdbcType=DOUBLE}, #{proccpuuserstd,jdbcType=DOUBLE}, #{proccpuuser55quantile,jdbcType=DOUBLE}, 
-      #{proccpuuser75quantile,jdbcType=DOUBLE}, #{proccpuuser95quantile,jdbcType=DOUBLE}, 
-      #{proccpuuser99quantile,jdbcType=DOUBLE}, #{proccpuswitchesps,jdbcType=BIGINT}, 
-      #{proccpuswitchespsmin,jdbcType=BIGINT}, #{proccpuswitchespsmax,jdbcType=BIGINT}, 
-      #{proccpuswitchespsmean,jdbcType=DOUBLE}, #{proccpuswitchespsstd,jdbcType=DOUBLE}, 
-      #{proccpuswitchesps55quantile,jdbcType=BIGINT}, #{proccpuswitchesps75quantile,jdbcType=BIGINT}, 
-      #{proccpuswitchesps95quantile,jdbcType=BIGINT}, #{proccpuswitchesps99quantile,jdbcType=BIGINT}, 
-      #{proccpuvoluntaryswitchesps,jdbcType=BIGINT}, #{proccpuvoluntaryswitchespsmin,jdbcType=BIGINT}, 
-      #{proccpuvoluntaryswitchespsmax,jdbcType=BIGINT}, #{proccpuvoluntaryswitchespsmean,jdbcType=DOUBLE}, 
-      #{proccpuvoluntaryswitchespsstd,jdbcType=DOUBLE}, #{proccpuvoluntaryswitchesps55quantile,jdbcType=BIGINT}, 
-      #{proccpuvoluntaryswitchesps75quantile,jdbcType=BIGINT}, #{proccpuvoluntaryswitchesps95quantile,jdbcType=BIGINT}, 
-      #{proccpuvoluntaryswitchesps99quantile,jdbcType=BIGINT}, #{proccpunonvoluntaryswitchesps,jdbcType=BIGINT}, 
-      #{proccpunonvoluntaryswitchespsmin,jdbcType=BIGINT}, #{proccpunonvoluntaryswitchespsmax,jdbcType=BIGINT}, 
-      #{proccpunonvoluntaryswitchespsmean,jdbcType=DOUBLE}, #{proccpunonvoluntaryswitchespsstd,jdbcType=DOUBLE}, 
-      #{proccpunonvoluntaryswitchesps55quantile,jdbcType=BIGINT}, #{proccpunonvoluntaryswitchesps75quantile,jdbcType=BIGINT}, 
-      #{proccpunonvoluntaryswitchesps95quantile,jdbcType=BIGINT}, #{proccpunonvoluntaryswitchesps99quantile,jdbcType=BIGINT}, 
-      #{procmemused,jdbcType=BIGINT}, #{procmemutil,jdbcType=DOUBLE}, #{procmemdata,jdbcType=BIGINT}, 
-      #{procmemdirty,jdbcType=BIGINT}, #{procmemlib,jdbcType=BIGINT}, #{procmemrss,jdbcType=BIGINT}, 
-      #{procmemshared,jdbcType=BIGINT}, #{procmemswap,jdbcType=BIGINT}, #{procmemtext,jdbcType=BIGINT}, 
-      #{procmemvms,jdbcType=BIGINT}, #{jvmprocheapmemoryused,jdbcType=BIGINT}, #{jvmprocnonheapmemoryused,jdbcType=BIGINT}, 
-      #{jvmprocheapsizexmx,jdbcType=BIGINT}, #{jvmprocmemusedpeak,jdbcType=BIGINT}, #{jvmprocheapmemusedpercent,jdbcType=DOUBLE}, 
-      #{procioreadrate,jdbcType=DOUBLE}, #{procioreadratemin,jdbcType=DOUBLE}, #{procioreadratemax,jdbcType=DOUBLE}, 
-      #{procioreadratemean,jdbcType=DOUBLE}, #{procioreadratestd,jdbcType=DOUBLE}, #{procioreadrate55quantile,jdbcType=DOUBLE}, 
-      #{procioreadrate75quantile,jdbcType=DOUBLE}, #{procioreadrate95quantile,jdbcType=DOUBLE}, 
-      #{procioreadrate99quantile,jdbcType=DOUBLE}, #{procioreadbytesrate,jdbcType=BIGINT}, 
-      #{procioreadbytesratemin,jdbcType=BIGINT}, #{procioreadbytesratemax,jdbcType=BIGINT}, 
-      #{procioreadbytesratemean,jdbcType=DOUBLE}, #{procioreadbytesratestd,jdbcType=DOUBLE}, 
-      #{procioreadbytesrate55quantile,jdbcType=BIGINT}, #{procioreadbytesrate75quantile,jdbcType=BIGINT}, 
-      #{procioreadbytesrate95quantile,jdbcType=BIGINT}, #{procioreadbytesrate99quantile,jdbcType=BIGINT}, 
-      #{prociowriterate,jdbcType=DOUBLE}, #{prociowriteratemin,jdbcType=DOUBLE}, #{prociowriteratemax,jdbcType=DOUBLE}, 
-      #{prociowriteratemean,jdbcType=DOUBLE}, #{prociowriteratestd,jdbcType=DOUBLE}, 
-      #{prociowriterate55quantile,jdbcType=DOUBLE}, #{prociowriterate75quantile,jdbcType=DOUBLE}, 
-      #{prociowriterate95quantile,jdbcType=DOUBLE}, #{prociowriterate99quantile,jdbcType=DOUBLE}, 
-      #{prociowritebytesrate,jdbcType=BIGINT}, #{prociowritebytesratemin,jdbcType=BIGINT}, 
-      #{prociowritebytesratemax,jdbcType=BIGINT}, #{prociowritebytesratemean,jdbcType=DOUBLE}, 
-      #{prociowritebytesratestd,jdbcType=DOUBLE}, #{prociowritebytesrate55quantile,jdbcType=BIGINT}, 
-      #{prociowritebytesrate75quantile,jdbcType=BIGINT}, #{prociowritebytesrate95quantile,jdbcType=BIGINT}, 
-      #{prociowritebytesrate99quantile,jdbcType=BIGINT}, #{procioreadwriterate,jdbcType=DOUBLE}, 
-      #{procioreadwriteratemin,jdbcType=DOUBLE}, #{procioreadwriteratemax,jdbcType=DOUBLE}, 
-      #{procioreadwriteratemean,jdbcType=DOUBLE}, #{procioreadwriteratestd,jdbcType=DOUBLE}, 
-      #{procioreadwriterate55quantile,jdbcType=DOUBLE}, #{procioreadwriterate75quantile,jdbcType=DOUBLE}, 
-      #{procioreadwriterate95quantile,jdbcType=DOUBLE}, #{procioreadwriterate99quantile,jdbcType=DOUBLE}, 
-      #{procioreadwritebytesrate,jdbcType=BIGINT}, #{procioreadwritebytesratemin,jdbcType=BIGINT}, 
-      #{procioreadwritebytesratemax,jdbcType=BIGINT}, #{procioreadwritebytesratemean,jdbcType=DOUBLE}, 
-      #{procioreadwritebytesratestd,jdbcType=DOUBLE}, #{procioreadwritebytesrate55quantile,jdbcType=BIGINT}, 
-      #{procioreadwritebytesrate75quantile,jdbcType=BIGINT}, #{procioreadwritebytesrate95quantile,jdbcType=BIGINT}, 
-      #{procioreadwritebytesrate99quantile,jdbcType=BIGINT}, #{procioawaittimepercent,jdbcType=DOUBLE}, 
-      #{procioawaittimepercentmin,jdbcType=DOUBLE}, #{procioawaittimepercentmax,jdbcType=DOUBLE}, 
-      #{procioawaittimepercentmean,jdbcType=DOUBLE}, #{procioawaittimepercentstd,jdbcType=DOUBLE}, 
-      #{procioawaittimepercent55quantile,jdbcType=DOUBLE}, #{procioawaittimepercent75quantile,jdbcType=DOUBLE}, 
-      #{procioawaittimepercent95quantile,jdbcType=DOUBLE}, #{procioawaittimepercent99quantile,jdbcType=DOUBLE}, 
-      #{jvmprocyounggccount,jdbcType=BIGINT}, #{jvmprocfullgccount,jdbcType=BIGINT}, 
-      #{jvmprocyounggctime,jdbcType=BIGINT}, #{jvmprocfullgctime,jdbcType=BIGINT}, #{jvmprocthreadnum,jdbcType=INTEGER}, 
-      #{jvmprocthreadnumpeak,jdbcType=INTEGER}, #{procopenfdcount,jdbcType=INTEGER}, 
-      #{procportlisten,jdbcType=VARCHAR}, #{procnetworkreceivebytesps,jdbcType=BIGINT}, 
-      #{procnetworkreceivebytespsmin,jdbcType=BIGINT}, #{procnetworkreceivebytespsmax,jdbcType=BIGINT}, 
-      #{procnetworkreceivebytespsmean,jdbcType=BIGINT}, #{procnetworkreceivebytespsstd,jdbcType=BIGINT}, 
-      #{procnetworkreceivebytesps55quantile,jdbcType=BIGINT}, #{procnetworkreceivebytesps75quantile,jdbcType=BIGINT}, 
-      #{procnetworkreceivebytesps95quantile,jdbcType=BIGINT}, #{procnetworkreceivebytesps99quantile,jdbcType=BIGINT}, 
-      #{procnetworksendbytesps,jdbcType=BIGINT}, #{procnetworksendbytespsmin,jdbcType=BIGINT}, 
-      #{procnetworksendbytespsmax,jdbcType=BIGINT}, #{procnetworksendbytespsmean,jdbcType=BIGINT}, 
-      #{procnetworksendbytespsstd,jdbcType=BIGINT}, #{procnetworksendbytesps55quantile,jdbcType=BIGINT}, 
-      #{procnetworksendbytesps75quantile,jdbcType=BIGINT}, #{procnetworksendbytesps95quantile,jdbcType=BIGINT}, 
-      #{procnetworksendbytesps99quantile,jdbcType=BIGINT}, #{procnetworkconnrate,jdbcType=BIGINT}, 
-      #{procnetworkconnratemin,jdbcType=BIGINT}, #{procnetworkconnratemax,jdbcType=BIGINT}, 
-      #{procnetworkconnratemean,jdbcType=BIGINT}, #{procnetworkconnratestd,jdbcType=BIGINT}, 
-      #{procnetworkconnrate55quantile,jdbcType=BIGINT}, #{procnetworkconnrate75quantile,jdbcType=BIGINT}, 
-      #{procnetworkconnrate95quantile,jdbcType=BIGINT}, #{procnetworkconnrate99quantile,jdbcType=BIGINT}, 
-      #{procnetworktcpconnectionnum,jdbcType=INTEGER}, #{procnetworktcplisteningnum,jdbcType=INTEGER}, 
-      #{procnetworktcptimewaitnum,jdbcType=INTEGER}, #{procnetworktcpclosewaitnum,jdbcType=INTEGER}, 
-      #{procnetworktcpestablishednum,jdbcType=INTEGER}, #{procnetworktcpsynsentnum,jdbcType=INTEGER}, 
-      #{procnetworktcpsynrecvnum,jdbcType=INTEGER}, #{procnetworktcpfinwait1num,jdbcType=INTEGER}, 
-      #{procnetworktcpfinwait2num,jdbcType=INTEGER}, #{procnetworktcpclosednum,jdbcType=INTEGER}, 
-      #{procnetworktcpclosingnum,jdbcType=INTEGER}, #{procnetworktcplastacknum,jdbcType=INTEGER}, 
-      #{procnetworktcpnonenum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
-      #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT},
-      #{jvmProcS0C,jdbcType=DOUBLE},
-      #{jvmProcS1C,jdbcType=DOUBLE},
-      #{jvmProcS0U,jdbcType=DOUBLE},
-      #{jvmProcS1U,jdbcType=DOUBLE},
-      #{jvmProcEC,jdbcType=DOUBLE},
-      #{jvmProcEU,jdbcType=DOUBLE},
-      #{jvmProcOC,jdbcType=DOUBLE},
-      #{jvmProcOU,jdbcType=DOUBLE},
-      #{jvmProcMC,jdbcType=DOUBLE},
-      #{jvmProcMU,jdbcType=DOUBLE},
-      #{jvmProcCCSC,jdbcType=DOUBLE},
-      #{jvmProcCCSU,jdbcType=DOUBLE})
-  </insert>
   <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO" >
     insert into tb_metrics_process
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -1375,13 +1180,13 @@
         #{proccpuuser99quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchesps != null" >
-        #{proccpuswitchesps,jdbcType=BIGINT},
+        #{proccpuswitchesps,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchespsmin != null" >
-        #{proccpuswitchespsmin,jdbcType=BIGINT},
+        #{proccpuswitchespsmin,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchespsmax != null" >
-        #{proccpuswitchespsmax,jdbcType=BIGINT},
+        #{proccpuswitchespsmax,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchespsmean != null" >
         #{proccpuswitchespsmean,jdbcType=DOUBLE},
@@ -1390,25 +1195,25 @@
         #{proccpuswitchespsstd,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchesps55quantile != null" >
-        #{proccpuswitchesps55quantile,jdbcType=BIGINT},
+        #{proccpuswitchesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchesps75quantile != null" >
-        #{proccpuswitchesps75quantile,jdbcType=BIGINT},
+        #{proccpuswitchesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchesps95quantile != null" >
-        #{proccpuswitchesps95quantile,jdbcType=BIGINT},
+        #{proccpuswitchesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuswitchesps99quantile != null" >
-        #{proccpuswitchesps99quantile,jdbcType=BIGINT},
+        #{proccpuswitchesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchesps != null" >
-        #{proccpuvoluntaryswitchesps,jdbcType=BIGINT},
+        #{proccpuvoluntaryswitchesps,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchespsmin != null" >
-        #{proccpuvoluntaryswitchespsmin,jdbcType=BIGINT},
+        #{proccpuvoluntaryswitchespsmin,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchespsmax != null" >
-        #{proccpuvoluntaryswitchespsmax,jdbcType=BIGINT},
+        #{proccpuvoluntaryswitchespsmax,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchespsmean != null" >
         #{proccpuvoluntaryswitchespsmean,jdbcType=DOUBLE},
@@ -1417,25 +1222,25 @@
         #{proccpuvoluntaryswitchespsstd,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchesps55quantile != null" >
-        #{proccpuvoluntaryswitchesps55quantile,jdbcType=BIGINT},
+        #{proccpuvoluntaryswitchesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchesps75quantile != null" >
-        #{proccpuvoluntaryswitchesps75quantile,jdbcType=BIGINT},
+        #{proccpuvoluntaryswitchesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchesps95quantile != null" >
-        #{proccpuvoluntaryswitchesps95quantile,jdbcType=BIGINT},
+        #{proccpuvoluntaryswitchesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpuvoluntaryswitchesps99quantile != null" >
-        #{proccpuvoluntaryswitchesps99quantile,jdbcType=BIGINT},
+        #{proccpuvoluntaryswitchesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchesps != null" >
-        #{proccpunonvoluntaryswitchesps,jdbcType=BIGINT},
+        #{proccpunonvoluntaryswitchesps,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchespsmin != null" >
-        #{proccpunonvoluntaryswitchespsmin,jdbcType=BIGINT},
+        #{proccpunonvoluntaryswitchespsmin,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchespsmax != null" >
-        #{proccpunonvoluntaryswitchespsmax,jdbcType=BIGINT},
+        #{proccpunonvoluntaryswitchespsmax,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchespsmean != null" >
         #{proccpunonvoluntaryswitchespsmean,jdbcType=DOUBLE},
@@ -1444,16 +1249,16 @@
         #{proccpunonvoluntaryswitchespsstd,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchesps55quantile != null" >
-        #{proccpunonvoluntaryswitchesps55quantile,jdbcType=BIGINT},
+        #{proccpunonvoluntaryswitchesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchesps75quantile != null" >
-        #{proccpunonvoluntaryswitchesps75quantile,jdbcType=BIGINT},
+        #{proccpunonvoluntaryswitchesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchesps95quantile != null" >
-        #{proccpunonvoluntaryswitchesps95quantile,jdbcType=BIGINT},
+        #{proccpunonvoluntaryswitchesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="proccpunonvoluntaryswitchesps99quantile != null" >
-        #{proccpunonvoluntaryswitchesps99quantile,jdbcType=BIGINT},
+        #{proccpunonvoluntaryswitchesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procmemused != null" >
         #{procmemused,jdbcType=BIGINT},
@@ -1528,13 +1333,13 @@
         #{procioreadrate99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesrate != null" >
-        #{procioreadbytesrate,jdbcType=BIGINT},
+        #{procioreadbytesrate,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesratemin != null" >
-        #{procioreadbytesratemin,jdbcType=BIGINT},
+        #{procioreadbytesratemin,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesratemax != null" >
-        #{procioreadbytesratemax,jdbcType=BIGINT},
+        #{procioreadbytesratemax,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesratemean != null" >
         #{procioreadbytesratemean,jdbcType=DOUBLE},
@@ -1543,16 +1348,16 @@
         #{procioreadbytesratestd,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesrate55quantile != null" >
-        #{procioreadbytesrate55quantile,jdbcType=BIGINT},
+        #{procioreadbytesrate55quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesrate75quantile != null" >
-        #{procioreadbytesrate75quantile,jdbcType=BIGINT},
+        #{procioreadbytesrate75quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesrate95quantile != null" >
-        #{procioreadbytesrate95quantile,jdbcType=BIGINT},
+        #{procioreadbytesrate95quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadbytesrate99quantile != null" >
-        #{procioreadbytesrate99quantile,jdbcType=BIGINT},
+        #{procioreadbytesrate99quantile,jdbcType=DOUBLE},
       </if>
       <if test="prociowriterate != null" >
         #{prociowriterate,jdbcType=DOUBLE},
@@ -1582,13 +1387,13 @@
         #{prociowriterate99quantile,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesrate != null" >
-        #{prociowritebytesrate,jdbcType=BIGINT},
+        #{prociowritebytesrate,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesratemin != null" >
-        #{prociowritebytesratemin,jdbcType=BIGINT},
+        #{prociowritebytesratemin,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesratemax != null" >
-        #{prociowritebytesratemax,jdbcType=BIGINT},
+        #{prociowritebytesratemax,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesratemean != null" >
         #{prociowritebytesratemean,jdbcType=DOUBLE},
@@ -1597,16 +1402,16 @@
         #{prociowritebytesratestd,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesrate55quantile != null" >
-        #{prociowritebytesrate55quantile,jdbcType=BIGINT},
+        #{prociowritebytesrate55quantile,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesrate75quantile != null" >
-        #{prociowritebytesrate75quantile,jdbcType=BIGINT},
+        #{prociowritebytesrate75quantile,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesrate95quantile != null" >
-        #{prociowritebytesrate95quantile,jdbcType=BIGINT},
+        #{prociowritebytesrate95quantile,jdbcType=DOUBLE},
       </if>
       <if test="prociowritebytesrate99quantile != null" >
-        #{prociowritebytesrate99quantile,jdbcType=BIGINT},
+        #{prociowritebytesrate99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwriterate != null" >
         #{procioreadwriterate,jdbcType=DOUBLE},
@@ -1636,13 +1441,13 @@
         #{procioreadwriterate99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesrate != null" >
-        #{procioreadwritebytesrate,jdbcType=BIGINT},
+        #{procioreadwritebytesrate,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesratemin != null" >
-        #{procioreadwritebytesratemin,jdbcType=BIGINT},
+        #{procioreadwritebytesratemin,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesratemax != null" >
-        #{procioreadwritebytesratemax,jdbcType=BIGINT},
+        #{procioreadwritebytesratemax,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesratemean != null" >
         #{procioreadwritebytesratemean,jdbcType=DOUBLE},
@@ -1651,16 +1456,16 @@
         #{procioreadwritebytesratestd,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesrate55quantile != null" >
-        #{procioreadwritebytesrate55quantile,jdbcType=BIGINT},
+        #{procioreadwritebytesrate55quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesrate75quantile != null" >
-        #{procioreadwritebytesrate75quantile,jdbcType=BIGINT},
+        #{procioreadwritebytesrate75quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesrate95quantile != null" >
-        #{procioreadwritebytesrate95quantile,jdbcType=BIGINT},
+        #{procioreadwritebytesrate95quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioreadwritebytesrate99quantile != null" >
-        #{procioreadwritebytesrate99quantile,jdbcType=BIGINT},
+        #{procioreadwritebytesrate99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procioawaittimepercent != null" >
         #{procioawaittimepercent,jdbcType=DOUBLE},
@@ -1714,85 +1519,85 @@
         #{procportlisten,jdbcType=VARCHAR},
       </if>
       <if test="procnetworkreceivebytesps != null" >
-        #{procnetworkreceivebytesps,jdbcType=BIGINT},
+        #{procnetworkreceivebytesps,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytespsmin != null" >
-        #{procnetworkreceivebytespsmin,jdbcType=BIGINT},
+        #{procnetworkreceivebytespsmin,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytespsmax != null" >
-        #{procnetworkreceivebytespsmax,jdbcType=BIGINT},
+        #{procnetworkreceivebytespsmax,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytespsmean != null" >
-        #{procnetworkreceivebytespsmean,jdbcType=BIGINT},
+        #{procnetworkreceivebytespsmean,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytespsstd != null" >
-        #{procnetworkreceivebytespsstd,jdbcType=BIGINT},
+        #{procnetworkreceivebytespsstd,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytesps55quantile != null" >
-        #{procnetworkreceivebytesps55quantile,jdbcType=BIGINT},
+        #{procnetworkreceivebytesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytesps75quantile != null" >
-        #{procnetworkreceivebytesps75quantile,jdbcType=BIGINT},
+        #{procnetworkreceivebytesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytesps95quantile != null" >
-        #{procnetworkreceivebytesps95quantile,jdbcType=BIGINT},
+        #{procnetworkreceivebytesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkreceivebytesps99quantile != null" >
-        #{procnetworkreceivebytesps99quantile,jdbcType=BIGINT},
+        #{procnetworkreceivebytesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytesps != null" >
-        #{procnetworksendbytesps,jdbcType=BIGINT},
+        #{procnetworksendbytesps,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytespsmin != null" >
-        #{procnetworksendbytespsmin,jdbcType=BIGINT},
+        #{procnetworksendbytespsmin,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytespsmax != null" >
-        #{procnetworksendbytespsmax,jdbcType=BIGINT},
+        #{procnetworksendbytespsmax,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytespsmean != null" >
-        #{procnetworksendbytespsmean,jdbcType=BIGINT},
+        #{procnetworksendbytespsmean,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytespsstd != null" >
-        #{procnetworksendbytespsstd,jdbcType=BIGINT},
+        #{procnetworksendbytespsstd,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytesps55quantile != null" >
-        #{procnetworksendbytesps55quantile,jdbcType=BIGINT},
+        #{procnetworksendbytesps55quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytesps75quantile != null" >
-        #{procnetworksendbytesps75quantile,jdbcType=BIGINT},
+        #{procnetworksendbytesps75quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytesps95quantile != null" >
-        #{procnetworksendbytesps95quantile,jdbcType=BIGINT},
+        #{procnetworksendbytesps95quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworksendbytesps99quantile != null" >
-        #{procnetworksendbytesps99quantile,jdbcType=BIGINT},
+        #{procnetworksendbytesps99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnrate != null" >
-        #{procnetworkconnrate,jdbcType=BIGINT},
+        #{procnetworkconnrate,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnratemin != null" >
-        #{procnetworkconnratemin,jdbcType=BIGINT},
+        #{procnetworkconnratemin,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnratemax != null" >
-        #{procnetworkconnratemax,jdbcType=BIGINT},
+        #{procnetworkconnratemax,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnratemean != null" >
-        #{procnetworkconnratemean,jdbcType=BIGINT},
+        #{procnetworkconnratemean,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnratestd != null" >
-        #{procnetworkconnratestd,jdbcType=BIGINT},
+        #{procnetworkconnratestd,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnrate55quantile != null" >
-        #{procnetworkconnrate55quantile,jdbcType=BIGINT},
+        #{procnetworkconnrate55quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnrate75quantile != null" >
-        #{procnetworkconnrate75quantile,jdbcType=BIGINT},
+        #{procnetworkconnrate75quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnrate95quantile != null" >
-        #{procnetworkconnrate95quantile,jdbcType=BIGINT},
+        #{procnetworkconnrate95quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworkconnrate99quantile != null" >
-        #{procnetworkconnrate99quantile,jdbcType=BIGINT},
+        #{procnetworkconnrate99quantile,jdbcType=DOUBLE},
       </if>
       <if test="procnetworktcpconnectionnum != null" >
         #{procnetworktcpconnectionnum,jdbcType=INTEGER},

@@ -11,8 +11,6 @@ import java.util.Map;
 @Repository(value = "metricsProcessDAO")
 public interface MetricsProcessPOMapper {
 
-    int insert(MetricsProcessPO record);
-
     int insertSelective(MetricsProcessPO record);
 
     MetricsProcessPO selectByPrimaryKey(Long id);

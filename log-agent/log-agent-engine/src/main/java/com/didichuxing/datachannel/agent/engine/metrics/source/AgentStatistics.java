@@ -498,70 +498,249 @@ public class AgentStatistics extends AbstractStatistics {
                                                Long heartbeatTimeDay) {
         ProcessMetrics processMetrics = new ProcessMetrics();
         processMetrics.setHostname(hostName);
-        processMetrics.setProccpuutil(GlobalProperties.getProcessMetricsService().getProcCpuUtil()
-            .getLast());
-        processMetrics.setProccpuutilmin(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getMin());
-        processMetrics.setProccpuutilmax(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getMax());
-        processMetrics.setProccpuutilmean(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getAvg());
-        processMetrics.setProccpuutilstd(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getStdDev());
-        processMetrics.setProccpuutil55quantile(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getQuantile55());
-        processMetrics.setProccpuutil75quantile(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getQuantile75());
-        processMetrics.setProccpuutil95quantile(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getQuantile95());
-        processMetrics.setProccpuutil99quantile(GlobalProperties.getProcessMetricsService()
-            .getProcCpuUtil().getQuantile99());
+        processMetrics.setProcstartuptime(GlobalProperties.getProcessMetricsService().getProcessStartupTime());
+        processMetrics.setProcuptime(GlobalProperties.getProcessMetricsService().getProcUptime());
+        processMetrics.setProcpid(GlobalProperties.getProcessMetricsService().getProcessPid());
+        /* proccpuutil */
+        processMetrics.setProccpuutil(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getLast());
+        processMetrics.setProccpuutilmin(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getMin());
+        processMetrics.setProccpuutilmax(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getMax());
+        processMetrics.setProccpuutilmean(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getAvg());
+        processMetrics.setProccpuutilstd(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getStdDev());
+        processMetrics.setProccpuutil55quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getQuantile55());
+        processMetrics.setProccpuutil75quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getQuantile75());
+        processMetrics.setProccpuutil95quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getQuantile95());
+        processMetrics.setProccpuutil99quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtil().getQuantile99());
+        /* proccpuutiltotalpercent */
+        processMetrics.setProccpuutiltotalpercent(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getLast());
+        processMetrics.setProccpuutiltotalpercentmin(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getMin());
+        processMetrics.setProccpuutiltotalpercentmax(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getMax());
+        processMetrics.setProccpuutiltotalpercentmean(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getAvg());
+        processMetrics.setProccpuutiltotalpercentstd(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getStdDev());
+        processMetrics.setProccpuutiltotalpercent55quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getQuantile55());
+        processMetrics.setProccpuutiltotalpercent75quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getQuantile75());
+        processMetrics.setProccpuutiltotalpercent95quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getQuantile95());
+        processMetrics.setProccpuutiltotalpercent99quantile(GlobalProperties.getProcessMetricsService().getProcCpuUtilTotalPercent().getQuantile99());
+        /* proccpusys */
+        processMetrics.setProccpusys(GlobalProperties.getProcessMetricsService().getProcCpuSys().getLast());
+        processMetrics.setProccpusysmin(GlobalProperties.getProcessMetricsService().getProcCpuSys().getMin());
+        processMetrics.setProccpusysmax(GlobalProperties.getProcessMetricsService().getProcCpuSys().getMax());
+        processMetrics.setProccpusysmean(GlobalProperties.getProcessMetricsService().getProcCpuSys().getAvg());
+        processMetrics.setProccpusysstd(GlobalProperties.getProcessMetricsService().getProcCpuSys().getStdDev());
+        processMetrics.setProccpusys55quantile(GlobalProperties.getProcessMetricsService().getProcCpuSys().getQuantile55());
+        processMetrics.setProccpusys75quantile(GlobalProperties.getProcessMetricsService().getProcCpuSys().getQuantile75());
+        processMetrics.setProccpusys95quantile(GlobalProperties.getProcessMetricsService().getProcCpuSys().getQuantile95());
+        processMetrics.setProccpusys99quantile(GlobalProperties.getProcessMetricsService().getProcCpuSys().getQuantile99());
+        /* proccpuuser */
+        processMetrics.setProccpuuser(GlobalProperties.getProcessMetricsService().getProcCpuUser().getLast());
+        processMetrics.setProccpuusermin(GlobalProperties.getProcessMetricsService().getProcCpuUser().getMin());
+        processMetrics.setProccpuusermax(GlobalProperties.getProcessMetricsService().getProcCpuUser().getMax());
+        processMetrics.setProccpuusermean(GlobalProperties.getProcessMetricsService().getProcCpuUser().getAvg());
+        processMetrics.setProccpuuserstd(GlobalProperties.getProcessMetricsService().getProcCpuUser().getStdDev());
+        processMetrics.setProccpuuser55quantile(GlobalProperties.getProcessMetricsService().getProcCpuUser().getQuantile55());
+        processMetrics.setProccpuuser75quantile(GlobalProperties.getProcessMetricsService().getProcCpuUser().getQuantile75());
+        processMetrics.setProccpuuser95quantile(GlobalProperties.getProcessMetricsService().getProcCpuUser().getQuantile95());
+        processMetrics.setProccpuuser99quantile(GlobalProperties.getProcessMetricsService().getProcCpuUser().getQuantile99());
+        /* proccpuswitchesps */
+        processMetrics.setProccpuswitchesps(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getLast());
+        processMetrics.setProccpuswitchespsmin(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getMin());
+        processMetrics.setProccpuswitchespsmax(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getMax());
+        processMetrics.setProccpuswitchespsmean(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getAvg());
+        processMetrics.setProccpuswitchespsstd(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getStdDev());
+        processMetrics.setProccpuswitchesps55quantile(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getQuantile55());
+        processMetrics.setProccpuswitchesps75quantile(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getQuantile75());
+        processMetrics.setProccpuswitchesps95quantile(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getQuantile95());
+        processMetrics.setProccpuswitchesps99quantile(GlobalProperties.getProcessMetricsService().getProcCpuSwitchesPS().getQuantile99());
+        /* proccpuvoluntaryswitchesps */
+        processMetrics.setProccpuvoluntaryswitchesps(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getLast());
+        processMetrics.setProccpuvoluntaryswitchespsmin(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getMin());
+        processMetrics.setProccpuvoluntaryswitchespsmax(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getMax());
+        processMetrics.setProccpuvoluntaryswitchespsmean(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getAvg());
+        processMetrics.setProccpuvoluntaryswitchespsstd(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getStdDev());
+        processMetrics.setProccpuvoluntaryswitchesps55quantile(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getQuantile55());
+        processMetrics.setProccpuvoluntaryswitchesps75quantile(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getQuantile75());
+        processMetrics.setProccpuvoluntaryswitchesps95quantile(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getQuantile95());
+        processMetrics.setProccpuvoluntaryswitchesps99quantile(GlobalProperties.getProcessMetricsService().getProcCpuVoluntarySwitchesPS().getQuantile99());
+        /* proccpunonvoluntaryswitchesps */
+        processMetrics.setProccpunonvoluntaryswitchesps(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getLast());
+        processMetrics.setProccpunonvoluntaryswitchespsmin(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getMin());
+        processMetrics.setProccpunonvoluntaryswitchespsmax(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getMax());
+        processMetrics.setProccpunonvoluntaryswitchespsmean(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getAvg());
+        processMetrics.setProccpunonvoluntaryswitchespsstd(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getStdDev());
+        processMetrics.setProccpunonvoluntaryswitchesps55quantile(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getQuantile55());
+        processMetrics.setProccpunonvoluntaryswitchesps75quantile(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getQuantile75());
+        processMetrics.setProccpunonvoluntaryswitchesps95quantile(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getQuantile95());
+        processMetrics.setProccpunonvoluntaryswitchesps99quantile(GlobalProperties.getProcessMetricsService().getProcCpuNonVoluntarySwitchesPS().getQuantile99());
         processMetrics.setProcmemused(GlobalProperties.getProcessMetricsService().getProcMemUsed());
-        processMetrics.setProcnetworksendbytesps(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkSendBytesPs().getLast().longValue());
-        processMetrics.setProcnetworksendbytespsmin(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkSendBytesPs().getMin().longValue());
-        processMetrics.setProcnetworksendbytespsmax(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkSendBytesPs().getMax().longValue());
-        processMetrics.setProcnetworksendbytespsmean(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkSendBytesPs().getAvg().longValue());
-        processMetrics.setProcnetworksendbytespsstd(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkSendBytesPs().getStdDev().longValue());
-        processMetrics.setProcnetworksendbytesps55quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile55().longValue());
-        processMetrics.setProcnetworksendbytesps75quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile75().longValue());
-        processMetrics.setProcnetworksendbytesps95quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile95().longValue());
-        processMetrics.setProcnetworksendbytesps99quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile99().longValue());
+        processMetrics.setProcmemutil(GlobalProperties.getProcessMetricsService().getProcMemUtil());
+        processMetrics.setProcmemdata(GlobalProperties.getProcessMetricsService().getProcMemData());
+        processMetrics.setProcmemdirty(GlobalProperties.getProcessMetricsService().getProcMemDirty());
+        processMetrics.setProcmemlib(GlobalProperties.getProcessMetricsService().getProcMemLib());
+        processMetrics.setProcmemrss(GlobalProperties.getProcessMetricsService().getProcMemRss());
+        processMetrics.setProcmemshared(GlobalProperties.getProcessMetricsService().getProcMemShared());
+        processMetrics.setProcmemswap(GlobalProperties.getProcessMetricsService().getProcMemSwap());
+        processMetrics.setProcmemtext(GlobalProperties.getProcessMetricsService().getProcMemText());
+        processMetrics.setProcmemvms(GlobalProperties.getProcessMetricsService().getProcMemVms());
+        processMetrics.setJvmprocheapmemoryused(GlobalProperties.getProcessMetricsService().getJvmProcHeapMemoryUsed());
+        processMetrics.setJvmprocnonheapmemoryused(GlobalProperties.getProcessMetricsService().getJvmProcNonHeapMemoryUsed());
+        processMetrics.setJvmprocheapsizexmx(GlobalProperties.getProcessMetricsService().getJvmProcHeapSizeXmx());
+        processMetrics.setJvmprocmemusedpeak(GlobalProperties.getProcessMetricsService().getJvmProcMemUsedPeak());
+        processMetrics.setJvmprocheapmemusedpercent(GlobalProperties.getProcessMetricsService().getJvmProcHeapMemUsedPercent());
+        /* procioreadrate */
+        processMetrics.setProcioreadrate(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getLast());
+        processMetrics.setProcioreadratemin(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getMin());
+        processMetrics.setProcioreadratemax(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getMax());
+        processMetrics.setProcioreadratemean(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getAvg());
+        processMetrics.setProcioreadratestd(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getStdDev());
+        processMetrics.setProcioreadrate55quantile(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getQuantile55());
+        processMetrics.setProcioreadrate75quantile(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getQuantile75());
+        processMetrics.setProcioreadrate95quantile(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getQuantile95());
+        processMetrics.setProcioreadrate99quantile(GlobalProperties.getProcessMetricsService().getProcIOReadRate().getQuantile99());
+        /* procioreadbytesrate */
+        processMetrics.setProcioreadbytesrate(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getLast());
+        processMetrics.setProcioreadbytesratemin(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getMin());
+        processMetrics.setProcioreadbytesratemax(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getMax());
+        processMetrics.setProcioreadbytesratemean(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getAvg());
+        processMetrics.setProcioreadbytesratestd(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getStdDev());
+        processMetrics.setProcioreadbytesrate55quantile(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getQuantile55());
+        processMetrics.setProcioreadbytesrate75quantile(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getQuantile75());
+        processMetrics.setProcioreadbytesrate95quantile(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getQuantile95());
+        processMetrics.setProcioreadbytesrate99quantile(GlobalProperties.getProcessMetricsService().getProcIOReadBytesRate().getQuantile99());
+        /* prociowriterate */
+        processMetrics.setProciowriterate(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getLast());
+        processMetrics.setProciowriteratemin(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getMin());
+        processMetrics.setProciowriteratemax(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getMax());
+        processMetrics.setProciowriteratemean(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getAvg());
+        processMetrics.setProciowriteratestd(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getStdDev());
+        processMetrics.setProciowriterate55quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getQuantile55());
+        processMetrics.setProciowriterate75quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getQuantile75());
+        processMetrics.setProciowriterate95quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getQuantile95());
+        processMetrics.setProciowriterate99quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteRate().getQuantile99());
+        /* prociowritebytesrate */
+        processMetrics.setProciowritebytesrate(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getLast());
+        processMetrics.setProciowritebytesratemin(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getMin());
+        processMetrics.setProciowritebytesratemax(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getMax());
+        processMetrics.setProciowritebytesratemean(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getAvg());
+        processMetrics.setProciowritebytesratestd(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getStdDev());
+        processMetrics.setProciowritebytesrate55quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getQuantile55());
+        processMetrics.setProciowritebytesrate75quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getQuantile75());
+        processMetrics.setProciowritebytesrate95quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getQuantile95());
+        processMetrics.setProciowritebytesrate99quantile(GlobalProperties.getProcessMetricsService().getProcIOWriteBytesRate().getQuantile99());
+        /* procioreadwriterate */
+        processMetrics.setProcioreadwriterate(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getLast());
+        processMetrics.setProcioreadwriteratemin(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getMin());
+        processMetrics.setProcioreadwriteratemax(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getMax());
+        processMetrics.setProcioreadwriteratemean(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getAvg());
+        processMetrics.setProcioreadwriteratestd(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getStdDev());
+        processMetrics.setProcioreadwriterate55quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getQuantile55());
+        processMetrics.setProcioreadwriterate75quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getQuantile75());
+        processMetrics.setProcioreadwriterate95quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getQuantile95());
+        processMetrics.setProcioreadwriterate99quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteRate().getQuantile99());
+        /* procioreadwritebytesrate */
+        processMetrics.setProcioreadwritebytesrate(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getLast());
+        processMetrics.setProcioreadwritebytesratemin(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getMin());
+        processMetrics.setProcioreadwritebytesratemax(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getMax());
+        processMetrics.setProcioreadwritebytesratemean(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getAvg());
+        processMetrics.setProcioreadwritebytesratestd(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getStdDev());
+        processMetrics.setProcioreadwritebytesrate55quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getQuantile55());
+        processMetrics.setProcioreadwritebytesrate75quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getQuantile75());
+        processMetrics.setProcioreadwritebytesrate95quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getQuantile95());
+        processMetrics.setProcioreadwritebytesrate99quantile(GlobalProperties.getProcessMetricsService().getProcIOReadWriteBytesRate().getQuantile99());
+        /* procioawaittimepercent */
+        processMetrics.setProcioawaittimepercent(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getLast());
+        processMetrics.setProcioawaittimepercentmin(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getMin());
+        processMetrics.setProcioawaittimepercentmax(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getMax());
+        processMetrics.setProcioawaittimepercentmean(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getAvg());
+        processMetrics.setProcioawaittimepercentstd(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getStdDev());
+        processMetrics.setProcioawaittimepercent55quantile(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getQuantile55());
+        processMetrics.setProcioawaittimepercent75quantile(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getQuantile75());
+        processMetrics.setProcioawaittimepercent95quantile(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getQuantile95());
+        processMetrics.setProcioawaittimepercent99quantile(GlobalProperties.getProcessMetricsService().getProcIOAwaitTimePercent().getQuantile99());
+        processMetrics.setJvmprocyounggccount(GlobalProperties.getProcessMetricsService().getJvmProcYoungGcCount());
+        processMetrics.setJvmprocfullgccount(GlobalProperties.getProcessMetricsService().getJvmProcFullGcCount());
+        processMetrics.setJvmprocyounggctime(GlobalProperties.getProcessMetricsService().getJvmProcYoungGcTime());
+        processMetrics.setJvmprocfullgctime(GlobalProperties.getProcessMetricsService().getJvmProcFullGcTime());
+        processMetrics.setJvmprocthreadnum(GlobalProperties.getProcessMetricsService().getJvmProcThreadNum());
+        processMetrics.setJvmprocthreadnumpeak(GlobalProperties.getProcessMetricsService().getJvmProcThreadNumPeak());
+        processMetrics.setProcopenfdcount(GlobalProperties.getProcessMetricsService().getProcOpenFdCount());
+        processMetrics.setProcportlisten(JSON.toJSONString(GlobalProperties.getProcessMetricsService().getProcPortListen()));
+        /* procnetworkreceivebytesps */
         processMetrics.setProcnetworkreceivebytesps(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkReceiveBytesPs().getLast().longValue());
+                .getProcNetworkReceiveBytesPs().getLast());
         processMetrics.setProcnetworkreceivebytespsmin(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkReceiveBytesPs().getMin().longValue());
+                .getProcNetworkReceiveBytesPs().getMin());
         processMetrics.setProcnetworkreceivebytespsmax(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkReceiveBytesPs().getMax().longValue());
+                .getProcNetworkReceiveBytesPs().getMax());
         processMetrics.setProcnetworkreceivebytespsmean(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkReceiveBytesPs().getAvg().longValue());
+                .getProcNetworkReceiveBytesPs().getAvg());
         processMetrics.setProcnetworkreceivebytespsstd(GlobalProperties.getProcessMetricsService()
-            .getProcNetworkReceiveBytesPs().getStdDev().longValue());
+                .getProcNetworkReceiveBytesPs().getStdDev());
         processMetrics.setProcnetworkreceivebytesps55quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile55().longValue());
+                .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile55());
         processMetrics.setProcnetworkreceivebytesps75quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile75().longValue());
+                .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile75());
         processMetrics.setProcnetworkreceivebytesps95quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile95().longValue());
+                .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile95());
         processMetrics.setProcnetworkreceivebytesps99quantile(GlobalProperties
-            .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile99().longValue());
-        processMetrics.setJvmprocfullgccount(GlobalProperties.getProcessMetricsService()
-            .getJvmProcFullGcCount());
-        processMetrics.setProcopenfdcount(GlobalProperties.getProcessMetricsService()
-            .getProcOpenFdCount());
-        processMetrics.setJvmProcS0C(GlobalProperties.getProcessMetricsService().getJvmProcS0C());
+                .getProcessMetricsService().getProcNetworkReceiveBytesPs().getQuantile99());
+        /* procnetworksendbytesps */
+        processMetrics.setProcnetworksendbytesps(GlobalProperties.getProcessMetricsService()
+                .getProcNetworkSendBytesPs().getLast());
+        processMetrics.setProcnetworksendbytespsmin(GlobalProperties.getProcessMetricsService()
+                .getProcNetworkSendBytesPs().getMin());
+        processMetrics.setProcnetworksendbytespsmax(GlobalProperties.getProcessMetricsService()
+                .getProcNetworkSendBytesPs().getMax());
+        processMetrics.setProcnetworksendbytespsmean(GlobalProperties.getProcessMetricsService()
+                .getProcNetworkSendBytesPs().getAvg());
+        processMetrics.setProcnetworksendbytespsstd(GlobalProperties.getProcessMetricsService()
+                .getProcNetworkSendBytesPs().getStdDev());
+        processMetrics.setProcnetworksendbytesps55quantile(GlobalProperties
+                .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile55());
+        processMetrics.setProcnetworksendbytesps75quantile(GlobalProperties
+                .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile75());
+        processMetrics.setProcnetworksendbytesps95quantile(GlobalProperties
+                .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile95());
+        processMetrics.setProcnetworksendbytesps99quantile(GlobalProperties
+                .getProcessMetricsService().getProcNetworkSendBytesPs().getQuantile99());
+        /* procnetworkconnrate */
+        processMetrics.setProcnetworkconnrate(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getLast());
+        processMetrics.setProcnetworkconnratemin(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getMin());
+        processMetrics.setProcnetworkconnratemax(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getMax());
+        processMetrics.setProcnetworkconnratemean(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getAvg());
+        processMetrics.setProcnetworkconnratestd(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getStdDev());
+        processMetrics.setProcnetworkconnrate55quantile(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getQuantile55());
+        processMetrics.setProcnetworkconnrate75quantile(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getQuantile75());
+        processMetrics.setProcnetworkconnrate95quantile(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getQuantile95());
+        processMetrics.setProcnetworkconnrate99quantile(GlobalProperties.getProcessMetricsService().getProcNetworkConnRate().getQuantile99());
+        processMetrics.setProcnetworktcpconnectionnum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpConnectionNum());
+        processMetrics.setProcnetworktcplisteningnum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpListeningNum());
+        processMetrics.setProcnetworktcptimewaitnum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpTimeWaitNum());
+        processMetrics.setProcnetworktcpclosewaitnum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpCloseWaitNum());
+        processMetrics.setProcnetworktcpestablishednum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpEstablishedNum());
+        processMetrics.setProcnetworktcpsynsentnum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpSynSentNum());
+        processMetrics.setProcnetworktcpsynrecvnum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpSynRecvNum());
+        processMetrics.setProcnetworktcpfinwait1num(GlobalProperties.getProcessMetricsService().getProcNetworkTcpFinWait1Num());
+        processMetrics.setProcnetworktcpfinwait2num(GlobalProperties.getProcessMetricsService().getProcNetworkTcpFinWait2Num());
+        processMetrics.setProcnetworktcpclosednum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpClosedNum());
+        processMetrics.setProcnetworktcpclosingnum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpClosingNum());
+        processMetrics.setProcnetworktcplastacknum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpLastAckNum());
+        processMetrics.setProcnetworktcpnonenum(GlobalProperties.getProcessMetricsService().getProcNetworkTcpNoneNum());
         processMetrics.setHeartbeattime(heartbeatTime);
         processMetrics.setHeartbeattimeminute(heartbeatTimeMinute);
         processMetrics.setHeartbeattimehour(heartbeatTimeHour);
         processMetrics.setHeartbeatTimeDay(heartbeatTimeDay);
+        processMetrics.setJvmProcS0C(GlobalProperties.getProcessMetricsService().getJvmProcS0C());
+        processMetrics.setJvmProcS1C(GlobalProperties.getProcessMetricsService().getJvmProcS1C());
+        processMetrics.setJvmProcS0U(GlobalProperties.getProcessMetricsService().getJvmProcS0U());
+        processMetrics.setJvmProcS1U(GlobalProperties.getProcessMetricsService().getJvmProcS1U());
+        processMetrics.setJvmProcEC(GlobalProperties.getProcessMetricsService().getJvmProcEC());
+        processMetrics.setJvmProcEU(GlobalProperties.getProcessMetricsService().getJvmProcEU());
+        processMetrics.setJvmProcOC(GlobalProperties.getProcessMetricsService().getJvmProcOC());
+        processMetrics.setJvmProcOU(GlobalProperties.getProcessMetricsService().getJvmProcOU());
+        processMetrics.setJvmProcMC(GlobalProperties.getProcessMetricsService().getJvmProcMC());
+        processMetrics.setJvmProcMU(GlobalProperties.getProcessMetricsService().getJvmProcMU());
+        processMetrics.setJvmProcCCSC(GlobalProperties.getProcessMetricsService().getJvmProcCCSC());
+        processMetrics.setJvmProcCCSU(GlobalProperties.getProcessMetricsService().getJvmProcCCSU());
         return processMetrics;
     }
 
@@ -577,9 +756,28 @@ public class AgentStatistics extends AbstractStatistics {
                                              Long heartbeatTimeMinute, Long heartbeatTimeHour,
                                              Long heartbeatTimeDay) {
         SystemMetrics systemMetrics = new SystemMetrics();
+        systemMetrics.setOstype(GlobalProperties.getSystemMetricsService().getOsType());
+        systemMetrics.setOsversion(GlobalProperties.getSystemMetricsService().getOsVersion());
+        systemMetrics.setOskernelversion(GlobalProperties.getSystemMetricsService().getOsKernelVersion());
         systemMetrics.setHostname(hostName);
-        systemMetrics.setSystemntpoffset(GlobalProperties.getSystemMetricsService()
-            .getSystemNtpOffset());
+        systemMetrics.setIps(GlobalProperties.getSystemMetricsService().getIps());
+        systemMetrics.setSystemntpoffset(GlobalProperties.getSystemMetricsService().getSystemNtpOffset());
+        systemMetrics.setSystemstartuptime(GlobalProperties.getSystemMetricsService().getSystemStartupTime());
+        systemMetrics.setSystemuptime(GlobalProperties.getSystemMetricsService().getSystemUptime());
+        systemMetrics.setProcessesblocked(GlobalProperties.getSystemMetricsService().getProcessesBlocked());
+        systemMetrics.setProcessessleeping(GlobalProperties.getSystemMetricsService().getProcessesSleeping());
+        systemMetrics.setProcesseszombies(GlobalProperties.getSystemMetricsService().getProcessesZombies());
+        systemMetrics.setProcessesstopped(GlobalProperties.getSystemMetricsService().getProcessesStopped());
+        systemMetrics.setProcessesrunning(GlobalProperties.getSystemMetricsService().getProcessesRunning());
+        systemMetrics.setProcessesidle(GlobalProperties.getSystemMetricsService().getProcessesIdle());
+        systemMetrics.setProcesseswait(GlobalProperties.getSystemMetricsService().getProcessesWait());
+        systemMetrics.setProcessesdead(GlobalProperties.getSystemMetricsService().getProcessesDead());
+        systemMetrics.setProcessespaging(GlobalProperties.getSystemMetricsService().getProcessesPaging());
+        systemMetrics.setProcessesunknown(GlobalProperties.getSystemMetricsService().getProcessesUnknown());
+        systemMetrics.setProcessestotal(GlobalProperties.getSystemMetricsService().getProcessesTotal());
+        systemMetrics.setProcessestotalthreads(GlobalProperties.getSystemMetricsService().getProcessesTotalThreads());
+        systemMetrics.setCpucores(GlobalProperties.getSystemMetricsService().getSystemCpuCores());
+        /* Systemcpuutil */
         systemMetrics.setSystemcpuutil(GlobalProperties.getSystemMetricsService()
             .getSystemCpuUtil().getLast());
         systemMetrics.setSystemcpuutil55quantile(GlobalProperties.getSystemMetricsService()
@@ -598,48 +796,251 @@ public class AgentStatistics extends AbstractStatistics {
             .getSystemCpuUtil().getMin());
         systemMetrics.setSystemcpuutilstd(GlobalProperties.getSystemMetricsService()
             .getSystemCpuUtil().getStdDev());
-        systemMetrics.setSystemmemfree(GlobalProperties.getSystemMetricsService()
-            .getSystemMemFree());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPs(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getLast());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPsMin(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getMin());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPsMax(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getMax());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPsMean(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getAvg());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPsStd(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getStdDev());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPs55Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile55());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPs75Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile75());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPs95Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile95());
-        systemMetrics.setSystemNetworkSendAndReceiveBytesPs99Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile99());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercent(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getLast());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercentMin(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getMin());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercentMax(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getMax());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercentMean(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getAvg());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercentStd(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getStdDev());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercent55Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile55());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercent75Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile75());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercent95Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile95());
-        systemMetrics.setSystemNetWorkBandWidthUsedPercent99Quantile(GlobalProperties
-            .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile99());
+        /* systemcpuutiltotalpercent */
+        systemMetrics.setSystemcpuutiltotalpercent(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getLast());
+        systemMetrics.setSystemcpuutiltotalpercentmin(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getMin());
+        systemMetrics.setSystemcpuutiltotalpercentmax(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getMax());
+        systemMetrics.setSystemcpuutiltotalpercentmean(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getAvg());
+        systemMetrics.setSystemcpuutiltotalpercentstd(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getStdDev());
+        systemMetrics.setSystemcpuutiltotalpercent55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getQuantile55());
+        systemMetrics.setSystemcpuutiltotalpercent75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getQuantile75());
+        systemMetrics.setSystemcpuutiltotalpercent95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getQuantile95());
+        systemMetrics.setSystemcpuutiltotalpercent99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUtilTotalPercent().getQuantile99());
+        /* systemcpusystem */
+        systemMetrics.setSystemcpusystem(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getLast());
+        systemMetrics.setSystemcpusystemmin(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getMin());
+        systemMetrics.setSystemcpusystemmax(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getMax());
+        systemMetrics.setSystemcpusystemmean(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getAvg());
+        systemMetrics.setSystemcpusystemstd(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getStdDev());
+        systemMetrics.setSystemcpusystem55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getQuantile55());
+        systemMetrics.setSystemcpusystem75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getQuantile75());
+        systemMetrics.setSystemcpusystem95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getQuantile95());
+        systemMetrics.setSystemcpusystem99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSystem().getQuantile99());
+        /* systemcpuuser */
+        systemMetrics.setSystemcpuuser(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getLast());
+        systemMetrics.setSystemcpuusermin(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getMin());
+        systemMetrics.setSystemcpuusermax(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getMax());
+        systemMetrics.setSystemcpuusermean(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getAvg());
+        systemMetrics.setSystemcpuuserstd(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getStdDev());
+        systemMetrics.setSystemcpuuser55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getQuantile55());
+        systemMetrics.setSystemcpuuser75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getQuantile75());
+        systemMetrics.setSystemcpuuser95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getQuantile95());
+        systemMetrics.setSystemcpuuser99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUser().getQuantile99());
+        /* systemcpuidle */
+        systemMetrics.setSystemcpuidle(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getLast());
+        systemMetrics.setSystemcpuidlemin(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getMin());
+        systemMetrics.setSystemcpuidlemax(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getMax());
+        systemMetrics.setSystemcpuidlemean(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getAvg());
+        systemMetrics.setSystemcpuidlestd(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getStdDev());
+        systemMetrics.setSystemcpuidle55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getQuantile55());
+        systemMetrics.setSystemcpuidle75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getQuantile75());
+        systemMetrics.setSystemcpuidle95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getQuantile95());
+        systemMetrics.setSystemcpuidle99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIdle().getQuantile99());
+        /* systemcpuswitches */
+        systemMetrics.setSystemcpuswitches(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getLast());
+        systemMetrics.setSystemcpuswitchesmin(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getMin());
+        systemMetrics.setSystemcpuswitchesmax(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getMax());
+        systemMetrics.setSystemcpuswitchesmean(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getAvg());
+        systemMetrics.setSystemcpuswitchesstd(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getStdDev());
+        systemMetrics.setSystemcpuswitches55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getQuantile55());
+        systemMetrics.setSystemcpuswitches75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getQuantile75());
+        systemMetrics.setSystemcpuswitches95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getQuantile95());
+        systemMetrics.setSystemcpuswitches99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSwitches().getQuantile99());
+        /* systemcpuusageirq */
+        systemMetrics.setSystemcpuusageirq(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getLast());
+        systemMetrics.setSystemcpuusageirqmin(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getMin());
+        systemMetrics.setSystemcpuusageirqmax(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getMax());
+        systemMetrics.setSystemcpuusageirqmean(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getAvg());
+        systemMetrics.setSystemcpuusageirqstd(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getStdDev());
+        systemMetrics.setSystemcpuusageirq55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getQuantile55());
+        systemMetrics.setSystemcpuusageirq75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getQuantile75());
+        systemMetrics.setSystemcpuusageirq95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getQuantile95());
+        systemMetrics.setSystemcpuusageirq99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageIrq().getQuantile99());
+        /* systemcpuusagesoftirq */
+        systemMetrics.setSystemcpuusagesoftirq(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getLast());
+        systemMetrics.setSystemcpuusagesoftirqmin(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getMin());
+        systemMetrics.setSystemcpuusagesoftirqmax(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getMax());
+        systemMetrics.setSystemcpuusagesoftirqmean(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getAvg());
+        systemMetrics.setSystemcpuusagesoftirqstd(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getStdDev());
+        systemMetrics.setSystemcpuusagesoftirq55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getQuantile55());
+        systemMetrics.setSystemcpuusagesoftirq75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getQuantile75());
+        systemMetrics.setSystemcpuusagesoftirq95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getQuantile95());
+        systemMetrics.setSystemcpuusagesoftirq99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuUsageSoftIrq().getQuantile99());
+        /* systemload1 */
+        systemMetrics.setSystemload1(GlobalProperties.getSystemMetricsService().getSystemLoad1().getLast());
+        systemMetrics.setSystemload1min(GlobalProperties.getSystemMetricsService().getSystemLoad1().getMin());
+        systemMetrics.setSystemload1max(GlobalProperties.getSystemMetricsService().getSystemLoad1().getMax());
+        systemMetrics.setSystemload1mean(GlobalProperties.getSystemMetricsService().getSystemLoad1().getAvg());
+        systemMetrics.setSystemload1std(GlobalProperties.getSystemMetricsService().getSystemLoad1().getStdDev());
+        systemMetrics.setSystemload155quantile(GlobalProperties.getSystemMetricsService().getSystemLoad1().getQuantile55());
+        systemMetrics.setSystemload175quantile(GlobalProperties.getSystemMetricsService().getSystemLoad1().getQuantile75());
+        systemMetrics.setSystemload195quantile(GlobalProperties.getSystemMetricsService().getSystemLoad1().getQuantile95());
+        systemMetrics.setSystemload199quantile(GlobalProperties.getSystemMetricsService().getSystemLoad1().getQuantile99());
+        /* systemload5 */
+        systemMetrics.setSystemload5(GlobalProperties.getSystemMetricsService().getSystemLoad5().getLast());
+        systemMetrics.setSystemload5min(GlobalProperties.getSystemMetricsService().getSystemLoad5().getMin());
+        systemMetrics.setSystemload5max(GlobalProperties.getSystemMetricsService().getSystemLoad5().getMax());
+        systemMetrics.setSystemload5mean(GlobalProperties.getSystemMetricsService().getSystemLoad5().getAvg());
+        systemMetrics.setSystemload5std(GlobalProperties.getSystemMetricsService().getSystemLoad5().getStdDev());
+        systemMetrics.setSystemload555quantile(GlobalProperties.getSystemMetricsService().getSystemLoad5().getQuantile55());
+        systemMetrics.setSystemload575quantile(GlobalProperties.getSystemMetricsService().getSystemLoad5().getQuantile75());
+        systemMetrics.setSystemload595quantile(GlobalProperties.getSystemMetricsService().getSystemLoad5().getQuantile95());
+        systemMetrics.setSystemload599quantile(GlobalProperties.getSystemMetricsService().getSystemLoad5().getQuantile99());
+        /* systemload15 */
+        systemMetrics.setSystemload15(GlobalProperties.getSystemMetricsService().getSystemLoad15().getLast());
+        systemMetrics.setSystemload15min(GlobalProperties.getSystemMetricsService().getSystemLoad15().getMin());
+        systemMetrics.setSystemload15max(GlobalProperties.getSystemMetricsService().getSystemLoad15().getMax());
+        systemMetrics.setSystemload15mean(GlobalProperties.getSystemMetricsService().getSystemLoad15().getAvg());
+        systemMetrics.setSystemload15std(GlobalProperties.getSystemMetricsService().getSystemLoad15().getStdDev());
+        systemMetrics.setSystemload1555quantile(GlobalProperties.getSystemMetricsService().getSystemLoad15().getQuantile55());
+        systemMetrics.setSystemload1575quantile(GlobalProperties.getSystemMetricsService().getSystemLoad15().getQuantile75());
+        systemMetrics.setSystemload1595quantile(GlobalProperties.getSystemMetricsService().getSystemLoad15().getQuantile95());
+        systemMetrics.setSystemload1599quantile(GlobalProperties.getSystemMetricsService().getSystemLoad15().getQuantile99());
+        /* systemcpuiowait */
+        systemMetrics.setSystemcpuiowait(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getLast());
+        systemMetrics.setSystemcpuiowaitmin(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getMin());
+        systemMetrics.setSystemcpuiowaitmax(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getMax());
+        systemMetrics.setSystemcpuiowaitmean(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getAvg());
+        systemMetrics.setSystemcpuiowaitstd(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getStdDev());
+        systemMetrics.setSystemcpuiowait55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getQuantile55());
+        systemMetrics.setSystemcpuiowait75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getQuantile75());
+        systemMetrics.setSystemcpuiowait95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getQuantile95());
+        systemMetrics.setSystemcpuiowait99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuIOWait().getQuantile99());
+        /* systemcpuguest */
+        systemMetrics.setSystemcpuguest(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getLast());
+        systemMetrics.setSystemcpuguestmin(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getMin());
+        systemMetrics.setSystemcpuguestmax(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getMax());
+        systemMetrics.setSystemcpuguestmean(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getAvg());
+        systemMetrics.setSystemcpugueststd(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getStdDev());
+        systemMetrics.setSystemcpuguest55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getQuantile55());
+        systemMetrics.setSystemcpuguest75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getQuantile75());
+        systemMetrics.setSystemcpuguest95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getQuantile95());
+        systemMetrics.setSystemcpuguest99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuGuest().getQuantile99());
+        /* systemcpusteal */
+        systemMetrics.setSystemcpusteal(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getLast());
+        systemMetrics.setSystemcpustealmin(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getMin());
+        systemMetrics.setSystemcpustealmax(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getMax());
+        systemMetrics.setSystemcpustealmean(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getAvg());
+        systemMetrics.setSystemcpustealstd(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getStdDev());
+        systemMetrics.setSystemcpusteal55quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getQuantile55());
+        systemMetrics.setSystemcpusteal75quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getQuantile75());
+        systemMetrics.setSystemcpusteal95quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getQuantile95());
+        systemMetrics.setSystemcpusteal99quantile(GlobalProperties.getSystemMetricsService().getSystemCpuSteal().getQuantile99());
+        systemMetrics.setSystemmemcommitlimit(GlobalProperties.getSystemMetricsService().getSystemMemCommitLimit());
+        systemMetrics.setSystemmemcommittedas(GlobalProperties.getSystemMetricsService().getSystemMemCommittedAs());
+        systemMetrics.setSystemmemcommitted(GlobalProperties.getSystemMetricsService().getSystemMemCommitted());
+        systemMetrics.setSystemmemnonpaged(GlobalProperties.getSystemMetricsService().getSystemMemNonPaged());
+        systemMetrics.setSystemmempaged(GlobalProperties.getSystemMetricsService().getSystemMemPaged());
+        systemMetrics.setSystemmemshared(GlobalProperties.getSystemMetricsService().getSystemMemShared());
+        systemMetrics.setSystemmemslab(GlobalProperties.getSystemMetricsService().getSystemMemSlab());
+        systemMetrics.setSystemmemtotal(GlobalProperties.getSystemMetricsService().getSystemMemTotal());
+        systemMetrics.setSystemmemfree(GlobalProperties.getSystemMetricsService().getSystemMemFree());
+        systemMetrics.setSystemmemused(GlobalProperties.getSystemMetricsService().getSystemMemUsed());
+        systemMetrics.setSystemmembuffered(GlobalProperties.getSystemMetricsService().getSystemMemBuffered());
+        systemMetrics.setSystemmemcached(GlobalProperties.getSystemMetricsService().getSystemMemCached());
+        systemMetrics.setSystemmemfreepercent(GlobalProperties.getSystemMetricsService().getSystemMemFreePercent());
+        systemMetrics.setSystemmemusedpercent(GlobalProperties.getSystemMetricsService().getSystemMemUsedPercent());
+        systemMetrics.setSystemswapcached(GlobalProperties.getSystemMetricsService().getSystemSwapCached());
+        systemMetrics.setSystemswapfree(GlobalProperties.getSystemMetricsService().getSystemSwapFree());
+        systemMetrics.setSystemswapfreepercent(GlobalProperties.getSystemMetricsService().getSystemSwapFreePercent());
+        systemMetrics.setSystemswaptotal(GlobalProperties.getSystemMetricsService().getSystemSwapTotal());
+        systemMetrics.setSystemswapused(GlobalProperties.getSystemMetricsService().getSystemSwapUsed());
+        systemMetrics.setSystemswapusedpercent(GlobalProperties.getSystemMetricsService().getSystemSwapUsedPercent());
+        systemMetrics.setSystemdisks(GlobalProperties.getSystemMetricsService().getSystemDisks());
+        systemMetrics.setSystemfilesmax(GlobalProperties.getSystemMetricsService().getSystemFilesMax());
+        systemMetrics.setSystemfilesallocated(GlobalProperties.getSystemMetricsService().getSystemFilesAllocated());
+        systemMetrics.setSystemfilesleft(GlobalProperties.getSystemMetricsService().getSystemFilesLeft());
+        systemMetrics.setSystemfilesusedpercent(GlobalProperties.getSystemMetricsService().getSystemFilesUsedPercent());
+        systemMetrics.setSystemfilesused(GlobalProperties.getSystemMetricsService().getSystemFilesUsed());
+        systemMetrics.setSystemfilesnotused(GlobalProperties.getSystemMetricsService().getSystemFilesNotUsed());
+        systemMetrics.setSystemnetcards(GlobalProperties.getSystemMetricsService().getSystemNetCards());
+        /* systemnetworkreceivebytesps */
+        systemMetrics.setSystemnetworkreceivebytesps(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getLast());
+        systemMetrics.setSystemnetworkreceivebytespsmin(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getMin());
+        systemMetrics.setSystemnetworkreceivebytespsmax(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getMax());
+        systemMetrics.setSystemnetworkreceivebytespsmean(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getAvg());
+        systemMetrics.setSystemnetworkreceivebytespsstd(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getStdDev());
+        systemMetrics.setSystemnetworkreceivebytesps55quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getQuantile55());
+        systemMetrics.setSystemnetworkreceivebytesps75quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getQuantile75());
+        systemMetrics.setSystemnetworkreceivebytesps95quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getQuantile95());
+        systemMetrics.setSystemnetworkreceivebytesps99quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkReceiveBytesPs().getQuantile99());
+        /* systemnetworksendbytesps */
+        systemMetrics.setSystemnetworksendbytesps(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getLast());
+        systemMetrics.setSystemnetworksendbytespsmin(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getMin());
+        systemMetrics.setSystemnetworksendbytespsmax(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getMax());
+        systemMetrics.setSystemnetworksendbytespsmean(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getAvg());
+        systemMetrics.setSystemnetworksendbytespsstd(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getStdDev());
+        systemMetrics.setSystemnetworksendbytesps55quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getQuantile55());
+        systemMetrics.setSystemnetworksendbytesps75quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getQuantile75());
+        systemMetrics.setSystemnetworksendbytesps95quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getQuantile95());
+        systemMetrics.setSystemnetworksendbytesps99quantile(GlobalProperties.getSystemMetricsService().getSystemNetworkSendBytesPs().getQuantile99());
+        systemMetrics.setSystemnetworktcpconnectionnum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpConnectionNum());
+        systemMetrics.setSystemnetworktcplisteningnum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpListeningNum());
+        systemMetrics.setSystemnetworktcpestablishednum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpEstablishedNum());
+        systemMetrics.setSystemnetworktcpsynsentnum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpSynSentNum());
+        systemMetrics.setSystemnetworktcpsynrecvnum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpSynRecvNum());
+        systemMetrics.setSystemnetworktcpfinwait1num(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpFinWait1Num());
+        systemMetrics.setSystemnetworktcpfinwait2num(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpFinWait2Num());
+        systemMetrics.setSystemnetworktcptimewaitnum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpTimeWaitNum());
+        systemMetrics.setSystemnetworktcpclosednum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpClosedNum());
+        systemMetrics.setSystemnetworktcpclosewaitnum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpCloseWaitNum());
+        systemMetrics.setSystemnetworktcpclosingnum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpClosingNum());
+        systemMetrics.setSystemnetworktcplastacknum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpLastAckNum());
+        systemMetrics.setSystemnetworktcpnonenum(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpNoneNum());
+        systemMetrics.setSystemnetworktcpactiveopens(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpActiveOpens());
+        systemMetrics.setSystemnetworktcppassiveopens(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpPassiveOpens());
+        systemMetrics.setSystemnetworktcpattemptfails(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpAttemptFails());
+        systemMetrics.setSystemnetworktcpestabresets(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpEstabResets());
+        systemMetrics.setSystemnetworktcpretranssegs(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpRetransSegs());
+        systemMetrics.setSystemnetworktcpextlistenoverflows(GlobalProperties.getSystemMetricsService().getSystemNetworkTcpExtListenOverflows());
+        systemMetrics.setSystemnetworkudpindatagrams(GlobalProperties.getSystemMetricsService().getSystemNetworkUdpInDatagrams());
+        systemMetrics.setSystemnetworkudpoutdatagrams(GlobalProperties.getSystemMetricsService().getSystemNetworkUdpOutDatagrams());
+        systemMetrics.setSystemnetworkudpinerrors(GlobalProperties.getSystemMetricsService().getSystemNetworkUdpInErrors());
+        systemMetrics.setSystemnetworkudpnoports(GlobalProperties.getSystemMetricsService().getSystemNetworkUdpNoPorts());
+        systemMetrics.setSystemnetworkudpsendbuffererrors(GlobalProperties.getSystemMetricsService().getSystemNetworkUdpSendBufferErrors());
         systemMetrics.setHeartbeattime(heartbeatTime);
         systemMetrics.setHeartbeattimeminute(heartbeatTimeMinute);
         systemMetrics.setHeartbeattimehour(heartbeatTimeHour);
         systemMetrics.setHeartbeatTimeDay(heartbeatTimeDay);
+        systemMetrics.setSystemNetCardsBandWidth(GlobalProperties.getSystemMetricsService().getSystemNetCardsBandWidth());
+        /* systemNetworkSendAndReceiveBytesPs */
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPs(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getLast());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPsMin(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getMin());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPsMax(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getMax());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPsMean(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getAvg());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPsStd(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getStdDev());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPs55Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile55());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPs75Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile75());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPs95Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile95());
+        systemMetrics.setSystemNetworkSendAndReceiveBytesPs99Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetworkSendAndReceiveBytesPs().getQuantile99());
+        /* systemNetWorkBandWidthUsedPercent */
+        systemMetrics.setSystemNetWorkBandWidthUsedPercent(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getLast());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercentMin(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getMin());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercentMax(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getMax());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercentMean(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getAvg());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercentStd(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getStdDev());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercent55Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile55());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercent75Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile75());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercent95Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile95());
+        systemMetrics.setSystemNetWorkBandWidthUsedPercent99Quantile(GlobalProperties
+                .getSystemMetricsService().getSystemNetWorkBandWidthUsedPercent().getQuantile99());
         return systemMetrics;
     }
 

@@ -299,17 +299,17 @@ public interface SystemMetricsService {
     /*********************** about disk、disk io ***********************/
 
     /**
-     * @return 返回系统磁盘数
+     * @return 返回系统磁盘分区数
      */
     Integer getSystemDisks();
 
     /**
-     * @return 返回系统各磁盘信息
+     * @return 返回系统各磁盘分区信息
      */
     List<DiskInfo> getSystemDiskInfoList();
 
     /**
-     * @return 返回系统各磁盘、io 信息
+     * @return 返回系统各磁盘 io 信息
      */
     List<DiskIOInfo> getSystemDiskIOInfoList();
 
