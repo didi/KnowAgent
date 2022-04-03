@@ -56,6 +56,8 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     private PeriodStatistics systemCpuUsageIrq = new PeriodStatistics();
 
+    private PeriodStatistics systemCpuUsageSoftIrq = new PeriodStatistics();
+
     private PeriodStatistics systemLoad1 = new PeriodStatistics();
 
     private PeriodStatistics systemLoad5 = new PeriodStatistics();
@@ -186,62 +188,120 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getProcessesBlocked() {
-        return null;
+        return getProcessesCountByProcessStatus("D");
+    }
+
+    private Integer getProcessesCountByProcessStatus(String status) {
+        Integer statusCount = 0;
+        List<String> processInfoList = getOutputByCmd(
+                "ps -aux", "系统进程状态", null);
+        if (!processInfoList.isEmpty() && processInfoList.size() > 1) {
+            for (int i = 1; i < processInfoList.size(); i++) {
+                String processInfo = processInfoList.get(i);
+                String[] properties = processInfo.split("\\s+");
+                String processStatus = properties[7];
+                if(processStatus.contains(status)) {
+                    statusCount++;
+                }
+            }
+        }
+        return statusCount;
     }
 
     @Override
     public Integer getProcessesSleeping() {
-        return null;
+        return getProcessesCountByProcessStatus("S");
     }
 
     @Override
     public Integer getProcessesZombies() {
-        return null;
+        return getProcessesCountByProcessStatus("Z");
     }
 
     @Override
     public Integer getProcessesStopped() {
-        return null;
+        return getProcessesCountByProcessStatus("T");
     }
 
     @Override
     public Integer getProcessesRunning() {
-        return null;
+        return getProcessesCountByProcessStatus("R");
     }
 
     @Override
     public Integer getProcessesIdle() {
-        return null;
+        return getProcessesCountByProcessStatus("I");
     }
 
     @Override
     public Integer getProcessesWait() {
-        return null;
+        return getProcessesCountByProcessStatus("S");
     }
 
     @Override
     public Integer getProcessesDead() {
-        return null;
+        return getProcessesCountByProcessStatus("X");
     }
 
     @Override
     public Integer getProcessesPaging() {
-        return null;
+        return getProcessesCountByProcessStatus("W");
     }
 
     @Override
     public Integer getProcessesUnknown() {
-        return null;
+
+        //TODO：
+
+        return 0;
+
     }
 
     @Override
     public Integer getProcessesTotal() {
-        return null;
+        List<String> processesTotal = getOutputByCmd("ps -ef | wc -l", "系统总进程数", null);
+        if (!processesTotal.isEmpty() && StringUtils.isNotBlank(processesTotal.get(0))) {
+            return Integer.parseInt(processesTotal.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getProcessesTotal||msg=data is null");
+            return 0;
+        }
     }
 
     @Override
     public Integer getProcessesTotalThreads() {
-        return null;
+        Integer processesTotalThreads = 0;
+        for (Integer pid : getPidList()) {
+            processesTotalThreads += getThreadNumByPid(pid);
+        }
+        return processesTotalThreads;
+    }
+
+    private Integer getThreadNumByPid(Integer pid) {
+        List<String> threadNum = getOutputByCmd(
+                String.format("ls /proc/%d/task | wc -l", pid), String.format("进程pid=%d线程数", pid), null);
+        if (!threadNum.isEmpty() && threadNum.size() == 1) {
+            return Integer.valueOf(threadNum.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl()||method=getThreadNumByPid()||msg=data is null");
+            return 0;
+        }
+    }
+
+    private List<Integer> getPidList() {
+        List<Integer> pidList = new ArrayList<>();
+        /* ls /proc/17034/task | wc -l */
+        List<String> processInfoList = getOutputByCmd(
+                "ps -aux", "系统进程状态", null);
+        if (!processInfoList.isEmpty() && processInfoList.size() > 1) {
+            for (int i = 1; i < processInfoList.size(); i++) {
+                String processInfo = processInfoList.get(i);
+                String[] properties = processInfo.split("\\s+");
+                Integer pid = Integer.valueOf(properties[1]);
+                pidList.add(pid);
+            }
+        }
+        return pidList;
     }
 
     @Override
@@ -366,21 +426,39 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUsageIrqOnly() {
-
-        //TODO：
-
+        List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
+        if (!output.isEmpty() && output.size() >= 3) {
+            String[] properties = output.get(2).split("\\s+");//
+            Double irq = Double.valueOf(properties[11]);
+            return irq;
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUsageIrqOnly||msg=data is null");
+        }
         return 0d;
-
     }
 
     @Override
     public PeriodStatistics getSystemCpuUsageSoftIrq() {
-
-        //TODO：
-
-        return null;
-
+        return systemCpuUsageSoftIrq.snapshot();
     }
+
+    @PeriodMethod(periodMs = 5 * 1000)
+    private void calcSystemCpuUsageSoftIrq() {
+        systemCpuUsageSoftIrq.add(getSystemCpuUsageSoftIrqOnly());
+    }
+
+    private Double getSystemCpuUsageSoftIrqOnly() {
+        List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
+        if (!output.isEmpty() && output.size() >= 3) {
+            String[] properties = output.get(2).split("\\s+");//
+            Double softIrq = Double.valueOf(properties[13]);
+            return softIrq;
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUsageSoftIrqOnly||msg=data is null");
+        }
+        return 0d;
+    }
+
 
     @Override
     public PeriodStatistics getSystemLoad1() {

@@ -923,7 +923,11 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcNetworkConnRate() {
-        return null;
+
+        //TODO：
+
+        return PeriodStatistics.defaultValue();
+
     }
 
     @Override
