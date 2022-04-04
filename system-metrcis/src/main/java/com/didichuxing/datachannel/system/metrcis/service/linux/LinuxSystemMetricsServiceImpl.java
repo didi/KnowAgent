@@ -999,7 +999,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
             double processReceiveBytesPs = curLinuxNetFlow.getSystemReceiveBytesPs(lastLinuxNetFlow);
             lastLinuxNetFlow = curLinuxNetFlow;
-            return  processReceiveBytesPs;
+            return MathUtil.divideWith2Digit(processReceiveBytesPs, 1.0);
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkReceiveBytesPsOnly()||msg=获取系统网络每秒下行流量失败",
                     e);
@@ -1022,7 +1022,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
             double processTransmitBytesPs = curLinuxNetFlow.getSystemTransmitBytesPs(lastLinuxNetFlow);
             lastLinuxNetFlow = curLinuxNetFlow;
-            return  processTransmitBytesPs;
+            return MathUtil.divideWith2Digit(processTransmitBytesPs, 1.0);
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkSendBytesPsOnly()||msg=获取系统网络每秒上行流量失败",
                     e);
@@ -1075,7 +1075,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             return 0d;
         } else {
             Double systemNetworkSendAndReceiveBytesPs = getSystemNetworkSendAndReceiveBytesPsOnly();
-            return systemNetworkSendAndReceiveBytesPs / systemNetWorkBand;
+            return MathUtil.divideWith2Digit(systemNetworkSendAndReceiveBytesPs, systemNetWorkBand);
         }
     }
 

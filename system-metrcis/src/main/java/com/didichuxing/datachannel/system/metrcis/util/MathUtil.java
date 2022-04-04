@@ -160,4 +160,17 @@ public class MathUtil {
         }
     }
 
+    /**
+     *
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return 分子 / 分母结果 保留2位小数
+     */
+    public static Double divideWith2Digit(Double numerator, Long denominator) {
+        if(denominator.equals(0l)) {
+            return 0d;
+        }
+        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+    }
+
 }
