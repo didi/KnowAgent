@@ -135,23 +135,23 @@ public class MetricsSystemPO {
 
     private Double systemcpuidle99quantile;
 
-    private Long systemcpuswitches;
+    private Double systemcpuswitches;
 
-    private Long systemcpuswitchesmin;
+    private Double systemcpuswitchesmin;
 
-    private Long systemcpuswitchesmax;
+    private Double systemcpuswitchesmax;
 
     private Double systemcpuswitchesmean;
 
     private Double systemcpuswitchesstd;
 
-    private Long systemcpuswitches55quantile;
+    private Double systemcpuswitches55quantile;
 
-    private Long systemcpuswitches75quantile;
+    private Double systemcpuswitches75quantile;
 
-    private Long systemcpuswitches95quantile;
+    private Double systemcpuswitches95quantile;
 
-    private Long systemcpuswitches99quantile;
+    private Double systemcpuswitches99quantile;
 
     private Double systemcpuusageirq;
 
@@ -353,41 +353,41 @@ public class MetricsSystemPO {
 
     private Integer systemnetcards;
 
-    private Long systemnetworkreceivebytesps;
+    private Double systemnetworkreceivebytesps;
 
-    private Long systemnetworkreceivebytespsmin;
+    private Double systemnetworkreceivebytespsmin;
 
-    private Long systemnetworkreceivebytespsmax;
+    private Double systemnetworkreceivebytespsmax;
 
     private Double systemnetworkreceivebytespsmean;
 
     private Double systemnetworkreceivebytespsstd;
 
-    private Long systemnetworkreceivebytesps55quantile;
+    private Double systemnetworkreceivebytesps55quantile;
 
-    private Long systemnetworkreceivebytesps75quantile;
+    private Double systemnetworkreceivebytesps75quantile;
 
-    private Long systemnetworkreceivebytesps95quantile;
+    private Double systemnetworkreceivebytesps95quantile;
 
-    private Long systemnetworkreceivebytesps99quantile;
+    private Double systemnetworkreceivebytesps99quantile;
 
-    private Long systemnetworksendbytesps;
+    private Double systemnetworksendbytesps;
 
-    private Long systemnetworksendbytespsmin;
+    private Double systemnetworksendbytespsmin;
 
-    private Long systemnetworksendbytespsmax;
+    private Double systemnetworksendbytespsmax;
 
     private Double systemnetworksendbytespsmean;
 
     private Double systemnetworksendbytespsstd;
 
-    private Long systemnetworksendbytesps55quantile;
+    private Double systemnetworksendbytesps55quantile;
 
-    private Long systemnetworksendbytesps75quantile;
+    private Double systemnetworksendbytesps75quantile;
 
-    private Long systemnetworksendbytesps95quantile;
+    private Double systemnetworksendbytesps95quantile;
 
-    private Long systemnetworksendbytesps99quantile;
+    private Double systemnetworksendbytesps99quantile;
 
     private Integer systemnetworktcpconnectionnum;
 
@@ -482,166 +482,6 @@ public class MetricsSystemPO {
     private Double systemNetWorkBandWidthUsedPercent95Quantile;
 
     private Double systemNetWorkBandWidthUsedPercent99Quantile;
-
-    public Long getHeartbeatTimeDay() {
-        return heartbeatTimeDay;
-    }
-
-    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
-        this.heartbeatTimeDay = heartbeatTimeDay;
-    }
-
-    public Double getSystemNetCardsBandWidth() {
-        return systemNetCardsBandWidth;
-    }
-
-    public void setSystemNetCardsBandWidth(Double systemNetCardsBandWidth) {
-        this.systemNetCardsBandWidth = systemNetCardsBandWidth;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPs() {
-        return systemNetworkSendAndReceiveBytesPs;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPs(Double systemNetworkSendAndReceiveBytesPs) {
-        this.systemNetworkSendAndReceiveBytesPs = systemNetworkSendAndReceiveBytesPs;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPsMin() {
-        return systemNetworkSendAndReceiveBytesPsMin;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPsMin(Double systemNetworkSendAndReceiveBytesPsMin) {
-        this.systemNetworkSendAndReceiveBytesPsMin = systemNetworkSendAndReceiveBytesPsMin;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPsMax() {
-        return systemNetworkSendAndReceiveBytesPsMax;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPsMax(Double systemNetworkSendAndReceiveBytesPsMax) {
-        this.systemNetworkSendAndReceiveBytesPsMax = systemNetworkSendAndReceiveBytesPsMax;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPsMean() {
-        return systemNetworkSendAndReceiveBytesPsMean;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPsMean(Double systemNetworkSendAndReceiveBytesPsMean) {
-        this.systemNetworkSendAndReceiveBytesPsMean = systemNetworkSendAndReceiveBytesPsMean;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPsStd() {
-        return systemNetworkSendAndReceiveBytesPsStd;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPsStd(Double systemNetworkSendAndReceiveBytesPsStd) {
-        this.systemNetworkSendAndReceiveBytesPsStd = systemNetworkSendAndReceiveBytesPsStd;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPs55Quantile() {
-        return systemNetworkSendAndReceiveBytesPs55Quantile;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPs55Quantile(Double systemNetworkSendAndReceiveBytesPs55Quantile) {
-        this.systemNetworkSendAndReceiveBytesPs55Quantile = systemNetworkSendAndReceiveBytesPs55Quantile;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPs75Quantile() {
-        return systemNetworkSendAndReceiveBytesPs75Quantile;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPs75Quantile(Double systemNetworkSendAndReceiveBytesPs75Quantile) {
-        this.systemNetworkSendAndReceiveBytesPs75Quantile = systemNetworkSendAndReceiveBytesPs75Quantile;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPs95Quantile() {
-        return systemNetworkSendAndReceiveBytesPs95Quantile;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPs95Quantile(Double systemNetworkSendAndReceiveBytesPs95Quantile) {
-        this.systemNetworkSendAndReceiveBytesPs95Quantile = systemNetworkSendAndReceiveBytesPs95Quantile;
-    }
-
-    public Double getSystemNetworkSendAndReceiveBytesPs99Quantile() {
-        return systemNetworkSendAndReceiveBytesPs99Quantile;
-    }
-
-    public void setSystemNetworkSendAndReceiveBytesPs99Quantile(Double systemNetworkSendAndReceiveBytesPs99Quantile) {
-        this.systemNetworkSendAndReceiveBytesPs99Quantile = systemNetworkSendAndReceiveBytesPs99Quantile;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercent() {
-        return systemNetWorkBandWidthUsedPercent;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercent(Double systemNetWorkBandWidthUsedPercent) {
-        this.systemNetWorkBandWidthUsedPercent = systemNetWorkBandWidthUsedPercent;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercentMin() {
-        return systemNetWorkBandWidthUsedPercentMin;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercentMin(Double systemNetWorkBandWidthUsedPercentMin) {
-        this.systemNetWorkBandWidthUsedPercentMin = systemNetWorkBandWidthUsedPercentMin;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercentMax() {
-        return systemNetWorkBandWidthUsedPercentMax;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercentMax(Double systemNetWorkBandWidthUsedPercentMax) {
-        this.systemNetWorkBandWidthUsedPercentMax = systemNetWorkBandWidthUsedPercentMax;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercentMean() {
-        return systemNetWorkBandWidthUsedPercentMean;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercentMean(Double systemNetWorkBandWidthUsedPercentMean) {
-        this.systemNetWorkBandWidthUsedPercentMean = systemNetWorkBandWidthUsedPercentMean;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercentStd() {
-        return systemNetWorkBandWidthUsedPercentStd;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercentStd(Double systemNetWorkBandWidthUsedPercentStd) {
-        this.systemNetWorkBandWidthUsedPercentStd = systemNetWorkBandWidthUsedPercentStd;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercent55Quantile() {
-        return systemNetWorkBandWidthUsedPercent55Quantile;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercent55Quantile(Double systemNetWorkBandWidthUsedPercent55Quantile) {
-        this.systemNetWorkBandWidthUsedPercent55Quantile = systemNetWorkBandWidthUsedPercent55Quantile;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercent75Quantile() {
-        return systemNetWorkBandWidthUsedPercent75Quantile;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercent75Quantile(Double systemNetWorkBandWidthUsedPercent75Quantile) {
-        this.systemNetWorkBandWidthUsedPercent75Quantile = systemNetWorkBandWidthUsedPercent75Quantile;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercent95Quantile() {
-        return systemNetWorkBandWidthUsedPercent95Quantile;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercent95Quantile(Double systemNetWorkBandWidthUsedPercent95Quantile) {
-        this.systemNetWorkBandWidthUsedPercent95Quantile = systemNetWorkBandWidthUsedPercent95Quantile;
-    }
-
-    public Double getSystemNetWorkBandWidthUsedPercent99Quantile() {
-        return systemNetWorkBandWidthUsedPercent99Quantile;
-    }
-
-    public void setSystemNetWorkBandWidthUsedPercent99Quantile(Double systemNetWorkBandWidthUsedPercent99Quantile) {
-        this.systemNetWorkBandWidthUsedPercent99Quantile = systemNetWorkBandWidthUsedPercent99Quantile;
-    }
 
     public Long getId() {
         return id;
@@ -1179,27 +1019,27 @@ public class MetricsSystemPO {
         this.systemcpuidle99quantile = systemcpuidle99quantile;
     }
 
-    public Long getSystemcpuswitches() {
+    public Double getSystemcpuswitches() {
         return systemcpuswitches;
     }
 
-    public void setSystemcpuswitches(Long systemcpuswitches) {
+    public void setSystemcpuswitches(Double systemcpuswitches) {
         this.systemcpuswitches = systemcpuswitches;
     }
 
-    public Long getSystemcpuswitchesmin() {
+    public Double getSystemcpuswitchesmin() {
         return systemcpuswitchesmin;
     }
 
-    public void setSystemcpuswitchesmin(Long systemcpuswitchesmin) {
+    public void setSystemcpuswitchesmin(Double systemcpuswitchesmin) {
         this.systemcpuswitchesmin = systemcpuswitchesmin;
     }
 
-    public Long getSystemcpuswitchesmax() {
+    public Double getSystemcpuswitchesmax() {
         return systemcpuswitchesmax;
     }
 
-    public void setSystemcpuswitchesmax(Long systemcpuswitchesmax) {
+    public void setSystemcpuswitchesmax(Double systemcpuswitchesmax) {
         this.systemcpuswitchesmax = systemcpuswitchesmax;
     }
 
@@ -1219,35 +1059,35 @@ public class MetricsSystemPO {
         this.systemcpuswitchesstd = systemcpuswitchesstd;
     }
 
-    public Long getSystemcpuswitches55quantile() {
+    public Double getSystemcpuswitches55quantile() {
         return systemcpuswitches55quantile;
     }
 
-    public void setSystemcpuswitches55quantile(Long systemcpuswitches55quantile) {
+    public void setSystemcpuswitches55quantile(Double systemcpuswitches55quantile) {
         this.systemcpuswitches55quantile = systemcpuswitches55quantile;
     }
 
-    public Long getSystemcpuswitches75quantile() {
+    public Double getSystemcpuswitches75quantile() {
         return systemcpuswitches75quantile;
     }
 
-    public void setSystemcpuswitches75quantile(Long systemcpuswitches75quantile) {
+    public void setSystemcpuswitches75quantile(Double systemcpuswitches75quantile) {
         this.systemcpuswitches75quantile = systemcpuswitches75quantile;
     }
 
-    public Long getSystemcpuswitches95quantile() {
+    public Double getSystemcpuswitches95quantile() {
         return systemcpuswitches95quantile;
     }
 
-    public void setSystemcpuswitches95quantile(Long systemcpuswitches95quantile) {
+    public void setSystemcpuswitches95quantile(Double systemcpuswitches95quantile) {
         this.systemcpuswitches95quantile = systemcpuswitches95quantile;
     }
 
-    public Long getSystemcpuswitches99quantile() {
+    public Double getSystemcpuswitches99quantile() {
         return systemcpuswitches99quantile;
     }
 
-    public void setSystemcpuswitches99quantile(Long systemcpuswitches99quantile) {
+    public void setSystemcpuswitches99quantile(Double systemcpuswitches99quantile) {
         this.systemcpuswitches99quantile = systemcpuswitches99quantile;
     }
 
@@ -2051,27 +1891,27 @@ public class MetricsSystemPO {
         this.systemnetcards = systemnetcards;
     }
 
-    public Long getSystemnetworkreceivebytesps() {
+    public Double getSystemnetworkreceivebytesps() {
         return systemnetworkreceivebytesps;
     }
 
-    public void setSystemnetworkreceivebytesps(Long systemnetworkreceivebytesps) {
+    public void setSystemnetworkreceivebytesps(Double systemnetworkreceivebytesps) {
         this.systemnetworkreceivebytesps = systemnetworkreceivebytesps;
     }
 
-    public Long getSystemnetworkreceivebytespsmin() {
+    public Double getSystemnetworkreceivebytespsmin() {
         return systemnetworkreceivebytespsmin;
     }
 
-    public void setSystemnetworkreceivebytespsmin(Long systemnetworkreceivebytespsmin) {
+    public void setSystemnetworkreceivebytespsmin(Double systemnetworkreceivebytespsmin) {
         this.systemnetworkreceivebytespsmin = systemnetworkreceivebytespsmin;
     }
 
-    public Long getSystemnetworkreceivebytespsmax() {
+    public Double getSystemnetworkreceivebytespsmax() {
         return systemnetworkreceivebytespsmax;
     }
 
-    public void setSystemnetworkreceivebytespsmax(Long systemnetworkreceivebytespsmax) {
+    public void setSystemnetworkreceivebytespsmax(Double systemnetworkreceivebytespsmax) {
         this.systemnetworkreceivebytespsmax = systemnetworkreceivebytespsmax;
     }
 
@@ -2091,59 +1931,59 @@ public class MetricsSystemPO {
         this.systemnetworkreceivebytespsstd = systemnetworkreceivebytespsstd;
     }
 
-    public Long getSystemnetworkreceivebytesps55quantile() {
+    public Double getSystemnetworkreceivebytesps55quantile() {
         return systemnetworkreceivebytesps55quantile;
     }
 
-    public void setSystemnetworkreceivebytesps55quantile(Long systemnetworkreceivebytesps55quantile) {
+    public void setSystemnetworkreceivebytesps55quantile(Double systemnetworkreceivebytesps55quantile) {
         this.systemnetworkreceivebytesps55quantile = systemnetworkreceivebytesps55quantile;
     }
 
-    public Long getSystemnetworkreceivebytesps75quantile() {
+    public Double getSystemnetworkreceivebytesps75quantile() {
         return systemnetworkreceivebytesps75quantile;
     }
 
-    public void setSystemnetworkreceivebytesps75quantile(Long systemnetworkreceivebytesps75quantile) {
+    public void setSystemnetworkreceivebytesps75quantile(Double systemnetworkreceivebytesps75quantile) {
         this.systemnetworkreceivebytesps75quantile = systemnetworkreceivebytesps75quantile;
     }
 
-    public Long getSystemnetworkreceivebytesps95quantile() {
+    public Double getSystemnetworkreceivebytesps95quantile() {
         return systemnetworkreceivebytesps95quantile;
     }
 
-    public void setSystemnetworkreceivebytesps95quantile(Long systemnetworkreceivebytesps95quantile) {
+    public void setSystemnetworkreceivebytesps95quantile(Double systemnetworkreceivebytesps95quantile) {
         this.systemnetworkreceivebytesps95quantile = systemnetworkreceivebytesps95quantile;
     }
 
-    public Long getSystemnetworkreceivebytesps99quantile() {
+    public Double getSystemnetworkreceivebytesps99quantile() {
         return systemnetworkreceivebytesps99quantile;
     }
 
-    public void setSystemnetworkreceivebytesps99quantile(Long systemnetworkreceivebytesps99quantile) {
+    public void setSystemnetworkreceivebytesps99quantile(Double systemnetworkreceivebytesps99quantile) {
         this.systemnetworkreceivebytesps99quantile = systemnetworkreceivebytesps99quantile;
     }
 
-    public Long getSystemnetworksendbytesps() {
+    public Double getSystemnetworksendbytesps() {
         return systemnetworksendbytesps;
     }
 
-    public void setSystemnetworksendbytesps(Long systemnetworksendbytesps) {
+    public void setSystemnetworksendbytesps(Double systemnetworksendbytesps) {
         this.systemnetworksendbytesps = systemnetworksendbytesps;
     }
 
-    public Long getSystemnetworksendbytespsmin() {
+    public Double getSystemnetworksendbytespsmin() {
         return systemnetworksendbytespsmin;
     }
 
-    public void setSystemnetworksendbytespsmin(Long systemnetworksendbytespsmin) {
+    public void setSystemnetworksendbytespsmin(Double systemnetworksendbytespsmin) {
         this.systemnetworksendbytespsmin = systemnetworksendbytespsmin;
     }
 
-    public Long getSystemnetworksendbytespsmax() {
+    public Double getSystemnetworksendbytespsmax() {
         return systemnetworksendbytespsmax;
     }
 
-    public void setSystemnetworksendbytespsmax(Long systemnetworksendbytespsmax) {
+    public void setSystemnetworksendbytespsmax(Double systemnetworksendbytespsmax) {
         this.systemnetworksendbytespsmax = systemnetworksendbytespsmax;
     }
 
@@ -2163,35 +2003,35 @@ public class MetricsSystemPO {
         this.systemnetworksendbytespsstd = systemnetworksendbytespsstd;
     }
 
-    public Long getSystemnetworksendbytesps55quantile() {
+    public Double getSystemnetworksendbytesps55quantile() {
         return systemnetworksendbytesps55quantile;
     }
 
-    public void setSystemnetworksendbytesps55quantile(Long systemnetworksendbytesps55quantile) {
+    public void setSystemnetworksendbytesps55quantile(Double systemnetworksendbytesps55quantile) {
         this.systemnetworksendbytesps55quantile = systemnetworksendbytesps55quantile;
     }
 
-    public Long getSystemnetworksendbytesps75quantile() {
+    public Double getSystemnetworksendbytesps75quantile() {
         return systemnetworksendbytesps75quantile;
     }
 
-    public void setSystemnetworksendbytesps75quantile(Long systemnetworksendbytesps75quantile) {
+    public void setSystemnetworksendbytesps75quantile(Double systemnetworksendbytesps75quantile) {
         this.systemnetworksendbytesps75quantile = systemnetworksendbytesps75quantile;
     }
 
-    public Long getSystemnetworksendbytesps95quantile() {
+    public Double getSystemnetworksendbytesps95quantile() {
         return systemnetworksendbytesps95quantile;
     }
 
-    public void setSystemnetworksendbytesps95quantile(Long systemnetworksendbytesps95quantile) {
+    public void setSystemnetworksendbytesps95quantile(Double systemnetworksendbytesps95quantile) {
         this.systemnetworksendbytesps95quantile = systemnetworksendbytesps95quantile;
     }
 
-    public Long getSystemnetworksendbytesps99quantile() {
+    public Double getSystemnetworksendbytesps99quantile() {
         return systemnetworksendbytesps99quantile;
     }
 
-    public void setSystemnetworksendbytesps99quantile(Long systemnetworksendbytesps99quantile) {
+    public void setSystemnetworksendbytesps99quantile(Double systemnetworksendbytesps99quantile) {
         this.systemnetworksendbytesps99quantile = systemnetworksendbytesps99quantile;
     }
 
@@ -2409,5 +2249,165 @@ public class MetricsSystemPO {
 
     public void setHeartbeattimehour(Long heartbeattimehour) {
         this.heartbeattimehour = heartbeattimehour;
+    }
+
+    public Long getHeartbeatTimeDay() {
+        return heartbeatTimeDay;
+    }
+
+    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
+        this.heartbeatTimeDay = heartbeatTimeDay;
+    }
+
+    public Double getSystemNetCardsBandWidth() {
+        return systemNetCardsBandWidth;
+    }
+
+    public void setSystemNetCardsBandWidth(Double systemNetCardsBandWidth) {
+        this.systemNetCardsBandWidth = systemNetCardsBandWidth;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPs() {
+        return systemNetworkSendAndReceiveBytesPs;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPs(Double systemNetworkSendAndReceiveBytesPs) {
+        this.systemNetworkSendAndReceiveBytesPs = systemNetworkSendAndReceiveBytesPs;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPsMin() {
+        return systemNetworkSendAndReceiveBytesPsMin;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPsMin(Double systemNetworkSendAndReceiveBytesPsMin) {
+        this.systemNetworkSendAndReceiveBytesPsMin = systemNetworkSendAndReceiveBytesPsMin;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPsMax() {
+        return systemNetworkSendAndReceiveBytesPsMax;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPsMax(Double systemNetworkSendAndReceiveBytesPsMax) {
+        this.systemNetworkSendAndReceiveBytesPsMax = systemNetworkSendAndReceiveBytesPsMax;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPsMean() {
+        return systemNetworkSendAndReceiveBytesPsMean;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPsMean(Double systemNetworkSendAndReceiveBytesPsMean) {
+        this.systemNetworkSendAndReceiveBytesPsMean = systemNetworkSendAndReceiveBytesPsMean;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPsStd() {
+        return systemNetworkSendAndReceiveBytesPsStd;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPsStd(Double systemNetworkSendAndReceiveBytesPsStd) {
+        this.systemNetworkSendAndReceiveBytesPsStd = systemNetworkSendAndReceiveBytesPsStd;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPs55Quantile() {
+        return systemNetworkSendAndReceiveBytesPs55Quantile;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPs55Quantile(Double systemNetworkSendAndReceiveBytesPs55Quantile) {
+        this.systemNetworkSendAndReceiveBytesPs55Quantile = systemNetworkSendAndReceiveBytesPs55Quantile;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPs75Quantile() {
+        return systemNetworkSendAndReceiveBytesPs75Quantile;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPs75Quantile(Double systemNetworkSendAndReceiveBytesPs75Quantile) {
+        this.systemNetworkSendAndReceiveBytesPs75Quantile = systemNetworkSendAndReceiveBytesPs75Quantile;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPs95Quantile() {
+        return systemNetworkSendAndReceiveBytesPs95Quantile;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPs95Quantile(Double systemNetworkSendAndReceiveBytesPs95Quantile) {
+        this.systemNetworkSendAndReceiveBytesPs95Quantile = systemNetworkSendAndReceiveBytesPs95Quantile;
+    }
+
+    public Double getSystemNetworkSendAndReceiveBytesPs99Quantile() {
+        return systemNetworkSendAndReceiveBytesPs99Quantile;
+    }
+
+    public void setSystemNetworkSendAndReceiveBytesPs99Quantile(Double systemNetworkSendAndReceiveBytesPs99Quantile) {
+        this.systemNetworkSendAndReceiveBytesPs99Quantile = systemNetworkSendAndReceiveBytesPs99Quantile;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercent() {
+        return systemNetWorkBandWidthUsedPercent;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercent(Double systemNetWorkBandWidthUsedPercent) {
+        this.systemNetWorkBandWidthUsedPercent = systemNetWorkBandWidthUsedPercent;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercentMin() {
+        return systemNetWorkBandWidthUsedPercentMin;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercentMin(Double systemNetWorkBandWidthUsedPercentMin) {
+        this.systemNetWorkBandWidthUsedPercentMin = systemNetWorkBandWidthUsedPercentMin;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercentMax() {
+        return systemNetWorkBandWidthUsedPercentMax;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercentMax(Double systemNetWorkBandWidthUsedPercentMax) {
+        this.systemNetWorkBandWidthUsedPercentMax = systemNetWorkBandWidthUsedPercentMax;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercentMean() {
+        return systemNetWorkBandWidthUsedPercentMean;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercentMean(Double systemNetWorkBandWidthUsedPercentMean) {
+        this.systemNetWorkBandWidthUsedPercentMean = systemNetWorkBandWidthUsedPercentMean;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercentStd() {
+        return systemNetWorkBandWidthUsedPercentStd;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercentStd(Double systemNetWorkBandWidthUsedPercentStd) {
+        this.systemNetWorkBandWidthUsedPercentStd = systemNetWorkBandWidthUsedPercentStd;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercent55Quantile() {
+        return systemNetWorkBandWidthUsedPercent55Quantile;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercent55Quantile(Double systemNetWorkBandWidthUsedPercent55Quantile) {
+        this.systemNetWorkBandWidthUsedPercent55Quantile = systemNetWorkBandWidthUsedPercent55Quantile;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercent75Quantile() {
+        return systemNetWorkBandWidthUsedPercent75Quantile;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercent75Quantile(Double systemNetWorkBandWidthUsedPercent75Quantile) {
+        this.systemNetWorkBandWidthUsedPercent75Quantile = systemNetWorkBandWidthUsedPercent75Quantile;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercent95Quantile() {
+        return systemNetWorkBandWidthUsedPercent95Quantile;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercent95Quantile(Double systemNetWorkBandWidthUsedPercent95Quantile) {
+        this.systemNetWorkBandWidthUsedPercent95Quantile = systemNetWorkBandWidthUsedPercent95Quantile;
+    }
+
+    public Double getSystemNetWorkBandWidthUsedPercent99Quantile() {
+        return systemNetWorkBandWidthUsedPercent99Quantile;
+    }
+
+    public void setSystemNetWorkBandWidthUsedPercent99Quantile(Double systemNetWorkBandWidthUsedPercent99Quantile) {
+        this.systemNetWorkBandWidthUsedPercent99Quantile = systemNetWorkBandWidthUsedPercent99Quantile;
     }
 }

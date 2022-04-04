@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.core.metrics;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskIOPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsNetCardPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO;
 import com.didichuxing.datachannel.agentmanager.core.ApplicationTests;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-//@Rollback
+@Rollback
 public class MetricsInsertTest extends ApplicationTests {
 
     @Autowired
@@ -57,6 +58,13 @@ public class MetricsInsertTest extends ApplicationTests {
         metricsNetCardPO.setHostname("test_01");
         metricsNetCardPO.setSystemnetcardsbandmacaddress("qwdqwd");
         metricsNetCardDAO.insertSelective(metricsNetCardPO);
+    }
+
+    @Test
+    public void testInsertMetricsSystemPO() {
+        MetricsSystemPO metricsSystemPO = new MetricsSystemPO();
+        metricsSystemPO.setSystemnetworksendbytesps99quantile(1.0d);
+        metricsSystemDAO.insertSelective(metricsSystemPO);
     }
 
 }

@@ -83,59 +83,59 @@ public class MetricsProcessPO {
 
     private Double proccpuuser99quantile;
 
-    private Long proccpuswitchesps;
+    private Double proccpuswitchesps;
 
-    private Long proccpuswitchespsmin;
+    private Double proccpuswitchespsmin;
 
-    private Long proccpuswitchespsmax;
+    private Double proccpuswitchespsmax;
 
     private Double proccpuswitchespsmean;
 
     private Double proccpuswitchespsstd;
 
-    private Long proccpuswitchesps55quantile;
+    private Double proccpuswitchesps55quantile;
 
-    private Long proccpuswitchesps75quantile;
+    private Double proccpuswitchesps75quantile;
 
-    private Long proccpuswitchesps95quantile;
+    private Double proccpuswitchesps95quantile;
 
-    private Long proccpuswitchesps99quantile;
+    private Double proccpuswitchesps99quantile;
 
-    private Long proccpuvoluntaryswitchesps;
+    private Double proccpuvoluntaryswitchesps;
 
-    private Long proccpuvoluntaryswitchespsmin;
+    private Double proccpuvoluntaryswitchespsmin;
 
-    private Long proccpuvoluntaryswitchespsmax;
+    private Double proccpuvoluntaryswitchespsmax;
 
     private Double proccpuvoluntaryswitchespsmean;
 
     private Double proccpuvoluntaryswitchespsstd;
 
-    private Long proccpuvoluntaryswitchesps55quantile;
+    private Double proccpuvoluntaryswitchesps55quantile;
 
-    private Long proccpuvoluntaryswitchesps75quantile;
+    private Double proccpuvoluntaryswitchesps75quantile;
 
-    private Long proccpuvoluntaryswitchesps95quantile;
+    private Double proccpuvoluntaryswitchesps95quantile;
 
-    private Long proccpuvoluntaryswitchesps99quantile;
+    private Double proccpuvoluntaryswitchesps99quantile;
 
-    private Long proccpunonvoluntaryswitchesps;
+    private Double proccpunonvoluntaryswitchesps;
 
-    private Long proccpunonvoluntaryswitchespsmin;
+    private Double proccpunonvoluntaryswitchespsmin;
 
-    private Long proccpunonvoluntaryswitchespsmax;
+    private Double proccpunonvoluntaryswitchespsmax;
 
     private Double proccpunonvoluntaryswitchespsmean;
 
     private Double proccpunonvoluntaryswitchespsstd;
 
-    private Long proccpunonvoluntaryswitchesps55quantile;
+    private Double proccpunonvoluntaryswitchesps55quantile;
 
-    private Long proccpunonvoluntaryswitchesps75quantile;
+    private Double proccpunonvoluntaryswitchesps75quantile;
 
-    private Long proccpunonvoluntaryswitchesps95quantile;
+    private Double proccpunonvoluntaryswitchesps95quantile;
 
-    private Long proccpunonvoluntaryswitchesps99quantile;
+    private Double proccpunonvoluntaryswitchesps99quantile;
 
     private Long procmemused;
 
@@ -185,23 +185,23 @@ public class MetricsProcessPO {
 
     private Double procioreadrate99quantile;
 
-    private Long procioreadbytesrate;
+    private Double procioreadbytesrate;
 
-    private Long procioreadbytesratemin;
+    private Double procioreadbytesratemin;
 
-    private Long procioreadbytesratemax;
+    private Double procioreadbytesratemax;
 
     private Double procioreadbytesratemean;
 
     private Double procioreadbytesratestd;
 
-    private Long procioreadbytesrate55quantile;
+    private Double procioreadbytesrate55quantile;
 
-    private Long procioreadbytesrate75quantile;
+    private Double procioreadbytesrate75quantile;
 
-    private Long procioreadbytesrate95quantile;
+    private Double procioreadbytesrate95quantile;
 
-    private Long procioreadbytesrate99quantile;
+    private Double procioreadbytesrate99quantile;
 
     private Double prociowriterate;
 
@@ -221,23 +221,23 @@ public class MetricsProcessPO {
 
     private Double prociowriterate99quantile;
 
-    private Long prociowritebytesrate;
+    private Double prociowritebytesrate;
 
-    private Long prociowritebytesratemin;
+    private Double prociowritebytesratemin;
 
-    private Long prociowritebytesratemax;
+    private Double prociowritebytesratemax;
 
     private Double prociowritebytesratemean;
 
     private Double prociowritebytesratestd;
 
-    private Long prociowritebytesrate55quantile;
+    private Double prociowritebytesrate55quantile;
 
-    private Long prociowritebytesrate75quantile;
+    private Double prociowritebytesrate75quantile;
 
-    private Long prociowritebytesrate95quantile;
+    private Double prociowritebytesrate95quantile;
 
-    private Long prociowritebytesrate99quantile;
+    private Double prociowritebytesrate99quantile;
 
     private Double procioreadwriterate;
 
@@ -257,23 +257,23 @@ public class MetricsProcessPO {
 
     private Double procioreadwriterate99quantile;
 
-    private Long procioreadwritebytesrate;
+    private Double procioreadwritebytesrate;
 
-    private Long procioreadwritebytesratemin;
+    private Double procioreadwritebytesratemin;
 
-    private Long procioreadwritebytesratemax;
+    private Double procioreadwritebytesratemax;
 
     private Double procioreadwritebytesratemean;
 
     private Double procioreadwritebytesratestd;
 
-    private Long procioreadwritebytesrate55quantile;
+    private Double procioreadwritebytesrate55quantile;
 
-    private Long procioreadwritebytesrate75quantile;
+    private Double procioreadwritebytesrate75quantile;
 
-    private Long procioreadwritebytesrate95quantile;
+    private Double procioreadwritebytesrate95quantile;
 
-    private Long procioreadwritebytesrate99quantile;
+    private Double procioreadwritebytesrate99quantile;
 
     private Double procioawaittimepercent;
 
@@ -309,59 +309,59 @@ public class MetricsProcessPO {
 
     private String procportlisten;
 
-    private Long procnetworkreceivebytesps;
+    private Double procnetworkreceivebytesps;
 
-    private Long procnetworkreceivebytespsmin;
+    private Double procnetworkreceivebytespsmin;
 
-    private Long procnetworkreceivebytespsmax;
+    private Double procnetworkreceivebytespsmax;
 
-    private Long procnetworkreceivebytespsmean;
+    private Double procnetworkreceivebytespsmean;
 
-    private Long procnetworkreceivebytespsstd;
+    private Double procnetworkreceivebytespsstd;
 
-    private Long procnetworkreceivebytesps55quantile;
+    private Double procnetworkreceivebytesps55quantile;
 
-    private Long procnetworkreceivebytesps75quantile;
+    private Double procnetworkreceivebytesps75quantile;
 
-    private Long procnetworkreceivebytesps95quantile;
+    private Double procnetworkreceivebytesps95quantile;
 
-    private Long procnetworkreceivebytesps99quantile;
+    private Double procnetworkreceivebytesps99quantile;
 
-    private Long procnetworksendbytesps;
+    private Double procnetworksendbytesps;
 
-    private Long procnetworksendbytespsmin;
+    private Double procnetworksendbytespsmin;
 
-    private Long procnetworksendbytespsmax;
+    private Double procnetworksendbytespsmax;
 
-    private Long procnetworksendbytespsmean;
+    private Double procnetworksendbytespsmean;
 
-    private Long procnetworksendbytespsstd;
+    private Double procnetworksendbytespsstd;
 
-    private Long procnetworksendbytesps55quantile;
+    private Double procnetworksendbytesps55quantile;
 
-    private Long procnetworksendbytesps75quantile;
+    private Double procnetworksendbytesps75quantile;
 
-    private Long procnetworksendbytesps95quantile;
+    private Double procnetworksendbytesps95quantile;
 
-    private Long procnetworksendbytesps99quantile;
+    private Double procnetworksendbytesps99quantile;
 
-    private Long procnetworkconnrate;
+    private Double procnetworkconnrate;
 
-    private Long procnetworkconnratemin;
+    private Double procnetworkconnratemin;
 
-    private Long procnetworkconnratemax;
+    private Double procnetworkconnratemax;
 
-    private Long procnetworkconnratemean;
+    private Double procnetworkconnratemean;
 
-    private Long procnetworkconnratestd;
+    private Double procnetworkconnratestd;
 
-    private Long procnetworkconnrate55quantile;
+    private Double procnetworkconnrate55quantile;
 
-    private Long procnetworkconnrate75quantile;
+    private Double procnetworkconnrate75quantile;
 
-    private Long procnetworkconnrate95quantile;
+    private Double procnetworkconnrate95quantile;
 
-    private Long procnetworkconnrate99quantile;
+    private Double procnetworkconnrate99quantile;
 
     private Integer procnetworktcpconnectionnum;
 
@@ -420,14 +420,6 @@ public class MetricsProcessPO {
     private Double jvmProcCCSC;
 
     private Double jvmProcCCSU;
-
-    public Long getHeartbeatTimeDay() {
-        return heartbeatTimeDay;
-    }
-
-    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
-        this.heartbeatTimeDay = heartbeatTimeDay;
-    }
 
     public Long getId() {
         return id;
@@ -613,102 +605,6 @@ public class MetricsProcessPO {
         this.proccpuutiltotalpercent99quantile = proccpuutiltotalpercent99quantile;
     }
 
-    public Double getJvmProcS0C() {
-        return jvmProcS0C;
-    }
-
-    public void setJvmProcS0C(Double jvmProcS0C) {
-        this.jvmProcS0C = jvmProcS0C;
-    }
-
-    public Double getJvmProcS1C() {
-        return jvmProcS1C;
-    }
-
-    public void setJvmProcS1C(Double jvmProcS1C) {
-        this.jvmProcS1C = jvmProcS1C;
-    }
-
-    public Double getJvmProcS0U() {
-        return jvmProcS0U;
-    }
-
-    public void setJvmProcS0U(Double jvmProcS0U) {
-        this.jvmProcS0U = jvmProcS0U;
-    }
-
-    public Double getJvmProcS1U() {
-        return jvmProcS1U;
-    }
-
-    public void setJvmProcS1U(Double jvmProcS1U) {
-        this.jvmProcS1U = jvmProcS1U;
-    }
-
-    public Double getJvmProcEC() {
-        return jvmProcEC;
-    }
-
-    public void setJvmProcEC(Double jvmProcEC) {
-        this.jvmProcEC = jvmProcEC;
-    }
-
-    public Double getJvmProcEU() {
-        return jvmProcEU;
-    }
-
-    public void setJvmProcEU(Double jvmProcEU) {
-        this.jvmProcEU = jvmProcEU;
-    }
-
-    public Double getJvmProcOC() {
-        return jvmProcOC;
-    }
-
-    public void setJvmProcOC(Double jvmProcOC) {
-        this.jvmProcOC = jvmProcOC;
-    }
-
-    public Double getJvmProcOU() {
-        return jvmProcOU;
-    }
-
-    public void setJvmProcOU(Double jvmProcOU) {
-        this.jvmProcOU = jvmProcOU;
-    }
-
-    public Double getJvmProcMC() {
-        return jvmProcMC;
-    }
-
-    public void setJvmProcMC(Double jvmProcMC) {
-        this.jvmProcMC = jvmProcMC;
-    }
-
-    public Double getJvmProcMU() {
-        return jvmProcMU;
-    }
-
-    public void setJvmProcMU(Double jvmProcMU) {
-        this.jvmProcMU = jvmProcMU;
-    }
-
-    public Double getJvmProcCCSC() {
-        return jvmProcCCSC;
-    }
-
-    public void setJvmProcCCSC(Double jvmProcCCSC) {
-        this.jvmProcCCSC = jvmProcCCSC;
-    }
-
-    public Double getJvmProcCCSU() {
-        return jvmProcCCSU;
-    }
-
-    public void setJvmProcCCSU(Double jvmProcCCSU) {
-        this.jvmProcCCSU = jvmProcCCSU;
-    }
-
     public Double getProccpusys() {
         return proccpusys;
     }
@@ -853,27 +749,27 @@ public class MetricsProcessPO {
         this.proccpuuser99quantile = proccpuuser99quantile;
     }
 
-    public Long getProccpuswitchesps() {
+    public Double getProccpuswitchesps() {
         return proccpuswitchesps;
     }
 
-    public void setProccpuswitchesps(Long proccpuswitchesps) {
+    public void setProccpuswitchesps(Double proccpuswitchesps) {
         this.proccpuswitchesps = proccpuswitchesps;
     }
 
-    public Long getProccpuswitchespsmin() {
+    public Double getProccpuswitchespsmin() {
         return proccpuswitchespsmin;
     }
 
-    public void setProccpuswitchespsmin(Long proccpuswitchespsmin) {
+    public void setProccpuswitchespsmin(Double proccpuswitchespsmin) {
         this.proccpuswitchespsmin = proccpuswitchespsmin;
     }
 
-    public Long getProccpuswitchespsmax() {
+    public Double getProccpuswitchespsmax() {
         return proccpuswitchespsmax;
     }
 
-    public void setProccpuswitchespsmax(Long proccpuswitchespsmax) {
+    public void setProccpuswitchespsmax(Double proccpuswitchespsmax) {
         this.proccpuswitchespsmax = proccpuswitchespsmax;
     }
 
@@ -893,59 +789,59 @@ public class MetricsProcessPO {
         this.proccpuswitchespsstd = proccpuswitchespsstd;
     }
 
-    public Long getProccpuswitchesps55quantile() {
+    public Double getProccpuswitchesps55quantile() {
         return proccpuswitchesps55quantile;
     }
 
-    public void setProccpuswitchesps55quantile(Long proccpuswitchesps55quantile) {
+    public void setProccpuswitchesps55quantile(Double proccpuswitchesps55quantile) {
         this.proccpuswitchesps55quantile = proccpuswitchesps55quantile;
     }
 
-    public Long getProccpuswitchesps75quantile() {
+    public Double getProccpuswitchesps75quantile() {
         return proccpuswitchesps75quantile;
     }
 
-    public void setProccpuswitchesps75quantile(Long proccpuswitchesps75quantile) {
+    public void setProccpuswitchesps75quantile(Double proccpuswitchesps75quantile) {
         this.proccpuswitchesps75quantile = proccpuswitchesps75quantile;
     }
 
-    public Long getProccpuswitchesps95quantile() {
+    public Double getProccpuswitchesps95quantile() {
         return proccpuswitchesps95quantile;
     }
 
-    public void setProccpuswitchesps95quantile(Long proccpuswitchesps95quantile) {
+    public void setProccpuswitchesps95quantile(Double proccpuswitchesps95quantile) {
         this.proccpuswitchesps95quantile = proccpuswitchesps95quantile;
     }
 
-    public Long getProccpuswitchesps99quantile() {
+    public Double getProccpuswitchesps99quantile() {
         return proccpuswitchesps99quantile;
     }
 
-    public void setProccpuswitchesps99quantile(Long proccpuswitchesps99quantile) {
+    public void setProccpuswitchesps99quantile(Double proccpuswitchesps99quantile) {
         this.proccpuswitchesps99quantile = proccpuswitchesps99quantile;
     }
 
-    public Long getProccpuvoluntaryswitchesps() {
+    public Double getProccpuvoluntaryswitchesps() {
         return proccpuvoluntaryswitchesps;
     }
 
-    public void setProccpuvoluntaryswitchesps(Long proccpuvoluntaryswitchesps) {
+    public void setProccpuvoluntaryswitchesps(Double proccpuvoluntaryswitchesps) {
         this.proccpuvoluntaryswitchesps = proccpuvoluntaryswitchesps;
     }
 
-    public Long getProccpuvoluntaryswitchespsmin() {
+    public Double getProccpuvoluntaryswitchespsmin() {
         return proccpuvoluntaryswitchespsmin;
     }
 
-    public void setProccpuvoluntaryswitchespsmin(Long proccpuvoluntaryswitchespsmin) {
+    public void setProccpuvoluntaryswitchespsmin(Double proccpuvoluntaryswitchespsmin) {
         this.proccpuvoluntaryswitchespsmin = proccpuvoluntaryswitchespsmin;
     }
 
-    public Long getProccpuvoluntaryswitchespsmax() {
+    public Double getProccpuvoluntaryswitchespsmax() {
         return proccpuvoluntaryswitchespsmax;
     }
 
-    public void setProccpuvoluntaryswitchespsmax(Long proccpuvoluntaryswitchespsmax) {
+    public void setProccpuvoluntaryswitchespsmax(Double proccpuvoluntaryswitchespsmax) {
         this.proccpuvoluntaryswitchespsmax = proccpuvoluntaryswitchespsmax;
     }
 
@@ -965,59 +861,59 @@ public class MetricsProcessPO {
         this.proccpuvoluntaryswitchespsstd = proccpuvoluntaryswitchespsstd;
     }
 
-    public Long getProccpuvoluntaryswitchesps55quantile() {
+    public Double getProccpuvoluntaryswitchesps55quantile() {
         return proccpuvoluntaryswitchesps55quantile;
     }
 
-    public void setProccpuvoluntaryswitchesps55quantile(Long proccpuvoluntaryswitchesps55quantile) {
+    public void setProccpuvoluntaryswitchesps55quantile(Double proccpuvoluntaryswitchesps55quantile) {
         this.proccpuvoluntaryswitchesps55quantile = proccpuvoluntaryswitchesps55quantile;
     }
 
-    public Long getProccpuvoluntaryswitchesps75quantile() {
+    public Double getProccpuvoluntaryswitchesps75quantile() {
         return proccpuvoluntaryswitchesps75quantile;
     }
 
-    public void setProccpuvoluntaryswitchesps75quantile(Long proccpuvoluntaryswitchesps75quantile) {
+    public void setProccpuvoluntaryswitchesps75quantile(Double proccpuvoluntaryswitchesps75quantile) {
         this.proccpuvoluntaryswitchesps75quantile = proccpuvoluntaryswitchesps75quantile;
     }
 
-    public Long getProccpuvoluntaryswitchesps95quantile() {
+    public Double getProccpuvoluntaryswitchesps95quantile() {
         return proccpuvoluntaryswitchesps95quantile;
     }
 
-    public void setProccpuvoluntaryswitchesps95quantile(Long proccpuvoluntaryswitchesps95quantile) {
+    public void setProccpuvoluntaryswitchesps95quantile(Double proccpuvoluntaryswitchesps95quantile) {
         this.proccpuvoluntaryswitchesps95quantile = proccpuvoluntaryswitchesps95quantile;
     }
 
-    public Long getProccpuvoluntaryswitchesps99quantile() {
+    public Double getProccpuvoluntaryswitchesps99quantile() {
         return proccpuvoluntaryswitchesps99quantile;
     }
 
-    public void setProccpuvoluntaryswitchesps99quantile(Long proccpuvoluntaryswitchesps99quantile) {
+    public void setProccpuvoluntaryswitchesps99quantile(Double proccpuvoluntaryswitchesps99quantile) {
         this.proccpuvoluntaryswitchesps99quantile = proccpuvoluntaryswitchesps99quantile;
     }
 
-    public Long getProccpunonvoluntaryswitchesps() {
+    public Double getProccpunonvoluntaryswitchesps() {
         return proccpunonvoluntaryswitchesps;
     }
 
-    public void setProccpunonvoluntaryswitchesps(Long proccpunonvoluntaryswitchesps) {
+    public void setProccpunonvoluntaryswitchesps(Double proccpunonvoluntaryswitchesps) {
         this.proccpunonvoluntaryswitchesps = proccpunonvoluntaryswitchesps;
     }
 
-    public Long getProccpunonvoluntaryswitchespsmin() {
+    public Double getProccpunonvoluntaryswitchespsmin() {
         return proccpunonvoluntaryswitchespsmin;
     }
 
-    public void setProccpunonvoluntaryswitchespsmin(Long proccpunonvoluntaryswitchespsmin) {
+    public void setProccpunonvoluntaryswitchespsmin(Double proccpunonvoluntaryswitchespsmin) {
         this.proccpunonvoluntaryswitchespsmin = proccpunonvoluntaryswitchespsmin;
     }
 
-    public Long getProccpunonvoluntaryswitchespsmax() {
+    public Double getProccpunonvoluntaryswitchespsmax() {
         return proccpunonvoluntaryswitchespsmax;
     }
 
-    public void setProccpunonvoluntaryswitchespsmax(Long proccpunonvoluntaryswitchespsmax) {
+    public void setProccpunonvoluntaryswitchespsmax(Double proccpunonvoluntaryswitchespsmax) {
         this.proccpunonvoluntaryswitchespsmax = proccpunonvoluntaryswitchespsmax;
     }
 
@@ -1037,35 +933,35 @@ public class MetricsProcessPO {
         this.proccpunonvoluntaryswitchespsstd = proccpunonvoluntaryswitchespsstd;
     }
 
-    public Long getProccpunonvoluntaryswitchesps55quantile() {
+    public Double getProccpunonvoluntaryswitchesps55quantile() {
         return proccpunonvoluntaryswitchesps55quantile;
     }
 
-    public void setProccpunonvoluntaryswitchesps55quantile(Long proccpunonvoluntaryswitchesps55quantile) {
+    public void setProccpunonvoluntaryswitchesps55quantile(Double proccpunonvoluntaryswitchesps55quantile) {
         this.proccpunonvoluntaryswitchesps55quantile = proccpunonvoluntaryswitchesps55quantile;
     }
 
-    public Long getProccpunonvoluntaryswitchesps75quantile() {
+    public Double getProccpunonvoluntaryswitchesps75quantile() {
         return proccpunonvoluntaryswitchesps75quantile;
     }
 
-    public void setProccpunonvoluntaryswitchesps75quantile(Long proccpunonvoluntaryswitchesps75quantile) {
+    public void setProccpunonvoluntaryswitchesps75quantile(Double proccpunonvoluntaryswitchesps75quantile) {
         this.proccpunonvoluntaryswitchesps75quantile = proccpunonvoluntaryswitchesps75quantile;
     }
 
-    public Long getProccpunonvoluntaryswitchesps95quantile() {
+    public Double getProccpunonvoluntaryswitchesps95quantile() {
         return proccpunonvoluntaryswitchesps95quantile;
     }
 
-    public void setProccpunonvoluntaryswitchesps95quantile(Long proccpunonvoluntaryswitchesps95quantile) {
+    public void setProccpunonvoluntaryswitchesps95quantile(Double proccpunonvoluntaryswitchesps95quantile) {
         this.proccpunonvoluntaryswitchesps95quantile = proccpunonvoluntaryswitchesps95quantile;
     }
 
-    public Long getProccpunonvoluntaryswitchesps99quantile() {
+    public Double getProccpunonvoluntaryswitchesps99quantile() {
         return proccpunonvoluntaryswitchesps99quantile;
     }
 
-    public void setProccpunonvoluntaryswitchesps99quantile(Long proccpunonvoluntaryswitchesps99quantile) {
+    public void setProccpunonvoluntaryswitchesps99quantile(Double proccpunonvoluntaryswitchesps99quantile) {
         this.proccpunonvoluntaryswitchesps99quantile = proccpunonvoluntaryswitchesps99quantile;
     }
 
@@ -1261,27 +1157,27 @@ public class MetricsProcessPO {
         this.procioreadrate99quantile = procioreadrate99quantile;
     }
 
-    public Long getProcioreadbytesrate() {
+    public Double getProcioreadbytesrate() {
         return procioreadbytesrate;
     }
 
-    public void setProcioreadbytesrate(Long procioreadbytesrate) {
+    public void setProcioreadbytesrate(Double procioreadbytesrate) {
         this.procioreadbytesrate = procioreadbytesrate;
     }
 
-    public Long getProcioreadbytesratemin() {
+    public Double getProcioreadbytesratemin() {
         return procioreadbytesratemin;
     }
 
-    public void setProcioreadbytesratemin(Long procioreadbytesratemin) {
+    public void setProcioreadbytesratemin(Double procioreadbytesratemin) {
         this.procioreadbytesratemin = procioreadbytesratemin;
     }
 
-    public Long getProcioreadbytesratemax() {
+    public Double getProcioreadbytesratemax() {
         return procioreadbytesratemax;
     }
 
-    public void setProcioreadbytesratemax(Long procioreadbytesratemax) {
+    public void setProcioreadbytesratemax(Double procioreadbytesratemax) {
         this.procioreadbytesratemax = procioreadbytesratemax;
     }
 
@@ -1301,35 +1197,35 @@ public class MetricsProcessPO {
         this.procioreadbytesratestd = procioreadbytesratestd;
     }
 
-    public Long getProcioreadbytesrate55quantile() {
+    public Double getProcioreadbytesrate55quantile() {
         return procioreadbytesrate55quantile;
     }
 
-    public void setProcioreadbytesrate55quantile(Long procioreadbytesrate55quantile) {
+    public void setProcioreadbytesrate55quantile(Double procioreadbytesrate55quantile) {
         this.procioreadbytesrate55quantile = procioreadbytesrate55quantile;
     }
 
-    public Long getProcioreadbytesrate75quantile() {
+    public Double getProcioreadbytesrate75quantile() {
         return procioreadbytesrate75quantile;
     }
 
-    public void setProcioreadbytesrate75quantile(Long procioreadbytesrate75quantile) {
+    public void setProcioreadbytesrate75quantile(Double procioreadbytesrate75quantile) {
         this.procioreadbytesrate75quantile = procioreadbytesrate75quantile;
     }
 
-    public Long getProcioreadbytesrate95quantile() {
+    public Double getProcioreadbytesrate95quantile() {
         return procioreadbytesrate95quantile;
     }
 
-    public void setProcioreadbytesrate95quantile(Long procioreadbytesrate95quantile) {
+    public void setProcioreadbytesrate95quantile(Double procioreadbytesrate95quantile) {
         this.procioreadbytesrate95quantile = procioreadbytesrate95quantile;
     }
 
-    public Long getProcioreadbytesrate99quantile() {
+    public Double getProcioreadbytesrate99quantile() {
         return procioreadbytesrate99quantile;
     }
 
-    public void setProcioreadbytesrate99quantile(Long procioreadbytesrate99quantile) {
+    public void setProcioreadbytesrate99quantile(Double procioreadbytesrate99quantile) {
         this.procioreadbytesrate99quantile = procioreadbytesrate99quantile;
     }
 
@@ -1405,27 +1301,27 @@ public class MetricsProcessPO {
         this.prociowriterate99quantile = prociowriterate99quantile;
     }
 
-    public Long getProciowritebytesrate() {
+    public Double getProciowritebytesrate() {
         return prociowritebytesrate;
     }
 
-    public void setProciowritebytesrate(Long prociowritebytesrate) {
+    public void setProciowritebytesrate(Double prociowritebytesrate) {
         this.prociowritebytesrate = prociowritebytesrate;
     }
 
-    public Long getProciowritebytesratemin() {
+    public Double getProciowritebytesratemin() {
         return prociowritebytesratemin;
     }
 
-    public void setProciowritebytesratemin(Long prociowritebytesratemin) {
+    public void setProciowritebytesratemin(Double prociowritebytesratemin) {
         this.prociowritebytesratemin = prociowritebytesratemin;
     }
 
-    public Long getProciowritebytesratemax() {
+    public Double getProciowritebytesratemax() {
         return prociowritebytesratemax;
     }
 
-    public void setProciowritebytesratemax(Long prociowritebytesratemax) {
+    public void setProciowritebytesratemax(Double prociowritebytesratemax) {
         this.prociowritebytesratemax = prociowritebytesratemax;
     }
 
@@ -1445,35 +1341,35 @@ public class MetricsProcessPO {
         this.prociowritebytesratestd = prociowritebytesratestd;
     }
 
-    public Long getProciowritebytesrate55quantile() {
+    public Double getProciowritebytesrate55quantile() {
         return prociowritebytesrate55quantile;
     }
 
-    public void setProciowritebytesrate55quantile(Long prociowritebytesrate55quantile) {
+    public void setProciowritebytesrate55quantile(Double prociowritebytesrate55quantile) {
         this.prociowritebytesrate55quantile = prociowritebytesrate55quantile;
     }
 
-    public Long getProciowritebytesrate75quantile() {
+    public Double getProciowritebytesrate75quantile() {
         return prociowritebytesrate75quantile;
     }
 
-    public void setProciowritebytesrate75quantile(Long prociowritebytesrate75quantile) {
+    public void setProciowritebytesrate75quantile(Double prociowritebytesrate75quantile) {
         this.prociowritebytesrate75quantile = prociowritebytesrate75quantile;
     }
 
-    public Long getProciowritebytesrate95quantile() {
+    public Double getProciowritebytesrate95quantile() {
         return prociowritebytesrate95quantile;
     }
 
-    public void setProciowritebytesrate95quantile(Long prociowritebytesrate95quantile) {
+    public void setProciowritebytesrate95quantile(Double prociowritebytesrate95quantile) {
         this.prociowritebytesrate95quantile = prociowritebytesrate95quantile;
     }
 
-    public Long getProciowritebytesrate99quantile() {
+    public Double getProciowritebytesrate99quantile() {
         return prociowritebytesrate99quantile;
     }
 
-    public void setProciowritebytesrate99quantile(Long prociowritebytesrate99quantile) {
+    public void setProciowritebytesrate99quantile(Double prociowritebytesrate99quantile) {
         this.prociowritebytesrate99quantile = prociowritebytesrate99quantile;
     }
 
@@ -1549,27 +1445,27 @@ public class MetricsProcessPO {
         this.procioreadwriterate99quantile = procioreadwriterate99quantile;
     }
 
-    public Long getProcioreadwritebytesrate() {
+    public Double getProcioreadwritebytesrate() {
         return procioreadwritebytesrate;
     }
 
-    public void setProcioreadwritebytesrate(Long procioreadwritebytesrate) {
+    public void setProcioreadwritebytesrate(Double procioreadwritebytesrate) {
         this.procioreadwritebytesrate = procioreadwritebytesrate;
     }
 
-    public Long getProcioreadwritebytesratemin() {
+    public Double getProcioreadwritebytesratemin() {
         return procioreadwritebytesratemin;
     }
 
-    public void setProcioreadwritebytesratemin(Long procioreadwritebytesratemin) {
+    public void setProcioreadwritebytesratemin(Double procioreadwritebytesratemin) {
         this.procioreadwritebytesratemin = procioreadwritebytesratemin;
     }
 
-    public Long getProcioreadwritebytesratemax() {
+    public Double getProcioreadwritebytesratemax() {
         return procioreadwritebytesratemax;
     }
 
-    public void setProcioreadwritebytesratemax(Long procioreadwritebytesratemax) {
+    public void setProcioreadwritebytesratemax(Double procioreadwritebytesratemax) {
         this.procioreadwritebytesratemax = procioreadwritebytesratemax;
     }
 
@@ -1589,35 +1485,35 @@ public class MetricsProcessPO {
         this.procioreadwritebytesratestd = procioreadwritebytesratestd;
     }
 
-    public Long getProcioreadwritebytesrate55quantile() {
+    public Double getProcioreadwritebytesrate55quantile() {
         return procioreadwritebytesrate55quantile;
     }
 
-    public void setProcioreadwritebytesrate55quantile(Long procioreadwritebytesrate55quantile) {
+    public void setProcioreadwritebytesrate55quantile(Double procioreadwritebytesrate55quantile) {
         this.procioreadwritebytesrate55quantile = procioreadwritebytesrate55quantile;
     }
 
-    public Long getProcioreadwritebytesrate75quantile() {
+    public Double getProcioreadwritebytesrate75quantile() {
         return procioreadwritebytesrate75quantile;
     }
 
-    public void setProcioreadwritebytesrate75quantile(Long procioreadwritebytesrate75quantile) {
+    public void setProcioreadwritebytesrate75quantile(Double procioreadwritebytesrate75quantile) {
         this.procioreadwritebytesrate75quantile = procioreadwritebytesrate75quantile;
     }
 
-    public Long getProcioreadwritebytesrate95quantile() {
+    public Double getProcioreadwritebytesrate95quantile() {
         return procioreadwritebytesrate95quantile;
     }
 
-    public void setProcioreadwritebytesrate95quantile(Long procioreadwritebytesrate95quantile) {
+    public void setProcioreadwritebytesrate95quantile(Double procioreadwritebytesrate95quantile) {
         this.procioreadwritebytesrate95quantile = procioreadwritebytesrate95quantile;
     }
 
-    public Long getProcioreadwritebytesrate99quantile() {
+    public Double getProcioreadwritebytesrate99quantile() {
         return procioreadwritebytesrate99quantile;
     }
 
-    public void setProcioreadwritebytesrate99quantile(Long procioreadwritebytesrate99quantile) {
+    public void setProcioreadwritebytesrate99quantile(Double procioreadwritebytesrate99quantile) {
         this.procioreadwritebytesrate99quantile = procioreadwritebytesrate99quantile;
     }
 
@@ -1757,219 +1653,219 @@ public class MetricsProcessPO {
         this.procportlisten = procportlisten;
     }
 
-    public Long getProcnetworkreceivebytesps() {
+    public Double getProcnetworkreceivebytesps() {
         return procnetworkreceivebytesps;
     }
 
-    public void setProcnetworkreceivebytesps(Long procnetworkreceivebytesps) {
+    public void setProcnetworkreceivebytesps(Double procnetworkreceivebytesps) {
         this.procnetworkreceivebytesps = procnetworkreceivebytesps;
     }
 
-    public Long getProcnetworkreceivebytespsmin() {
+    public Double getProcnetworkreceivebytespsmin() {
         return procnetworkreceivebytespsmin;
     }
 
-    public void setProcnetworkreceivebytespsmin(Long procnetworkreceivebytespsmin) {
+    public void setProcnetworkreceivebytespsmin(Double procnetworkreceivebytespsmin) {
         this.procnetworkreceivebytespsmin = procnetworkreceivebytespsmin;
     }
 
-    public Long getProcnetworkreceivebytespsmax() {
+    public Double getProcnetworkreceivebytespsmax() {
         return procnetworkreceivebytespsmax;
     }
 
-    public void setProcnetworkreceivebytespsmax(Long procnetworkreceivebytespsmax) {
+    public void setProcnetworkreceivebytespsmax(Double procnetworkreceivebytespsmax) {
         this.procnetworkreceivebytespsmax = procnetworkreceivebytespsmax;
     }
 
-    public Long getProcnetworkreceivebytespsmean() {
+    public Double getProcnetworkreceivebytespsmean() {
         return procnetworkreceivebytespsmean;
     }
 
-    public void setProcnetworkreceivebytespsmean(Long procnetworkreceivebytespsmean) {
+    public void setProcnetworkreceivebytespsmean(Double procnetworkreceivebytespsmean) {
         this.procnetworkreceivebytespsmean = procnetworkreceivebytespsmean;
     }
 
-    public Long getProcnetworkreceivebytespsstd() {
+    public Double getProcnetworkreceivebytespsstd() {
         return procnetworkreceivebytespsstd;
     }
 
-    public void setProcnetworkreceivebytespsstd(Long procnetworkreceivebytespsstd) {
+    public void setProcnetworkreceivebytespsstd(Double procnetworkreceivebytespsstd) {
         this.procnetworkreceivebytespsstd = procnetworkreceivebytespsstd;
     }
 
-    public Long getProcnetworkreceivebytesps55quantile() {
+    public Double getProcnetworkreceivebytesps55quantile() {
         return procnetworkreceivebytesps55quantile;
     }
 
-    public void setProcnetworkreceivebytesps55quantile(Long procnetworkreceivebytesps55quantile) {
+    public void setProcnetworkreceivebytesps55quantile(Double procnetworkreceivebytesps55quantile) {
         this.procnetworkreceivebytesps55quantile = procnetworkreceivebytesps55quantile;
     }
 
-    public Long getProcnetworkreceivebytesps75quantile() {
+    public Double getProcnetworkreceivebytesps75quantile() {
         return procnetworkreceivebytesps75quantile;
     }
 
-    public void setProcnetworkreceivebytesps75quantile(Long procnetworkreceivebytesps75quantile) {
+    public void setProcnetworkreceivebytesps75quantile(Double procnetworkreceivebytesps75quantile) {
         this.procnetworkreceivebytesps75quantile = procnetworkreceivebytesps75quantile;
     }
 
-    public Long getProcnetworkreceivebytesps95quantile() {
+    public Double getProcnetworkreceivebytesps95quantile() {
         return procnetworkreceivebytesps95quantile;
     }
 
-    public void setProcnetworkreceivebytesps95quantile(Long procnetworkreceivebytesps95quantile) {
+    public void setProcnetworkreceivebytesps95quantile(Double procnetworkreceivebytesps95quantile) {
         this.procnetworkreceivebytesps95quantile = procnetworkreceivebytesps95quantile;
     }
 
-    public Long getProcnetworkreceivebytesps99quantile() {
+    public Double getProcnetworkreceivebytesps99quantile() {
         return procnetworkreceivebytesps99quantile;
     }
 
-    public void setProcnetworkreceivebytesps99quantile(Long procnetworkreceivebytesps99quantile) {
+    public void setProcnetworkreceivebytesps99quantile(Double procnetworkreceivebytesps99quantile) {
         this.procnetworkreceivebytesps99quantile = procnetworkreceivebytesps99quantile;
     }
 
-    public Long getProcnetworksendbytesps() {
+    public Double getProcnetworksendbytesps() {
         return procnetworksendbytesps;
     }
 
-    public void setProcnetworksendbytesps(Long procnetworksendbytesps) {
+    public void setProcnetworksendbytesps(Double procnetworksendbytesps) {
         this.procnetworksendbytesps = procnetworksendbytesps;
     }
 
-    public Long getProcnetworksendbytespsmin() {
+    public Double getProcnetworksendbytespsmin() {
         return procnetworksendbytespsmin;
     }
 
-    public void setProcnetworksendbytespsmin(Long procnetworksendbytespsmin) {
+    public void setProcnetworksendbytespsmin(Double procnetworksendbytespsmin) {
         this.procnetworksendbytespsmin = procnetworksendbytespsmin;
     }
 
-    public Long getProcnetworksendbytespsmax() {
+    public Double getProcnetworksendbytespsmax() {
         return procnetworksendbytespsmax;
     }
 
-    public void setProcnetworksendbytespsmax(Long procnetworksendbytespsmax) {
+    public void setProcnetworksendbytespsmax(Double procnetworksendbytespsmax) {
         this.procnetworksendbytespsmax = procnetworksendbytespsmax;
     }
 
-    public Long getProcnetworksendbytespsmean() {
+    public Double getProcnetworksendbytespsmean() {
         return procnetworksendbytespsmean;
     }
 
-    public void setProcnetworksendbytespsmean(Long procnetworksendbytespsmean) {
+    public void setProcnetworksendbytespsmean(Double procnetworksendbytespsmean) {
         this.procnetworksendbytespsmean = procnetworksendbytespsmean;
     }
 
-    public Long getProcnetworksendbytespsstd() {
+    public Double getProcnetworksendbytespsstd() {
         return procnetworksendbytespsstd;
     }
 
-    public void setProcnetworksendbytespsstd(Long procnetworksendbytespsstd) {
+    public void setProcnetworksendbytespsstd(Double procnetworksendbytespsstd) {
         this.procnetworksendbytespsstd = procnetworksendbytespsstd;
     }
 
-    public Long getProcnetworksendbytesps55quantile() {
+    public Double getProcnetworksendbytesps55quantile() {
         return procnetworksendbytesps55quantile;
     }
 
-    public void setProcnetworksendbytesps55quantile(Long procnetworksendbytesps55quantile) {
+    public void setProcnetworksendbytesps55quantile(Double procnetworksendbytesps55quantile) {
         this.procnetworksendbytesps55quantile = procnetworksendbytesps55quantile;
     }
 
-    public Long getProcnetworksendbytesps75quantile() {
+    public Double getProcnetworksendbytesps75quantile() {
         return procnetworksendbytesps75quantile;
     }
 
-    public void setProcnetworksendbytesps75quantile(Long procnetworksendbytesps75quantile) {
+    public void setProcnetworksendbytesps75quantile(Double procnetworksendbytesps75quantile) {
         this.procnetworksendbytesps75quantile = procnetworksendbytesps75quantile;
     }
 
-    public Long getProcnetworksendbytesps95quantile() {
+    public Double getProcnetworksendbytesps95quantile() {
         return procnetworksendbytesps95quantile;
     }
 
-    public void setProcnetworksendbytesps95quantile(Long procnetworksendbytesps95quantile) {
+    public void setProcnetworksendbytesps95quantile(Double procnetworksendbytesps95quantile) {
         this.procnetworksendbytesps95quantile = procnetworksendbytesps95quantile;
     }
 
-    public Long getProcnetworksendbytesps99quantile() {
+    public Double getProcnetworksendbytesps99quantile() {
         return procnetworksendbytesps99quantile;
     }
 
-    public void setProcnetworksendbytesps99quantile(Long procnetworksendbytesps99quantile) {
+    public void setProcnetworksendbytesps99quantile(Double procnetworksendbytesps99quantile) {
         this.procnetworksendbytesps99quantile = procnetworksendbytesps99quantile;
     }
 
-    public Long getProcnetworkconnrate() {
+    public Double getProcnetworkconnrate() {
         return procnetworkconnrate;
     }
 
-    public void setProcnetworkconnrate(Long procnetworkconnrate) {
+    public void setProcnetworkconnrate(Double procnetworkconnrate) {
         this.procnetworkconnrate = procnetworkconnrate;
     }
 
-    public Long getProcnetworkconnratemin() {
+    public Double getProcnetworkconnratemin() {
         return procnetworkconnratemin;
     }
 
-    public void setProcnetworkconnratemin(Long procnetworkconnratemin) {
+    public void setProcnetworkconnratemin(Double procnetworkconnratemin) {
         this.procnetworkconnratemin = procnetworkconnratemin;
     }
 
-    public Long getProcnetworkconnratemax() {
+    public Double getProcnetworkconnratemax() {
         return procnetworkconnratemax;
     }
 
-    public void setProcnetworkconnratemax(Long procnetworkconnratemax) {
+    public void setProcnetworkconnratemax(Double procnetworkconnratemax) {
         this.procnetworkconnratemax = procnetworkconnratemax;
     }
 
-    public Long getProcnetworkconnratemean() {
+    public Double getProcnetworkconnratemean() {
         return procnetworkconnratemean;
     }
 
-    public void setProcnetworkconnratemean(Long procnetworkconnratemean) {
+    public void setProcnetworkconnratemean(Double procnetworkconnratemean) {
         this.procnetworkconnratemean = procnetworkconnratemean;
     }
 
-    public Long getProcnetworkconnratestd() {
+    public Double getProcnetworkconnratestd() {
         return procnetworkconnratestd;
     }
 
-    public void setProcnetworkconnratestd(Long procnetworkconnratestd) {
+    public void setProcnetworkconnratestd(Double procnetworkconnratestd) {
         this.procnetworkconnratestd = procnetworkconnratestd;
     }
 
-    public Long getProcnetworkconnrate55quantile() {
+    public Double getProcnetworkconnrate55quantile() {
         return procnetworkconnrate55quantile;
     }
 
-    public void setProcnetworkconnrate55quantile(Long procnetworkconnrate55quantile) {
+    public void setProcnetworkconnrate55quantile(Double procnetworkconnrate55quantile) {
         this.procnetworkconnrate55quantile = procnetworkconnrate55quantile;
     }
 
-    public Long getProcnetworkconnrate75quantile() {
+    public Double getProcnetworkconnrate75quantile() {
         return procnetworkconnrate75quantile;
     }
 
-    public void setProcnetworkconnrate75quantile(Long procnetworkconnrate75quantile) {
+    public void setProcnetworkconnrate75quantile(Double procnetworkconnrate75quantile) {
         this.procnetworkconnrate75quantile = procnetworkconnrate75quantile;
     }
 
-    public Long getProcnetworkconnrate95quantile() {
+    public Double getProcnetworkconnrate95quantile() {
         return procnetworkconnrate95quantile;
     }
 
-    public void setProcnetworkconnrate95quantile(Long procnetworkconnrate95quantile) {
+    public void setProcnetworkconnrate95quantile(Double procnetworkconnrate95quantile) {
         this.procnetworkconnrate95quantile = procnetworkconnrate95quantile;
     }
 
-    public Long getProcnetworkconnrate99quantile() {
+    public Double getProcnetworkconnrate99quantile() {
         return procnetworkconnrate99quantile;
     }
 
-    public void setProcnetworkconnrate99quantile(Long procnetworkconnrate99quantile) {
+    public void setProcnetworkconnrate99quantile(Double procnetworkconnrate99quantile) {
         this.procnetworkconnrate99quantile = procnetworkconnrate99quantile;
     }
 
@@ -2099,5 +1995,109 @@ public class MetricsProcessPO {
 
     public void setHeartbeattimehour(Long heartbeattimehour) {
         this.heartbeattimehour = heartbeattimehour;
+    }
+
+    public Long getHeartbeatTimeDay() {
+        return heartbeatTimeDay;
+    }
+
+    public void setHeartbeatTimeDay(Long heartbeatTimeDay) {
+        this.heartbeatTimeDay = heartbeatTimeDay;
+    }
+
+    public Double getJvmProcS0C() {
+        return jvmProcS0C;
+    }
+
+    public void setJvmProcS0C(Double jvmProcS0C) {
+        this.jvmProcS0C = jvmProcS0C;
+    }
+
+    public Double getJvmProcS1C() {
+        return jvmProcS1C;
+    }
+
+    public void setJvmProcS1C(Double jvmProcS1C) {
+        this.jvmProcS1C = jvmProcS1C;
+    }
+
+    public Double getJvmProcS0U() {
+        return jvmProcS0U;
+    }
+
+    public void setJvmProcS0U(Double jvmProcS0U) {
+        this.jvmProcS0U = jvmProcS0U;
+    }
+
+    public Double getJvmProcS1U() {
+        return jvmProcS1U;
+    }
+
+    public void setJvmProcS1U(Double jvmProcS1U) {
+        this.jvmProcS1U = jvmProcS1U;
+    }
+
+    public Double getJvmProcEC() {
+        return jvmProcEC;
+    }
+
+    public void setJvmProcEC(Double jvmProcEC) {
+        this.jvmProcEC = jvmProcEC;
+    }
+
+    public Double getJvmProcEU() {
+        return jvmProcEU;
+    }
+
+    public void setJvmProcEU(Double jvmProcEU) {
+        this.jvmProcEU = jvmProcEU;
+    }
+
+    public Double getJvmProcOC() {
+        return jvmProcOC;
+    }
+
+    public void setJvmProcOC(Double jvmProcOC) {
+        this.jvmProcOC = jvmProcOC;
+    }
+
+    public Double getJvmProcOU() {
+        return jvmProcOU;
+    }
+
+    public void setJvmProcOU(Double jvmProcOU) {
+        this.jvmProcOU = jvmProcOU;
+    }
+
+    public Double getJvmProcMC() {
+        return jvmProcMC;
+    }
+
+    public void setJvmProcMC(Double jvmProcMC) {
+        this.jvmProcMC = jvmProcMC;
+    }
+
+    public Double getJvmProcMU() {
+        return jvmProcMU;
+    }
+
+    public void setJvmProcMU(Double jvmProcMU) {
+        this.jvmProcMU = jvmProcMU;
+    }
+
+    public Double getJvmProcCCSC() {
+        return jvmProcCCSC;
+    }
+
+    public void setJvmProcCCSC(Double jvmProcCCSC) {
+        this.jvmProcCCSC = jvmProcCCSC;
+    }
+
+    public Double getJvmProcCCSU() {
+        return jvmProcCCSU;
+    }
+
+    public void setJvmProcCCSU(Double jvmProcCCSU) {
+        this.jvmProcCCSU = jvmProcCCSU;
     }
 }
