@@ -1789,7 +1789,7 @@ public enum MetricFieldEnum {
             125,
             "process_cpu_util",
             "procCpuUtil",
-            "当前进程cpu使用率(单位：%) 使用率采用全核方式计数，如进程使用一颗核，则返回100，如进程使用两颗核，则返回200",
+            "进程cpu使用率(单位：%) 使用率采用全核方式计数，如进程使用一颗核，则返回100，如进程使用两颗核，则返回200",
             MetricTypeEnum.PROCESS_CPU,
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
@@ -1797,8 +1797,109 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             true,
-            null
+            SortTypeEnum.DESC
     ),
+    PROCESS_CPU_UTIL_TOTAL_PERCENT(
+            126,
+                    "process_cpu_util_total_percent",
+                    "procCpuUtilTotalPercent",
+                    "进程cpu使用率(单位：%) 使用率为总使用比率，如进程使用一颗核，系统共10核，则返回0.1 = 10%",
+            MetricTypeEnum.PROCESS_CPU,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.PERCENT,
+            MetricUnitEnum.PERCENT,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+    ),
+    PROCESS_CPU_SYS(
+            127,
+                    "process_cpu_sys",
+                    "procCpuSys",
+                    "进程内核态cpu使用率（单位：%）",
+            MetricTypeEnum.PROCESS_CPU,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.PERCENT,
+            MetricUnitEnum.PERCENT,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    PROCESS_CPU_USER(
+            128,
+                    "process_cpu_user",
+                    "procCpuUser",
+                    "进程用户态cpu使用率（单位：%）",
+            MetricTypeEnum.PROCESS_CPU,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.PERCENT,
+            MetricUnitEnum.PERCENT,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    PROCESS_CPU_SWITCHES_PS(
+            129,
+                    "process_cpu_switches_ps",
+                    "procCpuSwitchesPS",
+                    "进程cpu每秒上下文交换次数",
+            MetricTypeEnum.PROCESS_CPU,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    PROCESS_CPU_VOLUNTARY_SWITCHES_PS(
+            130,
+                    "process_cpu_voluntary_switches_ps",
+                    "procCpuVoluntarySwitchesPS",
+                    "当前进程cpu每秒自愿上下文交换次数（自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换。比如说， I/O、内存等系统资源不足时，就会发生自愿上下文切换 pidstat）",
+            MetricTypeEnum.PROCESS_CPU,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    PROCESS_CPU_NON_VOLUNTARY_SWITCHES_PS(
+            131,
+                    "process_cpu_non_voluntary_switches_ps",
+                    "procCpuNonVoluntarySwitchesPS",
+                    "当前进程cpu每秒非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）",
+            MetricTypeEnum.PROCESS_CPU,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    /*
+     * memory 相关
+     */
+    PROCESS_MEMORY_USED(
+            132,
+                    "process_memory_used",
+                    "procMemUsed",
+                    "当前进程内存使用量（单位：MB）",
+            MetricTypeEnum.PROCESS_MEMORY,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
 
     //TODO：
 
@@ -1826,23 +1927,6 @@ public enum MetricFieldEnum {
 
 
 
-    /*
-     * memory 相关
-     */
-    PROCESS_MEMORY_USED(
-            13,
-            "process_memory_used",
-            "procMemUsed",
-            "当前进程内存使用量（单位：byte）当前值",
-            MetricTypeEnum.PROCESS_MEMORY,
-            AggregationCalcFunctionEnum.MAX,
-            MetricValueTypeEnum.CURRENT,
-            MetricUnitEnum.BYTE,
-            MetricUnitEnum.M_BYTE,
-            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            true,
-            null
-    ),
 
     PROCESS_NET_WORK_SEND_BYTES_PS(
             14,
