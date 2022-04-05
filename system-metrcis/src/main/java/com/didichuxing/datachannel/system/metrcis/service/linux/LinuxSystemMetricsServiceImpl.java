@@ -429,7 +429,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
         if (!output.isEmpty() && output.size() >= 3) {
             String[] properties = output.get(2).split("\\s+");//
-            Double irq = Double.valueOf(properties[10]);
+            Double irq = Double.valueOf(properties[11]);
             return irq;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUsageIrqOnly||msg=data is null");
@@ -451,7 +451,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
         if (!output.isEmpty() && output.size() >= 3) {
             String[] properties = output.get(2).split("\\s+");//
-            Double softIrq = Double.valueOf(properties[12]);
+            Double softIrq = Double.valueOf(properties[13]);
             return softIrq;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUsageSoftIrqOnly||msg=data is null");
