@@ -2026,9 +2026,112 @@ public enum MetricFieldEnum {
             false,
             SortTypeEnum.DESC
             ),
-//    jvmProcHeapMemoryUsed
+    JVM_PROCESS_HEAP_MEMORY_USED(
+            142,
+                    "jvm_process_heap_memory_used",
+                    "jvmProcHeapMemoryUsed",
+                    "jvm进程堆内存使用量（单位：MB）",
+            MetricTypeEnum.PROCESS_MEMORY,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    JVM_PROCESS_NON_HEAP_MEMORY_USED(
+            143,
+                    "jvm_process_non_heap_memory_used",
+                    "jvmProcNonHeapMemoryUsed",
+                    "jvm进程堆外内存使用量（单位：MB）",
+            MetricTypeEnum.PROCESS_MEMORY,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    JVM_PROCESS_HEAP_SIZE_XMX(
+            144,
+                    "jvm_process_heap_size_xmx",
+                    "jvmProcHeapSizeXmx",
+                    "jvm进程最大可用堆内存 对应 jvm Xmx（单位：字节）",
+            MetricTypeEnum.PROCESS_MEMORY,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    JVM_PROCESS_MEMORY_USED_PEAK(
+            145,
+                    "jvm_process_memory_used_peak",
+                    "jvmProcMemUsedPeak",
+                    "jvm进程启动以来内存使用量峰值（单位：MB）",
+            MetricTypeEnum.PROCESS_MEMORY,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    JVM_PROCESS_HEAP_MEMORY_USED_PERCENT(
+            146,
+                    "jvm_process_heap_memory_used_percent",
+                    "jvmProcHeapMemUsedPercent",
+                    "jvm堆内存使用率（单位：%）",
+            MetricTypeEnum.PROCESS_MEMORY,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.CURRENT,
+            MetricUnitEnum.PERCENT,
+            MetricUnitEnum.PERCENT,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    /*
+     * disk io 相关
+     */
+    PROCESS_DISK_IO_READ_RATE(
+            147,
+                    "process_disk_io_read_rate",
+                    "procIOReadRate",
+                    "进程io读取频率（单位：hz）",
+            MetricTypeEnum.PROCESS_DISK_IO,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+    PROCESS_DISK_IO_READ_BYTES_RATE(
+            148,
+                    "process_disk_io_read_bytes_rate",
+                    "procIOReadBytesRate",
+                    "当前进程io读取速率（单位：字节/秒）",
+            MetricTypeEnum.PROCESS_DISK_IO,
+            AggregationCalcFunctionEnum.MAX,
+            MetricValueTypeEnum.STATISTICS,
+            MetricUnitEnum.BYTE,
+            MetricUnitEnum.BYTE,
+            MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
+            false,
+            SortTypeEnum.DESC
+            ),
+
+//    procIOWriteRate
 
     //TODO：
+
 
 
 
