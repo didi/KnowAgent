@@ -124,8 +124,8 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         Map<String, Object> params = new HashMap<>();
         params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
         params.put("fieldName", metricFieldEnum.getFieldName());
-        params.put("startTime", metricFieldEnum.getFieldName());
-        params.put("endTime", metricFieldEnum.getFieldName());
+        params.put("startTime", startTime);
+        params.put("endTime", endTime);
         Double value = 0d;
         if(isProcessMetric(metricFieldEnum)) {
             value = metricsProcessDAO.getSumMetricAllAgents(params);
