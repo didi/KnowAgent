@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckPr
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -81,7 +82,7 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
                 AggregationCalcFunctionEnum.SUM.getValue(),
-                "disorderExists"
+                MetricFieldEnum.LOG_COLLECT_TASK_DISORDER_EXISTS.getFieldName()
         );
         Long fileDisorderCount = 0L;
         if(null != fileDisorderCountObj) {

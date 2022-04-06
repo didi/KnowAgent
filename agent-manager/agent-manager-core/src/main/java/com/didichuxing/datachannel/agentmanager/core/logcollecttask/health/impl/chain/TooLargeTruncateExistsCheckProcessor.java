@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckPr
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -80,7 +81,7 @@ public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
                 AggregationCalcFunctionEnum.SUM.getValue(),
-                "tooLargeTruncateNum"
+                MetricFieldEnum.LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM.getFieldName()
         );
         Long tooLargeTruncateCount = 0L;
         if(null != tooLargeTruncateCountObj) {

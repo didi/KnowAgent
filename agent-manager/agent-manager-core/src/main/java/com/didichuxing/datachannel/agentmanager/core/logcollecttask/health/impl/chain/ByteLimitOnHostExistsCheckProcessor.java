@@ -6,6 +6,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckPr
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -78,7 +79,7 @@ public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
                 startTime,
                 currentTime,
                 AggregationCalcFunctionEnum.SUM.getValue(),
-                "limitTime"
+                MetricFieldEnum.LOG_COLLECT_TASK_LIMIT_TIME.getFieldName()
         );
         Long limitMs = 0L;
         if(null != limitMsObj) {

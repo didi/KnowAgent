@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheck
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -51,7 +52,7 @@ public class AgentGcMetricExceptionExistsCheckProcessor extends BaseProcessor {
                 startTime,
                 endTime,
                 AggregationCalcFunctionEnum.SUM.getValue(),
-                "jvmProcFullGcCount"
+                MetricFieldEnum.JVM_PROCESS_FULL_GC_COUNT.getFieldName()
         );
         Long agentFullGcTimes = 0L;
         if(null != agentFullGcTimesObj) {

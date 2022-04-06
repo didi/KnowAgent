@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheck
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -46,7 +47,7 @@ public class AgentFdUsageMetricExceptionExistsCheckProcessor extends BaseProcess
                 currentTime - AgentHealthCheckConstant.AGENT_FD_USED_METRIC_CHECK_LASTEST_MS_THRESHOLD,
                 currentTime,
                 AggregationCalcFunctionEnum.MAX.getValue(),
-                "procOpenFdCount"
+                MetricFieldEnum.JVM_PROCESS_OPEN_FD_COUNT.getFieldName()
         );
         Integer fdUsage = 0;
         if(null != fdUsageObj) {

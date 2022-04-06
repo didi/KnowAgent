@@ -6,6 +6,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckPr
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -63,7 +64,7 @@ public class ErrorLogsExistsCheckProcessor extends BaseProcessor {
                 agentHealthDO.getLastestErrorLogsExistsCheckHealthyTime(),
                 agentHealthCheckTimeEnd,
                 AggregationCalcFunctionEnum.SUM.getValue(),
-                "errorLogsCount"
+                MetricFieldEnum.AGENT_ERROR_LOGS_COUNT.getFieldName()
         );
         Long errorLogsCount = 0L;
         if(null != errorLogsCountObj) {
