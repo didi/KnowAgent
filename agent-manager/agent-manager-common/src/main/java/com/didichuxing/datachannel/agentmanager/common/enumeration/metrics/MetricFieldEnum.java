@@ -1,7 +1,5 @@
 package com.didichuxing.datachannel.agentmanager.common.enumeration.metrics;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -805,7 +803,7 @@ public enum MetricFieldEnum {
                     "system_disks",
                     "systemDisks",
                     "系统磁盘分区数",
-            MetricTypeEnum.SYSTEM_DISK,
+            MetricTypeEnum.SYSTEM_BASIC,
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.CURRENT,
             MetricUnitEnum.NONE,
@@ -1276,7 +1274,7 @@ public enum MetricFieldEnum {
                     "net_cards",
                     "systemNetCards",
                     "网卡数",
-            MetricTypeEnum.SYSTEM_NET_CARD,
+            MetricTypeEnum.SYSTEM_BASIC,
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.CURRENT,
             MetricUnitEnum.NONE,

@@ -87,8 +87,8 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     @Override
     @Transactional
-    public Long createAgent(AgentDO agent, String operator) {
-        return this.handleCreateAgent(agent, operator);//创建 agent 对象
+    public Long createAgent(AgentDO agent, String operator, Boolean createHostWhenHostNotExists) {
+        return this.handleCreateAgent(agent, operator, createHostWhenHostNotExists);
     }
 
     /**
@@ -96,10 +96,11 @@ public class AgentManageServiceImpl implements AgentManageService {
      *
      * @param agentDO  待创建Agent对象
      * @param operator 操作人
+     * @param createHostWhenHostNotExists agent宿主机不存在时，是否创建对应宿主机信息，true：创建 false：不创建，报异常
      * @return 创建成功的Agent对象id
      * @throws ServiceException 执行该函数过程中出现的异常
      */
-    private Long handleCreateAgent(AgentDO agentDO, String operator) throws ServiceException {
+    private Long handleCreateAgent(AgentDO agentDO, String operator, Boolean createHostWhenHostNotExists) throws ServiceException {
         /*
          * 校验待创建 AgentPO 对象参数信息是否合法
          */
@@ -122,10 +123,14 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         boolean hostExists = hostExists(agentDO.getHostName());
         if (!hostExists) {
-            throw new ServiceException(
-                    String.format("Agent对象{%s}创建失败，原因为：不能基于一个系统中不存在的主机创建Agent对象，系统中已不存在主机名为待创建Agent对应主机名{%s}的主机对象", JSON.toJSONString(agentDO), agentDO.getHostName()),
-                    ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
-            );
+            if(createHostWhenHostNotExists) {
+                hostManageService.createHost(convert2HostDO(agentDO), operator);
+            } else {
+                throw new ServiceException(
+                        String.format("Agent对象{%s}创建失败，原因为：不能基于一个系统中不存在的主机创建Agent对象，系统中已不存在主机名为待创建Agent对应主机名{%s}的主机对象", JSON.toJSONString(agentDO), agentDO.getHostName()),
+                        ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
+                );
+            }
         }
         /*
          * 系统是否存在 agent errorlogs & metrics 流 对应 全局 接收端 配置，如存在 & 用户未设置待添加 agent 对应 errorlogs & metrcis 流 对应 topic，则 设置
@@ -171,6 +176,17 @@ public class AgentManageServiceImpl implements AgentManageService {
                 operator
         );
         return savedAgentId;
+    }
+
+    private HostDO convert2HostDO(AgentDO agentDO) {
+        HostDO hostDO = new HostDO();
+        hostDO.setHostName(agentDO.getHostName());
+        hostDO.setIp(agentDO.getIp());
+        hostDO.setContainer(HostTypeEnum.HOST.getCode());
+        hostDO.setParentHostName(StringUtils.EMPTY);
+        hostDO.setMachineZone(StringUtils.EMPTY);
+        hostDO.setDepartment(StringUtils.EMPTY);
+        return hostDO;
     }
 
     /**

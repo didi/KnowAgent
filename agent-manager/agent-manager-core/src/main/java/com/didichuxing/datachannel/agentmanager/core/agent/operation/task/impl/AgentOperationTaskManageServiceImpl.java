@@ -753,7 +753,7 @@ public class AgentOperationTaskManageServiceImpl implements AgentOperationTaskMa
             agentDO.setIp(hostDO.getIp());
             agentDO.setCollectType(AgentCollectTypeEnum.COLLECT_HOST_AND_CONTAINERS.getCode());
             agentDO.setAgentVersionId(agentOperationTaskPO.getTargetAgentVersionId());
-            agentManageService.createAgent(agentDO, null);
+            agentManageService.createAgent(agentDO, null, false);
         } else if(AgentOperationTaskTypeEnum.UNINSTALL.getCode().equals(agentOperationTaskPO.getTaskType())) {
             /*
              * 删除对应Agent记录

@@ -267,6 +267,11 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
 //        }
 
         /*
+         * 校验：如修改的是agent error logs 或 metrics 流对应全局接收端对象，根据 id 获取全部 agent 对象，并更新对应 topic & producer configuration 信息
+         * TODO：
+         */
+
+        /*
          * 更新KafkaCluster对象至db
          */
         ReceiverDO persistReceiver = kafkaClusterManageServiceExtension.updateKafkaCluster(sourceReceiverDO, kafkaClusterDO);

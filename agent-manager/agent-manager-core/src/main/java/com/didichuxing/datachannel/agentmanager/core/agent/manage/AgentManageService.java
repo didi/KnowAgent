@@ -16,9 +16,10 @@ public interface AgentManageService {
      *
      * @param agent    待创建 AgentPO 对象
      * @param operator 操作人
+     * @param createHostWhenHostNotExists agent宿主机不存在时，是否创建对应宿主机信息，true：创建 false：不创建，报异常
      * @return 创建成功的agent对象id
      */
-    Long createAgent(AgentDO agent, String operator);
+    Long createAgent(AgentDO agent, String operator, Boolean createHostWhenHostNotExists);
 
     /**
      * 删除主机名为hostName的Agent对象

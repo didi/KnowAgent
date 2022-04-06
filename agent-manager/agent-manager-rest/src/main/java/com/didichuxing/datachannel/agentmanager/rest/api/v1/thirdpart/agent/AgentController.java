@@ -62,7 +62,7 @@ public class AgentController {
             );
         }
         AgentDO agentDO = agentRegisterDTO2AgentDO(dto, agentVersionDO);
-        Long agentId = agentManageService.createAgent(agentDO, SpringTool.getUserName());
+        Long agentId = agentManageService.createAgent(agentDO, SpringTool.getUserName(), true);
         return Result.buildSucc(agentId);
     }
 

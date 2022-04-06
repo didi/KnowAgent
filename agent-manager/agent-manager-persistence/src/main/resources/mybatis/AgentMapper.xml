@@ -112,6 +112,18 @@
       <if test="modifyTime != null" >
         modify_time,
       </if>
+      <if test="metricsSendTopic != null" >
+        metrics_send_topic,
+      </if>
+      <if test="metricsSendReceiverId != null" >
+        metrics_send_receiver_id,
+      </if>
+      <if test="errorLogsSendTopic != null" >
+        error_logs_send_topic,
+      </if>
+      <if test="errorLogsSendReceiverId != null" >
+        error_logs_send_receiver_id,
+      </if>
       <if test="metricsProducerConfiguration != null" >
         metrics_producer_configuration,
       </if>
@@ -152,6 +164,18 @@
       </if>
       <if test="modifyTime != null" >
         #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="metricsSendTopic != null" >
+        #{metricsSendTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="metricsSendReceiverId != null" >
+        #{metricsSendReceiverId,jdbcType=BIGINT},
+      </if>
+      <if test="errorLogsSendTopic != null" >
+        #{errorLogsSendTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="errorLogsSendReceiverId != null" >
+        #{errorLogsSendReceiverId,jdbcType=BIGINT},
       </if>
       <if test="metricsProducerConfiguration != null" >
         #{metricsProducerConfiguration,jdbcType=VARCHAR},
