@@ -1763,7 +1763,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_MILLISECOND,
             MetricUnitEnum.TIMESTAMP_SECOND,
             MetricDisplayTypeEnum.LABLE,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     PROCESS_PID(
@@ -1895,7 +1895,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     PROCESS_MEMORY_UTIL(
@@ -1909,7 +1909,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     PROCESS_MEMORY_DATA(
@@ -2091,7 +2091,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     /*
@@ -2223,7 +2223,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     JVM_PROCESS_YOUNG_GC_TIME(
@@ -2467,7 +2467,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     /*
@@ -2498,7 +2498,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
     ),
     PROCESS_NET_WORK_SEND_BYTES_PS(
@@ -2512,7 +2512,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     PROCESS_NET_WORK_CONN_RATE(
@@ -2765,7 +2765,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
     ),
     AGENT_READ_COUNT(
@@ -2779,7 +2779,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     AGENT_WRITE_BYTES(
@@ -2793,7 +2793,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     AGENT_WRITE_COUNT(
@@ -2807,7 +2807,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
     ),
     AGENT_ERROR_LOGS_COUNT(
@@ -2821,7 +2821,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     AGENT_ERROR_LOGS_SEND_FAILED_COUNT(
@@ -2835,7 +2835,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     AGENT_NORMAL_COLLECT_THREAD_NUM_MAX(
@@ -2975,7 +2975,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
     ),
     AGENT_PAUSE_COLLECT_TASK_NUM(
@@ -3017,7 +3017,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
     ),
     AGENT_PAUSE_COLLECT_PATH_NUM(
@@ -3046,7 +3046,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_MILLISECOND,
             MetricUnitEnum.DATE_TIME,
             MetricDisplayTypeEnum.LABLE,
-            false,
+            true,
             SortTypeEnum.DESC
     ),
     LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY(
@@ -3060,7 +3060,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_MILLISECOND,
             MetricUnitEnum.TIMESTAMP_SECOND,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_LIMIT_TIME(
@@ -3074,7 +3074,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_SECOND,
             MetricUnitEnum.TIMESTAMP_SECOND,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM(
@@ -3088,7 +3088,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM_TOTAL(
@@ -3116,7 +3116,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_DISORDER_EXISTS(
@@ -3130,7 +3130,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_SLICE_ERROR_EXISTS(
@@ -3144,7 +3144,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_READ_BYTES(
@@ -3158,7 +3158,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_READ_COUNT(
@@ -3172,7 +3172,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_SEND_BYTES(
@@ -3186,7 +3186,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.BYTE,
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
     ),
     LOG_COLLECT_TASK_SEND_COUNT(
@@ -3200,7 +3200,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_READ_TIME_PER_EVENT(
@@ -3284,7 +3284,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_FILTER_EVENTS_NUM(
@@ -3368,7 +3368,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
-            false,
+            true,
             SortTypeEnum.DESC
             ),
     LOG_COLLECT_TASK_RELATED_FILES(
