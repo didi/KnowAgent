@@ -6,7 +6,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointLine;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
@@ -272,12 +271,12 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
     private MetricPanel getRunningLogCollectPathsTop5Agents(Long startTime, Long endTime) {
         List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
-                MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+                MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_NUM, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
-        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT.getBaseUnit().getCode());
-        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT.getDisplayUnit().getCode());
-        metricPanel.setName(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_COUNT.getMetricName());
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_NUM.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_NUM.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_RUNNING_COLLECT_PATH_NUM.getMetricName());
         metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
         metricPanel.setMultiLineChatValue(multiLineChatValue);
         return metricPanel;
@@ -285,12 +284,12 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
     private MetricPanel getRunningLogCollectTasksTop5Agents(Long startTime, Long endTime) {
         List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
-                MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+                MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_NUM, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
-        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT.getBaseUnit().getCode());
-        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT.getDisplayUnit().getCode());
-        metricPanel.setName(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_COUNT.getMetricName());
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_NUM.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_NUM.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_RUNNING_COLLECT_TASK_NUM.getMetricName());
         metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
         metricPanel.setMultiLineChatValue(multiLineChatValue);
         return metricPanel;
@@ -350,12 +349,12 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
     private MetricPanel getFdUsedTop5Agents(Long startTime, Long endTime) {
         List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
-                MetricFieldEnum.PROCESS_FD_USED, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+                MetricFieldEnum.JVM_PROCESS_OPEN_FD_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
-        metricPanel.setBaseUnit(MetricFieldEnum.PROCESS_FD_USED.getBaseUnit().getCode());
-        metricPanel.setDisplayUnit(MetricFieldEnum.PROCESS_FD_USED.getDisplayUnit().getCode());
-        metricPanel.setName(MetricFieldEnum.PROCESS_FD_USED.getMetricName());
+        metricPanel.setBaseUnit(MetricFieldEnum.JVM_PROCESS_OPEN_FD_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.JVM_PROCESS_OPEN_FD_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.JVM_PROCESS_OPEN_FD_COUNT.getMetricName());
         metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
         metricPanel.setMultiLineChatValue(multiLineChatValue);
         return metricPanel;
@@ -363,12 +362,12 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
     private MetricPanel getFullGcTimesDayTop5Agents(Long startTime, Long endTime) {
         List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
-                MetricFieldEnum.JVM_FULL_GC_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
+                MetricFieldEnum.JVM_PROCESS_FULL_GC_COUNT, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_DAY.getFieldName(),false
         );
         MetricPanel metricPanel = new MetricPanel();
-        metricPanel.setBaseUnit(MetricFieldEnum.JVM_FULL_GC_COUNT.getBaseUnit().getCode());
-        metricPanel.setDisplayUnit(MetricFieldEnum.JVM_FULL_GC_COUNT.getDisplayUnit().getCode());
-        metricPanel.setName(MetricFieldEnum.JVM_FULL_GC_COUNT.getMetricName());
+        metricPanel.setBaseUnit(MetricFieldEnum.JVM_PROCESS_FULL_GC_COUNT.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.JVM_PROCESS_FULL_GC_COUNT.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.JVM_PROCESS_FULL_GC_COUNT.getMetricName());
         metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
         metricPanel.setMultiLineChatValue(multiLineChatValue);
         return metricPanel;
