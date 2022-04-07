@@ -41,12 +41,16 @@ public class ContextPropertiesInitProcessor extends BaseProcessor {
          * set lastLogCollectTaskMetric
          */
         MetricsLogCollectTaskPO metricsLogCollectTaskPO = context.getMetricsManageService().getLastLogCollectTaskMetric(logCollectTaskDO.getId(), fileLogCollectPathDO.getId(), hostDO.getHostName());
-        context.setLastLogCollectTaskMetric(metricsLogCollectTaskPO);
+        if(null != metricsLogCollectTaskPO) {
+            context.setLastLogCollectTaskMetric(metricsLogCollectTaskPO);
+        }
 
         /*
          * set logCollectTaskHealthCheckTimeEnd
          */
-        context.setLogCollectTaskHealthCheckTimeEnd(metricsLogCollectTaskPO.getHeartbeattime());
+        if(null != metricsLogCollectTaskPO) {
+            context.setLogCollectTaskHealthCheckTimeEnd(metricsLogCollectTaskPO.getHeartbeattime());
+        }
 
     }
 

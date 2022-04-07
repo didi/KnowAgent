@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain;
 
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
+import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
@@ -10,11 +11,11 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
 /**
- * 文件乱序检查
+ * 是否存在采集端出口限流检查
  * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 5, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
-public class FileDisorderCheckProcessor extends BaseProcessor {
+@HealthCheckProcessorAnnotation(seq = 9, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+public class DataSendFailedCheckProcessor extends BaseProcessor {
 
     @Override
     protected void process(LogCollectTaskHealthCheckContext context) {
@@ -28,67 +29,59 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
             return;
         }
         /*
-         * 校验logCollectTaskId+fileLogCollectPathId在host上是否存在乱序
+         * 校验 logcollecttask + logpath 在 host 端是否存在下游接收端写入失败
          */
-        boolean fileDisorder = checkFileDisorder(
+        boolean dataSendFailedExists = checkDataSendFailedExists(
                 context.getLogCollectTaskDO().getId(),
                 context.getFileLogCollectPathDO().getId(),
                 context.getHostDO().getHostName(),
-                context.getLogCollectTaskHealthDetailDO().getFileDisorderCheckHealthyHeartbeatTime(),
-                context.getLogCollectTaskHealthCheckTimeEnd(),
                 context.getMetricsManageService()
         );
-        if (fileDisorder) {
-            // 存在乱序
-            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getLogCollectTaskHealthLevelEnum());
+        if (dataSendFailedExists) {//存在下游接收端写入失败
+            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.DATA_SEND_FAILED_EXISTS.getLogCollectTaskHealthLevelEnum());
             String logCollectTaskHealthDescription = String.format(
                     "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getDescription(),
+                    LogCollectTaskHealthInspectionResultEnum.DATA_SEND_FAILED_EXISTS.getDescription(),
                     context.getLogCollectTaskDO().getId(),
                     context.getFileLogCollectPathDO().getId(),
                     context.getHostDO().getHostName()
             );
             context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER);
+            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.DATA_SEND_FAILED_EXISTS);
         }
     }
 
     /**
-     * 校验 logCollectTaskId+fileLogCollectPathId 在 host 上是否存在乱序
+     * 校验 logcollecttask + logpath 在 host 端是否存在下游接收端写入失败
      *
-     * @param logCollectTaskId 日志采集任务 id
+     * @param logCollectTaskId     日志采集任务 id
      * @param fileLogCollectPathId 日志采集路径 id
-     * @param hostName 日志采集任务运行主机名
-     * @param healthCheckTimeStart 心跳开始时间戳
-     * @param healthCheckTimeEnd 心跳结束时间戳
+     * @param hostName             主机名
      * @param metricsManageService MetricsManageService 对象
-     * @return logCollectTaskId+fileLogCollectPathId 在 host 上是否存在乱序 true：存在 乱序 false：不存在 乱序
+     * @return true：存在下游接收端写入失败 false：不存在下游接收端写入失败
      */
-    private boolean checkFileDisorder(
+    private boolean checkDataSendFailedExists(
             Long logCollectTaskId,
             Long fileLogCollectPathId,
             String hostName,
-            Long healthCheckTimeStart,
-            Long healthCheckTimeEnd,
             MetricsManageService metricsManageService
     ) {
-        /*
-         * 获取自上次"文件乱序"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在日志乱序
-         */
-        Object fileDisorderCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Long currentTime = System.currentTimeMillis();
+        Long startTime = currentTime - LogCollectTaskHealthCheckConstant.DATA_SEND_FAILED_EXISTS_CHECK_LASTEST_MS_THRESHOLD;
+        Object flushFailedTimesObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
-                healthCheckTimeStart,
-                healthCheckTimeEnd,
+                startTime,
+                currentTime,
                 AggregationCalcFunctionEnum.SUM.getValue(),
-                MetricFieldEnum.LOG_COLLECT_TASK_DISORDER_EXISTS.getFieldName()
+                MetricFieldEnum.LOG_COLLECT_TASK_FLUSH_FAILED_TIMES.getFieldName()
         );
-        Long fileDisorderCount = 0L;
-        if(null != fileDisorderCountObj) {
-            fileDisorderCount = Long.valueOf(fileDisorderCountObj.toString());
+        Long flushFailedTimes = 0L;
+        if(null != flushFailedTimesObj) {
+            flushFailedTimes = Long.valueOf(flushFailedTimesObj.toString());
         }
-        return fileDisorderCount != 0L;
+        return flushFailedTimes > 0L;
     }
 
 }

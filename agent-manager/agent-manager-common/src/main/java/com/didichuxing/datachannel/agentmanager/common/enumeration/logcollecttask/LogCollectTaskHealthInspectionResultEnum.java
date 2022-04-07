@@ -21,6 +21,7 @@ public enum LogCollectTaskHealthInspectionResultEnum {
     HOST_BYTES_LIMIT_EXISTS(12, "日志采集任务在对应主机端存在出口流量阀值限流", LogCollectTaskHealthLevelEnum.YELLOW, true),
     LOG_SINK_TOPIC_ERROR_FREQUENTLY(13, "日志数据写入下游 topic 失败频繁", LogCollectTaskHealthLevelEnum.YELLOW, true),
     NOT_RELATE_ANY_HOST(14, "日志采集任务未关联主机", LogCollectTaskHealthLevelEnum.YELLOW, true),
+    DATA_SEND_FAILED_EXISTS(15, "数据流下游接收端存在写入失败", LogCollectTaskHealthLevelEnum.YELLOW, true),
     HEALTHY(0, "日志采集任务健康", LogCollectTaskHealthLevelEnum.GREEN, true);
 
     /**

@@ -11,7 +11,7 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.
  * LogCollectTaskHealthDetailDO对象信息保存处理器
  * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 10, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 11, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class LogCollectTaskHealthDetailSaveProcessor extends BaseProcessor {
 
     @Override

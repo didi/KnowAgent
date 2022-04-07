@@ -26,6 +26,12 @@ public class LogCollectTaskHealthCheckConstant {
      * 校验 logcollecttask + logpath 在 host 端是否存在采集端流量阈值限流过程中，获取最近 HOST_CPU_LIMIT_CHECK_LASTEST_MS_THRESHOLD ms 内指标
      */
     public static final Long HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD = 10 * 60 * 1000L;
+
+    /**
+     * 校验 logcollecttask + logpath 在 host 端是否存在下游接收端写入失败，获取最近 DATA_SEND_FAILED_EXISTS_CHECK_LASTEST_MS_THRESHOLD ms 内指标
+     */
+    public static final Long DATA_SEND_FAILED_EXISTS_CHECK_LASTEST_MS_THRESHOLD = 10 * 60 * 1000L;
+
     /**
      * 校验 logcollecttask + logpath 在 host 端是否存在采集端流量阈值限流过程中，限流总时长阈值
      */

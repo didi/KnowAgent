@@ -11,7 +11,7 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.
  * 是否存在采集延迟检查
  * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 7, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 8, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class CollectDelayCheckProcessor extends BaseProcessor {
 
     @Override

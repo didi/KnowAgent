@@ -13,7 +13,7 @@ import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServic
  * 是否存在多 agent 并发采集检查
  * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 8, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 7, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class ConcurrentCollectExistsCheckProcessor extends BaseProcessor {
 
     @Override

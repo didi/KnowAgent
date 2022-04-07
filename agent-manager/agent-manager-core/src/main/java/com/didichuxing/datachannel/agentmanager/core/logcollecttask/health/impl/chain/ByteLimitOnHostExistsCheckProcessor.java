@@ -12,9 +12,9 @@ import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServic
 
 /**
  * 是否存在采集端出口限流检查
- * @author Ronaldo
+ * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 9, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 10, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
 
     @Override

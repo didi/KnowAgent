@@ -11,7 +11,7 @@ import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServic
 
 /**
  * 是否存在心跳检查
- * @author william
+ * @author william.
  */
 @HealthCheckProcessorAnnotation(seq = 2, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class LogCollectTaskHeartbeatCheckProcessor extends BaseProcessor {

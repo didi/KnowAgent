@@ -13,7 +13,7 @@ import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServic
  * 日志异常截断检查
  * @author Ronaldo
  */
-@HealthCheckProcessorAnnotation(seq = 5, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 6, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
 
     @Override

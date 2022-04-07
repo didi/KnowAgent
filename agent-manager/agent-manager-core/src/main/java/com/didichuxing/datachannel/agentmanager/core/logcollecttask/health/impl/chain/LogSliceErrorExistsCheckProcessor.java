@@ -12,7 +12,7 @@ import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageServic
  * 日志切片是否配置错误检查
  * @author Ronaldo
  */
-@HealthCheckProcessorAnnotation(seq = 6, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
+@HealthCheckProcessorAnnotation(seq = 4, type = HealthCheckProcessorEnum.LOGCOLLECTTASK)
 public class LogSliceErrorExistsCheckProcessor extends BaseProcessor {
 
     @Override
