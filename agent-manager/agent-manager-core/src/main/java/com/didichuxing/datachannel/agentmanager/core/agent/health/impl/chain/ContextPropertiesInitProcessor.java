@@ -21,24 +21,32 @@ public class ContextPropertiesInitProcessor extends BaseProcessor {
          * set lastAgentMetric
          */
         MetricsAgentPO metricsAgentPO = context.getMetricsManageService().getLastAgentMetric(context.getAgentDO().getHostName());
-        context.setLastMetricsAgent(metricsAgentPO);
+        if(null != metricsAgentPO) {
+            context.setLastMetricsAgent(metricsAgentPO);
+        }
 
         /*
          * set lastSystemMetric
          */
         MetricsSystemPO metricsSystemPO = context.getMetricsManageService().getLastSystemMetric(context.getAgentDO().getHostName());
-        context.setLastMetricsSystem(metricsSystemPO);
+        if(null != metricsSystemPO) {
+            context.setLastMetricsSystem(metricsSystemPO);
+        }
 
         /*
          * set lastProcessMetric
          */
         MetricsProcessPO metricsProcessPO = context.getMetricsManageService().getLastProcessMetric(context.getAgentDO().getHostName());
-        context.setLastMetricsProcess(metricsProcessPO);
+        if(null != metricsProcessPO) {
+            context.setLastMetricsProcess(metricsProcessPO);
+        }
 
         /*
          * set logCollectTaskHealthCheckTimeEnd
          */
-        context.setAgentHealthCheckTimeEnd(metricsAgentPO.getHeartbeattime());
+        if(null != metricsAgentPO) {
+            context.setAgentHealthCheckTimeEnd(metricsAgentPO.getHeartbeattime());
+        }
 
     }
 
