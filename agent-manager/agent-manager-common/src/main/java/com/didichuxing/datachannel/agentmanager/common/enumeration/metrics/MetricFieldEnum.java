@@ -25,7 +25,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_IP(
             2,
@@ -39,7 +39,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_NTP_OFFSET(
             3,
@@ -53,7 +53,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_SECOND,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             true,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_STARTUP_TIME(
             4,
@@ -67,7 +67,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.DATE_TIME,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_UP_TIME(
             5,
@@ -81,7 +81,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.TIMESTAMP_SECOND,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     /*
      * OS相关
@@ -98,7 +98,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_OS_VERSION(
             7,
@@ -112,7 +112,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_OS_KERNEL_VERSION(
             8,
@@ -126,7 +126,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     /*
      * Process相关
@@ -143,7 +143,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_SLEEPING(
             10,
@@ -157,7 +157,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_ZOMBIES(
             11,
@@ -171,7 +171,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_STOPPED(
             12,
@@ -185,7 +185,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_RUNNING(
             13,
@@ -199,7 +199,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_IDLE(
             14,
@@ -213,7 +213,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_WAIT(
             15,
@@ -227,7 +227,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_DEAD(
             16,
@@ -241,7 +241,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_PAGING(
             17,
@@ -255,7 +255,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_UNKNOWN(
             18,
@@ -269,7 +269,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_TOTAL(
             19,
@@ -283,7 +283,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_PROCESS_TOTAL_THREADS(
             20,
@@ -297,7 +297,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     /*
      * cpu 相关
@@ -314,7 +314,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_UTIL(
             22,
@@ -328,7 +328,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             true,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_UTIL_TOTAL_PERCENT(
             23,
@@ -342,7 +342,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_SYSTEM(
             24,
@@ -356,7 +356,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_USER(
             25,
@@ -370,7 +370,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_IDLE(
             26,
@@ -384,7 +384,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_SWITCHES(
             27,
@@ -398,7 +398,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_USAGE_IRQ(
             28,
@@ -412,7 +412,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_USAGE_SOFT_IRQ(
             29,
@@ -426,7 +426,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_LOAD_1(
             30,
@@ -440,7 +440,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_LOAD_5(
             31,
@@ -454,7 +454,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_LOAD_15(
             32,
@@ -468,7 +468,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_IO_WAIT(
             33,
@@ -482,7 +482,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_GUEST(
             34,
@@ -496,7 +496,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_CPU_STEAL(
             35,
@@ -510,7 +510,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     /*
      * memory 相关
@@ -527,7 +527,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_COMMITTED_AS(
             37,
@@ -541,7 +541,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_COMMITTED(
             38,
@@ -555,7 +555,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_NON_PAGED(
             39,
@@ -569,7 +569,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_PAGED(
             40,
@@ -583,7 +583,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SHARED(
             41,
@@ -597,7 +597,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SLAB(
             42,
@@ -611,7 +611,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_TOTAL(
             43,
@@ -625,7 +625,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_FREE(
             44,
@@ -639,7 +639,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_USED(
             45,
@@ -653,7 +653,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_BUFFERED(
             46,
@@ -667,7 +667,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_CACHED(
             47,
@@ -681,7 +681,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_FREE_PERCENT(
             48,
@@ -695,7 +695,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_USED_PERCENT(
             49,
@@ -709,7 +709,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SWAP_CACHED(
             50,
@@ -723,7 +723,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SWAP_FREE(
             51,
@@ -737,7 +737,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SWAP_FREE_PERCENT(
             52,
@@ -751,7 +751,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SWAP_TOTAL(
             53,
@@ -765,7 +765,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SWAP_USED(
             54,
@@ -779,7 +779,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_MEMORY_SWAP_USED_PERCENT(
             55,
@@ -793,7 +793,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.PERCENT,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     /*
      * disk 相关
@@ -810,7 +810,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_DISK_BYTES_TOTAL(
             57,
@@ -824,7 +824,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             false,
-                    null
+            SortTypeEnum.DESC
     ),
     SYSTEM_DISK_BYTES_FREE(
             58,
@@ -2479,13 +2479,13 @@ public enum MetricFieldEnum {
                     "procPortListen",
                     "当前进程监听端口列表",
             MetricTypeEnum.PROCESS_NET_WORK,
-            null,
+            AggregationCalcFunctionEnum.NONE,
             MetricValueTypeEnum.CURRENT,
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
             ),
     PROCESS_NET_WORK_RECEIVE_BYTES_PS(
             174,
@@ -2746,13 +2746,13 @@ public enum MetricFieldEnum {
             "agentVersion",
             "agent版本号",
             MetricTypeEnum.AGENT_BUSINESS,
-            null,
+            AggregationCalcFunctionEnum.NONE,
             MetricValueTypeEnum.CURRENT,
             MetricUnitEnum.NONE,
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.LABLE,
             false,
-            null
+            SortTypeEnum.DESC
     ),
     AGENT_READ_BYTES(
             193,

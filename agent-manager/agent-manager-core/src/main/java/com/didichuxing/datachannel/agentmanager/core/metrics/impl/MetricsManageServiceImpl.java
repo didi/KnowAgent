@@ -355,7 +355,9 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatStatisticByLogCollectTaskId(params);
                 MetricPointLine metricPointLine = new MetricPointLine();
-                metricPointLine.setName(logCollectTaskManageService.getById(logCollectTaskId).getLogCollectTaskName());
+                LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
+                String metricPointLineName = null != logCollectTaskDO ? logCollectTaskDO.getLogCollectTaskName() : logCollectTaskId.toString();
+                metricPointLine.setName(metricPointLineName);
                 metricPointLine.setMetricPointList(result);
                 multiLineChatValue.add(metricPointLine);
             } else if(metricFieldEnum.getMetricValueType().equals(MetricValueTypeEnum.CURRENT)) {
@@ -367,7 +369,9 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                 params.put("endTime", endTime);
                 List<MetricPoint> result = metricsLogCollectTaskDAO.getSingleChatNonStatisticByLogCollectTaskId(params);
                 MetricPointLine metricPointLine = new MetricPointLine();
-                metricPointLine.setName(logCollectTaskManageService.getById(logCollectTaskId).getLogCollectTaskName());
+                LogCollectTaskDO logCollectTaskDO = logCollectTaskManageService.getById(logCollectTaskId);
+                String metricPointLineName = null != logCollectTaskDO ? logCollectTaskDO.getLogCollectTaskName() : logCollectTaskId.toString();
+                metricPointLine.setName(metricPointLineName);
                 metricPointLine.setMetricPointList(result);
                 multiLineChatValue.add(metricPointLine);
             } else {
