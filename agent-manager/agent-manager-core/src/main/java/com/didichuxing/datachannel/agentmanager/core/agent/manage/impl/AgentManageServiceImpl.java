@@ -147,7 +147,7 @@ public class AgentManageServiceImpl implements AgentManageService {
             ReceiverDO receiverDO = kafkaClusterManageService.getAgentMetricsTopicExistsReceiver();
             if(null != receiverDO) {
                 agentDO.setMetricsSendReceiverId(receiverDO.getId());
-                agentDO.setMetricsSendTopic(receiverDO.getAgentErrorLogsTopic());
+                agentDO.setMetricsSendTopic(receiverDO.getAgentMetricsTopic());
                 agentDO.setMetricsProducerConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
             }
         }
