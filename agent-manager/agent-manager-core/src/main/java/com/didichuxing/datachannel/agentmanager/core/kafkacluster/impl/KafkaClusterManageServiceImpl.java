@@ -267,9 +267,9 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
 //        }
 
         /*
-         * 校验：如修改的是agent error logs 或 metrics 流对应全局接收端对象，根据 id 获取全部 agent 对象，并更新对应 topic & producer configuration 信息
-         * TODO：
+         * 校验：如修改的是agent error logs 或 metrics 流对应全局接收端对象，获取全部 agent 对象 & 更新对应 topic & producer configuration 信息
          */
+        checkAndUpdateAllAgentMetricsAndErrorLogsReceiver(kafkaClusterDO);
 
         /*
          * 更新KafkaCluster对象至db
@@ -278,6 +278,7 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         KafkaClusterPO kafkaClusterPO = kafkaClusterManageServiceExtension.kafkaCluster2KafkaClusterPO(persistReceiver);
         kafkaClusterPO.setOperator(CommonConstant.getOperator(operator));
         kafkaClusterDAO.updateByPrimaryKey(kafkaClusterPO);
+
         /*
          * 添加对应操作记录
          */
@@ -288,6 +289,33 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
                 String.format("修改KafkaCluster={%s}，修改成功的KafkaCluster对象id={%d}", JSON.toJSONString(kafkaClusterDO), kafkaClusterDO.getId()),
                 operator
         );
+    }
+
+    private void checkAndUpdateAllAgentMetricsAndErrorLogsReceiver(ReceiverDO kafkaClusterDO) {
+        boolean errorLogsReceiverChanged = false;
+        boolean metricsReceiverChanged = false;
+        if(StringUtils.isNotBlank(kafkaClusterDO.getAgentErrorLogsTopic())) {
+            errorLogsReceiverChanged = true;
+        }
+        if(StringUtils.isNotBlank(kafkaClusterDO.getAgentMetricsTopic())) {
+            metricsReceiverChanged = true;
+        }
+        if(errorLogsReceiverChanged || metricsReceiverChanged) {
+            List<AgentDO> agentDOList = agentManageService.list();
+            for (AgentDO agentDO : agentDOList) {
+                if(errorLogsReceiverChanged) {
+                    agentDO.setErrorLogsSendReceiverId(kafkaClusterDO.getId());
+                    agentDO.setErrorLogsSendTopic(kafkaClusterDO.getAgentErrorLogsTopic());
+                    agentDO.setErrorLogsProducerConfiguration(kafkaClusterDO.getKafkaClusterProducerInitConfiguration());
+                }
+                if(metricsReceiverChanged) {
+                    agentDO.setMetricsSendReceiverId(kafkaClusterDO.getId());
+                    agentDO.setMetricsSendTopic(kafkaClusterDO.getAgentMetricsTopic());
+                    agentDO.setMetricsProducerConfiguration(kafkaClusterDO.getKafkaClusterProducerInitConfiguration());
+                }
+                agentManageService.updateAgent(agentDO, null);
+            }
+        }
     }
 
     @Override

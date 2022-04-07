@@ -61,7 +61,7 @@ public class AgentHealthCheckConstant {
     /**
      * 校验agent gc检查次数阈值
      */
-    public static final Integer AGENT_GC_TIMES_METRIC_CHECK_THRESHOLD = 1;
+    public static final Integer AGENT_GC_TIMES_METRIC_CHECK_THRESHOLD = 2;
     /**
      * 校验 agent 宿主机系统时间阈值
      */

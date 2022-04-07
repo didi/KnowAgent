@@ -42,7 +42,7 @@ public class AgentGcMetricExceptionExistsCheckProcessor extends BaseProcessor {
             MetricsManageService metricsManageService
     ) {
         /*
-         * 获取 agent 近一小时内 fullgc 次数是否 > 1，如是：表示存在 agent 进程 gc 指标异常 如不是：表示不存在 agent 进程 gc 指标异常
+         * 获取 agent 近一小时内 fullgc 次数是否 > 2，如是：表示存在 agent 进程 gc 指标异常 如不是：表示不存在 agent 进程 gc 指标异常
          *
          */
         Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
