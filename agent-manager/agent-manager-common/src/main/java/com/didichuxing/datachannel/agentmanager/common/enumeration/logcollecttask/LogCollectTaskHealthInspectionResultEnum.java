@@ -22,9 +22,9 @@ public enum LogCollectTaskHealthInspectionResultEnum {
     LOG_SINK_TOPIC_ERROR_FREQUENTLY(13, "日志数据写入下游 topic 失败频繁", LogCollectTaskHealthLevelEnum.YELLOW, true),
     NOT_RELATE_ANY_HOST(14, "日志采集任务未关联主机", LogCollectTaskHealthLevelEnum.YELLOW, true),
     DATA_SEND_FAILED_EXISTS(15, "数据流下游接收端存在写入失败", LogCollectTaskHealthLevelEnum.YELLOW, true),
-    HOST_UNABLE_CONNECT(16, "主机无法联通", LogCollectTaskHealthLevelEnum.RED, true),
-    HOST_NOT_BIND_AGENT(17, "主机未绑定任何Agent进行采集", LogCollectTaskHealthLevelEnum.RED, true),
-    AGENT_BREAKDOWN(18, "Agent故障", LogCollectTaskHealthLevelEnum.RED, true),
+    HOST_UNABLE_CONNECT(16, "待采集主机无法连通", LogCollectTaskHealthLevelEnum.RED, true),
+    HOST_NOT_BIND_AGENT(17, "待采集主机未绑定任何Agent进行采集", LogCollectTaskHealthLevelEnum.RED, true),
+    AGENT_BREAKDOWN(18, "待采集主机绑定的Agent存在故障", LogCollectTaskHealthLevelEnum.RED, true),
     HEALTHY(0, "日志采集任务健康", LogCollectTaskHealthLevelEnum.GREEN, true);
 
     /**
