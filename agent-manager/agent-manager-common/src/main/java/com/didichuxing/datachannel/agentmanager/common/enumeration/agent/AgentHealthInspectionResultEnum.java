@@ -8,12 +8,12 @@ package com.didichuxing.datachannel.agentmanager.common.enumeration.agent;
 public enum AgentHealthInspectionResultEnum {
 
     AGENT_HEART_BEAT_NOT_EXISTS(1, "agent 心跳不存在", AgentHealthLevelEnum.RED),
-    HOST_OF_AGENT_NOT_ALIVE(2, "agent 宿主机不存活", AgentHealthLevelEnum.RED),
-    AGENT_METRICS_CONFIGURATION_NOT_EXISTS(3, "agent 没有配置metrics流对应下游接收端信息", AgentHealthLevelEnum.RED),
-    AGENT_METRICS_RECEIVER_NOT_CONNECTED(4, "agent的metrics流对应下游接收端连通性不正常", AgentHealthLevelEnum.RED),
+    HOST_OF_AGENT_NOT_ALIVE(2, "Agent宿主机故障-无法连通", AgentHealthLevelEnum.RED),
+    AGENT_METRICS_CONFIGURATION_NOT_EXISTS(3, "Agent没有配置Metrics流对应下游接收端信息", AgentHealthLevelEnum.RED),
+    AGENT_METRICS_RECEIVER_NOT_CONNECTED(4, "Agent的Metrics流对应下游接收端连通性不正常", AgentHealthLevelEnum.RED),
     AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS(5, "agent 没有配置errorlogs流对应下游接收端信息", AgentHealthLevelEnum.RED),
     AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED(6, "agent的errorlogs流对应下游接收端连通性不正常", AgentHealthLevelEnum.RED),
-    AGENT_PROCESS_BROKES_DOWN(7, "agent 进程故障", AgentHealthLevelEnum.RED),
+    AGENT_PROCESS_BROKES_DOWN(7, "Agent进程故障", AgentHealthLevelEnum.RED),
     AGENT_METRICS_KAFKA_CONFIG_ERROR(8, "agent metrics 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
     AGENT_ERRORLOGS_KAFKA_CONFIG_ERROR(9, "agent errorlogs 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
     AGENT_ERROR_LOGS_EXISTS(10, "agent 自身存在 errorlogs 输出 注：errorlogs 属 agent 自身，而非其他任何日志采集任务", AgentHealthLevelEnum.YELLOW),

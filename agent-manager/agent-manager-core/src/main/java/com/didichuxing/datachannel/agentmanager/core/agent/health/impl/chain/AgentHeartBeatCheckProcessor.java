@@ -1,13 +1,16 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Agent心跳检查
@@ -35,7 +38,51 @@ public class AgentHeartBeatCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if(!alive) {// 如不存活
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_HEART_BEAT_NOT_EXISTS, context);
+            /*
+             * agent宿主机是否存活
+             */
+            boolean hostConnect = NetworkUtil.ping(context.getAgentDO().getHostName());
+            if(!hostConnect) {
+                setAgentHealthCheckResult(AgentHealthInspectionResultEnum.HOST_OF_AGENT_NOT_ALIVE, context);
+            } else {
+                /*
+                 * agent是否已配置指标流的接收端
+                 */
+                if(checkAgentMetricsReceiverConfigured(context.getAgentDO())) {
+                    /*
+                     * agent的指标流下游接收端连通性是否正常
+                     */
+                    boolean agentMetricsReceiverConfigValid = checkAgentMetricsReceiverConfigValid(context.getAgentDO());
+                    if(agentMetricsReceiverConfigValid) {
+                        setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_PROCESS_BROKES_DOWN, context);
+                    } else {
+                        setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_METRICS_RECEIVER_NOT_CONNECTED, context);
+                    }
+                } else {
+                    setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_METRICS_CONFIGURATION_NOT_EXISTS, context);
+                }
+            }
+        }
+    }
+
+    private boolean checkAgentMetricsReceiverConfigValid(AgentDO agentDO) {
+
+        //TODO：
+
+        return true;
+
+    }
+
+    private boolean checkAgentMetricsReceiverConfigured(AgentDO agentDO) {
+        if(
+                null != agentDO.getMetricsSendReceiverId() &&
+                        0l != agentDO.getMetricsSendReceiverId() &&
+                        StringUtils.isNotBlank(agentDO.getMetricsSendTopic()) &&
+                        StringUtils.isNotBlank(agentDO.getMetricsProducerConfiguration())
+        ) {
+            return true;
+        } else {
+            return false;
         }
     }
 
