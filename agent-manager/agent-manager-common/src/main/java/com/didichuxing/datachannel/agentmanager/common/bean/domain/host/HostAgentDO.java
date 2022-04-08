@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.common.bean.domain.host;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.BaseDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.BasePO;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -56,6 +57,10 @@ public class HostAgentDO extends BaseDO {
      * 宿主机 名
      */
     private String parentHostName;
+    /**
+     * agent健康描述信息
+     */
+    private String agentHealthDescription;
 
     public String getParentHostName() {
         return parentHostName;
@@ -67,6 +72,14 @@ public class HostAgentDO extends BaseDO {
 
     public Long getAgentId() {
         return agentId;
+    }
+
+    public String getAgentHealthDescription() {
+        return agentHealthDescription;
+    }
+
+    public void setAgentHealthDescription(String agentHealthDescription) {
+        this.agentHealthDescription = agentHealthDescription;
     }
 
     public void setAgentId(Long agentId) {

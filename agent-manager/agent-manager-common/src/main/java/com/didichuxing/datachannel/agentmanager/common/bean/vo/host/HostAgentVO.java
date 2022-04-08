@@ -33,6 +33,9 @@ public class HostAgentVO {
     @ApiModelProperty(value = "Agent健康度 0：红 1：黄 2：绿")
     private Integer agentHealthLevel;
 
+    @ApiModelProperty(value = "agent健康描述信息")
+    private String agentHealthDescription;
+
     @ApiModelProperty(value = "主机所属机器单元")
     private String machineZone;
 
@@ -164,6 +167,14 @@ public class HostAgentVO {
 
     public void setOpenedLogCollectTaskNum(Integer openedLogCollectTaskNum) {
         this.openedLogCollectTaskNum = openedLogCollectTaskNum;
+    }
+
+    public String getAgentHealthDescription() {
+        return agentHealthDescription;
+    }
+
+    public void setAgentHealthDescription(String agentHealthDescription) {
+        this.agentHealthDescription = agentHealthDescription;
     }
 
     public Integer getOpenedLogPathNum() {

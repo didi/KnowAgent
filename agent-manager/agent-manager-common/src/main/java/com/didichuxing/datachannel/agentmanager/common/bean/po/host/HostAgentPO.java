@@ -56,6 +56,10 @@ public class HostAgentPO extends BasePO {
      * 宿主机 名
      */
     private String parentHostName;
+    /**
+     * agent健康描述信息
+     */
+    private String agentHealthDescription;
 
     public Long getAgentId() {
         return agentId;
@@ -111,6 +115,14 @@ public class HostAgentPO extends BasePO {
 
     public void setHostType(Integer hostType) {
         this.hostType = hostType;
+    }
+
+    public String getAgentHealthDescription() {
+        return agentHealthDescription;
+    }
+
+    public void setAgentHealthDescription(String agentHealthDescription) {
+        this.agentHealthDescription = agentHealthDescription;
     }
 
     public Integer getAgentHealthLevel() {
