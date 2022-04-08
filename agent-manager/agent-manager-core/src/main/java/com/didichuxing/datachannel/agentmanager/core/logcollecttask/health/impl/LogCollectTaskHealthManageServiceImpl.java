@@ -18,6 +18,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
@@ -59,6 +60,9 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
 
     @Autowired
     private MetricsManageService metricsManageService;
+
+    @Autowired
+    private AgentManageService agentManageService;
 
     @Override
     @Transactional
@@ -337,6 +341,8 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
         context.setLogCollectTaskHealthInspectionResultEnum(logCollectTaskHealthInspectionResultEnum);
         context.setLogCollectTaskHealthDetailManageService(logCollectTaskHealthDetailManageService);
         context.setMetricsManageService(metricsManageService);
+        context.setHostManageService(hostManageService);
+        context.setAgentManageService(agentManageService);
         return context;
     }
 

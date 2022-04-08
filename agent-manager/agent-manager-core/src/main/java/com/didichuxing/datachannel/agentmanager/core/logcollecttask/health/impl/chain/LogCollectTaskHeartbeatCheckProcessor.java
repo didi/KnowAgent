@@ -1,11 +1,14 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -38,17 +41,47 @@ public class LogCollectTaskHeartbeatCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if(!alive) {
-            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getLogCollectTaskHealthLevelEnum());
-            String logCollectTaskHealthDescription = String.format(
-                    "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS.getDescription(),
-                    context.getLogCollectTaskDO().getId(),
-                    context.getFileLogCollectPathDO().getId(),
-                    context.getHostDO().getHostName()
-            );
-            context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_IN_HOST_HEART_BEAT_NOT_EXISTS);
+            /*
+             * 不存在心跳的主机是否存活
+             */
+            boolean hostConnect = NetworkUtil.ping(context.getHostDO().getHostName());
+            if(hostConnect) {//存活
+                /*
+                 * 不存在心跳的主机是否关联有agent
+                 */
+                AgentDO agentDO = getRelaAgent(context);
+                if(null != agentDO) {
+                    setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.AGENT_BREAKDOWN);
+                } else {
+                    setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.HOST_NOT_BIND_AGENT);
+                }
+            } else {//不存活
+                setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.HOST_UNABLE_CONNECT);
+            }
         }
+    }
+
+    private AgentDO getRelaAgent(LogCollectTaskHealthCheckContext context) {
+        AgentDO agentDO = null;
+        if(HostTypeEnum.CONTAINER.getCode().equals(context.getHostDO().getContainer())) {//容器
+            agentDO = context.getAgentManageService().getAgentByHostName(context.getHostDO().getParentHostName());
+        } else {//主机
+            agentDO = context.getAgentManageService().getAgentByHostName(context.getHostDO().getHostName());
+        }
+        return agentDO;
+    }
+
+    private void setLogCollectTaskHealthInfo(LogCollectTaskHealthCheckContext context, LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum) {
+        context.setLogCollectTaskHealthLevelEnum(logCollectTaskHealthInspectionResultEnum.getLogCollectTaskHealthLevelEnum());
+        String logCollectTaskHealthDescription = String.format(
+                "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
+                logCollectTaskHealthInspectionResultEnum.getDescription(),
+                context.getLogCollectTaskDO().getId(),
+                context.getFileLogCollectPathDO().getId(),
+                context.getHostDO().getHostName()
+        );
+        context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
+        context.setLogCollectTaskHealthInspectionResultEnum(logCollectTaskHealthInspectionResultEnum);
     }
 
     /**

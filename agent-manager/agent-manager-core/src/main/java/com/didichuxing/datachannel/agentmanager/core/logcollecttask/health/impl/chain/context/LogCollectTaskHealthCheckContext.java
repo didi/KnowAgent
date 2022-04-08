@@ -8,6 +8,8 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLo
 import com.didichuxing.datachannel.agentmanager.common.chain.Context;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
+import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import lombok.Data;
@@ -67,6 +69,16 @@ public class LogCollectTaskHealthCheckContext extends Context {
      * MetricsManageService 对象
      */
     private MetricsManageService metricsManageService;
+
+    /**
+     * HostManageService 对象
+     */
+    private HostManageService hostManageService;
+
+    /**
+     * AgentManageService 对象
+     */
+    private AgentManageService agentManageService;
 
     /**
      * LogCollectTaskHealthDetailDO 对象
