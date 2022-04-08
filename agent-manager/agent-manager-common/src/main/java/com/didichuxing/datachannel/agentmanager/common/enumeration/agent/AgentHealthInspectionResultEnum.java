@@ -10,9 +10,9 @@ public enum AgentHealthInspectionResultEnum {
     AGENT_HEART_BEAT_NOT_EXISTS(1, "agent 心跳不存在", AgentHealthLevelEnum.RED),
     HOST_OF_AGENT_NOT_ALIVE(2, "Agent宿主机故障-无法连通", AgentHealthLevelEnum.RED),
     AGENT_METRICS_CONFIGURATION_NOT_EXISTS(3, "Agent没有配置Metrics流对应下游接收端信息", AgentHealthLevelEnum.RED),
-    AGENT_METRICS_RECEIVER_NOT_CONNECTED(4, "Agent的Metrics流对应下游接收端连通性不正常", AgentHealthLevelEnum.RED),
-    AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS(5, "agent 没有配置errorlogs流对应下游接收端信息", AgentHealthLevelEnum.RED),
-    AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED(6, "agent的errorlogs流对应下游接收端连通性不正常", AgentHealthLevelEnum.RED),
+    AGENT_METRICS_RECEIVER_NOT_CONNECTED(4, "Agent的Metrics流对应下游接收端连通性存在异常", AgentHealthLevelEnum.RED),
+    AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS(5, "Agent没有配置ErrorLogs流对应下游接收端信息", AgentHealthLevelEnum.RED),
+    AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED(6, "Agent的ErrorLogs流对应下游接收端连通性存在异常", AgentHealthLevelEnum.RED),
     AGENT_PROCESS_BROKES_DOWN(7, "Agent进程故障", AgentHealthLevelEnum.RED),
     AGENT_METRICS_KAFKA_CONFIG_ERROR(8, "agent metrics 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
     AGENT_ERRORLOGS_KAFKA_CONFIG_ERROR(9, "agent errorlogs 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
@@ -30,6 +30,7 @@ public enum AgentHealthInspectionResultEnum {
     NOT_RELATE_ANY_LOGCOLLECTTASK(21, "agent 未关联任何日志采集任务", AgentHealthLevelEnum.YELLOW),
     HOST_SYSTEM_TIME_IN_VALID(22, "agent 主机系统时间不正确", AgentHealthLevelEnum.RED),
     AGENT_ERROR_LOGS_SEND_FAILED_EXISTS(23, "agent 错误日志发送下游接收端错误", AgentHealthLevelEnum.RED),
+    AGENT_ERROR_LOGS_SEND_FAILED_EXISTS_CAUSE_BY_AGENT_PROCESS_BREAK_DOWN(24, "Agent进程故障导致Agent错误日志发送下游接收端错误", AgentHealthLevelEnum.RED),
     HEALTHY(0, "agent 健康", AgentHealthLevelEnum.GREEN);
 
     private Integer code;

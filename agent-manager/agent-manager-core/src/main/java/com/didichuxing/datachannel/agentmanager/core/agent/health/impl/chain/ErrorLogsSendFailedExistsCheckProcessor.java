@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
@@ -9,6 +10,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.Aggre
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * agent的errorlogs流对应的下游接收端是否存在写入失败情况
@@ -36,7 +38,43 @@ public class ErrorLogsSendFailedExistsCheckProcessor extends BaseProcessor {
                 context.getAgentDO().getHostName()
         );
         if(errorLogsSendExceptionExists) {//  存在
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_SEND_FAILED_EXISTS, context);
+            /*
+             * agent是否已配置错误日志流的接收端
+             */
+            if(checkAgentErrorLogsReceiverConfigured(context.getAgentDO())) {
+                /*
+                 * agent的错误日志流下游接收端连通性是否正常
+                 */
+                boolean agentErrorLogsReceiverConfigValid = checkAgentErrorLogsReceiverConfigValid(context.getAgentDO());
+                if(agentErrorLogsReceiverConfigValid) {
+                    setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_SEND_FAILED_EXISTS_CAUSE_BY_AGENT_PROCESS_BREAK_DOWN, context);
+                } else {
+                    setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED, context);
+                }
+            } else {
+                setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS, context);
+            }
+        }
+    }
+
+    private boolean checkAgentErrorLogsReceiverConfigValid(AgentDO agentDO) {
+
+        //TODO：
+
+        return true;
+
+    }
+
+    private boolean checkAgentErrorLogsReceiverConfigured(AgentDO agentDO) {
+        if(
+                null != agentDO.getErrorLogsSendReceiverId() &&
+                        0l != agentDO.getErrorLogsSendReceiverId() &&
+                        StringUtils.isNotBlank(agentDO.getErrorLogsSendTopic()) &&
+                        StringUtils.isNotBlank(agentDO.getErrorLogsProducerConfiguration())
+        ) {
+            return true;
+        } else {
+            return false;
         }
     }
 
