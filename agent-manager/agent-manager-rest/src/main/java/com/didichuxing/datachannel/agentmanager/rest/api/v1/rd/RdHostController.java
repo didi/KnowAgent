@@ -109,6 +109,7 @@ public class RdHostController {
                 hostAgentVO.setAgentVersion(agentVersionDO.getVersion());
             }
             hostAgentVO.setAgentHealthLevel(hostAgentDO.getAgentHealthLevel());
+            hostAgentVO.setAgentHealthDescription(hostAgentDO.getAgentHealthDescription());
             hostAgentVO.setMachineZone(hostAgentDO.getHostMachineZone());
             hostAgentVO.setHostCreateTime(hostAgentDO.getHostCreateTime().getTime());
             hostAgentVO.setAgentId(hostAgentDO.getAgentId());
