@@ -58,10 +58,14 @@ public class ErrorLogsExistsCheckProcessor extends BaseProcessor {
     ) {
         /*
          * 获取自上次"错误日志输出存在"健康点 ~ 最近一次 agent 业务指标心跳时间，agent 是否存在错误日志输出
+         *
+         * TODO：暂用10分内scope
+         *
          */
         Object errorLogsCountObj = metricsManageService.getAggregationQueryPerHostNameFromMetricsAgent(
                 hostName,
-                agentHealthDO.getLastestErrorLogsExistsCheckHealthyTime(),
+//                agentHealthDO.getLastestErrorLogsExistsCheckHealthyTime(),
+                agentHealthCheckTimeEnd - 10 * 60 * 1000,
                 agentHealthCheckTimeEnd,
                 AggregationCalcFunctionEnum.SUM.getValue(),
                 MetricFieldEnum.AGENT_ERROR_LOGS_COUNT.getFieldName()
