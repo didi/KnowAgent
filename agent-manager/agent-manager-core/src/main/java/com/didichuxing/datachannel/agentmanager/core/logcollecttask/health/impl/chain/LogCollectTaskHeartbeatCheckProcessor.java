@@ -71,19 +71,6 @@ public class LogCollectTaskHeartbeatCheckProcessor extends BaseProcessor {
         return agentDO;
     }
 
-    private void setLogCollectTaskHealthInfo(LogCollectTaskHealthCheckContext context, LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum) {
-        context.setLogCollectTaskHealthLevelEnum(logCollectTaskHealthInspectionResultEnum.getLogCollectTaskHealthLevelEnum());
-        String logCollectTaskHealthDescription = String.format(
-                "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                logCollectTaskHealthInspectionResultEnum.getDescription(),
-                context.getLogCollectTaskDO().getId(),
-                context.getFileLogCollectPathDO().getId(),
-                context.getHostDO().getHostName()
-        );
-        context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-        context.setLogCollectTaskHealthInspectionResultEnum(logCollectTaskHealthInspectionResultEnum);
-    }
-
     /**
      * 校验在距当前时间的心跳存活判定周期内，logCollectTaskId+fileLogCollectPathId+hostName是否存在心跳
      * @param logCollectTaskId                 日志采集任务 id

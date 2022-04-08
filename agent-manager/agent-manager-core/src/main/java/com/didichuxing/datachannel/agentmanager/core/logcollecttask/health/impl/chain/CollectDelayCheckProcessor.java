@@ -31,16 +31,10 @@ public class CollectDelayCheckProcessor extends BaseProcessor {
                     context.getLastLogCollectTaskMetric()
             );
             if (collectDelay) {// 存在采集延迟
-                context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getLogCollectTaskHealthLevelEnum());
-                String logCollectTaskHealthDescription = String.format(
-                        "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                        LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.getDescription(),
-                        context.getLogCollectTaskDO().getId(),
-                        context.getFileLogCollectPathDO().getId(),
-                        context.getHostDO().getHostName()
-                );
-                context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-                context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED);
+                /*
+                 * 下游接收端是否存在写入失败
+                 */
+                setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED);
             }
         }
     }

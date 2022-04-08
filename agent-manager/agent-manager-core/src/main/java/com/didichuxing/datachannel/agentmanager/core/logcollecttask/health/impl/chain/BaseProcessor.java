@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl
 import com.didichuxing.datachannel.agentmanager.common.chain.Context;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,5 +40,18 @@ public abstract class BaseProcessor implements Processor {
      * @param context 执行器上下文对象
      */
     protected abstract void process(LogCollectTaskHealthCheckContext context);
+
+    protected void setLogCollectTaskHealthInfo(LogCollectTaskHealthCheckContext context, LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum) {
+        context.setLogCollectTaskHealthLevelEnum(logCollectTaskHealthInspectionResultEnum.getLogCollectTaskHealthLevelEnum());
+        String logCollectTaskHealthDescription = String.format(
+                "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
+                logCollectTaskHealthInspectionResultEnum.getDescription(),
+                context.getLogCollectTaskDO().getId(),
+                context.getFileLogCollectPathDO().getId(),
+                context.getHostDO().getHostName()
+        );
+        context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
+        context.setLogCollectTaskHealthInspectionResultEnum(logCollectTaskHealthInspectionResultEnum);
+    }
 
 }
