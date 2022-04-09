@@ -109,4 +109,13 @@ public interface MetricsAgentPOMapper {
      */
     MetricsAgentPO getLastRecord(Map<String, Object> params);
 
+    /**
+     * @param params 含：
+     *  hostName：主机名
+     *  startHeartbeatTime：开始时间戳（不含）
+     *  endHeartbeatTime：结束时间戳（含）
+     * @return 返回根据给定参数获取到的心跳信息集
+     */
+    List<MetricsAgentPO> getErrorMetrics(Map<String, Object> params);
+
 }

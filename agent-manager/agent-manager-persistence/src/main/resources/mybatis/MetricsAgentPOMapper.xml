@@ -192,6 +192,19 @@
     limit 1
   </select>
 
+  <select id="getErrorMetrics" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_agent
+    where
+            hostName = #{hostName,jdbcType=VARCHAR}
+        AND
+            errorLogsCount > 0
+        AND
+            heartbeatTime &gt; #{startHeartbeatTime} and heartbeatTime &lt;= #{endHeartbeatTime}
+    order by heartbeatTime asc
+  </select>
+
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
     insert into tb_metrics_agent (id, hostName, limitTps, 
       cpuLimit, agentVersion, readBytes, 

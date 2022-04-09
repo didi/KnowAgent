@@ -277,6 +277,20 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return list;
     }
 
+    @Override
+    public List<MetricsAgentPO> getErrorMetrics(String hostName, Long startHeartbeatTime, Long endHeartbeatTime) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("hostName", hostName);
+        params.put("startHeartbeatTime", startHeartbeatTime);
+        params.put("endHeartbeatTime", endHeartbeatTime);
+        return metricsAgentDAO.getErrorMetrics(params);
+    }
+
+    @Override
+    public MetricsAgentPO getMetricAgent(Long agentMetricId) {
+        return metricsAgentDAO.selectByPrimaryKey(agentMetricId);
+    }
+
     private List<MetricPointLine> handleGetTopNByLogCollectTaskMetricPerServiceNames(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n logcollecttask

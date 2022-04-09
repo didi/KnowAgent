@@ -36,6 +36,7 @@ public enum ErrorCodeEnum {
     AGENT_UNKNOWN_COLLECT_TYPE(22004, "Agent对应collectType数值型未知"),
     AGENT_HEALTH_NOT_EXISTS(22005, "AgentHealth不存在"),
     AGENT_HEALTH_ERROR_LOGS_EXISTS_CHECK_HEALTHY_TIME_NOT_EXISTS(22006, "AgentHealthy对应ErrorLogsExistsCheckHealthyTime在系统中不存在"),
+
     /*
      * Host 相关 23000 ~ 23999
      */
@@ -112,7 +113,7 @@ public enum ErrorCodeEnum {
     METRIC_NOT_EXISTS(34000, "指标不存在"),
     METRICS_TYPE_NOT_EXISTS(34001,"待查询指标系统不存在"),
     METRICS_QUERY_ERROR(34002, "指标查询错误"),
-
+    METRICS_RECORD_NOT_EXISTS(34003, "指标记录不存在"),
 
 
     UNKNOWN(90001, "未知错误"),

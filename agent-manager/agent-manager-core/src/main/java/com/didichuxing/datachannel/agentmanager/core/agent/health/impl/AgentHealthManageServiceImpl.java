@@ -5,12 +5,16 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
@@ -24,6 +28,10 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentHealthMap
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class AgentHealthManageServiceImpl implements AgentHealthManageService {
@@ -162,6 +170,65 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
             return agentHealthLevel;
         } else {//该日志采集任务无须被诊断 返回 AgentHealthLevelEnum.GREEN
             return AgentHealthLevelEnum.GREEN;
+        }
+    }
+
+    @Override
+    public List<MetricsAgentPO> getErrorDetails(String hostName) {
+        /*
+         * 根据agentHealthInspectionCode获取对应case在hostName时最近一次健康时间点
+         */
+        AgentDO agentDO = agentManageService.getAgentByHostName(hostName);
+        if(null == agentDO) {
+            throw new ServiceException(
+                    String.format("Agent[hostName=%s]在系统中不存在", hostName),
+                    ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
+            );
+        }
+        AgentHealthPO agentHealthPO = agentHealthDAO.selectByAgentId(agentDO.getId());
+        Long lastCheckHealthyTimestamp = 0L;
+        if(null == agentHealthPO) {
+            throw new ServiceException(
+                    String.format("Agent[hostName=%s]关联的AgentHealth对象在系统中不存在", hostName),
+                    ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
+            );
+        } else {
+            lastCheckHealthyTimestamp = agentHealthPO.getLastestErrorLogsExistsCheckHealthyTime();
+        }
+        /*
+         * 从agent业务指标表查询近一次健康时间点到当前时间点所有心跳信息，根据心跳时间顺序排序
+         */
+        return metricsManageService.getErrorMetrics(hostName, lastCheckHealthyTimestamp, System.currentTimeMillis());
+    }
+
+    @Override
+    @Transactional
+    public void solveErrorDetail(Long agentMetricId) {
+        MetricsAgentPO metricsAgentPO = metricsManageService.getMetricAgent(agentMetricId);
+        if(null == metricsAgentPO) {
+            throw new ServiceException(
+                    String.format("MetricsAgent[id=%d]在系统中不存在", agentMetricId),
+                    ErrorCodeEnum.METRICS_RECORD_NOT_EXISTS.getCode()
+            );
+        } else {
+            String hostName = metricsAgentPO.getHostname();
+            AgentDO agentDO = agentManageService.getAgentByHostName(hostName);
+            if(null == agentDO) {
+                throw new ServiceException(
+                        String.format("Agent[hostName=%s]在系统中不存在", hostName),
+                        ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
+                );
+            }
+            AgentHealthPO agentHealthPO = agentHealthDAO.selectByAgentId(agentDO.getId());
+            if(null == agentHealthPO) {
+                throw new ServiceException(
+                        String.format("Agent[hostName=%s]关联的AgentHealth对象在系统中不存在", hostName),
+                        ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
+                );
+            } else {
+                agentHealthPO.setLastestErrorLogsExistsCheckHealthyTime(metricsAgentPO.getHeartbeattime());
+            }
+            agentHealthDAO.updateByPrimaryKey(agentHealthPO);
         }
     }
 

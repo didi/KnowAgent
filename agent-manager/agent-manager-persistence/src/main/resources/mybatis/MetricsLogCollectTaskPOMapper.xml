@@ -273,9 +273,15 @@
         AND
         collectTaskHostName = #{hostName,jdbcType=VARCHAR}
         AND
-        #{errorFieldName,jdbcType=VARCHAR} > 0
+        <if test="errorFieldName != 'collectPathIsExists'">
+          #{errorFieldName,jdbcType=VARCHAR} > 0
+        </if>
+        <if test="errorFieldName == 'collectPathIsExists'">
+          #{errorFieldName,jdbcType=VARCHAR} = 0
+        </if>
         AND
         heartbeatTime &gt; #{startHeartbeatTime} and heartbeatTime &lt;= #{endHeartbeatTime}
+    order by heartbeatTime asc
   </select>
 
   <resultMap id="TopNByMetricPerLogCollectTaskIdResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskIdTopPO" >

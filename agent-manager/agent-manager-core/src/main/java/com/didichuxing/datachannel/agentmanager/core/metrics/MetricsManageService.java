@@ -167,4 +167,17 @@ public interface MetricsManageService {
      */
     List<MetricsLogCollectTaskDO> getLastCollectTaskMetricsByAgentHostName(String hostName);
 
+    /**
+     * @param hostName 主机名
+     * @param startHeartbeatTime 开始时间戳（不含）
+     * @param endHeartbeatTime 结束时间戳（含）
+     * @return 返回根据给定参数获取到的心跳信息集
+     */
+    List<MetricsAgentPO> getErrorMetrics(String hostName, Long startHeartbeatTime, Long endHeartbeatTime);
+
+    /**
+     * @param agentMetricId agent 业务指标 id
+     * @return 根据给定agent 业务指标 id 获取对应agent 业务指标记录
+     */
+    MetricsAgentPO getMetricAgent(Long agentMetricId);
 }

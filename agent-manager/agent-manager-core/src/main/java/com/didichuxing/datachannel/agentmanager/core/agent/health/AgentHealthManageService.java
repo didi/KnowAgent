@@ -2,7 +2,11 @@ package com.didichuxing.datachannel.agentmanager.core.agent.health;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
+
+import java.util.List;
 
 /**
  * @author huqidong
@@ -47,5 +51,9 @@ public interface AgentHealthManageService {
      * @return 返回给定 agent 健康度检查结果，如给定Agent无须被诊断（如：处于 agent check 黑名单），返回 AgentHealthLevelEnum.GREEN
      */
     AgentHealthLevelEnum checkAgentHealth(AgentDO agentDO);
+
+    List<MetricsAgentPO> getErrorDetails(String hostName);
+
+    void solveErrorDetail(Long agentMetricId);
 
 }
