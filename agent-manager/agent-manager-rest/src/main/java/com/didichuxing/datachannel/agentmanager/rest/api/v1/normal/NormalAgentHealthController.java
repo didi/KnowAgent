@@ -23,7 +23,7 @@ public class NormalAgentHealthController {
     private AgentHealthManageService agentHealthManageService;
 
     @ApiOperation(value = "根据给定主机名获取导致 agent 健康状态为 AGENT_ERROR_LOGS_EXISTS 的错误信息详情列表", notes = "")
-    @RequestMapping(value = "/error-detail/{hostName}/", method = RequestMethod.GET)
+    @RequestMapping(value = "/error-detail/{hostName}", method = RequestMethod.GET)
     @ResponseBody
     public Result<List<AgentHealthErrorDetailVO>> getErrorDetails(@PathVariable String hostName) {
         List<MetricsAgentPO> metricsAgentPOList = agentHealthManageService.getErrorDetails(hostName);
