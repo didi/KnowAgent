@@ -14,13 +14,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.DirectoryLogCollectPathCreateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.DirectoryLogCollectPathUpdateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.FileLogCollectPathCreateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.FileLogCollectPathUpdateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskCreateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskPaginationRequestDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskUpdateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostFilterRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.DirectoryLogCollectPathVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.FileLogCollectPathVO;
@@ -149,6 +143,28 @@ public class NormalLogCollectTaskController {
     public Result<List<LogCollectTaskVO>> getAll() {
         List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAll();
         return Result.buildSucc(ConvertUtil.list2List(logCollectTaskDOList, LogCollectTaskVO.class));
+    }
+
+    @ApiOperation(value = "根据给定主文件路径与文件后缀匹配正则获取满足匹配对应规则的文件集", notes = "")
+    @RequestMapping(value = "/files/{hostName}/{path}/{suffixRegular}", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<String>> listFiles(@PathVariable String hostName, @PathVariable String path, @PathVariable String suffixRegular) {
+
+        //TODO：
+
+        return null;
+
+    }
+
+    @ApiOperation(value = "根据给定日志切片条件与待切片日志内容获取对应日志切片结果集", notes = "")
+    @RequestMapping(value = "/result-slice", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<List<String>> slice(@RequestBody SliceDTO sliceDTO) {
+
+        //TODO：
+
+        return null;
+
     }
 
     /**
