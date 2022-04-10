@@ -166,12 +166,20 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
 //                    ErrorCodeEnum.KAFKA_CLUSTER_BROKER_CONFIGURATION_DUPLICATE.getCode()
 //            );
 //        }
+
         /*
          * 持久化 kafkaCluster
          */
         kafkaClusterPO = kafkaClusterManageServiceExtension.kafkaCluster2KafkaClusterPO(kafkaClusterDO);
         kafkaClusterPO.setOperator(CommonConstant.getOperator(operator));
         kafkaClusterDAO.insert(kafkaClusterPO);
+
+        /*
+         * 校验：如待构建 agent error logs 或 metrics 流对应全局接收端对象，获取全部 agent 对象 & 更新对应 topic & producer configuration 信息
+         */
+        kafkaClusterDO.setId(kafkaClusterPO.getId());
+        checkAndUpdateAllAgentMetricsAndErrorLogsReceiver(kafkaClusterDO);
+
         /*
          * 添加对应操作记录
          */
