@@ -37,6 +37,8 @@ import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterMa
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
+import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.health.extension.LogCollectTaskHealthManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -72,6 +74,9 @@ public class NormalLogCollectTaskController {
 
     @Autowired
     private LogCollectTaskHealthManageService logCollectTaskHealthManageService;
+
+    @Autowired
+    private LogCollectTaskManageServiceExtension logCollectTaskManageServiceExtension;
 
     @ApiOperation(value = "新增日志采集任务", notes = "")
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -160,11 +165,13 @@ public class NormalLogCollectTaskController {
     @RequestMapping(value = "/result-slice", method = RequestMethod.POST)
     @ResponseBody
     public Result<List<String>> slice(@RequestBody SliceDTO sliceDTO) {
-
-        //TODO：
-
-        return null;
-
+        List<String> logList = logCollectTaskManageServiceExtension.slice(
+                sliceDTO.getContent(),
+                sliceDTO.getSliceTimestampFormat(),
+                sliceDTO.getSliceTimestampPrefixString(),
+                sliceDTO.getSliceTimestampPrefixStringIndex()
+        );
+        return Result.buildSucc(logList);
     }
 
     /**

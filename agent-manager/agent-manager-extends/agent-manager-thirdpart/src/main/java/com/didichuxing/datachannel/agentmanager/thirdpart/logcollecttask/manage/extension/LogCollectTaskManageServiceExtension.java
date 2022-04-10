@@ -58,4 +58,6 @@ public interface LogCollectTaskManageServiceExtension {
      */
     List<LogCollectTaskDO> logCollectTaskPOList2LogCollectTaskDOList(List<LogCollectTaskPO> logCollectTaskPOList);
 
+    List<String> slice(String content, String sliceTimestampFormat, String sliceTimestampPrefixString, Integer sliceTimestampPrefixStringIndex);
+
 }

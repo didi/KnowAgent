@@ -261,4 +261,71 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
         return ConvertUtil.list2List(logCollectTaskPOList, LogCollectTaskDO.class);
     }
 
+    @Override
+    public List<String> slice(String content, String sliceTimestampFormat, String sliceTimestampPrefixString, Integer sliceTimestampPrefixStringIndex) {
+//        String[] lines = content.split(StringUtils.LF);
+//        for (String line : lines) {
+//            String timeString = getTimeStringFormLineByIndex(line, sliceTimestampFormat, sliceTimestampPrefixString, sliceTimestampPrefixStringIndex);
+//            if (StringUtils.isNotBlank(timeString) && suspectTimeString.equals(timeString)) {
+//                longTimeStamp = timeStamp;
+//            } else {
+//                longTimeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, this.logSource
+//                        .getLogSourceConfig().getTimeFormat());
+//            }
+//        }
+        return null;
+    }
+
+    /**
+     * 根据index进行切割，从而得到对应的timeStamp
+     */
+    private String getTimeStringFormLineByIndex(String line, String timeFormat, String startFlag, Integer startFlagIndex) {
+        if (StringUtils.isEmpty(line)) {
+            return null;
+        }
+        int timeFormatLength = timeFormat.length();
+        String timeString;
+        if (StringUtils.isEmpty(startFlag) && startFlagIndex == 0) {
+            if (line.length() < timeFormatLength) {
+                return null;
+            } else {
+                timeString = line.substring(0, timeFormatLength);
+            }
+        } else {
+            try {
+                // startFlag不为空
+                // 对字符创进行切割，得到最终的字符创
+                if (!StringUtils.isEmpty(startFlag)) {
+                    boolean isVaild = true;
+                    int currentIndex = 0;
+                    for (int i = 0; i < startFlagIndex + 1; i++) {
+                        int startSubIndex = line.indexOf(startFlag, currentIndex);
+                        if (startSubIndex >= 0) {
+                            currentIndex = startSubIndex + startFlag.length();
+                        } else {
+                            // 此时说明line中不存在startFlag
+                            isVaild = false;
+                            break;
+                        }
+                    }
+                    if (isVaild) {
+                        if (line.length() < timeFormatLength) {
+                            return null;
+                        } else {
+                            timeString = line.substring(currentIndex, currentIndex + timeFormatLength);
+                        }
+                    } else {
+                        // 此时说明line中不存在startFlag
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return timeString;
+    }
+
 }
