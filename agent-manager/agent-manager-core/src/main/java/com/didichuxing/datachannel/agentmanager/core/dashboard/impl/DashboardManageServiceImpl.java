@@ -440,33 +440,33 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private Long getAgentSendLogEventsDay(Long startTime, Long endTime) {
-        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime);
+        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime, null);
     }
 
     private Long getAgentSendBytesDay(Long startTime, Long endTime) {
-        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.AGENT_WRITE_BYTES, startTime, endTime);
+        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.AGENT_WRITE_BYTES, startTime, endTime, null);
     }
 
     private Long getAgentSendLogEventsLast1Minute(Long startTime, Long endTime) {
-        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime);
+        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.AGENT_WRITE_COUNT, startTime, endTime, null);
     }
 
     private Long getAgentDownLinkBytes(Long startTime, Long endTime) {
-        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_NET_WORK_RECEIVE_BYTES_PS, startTime, endTime);
+        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_NET_WORK_RECEIVE_BYTES_PS, startTime, endTime, MetricFieldEnum.PROCESS_NET_WORK_RECEIVE_BYTES_PS.getFieldName()+"Max");
     }
 
     private Long getAgentUplinkBytes(Long startTime, Long endTime) {
-        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS, startTime, endTime);
+        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS, startTime, endTime, MetricFieldEnum.PROCESS_NET_WORK_SEND_BYTES_PS.getFieldName()+"Max");
     }
 
     private Long getAgentMemorySpend(Long startTime, Long endTime) {
-        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_MEMORY_USED, startTime, endTime);
+        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_MEMORY_USED, startTime, endTime, null);
     }
 
     private Long getAgentCpuCoresSpend(Long startTime, Long endTime) {
         return Math.round(
                 MathUtil.divideWith2Digit(
-                        metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_CPU_UTIL, startTime, endTime), 100l
+                        metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_CPU_UTIL, startTime, endTime, null), 100l
                 )
         );
     }

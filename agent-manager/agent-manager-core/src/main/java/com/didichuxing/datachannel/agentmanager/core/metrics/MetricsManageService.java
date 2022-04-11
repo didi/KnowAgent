@@ -50,9 +50,10 @@ public interface MetricsManageService {
      * @param metricFieldEnum 指标对应枚举对象
      * @param startTime 开始时间戳
      * @param endTime 结束时间戳
+     * @param fieldName 聚合字段名
      * @return 返回给定指标在给定时间范围内在所有agent上汇总统计值
      */
-    Long getSumMetricAllAgents(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime);
+    Long getSumMetricAllAgents(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String fieldName);
 
     /**
      * @param metricFieldEnum 指标对应枚举对象

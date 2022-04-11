@@ -23,6 +23,7 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -120,10 +121,14 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     @Override
-    public Long getSumMetricAllAgents(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime) {
+    public Long getSumMetricAllAgents(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String fieldName) {
         Map<String, Object> params = new HashMap<>();
         params.put("function", metricFieldEnum.getAggregationCalcFunction().getValue());
-        params.put("fieldName", metricFieldEnum.getFieldName());
+        if(StringUtils.isNotBlank(fieldName)) {
+            params.put("fieldName", fieldName);
+        } else {
+            params.put("fieldName", metricFieldEnum.getFieldName());
+        }
         params.put("startTime", startTime);
         params.put("endTime", endTime);
         Double value = 0d;
