@@ -20,6 +20,7 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpa
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -463,7 +464,11 @@ public class DashboardManageServiceImpl implements DashboardManageService {
     }
 
     private Long getAgentCpuCoresSpend(Long startTime, Long endTime) {
-        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_CPU_UTIL, startTime, endTime);
+        return Math.round(
+                MathUtil.divideWith2Digit(
+                        metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_CPU_UTIL, startTime, endTime), 100l
+                )
+        );
     }
 
     private Long getNonRelateAnyHostLogCollectTaskNum() {
