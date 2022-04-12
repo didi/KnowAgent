@@ -1,9 +1,11 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogRecordVO;
 import com.didichuxing.datachannel.agentmanager.core.ApplicationTests;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
@@ -14,6 +16,7 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpa
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentVersionMapper;
+import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -21,8 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//@Transactional
-//@Rollback
+@Transactional
+@Rollback
 public class LogCollectTaskManageServiceTest extends ApplicationTests {
 
     @Autowired
@@ -51,6 +54,37 @@ public class LogCollectTaskManageServiceTest extends ApplicationTests {
 
     @Autowired
     private AgentVersionMapper agentVersionMapper;
+
+    @Autowired
+    private LogCollectTaskManageServiceExtension logCollectTaskManageServiceExtension;
+
+    @Test
+    public void testSlice() {
+        String content = "[2022-04-12 11:25:08.920] [main] INFO  logger2 -    42512997 1649733908920 7\n" +
+                "[2022-04-12 11:25:08.921] [main] INFO  logger2 -    42512998 1649733908921 8\n" +
+                "[2022-04-12 11:25:08.924] [main] INFO  logger2 -    42512999 1649733908924 9\n" +
+                "[2022-04-12 11:25:08.926] [main] INFO  logger2 -    42513000 1649733908926 0\n" +
+                "[2022-04-12 11:25:08.928] [main] INFO  logger2 -    42513001 1649733908928 1\n" +
+                "[2022-04-12 11:25:08.929] [main] INFO  logger2 -    42513002 1649733908929 2\n" +
+                "[2022-04-12 11:25:08.931] [main] INFO  logger2 -    42513003 1649733908931 3\n" +
+                "[2022-04-12 11:25:08.934] [main] INFO  logger2 -    42513004 1649733908934 4\n" +
+                "[2022-04-12 11:25:08.936] [main] INFO  logger2 -    42513005 1649733908936 5\n" +
+                "[2022-04-12 11:25:08.937] [main] INFO  logger2 -    42513006 1649733908937 6\n";
+
+        String sliceTimestampFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+        String sliceTimestampPrefixString = "[";
+        Integer sliceTimestampPrefixStringIndex = 0;
+        List<LogRecordVO> logRecordVOList = logCollectTaskManageServiceExtension.slice(
+                content,
+                sliceTimestampFormat,
+                sliceTimestampPrefixString,
+                sliceTimestampPrefixStringIndex
+        );
+        for (LogRecordVO logRecordVO : logRecordVOList) {
+            System.err.println(JSON.toJSONString(logRecordVO));
+            System.err.println("============================================================================");
+        }
+    }
 
 //    /**
 //     * 测试日志采集任务修改服务接口 case：删除所有对应文件采集路径集

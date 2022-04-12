@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogRecordVO;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 
@@ -58,6 +59,6 @@ public interface LogCollectTaskManageServiceExtension {
      */
     List<LogCollectTaskDO> logCollectTaskPOList2LogCollectTaskDOList(List<LogCollectTaskPO> logCollectTaskPOList);
 
-    List<String> slice(String content, String sliceTimestampFormat, String sliceTimestampPrefixString, Integer sliceTimestampPrefixStringIndex);
+    List<LogRecordVO> slice(String content, String sliceTimestampFormat, String sliceTimestampPrefixString, Integer sliceTimestampPrefixStringIndex);
 
 }

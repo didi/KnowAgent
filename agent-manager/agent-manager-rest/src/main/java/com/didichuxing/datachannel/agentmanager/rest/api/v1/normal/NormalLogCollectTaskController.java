@@ -16,13 +16,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.Rece
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostFilterRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.DirectoryLogCollectPathVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.FileLogCollectPathVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.FileNameSuffixMatchRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskPaginationRecordVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogContentFilterRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -164,8 +158,8 @@ public class NormalLogCollectTaskController {
     @ApiOperation(value = "根据给定日志切片条件与待切片日志内容获取对应日志切片结果集", notes = "")
     @RequestMapping(value = "/result-slice", method = RequestMethod.POST)
     @ResponseBody
-    public Result<List<String>> slice(@RequestBody SliceDTO sliceDTO) {
-        List<String> logList = logCollectTaskManageServiceExtension.slice(
+    public Result<List<LogRecordVO>> slice(@RequestBody SliceDTO sliceDTO) {
+        List<LogRecordVO> logList = logCollectTaskManageServiceExtension.slice(
                 sliceDTO.getContent(),
                 sliceDTO.getSliceTimestampFormat(),
                 sliceDTO.getSliceTimestampPrefixString(),

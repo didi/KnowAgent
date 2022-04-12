@@ -4,17 +4,22 @@ import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogRecordVO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.YesOrNoEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskLimitPriorityLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskOldDataFilterTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
+import com.didichuxing.datachannel.agentmanager.common.util.TimeUtils;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -262,18 +267,35 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
     }
 
     @Override
-    public List<String> slice(String content, String sliceTimestampFormat, String sliceTimestampPrefixString, Integer sliceTimestampPrefixStringIndex) {
-//        String[] lines = content.split(StringUtils.LF);
-//        for (String line : lines) {
-//            String timeString = getTimeStringFormLineByIndex(line, sliceTimestampFormat, sliceTimestampPrefixString, sliceTimestampPrefixStringIndex);
-//            if (StringUtils.isNotBlank(timeString) && suspectTimeString.equals(timeString)) {
-//                longTimeStamp = timeStamp;
-//            } else {
-//                longTimeStamp = TimeUtils.getLongTimeStamp(suspectTimeString, this.logSource
-//                        .getLogSourceConfig().getTimeFormat());
-//            }
-//        }
-        return null;
+    public List<LogRecordVO> slice(String content, String sliceTimestampFormat, String sliceTimestampPrefixString, Integer sliceTimestampPrefixStringIndex) {
+        List<LogRecordVO> logRecordVOList = new ArrayList<>();
+        String[] lines = content.split(System.lineSeparator());
+        String record = "";
+        YesOrNoEnum valid = YesOrNoEnum.YES;
+        for (String line : lines) {
+            String timeString = getTimeStringFormLineByIndex(line, sliceTimestampFormat, sliceTimestampPrefixString, sliceTimestampPrefixStringIndex);
+            Long longTimeStamp = TimeUtils.getLongTimeStamp(timeString, sliceTimestampFormat);
+            if(null != longTimeStamp && longTimeStamp > 0L) {//时间戳解析
+                if(StringUtils.isNotBlank(record)) {//上一行存在
+                    logRecordVOList.add(new LogRecordVO(record, valid.getCode()));
+                    record = line;
+                    valid = YesOrNoEnum.YES;
+                } else {//上一行不存在
+                    record = line;
+                }
+            } else {//时间戳 不 存 在
+                if(StringUtils.isNotBlank(record)) {//上一行存在
+                    record += System.lineSeparator() + line;
+                } else {//上一行不存在
+                    record += System.lineSeparator() + line;
+                    valid = YesOrNoEnum.NO;
+                }
+            }
+        }
+        if(StringUtils.isNotBlank(record)) {
+            logRecordVOList.add(new LogRecordVO(record, valid.getCode()));
+        }
+        return logRecordVOList;
     }
 
     /**
