@@ -13,7 +13,10 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class DefaultAgentManageServiceExtensionImpl implements AgentManageServiceExtension {
@@ -122,6 +125,26 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
     @Override
     public List<AgentDO> agentPOList2AgentDOList(List<AgentPO> agentPOList) {
         return ConvertUtil.list2List(agentPOList, AgentDO.class);
+    }
+
+    @Override
+    public List<String> listFiles(String hostName, String path, String suffixRegular) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        Map<String, String> contentMap = new HashMap<>();
+        contentMap.put("path", path);
+        contentMap.put("suffixRegular", suffixRegular);
+        String result = HttpUtils.get(
+                String.format("http://%s:20230/log-agent/path", hostName),
+                null,
+                headers,
+                JSON.toJSONString(contentMap)
+        );
+        if(StringUtils.isNotBlank(result)) {
+            return JSON.parseObject(result, List.class);
+        } else {
+            return null;
+        }
     }
 
 }

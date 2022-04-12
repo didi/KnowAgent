@@ -65,4 +65,13 @@ public interface AgentManageServiceExtension {
      */
     List<AgentDO> agentPOList2AgentDOList(List<AgentPO> agentPOList);
 
+    /**
+     *
+     * @param hostName 主机名
+     * @param path 主 文件路径
+     * @param suffixRegular 文件后缀匹配正则
+     * @return 根据给定主文件路径与文件后缀匹配正则获取满足匹配对应规则的文件集
+     */
+    List<String> listFiles(String hostName, String path, String suffixRegular);
+
 }

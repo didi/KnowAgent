@@ -84,6 +84,7 @@ public class LogCollectTaskManageServiceTest extends ApplicationTests {
             System.err.println(JSON.toJSONString(logRecordVO));
             System.err.println("============================================================================");
         }
+
     }
 
 //    /**

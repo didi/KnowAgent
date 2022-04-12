@@ -53,6 +53,18 @@ public class HttpUtils {
         return sendRequest(url, METHOD_GET, params, headers, null);
     }
 
+    public static String get(String url, Map<String, String> params, Map<String, String> headers, String content) {
+        InputStream in = null;
+        try {
+            if (content != null && !content.isEmpty()) {
+                in = new ByteArrayInputStream(content.getBytes(CHARSET_UTF8));
+            }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+        return sendRequest(url, METHOD_GET, params, headers, in);
+    }
+
     public static String postForString(String url, String content, Map<String, String> headers) {
         InputStream in = null;
         try {

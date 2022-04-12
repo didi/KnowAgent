@@ -31,6 +31,7 @@ import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterMa
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.health.extension.LogCollectTaskHealthManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import io.swagger.annotations.Api;
@@ -71,6 +72,9 @@ public class NormalLogCollectTaskController {
 
     @Autowired
     private LogCollectTaskManageServiceExtension logCollectTaskManageServiceExtension;
+
+    @Autowired
+    private AgentManageServiceExtension agentManageServiceExtension;
 
     @ApiOperation(value = "新增日志采集任务", notes = "")
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -145,14 +149,15 @@ public class NormalLogCollectTaskController {
     }
 
     @ApiOperation(value = "根据给定主文件路径与文件后缀匹配正则获取满足匹配对应规则的文件集", notes = "")
-    @RequestMapping(value = "/files/{hostName}/{path}/{suffixRegular}", method = RequestMethod.GET)
+    @RequestMapping(value = "/files", method = RequestMethod.GET)
     @ResponseBody
-    public Result<List<String>> listFiles(@PathVariable String hostName, @PathVariable String path, @PathVariable String suffixRegular) {
+    public Result<List<String>> listFiles(
+            @RequestParam(value = "hostName") String hostName,
+            @RequestParam(value = "path") String path,
+            @RequestParam(value = "suffixRegular") String suffixRegular
 
-        //TODO：
-
-        return null;
-
+    ) {
+        return Result.buildSucc(agentManageServiceExtension.listFiles(hostName, path, suffixRegular));
     }
 
     @ApiOperation(value = "根据给定日志切片条件与待切片日志内容获取对应日志切片结果集", notes = "")
