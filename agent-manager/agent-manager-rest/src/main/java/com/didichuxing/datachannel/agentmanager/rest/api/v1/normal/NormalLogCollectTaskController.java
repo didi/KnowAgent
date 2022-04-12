@@ -149,15 +149,13 @@ public class NormalLogCollectTaskController {
     }
 
     @ApiOperation(value = "根据给定主文件路径与文件后缀匹配正则获取满足匹配对应规则的文件集", notes = "")
-    @RequestMapping(value = "/files", method = RequestMethod.GET)
+    @RequestMapping(value = "/files", method = RequestMethod.POST)
     @ResponseBody
     public Result<List<String>> listFiles(
-            @RequestParam(value = "hostName") String hostName,
-            @RequestParam(value = "path") String path,
-            @RequestParam(value = "suffixRegular") String suffixRegular
+            @RequestBody ListFilesDTO listFilesDTO
 
     ) {
-        return Result.buildSucc(agentManageServiceExtension.listFiles(hostName, path, suffixRegular));
+        return Result.buildSucc(agentManageServiceExtension.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular()));
     }
 
     @ApiOperation(value = "根据给定日志切片条件与待切片日志内容获取对应日志切片结果集", notes = "")
