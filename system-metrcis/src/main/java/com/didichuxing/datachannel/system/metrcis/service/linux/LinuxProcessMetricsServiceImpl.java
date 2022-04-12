@@ -76,6 +76,15 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private static LinuxProcessMetricsServiceImpl instance;
 
+    private Long yGcCountCurrent = 0l;
+    private Long yGcTimeCurrent = 0l;
+    private Long fGcCountCurrent = 0l;
+    private Long fGcTimeCurrent = 0l;
+    private Long yGcCountPre = 0l;
+    private Long yGcTimePre = 0l;
+    private Long fGcCountPre = 0l;
+    private Long fGcTimePre = 0l;
+
     public static synchronized LinuxProcessMetricsServiceImpl getInstance() {
         if(null == instance) {
             instance = new LinuxProcessMetricsServiceImpl();
@@ -551,6 +560,13 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getJvmProcYoungGcCount() {
+        yGcCountCurrent = getJvmProcYoungGcCountOnly();
+        Long yGcCount = yGcCountCurrent - yGcCountPre;
+        yGcCountPre = yGcCountCurrent;
+        return yGcCount;
+    }
+
+    private Long getJvmProcYoungGcCountOnly() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
                 .getGarbageCollectorMXBeans()) {
@@ -564,6 +580,13 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getJvmProcFullGcCount() {
+        fGcCountCurrent = getJvmProcFullGcCountOnly();
+        Long fGcCount = fGcCountCurrent - fGcCountPre;
+        fGcCountPre = fGcCountCurrent;
+        return fGcCount;
+    }
+
+    private Long getJvmProcFullGcCountOnly() {
         long gcCounts = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
                 .getGarbageCollectorMXBeans()) {
@@ -577,6 +600,13 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getJvmProcYoungGcTime() {
+        yGcTimeCurrent = getJvmProcYoungGcTimeOnly();
+        Long yGcTime = yGcTimeCurrent - yGcTimePre;
+        yGcTimePre = yGcTimeCurrent;
+        return yGcTime;
+    }
+
+    private Long getJvmProcYoungGcTimeOnly() {
         long gcTime = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
                 .getGarbageCollectorMXBeans()) {
@@ -590,6 +620,13 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Long getJvmProcFullGcTime() {
+        fGcTimeCurrent = getJvmProcFullGcTimeOnly();
+        Long fGcTime = fGcTimeCurrent - fGcTimePre;
+        fGcTimePre = fGcTimeCurrent;
+        return fGcTime;
+    }
+
+    private Long getJvmProcFullGcTimeOnly() {
         long gcTime = 0L;
         for (GarbageCollectorMXBean garbageCollector : ManagementFactory
                 .getGarbageCollectorMXBeans()) {
