@@ -261,7 +261,7 @@ CREATE TABLE `tb_agent_version` (
                                     PRIMARY KEY (`id`) USING BTREE,
                                     UNIQUE KEY `unq_idx_version` (`version`) USING BTREE,
                                     UNIQUE KEY `unq_idx_file_md5` (`file_md5`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_collect_delay_monitor_black_list
@@ -526,7 +526,12 @@ CREATE TABLE `tb_metrics_agent` (
                                     `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
                                     `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                     `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
-                                    PRIMARY KEY (`id`) USING BTREE
+                                    PRIMARY KEY (`id`) USING BTREE,
+                                    KEY `idx_heartbeatTime` (`heartbeatTime`) USING BTREE,
+                                    KEY `idx_hostName_heartbeatTime` (`hostName`,`heartbeatTime`) USING BTREE,
+                                    KEY `idx_heartbeatTimeMinute` (`heartbeatTimeMinute`) USING BTREE,
+                                    KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`) USING BTREE,
+                                    KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
@@ -550,7 +555,11 @@ CREATE TABLE `tb_metrics_disk` (
                                    `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
                                    `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                    `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
-                                   PRIMARY KEY (`id`) USING BTREE
+                                   PRIMARY KEY (`id`) USING BTREE,
+                                   KEY `idx_hostName_heartbeatTime` (`hostName`,`heartbeatTime`),
+                                   KEY `idx_hostName_systemDiskPath_heartbeatTime` (`hostName`,`systemDiskPath`,`heartbeatTime`),
+                                   KEY `idx_hostName_heartbeatTimeMinute` (`hostName`,`heartbeatTimeMinute`),
+                                   KEY `idx_heartbeatTime` (`heartbeatTime`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4117 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
@@ -727,7 +736,11 @@ CREATE TABLE `tb_metrics_disk_io` (
                                       `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
                                       `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                       `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
-                                      PRIMARY KEY (`id`) USING BTREE
+                                      PRIMARY KEY (`id`) USING BTREE,
+                                      KEY `idx_hostName_heartbeatTime` (`hostName`,`heartbeatTime`) USING BTREE,
+                                      KEY `idx_hostName_systemDiskDevice_heartbeatTime` (`hostName`,`systemDiskDevice`,`heartbeatTime`),
+                                      KEY `idx_hostName_heartbeatTimeMinute` (`hostName`,`heartbeatTimeMinute`),
+                                      KEY `idx_heartbeatTime` (`heartbeatTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4084 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -837,7 +850,18 @@ CREATE TABLE `tb_metrics_log_collect_task` (
   `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
   `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
   `serviceNames` varchar(4096) COLLATE utf8_bin DEFAULT NULL COMMENT '服务名集',
-  PRIMARY KEY (`id`) USING BTREE
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_collectTaskId_heartbeatTime` (`collectTaskId`,`heartbeatTime`),
+  KEY `idx_collectTaskId_pathId_heartbeatTime` (`collectTaskId`,`pathId`,`heartbeatTime`),
+  KEY `idx_collectTaskId_pathId_collectTaskHostName_heartbeatTime` (`collectTaskId`,`pathId`,`collectTaskHostName`,`heartbeatTime`),
+  KEY `idx_collectTaskId_heartbeatTimeMinute` (`collectTaskId`,`heartbeatTimeMinute`),
+  KEY `idx_collectTaskId_heartbeatTimeMinute_pathId` (`collectTaskId`,`heartbeatTimeMinute`,`pathId`),
+  KEY `idx_collectTaskId_heartbeatTimeMinute_collectTaskHostName` (`collectTaskId`,`heartbeatTimeMinute`,`collectTaskHostName`),
+  KEY `idx_collectTaskId_heartbeatTimeMinute_pathId_collectTaskHostName` (`collectTaskId`,`heartbeatTimeMinute`,`pathId`,`collectTaskHostName`) USING BTREE,
+  KEY `idx_heartbeatTimeMinute` (`heartbeatTimeMinute`),
+  KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`),
+  KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`),
+  KEY `idx_heartbeatTime` (`heartbeatTime`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4077 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
@@ -872,7 +896,11 @@ CREATE TABLE `tb_metrics_net_card` (
                                        `heartbeatTimeMinute` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：分钟',
                                        `heartbeatTimeHour` bigint(20) DEFAULT '0' COMMENT '心跳时间 精度：小时',
                                        `heartbeatTimeDay` bigint(20) DEFAULT NULL COMMENT '心跳时间 精度：日',
-                                       PRIMARY KEY (`id`) USING BTREE
+                                       PRIMARY KEY (`id`) USING BTREE,
+                                       KEY `idx_hostName_heartbeatTime` (`hostName`,`heartbeatTime`),
+                                       KEY `idx_hostName_systemNetCardsBandMacAddress_heartbeatTime` (`hostName`,`systemNetCardsBandMacAddress`,`heartbeatTime`),
+                                       KEY `idx_hostName_heartbeatTimeMinute` (`hostName`,`heartbeatTimeMinute`),
+                                       KEY `idx_heartbeatTime` (`heartbeatTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4086 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
@@ -1090,7 +1118,12 @@ CREATE TABLE `tb_metrics_process` (
                                       `jvmProcMU` double DEFAULT NULL COMMENT 'jvm 方法区使用大小',
                                       `jvmProcCCSC` double DEFAULT NULL COMMENT 'jvm 压缩类空间大小',
                                       `jvmProcCCSU` double DEFAULT NULL COMMENT 'jvm 压缩类空间使用大小',
-                                      PRIMARY KEY (`id`) USING BTREE
+                                      PRIMARY KEY (`id`) USING BTREE,
+                                      KEY `idx_hostName_heartbeatTime` (`hostName`,`heartbeatTime`),
+                                      KEY `idx_heartbeatTime` (`heartbeatTime`),
+                                      KEY `idx_heartbeatTimeMinute` (`heartbeatTimeMinute`),
+                                      KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`) USING BTREE,
+                                      KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
@@ -1339,7 +1372,12 @@ CREATE TABLE `tb_metrics_system` (
                                      `systemNetWorkBandWidthUsedPercent75Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 75分位数',
                                      `systemNetWorkBandWidthUsedPercent95Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 95分位数',
                                      `systemNetWorkBandWidthUsedPercent99Quantile` double DEFAULT NULL COMMENT '系统网络带宽使用率 单位：% 99分位数',
-                                     PRIMARY KEY (`id`) USING BTREE
+                                     PRIMARY KEY (`id`) USING BTREE,
+                                     KEY `idx_hostName_heartbeatTime` (`hostName`,`heartbeatTime`) USING BTREE,
+                                     KEY `idx_heartbeatTime` (`heartbeatTime`),
+                                     KEY `idx_heartbeatTimeMinute` (`heartbeatTimeMinute`) USING BTREE,
+                                     KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`) USING BTREE,
+                                     KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
