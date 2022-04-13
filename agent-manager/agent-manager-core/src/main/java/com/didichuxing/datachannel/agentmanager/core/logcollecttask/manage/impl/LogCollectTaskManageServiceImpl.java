@@ -454,6 +454,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
             }
         });
 
+        for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOListCompareResult.getCreateList()) {
+            fileLogCollectPathDO.setLogCollectTaskId(logCollectTaskDO.getId());
+            fileLogCollectPathManageService.createFileLogCollectPath(fileLogCollectPathDO, operator);
+        }
         for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOListCompareResult.getRemoveList()) {
             fileLogCollectPathManageService.deleteFileLogCollectPath(fileLogCollectPathDO.getId(), operator);
         }
