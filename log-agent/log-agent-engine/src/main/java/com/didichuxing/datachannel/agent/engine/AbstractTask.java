@@ -145,7 +145,7 @@ public abstract class AbstractTask extends TaskComponent implements Runnable, Co
             double limitTime = taskLimter.limitRate(event.length());
             if (limitTime > 0.0d) {
                 // 放大到毫秒精度
-                this.taskPatternStatistics.limitOneRecord(new Double(limitTime * 1000 * 1000).longValue());
+                this.taskPatternStatistics.limitOneRecord(new Double(limitTime * 1000).longValue());
             }
         }
         channel.tryAppend(event);

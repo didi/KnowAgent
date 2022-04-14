@@ -10,6 +10,7 @@ import com.didichuxing.datachannel.agentmanager.common.metrics.TaskMetrics;
 import com.didichuxing.datachannel.system.metrcis.Metrics;
 import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -164,8 +165,8 @@ public class LogChannel extends AbstractChannel {
         channelBytesSize.add(channelBytesSizeCurrent);
         channelCountSize.add(channelCountSizeCurrent);
         Double channelUsedPercent = Math.max(
-                channelCountSizeCurrent / this.channelConfig.getMaxNum(),
-                channelBytesSizeCurrent / this.channelConfig.getMaxBytes()
+                MathUtil.divideWith2Digit(channelCountSizeCurrent, this.channelConfig.getMaxNum()),
+                MathUtil.divideWith2Digit(channelBytesSizeCurrent, this.channelConfig.getMaxBytes())
         );
         this.channelUsedPercent.add(channelUsedPercent);
     }

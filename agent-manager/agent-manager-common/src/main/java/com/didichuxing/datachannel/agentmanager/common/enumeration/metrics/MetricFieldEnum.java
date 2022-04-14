@@ -3071,7 +3071,7 @@ public enum MetricFieldEnum {
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
             AggregationCalcFunctionEnum.SUM,
             MetricValueTypeEnum.CURRENT,
-            MetricUnitEnum.TIMESTAMP_SECOND,
+            MetricUnitEnum.TIMESTAMP_MILLISECOND,
             MetricUnitEnum.TIMESTAMP_SECOND,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             true,
