@@ -1,6 +1,8 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.util.FileUtils;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
+
 import java.util.List;
 
 /**
@@ -80,7 +82,7 @@ public class LinuxNetFlow {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.systemReceiveBytes - before.systemReceiveBytes;
         if(0 != timeGap) {
-            return 1000.0 * bytesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
         } else {
             return 1000.0 * bytesGap;
         }
@@ -93,7 +95,7 @@ public class LinuxNetFlow {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.systemTransmitBytes - before.systemTransmitBytes;
         if(0 != timeGap) {
-            return 1000.0 * bytesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
         } else {
             return 1000.0 * bytesGap;
         }
@@ -106,7 +108,7 @@ public class LinuxNetFlow {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.processReceiveBytes - before.processReceiveBytes;
         if(0 != timeGap) {
-            return 1000.0 * bytesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
         } else {
             return 1000.0 * bytesGap;
         }
@@ -119,7 +121,7 @@ public class LinuxNetFlow {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.processTransmitBytes - before.processTransmitBytes;
         if(0 != timeGap) {
-            return 1000.0 * bytesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
         } else {
             return 1000.0 * bytesGap;
         }

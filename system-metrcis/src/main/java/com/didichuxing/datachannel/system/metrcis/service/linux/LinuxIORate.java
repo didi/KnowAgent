@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.util.FileUtils;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class LinuxIORate {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOReadTimes - before.processIOReadTimes;
         if(0 != timeGap) {
-            return 1000.0 * readTimesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * readTimesGap, timeGap);
         } else {
             return 1000.0 * readTimesGap;
         }
@@ -99,7 +100,7 @@ public class LinuxIORate {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOWriteTimes - before.processIOWriteTimes;
         if(0 != timeGap) {
-            return 1000.0 * readTimesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * readTimesGap, timeGap);
         } else {
             return 1000.0 * readTimesGap;
         }
@@ -114,7 +115,7 @@ public class LinuxIORate {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOReadBytes - before.processIOReadBytes;
         if(0 != timeGap) {
-            return 1000.0 * readTimesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * readTimesGap, timeGap);
         } else {
             return 1000.0 * readTimesGap;
         }
@@ -129,7 +130,7 @@ public class LinuxIORate {
         long timeGap = this.currentTime - before.currentTime;
         long readTimesGap = this.processIOWriteBytes - before.processIOWriteBytes;
         if(0 != timeGap) {
-            return 1000.0 * readTimesGap / timeGap;
+            return MathUtil.divideWith2Digit(1000.0 * readTimesGap, timeGap);
         } else {
             return 1000.0 * readTimesGap;
         }

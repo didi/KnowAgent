@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.util.FileUtils;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
 
 public class LinuxCpuTime {
@@ -33,9 +34,9 @@ public class LinuxCpuTime {
         if (all - before.all == 0) {
             return 0.0f;
         }
-        float cpuUsage = ((float) (all - before.all)) / cpuNum;
+        float cpuUsage = MathUtil.divideWith2Digit((all - before.all), cpuNum).floatValue();
         float proUsage = process - before.process;
-        return proUsage * 100 / cpuUsage;
+        return MathUtil.divideWith2Digit(proUsage * 100, cpuUsage).floatValue();
     }
 
     // 获取系统CPU使用率
@@ -45,7 +46,7 @@ public class LinuxCpuTime {
         }
         float allCpuUsage = all - before.all;
         float allSubIdleCpuUsage = allSubIdle - before.allSubIdle;
-        return allSubIdleCpuUsage * 100 / allCpuUsage;
+        return MathUtil.divideWith2Digit(allSubIdleCpuUsage * 100, allCpuUsage).floatValue();
     }
 
     private long[] getAllTime() throws Exception {

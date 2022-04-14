@@ -173,4 +173,30 @@ public class MathUtil {
         return (double) (Math.round(numerator * 100 / denominator) / 100.0);
     }
 
+    /**
+     *
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return 分子 / 分母结果 保留2位小数
+     */
+    public static Double divideWith2Digit(Long numerator, Integer denominator) {
+        if(denominator.equals(0)) {
+            return 0d;
+        }
+        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+    }
+
+    /**
+     *
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return 分子 / 分母结果 保留2位小数
+     */
+    public static Double divideWith2Digit(Float numerator, Float denominator) {
+        if(denominator.equals(0f)) {
+            return 0d;
+        }
+        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+    }
+
 }
