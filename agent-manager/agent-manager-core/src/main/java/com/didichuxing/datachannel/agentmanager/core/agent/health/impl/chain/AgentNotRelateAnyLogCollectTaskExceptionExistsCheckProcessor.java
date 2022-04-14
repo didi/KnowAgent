@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -15,6 +16,15 @@ public class AgentNotRelateAnyLogCollectTaskExceptionExistsCheckProcessor extend
 
     @Override
     protected void process(AgentHealthCheckContext context) {
+        /*
+         * 校验 agent 是否为红 黄
+         */
+        if(
+                context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.RED) ||
+                        context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.YELLOW)
+        ) {
+            return;
+        }
         /*
          * 校验 agent 端是否未关联任何日志采集任务
          */

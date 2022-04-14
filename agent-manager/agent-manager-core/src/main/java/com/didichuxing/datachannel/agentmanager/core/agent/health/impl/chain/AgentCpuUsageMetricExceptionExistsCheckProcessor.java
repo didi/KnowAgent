@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcesso
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
@@ -17,6 +18,15 @@ public class AgentCpuUsageMetricExceptionExistsCheckProcessor extends BaseProces
 
     @Override
     protected void process(AgentHealthCheckContext context) {
+        /*
+         * 校验 agent 是否为红 黄
+         */
+        if(
+                context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.RED) ||
+                        context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.YELLOW)
+        ) {
+            return;
+        }
         /*
          * 校验是否存在 agent 进程 cpu 使用率指标异常
          */

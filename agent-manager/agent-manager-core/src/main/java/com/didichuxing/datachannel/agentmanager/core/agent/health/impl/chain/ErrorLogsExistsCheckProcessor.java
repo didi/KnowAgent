@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
@@ -23,8 +24,8 @@ public class ErrorLogsExistsCheckProcessor extends BaseProcessor {
          * 校验 agent 是否为红 黄
          */
         if(
-                context.getAgentHealthLevelEnum().equals(LogCollectTaskHealthLevelEnum.RED) ||
-                        context.getAgentHealthLevelEnum().equals(LogCollectTaskHealthLevelEnum.YELLOW)
+                context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.RED) ||
+                        context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.YELLOW)
         ) {
             return;
         }
