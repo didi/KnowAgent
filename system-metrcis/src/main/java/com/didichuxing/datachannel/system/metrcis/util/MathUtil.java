@@ -14,45 +14,6 @@ public class MathUtil {
 
     /**
      * @param values 待计算样本值集
-     * @return 返回待计算样本值集均值
-     */
-    public static Double getMean(List<Double> values) {
-        int count = values.size();
-        if(0 == count) {
-            return 0d;
-        } else {
-            double sum = 0d;
-            for (Double value : values) {
-                sum += value;
-            }
-            Double mean = new BigDecimal(sum).divide(new BigDecimal(count), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
-            return mean;
-        }
-    }
-
-    /**
-     * @param values 待计算样本值集
-     * @return 返回待计算样本值集标准差
-     */
-    public static Double getStdDev(List<Double> values) {
-        int count = values.size();
-        if(0 == count) {
-            return 0d;
-        }
-        double sum = 0;
-        for(int i=0; i<count; i++){//求和
-            sum += values.get(i);
-        }
-        double mean = sum / count;//求平均值
-        double variance = 0;
-        for(int i=0; i<count; i++){//求方差
-            variance += (values.get(i) - mean) * (values.get(i) - mean);
-        }
-        return Math.sqrt(divideWith2Digit(variance, count));
-    }
-
-    /**
-     * @param values 待计算样本值集
      * @return 返回待计算样本值集 55 分位数
      */
     public static Double getQuantile55(List<Double> values) {
@@ -93,7 +54,7 @@ public class MathUtil {
         if(denominator.equals(0d)) {
             return 0d;
         }
-        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
@@ -106,7 +67,7 @@ public class MathUtil {
         if(denominator.equals(0)) {
             return 0d;
         }
-        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
@@ -119,7 +80,7 @@ public class MathUtil {
         if(denominator.equals(0l)) {
             return 0d;
         }
-        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
@@ -132,7 +93,46 @@ public class MathUtil {
         if(denominator.equals(0)) {
             return 0d;
         }
-        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
+     *
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return 分子 / 分母结果 保留2位小数
+     */
+    public static Double divideWith2Digit(Double numerator, Long denominator) {
+        if(denominator.equals(0l)) {
+            return 0d;
+        }
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
+     *
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return 分子 / 分母结果 保留2位小数
+     */
+    public static Double divideWith2Digit(Long numerator, Integer denominator) {
+        if(denominator.equals(0)) {
+            return 0d;
+        }
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
+     *
+     * @param numerator 分子
+     * @param denominator 分母
+     * @return 分子 / 分母结果 保留2位小数
+     */
+    public static Double divideWith2Digit(Float numerator, Float denominator) {
+        if(denominator.equals(0f)) {
+            return 0d;
+        }
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
     /**
@@ -161,42 +161,42 @@ public class MathUtil {
     }
 
     /**
-     *
-     * @param numerator 分子
-     * @param denominator 分母
-     * @return 分子 / 分母结果 保留2位小数
+     * @param values 待计算样本值集
+     * @return 返回待计算样本值集均值
      */
-    public static Double divideWith2Digit(Double numerator, Long denominator) {
-        if(denominator.equals(0l)) {
+    public static Double getMean(List<Double> values) {
+        int count = values.size();
+        if(0 == count) {
             return 0d;
+        } else {
+            double sum = 0d;
+            for (Double value : values) {
+                sum += value;
+            }
+            Double mean = new BigDecimal(sum).divide(new BigDecimal(count), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            return mean;
         }
-        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
     }
 
     /**
-     *
-     * @param numerator 分子
-     * @param denominator 分母
-     * @return 分子 / 分母结果 保留2位小数
+     * @param values 待计算样本值集
+     * @return 返回待计算样本值集标准差
      */
-    public static Double divideWith2Digit(Long numerator, Integer denominator) {
-        if(denominator.equals(0)) {
+    public static Double getStdDev(List<Double> values) {
+        int count = values.size();
+        if(0 == count) {
             return 0d;
         }
-        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
-    }
-
-    /**
-     *
-     * @param numerator 分子
-     * @param denominator 分母
-     * @return 分子 / 分母结果 保留2位小数
-     */
-    public static Double divideWith2Digit(Float numerator, Float denominator) {
-        if(denominator.equals(0f)) {
-            return 0d;
+        double sum = 0;
+        for(int i=0; i<count; i++){//求和
+            sum += values.get(i);
         }
-        return (double) (Math.round(numerator * 100 / denominator) / 100.0);
+        double mean = MathUtil.divideWith2Digit(sum, count);//求平均值
+        double variance = 0;
+        for(int i=0; i<count; i++){//求方差
+            variance += (values.get(i) - mean) * (values.get(i) - mean);
+        }
+        return Math.sqrt(divideWith2Digit(variance, count));
     }
 
 }

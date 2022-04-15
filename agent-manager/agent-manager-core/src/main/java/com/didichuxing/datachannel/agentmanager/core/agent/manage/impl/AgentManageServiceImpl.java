@@ -407,11 +407,7 @@ public class AgentManageServiceImpl implements AgentManageService {
             String logHostPath = k8sPodDO.getLogHostPath();
             realPath = K8sUtil.getRealPath(logMountPath, logHostPath, path);
         }
-        String pathRequestUrl = String.format(requestUrl, hostName, requestPort);
-        String requestContent = JSON.toJSONString(new PathRequest(realPath, suffixMatchRegular));
-        String responseStr = HttpUtils.postForString(pathRequestUrl, requestContent, null);
-        List<String> fileNameList = JSON.parseObject(responseStr, List.class);
-        return fileNameList;
+        return agentManageServiceExtension.listFiles(hostName, realPath, suffixMatchRegular);
     }
 
     @Override
