@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.rest.api.v1.rd;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.version.AgentVersionDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.ListFilesDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.AgentVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
@@ -49,14 +50,12 @@ public class RdAgentController {
     }
 
     @ApiOperation(value = "根据给定路径 & 文件匹配正则获取匹配到的文件列表集", notes = "")
-    @RequestMapping(value = "/path", method = RequestMethod.GET)
+    @RequestMapping(value = "/path", method = RequestMethod.POST)
     @ResponseBody
     public Result<List<String>> listFiles(
-            @RequestParam (value = "path") String path,
-            @RequestParam (value = "suffixMatchRegular") String suffixMatchRegular,
-            @RequestParam (value = "hostName") String hostName
+            @RequestBody ListFilesDTO listFilesDTO
     ) {
-        return Result.buildSucc(agentManageService.listFiles(hostName, path, suffixMatchRegular));
+        return Result.buildSucc(agentManageService.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular()));
     }
 
 }
