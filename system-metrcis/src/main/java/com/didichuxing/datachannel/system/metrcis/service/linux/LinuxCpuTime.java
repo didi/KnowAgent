@@ -34,9 +34,9 @@ public class LinuxCpuTime {
         if (all - before.all == 0) {
             return 0.0f;
         }
-        float cpuUsage = MathUtil.divideWith2Digit((all - before.all), cpuNum).floatValue();
-        float proUsage = process - before.process;
-        return MathUtil.divideWith2Digit(proUsage * 100, cpuUsage).floatValue();
+        long cpuUsage = all - before.all;
+        long proUsage = process - before.process;
+        return MathUtil.divideWith2Digit(proUsage * 100, cpuUsage).floatValue() * cpuNum;
     }
 
     // 获取系统CPU使用率
@@ -78,8 +78,8 @@ public class LinuxCpuTime {
         long count = 0;
         count += Long.parseLong(array[13]);
         count += Long.parseLong(array[14]);
-        count += Long.parseLong(array[15]);
-        count += Long.parseLong(array[16]);
+//        count += Long.parseLong(array[15]);
+//        count += Long.parseLong(array[16]);
         return count;
     }
 
