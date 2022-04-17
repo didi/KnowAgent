@@ -583,7 +583,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemCommitLimit() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'CommitLimit:' | awk '{print $2}'", "系统当前可分配的内存总量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCommitLimit()||msg=data is null");
             return 0L;
@@ -594,7 +594,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemCommittedAs() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Committed_AS:' | awk '{print $2}'", "系统已分配的包括进程未使用的内存量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCommittedAs()||msg=data is null");
             return 0L;
@@ -610,7 +610,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemNonPaged() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'KernelStack:' | awk '{print $2}'", "写入磁盘的物理内存量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemNonPaged()||msg=data is null");
             return 0L;
@@ -621,7 +621,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemPaged() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Writeback:' | awk '{print $2}'", "没被使用是可以写入磁盘的物理内存量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemPaged()||msg=data is null");
             return 0L;
@@ -632,7 +632,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemShared() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Shmem:' | awk '{print $2}'", "用作共享内存的物理RAM量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemShared()||msg=data is null");
             return 0L;
@@ -643,7 +643,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemSlab() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Slab:' | awk '{print $2}'", "内核用来缓存数据结构供自己使用的内存量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemSlab()||msg=data is null");
             return 0L;
@@ -659,7 +659,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemFree() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'MemFree:' | awk '{print $2}'", "系系统空闲内存大小", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemMemFree()||msg=data is null");
             return 0L;
@@ -675,7 +675,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemBuffered() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Buffers:' | awk '{print $2}'", "系统文件缓冲区的物理RAM量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemBuffered()||msg=data is null");
             return 0L;
@@ -686,7 +686,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemMemCached() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'Cached:' | awk '{print $2}'", "缓存内存的物理RAM量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemCached()||msg=data is null");
             return 0L;
@@ -717,7 +717,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemSwapCached() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapCached:' | awk '{print $2}'", "系统用作缓存的交换空间", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapCached()||msg=data is null");
             return 0L;
@@ -728,7 +728,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemSwapFree() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapFree:' | awk '{print $2}'", "系统空闲swap大小", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapFree()||msg=data is null");
             return 0L;
@@ -749,7 +749,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     public Long getSystemSwapTotal() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'SwapTotal:' | awk '{print $2}'", "系统swap总大小", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemSwapTotal()||msg=data is null");
             return 0L;

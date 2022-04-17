@@ -85,7 +85,7 @@ public abstract class LinuxMetricsService {
     protected Long getSystemMemTotal() {
         List<String> lines = getOutputByCmd("cat /proc/meminfo | grep 'MemTotal:' | awk '{print $2}'", "系统物理内存总量", null);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Long.parseLong(lines.get(0));
+            return Long.parseLong(lines.get(0)) * 1024l;
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemMemTotal()||msg=data is null");
             return 0L;
