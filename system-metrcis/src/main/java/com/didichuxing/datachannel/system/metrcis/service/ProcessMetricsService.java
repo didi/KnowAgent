@@ -49,7 +49,6 @@ public interface ProcessMetricsService {
     Double getCurrentProcCpuUtil();
 
     /**
-     *
      * @return 返回当前进程系统态cpu使用率(单位：%)
      */
     PeriodStatistics getProcCpuSys();

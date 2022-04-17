@@ -178,11 +178,6 @@ public class MathUtil {
                 sum += value;
             }
             Double mean = new BigDecimal(sum).divide(new BigDecimal(count), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
-            if(mean.equals(0d) || mean.equals(0.0d) || mean.equals(0.00d)) {
-                LOGGER.error(
-                        String.format("values is %s, mean is %f", JSON.toJSONString(values), mean)
-                );
-            }
             return mean;
         }
     }

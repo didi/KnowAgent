@@ -320,12 +320,24 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUtilTotalPercentOnly() {
-        return 100.0d - getSystemCpuIdleOnly();
+        List<String> lines = getOutputByCmd("top -b -n 1", "系统cpu使用率", null);
+        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
+            String[] properties = lines.get(2).split("\\s+");
+            if(properties.length == 17) {
+                return Double.valueOf(properties[1]) + Double.valueOf(properties[3]) + Double.valueOf(properties[5]);
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null");
+                return 0.0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null");
+            return 0.0d;
+        }
     }
 
     @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemCpuUtilTotalPercent() {
-        systemCpuUtilTotalPercent.add(100.0d - getSystemCpuIdleOnly());
+        systemCpuUtilTotalPercent.add(getSystemCpuUtilTotalPercentOnly());
     }
 
     @Override
@@ -344,15 +356,20 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuSystemOnly() {
-        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $5}'", "内核态CPU时间占比", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
+        List<String> lines = getOutputByCmd("top -b -n 1", "内核态CPU时间占比", null);
+        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
+            String[] properties = lines.get(2).split("\\s+");
+            if(properties.length == 17) {
+                return Double.valueOf(properties[3]);
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null");
+                return 0.0d;
+            }
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null");
             return 0.0d;
         }
     }
-
 
     @Override
     public PeriodStatistics getSystemCpuUser() {
@@ -365,9 +382,15 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUserOnly() {
-        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $3}'", "用户态CPU时间占比", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
+        List<String> lines = getOutputByCmd("top -b -n 1", "用户态CPU时间占比", null);
+        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
+            String[] properties = lines.get(2).split("\\s+");
+            if(properties.length == 17) {
+                return Double.valueOf(properties[1]);
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null");
+                return 0.0d;
+            }
         } else {
             LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null");
             return 0.0d;
@@ -375,13 +398,20 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuIdleOnly() {
-        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $12}'", "总体cpu空闲率", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
+        List<String> lines = getOutputByCmd("top -b -n 1", "总体cpu空闲率", null);
+        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
+            String[] properties = lines.get(2).split("\\s+");
+            if(properties.length == 17) {
+                return Double.valueOf(properties[7]);
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null");
+                return 0.0d;
+            }
         } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdle||msg=data is null");
-            return 0d;
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null");
+            return 0.0d;
         }
+
     }
 
     @PeriodMethod(periodMs = 5 * 1000)
