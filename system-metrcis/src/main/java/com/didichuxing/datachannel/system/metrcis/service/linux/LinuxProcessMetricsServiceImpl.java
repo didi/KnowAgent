@@ -147,12 +147,19 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Double getCurrentProcCpuUtil() {
-        try {
-            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getProcessPid(), CPU_NUM);
-            float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTime);
-            lastLinuxCpuTime = curLinuxCpuTime;
-            return Float.valueOf(cpuUsage).doubleValue();
-        } catch (Exception ex) {
+        List<String> lines = getOutputByCmd("top -b -n 1 -p %d", "当前进程系统态cpu使用率", PID);
+        if (!lines.isEmpty() && 8 == lines.size() && StringUtils.isNotBlank(lines.get(7))) {
+            String[] properties = lines.get(7).split("\\s+");
+            if(12 == properties.length) {
+                return Double.parseDouble(properties[8]);
+            } else {
+                LOGGER.error(
+                        String.format("class=LinuxProcMetricsService||method=getCurrentProcCpuUtil||msg=data is invalid, data is %s", lines.get(1))
+                );
+                return 0d;
+            }
+        } else {
+            LOGGER.error("class=LinuxProcMetricsService||method=getCurrentProcCpuUtil||msg=data is null");
             return 0d;
         }
     }

@@ -1,9 +1,11 @@
 package com.didichuxing.datachannel.system.metrcis.util;
 
-import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
+import com.alibaba.fastjson.JSON;
+import com.didichuxing.datachannel.system.metrcis.service.linux.LinuxProcessMetricsServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
  * 数值计算工具类
  */
 public class MathUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxProcessMetricsServiceImpl.class);
 
     /**
      * @param values 待计算样本值集
@@ -174,6 +178,11 @@ public class MathUtil {
                 sum += value;
             }
             Double mean = new BigDecimal(sum).divide(new BigDecimal(count), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            if(mean.equals(0d) || mean.equals(0.0d) || mean.equals(0.00d)) {
+                LOGGER.error(
+                        String.format("values is %s, mean is %f", JSON.toJSONString(values), mean)
+                );
+            }
             return mean;
         }
     }
