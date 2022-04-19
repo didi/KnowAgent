@@ -394,8 +394,8 @@ public enum MetricFieldEnum {
             MetricTypeEnum.SYSTEM_CPU,
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
-            MetricUnitEnum.PERCENT,
-            MetricUnitEnum.PERCENT,
+            MetricUnitEnum.NONE,
+            MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             false,
             SortTypeEnum.DESC

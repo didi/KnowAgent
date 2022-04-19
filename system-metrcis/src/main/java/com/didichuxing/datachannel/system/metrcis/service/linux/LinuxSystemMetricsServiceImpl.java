@@ -80,6 +80,8 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     private static LinuxSystemMetricsServiceImpl instance;
 
+    private Double preSystemCpuSwitches;
+
     public static synchronized LinuxSystemMetricsServiceImpl getInstance() {
         if(null == instance) {
             instance = new LinuxSystemMetricsServiceImpl();
@@ -97,6 +99,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             LOGGER.error("class=LinuxSystemMetricsService||method=LinuxSystemMetricsServiceImpl()||msg=NetFlow init failed",
                     e);
         }
+        preSystemCpuSwitches = getSystemCpuSwitchesOnly();
     }
 
     @Override
@@ -316,6 +319,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtil() {
+        calcSystemCpuUtil();
         return systemCpuUtil.snapshot();
     }
 
@@ -342,11 +346,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtilTotalPercent() {
+        calcSystemCpuUtilTotalPercent();
         return systemCpuUtilTotalPercent.snapshot();
     }
 
     @Override
     public PeriodStatistics getSystemCpuSystem() {
+        calcSystemCpuSystem();
         return systemCpuSystem.snapshot();
     }
 
@@ -373,6 +379,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUser() {
+        calcSystemCpuUser();
         return systemCpuUser.snapshot();
     }
 
@@ -421,17 +428,21 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuIdle() {
+        calcSystemCpuIdle();
         return systemCpuIdle.snapshot();
     }
 
     @Override
     public PeriodStatistics getSystemCpuSwitches() {
+        calcSystemCpuSwitches();
         return systemCpuSwitches.snapshot();
     }
 
     @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemCpuSwitches() {
-        systemCpuSwitches.add(getSystemCpuSwitchesOnly());
+        Double currentSystemCpuSwitches = getSystemCpuSwitchesOnly();
+        systemCpuSwitches.add(currentSystemCpuSwitches - preSystemCpuSwitches);
+        preSystemCpuSwitches = currentSystemCpuSwitches;
     }
 
     private Double getSystemCpuSwitchesOnly() {
@@ -447,6 +458,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUsageIrq() {
+        calcSystemCpuUsageIrq();
         return systemCpuUsageIrq.snapshot();
     }
 
@@ -469,6 +481,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUsageSoftIrq() {
+        calcSystemCpuUsageSoftIrq();
         return systemCpuUsageSoftIrq.snapshot();
     }
 
@@ -492,6 +505,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad1() {
+        calcSystemLoad1();
         return systemLoad1.snapshot();
     }
 
@@ -512,6 +526,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad5() {
+        calcSystemLoad5();
         return systemLoad5.snapshot();
     }
 
@@ -532,6 +547,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad15() {
+        calcSystemLoad15();
         return systemLoad15.snapshot();
     }
 
@@ -552,6 +568,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuIOWait() {
+        calcSystemCpuIOWait();
         return systemCpuIOWait.snapshot();
     }
 
@@ -571,6 +588,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuGuest() {
+        calcSystemCpuGuest();
         return systemCpuGuest.snapshot();
     }
 
@@ -591,6 +609,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuSteal() {
+        calcSystemCpuSteal();
         return systemCpuSteal.snapshot();
     }
 
@@ -1039,6 +1058,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkReceiveBytesPs() {
+        calcSystemNetworkReceiveBytesPs();
         return systemNetworkReceiveBytesPs.snapshot();
     }
 
@@ -1062,6 +1082,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkSendBytesPs() {
+        calcSystemNetworkSendBytesPs();
         return systemNetworkSendBytesPs.snapshot();
     }
 
@@ -1078,6 +1099,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkSendAndReceiveBytesPs() {
+        calcSystemNetworkSendAndReceiveBytesPs();
         return systemNetworkSendAndReceiveBytesPs.snapshot();
     }
 
@@ -1111,6 +1133,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetWorkBandWidthUsedPercent() {
+        calcSystemNetWorkBandWidthUsedPercent();
         return systemNetWorkBandWidthUsedPercent.snapshot();
     }
 
