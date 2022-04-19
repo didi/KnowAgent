@@ -328,7 +328,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         List<String> lines = getOutputByCmd("top -b -n 1", "系统cpu使用率", null);
         if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
             String[] properties = lines.get(2).split("\\s+");
-            if(properties.length == 17) {
+            if(properties.length >= 6) {
                 return Double.valueOf(properties[1]) + Double.valueOf(properties[3]) + Double.valueOf(properties[5]);
             } else {
                 LOGGER.error(
@@ -376,7 +376,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         List<String> lines = getOutputByCmd("top -b -n 1", "内核态CPU时间占比", null);
         if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
             String[] properties = lines.get(2).split("\\s+");
-            if(properties.length == 17) {
+            if(properties.length >= 4) {
                 return Double.valueOf(properties[3]);
             } else {
                 LOGGER.error(
@@ -407,7 +407,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         List<String> lines = getOutputByCmd("top -b -n 1", "用户态CPU时间占比", null);
         if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
             String[] properties = lines.get(2).split("\\s+");
-            if(properties.length == 17) {
+            if(properties.length >= 2) {
                 return Double.valueOf(properties[1]);
             } else {
                 LOGGER.error(
@@ -433,7 +433,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         List<String> lines = getOutputByCmd("top -b -n 1", "总体cpu空闲率", null);
         if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
             String[] properties = lines.get(2).split("\\s+");
-            if(properties.length == 17) {
+            if(properties.length >= 8) {
                 return Double.valueOf(properties[7]);
             } else {
                 LOGGER.error(
