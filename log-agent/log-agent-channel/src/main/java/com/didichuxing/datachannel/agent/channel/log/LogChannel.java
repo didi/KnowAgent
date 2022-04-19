@@ -119,6 +119,8 @@ public class LogChannel extends AbstractChannel {
     @Override
     public void setMetrics(TaskMetrics taskMetrics) {
 
+        calcChannelMetrics();
+
         taskMetrics.setChannelbytesmax(this.channelConfig.getMaxBytes());
         taskMetrics.setChannelcountmax(this.channelConfig.getMaxNum().longValue());
 

@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.*;
 import com.didichuxing.datachannel.system.metrcis.service.DiskIOMetricsService;
@@ -330,11 +331,21 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             if(properties.length == 17) {
                 return Double.valueOf(properties[1]) + Double.valueOf(properties[3]) + Double.valueOf(properties[5]);
             } else {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null");
+                LOGGER.error(
+                        String.format(
+                                "class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null, lines is:%s",
+                                JSON.toJSONString(lines)
+                        )
+                );
                 return 0.0d;
             }
         } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null");
+            LOGGER.error(
+                    String.format(
+                            "class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null, lines is:%s",
+                            JSON.toJSONString(lines)
+                    )
+            );
             return 0.0d;
         }
     }
@@ -368,11 +379,15 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             if(properties.length == 17) {
                 return Double.valueOf(properties[3]);
             } else {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null");
+                LOGGER.error(
+                        String.format("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
+                );
                 return 0.0d;
             }
         } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null");
+            LOGGER.error(
+                    String.format("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
+            );
             return 0.0d;
         }
     }
@@ -395,11 +410,21 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             if(properties.length == 17) {
                 return Double.valueOf(properties[1]);
             } else {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null");
+                LOGGER.error(
+                        String.format(
+                                "class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null,lines is:%s",
+                                JSON.toJSONString(lines)
+                        )
+                );
                 return 0.0d;
             }
         } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null");
+            LOGGER.error(
+                    String.format(
+                            "class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null,lines is:%s",
+                            JSON.toJSONString(lines)
+                    )
+            );
             return 0.0d;
         }
     }
@@ -411,11 +436,15 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             if(properties.length == 17) {
                 return Double.valueOf(properties[7]);
             } else {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null");
+                LOGGER.error(
+                        String.format("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
+                );
                 return 0.0d;
             }
         } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null");
+            LOGGER.error(
+                    String.format("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
+            );
             return 0.0d;
         }
 
@@ -474,7 +503,8 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             Double irq = Double.valueOf(properties[11]);
             return irq;
         } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUsageIrqOnly||msg=data is null");
+            LOGGER.error(
+                    "class=LinuxSystemMetricsService()||method=getSystemCpuUsageIrqOnly||msg=data is null");
         }
         return 0d;
     }
@@ -652,7 +682,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Long getSystemMemCommitted() {
-        return getSystemMemCommitLimit() - getSystemMemCommittedAs();
+        return getSystemMemCommittedAs() - getSystemMemCommitLimit();
     }
 
     @Override
