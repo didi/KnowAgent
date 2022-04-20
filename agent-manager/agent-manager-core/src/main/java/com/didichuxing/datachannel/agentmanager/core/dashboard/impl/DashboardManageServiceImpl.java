@@ -60,7 +60,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
         DashBoardVO dashBoardVO = new DashBoardVO();
 
         Date current = new Date(System.currentTimeMillis());//当前时间
-        Long last1Minute = DateUtils.getMinuteUnitTimeStamp(DateUtils.getBeforeSeconds(current, 60));//当前时间上一分钟时间戳
+        Long last2Minute = DateUtils.getMinuteUnitTimeStamp(DateUtils.getBeforeSeconds(current, 60 * 2));//当前时间上一分钟时间戳
         Long currentMinute = DateUtils.getMinuteUnitTimeStamp(current);//当前时间戳
         Long currentDayZeroDate = DateUtils.getZeroDate(current).getTime();//当日凌晨00：00：00 时间戳
         Long last1Hour = DateUtils.getMinuteUnitTimeStamp(DateUtils.getBeforeSeconds(current, 60 * 60));//当前时间上一分钟时间戳
@@ -75,11 +75,11 @@ public class DashboardManageServiceImpl implements DashboardManageService {
         dashBoardVO.setLogCollectTaskNum(logCollectTaskManageService.countAll());
         dashBoardVO.setNonRelateAnyHostLogCollectTaskNum(getNonRelateAnyHostLogCollectTaskNum());
         dashBoardVO.setLogCollectPathNum(fileLogCollectPathManageService.countAll());
-        dashBoardVO.setAgentCpuCoresSpend(getAgentCpuCoresSpend(last1Minute, currentMinute));
-        dashBoardVO.setAgentMemorySpend(getAgentMemorySpend(last1Minute, currentMinute));
-        dashBoardVO.setAgentUplinkBytes(getAgentUplinkBytes(last1Minute, currentMinute));
-        dashBoardVO.setAgentDownLinkBytes(getAgentDownLinkBytes(last1Minute, currentMinute));
-        dashBoardVO.setAgentSendLogEventsLast1Minute(getAgentSendLogEventsLast1Minute(last1Minute, currentMinute));
+        dashBoardVO.setAgentCpuCoresSpend(getAgentCpuCoresSpend(last2Minute, currentMinute));
+        dashBoardVO.setAgentMemorySpend(getAgentMemorySpend(last2Minute, currentMinute));
+        dashBoardVO.setAgentUplinkBytes(getAgentUplinkBytes(last2Minute, currentMinute));
+        dashBoardVO.setAgentDownLinkBytes(getAgentDownLinkBytes(last2Minute, currentMinute));
+        dashBoardVO.setAgentSendLogEventsLast1Minute(getAgentSendLogEventsLast1Minute(last2Minute, currentMinute));
         dashBoardVO.setAgentSendBytesDay(getAgentSendBytesDay(currentDayZeroDate, currentMinute));
         dashBoardVO.setAgentSendLogEventsDay(getAgentSendLogEventsDay(currentDayZeroDate, currentMinute));
 
@@ -113,33 +113,33 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
         /*************************** agent 视角 ***************************/
 
-        dashBoardVO.setNtpGapTop5Agents(getNtpGapTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setCpuUsageTop5Agents((getCpuUsageTop5Agents(last1Hour, last1Minute)));
-        dashBoardVO.setMemoryUsedTop5Agents(getMemoryUsedTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setBandWidthUsedTop5Agents(getBandWidthUsedTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setBandWidthUsageTop5Agents(getBandWidthUsageTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setFullGcTimesDayTop5Agents(getFullGcTimesDayTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setFdUsedTop5Agents(getFdUsedTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setUplinkBytesTop5Agents(getUplinkBytesTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setSendLogEventsLast1MinuteTop5Agents(getSendLogEventsLast1MinuteTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setSendBytesDayTop5Agents(getSendBytesDayTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setSendLogEventsDayTop5Agents(getSendLogEventsDayTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setRunningLogCollectTasksTop5Agents(getRunningLogCollectTasksTop5Agents(last1Hour, last1Minute));
-        dashBoardVO.setRunningLogCollectPathsTop5Agents(getRunningLogCollectPathsTop5Agents(last1Hour, last1Minute));
+        dashBoardVO.setNtpGapTop5Agents(getNtpGapTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setCpuUsageTop5Agents((getCpuUsageTop5Agents(last1Hour, last2Minute)));
+        dashBoardVO.setMemoryUsedTop5Agents(getMemoryUsedTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setBandWidthUsedTop5Agents(getBandWidthUsedTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setBandWidthUsageTop5Agents(getBandWidthUsageTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setFullGcTimesDayTop5Agents(getFullGcTimesDayTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setFdUsedTop5Agents(getFdUsedTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setUplinkBytesTop5Agents(getUplinkBytesTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setSendLogEventsLast1MinuteTop5Agents(getSendLogEventsLast1MinuteTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setSendBytesDayTop5Agents(getSendBytesDayTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setSendLogEventsDayTop5Agents(getSendLogEventsDayTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setRunningLogCollectTasksTop5Agents(getRunningLogCollectTasksTop5Agents(last1Hour, last2Minute));
+        dashBoardVO.setRunningLogCollectPathsTop5Agents(getRunningLogCollectPathsTop5Agents(last1Hour, last2Minute));
 
         /*************************** logCollectTask 视角 ***************************/
-        dashBoardVO.setLogTimeDelayTop5LogCollectTasks(getLogTimeDelayTop5LogCollectTasks(last1Hour, last1Minute));
-        dashBoardVO.setLimitTimeTop5LogCollectTasks(getLimitTimeTop5LogCollectTasks(last1Hour, last1Minute));
-        dashBoardVO.setSendBytesLast1MinuteTop5LogCollectTasks(getSendBytesTop5LogCollectTasks(last1Hour, last1Minute));
-        dashBoardVO.setSendLogEventsLast1MinuteTop5LogCollectTasks(getSendLogEventsLast1MinuteTop5LogCollectTasks(last1Hour, last1Minute));
-        dashBoardVO.setSendBytesDayTop5LogCollectTasks(getSendBytesDayTop5LogCollectTasks(last1Hour, last1Minute));
-        dashBoardVO.setSendLogEventsDayTop5LogCollectTasks(getSendLogEventsDayTop5LogCollectTasks(last1Hour, last1Minute));
+        dashBoardVO.setLogTimeDelayTop5LogCollectTasks(getLogTimeDelayTop5LogCollectTasks(last1Hour, last2Minute));
+        dashBoardVO.setLimitTimeTop5LogCollectTasks(getLimitTimeTop5LogCollectTasks(last1Hour, last2Minute));
+        dashBoardVO.setSendBytesLast1MinuteTop5LogCollectTasks(getSendBytesTop5LogCollectTasks(last1Hour, last2Minute));
+        dashBoardVO.setSendLogEventsLast1MinuteTop5LogCollectTasks(getSendLogEventsLast1MinuteTop5LogCollectTasks(last1Hour, last2Minute));
+        dashBoardVO.setSendBytesDayTop5LogCollectTasks(getSendBytesDayTop5LogCollectTasks(last1Hour, last2Minute));
+        dashBoardVO.setSendLogEventsDayTop5LogCollectTasks(getSendLogEventsDayTop5LogCollectTasks(last1Hour, last2Minute));
 
         /*************************** service 视角 ***************************/
-        dashBoardVO.setSendBytesLast1MinuteTop5Services(getSendBytesLast1MinuteTop5Services(last1Hour, last1Minute));
-        dashBoardVO.setSendLogEventsLast1MinuteTop5Services(getSendLogEventsLast1MinuteTop5Services(last1Hour, last1Minute));
-        dashBoardVO.setSendBytesDayTop5Services(getSendBytesDayTop5Services(last1Hour, last1Minute));
-        dashBoardVO.setSendLogEventsDayTop5Services(getSendLogEventsDayTop5Services(last1Hour, last1Minute));
+        dashBoardVO.setSendBytesLast1MinuteTop5Services(getSendBytesLast1MinuteTop5Services(last1Hour, last2Minute));
+        dashBoardVO.setSendLogEventsLast1MinuteTop5Services(getSendLogEventsLast1MinuteTop5Services(last1Hour, last2Minute));
+        dashBoardVO.setSendBytesDayTop5Services(getSendBytesDayTop5Services(last1Hour, last2Minute));
+        dashBoardVO.setSendLogEventsDayTop5Services(getSendLogEventsDayTop5Services(last1Hour, last2Minute));
 
         return dashBoardVO;
 
