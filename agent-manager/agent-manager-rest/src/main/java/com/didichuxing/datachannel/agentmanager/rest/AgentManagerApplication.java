@@ -77,7 +77,7 @@ public class AgentManagerApplication {
         /**
          * TODO：定时任务 fix
          */
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(5);
+        ScheduledExecutorService pool = Executors.newScheduledThreadPool(2);
         pool.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
@@ -141,7 +141,7 @@ public class AgentManagerApplication {
                     LOGGER.error(String.format(" check logCollectTask health error, root cause is: %s", ex.getMessage()), ex);
                 }
             }
-        },0, 10, TimeUnit.MINUTES);
+        },0, 1, TimeUnit.MINUTES);
 
         ExecutorService agentHealthCheckThreadPool = Executors.newFixedThreadPool(2);
         pool.scheduleWithFixedDelay(new Runnable() {
@@ -170,7 +170,7 @@ public class AgentManagerApplication {
                     LOGGER.error(String.format(" check agent health error, root cause is: %s", ex.getMessage()), ex);
                 }
             }
-        },0, 10, TimeUnit.MINUTES);
+        },0, 1, TimeUnit.MINUTES);
 
     }
 
