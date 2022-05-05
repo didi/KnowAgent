@@ -320,34 +320,12 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtil() {
-        calcSystemCpuUtil();
+//        calcSystemCpuUtil();
         return systemCpuUtil.snapshot();
     }
 
     private Double getSystemCpuUtilTotalPercentOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "系统cpu使用率", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 6) {
-                return Double.valueOf(properties[1]) + Double.valueOf(properties[3]) + Double.valueOf(properties[5]);
-            } else {
-                LOGGER.error(
-                        String.format(
-                                "class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null, lines is:%s",
-                                JSON.toJSONString(lines)
-                        )
-                );
-                return 0.0d;
-            }
-        } else {
-            LOGGER.error(
-                    String.format(
-                            "class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null, lines is:%s",
-                            JSON.toJSONString(lines)
-                    )
-            );
-            return 0.0d;
-        }
+        return 100.0d - getSystemCpuIdleOnly();
     }
 
     @PeriodMethod(periodMs = 5 * 1000)
@@ -357,13 +335,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtilTotalPercent() {
-        calcSystemCpuUtilTotalPercent();
+//        calcSystemCpuUtilTotalPercent();
         return systemCpuUtilTotalPercent.snapshot();
     }
 
     @Override
     public PeriodStatistics getSystemCpuSystem() {
-        calcSystemCpuSystem();
+//        calcSystemCpuSystem();
         return systemCpuSystem.snapshot();
     }
 
@@ -373,28 +351,18 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuSystemOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "内核态CPU时间占比", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 4) {
-                return Double.valueOf(properties[3]);
-            } else {
-                LOGGER.error(
-                        String.format("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
-                );
-                return 0.0d;
-            }
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $5}'", "内核态CPU时间占比", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
         } else {
-            LOGGER.error(
-                    String.format("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
-            );
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSystem||msg=data is null");
             return 0.0d;
         }
     }
 
     @Override
     public PeriodStatistics getSystemCpuUser() {
-        calcSystemCpuUser();
+//        calcSystemCpuUser();
         return systemCpuUser.snapshot();
     }
 
@@ -404,50 +372,23 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUserOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "用户态CPU时间占比", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 2) {
-                return Double.valueOf(properties[1]);
-            } else {
-                LOGGER.error(
-                        String.format(
-                                "class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null,lines is:%s",
-                                JSON.toJSONString(lines)
-                        )
-                );
-                return 0.0d;
-            }
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $3}'", "用户态CPU时间占比", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
         } else {
-            LOGGER.error(
-                    String.format(
-                            "class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null,lines is:%s",
-                            JSON.toJSONString(lines)
-                    )
-            );
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUser||msg=data is null");
             return 0.0d;
         }
     }
 
     private Double getSystemCpuIdleOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "总体cpu空闲率", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 8) {
-                return Double.valueOf(properties[7]);
-            } else {
-                LOGGER.error(
-                        String.format("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
-                );
-                return 0.0d;
-            }
+        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $12}'", "总体cpu空闲率", null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Double.parseDouble(lines.get(0));
         } else {
-            LOGGER.error(
-                    String.format("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
-            );
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIdle||msg=data is null");
             return 0.0d;
         }
-
     }
 
     @PeriodMethod(periodMs = 5 * 1000)
@@ -457,13 +398,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuIdle() {
-        calcSystemCpuIdle();
+//        calcSystemCpuIdle();
         return systemCpuIdle.snapshot();
     }
 
     @Override
     public PeriodStatistics getSystemCpuSwitches() {
-        calcSystemCpuSwitches();
+//        calcSystemCpuSwitches();
         return systemCpuSwitches.snapshot();
     }
 
@@ -487,7 +428,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUsageIrq() {
-        calcSystemCpuUsageIrq();
+//        calcSystemCpuUsageIrq();
         return systemCpuUsageIrq.snapshot();
     }
 
@@ -511,7 +452,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUsageSoftIrq() {
-        calcSystemCpuUsageSoftIrq();
+//        calcSystemCpuUsageSoftIrq();
         return systemCpuUsageSoftIrq.snapshot();
     }
 
@@ -535,7 +476,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad1() {
-        calcSystemLoad1();
+//        calcSystemLoad1();
         return systemLoad1.snapshot();
     }
 
@@ -556,7 +497,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad5() {
-        calcSystemLoad5();
+//        calcSystemLoad5();
         return systemLoad5.snapshot();
     }
 
@@ -577,7 +518,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad15() {
-        calcSystemLoad15();
+//        calcSystemLoad15();
         return systemLoad15.snapshot();
     }
 
@@ -598,7 +539,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuIOWait() {
-        calcSystemCpuIOWait();
+//        calcSystemCpuIOWait();
         return systemCpuIOWait.snapshot();
     }
 
@@ -618,7 +559,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuGuest() {
-        calcSystemCpuGuest();
+//        calcSystemCpuGuest();
         return systemCpuGuest.snapshot();
     }
 
@@ -639,7 +580,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuSteal() {
-        calcSystemCpuSteal();
+//        calcSystemCpuSteal();
         return systemCpuSteal.snapshot();
     }
 
@@ -1088,7 +1029,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkReceiveBytesPs() {
-        calcSystemNetworkReceiveBytesPs();
+//        calcSystemNetworkReceiveBytesPs();
         return systemNetworkReceiveBytesPs.snapshot();
     }
 
@@ -1112,7 +1053,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkSendBytesPs() {
-        calcSystemNetworkSendBytesPs();
+//        calcSystemNetworkSendBytesPs();
         return systemNetworkSendBytesPs.snapshot();
     }
 
@@ -1129,7 +1070,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkSendAndReceiveBytesPs() {
-        calcSystemNetworkSendAndReceiveBytesPs();
+//        calcSystemNetworkSendAndReceiveBytesPs();
         return systemNetworkSendAndReceiveBytesPs.snapshot();
     }
 
@@ -1163,7 +1104,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetWorkBandWidthUsedPercent() {
-        calcSystemNetWorkBandWidthUsedPercent();
+//        calcSystemNetWorkBandWidthUsedPercent();
         return systemNetWorkBandWidthUsedPercent.snapshot();
     }
 

@@ -1,6 +1,9 @@
 package com.didichuxing.datachannel.system.metrcis.bean;
 
+import com.didichuxing.datachannel.system.metrcis.service.linux.LinuxSystemMetricsServiceImpl;
 import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.List;
  */
 
 public class PeriodStatistics {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PeriodStatistics.class);
 
     /**
      * 存放样本值
@@ -137,12 +142,6 @@ public class PeriodStatistics {
      * @param sample 待添加样本
      */
     public synchronized void add(Double sample) {
-        if(sample > this.max) {
-            this.max = sample;
-        }
-        if(sample < this.min) {
-            this.min = sample;
-        }
         this.samples.add(sample);
     }
 
@@ -151,6 +150,8 @@ public class PeriodStatistics {
      */
     public synchronized PeriodStatistics snapshot() {
         this.last = this.samples.size() == 0 ? 0d : this.samples.get(this.samples.size() - 1);
+        this.min = MathUtil.getMin(this.samples);
+        this.max = MathUtil.getMax(this.samples);
         this.avg = MathUtil.getMean(this.samples);
         this.stdDev = MathUtil.getStdDev(this.samples);
         this.quantile55 = MathUtil.getQuantile55(this.samples);

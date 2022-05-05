@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.system.metrcis.util;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.system.metrcis.service.linux.LinuxProcessMetricsServiceImpl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -201,6 +202,34 @@ public class MathUtil {
             variance += (values.get(i) - mean) * (values.get(i) - mean);
         }
         return Math.sqrt(divideWith2Digit(variance, count));
+    }
+
+    public static Double getMin(List<Double> samples) {
+        if(CollectionUtils.isNotEmpty(samples)) {
+            Double min = Double.MAX_VALUE;
+            for (Double sample : samples) {
+                if(sample < min) {
+                    min = sample;
+                }
+            }
+            return min;
+        } else {
+            return 0d;
+        }
+    }
+
+    public static Double getMax(List<Double> samples) {
+        if(CollectionUtils.isNotEmpty(samples)) {
+            Double max = Double.MIN_VALUE;
+            for (Double sample : samples) {
+                if(sample > max) {
+                    max = sample;
+                }
+            }
+            return max;
+        } else {
+            return 0d;
+        }
     }
 
 }
