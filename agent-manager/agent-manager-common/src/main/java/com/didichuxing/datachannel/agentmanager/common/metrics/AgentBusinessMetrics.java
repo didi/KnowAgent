@@ -54,6 +54,10 @@ public class AgentBusinessMetrics {
 
     private Long    heartbeatTimeDay;
 
+    private Long limittps;
+
+    private Double cpulimit;
+
     public Long getErrorlogscount() {
         return errorlogscount;
     }
@@ -248,6 +252,22 @@ public class AgentBusinessMetrics {
 
     public Long getHeartbeattimehour() {
         return heartbeattimehour;
+    }
+
+    public Long getLimittps() {
+        return limittps;
+    }
+
+    public void setLimittps(Long limittps) {
+        this.limittps = limittps;
+    }
+
+    public Double getCpulimit() {
+        return cpulimit;
+    }
+
+    public void setCpulimit(Double cpulimit) {
+        this.cpulimit = cpulimit;
     }
 
     public void setHeartbeattimehour(Long heartbeattimehour) {

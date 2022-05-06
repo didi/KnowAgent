@@ -109,7 +109,7 @@ public class LinuxDiskMetricsServiceImpl extends LinuxMetricsService implements 
                 //TODO：logger it
                 result.put(key, 0d);
             }
-            result.put(key, MathUtil.divideWith2Digit(numerator, denominator));
+            result.put(key, MathUtil.divideWith2Digit(numerator * 100, denominator));
         }
         return result;
     }
@@ -178,7 +178,7 @@ public class LinuxDiskMetricsServiceImpl extends LinuxMetricsService implements 
             String key = array[3];
             long inodeTotal = Long.parseLong(array[1]);
             long inodeUsed = Long.parseLong(array[2]);
-            result.put(key, MathUtil.divideWith2Digit(inodeUsed, inodeTotal));
+            result.put(key, MathUtil.divideWith2Digit(inodeUsed * 100, inodeTotal));
         }
         return result;
     }

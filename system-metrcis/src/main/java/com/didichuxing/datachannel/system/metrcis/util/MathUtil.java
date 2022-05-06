@@ -59,7 +59,7 @@ public class MathUtil {
         if(denominator.equals(0d)) {
             return 0d;
         }
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
@@ -72,7 +72,7 @@ public class MathUtil {
         if(denominator.equals(0)) {
             return 0d;
         }
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
@@ -85,7 +85,7 @@ public class MathUtil {
         if(denominator.equals(0l)) {
             return 0d;
         }
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
@@ -98,7 +98,7 @@ public class MathUtil {
         if(denominator.equals(0)) {
             return 0d;
         }
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
@@ -111,7 +111,7 @@ public class MathUtil {
         if(denominator.equals(0l)) {
             return 0d;
         }
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
@@ -124,7 +124,7 @@ public class MathUtil {
         if(denominator.equals(0)) {
             return 0d;
         }
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
@@ -137,7 +137,7 @@ public class MathUtil {
         if(denominator.equals(0f)) {
             return 0d;
         }
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 2, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
@@ -160,7 +160,7 @@ public class MathUtil {
             if(g == 0) {
                 return values.get(i);
             } else {
-                return (1-g) * values.get(i) + g * values.get(i+1);
+                return divideWith2Digit((1-g) * values.get(i) + g * values.get(i+1), 1.0d);
             }
         }
     }
@@ -178,7 +178,7 @@ public class MathUtil {
             for (Double value : values) {
                 sum += value;
             }
-            Double mean = new BigDecimal(sum).divide(new BigDecimal(count), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            Double mean = new BigDecimal(sum).divide(new BigDecimal(count), 2, BigDecimal.ROUND_UP).doubleValue();
             return mean;
         }
     }
@@ -201,7 +201,7 @@ public class MathUtil {
         for(int i=0; i<count; i++){//求方差
             variance += (values.get(i) - mean) * (values.get(i) - mean);
         }
-        return Math.sqrt(divideWith2Digit(variance, count));
+        return divideWith2Digit(Math.sqrt(variance / count), 1.0d);
     }
 
     public static Double getMin(List<Double> samples) {
@@ -212,7 +212,7 @@ public class MathUtil {
                     min = sample;
                 }
             }
-            return min;
+            return min.equals(Double.MAX_VALUE) ? 0d : min;
         } else {
             return 0d;
         }
@@ -226,7 +226,7 @@ public class MathUtil {
                     max = sample;
                 }
             }
-            return max;
+            return max.equals(Double.MIN_VALUE) ? 0d : max;
         } else {
             return 0d;
         }

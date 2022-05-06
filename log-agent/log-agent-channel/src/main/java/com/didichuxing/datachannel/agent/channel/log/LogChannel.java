@@ -167,8 +167,8 @@ public class LogChannel extends AbstractChannel {
         channelBytesSize.add(channelBytesSizeCurrent);
         channelCountSize.add(channelCountSizeCurrent);
         Double channelUsedPercent = Math.max(
-                MathUtil.divideWith2Digit(channelCountSizeCurrent, this.channelConfig.getMaxNum()),
-                MathUtil.divideWith2Digit(channelBytesSizeCurrent, this.channelConfig.getMaxBytes())
+                MathUtil.divideWith2Digit(channelCountSizeCurrent * 100, this.channelConfig.getMaxNum()),
+                MathUtil.divideWith2Digit(channelBytesSizeCurrent * 100, this.channelConfig.getMaxBytes())
         );
         this.channelUsedPercent.add(channelUsedPercent);
     }
