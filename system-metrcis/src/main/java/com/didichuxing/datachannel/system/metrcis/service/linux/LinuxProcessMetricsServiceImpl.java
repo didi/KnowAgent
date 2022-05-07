@@ -2,7 +2,6 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.bean.PeriodStatistics;
-import com.didichuxing.datachannel.system.metrcis.bean.ProcMetrics;
 import com.didichuxing.datachannel.system.metrcis.service.ProcessMetricsService;
 import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -31,9 +30,14 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private LinuxCpuTime lastLinuxCpuTime;
 
-    private LinuxNetFlow lastLinuxNetFlow;
+    private LinuxNetFlow lastLinuxNetFlowSend;
 
-    private LinuxIORate lastLinuxIORate;
+    private LinuxNetFlow lastLinuxNetFlowReceive;
+
+    private LinuxIORate lastLinuxIORateReadRate;
+    private LinuxIORate lastLinuxIORateReadBytesRate;
+    private LinuxIORate lastLinuxIORateWriteRate;
+    private LinuxIORate lastLinuxIORateWriteBytesRate;
 
     /**
      * agent宿主机cpu核（逻辑核）
@@ -102,13 +106,17 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
                     e);
         }
         try {
-            lastLinuxNetFlow = new LinuxNetFlow(getProcessPid());// 记录上次的收发字节数
+            lastLinuxNetFlowSend = new LinuxNetFlow(getProcessPid());// 记录上次的收发字节数
+            lastLinuxNetFlowReceive = new LinuxNetFlow(getProcessPid());
         } catch (Exception e) {
             LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=LinuxProcessMetricsServiceImpl()||msg=NetFlow init failed",
                     e);
         }
         try {
-            lastLinuxIORate = new LinuxIORate(getProcessPid());// 记录上次IO速率
+            lastLinuxIORateReadBytesRate = new LinuxIORate(getProcessPid());// 记录上次IO速率
+            lastLinuxIORateWriteRate = new LinuxIORate(getProcessPid());// 记录上次IO速率
+            lastLinuxIORateWriteBytesRate = new LinuxIORate(getProcessPid());// 记录上次IO速率
+            lastLinuxIORateReadRate = new LinuxIORate(getProcessPid());// 记录上次IO速率;
         } catch (Exception e) {
             LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=LinuxProcessMetricsServiceImpl()||msg=processIORate init failed",
                     e);
@@ -445,8 +453,8 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     private Double getProcIOReadRateOnly() {
         try {
             LinuxIORate curLinuxIORate = new LinuxIORate(PID);
-            double ioReadTimesRate = curLinuxIORate.getIOReadTimesRate(lastLinuxIORate);
-            this.lastLinuxIORate = curLinuxIORate;
+            double ioReadTimesRate = curLinuxIORate.getIOReadTimesRate(lastLinuxIORateReadRate);
+            this.lastLinuxIORateReadRate = curLinuxIORate;
             return ioReadTimesRate;
         } catch (Exception e) {
             LOGGER.error("class=LinuxOSResourceService||method=getProcIOReadRateOnly||msg=failed to get process IO read rate",
@@ -469,8 +477,8 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     private Double getProcIOReadBytesRateOnly() {
         try {
             LinuxIORate curLinuxIORate = new LinuxIORate(PID);
-            double ioReadBytesRate = curLinuxIORate.getIOReadBytesRate(lastLinuxIORate);
-            this.lastLinuxIORate = curLinuxIORate;
+            double ioReadBytesRate = curLinuxIORate.getIOReadBytesRate(lastLinuxIORateReadBytesRate);
+            this.lastLinuxIORateReadBytesRate = curLinuxIORate;
             return ioReadBytesRate;
         } catch (Exception e) {
             LOGGER.error("class=LinuxOSResourceService||method=getProcIOReadBytesRateOnly||msg=failed to get process IO read bytes rate",
@@ -493,8 +501,8 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     private Double getProcIOWriteRateOnly() {
         try {
             LinuxIORate curLinuxIORate = new LinuxIORate(PID);
-            double ioWriteTimesRate = curLinuxIORate.getIOWriteTimesRate(lastLinuxIORate);
-            this.lastLinuxIORate = curLinuxIORate;
+            double ioWriteTimesRate = curLinuxIORate.getIOWriteTimesRate(lastLinuxIORateWriteRate);
+            this.lastLinuxIORateWriteRate = curLinuxIORate;
             return ioWriteTimesRate;
         } catch (Exception e) {
             LOGGER.error("class=LinuxOSResourceService||method=getProcIOWriteRateOnly||msg=failed to get process IO write rate",
@@ -517,8 +525,8 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     private Double getProcIOWriteBytesRateOnly() {
         try {
             LinuxIORate curLinuxIORate = new LinuxIORate(PID);
-            double ioWriteBytesRate = curLinuxIORate.getIOWriteBytesRate(lastLinuxIORate);
-            this.lastLinuxIORate = curLinuxIORate;
+            double ioWriteBytesRate = curLinuxIORate.getIOWriteBytesRate(lastLinuxIORateWriteBytesRate);
+            this.lastLinuxIORateWriteBytesRate = curLinuxIORate;
             return ioWriteBytesRate;
         } catch (Exception e) {
             LOGGER.error("class=LinuxOSResourceService||method=getProcIOWriteBytesRateOnly||msg=failed to get process IO write bytes rate",
@@ -949,10 +957,17 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     private void calcProcNetworkReceiveBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getProcessPid());
-            double processReceiveBytesPs = curLinuxNetFlow.getProcessReceiveBytesPs(lastLinuxNetFlow);
-            lastLinuxNetFlow = curLinuxNetFlow;
+            double processReceiveBytesPs = curLinuxNetFlow.getProcessReceiveBytesPs(lastLinuxNetFlowReceive);
+            lastLinuxNetFlowReceive = curLinuxNetFlow;
             procNetworkReceiveBytesPs.add(processReceiveBytesPs);
         } catch (Exception e) {
+            LOGGER.error(
+                    String.format(
+                            "class=LinuxProcMetricsService||method=calcProcNetworkReceiveBytesPs||msg=%s",
+                            e.getMessage()
+                    ),
+                    e
+            );
             procNetworkReceiveBytesPs.add(0d);
         }
     }
@@ -967,10 +982,17 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     private void calcProcNetworkSendBytesPs() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow(getProcessPid());
-            double processTransmitBytesPs = curLinuxNetFlow.getProcessTransmitBytesPs(lastLinuxNetFlow);
-            lastLinuxNetFlow = curLinuxNetFlow;
+            double processTransmitBytesPs = curLinuxNetFlow.getProcessTransmitBytesPs(lastLinuxNetFlowSend);
+            lastLinuxNetFlowSend = curLinuxNetFlow;
             procNetworkSendBytesPs.add(processTransmitBytesPs);
         } catch (Exception e) {
+            LOGGER.error(
+                    String.format(
+                            "class=LinuxProcMetricsService||method=calcProcNetworkSendBytesPs||msg=%s",
+                            e.getMessage()
+                    ),
+                    e
+            );
             procNetworkSendBytesPs.add(0d);
         }
     }

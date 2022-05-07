@@ -2,6 +2,8 @@ package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.util.FileUtils;
 import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -9,6 +11,8 @@ import java.util.List;
  * @author Ronaldo
  */
 public class LinuxNetFlow {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxNetFlow.class);
 
     /**
      * 系统接收的字节数

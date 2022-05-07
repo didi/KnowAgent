@@ -13,9 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -31,7 +28,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxSystemMetricsServiceImpl.class);
 
-    private LinuxNetFlow lastLinuxNetFlow;
+    private LinuxNetFlow lastLinuxNetFlowSend;
+
+    private LinuxNetFlow lastLinuxNetFlowReceive;
 
     /**************************** 待计算字段 ****************************/
 
@@ -95,7 +94,8 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         diskMetricsService = LinuxDiskMetricsServiceImpl.getInstance();
         netCardMetricsService = LinuxNetCardMetricsServiceImpl.getInstance();
         try {
-            lastLinuxNetFlow = new LinuxNetFlow();// 记录上次的收发字节数
+            lastLinuxNetFlowSend = new LinuxNetFlow();// 记录上次的收发字节数
+            lastLinuxNetFlowReceive = new LinuxNetFlow();
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsService||method=LinuxSystemMetricsServiceImpl()||msg=NetFlow init failed",
                     e);
@@ -1075,8 +1075,8 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     private Double getSystemNetworkReceiveBytesPsOnly() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
-            double processReceiveBytesPs = curLinuxNetFlow.getSystemReceiveBytesPs(lastLinuxNetFlow);
-            lastLinuxNetFlow = curLinuxNetFlow;
+            double processReceiveBytesPs = curLinuxNetFlow.getSystemReceiveBytesPs(lastLinuxNetFlowReceive);
+            lastLinuxNetFlowReceive = curLinuxNetFlow;
             return MathUtil.divideWith2Digit(processReceiveBytesPs, 1.0);
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkReceiveBytesPsOnly()||msg=获取系统网络每秒下行流量失败",
@@ -1099,8 +1099,8 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     private Double getSystemNetworkSendBytesPsOnly() {
         try {
             LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
-            double processTransmitBytesPs = curLinuxNetFlow.getSystemTransmitBytesPs(lastLinuxNetFlow);
-            lastLinuxNetFlow = curLinuxNetFlow;
+            double processTransmitBytesPs = curLinuxNetFlow.getSystemTransmitBytesPs(lastLinuxNetFlowSend);
+            lastLinuxNetFlowSend = curLinuxNetFlow;
             return MathUtil.divideWith2Digit(processTransmitBytesPs, 1.0);
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkSendBytesPsOnly()||msg=获取系统网络每秒上行流量失败",

@@ -203,7 +203,8 @@ public class AgentStatistics extends AbstractStatistics {
         agentBusinessMetrics.setCollectpathnum(collectPathNum);
         agentBusinessMetrics.setPausecollectpathnum(getPauseCollectPathNum());
         agentBusinessMetrics.setLimittps(limiter.getAllQps());
-        agentBusinessMetrics.setCpulimit(Float.valueOf(limiter.getConfig().getCpuThreshold()).doubleValue());
+        agentBusinessMetrics.setCpulimit(Float.valueOf(limiter.getConfig().getCpuThreshold())
+            .doubleValue());
         return agentBusinessMetrics;
     }
 
