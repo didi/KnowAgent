@@ -1358,7 +1358,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         metricNodeVO.setMetricName(metricFieldEnum.getMetricName());
         metricNodeVO.setMetricDesc(metricFieldEnum.getDescription());
         metricNodeVO.setCode(metricFieldEnum.getCode());
-        metricNodeVO.setChecked(metricFieldEnum.isChecked());
+        metricNodeVO.setMetricLevel(metricFieldEnum.getMetricLevelEnum().getCode());
         metricNodeVO.setIsLeafNode(true);
         return metricNodeVO;
     }
