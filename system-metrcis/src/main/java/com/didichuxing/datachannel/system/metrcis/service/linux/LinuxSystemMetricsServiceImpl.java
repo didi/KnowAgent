@@ -32,6 +32,10 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     private LinuxNetFlow lastLinuxNetFlowReceive;
 
+    private LinuxCpuTime lastLinuxCpuTimeSystemCpuUtilTotalPercent;
+
+    private LinuxCpuTime lastLinuxCpuTimeSystemCpuUtil;
+
     /**************************** 待计算字段 ****************************/
 
     private PeriodStatistics systemCpuUtil = new PeriodStatistics();
@@ -98,6 +102,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             lastLinuxNetFlowReceive = new LinuxNetFlow();
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsService||method=LinuxSystemMetricsServiceImpl()||msg=NetFlow init failed",
+                    e);
+        }
+        try {
+            lastLinuxCpuTimeSystemCpuUtil = new LinuxCpuTime(CPU_NUM);// 记录上次的cpu耗时
+            lastLinuxCpuTimeSystemCpuUtilTotalPercent = new LinuxCpuTime(CPU_NUM);
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=LinuxSystemMetricsServiceImpl()||msg=CpuTime init failed",
                     e);
         }
         preSystemCpuSwitches = getSystemCpuSwitchesOnly();
@@ -313,9 +324,22 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         return CPU_NUM;
     }
 
+    private Double getSystemCpuUtilOnly() {
+        try {
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(CPU_NUM);
+            float cpuUsage = curLinuxCpuTime.getSystemUsage(lastLinuxCpuTimeSystemCpuUtil);
+            lastLinuxCpuTimeSystemCpuUtil = curLinuxCpuTime;
+            return Float.valueOf(cpuUsage).doubleValue();
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuUtilOnly||msg=current system's cpu usage get failed",
+                    e);
+            return 0d;
+        }
+    }
+
     @PeriodMethod(periodMs = 5 * 1000)
     private void calcSystemCpuUtil() {
-        systemCpuUtil.add(getSystemCpuUtilTotalPercentOnly() * getSystemCpuCores());
+        systemCpuUtil.add(getSystemCpuUtilOnly());
     }
 
     @Override
@@ -325,28 +349,15 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUtilTotalPercentOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "系统cpu使用率", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 6) {
-                return Double.valueOf(properties[1]) + Double.valueOf(properties[3]) + Double.valueOf(properties[5]);
-            } else {
-                LOGGER.error(
-                        String.format(
-                                "class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null, lines is:%s",
-                                JSON.toJSONString(lines)
-                        )
-                );
-                return 0.0d;
-            }
-        } else {
-            LOGGER.error(
-                    String.format(
-                            "class=LinuxSystemMetricsService()||method=getSystemCpuUtilTotalPercentOnly||msg=data is null, lines is:%s",
-                            JSON.toJSONString(lines)
-                    )
-            );
-            return 0.0d;
+        try {
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(CPU_NUM);
+            float cpuUsage = curLinuxCpuTime.getSystemUsage(lastLinuxCpuTimeSystemCpuUtilTotalPercent);
+            lastLinuxCpuTimeSystemCpuUtilTotalPercent = curLinuxCpuTime;
+            return MathUtil.divideWith2Digit(Float.valueOf(cpuUsage).doubleValue(), getSystemCpuCores());
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuUtilOnly||msg=current system's cpu usage get failed",
+                    e);
+            return 0d;
         }
     }
 

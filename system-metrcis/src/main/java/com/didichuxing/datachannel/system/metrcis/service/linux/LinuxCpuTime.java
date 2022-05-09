@@ -19,6 +19,14 @@ public class LinuxCpuTime {
     //cpu 核 数
     private int          cpuNum;
 
+    public LinuxCpuTime(int cpuNum) throws Exception {
+        this.cpuNum = cpuNum;
+        long[] allTime = getAllTime();
+        this.all = allTime[0];
+        this.allSubIdle = allTime[1];
+        PROCESS_PATH = "";
+    }
+
     // 获得当前的耗时
     public LinuxCpuTime(long pid, int cpuNum) throws Exception {
         this.cpuNum = cpuNum;
@@ -34,9 +42,9 @@ public class LinuxCpuTime {
         if (all - before.all == 0) {
             return 0.0f;
         }
-        long cpuUsage = all - before.all;
+        long cpuUsage = (all - before.all) / cpuNum;
         long proUsage = process - before.process;
-        return MathUtil.divideWith2Digit(proUsage * 100, cpuUsage).floatValue() * cpuNum;
+        return MathUtil.divideWith2Digit(proUsage * 100, cpuUsage).floatValue();
     }
 
     // 获取系统CPU使用率
@@ -78,8 +86,8 @@ public class LinuxCpuTime {
         long count = 0;
         count += Long.parseLong(array[13]);
         count += Long.parseLong(array[14]);
-//        count += Long.parseLong(array[15]);
-//        count += Long.parseLong(array[16]);
+        count += Long.parseLong(array[15]);
+        count += Long.parseLong(array[16]);
         return count;
     }
 

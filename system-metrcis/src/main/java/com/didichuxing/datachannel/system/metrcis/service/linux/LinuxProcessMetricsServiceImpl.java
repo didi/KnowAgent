@@ -16,7 +16,7 @@ import java.util.*;
 /**
  * 获取进程级指标
  * 包括按需获取指标数据和一次性获取所有指标数据
- * @author Ronaldo
+ * @author william.
  * @Date 2021/11/3
  */
 public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implements ProcessMetricsService {
@@ -28,7 +28,8 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
      */
     private final Long PID;
 
-    private LinuxCpuTime lastLinuxCpuTime;
+    private LinuxCpuTime lastLinuxCpuTimeProcessCpuUtil;
+    private LinuxCpuTime lastLinuxCpuTimeProcessCpuUtilTotalPercent;
 
     private LinuxNetFlow lastLinuxNetFlowSend;
 
@@ -100,7 +101,8 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
         PID = initializePid();
         CPU_NUM = Runtime.getRuntime().availableProcessors();
         try {
-            lastLinuxCpuTime = new LinuxCpuTime(getProcessPid(), CPU_NUM);// 记录上次的cpu耗时
+            lastLinuxCpuTimeProcessCpuUtil = new LinuxCpuTime(getProcessPid(), CPU_NUM);// 记录上次的cpu耗时
+            lastLinuxCpuTimeProcessCpuUtilTotalPercent = new LinuxCpuTime(getProcessPid(), CPU_NUM);
         } catch (Exception e) {
             LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=LinuxProcessMetricsServiceImpl()||msg=CpuTime init failed",
                     e);
@@ -156,19 +158,14 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Double getCurrentProcCpuUtil() {
-        List<String> lines = getOutputByCmd("top -b -n 1 -p %d", "当前进程系统态cpu使用率", PID);
-        if (!lines.isEmpty() && 8 == lines.size() && StringUtils.isNotBlank(lines.get(7))) {
-            String[] properties = lines.get(7).split("\\s+");
-            if(12 == properties.length) {
-                return Double.parseDouble(properties[8]);
-            } else {
-                LOGGER.error(
-                        String.format("class=LinuxProcMetricsService||method=getCurrentProcCpuUtil||msg=data is invalid, data is %s", lines.get(1))
-                );
-                return 0d;
-            }
-        } else {
-            LOGGER.error("class=LinuxProcMetricsService||method=getCurrentProcCpuUtil||msg=data is null");
+        try {
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getProcessPid(), CPU_NUM);
+            float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTimeProcessCpuUtil);
+            lastLinuxCpuTimeProcessCpuUtil = curLinuxCpuTime;
+            return MathUtil.divideWith2Digit(Float.valueOf(cpuUsage).doubleValue(), 1.0d);
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed",
+                    e);
             return 0d;
         }
     }
@@ -185,7 +182,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuUtilTotalPercentOnly() {
-        return MathUtil.divideWith2Digit(getCurrentProcCpuUtil(), CPU_NUM);
+        try {
+            LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(getProcessPid(), CPU_NUM);
+            float cpuUsage = curLinuxCpuTime.getUsage(lastLinuxCpuTimeProcessCpuUtilTotalPercent);
+            lastLinuxCpuTimeProcessCpuUtilTotalPercent = curLinuxCpuTime;
+            return MathUtil.divideWith2Digit(Float.valueOf(cpuUsage).doubleValue(), CPU_NUM);
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed",
+                    e);
+            return 0d;
+        }
     }
 
     @Override
