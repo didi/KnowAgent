@@ -468,11 +468,9 @@ public class DashboardManageServiceImpl implements DashboardManageService {
         return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_MEMORY_USED, startTime, endTime, null);
     }
 
-    private Long getAgentCpuCoresSpend(Long startTime, Long endTime) {
-        return Math.round(
-                MathUtil.divideWith2Digit(
+    private Double getAgentCpuCoresSpend(Long startTime, Long endTime) {
+        return MathUtil.divideWith2Digit(
                         metricsManageService.getSumMetricAllAgents(MetricFieldEnum.PROCESS_CPU_UTIL, startTime, endTime, null), 100l
-                )
         );
     }
 

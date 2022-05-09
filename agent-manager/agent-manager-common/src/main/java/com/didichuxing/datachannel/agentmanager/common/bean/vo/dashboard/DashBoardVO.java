@@ -40,7 +40,7 @@ public class DashBoardVO {
     private Long logCollectPathNum;
 
     @ApiModelProperty(value = "系统全量agent cpu耗费（单位：core）")
-    private Long agentCpuCoresSpend;
+    private Double agentCpuCoresSpend;
 
     @ApiModelProperty(value = "系统全量agent memory耗费（单位：byte）")
     private Long agentMemorySpend;
