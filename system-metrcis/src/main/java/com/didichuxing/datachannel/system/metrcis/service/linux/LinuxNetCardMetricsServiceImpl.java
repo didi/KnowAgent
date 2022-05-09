@@ -76,7 +76,9 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Map<String, PeriodStatistics> getReceiveBytesPs() {
-        calcReceiveBytesPs();
+        if(receiveBytesPs.isEmpty()) {
+            calcReceiveBytesPs();
+        }
         for (PeriodStatistics value : receiveBytesPs.values()) {
             value.snapshot();
         }
@@ -136,7 +138,9 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public Map<String, PeriodStatistics> getSendBytesPs() {
-        calcSendBytesPs();
+        if(sendBytesPs.isEmpty()) {
+            calcSendBytesPs();
+        }
         for (PeriodStatistics value : sendBytesPs.values()) {
             value.snapshot();
         }

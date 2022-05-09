@@ -344,7 +344,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtil() {
-//        calcSystemCpuUtil();
+        if(systemCpuUtil.isEmpty()) {
+            calcSystemCpuUtil();
+        }
         return systemCpuUtil.snapshot();
     }
 
@@ -368,13 +370,17 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtilTotalPercent() {
-//        calcSystemCpuUtilTotalPercent();
+        if(systemCpuUtilTotalPercent.isEmpty()) {
+            calcSystemCpuUtilTotalPercent();
+        }
         return systemCpuUtilTotalPercent.snapshot();
     }
 
     @Override
     public PeriodStatistics getSystemCpuSystem() {
-        calcSystemCpuSystem();
+        if(systemCpuSystem.isEmpty()) {
+            calcSystemCpuSystem();
+        }
         return systemCpuSystem.snapshot();
     }
 
@@ -405,7 +411,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUser() {
-        calcSystemCpuUser();
+        if(systemCpuUser.isEmpty()) {
+            calcSystemCpuUser();
+        }
         return systemCpuUser.snapshot();
     }
 
@@ -467,13 +475,17 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuIdle() {
-        calcSystemCpuIdle();
+        if(systemCpuIdle.isEmpty()) {
+            calcSystemCpuIdle();
+        }
         return systemCpuIdle.snapshot();
     }
 
     @Override
     public PeriodStatistics getSystemCpuSwitches() {
-        calcSystemCpuSwitches();
+        if(systemCpuSwitches.isEmpty()) {
+            calcSystemCpuSwitches();
+        }
         return systemCpuSwitches.snapshot();
     }
 
@@ -497,7 +509,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUsageIrq() {
-        calcSystemCpuUsageIrq();
+        if(systemCpuUsageIrq.isEmpty()) {
+            calcSystemCpuUsageIrq();
+        }
         return systemCpuUsageIrq.snapshot();
     }
 
@@ -521,7 +535,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUsageSoftIrq() {
-        calcSystemCpuUsageSoftIrq();
+        if(systemCpuUsageSoftIrq.isEmpty()) {
+            calcSystemCpuUsageSoftIrq();
+        }
         return systemCpuUsageSoftIrq.snapshot();
     }
 
@@ -545,7 +561,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad1() {
-        calcSystemLoad1();
+        if(systemLoad1.isEmpty()) {
+            calcSystemLoad1();
+        }
         return systemLoad1.snapshot();
     }
 
@@ -566,7 +584,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad5() {
-        calcSystemLoad5();
+        if(systemLoad5.isEmpty()) {
+            calcSystemLoad5();
+        }
         return systemLoad5.snapshot();
     }
 
@@ -587,7 +607,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemLoad15() {
-        calcSystemLoad15();
+        if(systemLoad15.isEmpty()) {
+            calcSystemLoad15();
+        }
         return systemLoad15.snapshot();
     }
 
@@ -608,7 +630,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuIOWait() {
-        calcSystemCpuIOWait();
+        if(systemCpuIOWait.isEmpty()) {
+            calcSystemCpuIOWait();
+        }
         return systemCpuIOWait.snapshot();
     }
 
@@ -628,7 +652,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuGuest() {
-        calcSystemCpuGuest();
+        if(systemCpuGuest.isEmpty()) {
+            calcSystemCpuGuest();
+        }
         return systemCpuGuest.snapshot();
     }
 
@@ -649,7 +675,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuSteal() {
-        calcSystemCpuSteal();
+        if(systemCpuSteal.isEmpty()) {
+            calcSystemCpuSteal();
+        }
         return systemCpuSteal.snapshot();
     }
 
@@ -1098,7 +1126,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkReceiveBytesPs() {
-        calcSystemNetworkReceiveBytesPs();
+        if(systemNetworkReceiveBytesPs.isEmpty()) {
+            calcSystemNetworkReceiveBytesPs();
+        }
         return systemNetworkReceiveBytesPs.snapshot();
     }
 
@@ -1122,7 +1152,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkSendBytesPs() {
-        calcSystemNetworkSendBytesPs();
+        if(systemNetworkSendBytesPs.isEmpty()) {
+            calcSystemNetworkSendBytesPs();
+        }
         return systemNetworkSendBytesPs.snapshot();
     }
 
@@ -1139,7 +1171,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetworkSendAndReceiveBytesPs() {
-        calcSystemNetworkSendAndReceiveBytesPs();
+        if(systemNetworkSendAndReceiveBytesPs.isEmpty()) {
+            calcSystemNetworkSendAndReceiveBytesPs();
+        }
         return systemNetworkSendAndReceiveBytesPs.snapshot();
     }
 
@@ -1173,7 +1207,9 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemNetWorkBandWidthUsedPercent() {
-        calcSystemNetWorkBandWidthUsedPercent();
+        if(systemNetWorkBandWidthUsedPercent.isEmpty()) {
+            calcSystemNetWorkBandWidthUsedPercent();
+        }
         return systemNetWorkBandWidthUsedPercent.snapshot();
     }
 

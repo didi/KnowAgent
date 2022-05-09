@@ -152,7 +152,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuUtil() {
-//        calcProcCpuUtil();
+        if(procCpuUtil.isEmpty()) {
+            calcProcCpuUtil();
+        }
         return procCpuUtil.snapshot();
     }
 
@@ -172,7 +174,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuUtilTotalPercent() {
-//        calcProcCpuUtilTotalPercent();
+        if(procCpuUtilTotalPercent.isEmpty()) {
+            calcProcCpuUtilTotalPercent();
+        }
         return procCpuUtilTotalPercent.snapshot();
     }
 
@@ -196,7 +200,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuSys() {
-        calcProcCpuSys();
+        if(procCpuSys.isEmpty()) {
+            calcProcCpuSys();
+        }
         return procCpuSys.snapshot();
     }
 
@@ -217,7 +223,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuUser() {
-        calcProcCpuUser();
+        if(procCpuUser.isEmpty()) {
+            calcProcCpuUser();
+        }
         return procCpuUser.snapshot();
     }
 
@@ -238,7 +246,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuSwitchesPS() {
-        calcProcCpuSwitchesPS();
+        if(procCpuSwitchesPS.isEmpty()) {
+            calcProcCpuSwitchesPS();
+        }
         return procCpuSwitchesPS.snapshot();
     }
 
@@ -253,7 +263,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuVoluntarySwitchesPS() {
-        calcProcCpuVoluntarySwitchesPS();
+        if(procCpuVoluntarySwitchesPS.isEmpty()) {
+            calcProcCpuVoluntarySwitchesPS();
+        }
         return procCpuVoluntarySwitchesPS.snapshot();
     }
 
@@ -274,7 +286,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuNonVoluntarySwitchesPS() {
-        calcProcCpuNonVoluntarySwitchesPS();
+        if(procCpuNonVoluntarySwitchesPS.isEmpty()) {
+            calcProcCpuNonVoluntarySwitchesPS();
+        }
         return procCpuNonVoluntarySwitchesPS.snapshot();
     }
 
@@ -447,7 +461,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOReadRate() {
-        calcProcIOReadRate();
+        if(procIOReadRate.isEmpty()) {
+            calcProcIOReadRate();
+        }
         return procIOReadRate.snapshot();
     }
 
@@ -471,7 +487,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOReadBytesRate() {
-        calcProcIOReadBytesRate();
+        if(procIOReadBytesRate.isEmpty()) {
+            calcProcIOReadBytesRate();
+        }
         return procIOReadBytesRate.snapshot();
     }
 
@@ -495,7 +513,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOWriteRate() {
-        calcProcIOWriteRate();
+        if(procIOWriteRate.isEmpty()) {
+            calcProcIOWriteRate();
+        }
         return procIOWriteRate.snapshot();
     }
 
@@ -519,7 +539,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOWriteBytesRate() {
-        calcProcIOWriteBytesRate();
+        if(procIOWriteBytesRate.isEmpty()) {
+            calcProcIOWriteBytesRate();
+        }
         return procIOWriteBytesRate.snapshot();
     }
 
@@ -543,7 +565,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOReadWriteRate() {
-        calcProcIOReadWriteRate();
+        if(procIOReadWriteRate.isEmpty()) {
+            calcProcIOReadWriteRate();
+        }
         return procIOReadWriteRate.snapshot();
     }
 
@@ -558,7 +582,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOReadWriteBytesRate() {
-        calcProcIOReadWriteBytesRate();
+        if(procIOReadWriteBytesRate.isEmpty()) {
+            calcProcIOReadWriteBytesRate();
+        }
         return procIOReadWriteBytesRate.snapshot();
     }
 
@@ -573,7 +599,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcIOAwaitTimePercent() {
-        calcProcIOAwaitTimePercent();
+        if(procIOAwaitTimePercent.isEmpty()) {
+            calcProcIOAwaitTimePercent();
+        }
         return procIOAwaitTimePercent.snapshot();
     }
 
@@ -980,7 +1008,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcNetworkReceiveBytesPs() {
-        calcProcNetworkReceiveBytesPs();
+        if(procNetworkReceiveBytesPs.isEmpty()) {
+            calcProcNetworkReceiveBytesPs();
+        }
         return procNetworkReceiveBytesPs.snapshot();
     }
 
@@ -1005,7 +1035,9 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcNetworkSendBytesPs() {
-        calcProcNetworkSendBytesPs();
+        if(procNetworkSendBytesPs.isEmpty()) {
+            calcProcNetworkSendBytesPs();
+        }
         return procNetworkSendBytesPs.snapshot();
     }
 

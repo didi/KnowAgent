@@ -162,4 +162,8 @@ public class PeriodStatistics {
         return this;
     }
 
+    public boolean isEmpty() {
+        return this.samples.isEmpty();
+    }
+
 }

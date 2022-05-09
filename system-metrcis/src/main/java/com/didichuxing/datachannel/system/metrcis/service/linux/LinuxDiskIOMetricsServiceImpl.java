@@ -47,7 +47,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOUtil() {
-        calcIOUtil();
+        if(iOUtil.isEmpty()) {
+            calcIOUtil();
+        }
         for (PeriodStatistics value : iOUtil.values()) {
             value.snapshot();
         }
@@ -88,7 +90,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getAvgQuSz() {
-        calcAvgQuSzOnly();
+        if(avgQuSz.isEmpty()) {
+            calcAvgQuSzOnly();
+        }
         for (PeriodStatistics value : avgQuSz.values()) {
             value.snapshot();
         }
@@ -130,7 +134,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getAvgRqSz() {
-        calcAvgRqSz();
+        if(avgRqSz.isEmpty()) {
+            calcAvgRqSz();
+        }
         for (PeriodStatistics value : avgRqSz.values()) {
             value.snapshot();
         }
@@ -172,7 +178,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOAwait() {
-        calcIOAwait();
+        if(iOAwait.isEmpty()) {
+            calcIOAwait();
+        }
         for (PeriodStatistics value : iOAwait.values()) {
             value.snapshot();
         }
@@ -214,7 +222,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIORAwait() {
-        calcIORAwait();
+        if(iORAwait.isEmpty()) {
+            calcIORAwait();
+        }
         for (PeriodStatistics value : iORAwait.values()) {
             value.snapshot();
         }
@@ -256,7 +266,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOReadRequest() {
-        calcIOReadRequest();
+        if(iOReadRequest.isEmpty()) {
+            calcIOReadRequest();
+        }
         for (PeriodStatistics value : iOReadRequest.values()) {
             value.snapshot();
         }
@@ -298,7 +310,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOReadBytes() {
-        calcIOReadBytes();
+        if(iOReadBytes.isEmpty()) {
+            calcIOReadBytes();
+        }
         for (PeriodStatistics value : iOReadBytes.values()) {
             value.snapshot();
         }
@@ -339,7 +353,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIORRQMS() {
-        calcIORRQMS();
+        if(iORRQMS.isEmpty()) {
+            calcIORRQMS();
+        }
         for (PeriodStatistics value : iORRQMS.values()) {
             value.snapshot();
         }
@@ -381,7 +397,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOSVCTM() {
-        calcIOSVCTM();
+        if(iOSVCTM.isEmpty()) {
+            calcIOSVCTM();
+        }
         for (PeriodStatistics value : iOSVCTM.values()) {
             value.snapshot();
         }
@@ -423,7 +441,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOWAwait() {
-        calcIOWAwait();
+        if(iOWAwait.isEmpty()) {
+            calcIOWAwait();
+        }
         for (PeriodStatistics value : iOWAwait.values()) {
             value.snapshot();
         }
@@ -465,7 +485,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOWriteRequest() {
-        calcIOWriteRequest();
+        if(iOWriteRequest.isEmpty()) {
+            calcIOWriteRequest();
+        }
         for (PeriodStatistics value : iOWriteRequest.values()) {
             value.snapshot();
         }
@@ -507,7 +529,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOWriteBytes() {
-        calcIOWriteBytes();
+        if(iOWriteBytes.isEmpty()) {
+            calcIOWriteBytes();
+        }
         for (PeriodStatistics value : iOWriteBytes.values()) {
             value.snapshot();
         }
@@ -548,7 +572,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOReadWriteBytes() {
-        calcIOReadWriteBytes();
+        if(iOReadWriteBytes.isEmpty()) {
+            calcIOReadWriteBytes();
+        }
         for (PeriodStatistics value : iOReadWriteBytes.values()) {
             value.snapshot();
         }
@@ -587,7 +613,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getIOWRQMS() {
-        calcIOWRQMS();
+        if(iOWRQMS.isEmpty()) {
+            calcIOWRQMS();
+        }
         for (PeriodStatistics value : iOWRQMS.values()) {
             value.snapshot();
         }
@@ -629,7 +657,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getDiskReadTime() {
-        calcDiskReadTime();
+        if(diskReadTime.isEmpty()) {
+            calcDiskReadTime();
+        }
         for (PeriodStatistics value : diskReadTime.values()) {
             value.snapshot();
         }
@@ -670,7 +700,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getDiskReadTimePercent() {
-        calcDiskReadTimePercent();
+        if(readTimePercent.isEmpty()) {
+            calcDiskReadTimePercent();
+        }
         for (PeriodStatistics value : readTimePercent.values()) {
             value.snapshot();
         }
@@ -714,7 +746,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getDiskWriteTime() {
-        calcDiskWriteTime();
+        if(writeTime.isEmpty()) {
+            calcDiskWriteTime();
+        }
         for (PeriodStatistics value : writeTime.values()) {
             value.snapshot();
         }
@@ -755,7 +789,9 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Map<String, PeriodStatistics> getDiskWriteTimePercent() {
-        calcDiskWriteTimePercent();
+        if(writeTimePercent.isEmpty()) {
+            calcDiskWriteTimePercent();
+        }
         for (PeriodStatistics value : writeTimePercent.values()) {
             value.snapshot();
         }
