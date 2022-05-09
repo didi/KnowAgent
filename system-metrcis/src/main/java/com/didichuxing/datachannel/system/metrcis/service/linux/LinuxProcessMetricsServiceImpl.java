@@ -152,7 +152,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuUtil() {
-        calcProcCpuUtil();
+//        calcProcCpuUtil();
         return procCpuUtil.snapshot();
     }
 
@@ -172,7 +172,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     @Override
     public PeriodStatistics getProcCpuUtilTotalPercent() {
-        calcProcCpuUtilTotalPercent();
+//        calcProcCpuUtilTotalPercent();
         return procCpuUtilTotalPercent.snapshot();
     }
 

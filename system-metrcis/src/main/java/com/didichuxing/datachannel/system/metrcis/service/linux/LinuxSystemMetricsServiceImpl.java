@@ -329,7 +329,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             LinuxCpuTime curLinuxCpuTime = new LinuxCpuTime(CPU_NUM);
             float cpuUsage = curLinuxCpuTime.getSystemUsage(lastLinuxCpuTimeSystemCpuUtil);
             lastLinuxCpuTimeSystemCpuUtil = curLinuxCpuTime;
-            return Float.valueOf(cpuUsage).doubleValue();
+            return MathUtil.divideWith2Digit(Float.valueOf(cpuUsage).doubleValue(), 1.0d);
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuUtilOnly||msg=current system's cpu usage get failed",
                     e);
@@ -344,7 +344,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtil() {
-        calcSystemCpuUtil();
+//        calcSystemCpuUtil();
         return systemCpuUtil.snapshot();
     }
 
@@ -368,7 +368,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public PeriodStatistics getSystemCpuUtilTotalPercent() {
-        calcSystemCpuUtilTotalPercent();
+//        calcSystemCpuUtilTotalPercent();
         return systemCpuUtilTotalPercent.snapshot();
     }
 

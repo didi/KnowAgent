@@ -42,7 +42,7 @@ public class LinuxCpuTime {
         if (all - before.all == 0) {
             return 0.0f;
         }
-        long cpuUsage = (all - before.all) / cpuNum;
+        long cpuUsage = all - before.all;
         long proUsage = process - before.process;
         return MathUtil.divideWith2Digit(proUsage * 100, cpuUsage).floatValue();
     }
