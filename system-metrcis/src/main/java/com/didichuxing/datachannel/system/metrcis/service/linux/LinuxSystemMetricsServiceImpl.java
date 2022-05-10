@@ -1197,24 +1197,18 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemNetWorkBandWidthUsedPercentOnly() {
-        Long systemNetWorkBand = 0L;
-        List<NetCardInfo> netCardInfoList = this.getSystemNetCardInfoList();
-
         /*
          * 1.）获取系统全部网卡对应带宽之和
          */
-        for(NetCardInfo netCardInfo : netCardInfoList) {
-            systemNetWorkBand += netCardInfo.getSystemNetCardsBandWidth();
-        }
-
+        Double systemNetWorkBand = getSystemNetCardsBandWidth();
         /*
          * 2.）获取系统当前上、下行总流量
          */
-        if(0l == systemNetWorkBand) {
-            return 0d;
-        } else {
+        if(0d < systemNetWorkBand) {
             Double systemNetworkSendAndReceiveBytesPs = getSystemNetworkSendAndReceiveBytesPsOnlyUsedInNetWorkBandWidthUsedPercent();
             return MathUtil.divideWith2Digit(systemNetworkSendAndReceiveBytesPs * 100, systemNetWorkBand);
+        } else {
+            return 0d;
         }
     }
 

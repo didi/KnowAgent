@@ -69,7 +69,7 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
                     break;
                 }
             }
-            result.put(device, bandWidth);
+            result.put(device, bandWidth * 1024 * 1024);
         }
         return result;
     }
