@@ -71,9 +71,9 @@ public class LinuxNetFlow {
         long bytes = 0;
         for (int i = 2; i < fileLines.size(); i++) {
             String[] array = fileLines.get(i).split("\\s+");
-            if ("lo:".equals(array[1])) {
-                continue;
-            }
+//            if ("lo:".equals(array[1])) {
+//                continue;
+//            }
             bytes += Long.parseLong(array[index]);
         }
         return bytes;
