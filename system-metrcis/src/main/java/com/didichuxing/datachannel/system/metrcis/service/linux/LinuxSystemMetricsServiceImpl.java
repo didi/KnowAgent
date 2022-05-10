@@ -32,6 +32,10 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     private LinuxNetFlow lastLinuxNetFlowReceive;
 
+    private LinuxNetFlow lastLinuxNetFlowSendReceive;
+
+    private LinuxNetFlow lastLinuxNetFlowSendReceiveUsedInNetWorkBandWidthUsedPercent;
+
     private LinuxCpuTime lastLinuxCpuTimeSystemCpuUtilTotalPercent;
 
     private LinuxCpuTime lastLinuxCpuTimeSystemCpuUtil;
@@ -100,6 +104,8 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         try {
             lastLinuxNetFlowSend = new LinuxNetFlow();// 记录上次的收发字节数
             lastLinuxNetFlowReceive = new LinuxNetFlow();
+            lastLinuxNetFlowSendReceive = new LinuxNetFlow();
+            lastLinuxNetFlowSendReceiveUsedInNetWorkBandWidthUsedPercent = new LinuxNetFlow();
         } catch (Exception e) {
             LOGGER.error("class=LinuxSystemMetricsService||method=LinuxSystemMetricsServiceImpl()||msg=NetFlow init failed",
                     e);
@@ -1164,9 +1170,16 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemNetworkSendAndReceiveBytesPsOnly() {
-        Double sendBytesPs = this.getSystemNetworkSendBytesPsOnly();;
-        Double receiveBytesPs = this.getSystemNetworkReceiveBytesPsOnly();
-        return sendBytesPs + receiveBytesPs;
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
+            double systemSendReceiveBytesPs = curLinuxNetFlow.getSystemSendReceiveBytesPs(lastLinuxNetFlowSendReceive);
+            lastLinuxNetFlowSendReceive = curLinuxNetFlow;
+            return MathUtil.divideWith2Digit(systemSendReceiveBytesPs, 1.0);
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkSendAndReceiveBytesPsOnly()||msg=获取系统网络每秒下行流量失败",
+                    e);
+            return 0d;
+        }
     }
 
     @Override
@@ -1197,11 +1210,24 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         /*
          * 2.）获取系统当前上、下行总流量
          */
-        if(0 == systemNetWorkBand) {
+        if(0l == systemNetWorkBand) {
             return 0d;
         } else {
-            Double systemNetworkSendAndReceiveBytesPs = getSystemNetworkSendAndReceiveBytesPsOnly();
+            Double systemNetworkSendAndReceiveBytesPs = getSystemNetworkSendAndReceiveBytesPsOnlyUsedInNetWorkBandWidthUsedPercent();
             return MathUtil.divideWith2Digit(systemNetworkSendAndReceiveBytesPs * 100, systemNetWorkBand);
+        }
+    }
+
+    private Double getSystemNetworkSendAndReceiveBytesPsOnlyUsedInNetWorkBandWidthUsedPercent() {
+        try {
+            LinuxNetFlow curLinuxNetFlow = new LinuxNetFlow();
+            double systemSendReceiveBytesPs = curLinuxNetFlow.getSystemSendReceiveBytesPs(lastLinuxNetFlowSendReceiveUsedInNetWorkBandWidthUsedPercent);
+            lastLinuxNetFlowSendReceiveUsedInNetWorkBandWidthUsedPercent = curLinuxNetFlow;
+            return MathUtil.divideWith2Digit(systemSendReceiveBytesPs, 1.0);
+        } catch (Exception e) {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getSystemNetworkSendAndReceiveBytesPsOnlyUsedInNetWorkBandWidthUsedPercent()||msg=获取系统网络每秒下行流量失败",
+                    e);
+            return 0d;
         }
     }
 

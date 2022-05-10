@@ -131,4 +131,14 @@ public class LinuxNetFlow {
         }
     }
 
+    public double getSystemSendReceiveBytesPs(LinuxNetFlow before) {
+        long timeGap = this.currentTime - before.currentTime;
+        long bytesGap = (this.systemTransmitBytes + this.systemReceiveBytes) - (before.systemTransmitBytes + before.systemReceiveBytes);
+        if(0 != timeGap) {
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
+        } else {
+            return 1000.0 * bytesGap;
+        }
+    }
+
 }
