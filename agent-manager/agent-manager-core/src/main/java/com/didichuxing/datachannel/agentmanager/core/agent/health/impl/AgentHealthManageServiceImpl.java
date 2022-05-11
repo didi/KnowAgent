@@ -25,6 +25,7 @@ import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterMa
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentHealthMapper;
+import com.didichuxing.datachannel.agentmanager.persistence.mysql.ErrorLogMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,9 +44,6 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
     private AgentHealthMapper agentHealthDAO;
 
     @Autowired
-    private AgentMetricsManageService agentMetricsManageService;
-
-    @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
 
     @Autowired
@@ -53,6 +51,9 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
 
     @Autowired
     private MetricsManageService metricsManageService;
+
+    @Autowired
+    private ErrorLogMapper errorLogMapper;
 
     @Override
     @Transactional
@@ -230,6 +231,13 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
             }
             agentHealthDAO.updateByPrimaryKey(agentHealthPO);
         }
+    }
+
+    @Override
+    public List<String> getErrorLogsInHeartbeatScope(Long heartbeatTime) {
+        Long startTime = heartbeatTime - 2 * 60 * 1000;
+        Long endTime = heartbeatTime;
+        return errorLogMapper.getErrorLogs(startTime, endTime);
     }
 
     /**

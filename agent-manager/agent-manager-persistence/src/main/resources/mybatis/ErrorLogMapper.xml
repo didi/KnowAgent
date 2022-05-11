@@ -168,4 +168,12 @@
     delete from error_log
     where heartbeat_time &lt;= #{time}
   </delete>
+
+  <select id="getErrorLogs" resultType="java.lang.String" >
+    select
+      log_msg
+    from error_log
+    where heartbeat_time &gt;= #{startTime} and heartbeat_time &lt;= #{endTime}
+  </select>
+
 </mapper>

@@ -23,9 +23,9 @@ public class NormalAgentHealthController {
     private AgentHealthManageService agentHealthManageService;
 
     @ApiOperation(value = "根据给定主机名获取导致 agent 健康状态为 AGENT_ERROR_LOGS_EXISTS 的错误信息详情列表", notes = "")
-    @RequestMapping(value = "/error-detail/{hostName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/error-detail", method = RequestMethod.GET)
     @ResponseBody
-    public Result<List<AgentHealthErrorDetailVO>> getErrorDetails(@PathVariable String hostName) {
+    public Result<List<AgentHealthErrorDetailVO>> getErrorDetails(@RequestParam String hostName) {
         List<MetricsAgentPO> metricsAgentPOList = agentHealthManageService.getErrorDetails(hostName);
         return Result.buildSucc(convert2AgentHealthErrorDetailVOList(metricsAgentPOList));
     }
@@ -44,6 +44,7 @@ public class NormalAgentHealthController {
             AgentHealthErrorDetailVO agentHealthErrorDetailVO = new AgentHealthErrorDetailVO();
             agentHealthErrorDetailVO.setAgentMetricId(metricsAgentPO.getId());
             agentHealthErrorDetailVO.setErrorLogsCount(metricsAgentPO.getErrorlogscount());
+            agentHealthErrorDetailVO.setErrorLogs(agentHealthManageService.getErrorLogsInHeartbeatScope(metricsAgentPO.getHeartbeattime()));
             agentHealthErrorDetailVO.setHostName(metricsAgentPO.getHostname());
             agentHealthErrorDetailVO.setHeartbeatTime(metricsAgentPO.getHeartbeattime());
             agentHealthErrorDetailVOList.add(agentHealthErrorDetailVO);

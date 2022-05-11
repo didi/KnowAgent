@@ -56,4 +56,11 @@ public interface AgentHealthManageService {
 
     void solveErrorDetail(Long agentMetricId);
 
+    /**
+     *
+     * @param heartbeatTime agent metrics 心跳时间
+     * @return 返回给定心跳时间对应心跳周期内 agent 错误日志信息集
+     */
+    List<String> getErrorLogsInHeartbeatScope(Long heartbeatTime);
+
 }
