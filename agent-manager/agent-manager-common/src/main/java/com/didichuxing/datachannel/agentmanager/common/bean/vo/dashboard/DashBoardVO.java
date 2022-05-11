@@ -54,6 +54,9 @@ public class DashBoardVO {
     @ApiModelProperty(value = "系统全量agent近1分钟发送条数")
     private Long agentSendLogEventsLast1Minute;
 
+    @ApiModelProperty(value = "系统全量agent近1分钟发送流量")
+    private Long agentSendBytesLast1Minute;
+
     @ApiModelProperty(value = "系统全量agent当日发送流量")
     private Long agentSendBytesDay;
 
@@ -104,6 +107,9 @@ public class DashBoardVO {
 
     @ApiModelProperty(value = "近1分钟发送日志条数top5 agents，key：agent主机名 value：发送日志条数")
     private MetricPanel sendLogEventsLast1MinuteTop5Agents;
+
+    @ApiModelProperty(value = "近1分钟发送日志流量top5 agents，key：agent主机名 value：发送日志流量")
+    private MetricPanel sendBytesLast1MinuteTop5Agents;
 
     @ApiModelProperty(value = "当日发送流量 top5 agents，key：agent主机名 value：当日发送流量")
     private MetricPanel sendBytesDayTop5Agents;

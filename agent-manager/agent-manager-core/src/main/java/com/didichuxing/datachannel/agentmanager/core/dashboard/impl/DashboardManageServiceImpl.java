@@ -79,6 +79,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
         dashBoardVO.setAgentMemorySpend(getAgentMemorySpend(last1Minute, currentMinute));
         dashBoardVO.setAgentUplinkBytes(getAgentUplinkBytes(last1Minute, currentMinute));
         dashBoardVO.setAgentDownLinkBytes(getAgentDownLinkBytes(last1Minute, currentMinute));
+        dashBoardVO.setAgentSendBytesLast1Minute(getAgentSendBytesLast1Minute(last1Minute, currentMinute));
         dashBoardVO.setAgentSendLogEventsLast1Minute(getAgentSendLogEventsLast1Minute(last1Minute, currentMinute));
         dashBoardVO.setAgentSendBytesDay(getAgentSendBytesDay(currentDayZeroDate, currentMinute));
         dashBoardVO.setAgentSendLogEventsDay(getAgentSendLogEventsDay(currentDayZeroDate, currentMinute));
@@ -122,6 +123,7 @@ public class DashboardManageServiceImpl implements DashboardManageService {
         dashBoardVO.setFdUsedTop5Agents(getFdUsedTop5Agents(last1Hour, last1Minute));
         dashBoardVO.setUplinkBytesTop5Agents(getUplinkBytesTop5Agents(last1Hour, last1Minute));
         dashBoardVO.setSendLogEventsLast1MinuteTop5Agents(getSendLogEventsLast1MinuteTop5Agents(last1Hour, last1Minute));
+        dashBoardVO.setSendBytesLast1MinuteTop5Agents(getSendBytesLast1MinuteTop5Agents(last1Hour, last1Minute));
         dashBoardVO.setSendBytesDayTop5Agents(getSendBytesDayTop5Agents(last1Hour, last1Minute));
         dashBoardVO.setSendLogEventsDayTop5Agents(getSendLogEventsDayTop5Agents(last1Hour, last1Minute));
         dashBoardVO.setRunningLogCollectTasksTop5Agents(getRunningLogCollectTasksTop5Agents(last1Hour, last1Minute));
@@ -143,6 +145,23 @@ public class DashboardManageServiceImpl implements DashboardManageService {
 
         return dashBoardVO;
 
+    }
+
+    private MetricPanel getSendBytesLast1MinuteTop5Agents(Long startTime, Long endTime) {
+        List<MetricPointLine> multiLineChatValue = metricsManageService.getTopNByMetric(
+                MetricFieldEnum.AGENT_WRITE_BYTES, startTime, endTime, SortTimeFieldEnum.HEARTBEAT_TIME_MINUTE.getFieldName(),false
+        );
+        MetricPanel metricPanel = new MetricPanel();
+        metricPanel.setBaseUnit(MetricFieldEnum.AGENT_WRITE_BYTES.getBaseUnit().getCode());
+        metricPanel.setDisplayUnit(MetricFieldEnum.AGENT_WRITE_BYTES.getDisplayUnit().getCode());
+        metricPanel.setName(MetricFieldEnum.AGENT_WRITE_BYTES.getMetricName());
+        metricPanel.setType(MetricDisplayTypeEnum.MULTI_LINE_CHAT.getCode());
+        metricPanel.setMultiLineChatValue(multiLineChatValue);
+        return metricPanel;
+    }
+
+    private Long getAgentSendBytesLast1Minute(Long startTime, Long endTime) {
+        return metricsManageService.getSumMetricAllAgents(MetricFieldEnum.AGENT_WRITE_BYTES, startTime, endTime, null);
     }
 
     private MetricPanel getSendLogEventsDayTop5Services(Long startTime, Long endTime) {

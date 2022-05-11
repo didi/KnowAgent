@@ -1306,7 +1306,7 @@ public enum MetricFieldEnum {
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.BYTE,
-            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
             MetricLevelEnum.LEVEL_THREE
@@ -1320,7 +1320,7 @@ public enum MetricFieldEnum {
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.BYTE,
-            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
             MetricLevelEnum.LEVEL_THREE
@@ -1337,7 +1337,7 @@ public enum MetricFieldEnum {
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.BYTE,
-            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             SortTypeEnum.DESC,
             MetricLevelEnum.LEVEL_THREE
@@ -1351,7 +1351,7 @@ public enum MetricFieldEnum {
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.BYTE,
-            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             SortTypeEnum.DESC,
             MetricLevelEnum.LEVEL_THREE
@@ -1715,7 +1715,7 @@ public enum MetricFieldEnum {
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.BYTE,
-            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             SortTypeEnum.DESC,
             MetricLevelEnum.LEVEL_THREE
@@ -2496,7 +2496,7 @@ public enum MetricFieldEnum {
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.BYTE,
-            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             SortTypeEnum.DESC,
             MetricLevelEnum.LEVEL_ONE
@@ -2510,7 +2510,7 @@ public enum MetricFieldEnum {
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.STATISTICS,
             MetricUnitEnum.BYTE,
-            MetricUnitEnum.BYTE,
+            MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.SINGLE_LINE_CHAT,
             SortTypeEnum.DESC,
             MetricLevelEnum.LEVEL_ONE
