@@ -60,7 +60,7 @@ public class DataSendFailedCheckProcessor extends BaseProcessor {
      * @param metricsManageService MetricsManageService 对象
      * @return true：存在下游接收端写入失败 false：不存在下游接收端写入失败
      */
-    private boolean checkDataSendFailedExists(
+    public static boolean checkDataSendFailedExists(
             Long logCollectTaskId,
             Long fileLogCollectPathId,
             String hostName,

@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.AgentGcMetricExceptionExistsCheckProcessor;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
@@ -38,16 +39,25 @@ public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (byteLimitOnHostExists) {//存在采集端出口流量阈值限流
-            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum());
-            String logCollectTaskHealthDescription = String.format(
-                    "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                    LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS.getDescription(),
-                    context.getLogCollectTaskDO().getId(),
-                    context.getFileLogCollectPathDO().getId(),
-                    context.getHostDO().getHostName()
-            );
-            context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.HOST_BYTES_LIMIT_EXISTS);
+            /*
+             * 此时，须进一步判断出口限流是否因 agent fullgc 过频导致，如是，提示用户 fullgc 过频，如不是，提示用户对应 agent cpu 限流阈值
+             */
+            if(
+                    AgentGcMetricExceptionExistsCheckProcessor.checkAgentGcMetricExceptionExists(
+                            context.getHostDO().getHostName(),
+                            context.getMetricsManageService()
+                    )
+            ) {//存在 full gc 过频
+                setLogCollectTaskHealthInfo(
+                        context,
+                        LogCollectTaskHealthInspectionResultEnum.HOST_CPU_USAGE_LIMIT_EXISTS_CAUSE_BY_AGENT_FULL_GC_OVER_FREQUENCY
+                );
+            } else {//不存在 full gc 过频
+                setLogCollectTaskHealthInfo(
+                        context,
+                        LogCollectTaskHealthInspectionResultEnum.HOST_CPU_USAGE_LIMIT_EXISTS
+                );
+            }
         }
     }
 
@@ -60,7 +70,7 @@ public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
      * @param metricsManageService MetricsManageService 对象
      * @return true：存在出口流量阈值限流 false：不存在出口流量阈值限流
      */
-    private boolean checkByteLimitOnHostExists(
+    public static boolean checkByteLimitOnHostExists(
             Long logCollectTaskId,
             Long fileLogCollectPathId,
             String hostName,

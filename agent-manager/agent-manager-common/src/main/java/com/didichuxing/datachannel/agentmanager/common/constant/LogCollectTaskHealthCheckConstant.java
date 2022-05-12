@@ -49,4 +49,10 @@ public class LogCollectTaskHealthCheckConstant {
      * 校验 logcollecttask + logpath 在 host 端是否存在心跳过程中，获取最近 ALIVE_CHECK_LASTEST_MS_THRESHOLD ms 内指标
      */
     public static final Long ALIVE_CHECK_LASTEST_MS_THRESHOLD = 5 * 60 * 1000L;
+
+    /**
+     * 校验 logcollecttask + logpath 在 host 端是否存在采集端流量阈值限流过程中，获取最近 CHANNEL_USAGE_CHECK_LASTEST_MS_THRESHOLD ms 内指标
+     */
+    public static final Long CHANNEL_USAGE_CHECK_LASTEST_MS_THRESHOLD = 10 * 60 * 1000L;
+
 }

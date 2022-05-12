@@ -48,7 +48,7 @@ public class AgentGcMetricExceptionExistsCheckProcessor extends BaseProcessor {
      * @param metricsManageService MetricsManageService 对象
      * @return true：存在 agent 进程 gc 指标异常 false：不存在 agent 进程 gc 指标异常
      */
-    private boolean checkAgentGcMetricExceptionExists(
+    public static boolean checkAgentGcMetricExceptionExists(
             String hostName,
             MetricsManageService metricsManageService
     ) {

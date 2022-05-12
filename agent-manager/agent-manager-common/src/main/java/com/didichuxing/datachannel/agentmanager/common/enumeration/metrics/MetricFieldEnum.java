@@ -3506,6 +3506,10 @@ public enum MetricFieldEnum {
         return fieldName;
     }
 
+    public String getFieldNameMax() {
+        return String.format("%sMax", fieldName);
+    }
+
     public String getDescription() {
         return description;
     }
