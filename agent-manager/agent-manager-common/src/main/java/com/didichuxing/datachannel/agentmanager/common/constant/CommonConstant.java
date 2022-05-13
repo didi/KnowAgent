@@ -16,6 +16,7 @@ public class CommonConstant {
     public static final String SYSTEM_DEFAULT_OPERATOR = "System";
     public static final String COMMA = ",";
     public static final String COLON = ":";
+    public static final String EQUAL_SIGN = "=";
 
     private static Map<Integer, ErrorCodeEnum> errorCodeEnumMap = new HashMap<>();
 

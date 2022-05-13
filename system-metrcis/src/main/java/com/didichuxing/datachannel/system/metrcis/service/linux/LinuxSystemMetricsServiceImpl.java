@@ -1044,7 +1044,7 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Double getSystemFilesUsedPercent() {
-        return MathUtil.divideWith2Digit(getSystemFilesUsed() * 100, getSystemFilesAllocated());
+        return MathUtil.divideWith2Digit(getSystemFilesUsed() * 100, getSystemFilesMax());
     }
 
     @Override

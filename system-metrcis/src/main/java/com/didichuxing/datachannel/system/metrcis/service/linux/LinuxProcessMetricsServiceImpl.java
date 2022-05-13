@@ -275,7 +275,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuVoluntarySwitchesPSOnly() {
-        List<String> lines = getOutputByCmd("pidstat -w -p %d | awk 'NR==4{print $4}'", "进程CPU每秒上下文自愿切换次数", PID);
+        List<String> lines = getOutputByCmd("pidstat -w -p %d 1 1 | awk 'NR==4{print $4}'", "进程CPU每秒上下文自愿切换次数", PID);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Double.parseDouble(lines.get(0));
         } else {
@@ -298,7 +298,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuNonVoluntarySwitchesPSOnly() {
-        List<String> lines = getOutputByCmd("pidstat -w -p %d | awk 'NR==4{print $5}'", "进程CPU每秒上下文非自愿切换次数", PID);
+        List<String> lines = getOutputByCmd("pidstat -w -p %d 1 1 | awk 'NR==4{print $5}'", "进程CPU每秒上下文非自愿切换次数", PID);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Double.parseDouble(lines.get(0));
         } else {
