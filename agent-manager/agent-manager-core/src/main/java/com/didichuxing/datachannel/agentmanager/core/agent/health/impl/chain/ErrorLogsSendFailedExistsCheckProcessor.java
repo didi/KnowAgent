@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
@@ -57,7 +58,15 @@ public class ErrorLogsSendFailedExistsCheckProcessor extends BaseProcessor {
                 if(agentErrorLogsReceiverConfigValid) {
                     setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_SEND_FAILED_EXISTS_CAUSE_BY_AGENT_PROCESS_BREAK_DOWN, context);
                 } else {
-                    setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED, context);
+                    /*
+                     * 继续判断是否 broker 无法连通 or 配置错误
+                     */
+                    ReceiverDO receiverDO = context.getKafkaClusterManageService().getById(context.getAgentDO().getErrorLogsSendReceiverId());
+                    if(!context.getKafkaClusterManageService().checkBrokerConfigurationValid(receiverDO.getKafkaClusterBrokerConfiguration())) {
+                        setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED, context);
+                    } else {
+                        setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_ERROR, context);
+                    }
                 }
             } else {
                 setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS, context);

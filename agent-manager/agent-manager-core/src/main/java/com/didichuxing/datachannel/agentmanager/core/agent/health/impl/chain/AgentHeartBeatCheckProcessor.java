@@ -1,21 +1,15 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
-import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
-import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 
 /**
  * Agent心跳检查
@@ -71,7 +65,15 @@ public class AgentHeartBeatCheckProcessor extends BaseProcessor {
                     if(agentMetricsReceiverConfigValid) {
                         setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_PROCESS_BROKES_DOWN, context);
                     } else {
-                        setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_METRICS_RECEIVER_NOT_CONNECTED, context);
+                        /*
+                         * 继续判断是否 broker 无法连通 or 配置错误
+                         */
+                        ReceiverDO receiverDO = context.getKafkaClusterManageService().getById(context.getAgentDO().getMetricsSendReceiverId());
+                        if(!context.getKafkaClusterManageService().checkBrokerConfigurationValid(receiverDO.getKafkaClusterBrokerConfiguration())) {
+                            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_METRICS_RECEIVER_NOT_CONNECTED, context);
+                        } else {
+                            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_METRICS_CONFIGURATION_ERROR, context);
+                        }
                     }
                 } else {
                     setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_METRICS_CONFIGURATION_NOT_EXISTS, context);

@@ -649,12 +649,6 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         }
         String brokerConfiguration = receiverDO.getKafkaClusterBrokerConfiguration();
         /*
-         * 校验 brokerConfiguration
-         */
-        if(!checkBrokerConfigurationValid(brokerConfiguration)) {
-            return false;
-        }
-        /*
          * 校验 metricsSendTopic
          */
         if(!checkMetricsSendTopicValid(topic)) {
@@ -698,7 +692,10 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         }
     }
 
-    private boolean checkBrokerConfigurationValid(String brokerConfiguration) {
+    public Boolean checkBrokerConfigurationValid(String brokerConfiguration) {
+        if(StringUtils.isBlank(brokerConfiguration)) {
+            return false;
+        }
         String[] brokerServerIpPortArray = brokerConfiguration.split(CommonConstant.COMMA);
         if(ArrayUtils.isEmpty(brokerServerIpPortArray)) {
             return false;

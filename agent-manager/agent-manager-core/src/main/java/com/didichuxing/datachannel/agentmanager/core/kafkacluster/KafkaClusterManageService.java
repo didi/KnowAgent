@@ -130,4 +130,12 @@ public interface KafkaClusterManageService {
      */
     Boolean checkReceiverConfigValid(Long receiverId, String topic, String producerConfiguration);
 
+    /**
+     * 校验给定 kafka broker 配置参数是否正确 & 可连通
+     * @param brokerConfiguration kafka broker 配置参数
+     * @return true：正确 & 可连通 false：无法连通
+     * 注：如配置多个 broker，仅存在一个可连通即返回 true
+     */
+    Boolean checkBrokerConfigurationValid(String brokerConfiguration);
+
 }
