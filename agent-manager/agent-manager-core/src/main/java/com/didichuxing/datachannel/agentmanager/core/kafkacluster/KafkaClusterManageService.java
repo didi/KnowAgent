@@ -112,4 +112,22 @@ public interface KafkaClusterManageService {
      */
     ReceiverDO getAgentMetricsTopicExistsReceiver();
 
+    /**
+     * 校验给定参数值是否已配置
+     * @param receiverId 接收端对象 id
+     * @param topic topic 名
+     * @param producerConfiguration 生产者参数
+     * @return true：已配置 false：未配置
+     */
+    Boolean checkReceiverConfigured(Long receiverId, String topic, String producerConfiguration);
+
+    /**
+     * 校验给定参数值是否配置正确
+     * @param receiverId 接收端对象 id
+     * @param topic topic 名
+     * @param producerConfiguration 生产者参数
+     * @return true：正确 false：错误
+     */
+    Boolean checkReceiverConfigValid(Long receiverId, String topic, String producerConfiguration);
+
 }

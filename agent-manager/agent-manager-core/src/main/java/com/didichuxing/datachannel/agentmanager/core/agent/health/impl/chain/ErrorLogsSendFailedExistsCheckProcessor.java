@@ -1,17 +1,14 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * agent的errorlogs流对应的下游接收端是否存在写入失败情况
@@ -42,11 +39,21 @@ public class ErrorLogsSendFailedExistsCheckProcessor extends BaseProcessor {
             /*
              * agent是否已配置错误日志流的接收端
              */
-            if(checkAgentErrorLogsReceiverConfigured(context.getAgentDO())) {
+            if(
+                    context.getKafkaClusterManageService().checkReceiverConfigured(
+                            context.getAgentDO().getErrorLogsSendReceiverId(),
+                            context.getAgentDO().getErrorLogsSendTopic(),
+                            context.getAgentDO().getErrorLogsProducerConfiguration()
+                    )
+            ) {
                 /*
                  * agent的错误日志流下游接收端连通性是否正常
                  */
-                boolean agentErrorLogsReceiverConfigValid = checkAgentErrorLogsReceiverConfigValid(context.getAgentDO());
+                boolean agentErrorLogsReceiverConfigValid = context.getKafkaClusterManageService().checkReceiverConfigValid(
+                        context.getAgentDO().getErrorLogsSendReceiverId(),
+                        context.getAgentDO().getErrorLogsSendTopic(),
+                        context.getAgentDO().getErrorLogsProducerConfiguration()
+                );
                 if(agentErrorLogsReceiverConfigValid) {
                     setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_SEND_FAILED_EXISTS_CAUSE_BY_AGENT_PROCESS_BREAK_DOWN, context);
                 } else {
@@ -55,27 +62,6 @@ public class ErrorLogsSendFailedExistsCheckProcessor extends BaseProcessor {
             } else {
                 setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS, context);
             }
-        }
-    }
-
-    private boolean checkAgentErrorLogsReceiverConfigValid(AgentDO agentDO) {
-
-        //TODO：
-
-        return true;
-
-    }
-
-    private boolean checkAgentErrorLogsReceiverConfigured(AgentDO agentDO) {
-        if(
-                null != agentDO.getErrorLogsSendReceiverId() &&
-                        0l != agentDO.getErrorLogsSendReceiverId() &&
-                        StringUtils.isNotBlank(agentDO.getErrorLogsSendTopic()) &&
-                        StringUtils.isNotBlank(agentDO.getErrorLogsProducerConfiguration())
-        ) {
-            return true;
-        } else {
-            return false;
         }
     }
 

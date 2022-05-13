@@ -24,6 +24,7 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.KafkaClusterMa
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -624,6 +625,95 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         } else {
             return null;
         }
+    }
+
+    @Override
+    public Boolean checkReceiverConfigured(Long receiverId, String topic, String producerConfiguration) {
+        if(
+                null != receiverId &&
+                        0l != receiverId &&
+                        StringUtils.isNotBlank(topic) &&
+                        StringUtils.isNotBlank(producerConfiguration)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public Boolean checkReceiverConfigValid(Long receiverId, String topic, String producerConfiguration) {
+        ReceiverDO receiverDO = getById(receiverId);
+        if(null == receiverDO) {
+            return false;
+        }
+        String brokerConfiguration = receiverDO.getKafkaClusterBrokerConfiguration();
+        /*
+         * 校验 brokerConfiguration
+         */
+        if(!checkBrokerConfigurationValid(brokerConfiguration)) {
+            return false;
+        }
+        /*
+         * 校验 metricsSendTopic
+         */
+        if(!checkMetricsSendTopicValid(topic)) {
+            return false;
+        }
+        /*
+         * 校验 metricsProducerConfiguration
+         */
+        if(!checkMetricsProducerConfigurationValid(producerConfiguration)) {
+            return false;
+        }
+        /*
+         * 通过构建 kafka producer，校验其配置是否 ok
+         *
+         * TODO：
+         *
+         */
+
+        return true;
+    }
+
+    private boolean checkMetricsProducerConfigurationValid(String metricsProducerConfiguration) {
+        String[] configItemArray = metricsProducerConfiguration.split(CommonConstant.COMMA);
+        if(ArrayUtils.isEmpty(configItemArray)) {
+            return false;
+        }
+        for (String configItem : configItemArray) {
+            String[] item = configItem.split(CommonConstant.EQUAL_SIGN);
+            if(ArrayUtils.isEmpty(item) || item.length != 2) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkMetricsSendTopicValid(String metricsSendTopic) {
+        //TODO：
+        return false;
+    }
+
+    private boolean checkBrokerConfigurationValid(String brokerConfiguration) {
+        String[] brokerServerIpPortArray = brokerConfiguration.split(CommonConstant.COMMA);
+        if(ArrayUtils.isEmpty(brokerServerIpPortArray)) {
+            return false;
+        }
+        for (String brokerServerIpPort : brokerServerIpPortArray) {
+            if(!brokerServerIpPort.contains(CommonConstant.COLON)) {
+                continue;
+            }
+            String[] ipPort = brokerServerIpPort.split(CommonConstant.COLON);
+            if(ipPort.length != 2) {
+                continue;
+            }
+            String ip = ipPort[0];
+            String port = ipPort[1];
+            if(NetworkUtil.telnet(ip, Integer.valueOf(port))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     class ReceiverDOComparator implements Comparator<ReceiverDO, Long> {

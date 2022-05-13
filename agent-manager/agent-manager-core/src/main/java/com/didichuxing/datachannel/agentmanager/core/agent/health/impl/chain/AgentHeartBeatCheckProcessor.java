@@ -53,11 +53,21 @@ public class AgentHeartBeatCheckProcessor extends BaseProcessor {
                 /*
                  * agent是否已配置指标流的接收端
                  */
-                if(checkAgentMetricsReceiverConfigured(context.getAgentDO())) {
+                if(
+                        context.getKafkaClusterManageService().checkReceiverConfigured(
+                                context.getAgentDO().getMetricsSendReceiverId(),
+                                context.getAgentDO().getMetricsSendTopic(),
+                                context.getAgentDO().getMetricsProducerConfiguration()
+                        )
+                ) {
                     /*
                      * agent的指标流下游接收端连通性是否正常
                      */
-                    boolean agentMetricsReceiverConfigValid = checkAgentMetricsReceiverConfigValid(context.getAgentDO(), context.getKafkaClusterManageService());
+                    boolean agentMetricsReceiverConfigValid = context.getKafkaClusterManageService().checkReceiverConfigValid(
+                            context.getAgentDO().getMetricsSendReceiverId(),
+                            context.getAgentDO().getMetricsSendTopic(),
+                            context.getAgentDO().getMetricsProducerConfiguration()
+                    );
                     if(agentMetricsReceiverConfigValid) {
                         setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_PROCESS_BROKES_DOWN, context);
                     } else {
@@ -67,105 +77,6 @@ public class AgentHeartBeatCheckProcessor extends BaseProcessor {
                     setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_METRICS_CONFIGURATION_NOT_EXISTS, context);
                 }
             }
-        }
-    }
-
-    private boolean checkAgentMetricsReceiverConfigValid(AgentDO agentDO, KafkaClusterManageService kafkaClusterManageService) {
-        ReceiverDO metricsReceiverDO = kafkaClusterManageService.getById(agentDO.getMetricsSendReceiverId());
-        if(null == metricsReceiverDO) {
-            return false;
-        }
-        String brokerConfiguration = metricsReceiverDO.getKafkaClusterBrokerConfiguration();
-        String metricsSendTopic = agentDO.getMetricsSendTopic();
-        String metricsProducerConfiguration = agentDO.getMetricsProducerConfiguration();
-        /*
-         * 校验 brokerConfiguration
-         */
-        if(!checkBrokerConfigurationValid(brokerConfiguration)) {
-            return false;
-        }
-        /*
-         * 校验 metricsSendTopic
-         */
-        if(!checkMetricsSendTopicValid(metricsSendTopic)) {
-            return false;
-        }
-        /*
-         * 校验 metricsProducerConfiguration
-         */
-        if(!checkMetricsProducerConfigurationValid(metricsProducerConfiguration)) {
-            return false;
-        }
-        /*
-         * 通过构建 kafka producer，校验其配置是否 ok
-         *
-         * TODO：
-         *
-         */
-
-        return true;
-    }
-
-    private boolean checkMetricsProducerConfigurationValid(String metricsProducerConfiguration) {
-        String[] configItemArray = metricsProducerConfiguration.split(CommonConstant.COMMA);
-        if(ArrayUtils.isEmpty(configItemArray)) {
-            return false;
-        }
-        for (String configItem : configItemArray) {
-            String[] item = configItem.split(CommonConstant.EQUAL_SIGN);
-            if(ArrayUtils.isEmpty(item) || item.length != 2) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static void main(String[] args) {
-        String info =
-                "acks=-1,key.serializer=org.apache.kafka.common.serialization.StringSerializer,value.serializer=org.apache.kafka.common.serialization.StringSerializer,max.in.flight.requests.per.connection=1";
-        String[] array = info.split(",");
-        for (String msg : array) {
-            System.err.println(msg);
-        }
-    }
-
-    private boolean checkMetricsSendTopicValid(String metricsSendTopic) {
-        //TODO：
-        return false;
-    }
-
-    private boolean checkBrokerConfigurationValid(String brokerConfiguration) {
-        String[] brokerServerIpPortArray = brokerConfiguration.split(CommonConstant.COMMA);
-        if(ArrayUtils.isEmpty(brokerServerIpPortArray)) {
-            return false;
-        }
-        for (String brokerServerIpPort : brokerServerIpPortArray) {
-            if(!brokerServerIpPort.contains(CommonConstant.COLON)) {
-                continue;
-            }
-            String[] ipPort = brokerServerIpPort.split(CommonConstant.COLON);
-            if(ipPort.length != 2) {
-                continue;
-            }
-            String ip = ipPort[0];
-            String port = ipPort[1];
-            if(NetworkUtil.telnet(ip, Integer.valueOf(port))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkAgentMetricsReceiverConfigured(AgentDO agentDO) {
-        if(
-                null != agentDO.getMetricsSendReceiverId() &&
-                        0l != agentDO.getMetricsSendReceiverId() &&
-                        StringUtils.isNotBlank(agentDO.getMetricsSendTopic()) &&
-                        StringUtils.isNotBlank(agentDO.getMetricsProducerConfiguration())
-        ) {
-            return true;
-        } else {
-            return false;
         }
     }
 
