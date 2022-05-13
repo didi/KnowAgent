@@ -641,6 +641,7 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         }
     }
 
+    @Override
     public Boolean checkReceiverConfigValid(Long receiverId, String topic, String producerConfiguration) {
         ReceiverDO receiverDO = getById(receiverId);
         if(null == receiverDO) {
@@ -667,12 +668,12 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         }
         /*
          * 通过构建 kafka producer，校验其配置是否 ok
-         *
-         * TODO：
-         *
          */
-
-        return true;
+        return kafkaClusterManageServiceExtension.checkProducerConfigurationValid(
+                brokerConfiguration,
+                topic,
+                producerConfiguration
+        );
     }
 
     private boolean checkMetricsProducerConfigurationValid(String metricsProducerConfiguration) {
@@ -689,9 +690,12 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         return true;
     }
 
-    private boolean checkMetricsSendTopicValid(String metricsSendTopic) {
-        //TODO：
-        return false;
+    private boolean checkMetricsSendTopicValid(String topic) {
+        if(StringUtils.isNotBlank(topic)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean checkBrokerConfigurationValid(String brokerConfiguration) {

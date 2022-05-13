@@ -13,13 +13,16 @@ import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.KafkaProducerSecurity;
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.common.PartitionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -263,6 +266,41 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
             }
         }
         return result;
+    }
+
+    @Override
+    public Boolean checkProducerConfigurationValid(String brokerConfiguration, String topic, String producerConfiguration) {
+        try {
+            Properties properties = new Properties();
+            properties.put("bootstrap.servers", brokerConfiguration);
+            Map<String, String> producerConfigurationMap = producerConfiguration2Map(producerConfiguration);
+            properties.putAll(producerConfigurationMap);
+            KafkaProducer kafkaProducer = new KafkaProducer<>(properties);
+            List<PartitionInfo> partitionInfoList = kafkaProducer.partitionsFor(topic);
+            if(CollectionUtils.isNotEmpty(partitionInfoList)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    private Map<String, String> producerConfiguration2Map(String producerConfiguration) {
+        Map<String, String> producerConfigurationMap = new HashMap<>();
+        String[] configItemArray = producerConfiguration.split(CommonConstant.COMMA);
+        if(ArrayUtils.isNotEmpty(configItemArray)) {
+            for (String configItem : configItemArray) {
+                String[] item = configItem.split(CommonConstant.EQUAL_SIGN);
+                if(ArrayUtils.isNotEmpty(item) || item.length == 2) {
+                    String key = item[0];
+                    String value = item[1];
+                    producerConfigurationMap.put(key, value);
+                }
+            }
+        }
+        return producerConfigurationMap;
     }
 
 }

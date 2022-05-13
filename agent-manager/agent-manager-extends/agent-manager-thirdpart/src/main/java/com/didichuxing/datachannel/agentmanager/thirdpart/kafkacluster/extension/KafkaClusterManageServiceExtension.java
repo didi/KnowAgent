@@ -77,4 +77,13 @@ public interface KafkaClusterManageServiceExtension {
      */
     List<Pair<String, Integer>> getBrokerIp2PortPairList(ReceiverDO receiverDO);
 
+    /**
+     * 校验通过给定 kafka producer 参数构建 kafka producer 对象是否可用
+     * @param brokerConfiguration kafka broker 配置参数
+     * @param topic topic 名
+     * @param producerConfiguration kafka producer 配置
+     * @return true：可用 false：不可用
+     */
+    Boolean checkProducerConfigurationValid(String brokerConfiguration, String topic, String producerConfiguration);
+
 }
