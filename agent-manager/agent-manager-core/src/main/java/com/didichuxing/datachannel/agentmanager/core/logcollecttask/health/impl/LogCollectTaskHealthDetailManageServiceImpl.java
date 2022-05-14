@@ -163,4 +163,16 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
         }
     }
 
+    @Override
+    @Transactional
+    public void deleteByLogCollectPathId(Long logCollectPathId) {
+        logCollectTaskHealthDetailDAO.deleteByLogCollectPathId(logCollectPathId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByLogCollectTaskId(Long logCollectTaskId) {
+        logCollectTaskHealthDetailDAO.deleteByLogCollectTaskId(logCollectTaskId);
+    }
+
 }

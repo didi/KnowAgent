@@ -39,6 +39,14 @@
     delete from tb_log_collect_task_health_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByLogCollectPathId" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health_detail
+    where path_id = #{logCollectPathId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByLogCollectTaskId" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health_detail
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
     insert into tb_log_collect_task_health_detail (id, log_collect_task_id, path_id, 
       host_name, collect_dquality_time, too_large_truncate_check_healthy_heartbeat_time, 

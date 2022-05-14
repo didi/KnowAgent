@@ -31,4 +31,7 @@ public interface LogCollectTaskHealthDetailPOMapper {
      */
     LogCollectTaskHealthDetailPO get(Map params);
 
+    void deleteByLogCollectPathId(Long logCollectPathId);
+
+    void deleteByLogCollectTaskId(Long logCollectTaskId);
 }

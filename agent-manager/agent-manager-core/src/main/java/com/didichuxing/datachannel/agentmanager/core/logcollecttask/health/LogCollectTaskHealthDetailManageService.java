@@ -42,4 +42,8 @@ public interface LogCollectTaskHealthDetailManageService {
 
     void solveErrorDetail(Long logCollectTaskMetricId, Integer logCollectTaskHealthInspectionCode);
 
+    void deleteByLogCollectPathId(Long logCollectPathId);
+
+    void deleteByLogCollectTaskId(Long logCollectTaskId);
+
 }

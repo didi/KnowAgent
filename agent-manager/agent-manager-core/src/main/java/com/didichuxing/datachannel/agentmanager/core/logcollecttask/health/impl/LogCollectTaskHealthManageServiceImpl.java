@@ -137,6 +137,11 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
      * @throws ServiceException 执行该函数过程中出现的异常
      */
     private void handleDeleteByLogCollectTaskId(Long logCollectTaskId, String operator) throws ServiceException {
+
+        /*
+         * 删除 表 tb_log_collect_task_health_detail 相关记录
+         */
+        logCollectTaskHealthDetailManageService.deleteByLogCollectTaskId(logCollectTaskId);
         LogCollectTaskHealthPO logCollectorTaskHealthPO = logCollectTaskHealthDAO.selectByLogCollectTaskId(logCollectTaskId);
         if(null == logCollectorTaskHealthPO) {
             throw new ServiceException(
