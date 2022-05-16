@@ -4,6 +4,7 @@ import cn.hutool.core.lang.ClassScanner;
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.system.metrcis.annotation.PeriodMethod;
 import com.didichuxing.datachannel.system.metrcis.service.linux.LinuxMetricsService;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,9 @@ public class PeriodMetricAutoComputeComponent {
     /**
      * 用于定时计算的线程池对象
      */
-    private ScheduledExecutorService autoComputeThreadPool = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledExecutorService autoComputeThreadPool = Executors.newSingleThreadScheduledExecutor(
+            new ThreadFactoryBuilder().setNameFormat("metricsAutoComputeThreadPool").build()
+    );
 
     /**
      * key：待自动计算的类
