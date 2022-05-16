@@ -65,6 +65,8 @@ spring:
     max-thread-num: 20
   transaction:
     default-timeout: 300
+  main:
+    allow-circular-references: true
 
 kcm:
   enabled: true
