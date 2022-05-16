@@ -45,9 +45,9 @@ public class NormalLogCollectTaskHealthController {
     }
 
     @ApiOperation(value = "根据给定日志采集任务id，采集路径id，主机名，日志采集任务健康度巡检状态码获取导致日志采集任务健康状态为logCollectTaskHealthInspectionCode的错误信息详情列表", notes = "")
-    @RequestMapping(value = "/error-detail/{logCollectTaskId}/{pathId}/{hostName}/{logCollectTaskHealthInspectionCode}", method = RequestMethod.GET)
+    @RequestMapping(value = "/error-detail", method = RequestMethod.GET)
     @ResponseBody
-    public Result<List<LogCollectTaskHealthErrorDetailVO>> getErrorDetails(@PathVariable Long logCollectTaskId, @PathVariable Long pathId, @PathVariable String hostName, @PathVariable Integer logCollectTaskHealthInspectionCode) {
+    public Result<List<LogCollectTaskHealthErrorDetailVO>> getErrorDetails(@RequestParam Long logCollectTaskId, @RequestParam Long pathId, @RequestParam String hostName, @RequestParam Integer logCollectTaskHealthInspectionCode) {
         List<MetricsLogCollectTaskPO> metricsLogCollectTaskPOList = logCollectTaskHealthDetailManageService.getErrorDetails(logCollectTaskId, pathId, hostName, logCollectTaskHealthInspectionCode);
         return Result.buildSucc(convert2LogCollectTaskHealthErrorDetailVOList(metricsLogCollectTaskPOList));
     }
