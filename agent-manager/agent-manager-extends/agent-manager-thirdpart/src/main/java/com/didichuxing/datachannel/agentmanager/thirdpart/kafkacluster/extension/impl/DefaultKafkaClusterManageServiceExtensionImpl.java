@@ -270,12 +270,13 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
 
     @Override
     public Boolean checkProducerConfigurationValid(String brokerConfiguration, String topic, String producerConfiguration) {
+        KafkaProducer kafkaProducer = null;
         try {
             Properties properties = new Properties();
             properties.put("bootstrap.servers", brokerConfiguration);
             Map<String, String> producerConfigurationMap = producerConfiguration2Map(producerConfiguration);
             properties.putAll(producerConfigurationMap);
-            KafkaProducer kafkaProducer = new KafkaProducer<>(properties);
+            kafkaProducer = new KafkaProducer<>(properties);
             List<PartitionInfo> partitionInfoList = kafkaProducer.partitionsFor(topic);
             if(CollectionUtils.isNotEmpty(partitionInfoList)) {
                 return true;
@@ -283,7 +284,14 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
                 return false;
             }
         } catch (Exception ex) {
+            if(null != kafkaProducer) {
+                kafkaProducer.close();
+            }
             return false;
+        } finally {
+            if(null != kafkaProducer) {
+                kafkaProducer.close();
+            }
         }
     }
 
