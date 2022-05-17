@@ -54,7 +54,7 @@ public class FileContent extends Handler implements HttpHandler {
     }
 
     private String getFileContent(File file) {
-        BufferedReader br  = null;
+        BufferedReader br = null;
         String fileContent = "";
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -69,7 +69,7 @@ public class FileContent extends Handler implements HttpHandler {
         } catch (IOException e) {
             LOGGER.error("file read error, path: {}", file.getAbsolutePath());
         } finally {
-            if(null != br) {
+            if (null != br) {
                 try {
                     br.close();
                 } catch (IOException ex) {
