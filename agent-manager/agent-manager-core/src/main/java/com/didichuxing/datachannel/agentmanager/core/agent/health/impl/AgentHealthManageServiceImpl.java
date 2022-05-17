@@ -21,6 +21,7 @@ import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthMan
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
+import com.didichuxing.datachannel.agentmanager.core.errorlogs.ErrorLogsManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
@@ -53,7 +54,7 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
     private MetricsManageService metricsManageService;
 
     @Autowired
-    private ErrorLogMapper errorLogMapper;
+    private ErrorLogsManageService errorLogsManageService;
 
     @Override
     @Transactional
@@ -234,10 +235,10 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
     }
 
     @Override
-    public List<String> getErrorLogsInHeartbeatScope(Long heartbeatTime) {
+    public List<String> getErrorLogsInHeartbeatScope(String hostName, Long heartbeatTime) {
         Long startTime = heartbeatTime - 2 * 60 * 1000;
         Long endTime = heartbeatTime;
-        return errorLogMapper.getErrorLogs(startTime, endTime);
+        return errorLogsManageService.getErrorLogs(hostName, startTime, endTime);
     }
 
     /**

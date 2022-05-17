@@ -44,7 +44,7 @@ public class NormalAgentHealthController {
             AgentHealthErrorDetailVO agentHealthErrorDetailVO = new AgentHealthErrorDetailVO();
             agentHealthErrorDetailVO.setAgentMetricId(metricsAgentPO.getId());
             agentHealthErrorDetailVO.setErrorLogsCount(metricsAgentPO.getErrorlogscount());
-            agentHealthErrorDetailVO.setErrorLogs(agentHealthManageService.getErrorLogsInHeartbeatScope(metricsAgentPO.getHeartbeattime()));
+            agentHealthErrorDetailVO.setErrorLogs(agentHealthManageService.getErrorLogsInHeartbeatScope(metricsAgentPO.getHostname(), metricsAgentPO.getHeartbeattime()));
             agentHealthErrorDetailVO.setHostName(metricsAgentPO.getHostname());
             agentHealthErrorDetailVO.setHeartbeatTime(metricsAgentPO.getHeartbeattime());
             agentHealthErrorDetailVOList.add(agentHealthErrorDetailVO);

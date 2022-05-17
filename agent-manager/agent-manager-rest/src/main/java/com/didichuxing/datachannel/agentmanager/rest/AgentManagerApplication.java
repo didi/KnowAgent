@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.AgentHealthManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.impl.AgentManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.impl.DashboardManageServiceImpl;
+import com.didichuxing.datachannel.agentmanager.core.errorlogs.impl.ErrorLogsManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.LogCollectTaskHealthManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl.LogCollectTaskManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.metrics.impl.MetricsManageServiceImpl;
@@ -110,6 +111,18 @@ public class AgentManagerApplication {
                     metricsManageService.clearExpireMetrics(7);
                 } catch (Exception ex) {
                     LOGGER.error(String.format(" delete expire metrics error, root cause is: %s", ex.getMessage()), ex);
+                }
+            }
+        },0, 1, TimeUnit.DAYS);
+
+        pool.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ErrorLogsManageServiceImpl errorLogsManageService = ctx.getBean(ErrorLogsManageServiceImpl.class);
+                    errorLogsManageService.clearExpireErrorLogs(7);
+                } catch (Exception ex) {
+                    LOGGER.error(String.format(" delete expire error logs error, root cause is: %s", ex.getMessage()), ex);
                 }
             }
         },0, 1, TimeUnit.DAYS);

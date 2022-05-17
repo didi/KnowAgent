@@ -25,6 +25,7 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -168,6 +169,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     @Override
+    @Transactional
     public void clearExpireMetrics(Integer metricsExpireDays) {
         Long heartBeatTime = DateUtils.getBeforeDays(new Date(), metricsExpireDays).getTime();
         metricsLogCollectTaskDAO.deleteByLtHeartbeatTime(heartBeatTime);

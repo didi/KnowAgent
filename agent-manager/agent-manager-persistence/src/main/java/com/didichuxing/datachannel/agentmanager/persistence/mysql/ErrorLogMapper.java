@@ -24,6 +24,6 @@ public interface ErrorLogMapper {
 
     int deleteBeforeTime(@Param("time") Long time);
 
-    List<String> getErrorLogs(@Param("startTime") Long startTime, @Param("endTime") Long endTime);
+    List<String> getErrorLogs(@Param("hostName") String hostName, @Param("startTime") Long startTime, @Param("endTime") Long endTime);
 
 }

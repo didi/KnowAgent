@@ -59,8 +59,9 @@ public interface AgentHealthManageService {
     /**
      *
      * @param heartbeatTime agent metrics 心跳时间
+     * @param hostName agent 宿主机名
      * @return 返回给定心跳时间对应心跳周期内 agent 错误日志信息集
      */
-    List<String> getErrorLogsInHeartbeatScope(Long heartbeatTime);
+    List<String> getErrorLogsInHeartbeatScope(String hostName, Long heartbeatTime);
 
 }
