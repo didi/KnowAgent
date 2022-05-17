@@ -127,3 +127,8 @@ agent:
 metrics:
   expire:
     days: 1
+
+system:
+  config:
+    datetime:
+      formats: yyyy-MM-dd HH:mm:ss.SSS,yyyy/MM/dd HH:mm:ss Z

@@ -13,4 +13,5 @@ public class GlobalProperties {
 
     public static volatile DashBoardVO dashBoardVO;
 
+    public static List<String> dateTimeFormats;
 }
