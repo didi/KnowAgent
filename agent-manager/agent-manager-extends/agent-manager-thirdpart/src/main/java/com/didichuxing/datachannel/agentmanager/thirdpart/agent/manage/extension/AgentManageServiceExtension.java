@@ -74,4 +74,6 @@ public interface AgentManageServiceExtension {
      */
     List<String> listFiles(String hostName, String path, String suffixRegular);
 
+    String readFileContent(String hostName, String path);
+
 }

@@ -13,13 +13,18 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class DefaultAgentManageServiceExtensionImpl implements AgentManageServiceExtension {
+
+    /**
+     * 远程请求 agent 端口
+     */
+    @Value("${agent.http.request.port}")
+    private Integer requestPort;
 
     @Override
     public CheckResult checkCreateParameterAgent(AgentDO agent) {
@@ -135,7 +140,7 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
         contentMap.put("path", path);
         contentMap.put("suffixRegular", suffixRegular);
         String result = HttpUtils.get(
-                String.format("http://%s:20230/log-agent/path", hostName),
+                String.format("http://%s:%d/log-agent/path", hostName, requestPort),
                 null,
                 headers,
                 JSON.toJSONString(contentMap)
@@ -145,6 +150,21 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
         } else {
             return null;
         }
+    }
+
+    @Override
+    public String readFileContent(String hostName, String path) {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        Map<String, String> contentMap = new HashMap<>();
+        contentMap.put("path", path);
+        String result = HttpUtils.get(
+                String.format("http://%s:%d/log-agent/file-content", hostName, requestPort),
+                null,
+                headers,
+                JSON.toJSONString(contentMap)
+        );
+        return result;
     }
 
 }

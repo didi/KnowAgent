@@ -158,6 +158,16 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc(agentManageServiceExtension.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular()));
     }
 
+    @ApiOperation(value = "读取文件内容 注：最多读取 100 行", notes = "")
+    @RequestMapping(value = "/file-content", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<String> readFileContent(
+            @RequestParam(value = "hostName") String hostName,
+            @RequestParam(value = "path") String path
+    ) {
+        return Result.buildSucc(agentManageServiceExtension.readFileContent(hostName, path));
+    }
+
     @ApiOperation(value = "根据给定日志切片条件与待切片日志内容获取对应日志切片结果集", notes = "")
     @RequestMapping(value = "/result-slice", method = RequestMethod.POST)
     @ResponseBody

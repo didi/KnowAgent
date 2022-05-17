@@ -58,6 +58,7 @@ public class HttpService {
         httpServer.createContext(Pid.URI, new Pid());
         httpServer.createContext(Version.URI, new Version());
         httpServer.createContext(Path.URI, new Path());
+        httpServer.createContext(FileContent.URI, new Path());
         // 因安全部需求，进行去掉
         //        httpServer.createContext(Command.URI, new Command());
         httpServer.createContext(Status.URI, new Status(launchService, configService));

@@ -73,18 +73,6 @@ public class AgentManageServiceImpl implements AgentManageService {
     @Autowired
     private KafkaClusterManageService kafkaClusterManageService;
 
-    /**
-     * 远程请求 agent url
-     */
-    @Value("${agent.http.path.request.url}")
-    private String requestUrl;
-
-    /**
-     * 远程请求 agent 端口
-     */
-    @Value("${agent.http.path.request.port}")
-    private Integer requestPort;
-
     @Override
     @Transactional
     public Long createAgent(AgentDO agent, String operator, Boolean createHostWhenHostNotExists) {

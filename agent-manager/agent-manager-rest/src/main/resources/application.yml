@@ -118,11 +118,8 @@ agent:
         agentMetricsIndexName: 1
         agentErrorLogIndexName: 1
   http:
-    path:
       request:
-        url: http://%s:%d/log-agent/path
-        port: 2023
-        body:
+        port: 20230
 
 metrics:
   expire:
