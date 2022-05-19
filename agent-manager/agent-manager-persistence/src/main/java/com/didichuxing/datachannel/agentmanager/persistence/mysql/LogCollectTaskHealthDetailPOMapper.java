@@ -34,4 +34,7 @@ public interface LogCollectTaskHealthDetailPOMapper {
     void deleteByLogCollectPathId(Long logCollectPathId);
 
     void deleteByLogCollectTaskId(Long logCollectTaskId);
+
+    void deleteById(Long id);
+
 }

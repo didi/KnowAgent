@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDetailDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public interface LogCollectTaskHealthDetailManageService {
     void add(LogCollectTaskHealthDetailDO logCollectTaskHealthDetailDO);
 
     List<LogCollectTaskHealthDetailDO> getByLogCollectTaskIdAndLogCollectTaskHealthInspectionCode(Long logCollectTaskId, Integer logCollectTaskHealthInspectionCode);
+
+    void deleteById(Long id);
 
     List<MetricsLogCollectTaskPO> getErrorDetails(Long logCollectTaskId, Long pathId, String hostName, Integer logCollectTaskHealthInspectionCode);
 

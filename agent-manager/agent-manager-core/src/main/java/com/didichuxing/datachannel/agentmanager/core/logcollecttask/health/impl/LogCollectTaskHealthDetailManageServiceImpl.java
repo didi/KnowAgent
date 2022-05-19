@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDetailDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO;
@@ -7,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLo
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
+import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
@@ -15,10 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @org.springframework.stereotype.Service
 public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTaskHealthDetailManageService {
@@ -31,6 +30,9 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
 
     @Autowired
     private MetricsManageService metricsManageService;
+
+    @Autowired
+    private HostManageService hostManageService;
 
     @Override
     public LogCollectTaskHealthDetailDO get(Long logCollectTaskId, Long pathId, String hostName) {
@@ -85,9 +87,36 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
                 return new ArrayList<>();
             } else {
                 List<LogCollectTaskHealthDetailPO> logCollectTaskHealthDetailPOList = logCollectTaskHealthDetailDAO.selectByLogCollectTaskId(logCollectTaskId);
-                return ConvertUtil.list2List(logCollectTaskHealthDetailPOList, LogCollectTaskHealthDetailDO.class);
+                List<LogCollectTaskHealthDetailPO> result = new ArrayList<>();
+                /*
+                 * TODO：logCollectTaskHealthDetailPOList可能存在系统中不存在的主机或与当前日志采集任务不相关的主机，此时进行过滤 & 清理
+                 *
+                 * 后续清理动作作为专有定时任务进行对应处理
+                 *
+                 */
+                List<HostDO> relaHostDOList = hostManageService.getHostListByLogCollectTaskId(logCollectTaskId);
+                Set<String> hostNameSet = new HashSet<>();
+                for (HostDO hostDO : relaHostDOList) {
+                    hostNameSet.add(hostDO.getHostName());
+                }
+                for (LogCollectTaskHealthDetailPO logCollectTaskHealthDetailPO : logCollectTaskHealthDetailPOList) {
+                    String hostName = logCollectTaskHealthDetailPO.getHostName();
+                    if(null == hostManageService.getHostByHostName(hostName) || !hostNameSet.contains(hostName)) {
+                        deleteById(logCollectTaskHealthDetailPO.getId());
+                        continue;
+                    } else {
+                        result.add(logCollectTaskHealthDetailPO);
+                    }
+                }
+                return ConvertUtil.list2List(result, LogCollectTaskHealthDetailDO.class);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        logCollectTaskHealthDetailDAO.deleteById(id);
     }
 
     @Override
