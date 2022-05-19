@@ -89,10 +89,7 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
                 List<LogCollectTaskHealthDetailPO> logCollectTaskHealthDetailPOList = logCollectTaskHealthDetailDAO.selectByLogCollectTaskId(logCollectTaskId);
                 List<LogCollectTaskHealthDetailPO> result = new ArrayList<>();
                 /*
-                 * TODO：logCollectTaskHealthDetailPOList可能存在系统中不存在的主机或与当前日志采集任务不相关的主机，此时进行过滤 & 清理
-                 *
-                 * 后续清理动作作为专有定时任务进行对应处理
-                 *
+                 * logCollectTaskHealthDetailPOList可能存在系统中不存在的主机或与当前日志采集任务不相关的主机，此时进行过滤 & 清理
                  */
                 List<HostDO> relaHostDOList = hostManageService.getHostListByLogCollectTaskId(logCollectTaskId);
                 Set<String> hostNameSet = new HashSet<>();
@@ -102,6 +99,9 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
                 for (LogCollectTaskHealthDetailPO logCollectTaskHealthDetailPO : logCollectTaskHealthDetailPOList) {
                     String hostName = logCollectTaskHealthDetailPO.getHostName();
                     if(null == hostManageService.getHostByHostName(hostName) || !hostNameSet.contains(hostName)) {
+                        /*
+                         * TODO：后续清理动作作为主机删除、或主机-服务解绑时进行对应处理
+                         */
                         deleteById(logCollectTaskHealthDetailPO.getId());
                         continue;
                     } else {
