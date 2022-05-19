@@ -231,6 +231,8 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
                 agentHealthPO.setLastestErrorLogsExistsCheckHealthyTime(metricsAgentPO.getHeartbeattime());
             }
             agentHealthDAO.updateByPrimaryKey(agentHealthPO);
+            //重走一遍agent诊断流程
+            checkAgentHealth(agentDO);
         }
     }
 

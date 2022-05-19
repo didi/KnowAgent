@@ -11,6 +11,7 @@ import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskHealthDetailPOMapper;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,6 +34,9 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
 
     @Autowired
     private HostManageService hostManageService;
+
+    @Autowired
+    private LogCollectTaskManageService logCollectTaskManageService;
 
     @Override
     public LogCollectTaskHealthDetailDO get(Long logCollectTaskId, Long pathId, String hostName) {
@@ -189,6 +193,8 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
                 throw new RuntimeException();
             }
             logCollectTaskHealthDetailDAO.updateByPrimaryKey(logCollectTaskHealthDetailPO);
+            //重走一遍日志采集任务诊断流程
+            logCollectTaskHealthManageService.checkLogCollectTaskHealth(logCollectTaskManageService.getById(metricsLogCollectTaskPO.getCollecttaskid()));
         }
     }
 
