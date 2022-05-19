@@ -181,7 +181,7 @@ public class ConfigService extends AgentComponent {
             } else {
                 lastAgentConfig = agentConfig;
                 curConfigTryTime = 0;
-                return null;
+                return agentConfig;
             }
         }
     }
