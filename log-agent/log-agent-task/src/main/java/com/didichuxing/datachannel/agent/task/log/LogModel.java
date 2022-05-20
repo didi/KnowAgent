@@ -319,7 +319,7 @@ public abstract class LogModel extends AbstractModel {
             // 文件
             for (Long id : updateIds) {
                 LogPath logPath = oldLogPaths.get(id);
-                String taskKey = buildPreLogTaskKey(logPath.getLogModelId(), logPath.getPathId());
+                String taskKey = buildPreLogTaskKey(oldModelConfig.getHostname(), logPath.getLogModelId(), logPath.getPathId());
                 for (Map.Entry<String, AbstractTask> entry : this.tasks.entrySet()) {
                     if (entry.getKey().startsWith(taskKey)) {
                         tasks.add(entry.getValue());
@@ -359,7 +359,7 @@ public abstract class LogModel extends AbstractModel {
         Set<Long> delIds = CollectUtils.getDel(oldLogPaths.keySet(), newLogPaths.keySet());
         for (Long id : delIds) {
             LogPath logPath = oldLogPaths.get(id);
-            String taskKey = buildPreLogTaskKey(logPath.getLogModelId(), logPath.getPathId());
+            String taskKey = buildPreLogTaskKey(oldModelConfig.getHostname(), logPath.getLogModelId(), logPath.getPathId());
             for (Map.Entry<String, AbstractTask> entry : this.tasks.entrySet()) {
                 if (entry.getKey().startsWith(taskKey)) {
                     tasks.add(entry.getValue());
@@ -522,8 +522,8 @@ public abstract class LogModel extends AbstractModel {
         TaskRunningPool.submit(task);
     }
 
-    private String buildPreLogTaskKey(Long modelId, Long pathId) {
-        return modelId + "_" + pathId + "_";
+    private String buildPreLogTaskKey(String logModelHostName, Long modelId, Long pathId) {
+        return logModelHostName + "_" + modelId + "_" + pathId + "_";
     }
 
     private String buildLogTaskKey(Long modelId, String sourceKey) {
