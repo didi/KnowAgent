@@ -124,20 +124,29 @@ public class Log2KafkaModel extends LogModel {
                 List<AbstractTask> deletedTask = getDeletedTasks(oldConfig, newConfig);
 
                 for (AbstractTask task : updatedTask) {
-                    tasks.get(task.getUniqueKey()).onChange(newOne);
+                    /*
+                     * 采用删、添加方式
+                     */
+                    //删
+                    deleteTask(task);
+                    //添 加
+                    LogPath logPath = ((LogSourceConfig) newConfig.getSourceConfig()).getLogPathMap().get(((LogSource) task.getSource()).getLogPath().getPathId());
+                    if(null != logPath) {
+                        LogSource logSourceAdd = new LogSource(newConfig, logPath);
+                        AbstractTask taskAdd = buildTask(newConfig, logSourceAdd);
+                        addTask(taskAdd);
+                    } else {
+                        //TODO：log it
+                    }
+
                 }
 
                 for (AbstractTask task : addedTask) {
-                    this.sources.put(task.getSource().getUniqueKey(), task.getSource());
-                    task.init(this.modelConfig);
-                    task.start();
-                    tasks.put(task.getUniqueKey(), task);
-                    TaskRunningPool.submit(task);
+                    addTask(task);
                 }
 
                 for (AbstractTask task : deletedTask) {
-                    task.delete();
-                    tasks.remove(task.getUniqueKey());
+                    deleteTask(task);
                 }
 
                 String oldPro = ((KafkaTargetConfig) oldConfig.getTargetConfig()).getProperties();
@@ -162,5 +171,19 @@ public class Log2KafkaModel extends LogModel {
             }
         }
         return true;
+    }
+
+    private void addTask(AbstractTask task) {
+        this.sources.put(task.getSource().getUniqueKey(), task.getSource());
+        task.init(this.modelConfig);
+        task.start();
+        tasks.put(task.getUniqueKey(), task);
+        TaskRunningPool.submit(task);
+    }
+
+    private void deleteTask(AbstractTask task) {
+        task.delete();
+        tasks.remove(task.getUniqueKey());
+        this.sources.remove(task.getSource().getUniqueKey());
     }
 }
