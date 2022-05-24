@@ -186,7 +186,7 @@ public interface MetricsLogCollectTaskPOMapper {
      *  startTime：心跳开始时间（>）
      *  endTime：心跳结束时间(<=)
      *  conditionFieldName：where 条件字段名
-     *  operator：where 条件操作符
+     *  operatorType：where 条件操作符类型
      *  conditionFieldValue：where 条件字段值
      *  function：聚合函数名
      *  fieldName：聚合字段名

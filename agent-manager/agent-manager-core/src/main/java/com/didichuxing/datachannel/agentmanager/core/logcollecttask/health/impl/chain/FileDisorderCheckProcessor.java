@@ -83,7 +83,7 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
                 MetricFieldEnum.LOG_COLLECT_TASK_DISORDER_EXISTS.getFieldName(),
-                OperatorEnum.EQ.getOperator(),
+                OperatorEnum.EQ.getOperatorType(),
                 1,
                 AggregationCalcFunctionEnum.COUNT.getValue(),
                 "*"

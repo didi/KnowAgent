@@ -411,7 +411,16 @@
       and
       collectTaskHostName = #{hostName,jdbcType=VARCHAR}
       and
-      #{conditionFieldName,jdbcType=VARCHAR} #{operator,jdbcType=VARCHAR} #{conditionFieldValue}
+      <if test="conditionFieldName == 'collectPathIsExists'">collectPathIsExists</if>
+      <if test="conditionFieldName == 'disorderExists'">disorderExists</if>
+      <if test="conditionFieldName == 'sliceErrorExists'">sliceErrorExists</if>
+      <if test="conditionFieldName == 'tooLargeTruncateNum'">tooLargeTruncateNum</if>
+      <if test="operatorType == 0">></if>
+      <if test="operatorType == 1">>=</if>
+      <if test="operatorType == 2">&lt;</if>
+      <if test="operatorType == 3">&lt;=</if>
+      <if test="operatorType == 4">=</if>
+      #{conditionFieldValue}
       and
       heartbeatTime &gt; #{startTime}
       and

@@ -191,7 +191,7 @@ public interface MetricsManageService {
      * @param heartbeatTimeStart 心跳开始时间戳（>）
      * @param heartbeatTimeEnd 心跳结束时间戳（<=）
      * @param conditionFieldValue where 条件字段名
-     * @param operator where 条件操作符
+     * @param operatorType where 条件操作符类型
      * @param conditionFieldValue where 条件字段值
      * @param aggregationFunction 聚合函数名
      * @param aggregationField 聚合字段名
@@ -209,7 +209,7 @@ public interface MetricsManageService {
             Long heartbeatTimeStart,
             Long heartbeatTimeEnd,
             String conditionFieldName,
-            String operator,
+            Integer operatorType,
             Object conditionFieldValue,
             String aggregationFunction,
             String aggregationField

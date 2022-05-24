@@ -306,7 +306,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             Long heartbeatTimeStart,
             Long heartbeatTimeEnd,
             String conditionFieldName,
-            String operator,
+            Integer operatorType,
             Object conditionFieldValue,
             String aggregationFunction,
             String aggregationField
@@ -318,7 +318,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         params.put("startTime", heartbeatTimeStart);
         params.put("endTime", heartbeatTimeEnd);
         params.put("conditionFieldName", conditionFieldName);
-        params.put("operator", operator);
+        params.put("operatorType", operatorType);
         params.put("conditionFieldValue", conditionFieldValue);
         params.put("function", aggregationFunction);
         params.put("fieldName", aggregationField);

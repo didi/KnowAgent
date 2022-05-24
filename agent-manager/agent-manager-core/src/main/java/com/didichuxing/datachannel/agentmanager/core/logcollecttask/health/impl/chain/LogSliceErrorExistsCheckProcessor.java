@@ -81,7 +81,7 @@ public class LogSliceErrorExistsCheckProcessor extends BaseProcessor {
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
                 MetricFieldEnum.LOG_COLLECT_TASK_SLICE_ERROR_EXISTS.getFieldName(),
-                OperatorEnum.EQ.getOperator(),
+                OperatorEnum.EQ.getOperatorType(),
                 1,
                 AggregationCalcFunctionEnum.COUNT.getValue(),
                 "*"

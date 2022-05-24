@@ -82,7 +82,7 @@ public class FilePathExistsCheckProcessor extends BaseProcessor {
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
                 MetricFieldEnum.LOG_COLLECT_TASK_COLLECT_PATH_IS_EXISTS.getFieldName(),
-                OperatorEnum.EQ.getOperator(),
+                OperatorEnum.EQ.getOperatorType(),
                 0,
                 AggregationCalcFunctionEnum.COUNT.getValue(),
                 "*"

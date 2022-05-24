@@ -82,7 +82,7 @@ public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
                 MetricFieldEnum.LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM.getFieldName(),
-                OperatorEnum.GT.getOperator(),
+                OperatorEnum.GT.getOperatorType(),
                 0,
                 AggregationCalcFunctionEnum.COUNT.getValue(),
                 "*"
