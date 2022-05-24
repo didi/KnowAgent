@@ -262,6 +262,7 @@
           limit 1
   </select>
 
+  <!-- TODO -->
   <select id="getErrorMetrics" resultMap="BaseResultMap" parameterType="java.util.Map" >
     select
     <include refid="Base_Column_List" />
@@ -273,11 +274,17 @@
         AND
         collectTaskHostName = #{hostName,jdbcType=VARCHAR}
         AND
-        <if test="errorFieldName != 'collectPathIsExists'">
-          #{errorFieldName,jdbcType=VARCHAR} > 0
+        <if test="errorFieldName == 'tooLargeTruncateNum'">
+          tooLargeTruncateNum > 0
+        </if>
+        <if test="errorFieldName == 'disorderExists'">
+          disorderExists > 0
+        </if>
+        <if test="errorFieldName == 'sliceErrorExists'">
+          sliceErrorExists > 0
         </if>
         <if test="errorFieldName == 'collectPathIsExists'">
-          #{errorFieldName,jdbcType=VARCHAR} = 0
+          collectPathIsExists = 0
         </if>
         AND
         heartbeatTime &gt; #{startHeartbeatTime} and heartbeatTime &lt;= #{endHeartbeatTime}
