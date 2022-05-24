@@ -400,6 +400,24 @@
     heartbeatTime &lt;= #{endTime}
   </select>
 
+  <select id="getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName})
+    from tb_metrics_log_collect_task
+    where
+      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+      and
+      pathId = #{pathId,jdbcType=BIGINT}
+      and
+      collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+      and
+      #{conditionFieldName,jdbcType=VARCHAR} #{operator,jdbcType=VARCHAR} #{conditionFieldValue}
+      and
+      heartbeatTime &gt; #{startTime}
+      and
+      heartbeatTime &lt;= #{endTime}
+  </select>
+
   <select id="getLastRecord" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
     <include refid="Base_Column_List" />

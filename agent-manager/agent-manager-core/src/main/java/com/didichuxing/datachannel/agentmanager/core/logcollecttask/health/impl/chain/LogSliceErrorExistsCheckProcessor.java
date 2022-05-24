@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl
 
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.OperatorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
@@ -73,14 +74,17 @@ public class LogSliceErrorExistsCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"错误日志输出存在"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在日志切片错误
          */
-        Object sliceErrorExistsObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object sliceErrorExistsObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
-                AggregationCalcFunctionEnum.SUM.getValue(),
-                MetricFieldEnum.LOG_COLLECT_TASK_SLICE_ERROR_EXISTS.getFieldName()
+                MetricFieldEnum.LOG_COLLECT_TASK_SLICE_ERROR_EXISTS.getFieldName(),
+                OperatorEnum.EQ.getOperator(),
+                1,
+                AggregationCalcFunctionEnum.COUNT.getValue(),
+                "*"
         );
         Long sliceErrorExists = 0L;
         if(null != sliceErrorExistsObj) {

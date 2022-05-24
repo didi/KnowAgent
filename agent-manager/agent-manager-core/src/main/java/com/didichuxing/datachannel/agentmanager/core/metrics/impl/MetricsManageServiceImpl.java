@@ -298,6 +298,33 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         return metricsAgentDAO.selectByPrimaryKey(agentMetricId);
     }
 
+    @Override
+    public Object getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask(
+            Long logCollectTaskId,
+            Long fileLogCollectPathId,
+            String logCollectTaskHostName,
+            Long heartbeatTimeStart,
+            Long heartbeatTimeEnd,
+            String conditionFieldName,
+            String operator,
+            Object conditionFieldValue,
+            String aggregationFunction,
+            String aggregationField
+    ) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("logCollectTaskId", logCollectTaskId);
+        params.put("pathId", fileLogCollectPathId);
+        params.put("hostName", logCollectTaskHostName);
+        params.put("startTime", heartbeatTimeStart);
+        params.put("endTime", heartbeatTimeEnd);
+        params.put("conditionFieldName", conditionFieldName);
+        params.put("operator", operator);
+        params.put("conditionFieldValue", conditionFieldValue);
+        params.put("function", aggregationFunction);
+        params.put("fieldName", aggregationField);
+        return metricsLogCollectTaskDAO.getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask(params);
+    }
+
     private List<MetricPointLine> handleGetTopNByLogCollectTaskMetricPerServiceNames(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField) {
         /*
          * 1.）获取 top n logcollecttask

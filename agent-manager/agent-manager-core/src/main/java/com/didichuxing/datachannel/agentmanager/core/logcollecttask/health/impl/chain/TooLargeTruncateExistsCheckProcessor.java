@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl
 
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.OperatorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
@@ -74,14 +75,17 @@ public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"异常截断"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在异常截断
          */
-        Object tooLargeTruncateCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object tooLargeTruncateCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
-                AggregationCalcFunctionEnum.SUM.getValue(),
-                MetricFieldEnum.LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM.getFieldName()
+                MetricFieldEnum.LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM.getFieldName(),
+                OperatorEnum.GT.getOperator(),
+                0,
+                AggregationCalcFunctionEnum.COUNT.getValue(),
+                "*"
         );
         Long tooLargeTruncateCount = 0L;
         if(null != tooLargeTruncateCountObj) {

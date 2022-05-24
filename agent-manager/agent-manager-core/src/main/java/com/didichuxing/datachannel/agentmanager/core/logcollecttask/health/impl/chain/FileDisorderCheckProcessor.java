@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl
 
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.OperatorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
@@ -75,14 +76,18 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"文件乱序"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在日志乱序
          */
-        Object fileDisorderCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object fileDisorderCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
-                AggregationCalcFunctionEnum.SUM.getValue(),
-                MetricFieldEnum.LOG_COLLECT_TASK_DISORDER_EXISTS.getFieldName()
+                MetricFieldEnum.LOG_COLLECT_TASK_DISORDER_EXISTS.getFieldName(),
+                OperatorEnum.EQ.getOperator(),
+                1,
+                AggregationCalcFunctionEnum.COUNT.getValue(),
+                "*"
+
         );
         Long fileDisorderCount = 0L;
         if(null != fileDisorderCountObj) {

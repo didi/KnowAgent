@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl
 
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.OperatorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
@@ -74,20 +75,23 @@ public class FilePathExistsCheckProcessor extends BaseProcessor {
         /*
          * 获取自上次"日志采集路径存在"健康点 ~ 当前时间，logCollectTaskId+fileLogCollectPathId在host上是否存在对应待采集日志文件
          */
-        Object filePathExistsCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask(
+        Object filePathNotExistsCountObj = metricsManageService.getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask(
                 logCollectTaskId,
                 fileLogCollectPathId,
                 hostName,
                 healthCheckTimeStart,
                 healthCheckTimeEnd,
-                AggregationCalcFunctionEnum.SUM.getValue(),
-                MetricFieldEnum.LOG_COLLECT_TASK_COLLECT_PATH_IS_EXISTS.getFieldName()
+                MetricFieldEnum.LOG_COLLECT_TASK_COLLECT_PATH_IS_EXISTS.getFieldName(),
+                OperatorEnum.EQ.getOperator(),
+                0,
+                AggregationCalcFunctionEnum.COUNT.getValue(),
+                "*"
         );
-        Long filePathExistsCount = 0L;
-        if(null != filePathExistsCountObj) {
-            filePathExistsCount = Long.valueOf(filePathExistsCountObj.toString());
+        Long filePathNotExistsCount = 0L;
+        if(null != filePathNotExistsCountObj) {
+            filePathNotExistsCount = Long.valueOf(filePathNotExistsCountObj.toString());
         }
-        return filePathExistsCount != 0L;
+        return filePathNotExistsCount == 0L;
     }
 
 }
