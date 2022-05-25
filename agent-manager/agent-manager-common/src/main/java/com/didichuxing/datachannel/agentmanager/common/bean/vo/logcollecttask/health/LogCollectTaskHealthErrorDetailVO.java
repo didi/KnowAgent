@@ -25,7 +25,7 @@ public class LogCollectTaskHealthErrorDetailVO {
     private String logTime;
 
     @ApiModelProperty(value = "心跳时间")
-    private Long heartbeatTime;
+    private String heartbeatTime;
 
     @ApiModelProperty(value = "采集的文件（集）信息")
     private String collectFiles;

@@ -94,7 +94,7 @@ public class NormalLogCollectTaskHealthController {
             logCollectTaskHealthErrorDetailVO.setLogCollectTaskMetricId(logCollectTaskPO.getId());
             logCollectTaskHealthErrorDetailVO.setCollectFiles(logCollectTaskPO.getCollectfiles());
             logCollectTaskHealthErrorDetailVO.setLogTime(DateUtils.getDateTimeStr(logCollectTaskPO.getBusinesstimestamp()));
-            logCollectTaskHealthErrorDetailVO.setHeartbeatTime(logCollectTaskPO.getHeartbeattime());
+            logCollectTaskHealthErrorDetailVO.setHeartbeatTime(DateUtils.getDateTimeStr(logCollectTaskPO.getHeartbeattime()));
             logCollectTaskHealthErrorDetailVO.setPath(logCollectTaskPO.getPath());
             logCollectTaskHealthErrorDetailVO.setHostName(logCollectTaskPO.getCollecttaskhostname());
             logCollectTaskHealthErrorDetailVO.setPathId(logCollectTaskPO.getPathid());
