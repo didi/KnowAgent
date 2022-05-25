@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLo
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.health.LogCollectTaskHealthErrorDetailPathHostsVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.health.LogCollectTaskHealthErrorDetailVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
+import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
@@ -92,7 +93,7 @@ public class NormalLogCollectTaskHealthController {
             logCollectTaskHealthErrorDetailVO.setLogCollectTaskId(logCollectTaskPO.getCollecttaskid());
             logCollectTaskHealthErrorDetailVO.setLogCollectTaskMetricId(logCollectTaskPO.getId());
             logCollectTaskHealthErrorDetailVO.setCollectFiles(logCollectTaskPO.getCollectfiles());
-            logCollectTaskHealthErrorDetailVO.setLogTime(logCollectTaskPO.getBusinesstimestamp());
+            logCollectTaskHealthErrorDetailVO.setLogTime(DateUtils.getDateTimeStr(logCollectTaskPO.getBusinesstimestamp()));
             logCollectTaskHealthErrorDetailVO.setHeartbeatTime(logCollectTaskPO.getHeartbeattime());
             logCollectTaskHealthErrorDetailVO.setPath(logCollectTaskPO.getPath());
             logCollectTaskHealthErrorDetailVO.setHostName(logCollectTaskPO.getCollecttaskhostname());

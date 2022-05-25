@@ -417,11 +417,11 @@ public class LogSource extends AbstractSource {
                     release(needToDelete);
                 } else {
                     LogGather.recordErrorLog(
-                            "LogSource error",
-                            "collectingFileNodeMap'size is too large ["
-                                    + (collectingFileNodeMap.size() + 1)
-                                    + "] which means collection delay. logId is "
-                                    + logPath.getLogModelId() + ", pathId is " + logPath.getPathId());
+                        "LogSource error",
+                        "collectingFileNodeMap'size is too large ["
+                                + (collectingFileNodeMap.size() + 1)
+                                + "] which means collection delay. logId is "
+                                + logPath.getLogModelId() + ", pathId is " + logPath.getPathId());
                 }
             }
         }

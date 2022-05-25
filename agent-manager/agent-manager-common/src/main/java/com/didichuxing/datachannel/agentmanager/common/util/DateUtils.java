@@ -262,7 +262,7 @@ public class DateUtils {
     }
 
     public static String getDateTimeStr(long time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return sdf.format(new Date(time));
     }
 

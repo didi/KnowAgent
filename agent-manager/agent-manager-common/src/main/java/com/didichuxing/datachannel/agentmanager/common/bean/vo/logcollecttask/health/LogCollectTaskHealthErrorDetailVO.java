@@ -22,7 +22,7 @@ public class LogCollectTaskHealthErrorDetailVO {
     private String path;
 
     @ApiModelProperty(value = "日志时间")
-    private Long logTime;
+    private String logTime;
 
     @ApiModelProperty(value = "心跳时间")
     private Long heartbeatTime;

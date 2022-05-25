@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.health.AgentHealthErrorDetailVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
+import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.ErrorLogMapper;
 import io.swagger.annotations.Api;
@@ -46,7 +47,7 @@ public class NormalAgentHealthController {
             agentHealthErrorDetailVO.setErrorLogsCount(metricsAgentPO.getErrorlogscount());
             agentHealthErrorDetailVO.setErrorLogs(agentHealthManageService.getErrorLogsInHeartbeatScope(metricsAgentPO.getHostname(), metricsAgentPO.getHeartbeattime()));
             agentHealthErrorDetailVO.setHostName(metricsAgentPO.getHostname());
-            agentHealthErrorDetailVO.setHeartbeatTime(metricsAgentPO.getHeartbeattime());
+            agentHealthErrorDetailVO.setHeartbeatTime(DateUtils.getDateTimeStr(metricsAgentPO.getHeartbeattime()));
             agentHealthErrorDetailVOList.add(agentHealthErrorDetailVO);
         }
         return agentHealthErrorDetailVOList;

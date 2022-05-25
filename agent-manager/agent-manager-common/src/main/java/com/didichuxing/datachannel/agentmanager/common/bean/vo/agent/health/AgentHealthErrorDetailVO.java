@@ -18,7 +18,7 @@ public class AgentHealthErrorDetailVO {
     private List<String> errorLogs;
 
     @ApiModelProperty(value = "心跳时间")
-    private Long heartbeatTime;
+    private String heartbeatTime;
 
     @ApiModelProperty(value = "agent 业务指标 id")
     private Long agentMetricId;

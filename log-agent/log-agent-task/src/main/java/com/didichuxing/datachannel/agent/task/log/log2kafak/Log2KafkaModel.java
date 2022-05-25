@@ -130,8 +130,10 @@ public class Log2KafkaModel extends LogModel {
                     //删
                     deleteTask(task);
                     //添 加
-                    LogPath logPath = ((LogSourceConfig) newConfig.getSourceConfig()).getLogPathMap().get(((LogSource) task.getSource()).getLogPath().getPathId());
-                    if(null != logPath) {
+                    LogPath logPath = ((LogSourceConfig) newConfig.getSourceConfig())
+                        .getLogPathMap().get(
+                            ((LogSource) task.getSource()).getLogPath().getPathId());
+                    if (null != logPath) {
                         LogSource logSourceAdd = new LogSource(newConfig, logPath);
                         AbstractTask taskAdd = buildTask(newConfig, logSourceAdd);
                         addTask(taskAdd);
