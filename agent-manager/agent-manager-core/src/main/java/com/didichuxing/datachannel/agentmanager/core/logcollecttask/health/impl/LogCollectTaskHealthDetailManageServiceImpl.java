@@ -193,8 +193,8 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
                 throw new RuntimeException();
             }
             logCollectTaskHealthDetailDAO.updateByPrimaryKey(logCollectTaskHealthDetailPO);
-            //重走一遍日志采集任务诊断流程
-            logCollectTaskHealthManageService.checkLogCollectTaskHealth(logCollectTaskManageService.getById(metricsLogCollectTaskPO.getCollecttaskid()));
+//            //重走一遍日志采集任务诊断流程
+//            logCollectTaskHealthManageService.checkLogCollectTaskHealth(logCollectTaskManageService.getById(metricsLogCollectTaskPO.getCollecttaskid()));
         }
     }
 
