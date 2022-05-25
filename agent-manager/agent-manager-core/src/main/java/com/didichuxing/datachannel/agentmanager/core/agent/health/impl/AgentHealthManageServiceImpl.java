@@ -232,7 +232,7 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
             }
             agentHealthDAO.updateByPrimaryKey(agentHealthPO);
             //重走一遍agent诊断流程
-            checkAgentHealth(agentDO);
+//            checkAgentHealth(agentDO);
         }
     }
 
