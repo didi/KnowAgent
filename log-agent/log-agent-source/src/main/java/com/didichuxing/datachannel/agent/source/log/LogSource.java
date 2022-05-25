@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agent.source.log;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agent.common.api.*;
@@ -98,7 +99,7 @@ public class LogSource extends AbstractSource {
 
         this.relatedFileNodeMap = new ConcurrentHashMap<>();
         this.collectingFileNodeMap = new ConcurrentHashMap<>();
-        this.collectingFileNodeList = new ArrayList<>(2);
+        this.collectingFileNodeList = new CopyOnWriteArrayList();
         bulidUniqueKey();
     }
 
@@ -414,12 +415,13 @@ public class LogSource extends AbstractSource {
                 if (needToDelete != null) {
                     needToDelete.close();
                     release(needToDelete);
+                } else {
                     LogGather.recordErrorLog(
-                        "LogSource error",
-                        "collectingFileNodeMap'size is too large ["
-                                + (collectingFileNodeMap.size() + 1)
-                                + "] which means collection delay. logId is "
-                                + logPath.getLogModelId() + ", pathId is " + logPath.getPathId());
+                            "LogSource error",
+                            "collectingFileNodeMap'size is too large ["
+                                    + (collectingFileNodeMap.size() + 1)
+                                    + "] which means collection delay. logId is "
+                                    + logPath.getLogModelId() + ", pathId is " + logPath.getPathId());
                 }
             }
         }
@@ -810,7 +812,7 @@ public class LogSource extends AbstractSource {
             wfn.close();
             String uniqueKey = wfn.getUniqueKey();
             collectingFileNodeMap.remove(uniqueKey);
-            List<WorkingFileNode> newOne = new ArrayList<>();
+            List<WorkingFileNode> newOne = new CopyOnWriteArrayList();
             for (WorkingFileNode w : collectingFileNodeList) {
                 if (!w.getUniqueKey().equals(wfn.getUniqueKey())) {
                     newOne.add(w);
