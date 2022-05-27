@@ -142,7 +142,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
         if(null != sortTime && null != endTime) {
             metricQueryDTO.setEndTime(endTime);
             metricQueryDTO.setSortTime(sortTime);
-            return getLogCollectTaskMetric(metricQueryDTO, metricFieldEnum);
+            return getAgentMetric(metricQueryDTO, metricFieldEnum);
         } else {
             return metricPanel;
         }
