@@ -41,16 +41,7 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
         );
         if (fileDisorder) {
             // 存在乱序
-            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getLogCollectTaskHealthLevelEnum());
-            String logCollectTaskHealthDescription = String.format(
-                    "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER.getDescription(),
-                    context.getLogCollectTaskDO().getId(),
-                    context.getFileLogCollectPathDO().getId(),
-                    context.getHostDO().getHostName()
-            );
-            context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER);
+            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER);
         }
     }
 

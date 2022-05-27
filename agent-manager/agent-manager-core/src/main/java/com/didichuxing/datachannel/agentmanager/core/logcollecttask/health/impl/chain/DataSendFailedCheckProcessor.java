@@ -38,16 +38,7 @@ public class DataSendFailedCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (dataSendFailedExists) {//存在下游接收端写入失败
-            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.DATA_SEND_FAILED_EXISTS.getLogCollectTaskHealthLevelEnum());
-            String logCollectTaskHealthDescription = String.format(
-                    "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                    LogCollectTaskHealthInspectionResultEnum.DATA_SEND_FAILED_EXISTS.getDescription(),
-                    context.getLogCollectTaskDO().getId(),
-                    context.getFileLogCollectPathDO().getId(),
-                    context.getHostDO().getHostName()
-            );
-            context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.DATA_SEND_FAILED_EXISTS);
+            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.DATA_SEND_FAILED_EXISTS);
         }
     }
 

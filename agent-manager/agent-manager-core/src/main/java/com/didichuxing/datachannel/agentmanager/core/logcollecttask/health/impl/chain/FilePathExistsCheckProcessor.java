@@ -40,16 +40,7 @@ public class FilePathExistsCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if(!filePathExists) {
-            context.setLogCollectTaskHealthLevelEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getLogCollectTaskHealthLevelEnum());
-            String logCollectTaskHealthDescription = String.format(
-                    "%s:LogCollectTaskId={%d}, FileLogCollectPathId={%d}, HostName={%s}",
-                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS.getDescription(),
-                    context.getLogCollectTaskDO().getId(),
-                    context.getFileLogCollectPathDO().getId(),
-                    context.getHostDO().getHostName()
-            );
-            context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
-            context.setLogCollectTaskHealthInspectionResultEnum(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS);
+            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_NOT_EXISTS);
         }
     }
 
