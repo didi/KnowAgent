@@ -1,9 +1,9 @@
 server:
-  port: 8080
+  port: 8010
 logging:
   pattern:
     file: "[%level][%d{yyyy-MM-dd'T'HH:mm:ss.SSS}][%t] %msg%xEx%n"
-  config: classpath:log4j2.yaml
+  config: classpath:log4j2.xml
   path: .
   file:
     max-history: 7
@@ -21,9 +21,9 @@ spring:
       stat-view-servlet:
         enabled: false
       driver-class-name: org.mariadb.jdbc.Driver
-      url: jdbc:mysql://localhost:8099/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
-      username:
-      password:
+      url: jdbc:mysql://116.85.10.170:3306/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+      username: root
+      password: Didiyun@888
       initialSize: 10
       validationQueryTimeout: 5000
       transactionQueryTimeout: 60000
@@ -55,9 +55,9 @@ spring:
       max-file-size: 600MB
       max-request-size: 600MB
   auv-job:
-    jdbc-url: jdbc:mysql://localhost:8099/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
-    username:
-    password:
+    jdbc-url: jdbc:mysql://116.85.10.170:3306/logi_agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+    username: root
+    password: Didiyun@888
     driver-class-name: org.mariadb.jdbc.Driver
     max-lifetime: 60000
     init-sql: true
@@ -65,6 +65,8 @@ spring:
     max-thread-num: 20
   transaction:
     default-timeout: 300
+  main:
+    allow-circular-references: true
 
 kcm:
   enabled: true
@@ -107,22 +109,23 @@ metadata:
 
 agent:
   metrics:
+    storage:
+      type: rds
     datasource:
       elasticsearch:
         ip: 1
         port: 1
-        appId: 1
-        appSecret: 1
         agentMetricsIndexName: 1
         agentErrorLogIndexName: 1
-    producer:
-      identify: false
-      appId: 0
-      clusterId: 0
-      password: 0
   http:
-    path:
-      request:
-        url: http://%s:%d/log-agent/path
-        port: 2023
-        body:
+    request:
+      port: 20230
+
+metrics:
+  expire:
+    days: 1
+
+system:
+  config:
+    datetime:
+      formats: yyyy-MM-dd HH:mm:ss.SSS,yyyy/MM/dd HH:mm:ss Z,yyyy-MM-dd HH:mm:ss,SSS

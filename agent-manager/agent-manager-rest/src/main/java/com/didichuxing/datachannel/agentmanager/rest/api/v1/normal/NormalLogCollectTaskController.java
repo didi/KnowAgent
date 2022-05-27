@@ -157,6 +157,13 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc(agentManageServiceExtension.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular()));
     }
 
+    @ApiOperation(value = "根据给定日志样本与切片时间戳串获取对应切片规则配置", notes = "")
+    @RequestMapping(value = "/slice_rule", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<LogSliceRuleVO> getSliceRule(@RequestBody SliceSampleDTO sliceSampleDTO) {
+        return Result.buildSucc(logCollectTaskManageService.getSliceRule(sliceSampleDTO.getContent(), sliceSampleDTO.getSliceDateTimeStringStartIndex(), sliceSampleDTO.getSliceDateTimeStringEndIndex()));
+    }
+
     @ApiOperation(value = "读取文件内容 注：最多读取 100 行", notes = "")
     @RequestMapping(value = "/file-content", method = RequestMethod.GET)
     @ResponseBody

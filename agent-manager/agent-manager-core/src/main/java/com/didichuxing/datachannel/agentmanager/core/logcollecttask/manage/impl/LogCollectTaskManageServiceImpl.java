@@ -1,8 +1,10 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
@@ -15,6 +17,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskServicePO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
@@ -46,9 +49,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -58,8 +63,16 @@ import java.util.*;
  */
 @Service
 public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageService {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LogCollectTaskManageServiceImpl.class);
+
     private static final int HEARTBEAT_PERIOD = 30;
+
+    /**
+     * 日期/时间格式串集
+     */
+    @Value("${system.config.datetime.formats}")
+    private String dateTimeFormats;
 
     @Autowired
     private LogCollectTaskMapper logCollectorTaskDAO;
@@ -616,6 +629,57 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     public List<LogCollectTaskDO> getAll() {
         List<LogCollectTaskPO> logCollectTaskPOList = logCollectorTaskDAO.queryAll();
         return logCollectTaskManageServiceExtension.logCollectTaskPOList2LogCollectTaskDOList(logCollectTaskPOList);
+    }
+
+    @Override
+    public List<String> getDateTimeFormats() {
+        // TODO：见 https://www.jb51.net/article/162825.htm
+        String[] dateTimeFormatArray = dateTimeFormats.split(CommonConstant.COMMA);
+        return Arrays.asList(dateTimeFormatArray);
+    }
+
+    @Override
+    public LogSliceRuleVO getSliceRule(String content, Integer sliceDateTimeStringStartIndex, Integer sliceDateTimeStringEndIndex) {
+        String sliceDateTimeString = content.substring(sliceDateTimeStringStartIndex, sliceDateTimeStringEndIndex+1);
+        String sliceTimestampFormat = "";
+        Integer sliceTimestampPrefixStringIndex = -1;
+        String sliceTimestampPrefixString = "";
+        List<String> dateTimeFormatList = getDateTimeFormats();
+        for (String dateTimeFormat : dateTimeFormatList) {
+            try {
+                Date date = new SimpleDateFormat(dateTimeFormat).parse(sliceDateTimeString);
+                if(null != date) {
+                    sliceTimestampFormat = dateTimeFormat;
+                    break;
+                }
+            } catch (Exception ex) {
+                continue;
+            }
+        }
+        if(0 == sliceDateTimeStringStartIndex) {
+            sliceTimestampPrefixStringIndex = 0;
+            sliceTimestampPrefixString = "";
+        } else {
+            Integer sliceTimestampPrefixIndex = sliceDateTimeStringStartIndex - 1;
+            sliceTimestampPrefixString = String.valueOf(content.charAt(sliceTimestampPrefixIndex));
+            Integer index = 0;
+            int times = 0;
+            for (; times <= sliceTimestampPrefixIndex; times++) {
+                index = content.indexOf(sliceTimestampPrefixString, index);
+                if(index.equals(sliceTimestampPrefixIndex)) {
+                    sliceTimestampPrefixStringIndex = times;
+                    break;
+                } else {
+                    index = index+1;
+                }
+            }
+            sliceTimestampPrefixStringIndex = times;
+        }
+        LogSliceRuleVO logSliceRuleVO = new LogSliceRuleVO();
+        logSliceRuleVO.setSliceTimestampFormat(sliceTimestampFormat);
+        logSliceRuleVO.setSliceTimestampPrefixString(sliceTimestampPrefixString);
+        logSliceRuleVO.setSliceTimestampPrefixStringIndex(sliceTimestampPrefixStringIndex);
+        return logSliceRuleVO;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
 
 import java.util.List;
 
@@ -141,5 +142,18 @@ public interface LogCollectTaskManageService {
      * @return 返回系统全量日志采集任务
      */
     List<LogCollectTaskDO> getAll();
+
+    /**
+     * @return 返回系统配置的所有日期/时间格式
+     */
+    List<String> getDateTimeFormats();
+
+    /**
+     * @param content 日志样本
+     * @param sliceDateTimeStringStartIndex 切片时间戳串开始位置索引
+     * @param sliceDateTimeStringEndIndex 切片时间戳串结束位置索引
+     * @return 返回根据给定日志样本与切片时间戳串开始、结束位置索引获取到的对应切片规则配置
+     */
+    LogSliceRuleVO getSliceRule(String content, Integer sliceDateTimeStringStartIndex, Integer sliceDateTimeStringEndIndex);
 
 }

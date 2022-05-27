@@ -6,16 +6,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogRecordVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
 import com.didichuxing.datachannel.agentmanager.core.ApplicationTests;
-import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
-import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.DirectoryLogCollectPathManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
-import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentVersionMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,31 +22,7 @@ import java.util.List;
 public class LogCollectTaskManageServiceTest extends ApplicationTests {
 
     @Autowired
-    private ServiceManageService serviceManageService;
-
-    @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
-
-    @Autowired
-    private KafkaClusterManageService kafkaClusterManageService;
-
-    @Autowired
-    private DirectoryLogCollectPathManageService directoryLogCollectPathManageService;
-
-    @Autowired
-    private FileLogCollectPathManageService fileLogCollectPathManageService;
-
-    @Autowired
-    private LogCollectTaskHealthManageService logCollectTaskHealthManageService;
-
-    @Autowired
-    private HostManageService hostManageService;
-
-    @Autowired
-    private AgentManageService agentManageService;
-
-    @Autowired
-    private AgentVersionMapper agentVersionMapper;
 
     @Autowired
     private LogCollectTaskManageServiceExtension logCollectTaskManageServiceExtension;
@@ -87,6 +56,16 @@ public class LogCollectTaskManageServiceTest extends ApplicationTests {
 
     }
 
+    @Test
+    public void testGetSliceRule() {
+        String info = "23123[qdsadq[qweqw[4[2022-05-27 19:02:47!110] [main] INFO  logger2 -  1652852225 1653649367110     \n" +
+                "2022-05-27";
+        Integer startIndex = info.indexOf("2022-05-27 19:02:47.110");
+        Integer endIndex = startIndex + "2022-05-27 19:02:47.110".length() - 1;
+        assert "2022-05-27 19:02:47.110".equals(info.substring(startIndex, endIndex+1));
+        LogSliceRuleVO logSliceRuleVO = logCollectTaskManageService.getSliceRule(info, startIndex, endIndex);
+        assert null != logSliceRuleVO;
+    }
 //    /**
 //     * 测试日志采集任务修改服务接口 case：删除所有对应文件采集路径集
 //     */
