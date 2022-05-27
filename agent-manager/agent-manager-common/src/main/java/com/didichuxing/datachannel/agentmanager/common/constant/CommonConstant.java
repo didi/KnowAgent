@@ -17,6 +17,7 @@ public class CommonConstant {
     public static final String COMMA = ",";
     public static final String COLON = ":";
     public static final String EQUAL_SIGN = "=";
+    public static final String SEMICOLON = ";";
 
     private static Map<Integer, ErrorCodeEnum> errorCodeEnumMap = new HashMap<>();
 

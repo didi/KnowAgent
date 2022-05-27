@@ -1,17 +1,14 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
-import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
@@ -20,7 +17,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.Lo
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskConstant;
-import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
@@ -31,7 +27,6 @@ import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.ListCompareUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
@@ -633,8 +628,8 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     @Override
     public List<String> getDateTimeFormats() {
-        // TODO：见 https://www.jb51.net/article/162825.htm
-        String[] dateTimeFormatArray = dateTimeFormats.split(CommonConstant.COMMA);
+        // TODO：见 https://www.jb51.net/article/162825.htm 后续移至全局系统参数维护
+        String[] dateTimeFormatArray = dateTimeFormats.split(CommonConstant.SEMICOLON);
         return Arrays.asList(dateTimeFormatArray);
     }
 
@@ -647,6 +642,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         List<String> dateTimeFormatList = getDateTimeFormats();
         for (String dateTimeFormat : dateTimeFormatList) {
             try {
+                if(dateTimeFormat.length() != sliceDateTimeString.length()) {
+                    continue;
+                }
                 Date date = new SimpleDateFormat(dateTimeFormat).parse(sliceDateTimeString);
                 if(null != date) {
                     sliceTimestampFormat = dateTimeFormat;
