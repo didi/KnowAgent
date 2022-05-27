@@ -98,10 +98,70 @@ public class MetricsManageServiceImpl implements MetricsManageService {
             );
         }
         if(isLogCollectTaskMetric(metricFieldEnum)) {//日志采集任务相关指标
-            return getLogCollectTaskMetric(metricQueryDTO, metricFieldEnum);
+            MetricPanel metricPanel = getLogCollectTaskMetric(metricQueryDTO, metricFieldEnum);
+            if(panelIsNull(metricPanel)) {//当前时间未获取到，end 最晚时间获取
+                return reGetLogCollectTaskMetric(metricQueryDTO, metricFieldEnum, metricPanel);
+            } else {
+                return metricPanel;
+            }
         } else {//agent相关指标
-            return getAgentMetric(metricQueryDTO, metricFieldEnum);
+            MetricPanel metricPanel = getAgentMetric(metricQueryDTO, metricFieldEnum);
+            if(panelIsNull(metricPanel)) {//当前时间未获取到，end 最晚时间获取
+                return reGetAgentMetric(metricQueryDTO, metricFieldEnum, metricPanel);
+            } else {
+                return metricPanel;
+            }
         }
+    }
+
+    private MetricPanel reGetAgentMetric(BusinessMetricsQueryDTO metricQueryDTO, MetricFieldEnum metricFieldEnum, MetricPanel metricPanel) {
+        Long endTime = null;
+        Long sortTime = null;
+        if(isSystemMetric(metricFieldEnum)) {
+            MetricsSystemPO metricsSystemPO = getLastSystemMetric(metricQueryDTO.getHostName());
+            if(null != metricsSystemPO) {
+                endTime = metricsSystemPO.getHeartbeattime();
+                sortTime = metricsSystemPO.getHeartbeattimeminute();
+            }
+        } else if(isProcessMetric(metricFieldEnum)) {
+            MetricsProcessPO metricsProcessPO = getLastProcessMetric(metricQueryDTO.getHostName());
+            if(null != metricsProcessPO) {
+                endTime = metricsProcessPO.getHeartbeattime();
+                sortTime = metricsProcessPO.getHeartbeattimeminute();
+            }
+        } else if(isAgentBusinessMetric(metricFieldEnum)) {
+            MetricsAgentPO metricsAgentPO = getLastAgentMetric(metricQueryDTO.getHostName());
+            if(null != metricsAgentPO) {
+                endTime = metricsAgentPO.getHeartbeattime();
+                sortTime = metricsAgentPO.getHeartbeattimeminute();
+            }
+        } else {
+            return metricPanel;
+        }
+        if(null != sortTime && null != endTime) {
+            metricQueryDTO.setEndTime(endTime);
+            metricQueryDTO.setSortTime(sortTime);
+            return getLogCollectTaskMetric(metricQueryDTO, metricFieldEnum);
+        } else {
+            return metricPanel;
+        }
+    }
+
+    private MetricPanel reGetLogCollectTaskMetric(BusinessMetricsQueryDTO metricQueryDTO, MetricFieldEnum metricFieldEnum, MetricPanel metricPanel) {
+        MetricsLogCollectTaskPO metricsLogCollectTaskPO = getLastLogCollectTaskMetric(metricQueryDTO.getLogCollectTaskId(), metricQueryDTO.getPathId(), metricQueryDTO.getHostName());
+        if(null != metricsLogCollectTaskPO) {
+            metricQueryDTO.setEndTime(metricsLogCollectTaskPO.getHeartbeattime());
+            metricQueryDTO.setSortTime(metricsLogCollectTaskPO.getHeartbeattimeminute());
+            return getLogCollectTaskMetric(metricQueryDTO, metricFieldEnum);
+        } else {
+            return metricPanel;
+        }
+    }
+
+    private boolean panelIsNull(MetricPanel metricPanel) {
+        return null == metricPanel.getLableValue() ||
+                CollectionUtils.isEmpty(metricPanel.getMultiLineChatValue()) ||
+                CollectionUtils.isEmpty(metricPanel.getSingleLineChatValue().getMetricPointList());
     }
 
     @Override
@@ -205,9 +265,15 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     @Override
     public MetricsLogCollectTaskPO getLastLogCollectTaskMetric(Long logCollectTaskId, Long pathId, String hostName) {
         Map<String, Object> params = new HashMap<>();
-        params.put("logCollectTaskId", logCollectTaskId);
-        params.put("pathId", pathId);
-        params.put("hostName", hostName);
+        if(null != logCollectTaskId && logCollectTaskId > 0l) {
+            params.put("logCollectTaskId", logCollectTaskId);
+        }
+        if(null != pathId && pathId > 0l) {
+            params.put("pathId", pathId);
+        }
+        if(StringUtils.isNotBlank(hostName)) {
+            params.put("hostName", hostName);
+        }
         return metricsLogCollectTaskDAO.getLastRecord(params);
     }
 

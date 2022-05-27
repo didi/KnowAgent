@@ -439,11 +439,19 @@
     <include refid="Base_Column_List" />
     from tb_metrics_log_collect_task
     where
+        1 = 1
+        <if test="logCollectTaskId != null">
+        and
         collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+        </if>
+        <if test="pathId != null">
         and
         pathId = #{pathId,jdbcType=BIGINT}
+        </if>
+        <if test="hostName != null">
         and
         collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+        </if>
     order by heartbeatTime desc
     limit 1
   </select>

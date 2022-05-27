@@ -61,7 +61,8 @@ public class FileContent extends Handler implements HttpHandler {
             String line = null;
             Integer lines = 0;
             while ((line = br.readLine()) != null && lines < 100) {
-                fileContent += line;
+                fileContent += line + System.getProperty("line.separator", "\n");
+                ;
                 lines++;
             }
         } catch (FileNotFoundException e) {

@@ -62,14 +62,11 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
         if(taskMetricsObj != null) {
             String taskMetricsStr = taskMetricsObj.toString();
             TaskMetrics taskMetrics = JSON.parseObject(taskMetricsStr, TaskMetrics.class);
-//            LOGGER.error(String.format("taskMetrics=%s", JSON.toJSONString(taskMetrics)));
             MetricsLogCollectTaskPO logCollectTaskPO = ConvertUtil.obj2Obj(taskMetrics, MetricsLogCollectTaskPO.class);
-//            LOGGER.error(String.format("logCollectTaskPO=%s", JSON.toJSONString(logCollectTaskPO)));
             metricsLogCollectTaskDAO.insertSelective(logCollectTaskPO);
         } else if(agentMetricsObj != null) {
             String agentMetricsStr = agentMetricsObj.toString();
             AgentMetrics agentMetrics = JSON.parseObject(agentMetricsStr, AgentMetrics.class);
-//            LOGGER.error(String.format("agentMetrics=%s", JSON.toJSONString(agentMetrics)));
             AgentBusinessMetrics agentBusinessMetrics = agentMetrics.getAgentBusinessMetrics();
             SystemMetrics systemMetrics = agentMetrics.getSystemMetrics();
             ProcessMetrics processMetrics = agentMetrics.getProcessMetrics();
@@ -84,26 +81,21 @@ public class AgentMetricsRDSImpl implements AgentMetricsDAO {
             List<MetricsDiskPO> metricsDiskPOList = ConvertUtil.list2List(diskMetricsList, MetricsDiskPO.class);
             List<MetricsNetCardPO> metricsNetCardPOList = ConvertUtil.list2List(netCardMetrics, MetricsNetCardPO.class);
 
-//            LOGGER.error(String.format("metricsAgentPO=%s", JSON.toJSONString(metricsAgentPO)));
-            metricsAgentDAO.insertSelective(metricsAgentPO);
-//            LOGGER.error(String.format("metricsSystemPO=%s", JSON.toJSONString(metricsSystemPO)));
-            metricsSystemDAO.insertSelective(metricsSystemPO);
-//            LOGGER.error(String.format("metricsProcessPO=%s", JSON.toJSONString(metricsProcessPO)));
-            metricsProcessDAO.insertSelective(metricsProcessPO);
-//            LOGGER.error(String.format("metricsDiskIOPOS=%s", JSON.toJSONString(metricsDiskIOPOS)));
             for (MetricsDiskIOPO metricsDiskIOPO : metricsDiskIOPOS) {
                 metricsDiskIODAO.insertSelective(metricsDiskIOPO);
             }
-//            LOGGER.error(String.format("metricsDiskPOList=%s", JSON.toJSONString(metricsDiskPOList)));
             for (MetricsDiskPO metricsDiskPO : metricsDiskPOList) {
                 metricsDiskDAO.insertSelective(metricsDiskPO);
             }
-//            LOGGER.error(String.format("metricsNetCardPOList=%s", JSON.toJSONString(metricsNetCardPOList)));
             for (MetricsNetCardPO metricsNetCardPO : metricsNetCardPOList) {
                 metricsNetCardDAO.insertSelective(metricsNetCardPO);
             }
+
+            metricsAgentDAO.insertSelective(metricsAgentPO);
+            metricsSystemDAO.insertSelective(metricsSystemPO);
+            metricsProcessDAO.insertSelective(metricsProcessPO);
+
         }
-//        LOGGER.error(" ==================== ");
     }
 
     @Override
