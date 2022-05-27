@@ -114,6 +114,7 @@ public class RdHostController {
             hostAgentVO.setHostCreateTime(hostAgentDO.getHostCreateTime().getTime());
             hostAgentVO.setAgentId(hostAgentDO.getAgentId());
             hostAgentVO.setParentHostName(hostAgentDO.getParentHostName());
+            hostAgentVO.setAgentHealthInspectionResultType(hostAgentDO.getAgentHealthInspectionResultType());
             resultSet.add(hostAgentVO);
         }
         return resultSet;

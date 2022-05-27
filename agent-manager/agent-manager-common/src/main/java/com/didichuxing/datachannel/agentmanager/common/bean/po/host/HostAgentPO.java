@@ -60,6 +60,18 @@ public class HostAgentPO extends BasePO {
      * agent健康描述信息
      */
     private String agentHealthDescription;
+    /**
+     * agent健康度巡检结果类型
+     */
+    private Integer agentHealthInspectionResultType;
+
+    public Integer getAgentHealthInspectionResultType() {
+        return agentHealthInspectionResultType;
+    }
+
+    public void setAgentHealthInspectionResultType(Integer agentHealthInspectionResultType) {
+        this.agentHealthInspectionResultType = agentHealthInspectionResultType;
+    }
 
     public Long getAgentId() {
         return agentId;
