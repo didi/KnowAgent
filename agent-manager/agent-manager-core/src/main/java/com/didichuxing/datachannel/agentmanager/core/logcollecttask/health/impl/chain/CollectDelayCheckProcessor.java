@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
@@ -10,6 +12,9 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.Aggre
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.AgentGcMetricExceptionExistsCheckProcessor;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.List;
 
 /**
  * 是否存在采集延迟检查
@@ -43,7 +48,91 @@ public class CollectDelayCheckProcessor extends BaseProcessor {
         }
     }
 
+    static class CollectFile {
+        private Boolean fileEnd;
+        private String fileName;
+        private Integer isFileOrder;
+        private Long lastModifyTime;
+        private Long logTime;
+        private Long rate;
+        private Boolean vaildTimeConfig;
+
+        public Boolean getFileEnd() {
+            return fileEnd;
+        }
+
+        public void setFileEnd(Boolean fileEnd) {
+            this.fileEnd = fileEnd;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+
+        public Integer getIsFileOrder() {
+            return isFileOrder;
+        }
+
+        public void setIsFileOrder(Integer isFileOrder) {
+            this.isFileOrder = isFileOrder;
+        }
+
+        public Long getLastModifyTime() {
+            return lastModifyTime;
+        }
+
+        public void setLastModifyTime(Long lastModifyTime) {
+            this.lastModifyTime = lastModifyTime;
+        }
+
+        public Long getLogTime() {
+            return logTime;
+        }
+
+        public void setLogTime(Long logTime) {
+            this.logTime = logTime;
+        }
+
+        public Long getRate() {
+            return rate;
+        }
+
+        public void setRate(Long rate) {
+            this.rate = rate;
+        }
+
+        public Boolean getVaildTimeConfig() {
+            return vaildTimeConfig;
+        }
+
+        public void setVaildTimeConfig(Boolean vaildTimeConfig) {
+            this.vaildTimeConfig = vaildTimeConfig;
+        }
+    }
+
     private void diagnosisCollectDelay(LogCollectTaskHealthCheckContext context) {
+        /*
+         * 校验待采集文件集是否全部采集完，如是，cause by 日志文件没有内容写入导致延时
+         */
+        String collectFilesString = context.getLastLogCollectTaskMetric().getCollectfiles();
+        List<CollectFile> collectFileList = JSON.parseObject(collectFilesString, new TypeReference<List<CollectFile>>() {});
+        if(CollectionUtils.isNotEmpty(collectFileList)) {
+            Boolean allFilesCollectFinished = true;
+            for (CollectFile collectFile : collectFileList) {
+                if(!collectFile.rate.equals(100l)) {
+                    allFilesCollectFinished = false;
+                }
+            }
+            if(allFilesCollectFinished) {
+                setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_BUSINESS_DATA_WRITE_SLOW);
+                return;
+            }
+        }
+
         /*
          * 下游接收端，是否存在写入失败情况
          */

@@ -21,6 +21,7 @@ public enum LogCollectTaskHealthInspectionResultEnum {
     LOG_PATH_COLLECT_DELAYED_CAUSE_BY_HOST_CPU_USAGE_LIMIT_EXISTS(12, "agent触发cpu阈值限流导致的日志采集任务延时", LogCollectTaskHealthLevelEnum.RED, false),
     LOG_PATH_COLLECT_DELAYED_CAUSE_BY_SINK_SLOW(13, "agent sink端发送速率瓶颈导致的日志采集任务延时", LogCollectTaskHealthLevelEnum.RED, false),
     LOG_PATH_COLLECT_DELAYED_CAUSE_BY_SOURCE_SLOW(14, "agent source端采集速率瓶颈导致的日志采集任务延时", LogCollectTaskHealthLevelEnum.RED, false),
+    LOG_PATH_COLLECT_DELAYED_CAUSE_BY_BUSINESS_DATA_WRITE_SLOW(25, "业务数据写入慢导致的日志采集任务延时（如：业务数据写入最后时间为16：08：00，当前时间为17：00：00），注意：此时所有业务数据已被全部采集，建议适当调大该日志采集任务对应延迟判断间隔", LogCollectTaskHealthLevelEnum.RED, false),
     TOPIC_LIMIT_EXISTS(15, "日志采集任务对应下游topic被限流", LogCollectTaskHealthLevelEnum.YELLOW, true),
     HOST_CPU_LIMIT_EXISTS(16, "日志采集任务在对应主机端存在 CPU 阀值限流", LogCollectTaskHealthLevelEnum.YELLOW, true),
     HOST_CPU_USAGE_LIMIT_EXISTS(17, "日志采集任务在对应主机端存在agent cpu阀值限流", LogCollectTaskHealthLevelEnum.YELLOW, true),
