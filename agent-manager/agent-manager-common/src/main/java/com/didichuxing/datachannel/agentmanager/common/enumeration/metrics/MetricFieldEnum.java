@@ -3047,7 +3047,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.DATE_TIME,
             MetricDisplayTypeEnum.LABLE,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_ONE
+            MetricLevelEnum.LEVEL_TWO
     ),
     LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY(
             214,
@@ -3089,7 +3089,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_TWO
+            MetricLevelEnum.LEVEL_ONE
             ),
     LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM_TOTAL(
             217,
@@ -3103,7 +3103,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_TWO
+            MetricLevelEnum.LEVEL_THREE
             ),
     LOG_COLLECT_TASK_COLLECT_PATH_IS_EXISTS(
             218,
@@ -3117,7 +3117,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_TWO
+            MetricLevelEnum.LEVEL_ONE
             ),
     LOG_COLLECT_TASK_DISORDER_EXISTS(
             219,
@@ -3131,7 +3131,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_TWO
+            MetricLevelEnum.LEVEL_ONE
             ),
     LOG_COLLECT_TASK_SLICE_ERROR_EXISTS(
             220,
@@ -3145,7 +3145,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_TWO
+            MetricLevelEnum.LEVEL_ONE
             ),
     LOG_COLLECT_TASK_READ_BYTES(
             221,
@@ -3159,7 +3159,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.M_BYTE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_THREE
+            MetricLevelEnum.LEVEL_ONE
             ),
     LOG_COLLECT_TASK_READ_COUNT(
             222,
@@ -3173,7 +3173,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_THREE
+            MetricLevelEnum.LEVEL_ONE
             ),
     LOG_COLLECT_TASK_SEND_BYTES(
             223,
@@ -3271,7 +3271,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_TWO
+            MetricLevelEnum.LEVEL_THREE
             ),
     LOG_COLLECT_TASK_FLUSH_FAILED_TIMES(
             230,
@@ -3285,7 +3285,7 @@ public enum MetricFieldEnum {
             MetricUnitEnum.NONE,
             MetricDisplayTypeEnum.MULTI_LINE_CHAT,
             SortTypeEnum.DESC,
-            MetricLevelEnum.LEVEL_TWO
+            MetricLevelEnum.LEVEL_ONE
             ),
     LOG_COLLECT_TASK_FILTER_EVENTS_NUM(
             231,
