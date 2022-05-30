@@ -186,8 +186,8 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
         if(StringUtils.isBlank(logCollectTaskDO.getLogCollectTaskName())) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "logCollectTaskName属性值不可为空");
         }
-        if(null == logCollectTaskDO.getCollectDelayThresholdMs() || logCollectTaskDO.getCollectDelayThresholdMs().equals(0)) {
-            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "FileLogCollectPathDO.collectDelayThresholdMs不可为空 & 等于0");
+        if(null == logCollectTaskDO.getCollectDelayThresholdMs()) {
+            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "FileLogCollectPathDO.collectDelayThresholdMs不可为空");
         }
         if(StringUtils.isBlank(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString())) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "FileLogCollectPathDO.fileNameSuffixMatchRuleLogicJsonString属性值不可为空");
