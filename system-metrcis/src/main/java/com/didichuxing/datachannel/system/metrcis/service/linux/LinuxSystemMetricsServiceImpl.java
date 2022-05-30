@@ -213,20 +213,15 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Integer getProcessesCountByProcessStatus(String status) {
-        Integer statusCount = 0;
-        List<String> processInfoList = getOutputByCmd(
-                "ps -aux", "系统进程状态", null);
-        if (!processInfoList.isEmpty() && processInfoList.size() > 1) {
-            for (int i = 1; i < processInfoList.size(); i++) {
-                String processInfo = processInfoList.get(i);
-                String[] properties = processInfo.split("\\s+");
-                String processStatus = properties[7];
-                if(processStatus.contains(status)) {
-                    statusCount++;
-                }
-            }
+        String command = String.format("ps -aux | awk '{print $8}' | grep %s | wc -l", status);
+        List<String> lines = getOutputByCmd(
+                command, String.format("系统进程状态[%s]", status), null);
+        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+            return Integer.valueOf(lines.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsServiceImpl||method=getProcessesCountByProcessStatus||msg=data is null");
+            return 0;
         }
-        return statusCount;
     }
 
     @Override
