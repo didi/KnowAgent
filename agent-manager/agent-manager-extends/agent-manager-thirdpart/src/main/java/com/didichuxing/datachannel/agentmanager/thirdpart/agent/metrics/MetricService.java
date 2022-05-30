@@ -48,7 +48,10 @@ public class MetricService {
     @Value("${agent.metrics.producer.password:#{null}}")
     private String password;
 
-    private static volatile boolean trigger = false;
+    private static volatile boolean errorLogsWriteStopTrigger = false;
+    private static volatile boolean metricsWriteStopTrigger = false;
+    private static volatile boolean errorLogsWriteStopped = false;
+    private static volatile boolean metricsWriteStopped = false;
 
     private static final String CONSUMER_GROUP_ID = "g1";
     private static final long RETENTION_TIME = 7 * 24 * 3600 * 1000;
@@ -56,8 +59,11 @@ public class MetricService {
     private static Set<ReceiverTopicDO> metricSet = new HashSet<>();
     private static Set<ReceiverTopicDO> errorSet = new HashSet<>();
 
+    private KafkaClusterPO lastAgentErrorLogsKafkaClusterPO = null;
+    private KafkaClusterPO lastAgentMetricsKafkaClusterPO = null;
+
     private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(
-            5, 20, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
+            2, 2, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
 
     private void loadClustersAndTopics() {
         List<AgentPO> agentPOList = agentMapper.getAll();
@@ -82,47 +88,53 @@ public class MetricService {
         }
     }
 
-    public void writeMetrics(ReceiverTopicDO receiverTopicDO) {
-        KafkaClusterPO kafkaClusterPO = kafkaClusterMapper.selectByPrimaryKey(receiverTopicDO.getReceiverId());
-        LOGGER.info("Thread: {}, cluster name: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterPO.getKafkaClusterName(), receiverTopicDO.getTopic());
-        Properties properties = getProducerProps(kafkaClusterPO.getKafkaClusterBrokerConfiguration());
+    public void writeMetrics(String agentMetricsTopic, String kafkaClusterBrokerConfiguration) {
+        LOGGER.info("Thread: {}, cluster: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterBrokerConfiguration, agentMetricsTopic);
+        Properties properties = getProducerProps(kafkaClusterBrokerConfiguration);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-        consumer.subscribe(Arrays.asList(receiverTopicDO.getTopic()));
+        consumer.subscribe(Arrays.asList(agentMetricsTopic));
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
                 agentMetricsDAO.writeMetrics(records);
-                if (trigger) {
+                if (metricsWriteStopTrigger) {
                     consumer.close();
                     break;
                 }
-            } catch (Throwable e) {
-                LOGGER.error(e.getMessage());
+            } catch (Throwable ex) {
+                LOGGER.error(
+                        String.format("writeMetrics error: %s", ex.getMessage()),
+                        ex
+                );
                 consumer.close();
                 break;
             }
         }
+        metricsWriteStopped = true;
     }
 
-    public void writeErrors(ReceiverTopicDO receiverTopicDO) {
-        KafkaClusterPO kafkaClusterPO = kafkaClusterMapper.selectByPrimaryKey(receiverTopicDO.getReceiverId());
-        LOGGER.info("Thread: {}, cluster name: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterPO.getKafkaClusterName(), receiverTopicDO.getTopic());
-        Properties properties = getProducerProps(kafkaClusterPO.getKafkaClusterBrokerConfiguration());
+    public void writeErrorLogs(String agentErrorLogsTopic, String kafkaClusterBrokerConfiguration) {
+        LOGGER.info("Thread: {}, cluster: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterBrokerConfiguration, agentErrorLogsTopic);
+        Properties properties = getProducerProps(kafkaClusterBrokerConfiguration);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-        consumer.subscribe(Arrays.asList(receiverTopicDO.getTopic()));
+        consumer.subscribe(Arrays.asList(agentErrorLogsTopic));
         while (true) {
             try {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
                 agentMetricsDAO.writeErrors(records);
-                if (trigger) {
+                if (errorLogsWriteStopTrigger) {
                     consumer.close();
                     break;
                 }
-            } catch (Throwable e) {
-                LOGGER.error(e.getMessage());
+            } catch (Throwable ex) {
+                LOGGER.error(
+                        String.format("writeErrorLogs error: %s", ex.getMessage()),
+                        ex
+                );
                 consumer.close();
             }
         }
+        errorLogsWriteStopped = true;
     }
 
     private Properties getProducerProps(String bootstrapServers) {
@@ -154,23 +166,102 @@ public class MetricService {
 
     @PostConstruct
     public void resetMetricConsumers() {
-        metricSet.clear();
-        errorSet.clear();
-        trigger = true;
-        try {
-            // 等待现有的kafka consumer线程全部关闭
-            Thread.sleep(10 * 1000);
-            loadClustersAndTopics();
-        } catch (InterruptedException e) {
-            LOGGER.error("thread interrupted", e);
+        /*
+         * 1.）获取 agent metrics & error logs 对应接收端信息、topic
+         */
+        KafkaClusterPO agentErrorLogsKafkaClusterPO = kafkaClusterMapper.getAgentErrorLogsTopicExistsKafkaCluster();
+        KafkaClusterPO agentMetricsKafkaClusterPO = kafkaClusterMapper.getAgentMetricsTopicExistsKafkaCluster();
+        /*
+         * 2.）校验较上一次获取是否相同，如不同，则立即进行对应变更处理
+         */
+        if(errorLogsReceiverChanged(lastAgentErrorLogsKafkaClusterPO, agentErrorLogsKafkaClusterPO)) {
+            restartWriteErrorLogs(agentErrorLogsKafkaClusterPO);
+            lastAgentErrorLogsKafkaClusterPO = agentErrorLogsKafkaClusterPO;
         }
-        trigger = false;
-        for (ReceiverTopicDO receiverTopicDO : metricSet) {
-            executor.execute(() -> writeMetrics(receiverTopicDO));
+        if(metricsReceiverChanged(lastAgentMetricsKafkaClusterPO, agentMetricsKafkaClusterPO)) {
+            restartWriteMetrics(agentMetricsKafkaClusterPO);
+            lastAgentMetricsKafkaClusterPO = agentMetricsKafkaClusterPO;
         }
-        for (ReceiverTopicDO receiverTopicDO : errorSet) {
-            executor.execute(() -> writeErrors(receiverTopicDO));
+    }
+
+    private boolean errorLogsReceiverChanged(KafkaClusterPO lastAgentErrorLogsKafkaClusterPO, KafkaClusterPO agentErrorLogsKafkaClusterPO) {
+        if(null == lastAgentErrorLogsKafkaClusterPO && null == agentErrorLogsKafkaClusterPO) {
+            return false;
         }
+        if(null == agentErrorLogsKafkaClusterPO) {
+            return false;
+        }
+        if(null == lastAgentErrorLogsKafkaClusterPO && null != agentErrorLogsKafkaClusterPO) {
+            return true;
+        }
+        if(
+                !lastAgentErrorLogsKafkaClusterPO.getAgentErrorLogsTopic().equals(agentErrorLogsKafkaClusterPO.getAgentErrorLogsTopic()) ||
+                        !lastAgentErrorLogsKafkaClusterPO.getKafkaClusterBrokerConfiguration().equals(agentErrorLogsKafkaClusterPO.getKafkaClusterBrokerConfiguration())
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean metricsReceiverChanged(KafkaClusterPO lastAgentMetricsKafkaClusterPO, KafkaClusterPO agentMetricsKafkaClusterPO) {
+        if(null == lastAgentMetricsKafkaClusterPO && null == agentMetricsKafkaClusterPO) {
+            return false;
+        }
+        if(null == agentMetricsKafkaClusterPO) {
+            return false;
+        }
+        if(null == lastAgentMetricsKafkaClusterPO && null != agentMetricsKafkaClusterPO) {
+            return true;
+        }
+        if(
+                !lastAgentMetricsKafkaClusterPO.getAgentMetricsTopic().equals(agentMetricsKafkaClusterPO.getAgentMetricsTopic()) ||
+                        !lastAgentMetricsKafkaClusterPO.getKafkaClusterBrokerConfiguration().equals(agentMetricsKafkaClusterPO.getKafkaClusterBrokerConfiguration())
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    private void restartWriteMetrics(KafkaClusterPO agentMetricsKafkaClusterPO) {
+        /*
+         * stop
+         */
+        metricsWriteStopTrigger = true;
+        while (!metricsWriteStopped) {
+            try {
+                // 等待现有的kafka consumer线程全部关闭
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                LOGGER.error("thread interrupted", e);
+            }
+        }
+        /*
+         * start
+         */
+        metricsWriteStopped = false;
+        metricsWriteStopTrigger = false;
+        executor.execute(() -> writeMetrics(agentMetricsKafkaClusterPO.getAgentMetricsTopic(), agentMetricsKafkaClusterPO.getKafkaClusterBrokerConfiguration()));
+    }
+
+    private void restartWriteErrorLogs(KafkaClusterPO agentErrorLogsKafkaClusterPO) {
+        /*
+         * stop
+         */
+        errorLogsWriteStopTrigger = true;
+        while (!errorLogsWriteStopped) {
+            try {
+                // 等待现有的kafka consumer线程全部关闭
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                LOGGER.error("thread interrupted", e);
+            }
+        }
+        /*
+         * start
+         */
+        errorLogsWriteStopped = false;
+        errorLogsWriteStopTrigger = false;
+        executor.execute(() -> writeErrorLogs(agentErrorLogsKafkaClusterPO.getAgentErrorLogsTopic(), agentErrorLogsKafkaClusterPO.getKafkaClusterBrokerConfiguration()));
     }
 
 }

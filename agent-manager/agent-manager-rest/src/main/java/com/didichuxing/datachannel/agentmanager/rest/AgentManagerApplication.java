@@ -89,7 +89,7 @@ public class AgentManagerApplication {
                     LOGGER.error(String.format(" write metrics to db error, root cause is: %s", ex.getMessage()), ex);
                 }
             }
-        },0, 10, TimeUnit.MINUTES);
+        },0, 5, TimeUnit.SECONDS);
 
         pool.scheduleWithFixedDelay(new Runnable() {
             @Override
