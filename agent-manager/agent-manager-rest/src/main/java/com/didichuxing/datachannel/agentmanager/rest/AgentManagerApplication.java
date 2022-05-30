@@ -154,7 +154,7 @@ public class AgentManagerApplication {
                     LOGGER.error(String.format(" check logCollectTask health error, root cause is: %s", ex.getMessage()), ex);
                 }
             }
-        },0, 1, TimeUnit.MINUTES);
+        },0, 4, TimeUnit.MINUTES);
 
         ExecutorService agentHealthCheckThreadPool = Executors.newFixedThreadPool(2);
         pool.scheduleWithFixedDelay(new Runnable() {
@@ -183,7 +183,7 @@ public class AgentManagerApplication {
                     LOGGER.error(String.format(" check agent health error, root cause is: %s", ex.getMessage()), ex);
                 }
             }
-        },0, 1, TimeUnit.MINUTES);
+        },0, 4, TimeUnit.MINUTES);
 
     }
 
