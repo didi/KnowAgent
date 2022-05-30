@@ -286,11 +286,13 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
 
     @Override
     public Integer getProcessesTotalThreads() {
-        Integer processesTotalThreads = 0;
-        for (Integer pid : getPidList()) {
-            processesTotalThreads += getThreadNumByPid(pid);
+        List<String> processesTotal = getOutputByCmd("ps -eLf | wc -l", "系统总线程数", null);
+        if (!processesTotal.isEmpty() && StringUtils.isNotBlank(processesTotal.get(0))) {
+            return Integer.parseInt(processesTotal.get(0));
+        } else {
+            LOGGER.error("class=LinuxSystemMetricsService()||method=getProcessesTotalThreads||msg=data is null");
+            return 0;
         }
-        return processesTotalThreads;
     }
 
     private Integer getThreadNumByPid(Integer pid) {
@@ -302,22 +304,6 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
             LOGGER.error("class=LinuxSystemMetricsServiceImpl()||method=getThreadNumByPid()||msg=data is null");
             return 0;
         }
-    }
-
-    private List<Integer> getPidList() {
-        List<Integer> pidList = new ArrayList<>();
-        /* ls /proc/17034/task | wc -l */
-        List<String> processInfoList = getOutputByCmd(
-                "ps -aux", "系统进程状态", null);
-        if (!processInfoList.isEmpty() && processInfoList.size() > 1) {
-            for (int i = 1; i < processInfoList.size(); i++) {
-                String processInfo = processInfoList.get(i);
-                String[] properties = processInfo.split("\\s+");
-                Integer pid = Integer.valueOf(properties[1]);
-                pidList.add(pid);
-            }
-        }
-        return pidList;
     }
 
     @Override
