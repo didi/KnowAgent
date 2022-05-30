@@ -49,7 +49,7 @@ public class AgentHealthCheckConstant {
     /**
      * 校验 agent fd 使用量阈值
      */
-    public static final Integer AGENT_FD_USED_THRESHOLD = 200;
+    public static final Integer AGENT_FD_USED_THRESHOLD = 2000;
     /**
      * 校验 agent 启动频繁阈值，表示agent两次启动时间间隔
      */
