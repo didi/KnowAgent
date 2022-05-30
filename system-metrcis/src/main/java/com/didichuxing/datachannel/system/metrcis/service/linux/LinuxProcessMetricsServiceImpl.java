@@ -212,7 +212,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuSysOnly() {
-        List<String> lines = getOutputByCmd("pidstat -p %d | awk 'NR==4{print $5}'", "当前进程系统态cpu使用率", PID);
+        List<String> lines = getOutputByCmd("pidstat -p %d 1 1 | awk 'NR==4{print $5}'", "当前进程系统态cpu使用率", PID);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Double.parseDouble(lines.get(0));
         } else {
@@ -235,7 +235,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuUserOnly() {
-        List<String> lines = getOutputByCmd("pidstat -p %d | awk 'NR==4{print $4}'", "当前进程系统态cpu使用率", PID);
+        List<String> lines = getOutputByCmd("pidstat -p %d 1 1 | awk 'NR==4{print $4}'", "当前进程系统态cpu使用率", PID);
         if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
             return Double.parseDouble(lines.get(0));
         } else {
