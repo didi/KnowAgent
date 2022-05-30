@@ -50,8 +50,8 @@ public class MetricService {
 
     private static volatile boolean errorLogsWriteStopTrigger = false;
     private static volatile boolean metricsWriteStopTrigger = false;
-    private static volatile boolean errorLogsWriteStopped = false;
-    private static volatile boolean metricsWriteStopped = false;
+    private static volatile boolean errorLogsWriteStopped = true;
+    private static volatile boolean metricsWriteStopped = true;
 
     private static final String CONSUMER_GROUP_ID = "g1";
     private static final long RETENTION_TIME = 7 * 24 * 3600 * 1000;
