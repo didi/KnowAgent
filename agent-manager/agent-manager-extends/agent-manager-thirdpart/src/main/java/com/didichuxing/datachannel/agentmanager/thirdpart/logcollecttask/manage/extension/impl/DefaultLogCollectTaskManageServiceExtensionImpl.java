@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogRecordVO;
+import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.YesOrNoEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskLimitPriorityLevelEnum;
@@ -90,9 +91,12 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
         if(StringUtils.isBlank(logCollectTaskDO.getLogCollectTaskName())) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "logCollectTaskName属性值不可为空");
         }
-        /*if(null == logCollectTaskDO.getCollectDelayThresholdMs() || logCollectTaskDO.getCollectDelayThresholdMs().equals(0L)) {
-            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "collectDelayThresholdMs属性值不可为空 & 等于0");
-        }*/
+        if(null == logCollectTaskDO.getCollectDelayThresholdMs()) {
+            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "collectDelayThresholdMs属性值不可为空");
+        }
+        if(0 < logCollectTaskDO.getCollectDelayThresholdMs() && (2 * LogCollectTaskHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD) > logCollectTaskDO.getCollectDelayThresholdMs()) {
+            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), String.format("collectDelayThresholdMs属性值最小值为", (2 * LogCollectTaskHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD)));
+        }
         if(StringUtils.isBlank(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString())) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "FileLogCollectPathDO.fileNameSuffixMatchRuleLogicJsonString属性值不可为空");
         }
@@ -187,7 +191,10 @@ public class DefaultLogCollectTaskManageServiceExtensionImpl implements LogColle
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "logCollectTaskName属性值不可为空");
         }
         if(null == logCollectTaskDO.getCollectDelayThresholdMs()) {
-            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "FileLogCollectPathDO.collectDelayThresholdMs不可为空");
+            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "collectDelayThresholdMs属性值不可为空");
+        }
+        if(0 < logCollectTaskDO.getCollectDelayThresholdMs() && (2 * LogCollectTaskHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD) > logCollectTaskDO.getCollectDelayThresholdMs()) {
+            return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), String.format("collectDelayThresholdMs属性值最小值为", (2 * LogCollectTaskHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD)));
         }
         if(StringUtils.isBlank(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString())) {
             return new CheckResult(false, ErrorCodeEnum.ILLEGAL_PARAMS.getCode(), "FileLogCollectPathDO.fileNameSuffixMatchRuleLogicJsonString属性值不可为空");
