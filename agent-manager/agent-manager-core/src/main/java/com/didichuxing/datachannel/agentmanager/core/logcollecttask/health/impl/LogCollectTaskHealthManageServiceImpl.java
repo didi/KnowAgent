@@ -174,7 +174,10 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
          * 日志采集任务对应接收端信息是否在一轮指标周期内添加/更新（ps：规避日志采集任务添加完，metrics未上报上来，开始巡检逻辑 case）
          */
         ReceiverDO receiverDO = kafkaClusterManageService.getById(logCollectTaskDO.getKafkaClusterId());
-        if(receiverCreateOrUpdateJustNow(receiverDO)) {
+        if(
+                null != receiverDO &&
+                receiverCreateOrUpdateJustNow(receiverDO)
+        ) {
             return LogCollectTaskHealthLevelEnum.fromMetricCode(getByLogCollectTaskId(logCollectTaskDO.getId()).getLogCollectTaskHealthLevel());
         }
         /*

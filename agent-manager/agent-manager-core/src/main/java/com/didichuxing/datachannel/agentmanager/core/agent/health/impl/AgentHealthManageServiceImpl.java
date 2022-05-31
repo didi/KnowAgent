@@ -178,8 +178,12 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
         ReceiverDO errorLogsReceiverDO = kafkaClusterManageService.getById(agentDO.getErrorLogsSendReceiverId());
         ReceiverDO metricsReceiverDO = kafkaClusterManageService.getById(agentDO.getMetricsSendReceiverId());
         if(
-                receiverCreateOrUpdateJustNow(metricsReceiverDO) ||
-                        receiverCreateOrUpdateJustNow(errorLogsReceiverDO)
+                null != errorLogsReceiverDO &&
+                        null != metricsReceiverDO &&
+                        (
+                                receiverCreateOrUpdateJustNow(metricsReceiverDO) ||
+                                        receiverCreateOrUpdateJustNow(errorLogsReceiverDO)
+                                )
         ) {
             return AgentHealthLevelEnum.fromMetricCode(getByAgentId(agentDO.getId()).getAgentHealthLevel());
         }
