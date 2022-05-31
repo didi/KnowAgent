@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskHealthDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthPO;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
@@ -21,6 +22,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
+import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
@@ -64,6 +66,9 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
 
     @Autowired
     private AgentManageService agentManageService;
+
+    @Autowired
+    private KafkaClusterManageService kafkaClusterManageService;
 
     @Override
     @Transactional
@@ -166,6 +171,13 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
             return LogCollectTaskHealthLevelEnum.fromMetricCode(getByLogCollectTaskId(logCollectTaskDO.getId()).getLogCollectTaskHealthLevel());
         }
         /*
+         * 日志采集任务对应接收端信息是否在一轮指标周期内添加/更新（ps：规避日志采集任务添加完，metrics未上报上来，开始巡检逻辑 case）
+         */
+        ReceiverDO receiverDO = kafkaClusterManageService.getById(logCollectTaskDO.getKafkaClusterId());
+        if(receiverCreateOrUpdateJustNow(receiverDO)) {
+            return LogCollectTaskHealthLevelEnum.fromMetricCode(getByLogCollectTaskId(logCollectTaskDO.getId()).getLogCollectTaskHealthLevel());
+        }
+        /*
          * 诊断对应日志采集任务
          */
         if (checkResult.getCheckResult()) {//须诊断对应日志采集任务
@@ -186,6 +198,16 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
         } else {//该日志采集任务无须被诊断
             return LogCollectTaskHealthLevelEnum.GREEN;
         }
+    }
+
+    private boolean receiverCreateOrUpdateJustNow(ReceiverDO receiverDO) {
+        Long currentTime = System.currentTimeMillis();
+        if(
+                ((currentTime - receiverDO.getModifyTime().getTime()) > 3 * 60 * 1000l)
+        ) {
+            return false;
+        }
+        return true;
     }
 
     private boolean logCollectTaskCreateOrUpdateJustNow(LogCollectTaskDO logCollectTaskDO) {

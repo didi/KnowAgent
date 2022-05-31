@@ -286,6 +286,7 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
         ReceiverDO persistReceiver = kafkaClusterManageServiceExtension.updateKafkaCluster(sourceReceiverDO, kafkaClusterDO);
         KafkaClusterPO kafkaClusterPO = kafkaClusterManageServiceExtension.kafkaCluster2KafkaClusterPO(persistReceiver);
         kafkaClusterPO.setOperator(CommonConstant.getOperator(operator));
+        kafkaClusterPO.setModifyTime(new Date());
         kafkaClusterDAO.updateByPrimaryKey(kafkaClusterPO);
 
         /*

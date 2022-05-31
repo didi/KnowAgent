@@ -4,6 +4,7 @@ import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
@@ -15,6 +16,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
@@ -171,6 +173,17 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
             return AgentHealthLevelEnum.fromMetricCode(getByAgentId(agentDO.getId()).getAgentHealthLevel());
         }
         /*
+         * agent对应 errorlogs & metrics 接收端信息是否在一轮指标周期内添加/更新（ps：规避 agent 添加完，metrics未上报上来，开始巡检逻辑 case）
+         */
+        ReceiverDO errorLogsReceiverDO = kafkaClusterManageService.getById(agentDO.getErrorLogsSendReceiverId());
+        ReceiverDO metricsReceiverDO = kafkaClusterManageService.getById(agentDO.getMetricsSendReceiverId());
+        if(
+                receiverCreateOrUpdateJustNow(metricsReceiverDO) ||
+                        receiverCreateOrUpdateJustNow(errorLogsReceiverDO)
+        ) {
+            return AgentHealthLevelEnum.fromMetricCode(getByAgentId(agentDO.getId()).getAgentHealthLevel());
+        }
+        /*
          * 诊断对应 agent
          */
         if (checkResult.getCheckResult()) {//须诊断对应 agent
@@ -179,6 +192,16 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
         } else {//该日志采集任务无须被诊断 返回 AgentHealthLevelEnum.GREEN
             return AgentHealthLevelEnum.GREEN;
         }
+    }
+
+    private boolean receiverCreateOrUpdateJustNow(ReceiverDO receiverDO) {
+        Long currentTime = System.currentTimeMillis();
+        if(
+                ((currentTime - receiverDO.getModifyTime().getTime()) > 3 * 60 * 1000l)
+        ) {
+            return false;
+        }
+        return true;
     }
 
     private boolean agentCreateOrUpdateJustNow(AgentDO agentDO) {
