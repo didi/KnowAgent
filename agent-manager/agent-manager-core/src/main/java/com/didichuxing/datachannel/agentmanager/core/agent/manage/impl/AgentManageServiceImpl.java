@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -463,8 +464,9 @@ public class AgentManageServiceImpl implements AgentManageService {
          */
         AgentDO agentDO = agentManageServiceExtension.updateAgent(agentDOExists, agentDOTarget);
         AgentPO agentPO = ConvertUtil.obj2Obj(agentDO, AgentPO.class);
-        ;
+
         agentPO.setOperator(CommonConstant.getOperator(operator));
+        agentPO.setModifyTime(new Date());
         agentDAO.updateByPrimaryKeySelective(agentPO);
         /*
          * 添加对应操作记录

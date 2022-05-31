@@ -401,6 +401,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         LogCollectTaskDO logCollectTaskDO2Save = logCollectTaskManageServiceExtension.updateLogCollectTask(logCollectTaskDOSource, logCollectTaskDO);
         LogCollectTaskPO logCollectTaskPO = logCollectTaskManageServiceExtension.logCollectTask2LogCollectTaskPO(logCollectTaskDO2Save);
         logCollectTaskPO.setOperator(CommonConstant.getOperator(operator));
+        logCollectTaskPO.setModifyTime(new Date());
         logCollectorTaskDAO.updateByPrimaryKey(logCollectTaskPO);
         /*
          * 更新日志采集任务关联的日志采集路径集相关信息
