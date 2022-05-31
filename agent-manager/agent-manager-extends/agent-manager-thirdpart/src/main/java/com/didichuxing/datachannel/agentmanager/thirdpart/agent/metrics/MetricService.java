@@ -49,10 +49,12 @@ public class MetricService {
     @Value("${agent.metrics.producer.password:#{null}}")
     private String password;
 
-    private static volatile boolean errorLogsWriteStopTrigger = false;
-    private static volatile boolean metricsWriteStopTrigger = false;
-    private static volatile boolean errorLogsWriteStopped = true;
-    private static volatile boolean metricsWriteStopped = true;
+    private volatile boolean errorLogsWriteStopTrigger = false;
+    private volatile boolean metricsWriteStopTrigger = false;
+    private volatile boolean errorLogsWriteStopped = true;
+    private volatile boolean metricsWriteStopped = true;
+
+    private static final Long RECEIVER_CLOSE_TIME_OUT_MS = 1 * 60 * 1000l;
 
     private static final String CONSUMER_GROUP_ID = "g1";
     private static final long RETENTION_TIME = 7 * 24 * 3600 * 1000;
@@ -90,52 +92,68 @@ public class MetricService {
     }
 
     public void writeMetrics(String agentMetricsTopic, String kafkaClusterBrokerConfiguration) {
-        LOGGER.info("Thread: {}, cluster: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterBrokerConfiguration, agentMetricsTopic);
-        Properties properties = getProducerProps(kafkaClusterBrokerConfiguration);
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-        consumer.subscribe(Arrays.asList(agentMetricsTopic));
-        while (true) {
-            try {
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-                agentMetricsDAO.writeMetrics(records);
-                if (metricsWriteStopTrigger) {
+        try {
+            LOGGER.info("Thread: {}, cluster: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterBrokerConfiguration, agentMetricsTopic);
+            Properties properties = getProducerProps(kafkaClusterBrokerConfiguration);
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+            consumer.subscribe(Arrays.asList(agentMetricsTopic));
+            while (true) {
+                try {
+                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
+                    agentMetricsDAO.writeMetrics(records);
+                    if (metricsWriteStopTrigger) {
+                        consumer.close();
+                        break;
+                    }
+                } catch (Throwable ex) {
+                    LOGGER.error(
+                            String.format("writeMetrics error: %s", ex.getMessage()),
+                            ex
+                    );
                     consumer.close();
                     break;
                 }
-            } catch (Throwable ex) {
-                LOGGER.error(
-                        String.format("writeMetrics error: %s", ex.getMessage()),
-                        ex
-                );
-                consumer.close();
-                break;
             }
+        } catch (Throwable ex) {
+            LOGGER.error(
+                    String.format("writeMetrics error: %s", ex.getMessage()),
+                    ex
+            );
+        } finally {
+            metricsWriteStopped = true;
         }
-        metricsWriteStopped = true;
     }
 
     public void writeErrorLogs(String agentErrorLogsTopic, String kafkaClusterBrokerConfiguration) {
-        LOGGER.info("Thread: {}, cluster: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterBrokerConfiguration, agentErrorLogsTopic);
-        Properties properties = getProducerProps(kafkaClusterBrokerConfiguration);
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-        consumer.subscribe(Arrays.asList(agentErrorLogsTopic));
-        while (true) {
-            try {
-                ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-                agentMetricsDAO.writeErrors(records);
-                if (errorLogsWriteStopTrigger) {
+        try {
+            LOGGER.info("Thread: {}, cluster: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterBrokerConfiguration, agentErrorLogsTopic);
+            Properties properties = getProducerProps(kafkaClusterBrokerConfiguration);
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+            consumer.subscribe(Arrays.asList(agentErrorLogsTopic));
+            while (true) {
+                try {
+                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
+                    agentMetricsDAO.writeErrors(records);
+                    if (errorLogsWriteStopTrigger) {
+                        consumer.close();
+                        break;
+                    }
+                } catch (Throwable ex) {
+                    LOGGER.error(
+                            String.format("writeErrorLogs error: %s", ex.getMessage()),
+                            ex
+                    );
                     consumer.close();
-                    break;
                 }
-            } catch (Throwable ex) {
-                LOGGER.error(
-                        String.format("writeErrorLogs error: %s", ex.getMessage()),
-                        ex
-                );
-                consumer.close();
             }
+        } catch (Throwable ex) {
+            LOGGER.error(
+                    String.format("writeErrorLogs error: %s", ex.getMessage()),
+                    ex
+            );
+        } finally {
+            errorLogsWriteStopped = true;
         }
-        errorLogsWriteStopped = true;
     }
 
     private Properties getProducerProps(String bootstrapServers) {
@@ -237,7 +255,11 @@ public class MetricService {
          * stop
          */
         metricsWriteStopTrigger = true;
-        while (!metricsWriteStopped) {
+        Long currentTime = System.currentTimeMillis();
+        while (
+                !metricsWriteStopped &&
+                        (System.currentTimeMillis() - currentTime) <= RECEIVER_CLOSE_TIME_OUT_MS
+        ) {
             try {
                 // 等待现有的kafka consumer线程全部关闭
                 Thread.sleep(1 * 1000);
@@ -270,7 +292,11 @@ public class MetricService {
          * stop
          */
         errorLogsWriteStopTrigger = true;
-        while (!errorLogsWriteStopped) {
+        Long currentTime = System.currentTimeMillis();
+        while (
+                !errorLogsWriteStopped &&
+                        (System.currentTimeMillis() - currentTime) <= RECEIVER_CLOSE_TIME_OUT_MS
+        ) {
             try {
                 // 等待现有的kafka consumer线程全部关闭
                 Thread.sleep(1 * 1000);
