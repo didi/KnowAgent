@@ -161,11 +161,17 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
     @Override
     public AgentHealthLevelEnum checkAgentHealth(AgentDO agentDO) {
         /*
-         * 校验日志采集任务是否须被诊断
+         * 校验 agent 是否须被诊断
          */
         CheckResult checkResult = agentNeedCheckHealth(agentDO);
         /*
-         * 诊断对应日志采集任务
+         * agent 是否在一轮指标周期内添加/更新（ps：规避agent添加完，metrics未上报上来，开始巡检逻辑 case）
+         */
+        if(agentCreateOrUpdateJustNow(agentDO)) {
+            return AgentHealthLevelEnum.fromMetricCode(getByAgentId(agentDO.getId()).getAgentHealthLevel());
+        }
+        /*
+         * 诊断对应 agent
          */
         if (checkResult.getCheckResult()) {//须诊断对应 agent
             AgentHealthLevelEnum agentHealthLevel = handleCheckAgentHealth(agentDO);
@@ -173,6 +179,16 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
         } else {//该日志采集任务无须被诊断 返回 AgentHealthLevelEnum.GREEN
             return AgentHealthLevelEnum.GREEN;
         }
+    }
+
+    private boolean agentCreateOrUpdateJustNow(AgentDO agentDO) {
+        Long currentTime = System.currentTimeMillis();
+        if(
+                ((currentTime - agentDO.getModifyTime().getTime()) > 3 * 60 * 1000l)
+        ) {
+            return false;
+        }
+        return true;
     }
 
     @Override

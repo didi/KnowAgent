@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
@@ -159,6 +160,12 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
          */
         CheckResult checkResult = logCollectTaskNeedCheck(logCollectTaskDO);
         /*
+         * 日志采集任务是否在一轮指标周期内添加/更新（ps：规避日志采集任务添加完，metrics未上报上来，开始巡检逻辑 case）
+         */
+        if(logCollectTaskCreateOrUpdateJustNow(logCollectTaskDO)) {
+            return LogCollectTaskHealthLevelEnum.fromMetricCode(getByLogCollectTaskId(logCollectTaskDO.getId()).getLogCollectTaskHealthLevel());
+        }
+        /*
          * 诊断对应日志采集任务
          */
         if (checkResult.getCheckResult()) {//须诊断对应日志采集任务
@@ -179,6 +186,16 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
         } else {//该日志采集任务无须被诊断
             return LogCollectTaskHealthLevelEnum.GREEN;
         }
+    }
+
+    private boolean logCollectTaskCreateOrUpdateJustNow(LogCollectTaskDO logCollectTaskDO) {
+        Long currentTime = System.currentTimeMillis();
+        if(
+                ((currentTime - logCollectTaskDO.getModifyTime().getTime()) > 3 * 60 * 1000l)
+        ) {
+            return false;
+        }
+        return true;
     }
 
     /**
