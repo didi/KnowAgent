@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverTopicDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
@@ -175,10 +176,16 @@ public class MetricService {
          * 2.）校验较上一次获取是否相同，如不同，则立即进行对应变更处理
          */
         if(errorLogsReceiverChanged(lastAgentErrorLogsKafkaClusterPO, agentErrorLogsKafkaClusterPO)) {
+            LOGGER.info(
+                    String.format("ErrorLogs receiver changed, before is %s, after is %s", JSON.toJSONString(lastAgentErrorLogsKafkaClusterPO), JSON.toJSONString(agentErrorLogsKafkaClusterPO))
+            );
             restartWriteErrorLogs(agentErrorLogsKafkaClusterPO);
             lastAgentErrorLogsKafkaClusterPO = agentErrorLogsKafkaClusterPO;
         }
         if(metricsReceiverChanged(lastAgentMetricsKafkaClusterPO, agentMetricsKafkaClusterPO)) {
+            LOGGER.info(
+                    String.format("Metrics receiver changed, before is %s, after is %s", JSON.toJSONString(lastAgentMetricsKafkaClusterPO), JSON.toJSONString(agentMetricsKafkaClusterPO))
+            );
             restartWriteMetrics(agentMetricsKafkaClusterPO);
             lastAgentMetricsKafkaClusterPO = agentMetricsKafkaClusterPO;
         }
@@ -223,6 +230,9 @@ public class MetricService {
     }
 
     private void restartWriteMetrics(KafkaClusterPO agentMetricsKafkaClusterPO) {
+        LOGGER.info(
+                String.format("restartWriteMetrics: Is going to stop receiver %s", JSON.toJSONString(lastAgentMetricsKafkaClusterPO))
+        );
         /*
          * stop
          */
@@ -235,15 +245,27 @@ public class MetricService {
                 LOGGER.error("thread interrupted", e);
             }
         }
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Stop receiver %s successful", JSON.toJSONString(lastAgentMetricsKafkaClusterPO))
+        );
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Is going to start receiver %s", JSON.toJSONString(agentMetricsKafkaClusterPO))
+        );
         /*
          * start
          */
         metricsWriteStopped = false;
         metricsWriteStopTrigger = false;
         executor.execute(() -> writeMetrics(agentMetricsKafkaClusterPO.getAgentMetricsTopic(), agentMetricsKafkaClusterPO.getKafkaClusterBrokerConfiguration()));
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Start receiver %s successful", JSON.toJSONString(agentMetricsKafkaClusterPO))
+        );
     }
 
     private void restartWriteErrorLogs(KafkaClusterPO agentErrorLogsKafkaClusterPO) {
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Is going to stop receiver %s", JSON.toJSONString(lastAgentErrorLogsKafkaClusterPO))
+        );
         /*
          * stop
          */
@@ -256,12 +278,21 @@ public class MetricService {
                 LOGGER.error("thread interrupted", e);
             }
         }
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Stop receiver %s successful", JSON.toJSONString(lastAgentErrorLogsKafkaClusterPO))
+        );
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Is going to start receiver %s", JSON.toJSONString(agentErrorLogsKafkaClusterPO))
+        );
         /*
          * start
          */
         errorLogsWriteStopped = false;
         errorLogsWriteStopTrigger = false;
         executor.execute(() -> writeErrorLogs(agentErrorLogsKafkaClusterPO.getAgentErrorLogsTopic(), agentErrorLogsKafkaClusterPO.getKafkaClusterBrokerConfiguration()));
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Start receiver %s successful", JSON.toJSONString(agentErrorLogsKafkaClusterPO))
+        );
     }
 
 }
