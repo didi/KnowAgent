@@ -84,6 +84,8 @@ public class LogSource extends AbstractSource {
      */
     private static final Long        THREE_MINS       = 3 * 60 * 1000L;
 
+    private Long latestLogTimeUsedOnMetrics = 0l;
+
     public LogSource(ModelConfig config, LogPath logPath){
         super(config.getSourceConfig());
         this.logPath = logPath;
@@ -1000,7 +1002,12 @@ public class LogSource extends AbstractSource {
         taskMetrics.setCollectfiles(JSON.toJSONString(collectFiles));
         taskMetrics.setLatestfile(latestFileName);
         taskMetrics.setMaxbusinesstimestampdelay(maxLogTime);
-        taskMetrics.setBusinesstimestamp(latestLogTime);
+        if(!latestLogTime.equals(0)) {
+            latestLogTimeUsedOnMetrics = latestLogTime;
+            taskMetrics.setBusinesstimestamp(latestLogTime);
+        } else {
+            taskMetrics.setBusinesstimestamp(latestLogTimeUsedOnMetrics);
+        }
         taskMetrics.setRelatedfiles(relatedFileNodeMap.size());
 
         resetMaxLogTime();
