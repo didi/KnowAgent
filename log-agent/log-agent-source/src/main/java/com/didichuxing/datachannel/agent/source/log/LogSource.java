@@ -41,9 +41,10 @@ import org.slf4j.LoggerFactory;
  */
 public class LogSource extends AbstractSource {
 
-    private static final Logger      LOGGER           = LoggerFactory.getLogger(LogSource.class
-                                                          .getName());
-    private final Object             lock             = new Object();
+    private static final Logger      LOGGER                     = LoggerFactory
+                                                                    .getLogger(LogSource.class
+                                                                        .getName());
+    private final Object             lock                       = new Object();
     private int                      num;
 
     private LogPath                  logPath;
@@ -60,11 +61,11 @@ public class LogSource extends AbstractSource {
     private LogSourceConfig          logSourceConfig;
     private ModelConfig              modelConfig;
 
-    private volatile boolean         isStopping       = false;
+    private volatile boolean         isStopping                 = false;
 
     private volatile WorkingFileNode curWFileNode;
 
-    private static final int         OPEN_RETRY_TIMES = 3;
+    private static final int         OPEN_RETRY_TIMES           = 3;
 
     FileReader                       fileReader;
     EventParser                      eventParser;
@@ -72,19 +73,19 @@ public class LogSource extends AbstractSource {
     /**
      * 一个心跳周期内的最大延迟量
      */
-    private volatile long            maxLogTime       = 0L;
+    private volatile long            maxLogTime                 = 0L;
 
     /**
      * 是否匹配标准日志
      */
-    private volatile boolean         isMatchStandard  = true;
+    private volatile boolean         isMatchStandard            = true;
 
     /**
      * 3分钟
      */
-    private static final Long        THREE_MINS       = 3 * 60 * 1000L;
+    private static final Long        THREE_MINS                 = 3 * 60 * 1000L;
 
-    private Long latestLogTimeUsedOnMetrics = 0l;
+    private Long                     latestLogTimeUsedOnMetrics = 0l;
 
     public LogSource(ModelConfig config, LogPath logPath){
         super(config.getSourceConfig());
@@ -1002,7 +1003,7 @@ public class LogSource extends AbstractSource {
         taskMetrics.setCollectfiles(JSON.toJSONString(collectFiles));
         taskMetrics.setLatestfile(latestFileName);
         taskMetrics.setMaxbusinesstimestampdelay(maxLogTime);
-        if(!latestLogTime.equals(0)) {
+        if(!latestLogTime.equals(0L)) {
             latestLogTimeUsedOnMetrics = latestLogTime;
             taskMetrics.setBusinesstimestamp(latestLogTime);
         } else {
