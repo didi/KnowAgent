@@ -4,22 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.didichuxing.datachannel</groupId>
-        <artifactId>log-agent</artifactId>
+        <artifactId>Know-Agent</artifactId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>log-agent-sink</artifactId>
+    <artifactId>agent-sink</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>com.didichuxing.datachannel</groupId>
-            <artifactId>log-agent-engine</artifactId>
+            <artifactId>agent-engine</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.didichuxing.datachannel</groupId>
-            <artifactId>log-agent-channel</artifactId>
+            <artifactId>agent-channel</artifactId>
         </dependency>
 
         <!-- kafka -->
