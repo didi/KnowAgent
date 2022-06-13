@@ -16,6 +16,10 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.ListTopicsOptions;
+import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.PartitionInfo;
 import org.slf4j.Logger;
@@ -28,7 +32,10 @@ import java.util.regex.Pattern;
 
 @org.springframework.stereotype.Service
 public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClusterManageServiceExtension {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultKafkaClusterManageServiceExtensionImpl.class);
+
+    private static final Integer ADMIN_CLIENT_REQUEST_TIME_OUT_UNIT_MS = 6000;
 
     @Autowired
     private RemoteKafkaClusterService remoteKafkaClusterService;
@@ -293,6 +300,37 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
                 kafkaProducer.close();
             }
         }
+    }
+
+    @Override
+    public Set<String> listTopics(String kafkaClusterBrokerConfiguration) {
+        AdminClient adminClient = null;
+        try {
+            adminClient = getAdminClient(kafkaClusterBrokerConfiguration);
+            ListTopicsResult listTopicsResult = adminClient.listTopics(new ListTopicsOptions().timeoutMs(ADMIN_CLIENT_REQUEST_TIME_OUT_UNIT_MS));
+            Set<String> topicSet = listTopicsResult.names().get();
+            return topicSet;
+        } catch (Exception ex) {
+            LOGGER.error(
+                    String.format(
+                            "class=DefaultKafkaClusterManageServiceExtensionImpl||method=listTopics||msg=list topics from kafka{%s} failed, root cause is: %s",
+                            kafkaClusterBrokerConfiguration,
+                            ex.getMessage()
+                    ),
+                    ex
+            );
+            return null;
+        } finally {
+            if(null != adminClient) {
+                adminClient.close();
+            }
+        }
+    }
+
+    private AdminClient getAdminClient(String kafkaClusterBrokerConfiguration) {
+        Properties props = new Properties();
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaClusterBrokerConfiguration);
+        return AdminClient.create(props);
     }
 
     private Map<String, String> producerConfiguration2Map(String producerConfiguration) {

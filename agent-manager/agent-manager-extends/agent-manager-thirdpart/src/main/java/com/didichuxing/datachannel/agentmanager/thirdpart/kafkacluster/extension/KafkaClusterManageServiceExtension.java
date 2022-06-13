@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 
 import java.util.List;
+import java.util.Set;
 
 public interface KafkaClusterManageServiceExtension {
 
@@ -85,5 +86,12 @@ public interface KafkaClusterManageServiceExtension {
      * @return true：可用 false：不可用
      */
     Boolean checkProducerConfigurationValid(String brokerConfiguration, String topic, String producerConfiguration);
+
+    /**
+     * 根据 kafka broker 配置获取 topic 集
+     * @param kafkaClusterBrokerConfiguration kafka broker 配置
+     * @return 返回根据 kafka broker 配置获取到的 topic 集
+     */
+    Set<String> listTopics(String kafkaClusterBrokerConfiguration);
 
 }

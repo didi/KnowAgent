@@ -13,6 +13,7 @@ import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageSer
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
+import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,6 +34,9 @@ public class NormalReceiverController {
 
     @Autowired
     private KafkaClusterManageService kafkaClusterManageService;
+
+    @Autowired
+    private KafkaClusterManageServiceExtension kafkaClusterManageServiceExtension;
 
     @Autowired
     private RemoteKafkaClusterService remoteKafkaClusterService;
@@ -72,14 +76,8 @@ public class NormalReceiverController {
                     String.format("接收端对应Kafka集群{id=%d}在系统中不存在", receiverId)
             );
         }
-        if(null != receiverDO.getKafkaClusterId()) {
-            return Result.buildSucc(remoteKafkaClusterService.getTopicsByKafkaClusterId(receiverDO.getKafkaClusterId()));
-        } else {//case：kafka集群由用户维护而非通过kafka-manager获取
-            return Result.build(
-                    ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode(),
-                    String.format("系统不支持！待获取topic列表信息的Kafka集群={id=%d}由用户维护，而非通过Kafka-Manager系统同步获得，系统仅对通过Kafka-Manager系统同步过来的Kafka集群提供该接口支持！", receiverId)
-            );
-        }
+        Set<String> topics = kafkaClusterManageServiceExtension.listTopics(receiverDO.getKafkaClusterBrokerConfiguration());
+        return Result.buildSucc(topics);
     }
 
     @ApiOperation(value = "根据id查询对应KafkaCluster对象是否关联LogCollectTask true：存在 false：不存在", notes = "")
