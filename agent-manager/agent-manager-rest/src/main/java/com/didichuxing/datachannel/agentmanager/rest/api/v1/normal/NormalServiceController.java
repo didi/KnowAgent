@@ -115,7 +115,15 @@ public class NormalServiceController {
             serviceDetailVO.setServiceName(serviceDO.getServicename());
             serviceDetailVO.setId(serviceDO.getId());
             List<HostDO> hostDOList = hostManageService.getHostsByServiceId(serviceDO.getId());
-            serviceDetailVO.setHostList(ConvertUtil.list2List(hostDOList, HostVO.class));
+            if(CollectionUtils.isNotEmpty(hostDOList)) {
+                List<HostVO> hostVOList = new ArrayList<>(hostDOList.size());
+                for (HostDO hostDO : hostDOList) {
+                    HostVO hostVO = ConvertUtil.obj2Obj(hostDO, HostVO.class);
+                    hostVO.setContainer(hostDO.getContainer());
+                    hostVOList.add(hostVO);
+                }
+                serviceDetailVO.setHostList(hostVOList);
+            }
             serviceDetailVO.setCreateTime(serviceDO.getCreateTime().getTime());
             return Result.buildSucc(serviceDetailVO);
         }
