@@ -160,8 +160,8 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     private boolean panelIsNull(MetricPanel metricPanel) {
-        return null == metricPanel.getLableValue() ||
-                CollectionUtils.isEmpty(metricPanel.getMultiLineChatValue()) ||
+        return null == metricPanel.getLableValue() &&
+                CollectionUtils.isEmpty(metricPanel.getMultiLineChatValue()) &&
                 CollectionUtils.isEmpty(metricPanel.getSingleLineChatValue().getMetricPointList());
     }
 
