@@ -5,17 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.didichuxing.datachannel</groupId>
-    <artifactId>Know-Agent</artifactId>
+    <artifactId>log-agent</artifactId>
     <version>1.0.0</version>
     <modules>
-        <module>agent-common</module>
-        <module>agent-engine</module>
-        <module>agent-source</module>
-        <module>agent-channel</module>
-        <module>agent-sink</module>
-        <module>agent-task</module>
-        <module>agent-node</module>
-        <module>agent-integration-test</module>
+        <module>log-agent-common</module>
+        <module>log-agent-engine</module>
+        <module>log-agent-source</module>
+        <module>log-agent-channel</module>
+        <module>log-agent-sink</module>
+        <module>log-agent-task</module>
+        <module>log-agent-node</module>
+        <module>log-agent-integration-test</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -161,42 +161,42 @@
 
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-channel</artifactId>
+                <artifactId>log-agent-channel</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-common</artifactId>
+                <artifactId>log-agent-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-engine</artifactId>
+                <artifactId>log-agent-engine</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-integration-test</artifactId>
+                <artifactId>log-agent-integration-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-node</artifactId>
+                <artifactId>log-agent-node</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-source</artifactId>
+                <artifactId>log-agent-source</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-sink</artifactId>
+                <artifactId>log-agent-sink</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.didichuxing.datachannel</groupId>
-                <artifactId>agent-task</artifactId>
+                <artifactId>log-agent-task</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -349,9 +349,9 @@
             </plugin>
         </plugins>
 
-<!--        <filters>-->
-<!--            <filter>${user.dir}/${profile.id}.properties</filter>-->
-<!--        </filters>-->
+        <!--        <filters>-->
+        <!--            <filter>${user.dir}/${profile.id}.properties</filter>-->
+        <!--        </filters>-->
 
         <resources>
             <resource>
