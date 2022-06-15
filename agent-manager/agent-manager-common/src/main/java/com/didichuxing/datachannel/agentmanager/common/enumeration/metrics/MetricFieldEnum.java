@@ -43,9 +43,9 @@ public enum MetricFieldEnum {
     ),
     SYSTEM_NTP_OFFSET(
             3,
-            "system_ntp_offset",
+            "system_ntp_offset_gap（unit：second）",
             "systemNtpOffset",
-            "源时钟与本地时钟的时间差（单位：秒）",
+            "当前源时钟与本地时钟的时间差（单位：秒）",
             MetricTypeEnum.SYSTEM_BASIC,
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.CURRENT,
@@ -135,7 +135,7 @@ public enum MetricFieldEnum {
             9,
             "system_process_blocked",
             "processesBlocked",
-            "不可中断的睡眠状态下的进程数",
+            "当前不可中断的睡眠状态下的进程数",
             MetricTypeEnum.SYSTEM_PROCESS,
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.CURRENT,
@@ -388,7 +388,7 @@ public enum MetricFieldEnum {
     ),
     SYSTEM_CPU_SWITCHES(
             27,
-                    "system_cpu_switches",
+                    "system_cpu_switches_per_second",
                     "systemCpuSwitches",
                     "每秒cpu上下文交换次数",
             MetricTypeEnum.SYSTEM_CPU,
@@ -985,7 +985,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_DISK_IO_IO_READ_REQUEST(
             69,
-                    "io_read_request",
+                    "io_read_request_per_second",
                     "systemIOReadRequest",
                     "各设备每秒读请求数量",
             MetricTypeEnum.SYSTEM_DISK_IO,
@@ -999,7 +999,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_DISK_IO_IO_READ_BYTES(
             70,
-                    "io_read_bytes",
+                    "io_read_bytes_per_second",
                     "systemIOReadBytes",
                     "各设备每秒读取字节数（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_DISK_IO,
@@ -1013,7 +1013,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_DISK_IO_IO_RRQMS(
             71,
-                    "io_read_rrqms",
+                    "io_read_rrqms_per_second",
                     "systemIORRQMS",
                     "各设备每秒合并到设备队列的读请求数",
             MetricTypeEnum.SYSTEM_DISK_IO,
@@ -1069,7 +1069,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_DISK_IO_IO_WRITE_REQUEST(
             75,
-                    "io_write_request",
+                    "io_write_request_per_second",
                     "systemIOWriteRequest",
                     "各设备每秒写请求数量",
             MetricTypeEnum.SYSTEM_DISK_IO,
@@ -1083,7 +1083,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_DISK_IO_IO_WRITE_BYTES(
             76,
-                    "io_write_bytes",
+                    "io_write_bytes_per_second",
                     "systemIOWriteBytes",
                     "各设备每秒写字节数（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_DISK_IO,
@@ -1097,7 +1097,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_DISK_IO_IO_READ_WRITE_BYTES(
             77,
-                    "io_read_write_bytes",
+                    "io_read_write_bytes_per_second",
                     "systemIOReadWriteBytes",
                     "各设备每秒读、写字节数（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_DISK_IO,
@@ -1111,7 +1111,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_DISK_IO_IO_W_RQMS(
             78,
-                    "io_w_rqms",
+                    "io_w_rqms_per_second",
                     "systemIOWRQMS",
                     "各设备每秒合并到设备队列的写请求数",
             MetricTypeEnum.SYSTEM_DISK_IO,
@@ -1299,7 +1299,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_CARD_RECEIVE_BYTES_PS(
             91,
-                    "net_card_receive_bytes_ps",
+                    "net_card_receive_bytes_per_second",
                     "systemNetCardsReceiveBytesPs",
                     "各网卡设备每秒下行流量（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_NET_CARD,
@@ -1313,7 +1313,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_CARD_SEND_BYTES_PS(
             92,
-                    "net_card_send_bytes_ps",
+                    "net_card_send_bytes_per_second",
                     "systemNetCardsSendBytesPs",
                     "各网卡设备每秒上行流量（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_NET_CARD,
@@ -1330,7 +1330,7 @@ public enum MetricFieldEnum {
      */
     SYSTEM_NET_WORK_RECEIVE_BYTES_PS(
             93,
-                    "system_network_receive_bytes_ps",
+                    "system_network_receive_bytes_per_second",
                     "systemNetworkReceiveBytesPs",
                     "系统网络每秒下行流量（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1344,7 +1344,7 @@ public enum MetricFieldEnum {
     ),
     SYSTEM_NET_WORK_SEND_BYTES_PS(
             94,
-                    "system_network_send_bytes_ps",
+                    "system_network_send_bytes_per_second",
                     "systemNetworkSendBytesPs",
                     "系统网络每秒上行流量（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1540,7 +1540,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_TCP_ACTIVE_OPENS(
             108,
-                    "system_network_tcp_active_opens",
+                    "system_network_tcp_active_opens_last_1_minute",
                     "systemNetworkTcpActiveOpens",
                     "最近一分钟内tcp主动连接次数（单位：次/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1554,7 +1554,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_TCP_PASSIVE_OPENS(
             109,
-                    "system_network_tcp_passive_opens",
+                    "system_network_tcp_passive_opens_last_1_minute",
                     "systemNetworkTcpPassiveOpens",
                     "最近一分钟内tcp被动连接次数（单位：次/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1568,7 +1568,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_TCP_ATTEMPT_FAILS(
             110,
-                    "system_network_tcp_attempt_fails",
+                    "system_network_tcp_attempt_fails_last_1_minute",
                     "systemNetworkTcpAttemptFails",
                     "最近一分钟内tcp连接失败次数（单位：次/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1582,7 +1582,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_TCP_ESTAB_RESETS(
             111,
-                    "system_network_tcp_estab_resets",
+                    "system_network_tcp_estab_resets_last_1_minute",
                     "systemNetworkTcpEstabResets",
                     "最近一分钟内tcp连接异常断开次数（单位：次/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1596,7 +1596,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_TCP_RETRANS_SEGS(
             112,
-                    "system_network_tcp_retrans_segs",
+                    "system_network_tcp_retrans_segs_last_1_minute",
                     "systemNetworkTcpRetransSegs",
                     "最近一分钟内tcp重传的报文段总个数（单位：个/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1610,7 +1610,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_TCP_EXT_LISTEN_OVER_FLOWS(
             113,
-                    "system_network_tcp_ext_listen_over_flows",
+                    "system_network_tcp_ext_listen_over_flows_last_1_minute",
                     "systemNetworkTcpExtListenOverflows",
                     "最近一分钟内tcp监听队列溢出次数（单位：次/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1624,7 +1624,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_UDP_IN_DATAGRAMS(
             114,
-                    "system_network_udp_in_datagrams",
+                    "system_network_udp_in_datagrams_last_1_minute",
                     "systemNetworkUdpInDatagrams",
                     "最近一分钟内udp入包量（单位：个/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1638,7 +1638,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_UDP_OUT_DATAGRAMS(
             115,
-                    "system_network_udp_out_datagrams",
+                    "system_network_udp_out_datagrams_last_1_minute",
                     "systemNetworkUdpOutDatagrams",
                     "最近一分钟内udp出包量（单位：个/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1652,7 +1652,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_UDP_IN_ERRORS(
             116,
-                    "system_network_udp_in_errors",
+                    "system_network_udp_in_errors_last_1_minute",
                     "systemNetworkUdpInErrors",
                     "最近一分钟内udp入包错误数（单位：个/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1666,7 +1666,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_UDP_NO_PORTS(
             117,
-                    "system_network_udp_no_ports",
+                    "system_network_udp_no_ports_last_1_minute",
                     "systemNetworkUdpNoPorts",
                     "最近一分钟内udp端口不可达个数（单位：个/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1680,7 +1680,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_UDP_SEND_BUFFER_ERRORS(
             118,
-                    "system_network_udp_send_buffer_errors",
+                    "system_network_udp_send_buffer_errors_last_1_minute",
                     "systemNetworkUdpSendBufferErrors",
                     "最近一分钟内udp发送缓冲区满次数（单位：次/分钟）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1708,7 +1708,7 @@ public enum MetricFieldEnum {
             ),
     SYSTEM_NET_WORK_SEND_AND_RECEIVE_BYTES_PS(
             120,
-            "system_network_send_and_receive_bytes_ps",
+            "system_network_send_and_receive_bytes_per_second",
             "systemNetworkSendAndReceiveBytesPs",
             "系统网络每秒总流量（单位：字节/秒）",
             MetricTypeEnum.SYSTEM_NET_WORK,
@@ -1841,7 +1841,7 @@ public enum MetricFieldEnum {
             ),
     PROCESS_CPU_SWITCHES_PS(
             129,
-                    "process_cpu_switches_ps",
+                    "process_cpu_switches_per_second",
                     "procCpuSwitchesPS",
                     "进程cpu每秒上下文交换次数",
             MetricTypeEnum.PROCESS_CPU,
@@ -1855,7 +1855,7 @@ public enum MetricFieldEnum {
             ),
     PROCESS_CPU_VOLUNTARY_SWITCHES_PS(
             130,
-                    "process_cpu_voluntary_switches_ps",
+                    "process_cpu_voluntary_switches_per_second",
                     "procCpuVoluntarySwitchesPS",
                     "当前进程cpu每秒自愿上下文交换次数（自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换。比如说， I/O、内存等系统资源不足时，就会发生自愿上下文切换 pidstat）",
             MetricTypeEnum.PROCESS_CPU,
@@ -1869,7 +1869,7 @@ public enum MetricFieldEnum {
             ),
     PROCESS_CPU_NON_VOLUNTARY_SWITCHES_PS(
             131,
-                    "process_cpu_non_voluntary_switches_ps",
+                    "process_cpu_non_voluntary_switches_per_second",
                     "procCpuNonVoluntarySwitchesPS",
                     "当前进程cpu每秒非自愿上下文交换次数（非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在争抢 CPU 时，就容易发生非自愿上下文切换 pidstat）",
             MetricTypeEnum.PROCESS_CPU,
@@ -2113,7 +2113,7 @@ public enum MetricFieldEnum {
             ),
     PROCESS_DISK_IO_READ_BYTES_RATE(
             148,
-                    "process_disk_io_read_bytes_rate",
+                    "process_disk_io_read_bytes_per_second",
                     "procIOReadBytesRate",
                     "当前进程io读取速率（单位：字节/秒）",
             MetricTypeEnum.PROCESS_DISK_IO,
@@ -2141,7 +2141,7 @@ public enum MetricFieldEnum {
     ),
     PROCESS_DISK_IO_WRITE_BYTES_RATE(
             150,
-                    "process_disk_io_write_bytes_rate",
+                    "process_disk_io_write_bytes_per_second",
                     "procIOWriteBytesRate",
                     "当前进程io写入速率（单位：字节/s）",
             MetricTypeEnum.PROCESS_DISK_IO,
@@ -2169,7 +2169,7 @@ public enum MetricFieldEnum {
             ),
     PROCESS_DISK_IO_READ_WRITE_BYTES_RATE(
             152,
-                    "process_disk_io_read_write_bytes_rate",
+                    "process_disk_io_read_write_bytes_per_second",
                     "procIOReadWriteBytesRate",
                     "当前进程io读、写速率（单位：字节/s）",
             MetricTypeEnum.PROCESS_DISK_IO,
@@ -2200,7 +2200,7 @@ public enum MetricFieldEnum {
      */
     JVM_PROCESS_YOUNG_GC_COUNT(
             154,
-                    "jvm_process_young_gc_count",
+                    "jvm_process_young_gc_count_last_1_minute",
                     "jvmProcYoungGcCount",
                     "最近一分钟内young gc次数（单位：次/分钟）",
             MetricTypeEnum.PROCESS_GC,
@@ -2214,7 +2214,7 @@ public enum MetricFieldEnum {
             ),
     JVM_PROCESS_FULL_GC_COUNT(
             155,
-                    "jvm_process_full_gc_count",
+                    "jvm_process_full_gc_count_last_1_minute",
                     "jvmProcFullGcCount",
                     "最近一分钟内full gc次数（单位：次/分钟）",
             MetricTypeEnum.PROCESS_GC,
@@ -2228,7 +2228,7 @@ public enum MetricFieldEnum {
             ),
     JVM_PROCESS_YOUNG_GC_TIME(
             156,
-                    "jvm_process_young_gc_time",
+                    "jvm_process_young_gc_time_last_1_minute",
                     "jvmProcYoungGcTime",
                     "最近一分钟内young gc耗时（单位：毫秒/分钟）",
             MetricTypeEnum.PROCESS_GC,
@@ -2242,7 +2242,7 @@ public enum MetricFieldEnum {
             ),
     JVM_PROCESS_FULL_GC_TIME(
             157,
-                    "jvm_process_full_gc_time",
+                    "jvm_process_full_gc_time_last_1_minute",
                     "jvmProcFullGcTime",
                     "最近一分钟内full gc耗时（单位：毫秒/分钟）",
             MetricTypeEnum.PROCESS_GC,
@@ -2489,7 +2489,7 @@ public enum MetricFieldEnum {
             ),
     PROCESS_NET_WORK_RECEIVE_BYTES_PS(
             174,
-                    "process_net_work_receive_bytes_ps",
+                    "process_net_work_receive_bytes_per_second",
                     "procNetworkReceiveBytesPs",
                     "当前进程网络每秒下行流量（单位：字节/秒）",
             MetricTypeEnum.PROCESS_NET_WORK,
@@ -2503,7 +2503,7 @@ public enum MetricFieldEnum {
     ),
     PROCESS_NET_WORK_SEND_BYTES_PS(
             175,
-                    "process_net_work_send_bytes_ps",
+                    "process_net_work_send_bytes_per_second",
                     "procNetworkSendBytesPs",
                     "当前进程网络每秒上行流量（单位：字节/秒）",
             MetricTypeEnum.PROCESS_NET_WORK,
@@ -2714,7 +2714,7 @@ public enum MetricFieldEnum {
     /*********************************** agent 相关 ***********************************/
     AGENT_LIMIT_TPS(
             190,
-                    "agent_limit_tps",
+                    "agent_limit_bytes_threshold",
                     "limitTps",
                     "当前流量限流阈值（单位：字节）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -2728,7 +2728,7 @@ public enum MetricFieldEnum {
     ),
     AGENT_CPU_LIMIT(
             191,
-                    "agent_cpu_limit",
+                    "agent_limit_cpu_util_threshold",
                     "cpuLimit",
                     "当前cpu限流阈值（单位：%）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -2756,7 +2756,7 @@ public enum MetricFieldEnum {
     ),
     AGENT_READ_BYTES(
             193,
-            "agent_read_bytes",
+            "agent_read_bytes_per_minute",
             "readBytes",
             "最近一分钟内入口采集流量（单位：MB/分钟）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -2770,7 +2770,7 @@ public enum MetricFieldEnum {
     ),
     AGENT_READ_COUNT(
             194,
-                    "agent_read_count",
+                    "agent_read_count_per_minute",
                     "readCount",
                     "最近一分钟内入口采集条数（单位：条/分钟）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -2784,7 +2784,7 @@ public enum MetricFieldEnum {
             ),
     AGENT_WRITE_BYTES(
             195,
-                    "agent_write_bytes",
+                    "agent_write_bytes_per_minute",
                     "writeBytes",
                     "最近一分钟内出口采集流量（单位：MB/分钟）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -2798,7 +2798,7 @@ public enum MetricFieldEnum {
             ),
     AGENT_WRITE_COUNT(
             196,
-            "agent_write_count",
+            "agent_write_count_per_minute",
             "writeCount",
             "最近一分钟内出口采集条数（单位：条/分钟）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -2812,7 +2812,7 @@ public enum MetricFieldEnum {
     ),
     AGENT_ERROR_LOGS_COUNT(
             197,
-                    "agent_error_logs_count",
+                    "agent_error_logs_count_per_minute",
                     "errorLogsCount",
                     "最近一分钟内agent错误日志输出条数（单位：条/分钟）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -2826,7 +2826,7 @@ public enum MetricFieldEnum {
             ),
     AGENT_ERROR_LOGS_SEND_FAILED_COUNT(
             198,
-                    "agent_error_logs_send_failed_count",
+                    "agent_error_logs_send_failed_count_per_minute",
                     "errorLogsSendFailedCount",
                     "最近一分钟内agent错误日志发送失败次数（单位：次/分钟）",
             MetricTypeEnum.AGENT_BUSINESS,
@@ -3037,7 +3037,7 @@ public enum MetricFieldEnum {
     /*********************************** 采集任务相关 ***********************************/
     LOG_COLLECT_TASK_BUSINESS_TIMESTAMP(
             213,
-            "business_date_time",
+            "log_time",
             "businessTimestamp",
             "当前采集的日志业务时间",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3051,9 +3051,9 @@ public enum MetricFieldEnum {
     ),
     LOG_COLLECT_TASK_MAX_BUSINESS_TIMESTAMP_DELAY(
             214,
-                    "max_business_timestamp_delay",
+                    "log_time_delay（unit：second）",
                     "maxBusinessTimestampDelay",
-                    "当前采集的日志业务时间最大延迟（单位：秒）",
+                    "当前采集的日志业务时间延迟（单位：秒）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
             AggregationCalcFunctionEnum.MAX,
             MetricValueTypeEnum.CURRENT,
@@ -3065,7 +3065,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_LIMIT_TIME(
             215,
-                    "limit_time",
+                    "limit_time_last_1_minute（unit：second）",
                     "limitTime",
                     "最近一分钟内限流时长（单位：秒/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3079,7 +3079,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_TOO_LARGE_TRUNCATE_NUM(
             216,
-                    "too_large_truncate_num",
+                    "too_large_truncate_num_last_1_minute",
                     "tooLargeTruncateNum",
                     "最近一分钟内数据过长导致的截断日志条数（单位：条/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3107,7 +3107,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_COLLECT_PATH_IS_EXISTS(
             218,
-                    "collect_path_is_exists",
+                    "collect_path_is_exists_last_1_minute",
                     "collectPathIsExists",
                     "最近一分钟内采集路径是否在宿主机上存在 1：存在 0：不存在",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3121,7 +3121,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_DISORDER_EXISTS(
             219,
-                    "disorder_exists",
+                    "disorder_exists_last_1_minute",
                     "disorderExists",
                     "最近一分钟内待采集日志数据是否存在时间戳乱序输出 1：存在 0：不存在",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3135,7 +3135,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_SLICE_ERROR_EXISTS(
             220,
-                    "slice_error_exists",
+                    "slice_error_exists_last_1_minute",
                     "sliceErrorExists",
                     "最近一分钟内是否存在日志数据切片配置错误 1：存在 0：不存在",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3149,7 +3149,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_READ_BYTES(
             221,
-                    "read_bytes",
+                    "read_bytes_last_1_minute（unit：MB）",
                     "readBytes",
                     "最近一分钟内日志读取字节数（单位：MB/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3163,7 +3163,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_READ_COUNT(
             222,
-                    "read_count",
+                    "read_count_last_1_minute",
                     "readCount",
                     "最近一分钟内日志读取条数（单位：条/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3177,7 +3177,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_SEND_BYTES(
             223,
-            "send_bytes",
+            "send_bytes_last_1_minute（unit：MB）",
             "sendBytes",
             "最近一分钟内日志发送字节数（单位：MB/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3191,7 +3191,7 @@ public enum MetricFieldEnum {
     ),
     LOG_COLLECT_TASK_SEND_COUNT(
             224,
-                    "send_count",
+                    "send_count_last_1_minute",
                     "sendCount",
                     "最近一分钟内日志发送条数（单位：条/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3205,7 +3205,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_READ_TIME_PER_EVENT(
             225,
-                    "read_time_per_event",
+                    "read_time_per_event（unit：nano second）",
                     "readTimePerEvent",
                     "最近一分钟内单条log event读取耗时（单位：纳秒/条）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3219,7 +3219,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_SEND_TIME(
             226,
-                    "send_time",
+                    "send_time_per_time（unit：nano second）",
                     "sendTime",
                     "最近一分钟内单次日志发送耗时（单位：纳秒/次）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3233,7 +3233,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_FLUSH_TIME(
             227,
-                    "flush_time",
+                    "flush_time_per_time（unit：nano second）",
                     "flushTime",
                     "最近一分钟内单次flush耗时（单位：纳秒/次）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3247,7 +3247,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_PROCESS_TIME_PER_EVENT(
             228,
-                    "process_time_per_event",
+                    "process_time_per_event（unit：nano second）",
                     "processTimePerEvent",
                     "最近一分钟内单条log event处理耗时（单位：纳秒/条），处理过程：表示一条日志被构建为一个LogEvent对象开始到该条日志被存入kafka producer发送缓冲区为止",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3261,7 +3261,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_FLUSH_TIMES(
             229,
-                    "flush_times",
+                    "flush_times_last_1_minute",
                     "flushTimes",
                     "最近一分钟内flush次数（单位：次/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3275,7 +3275,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_FLUSH_FAILED_TIMES(
             230,
-                    "flush_failed_times",
+                    "flush_failed_times_last_1_minute",
                     "flushFailedTimes",
                     "最近一分钟内flush失败次数（单位：次/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3289,7 +3289,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_FILTER_EVENTS_NUM(
             231,
-                    "filter_events_num",
+                    "filter_events_num_last_1_minute",
                     "filterEventsNum",
                     "最近一分钟内日志数据过滤条数（单位：条/分钟）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
@@ -3401,7 +3401,7 @@ public enum MetricFieldEnum {
             ),
     LOG_COLLECT_TASK_DYNAMIC_LIMITER_THRESHOLD(
             239,
-                    "dynamic_limiter_threshold",
+                    "current_dynamic_limit_bytes_threshold",
                     "dynamicLimiterThreshold",
                     "当前动态限流阈值（单位：字节）",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
