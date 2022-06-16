@@ -3037,7 +3037,7 @@ public enum MetricFieldEnum {
     /*********************************** 采集任务相关 ***********************************/
     LOG_COLLECT_TASK_BUSINESS_TIMESTAMP(
             213,
-            "log_time",
+            "current_log_time",
             "businessTimestamp",
             "当前采集的日志业务时间",
             MetricTypeEnum.LOG_COLLECT_TASK_BUSINESS,
