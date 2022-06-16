@@ -1422,4 +1422,4 @@ CREATE TABLE `tb_service_project` (
 SET FOREIGN_KEY_CHECKS = 1;
 
 insert into tb_agent_version (file_name, file_md5, file_type, description, operator, version)
-values ('agent-new.tgz',	'',	0,	'',	'System', '1.0.0');
+values ('output.tar.gz',	'5cc3bde3fea227d1fb1f83d289550dcb',	0,	'Agent安装包',	'System', '1.0.0');
