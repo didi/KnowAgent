@@ -81,11 +81,13 @@
 # 2 相关文档
 ## 2.1 产品文档
 
-[Know Agent安装部署手册](doc/Know Agent安装部署手册.md)
+[《Know Agent一站式日志采集平台》](doc/Know Agent一站式日志采集平台.md)
 
-[Know Agent开发手册](doc/Know Agent开发手册.md)
+[《Know Agent安装部署手册》](doc/Know Agent安装部署手册.md)
 
-[Know Agent用户使用手册](doc/user_guide/user_guide_cn.md)
+[《Know Agent用户使用手册》](doc/Know Agent用户使用手册.md)
+
+[《Know Agent开发手册》](doc/Know Agent开发手册.md)
 
 # 3 Know Agent开源用户交流群
 

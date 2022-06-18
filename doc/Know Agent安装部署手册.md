@@ -9,7 +9,7 @@
 
 ## 2. 源代码编译打包
 
-​	下载好源代码后，进入`agent-manager`的目录，执行`sh build.sh`命令，得到output目录。
+​	下载好源代码后，进入`agent-manager`目录，执行`sh build.sh`命令，得到output目录。
 
 ## 3. MySQL-DB初始化
 
@@ -34,11 +34,11 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 5. 启动与停止
 
-​	在`output`目录下，执行`sh start.sh`即可启动 Agent-Manager 服务，执行`sh stop.sh`即可停止 Agent-Manager 服务。
+​	在`output`目录下，执行`sh start.sh`即可启动 Agent-Manager 进程，执行`sh stop.sh`即可停止 Agent-Manager 进程。
 
 ## 6. 使用
 
-​	本地启动的话，访问`http://localhost:9010`。更多参考：[agent-manager 用户使用手册](../doc/user_guide/user_guide_cn.md)
+​	本地启动的话，访问`http://localhost:9010`。更多参考：[《Know Agent用户使用手册》](Know Agent用户使用手册.md)
 
 # Agent
 
@@ -49,23 +49,20 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 2. 源代码编译打包
 
-### Agent
-
-​	在编译打包Log-Agent项目前，请先对Agent-Manager项目进行编译打包。下载好Log-Agent项目源代码后，进入Log-Agent目录，执行`sh build.sh`命令，得到output目录。
+1. 在编译打包Agent项目前，请先对`System-Metrics`项目与`Agent-Manager`项目进行编译打包。
+   - `System-Metrics`项目编译打包方法：进入`system-metrcis`目录，执行`mvn clean install`命令。
+   - `Agent-Manager`项目编译打包方法见上文`Agent-Manager`部分。
+2. 今日`agent`目录，执行`sh build.sh`命令，得到output目录。
 
 ## 3. 配置文件修改
 
 ```
 # conf/settings.properties 是配置文件，最简单的是仅修改Agent-Manager平台的相关配置即可启动
 config.ip=运行Agent-Manager服务的机器ip
-config.port=Agent-Manager微服务配置的http端口（默认：8080）
+config.port=Agent-Manager服务配置的http端口（默认：9010）
 ```
 
 ## 4. 启动与停止
 
-在`output`目录下，执行`sh start.sh`即可启动Agent服务，执行`sh stop.sh`即可停止Agent服务。
-
-## 5. 使用
-
-Agent启动成功后，需要在Agent-Manager平台上将安装Agent的宿主机作为新增主机项维护进去，Agent将自动在Agent-Manager平台进行注册，待Agent注册成功后，请编辑并配置好该Agent对应的 Metrics & Errorlogs 流对应的接收端配置，然后即可在Agent-Manager平台管理对刚刚安装的Agent进行管理与采集任务下发。
+在`output`目录下，执行`sh start.sh`即可启动 Agent 进程，执行`sh stop.sh`即可停止 Agent 进程。
 
