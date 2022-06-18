@@ -1,9 +1,9 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
-drop database IF EXISTS logi_agent_manager;
-create database logi_agent_manager;
-use logi_agent_manager;
+drop database IF EXISTS agent_manager;
+create database agent_manager;
+use agent_manager;
 
 -- ----------------------------
 -- Table structure for auv_job

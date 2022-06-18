@@ -1,4 +1,4 @@
-# Agent-Manager
+# Agent Manager
 
 ## 1. 环境准备
 
@@ -9,11 +9,11 @@
 
 ## 2. 源代码编译打包
 
-下载好源代码后，进入`Agent-Manager`的主目录，执行`sh build.sh`命令，得到output目录。
+​	下载好源代码后，进入`agent-manager`的目录，执行`sh build.sh`命令，得到output目录。
 
 ## 3. MySQL-DB初始化
 
-执行[create_mysql_table.sql](../agent-manager/create_mysql_table.sql)中的SQL命令，从而创建所需的MySQL库及表，默认创建的库名是`logi_agent_manager`。
+​	进入`agent-manager`目录，执行[create_mysql_table.sql](../agent-manager/create_mysql_table.sql)中的SQL命令，从而创建所需的MySQL库及表，默认创建的库名是`agent_manager`。
 
 ```
 # 示例：
@@ -34,15 +34,13 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 5. 启动与停止
 
-在`output`目录下，执行`sh start.sh`即可启动Agent-Manager服务，执行`sh stop.sh`即可停止Agent-Manager服务。
+​	在`output`目录下，执行`sh start.sh`即可启动 Agent-Manager 服务，执行`sh stop.sh`即可停止 Agent-Manager 服务。
 
 ## 6. 使用
 
-本地启动的话，访问`http://localhost:8080`。更多参考：[agent-manager 用户使用手册](../doc/user_guide/user_guide_cn.md)
+​	本地启动的话，访问`http://localhost:9010`。更多参考：[agent-manager 用户使用手册](../doc/user_guide/user_guide_cn.md)
 
-
-
-# Log-Agent
+# Agent
 
 ## 1. 环境准备
 
@@ -51,9 +49,9 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 2. 源代码编译打包
 
-### Log-Agent
+### Agent
 
-在编译打包Log-Agent项目前，请先对Agent-Manager项目进行编译打包（见：[Agent-Manager 安装部署手册.md](Agent-Manager%20安装部署手册.md)）。下载好Log-Agent项目源代码后，进入Log-Agent目录，执行`sh build.sh`命令，得到output目录。
+​	在编译打包Log-Agent项目前，请先对Agent-Manager项目进行编译打包。下载好Log-Agent项目源代码后，进入Log-Agent目录，执行`sh build.sh`命令，得到output目录。
 
 ## 3. 配置文件修改
 
