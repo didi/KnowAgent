@@ -10,7 +10,6 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.KafkaProducerSecurity;
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
 import org.apache.commons.collections4.CollectionUtils;
@@ -187,48 +186,6 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
         return ConvertUtil.list2List(kafkaClusterPOList, ReceiverDO.class);
     }
 
-    /**
-     * 根据kafkaClusterProducerInitConfiguration获取appId
-     *
-     * @param kafkaClusterProducerInitConfiguration KafkaCluster对象对应kafkaClusterProducerInitConfiguration属性值
-     * @return 返回根据kafkaClusterProducerInitConfiguration获取到的appId
-     * <p>
-     * TODO：
-     */
-    private KafkaProducerSecurity getKafkaProducerSecurityByKafkaClusterProducerInitConfiguration(String kafkaClusterProducerInitConfiguration) {
-        if (StringUtils.isBlank(kafkaClusterProducerInitConfiguration)) {
-            throw new ServiceException(
-                    "kafkaClusterProducerInitConfiguration不可为空",
-                    ErrorCodeEnum.KAFKA_CLUSTER_PRODUCER_INIT_CONFIGURATION_IS_NULL.getCode()
-            );
-        }
-        String clusterId = "";
-        String appId = "";
-        String password = "";
-        String[] configs = kafkaClusterProducerInitConfiguration.split(",");
-        for (String config : configs) {
-            if (config.startsWith("sasl.jaas.config")) {
-                Pattern pattern = Pattern.compile("username=\"(.*?)\\.(.*?)\"");
-                Matcher matcher = pattern.matcher(config);
-                if (matcher.find()) {
-                    clusterId = matcher.group(1);
-                    appId = matcher.group(2);
-                }
-                Pattern pattern1 = Pattern.compile("password=\"(.*)\";");
-                Matcher matcher1 = pattern1.matcher(config);
-                if (matcher1.find()) {
-                    password = matcher1.group(1);
-                }
-                break;
-            }
-        }
-        KafkaProducerSecurity kafkaProducerSecurity = new KafkaProducerSecurity();
-        kafkaProducerSecurity.setAppId(appId);
-        kafkaProducerSecurity.setPassword(password);
-        kafkaProducerSecurity.setClusterId(clusterId);
-        return kafkaProducerSecurity;
-    }
-
     @Override
     public boolean checkTopicLimitExists(ReceiverDO receiverDO, String topic) {
         Long externalKafkaClusterId = receiverDO.getKafkaClusterId();
@@ -241,7 +198,7 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
         /*
          * 调用kafka-manager对应接口获取kafkaClusterId + sendTopic是否被限流
          */
-        return remoteKafkaClusterService.checkTopicLimitExists(externalKafkaClusterId, topic, getKafkaProducerSecurityByKafkaClusterProducerInitConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration()));
+        return remoteKafkaClusterService.checkTopicLimitExists(externalKafkaClusterId, topic);
     }
 
     @Override

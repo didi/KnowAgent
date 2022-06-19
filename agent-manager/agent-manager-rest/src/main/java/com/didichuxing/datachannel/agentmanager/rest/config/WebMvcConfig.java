@@ -1,9 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.rest.config;
 
 import com.didichuxing.datachannel.agentmanager.rest.interceptor.HeaderHandlerInterceptor;
-import com.didichuxing.datachannel.agentmanager.rest.interceptor.UserAppIDPermissionInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -13,17 +11,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootConfiguration
 @Component
-//@DependsOn({"permissionInterceptor"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
-    private UserAppIDPermissionInterceptor userAppIDPermissionInterceptor;
-
-    @Autowired
     private HeaderHandlerInterceptor headerHandlerInterceptor;
-
-    @Value("${metadata.sync.request.permission.enabled}")
-    private Boolean activatePermission;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -35,9 +26,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        if (activatePermission) {
-            registry.addInterceptor(userAppIDPermissionInterceptor).addPathPatterns("/**");
-        }
         registry.addInterceptor(headerHandlerInterceptor);
     }
 

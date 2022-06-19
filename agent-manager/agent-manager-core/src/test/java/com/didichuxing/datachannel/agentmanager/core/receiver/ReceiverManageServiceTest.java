@@ -201,9 +201,4 @@ public class ReceiverManageServiceTest extends ApplicationTests {
 //
 //    }
 
-    @Test
-    public void testPullKafkaClusterListFromRemoteAndMergeKafkaClusterInLocal() {
-        kafkaClusterManageService.pullKafkaClusterListFromRemoteAndMergeKafkaClusterInLocal();
-    }
-
 }

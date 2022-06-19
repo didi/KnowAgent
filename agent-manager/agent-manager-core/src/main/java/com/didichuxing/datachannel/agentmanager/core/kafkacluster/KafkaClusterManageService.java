@@ -13,15 +13,6 @@ import java.util.List;
 public interface KafkaClusterManageService {
 
     /**
-     * 根据kafka集群id获取对应kafka集群对象
-     * @param kafkaClusterId kafka集群id
-     * @return kafka集群对象
-     */
-    ReceiverDO getKafkaClusterByKafkaClusterId(Long kafkaClusterId);
-
-    ReceiverDO[] getDefaultReceivers();
-
-    /**
      * 获取全量kafka集群对象
      * @return 全量kafka集群对象
      */
@@ -51,13 +42,6 @@ public interface KafkaClusterManageService {
     void deleteKafkaClusterById(List<Long> receiverIdList, boolean ignoreLogCollectTaskAndAgentRelationCheck, String operator);
 
     /**
-     * 注：由于KafkaCluster同步操作可能会涉及大量KafkaCluster对象持久化，将持续较长时间，时长不可控，可能导致事务超时 回滚，因而，该函
-     *     数涉及到的KafkaCluster新增、删除、修改并不采用全局事务，而采用局部事务（即：一个KafkaCluster持久化操作一个事务），如期间遇到
-     *     某KafkaCluster对象持久化失败，将以 ERROR 日志进行记录
-     */
-    void pullKafkaClusterListFromRemoteAndMergeKafkaClusterInLocal();
-
-    /**
      * 根据接收端对象 id 查询对应接收端对象
      * @param receiverId 接收端对象 id
      * @return 返回根据接收端对象 id 查询到的对应接收端对象
@@ -77,29 +61,6 @@ public interface KafkaClusterManageService {
      * @return 返回根据给定参数查询到的满足条件的结果集总数量
      */
     Integer queryCountByCondition(ReceiverPaginationQueryConditionDO receiverPaginationQueryConditionDO);
-
-    /**
-     * 根据接收端对象id获取该接收端对象对应的kafka集群的所有topic列表
-     * @param receiverId 接收端对象 id
-     * @return 返回根据接收端对象id获取到的该接收端对象对应的kafka集群的所有topic列表
-     */
-    List<String> listTopics(Long receiverId);
-
-    /**
-     * 校验给定接收端对应topic是否存在限流
-     * @param kafkaClusterId KafkaCluster对象id值
-     * @param topic topic 名
-     * @return true：存在限流 false：不存在限流
-     */
-    boolean checkTopicLimitExists(Long kafkaClusterId, String topic);
-
-    /**
-     * 检查给定 KafkaCluster & topic 连通性
-     * @param kafkaClusterId KafkaCluster 对象 id 值
-     * @param topic topic 名
-     * @return true：可连通 false：无法连通
-     */
-    boolean checkConnectivity(Long kafkaClusterId, String topic);
 
     /**
      *

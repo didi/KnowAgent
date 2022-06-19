@@ -32,15 +32,11 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 #### **2.2 修改 Agent-Manager 配置文件**
 
-![agent-manager配置文件修改](assets/agent-manager%20配置.png)
+![agent-manager配置文件修改](assets/agent-manager 配置.png)
 
 #### **2.3 启动 Agent-Manager**
 
 ![agent-manager 启动](assets/agent-manager%20启动.png)
-
-#### **2.4 Agent-Manager 浏览器访问**
-
-![agent-manager 浏览器访问](assets/agent-manager%20浏览器访问.png)
 
 ### 3 Agent-Manager 简要介绍
 

@@ -48,7 +48,7 @@ public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
 
-    @Value("${agent.metrics.storage.type:#{null}}")
+    @Value("${agent.metrics.storage.type}")
     public String type;
 
     public static final String PACKAGE_SCAN_BASE = "com.didichuxing.datachannel.agentmanager";

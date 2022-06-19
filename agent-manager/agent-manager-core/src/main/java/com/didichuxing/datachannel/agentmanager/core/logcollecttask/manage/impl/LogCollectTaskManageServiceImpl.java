@@ -5,7 +5,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.DirectoryLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
@@ -29,7 +28,6 @@ import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCo
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
-import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.DirectoryLogCollectPathManageService;
@@ -39,7 +37,6 @@ import com.didichuxing.datachannel.agentmanager.core.service.ServiceLogCollectTa
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
-import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,9 +101,6 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
 
     @Autowired
     private AgentManageService agentManageService;
-
-    @Autowired
-    private K8sPodManageService k8sPodManageService;
 
     @Override
     @Transactional
@@ -574,12 +568,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         if (CollectionUtils.isEmpty(logCollectTaskPOList)) {
             return new ArrayList<>();
         }
-        String logMountPath = "";//k8s 容器内路径
-        String logHostPath = "";//k8s 主机路径
         if (hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
-            K8sPodDO k8sPodDO = k8sPodManageService.getByContainerId(hostDO.getId());
-            logMountPath = k8sPodDO.getLogMountPath();
-            logHostPath = k8sPodDO.getLogHostPath();
+            /*
+             * TODO：容器路径处理
+             */
         }
         List<LogCollectTaskDO> logCollectTaskList = new ArrayList<>(logCollectTaskPOList.size());
         for (LogCollectTaskPO logCollectTaskPO : logCollectTaskPOList) {
@@ -593,8 +585,10 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
                 if (hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
                     for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
                         String path = fileLogCollectPathDO.getPath();
-                        String realPath = K8sUtil.getRealPath(logMountPath, logHostPath, path);
-                        fileLogCollectPathDO.setRealPath(realPath);
+                        /*
+                         * TODO：根据配置 path 获取容器实际 real path
+                         */
+                        fileLogCollectPathDO.setRealPath(path);
                     }
                 }
                 logCollectTaskDO.setFileLogCollectPathList(fileLogCollectPathDOList);

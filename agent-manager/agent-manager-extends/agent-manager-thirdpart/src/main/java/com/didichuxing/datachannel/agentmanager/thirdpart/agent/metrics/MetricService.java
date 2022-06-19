@@ -29,25 +29,10 @@ public class MetricService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricService.class);
 
     @Autowired
-    private AgentMapper agentMapper;
-
-    @Autowired
     private KafkaClusterMapper kafkaClusterMapper;
 
     @Autowired
-    private ErrorLogMapper errorLogMapper;
-
-    @Autowired
     private AgentMetricsDAO agentMetricsDAO;
-
-    @Value("${agent.metrics.producer.appId:#{null}}")
-    private String appId;
-
-    @Value("${agent.metrics.producer.clusterId:#{null}}")
-    private String clusterId;
-
-    @Value("${agent.metrics.producer.password:#{null}}")
-    private String password;
 
     private volatile boolean errorLogsWriteStopTrigger = false;
     private volatile boolean metricsWriteStopTrigger = false;
@@ -57,6 +42,7 @@ public class MetricService {
     private static final Long RECEIVER_CLOSE_TIME_OUT_MS = 1 * 60 * 1000l;
 
     private static final String CONSUMER_GROUP_ID = "g1";
+
     private static final long RETENTION_TIME = 7 * 24 * 3600 * 1000;
 
     private static Set<ReceiverTopicDO> metricSet = new HashSet<>();
@@ -67,29 +53,6 @@ public class MetricService {
 
     private static final ThreadPoolExecutor executor = new ThreadPoolExecutor(
             2, 2, 2, TimeUnit.SECONDS, new ArrayBlockingQueue<>(100));
-
-    private void loadClustersAndTopics() {
-        List<AgentPO> agentPOList = agentMapper.getAll();
-        List<AgentDO> agentDOList = ConvertUtil.list2List(agentPOList, AgentDO.class);
-        for (AgentDO agentDO : agentDOList) {
-            ReceiverTopicDO receiverTopicDO = new ReceiverTopicDO();
-            if (agentDO.getMetricsSendReceiverId() == null || agentDO.getMetricsSendTopic() == null) {
-                continue;
-            }
-            receiverTopicDO.setReceiverId(agentDO.getMetricsSendReceiverId());
-            receiverTopicDO.setTopic(agentDO.getMetricsSendTopic());
-            metricSet.add(receiverTopicDO);
-        }
-        for (AgentDO agentDO : agentDOList) {
-            ReceiverTopicDO receiverTopicDO = new ReceiverTopicDO();
-            if (agentDO.getErrorLogsSendReceiverId() == null || agentDO.getErrorLogsSendTopic() == null) {
-                continue;
-            }
-            receiverTopicDO.setReceiverId(agentDO.getErrorLogsSendReceiverId());
-            receiverTopicDO.setTopic(agentDO.getErrorLogsSendTopic());
-            errorSet.add(receiverTopicDO);
-        }
-    }
 
     public void writeMetrics(String agentMetricsTopic, String kafkaClusterBrokerConfiguration) {
         try {
@@ -165,22 +128,7 @@ public class MetricService {
         props.put("session.timeout.ms", "30000");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-
-        if (!StringUtils.isBlank(appId) && !StringUtils.isBlank(clusterId) && !StringUtils.isBlank(password)) {
-            String format = "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"%s.%s\" password=\"%s\";";
-            String jaasConfig = String.format(format, clusterId, appId, password);
-            props.put("sasl.jaas.config", jaasConfig);
-            props.put("security.protocol", "SASL_PLAINTEXT");
-            props.put("sasl.mechanism", "PLAIN");
-        }
         return props;
-    }
-
-    public void clear() {
-        //TODO：
-//        agentMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
-//        collectTaskMetricMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
-        errorLogMapper.deleteBeforeTime(System.currentTimeMillis() - RETENTION_TIME);
     }
 
     @PostConstruct

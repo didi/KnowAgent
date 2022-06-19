@@ -7,7 +7,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.k8s.K8sPodDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.http.PathRequest;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
@@ -16,16 +15,12 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.common.util.HttpUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentOperationTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
-import com.didichuxing.datachannel.agentmanager.core.k8s.K8sPodManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
 import com.didichuxing.datachannel.agentmanager.thirdpart.metadata.k8s.util.K8sUtil;
@@ -34,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -67,9 +61,6 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     @Autowired
     private AgentHealthManageService agentHealthManageService;
-
-    @Autowired
-    private K8sPodManageService k8sPodManageService;
 
     @Autowired
     private KafkaClusterManageService kafkaClusterManageService;
@@ -391,10 +382,9 @@ public class AgentManageServiceImpl implements AgentManageService {
             );
         }
         if (hostDO.getContainer().equals(HostTypeEnum.CONTAINER.getCode())) {
-            K8sPodDO k8sPodDO = k8sPodManageService.getByContainerId(hostDO.getId());
-            String logMountPath = k8sPodDO.getLogMountPath();
-            String logHostPath = k8sPodDO.getLogHostPath();
-            realPath = K8sUtil.getRealPath(logMountPath, logHostPath, path);
+            /*
+             * TODO：根据 path 获取实际容器路径 real path
+             */
         }
         return agentManageServiceExtension.listFiles(hostName, realPath, suffixMatchRegular);
     }

@@ -28,7 +28,6 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.HostMapper;
-import com.didichuxing.datachannel.agentmanager.remote.host.RemoteHostManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.host.extension.HostManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -60,9 +59,6 @@ public class HostManageServiceImpl implements HostManageService {
 
     @Autowired
     private AgentManageService agentManageService;
-
-    @Autowired
-    private RemoteHostManageService remoteHostService;
 
     @Autowired
     private AgentMetricsManageService agentMetricsManageService;
