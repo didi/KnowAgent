@@ -24,21 +24,21 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ### 2 本地启动
 
-​	因为本地直接使用`IDEA`启动，并不会将前端资源文件生成，因此在第一次启动之前，需要执行一下`mvn clean install -DskipTests`命令，将前端的静态资源文件打包出来。命令执行完成以后，修改`application.yml`配置文件，然后点击启动，本地启动成功之后，访问 http://localhost:9010。具体的`IDEA`启动及配置见图：
+​	因为本地直接使用`IDEA`启动，并不会将前端资源文件生成，因此在第一次启动之前，需要在`agent-manager`目录下执行`mvn clean install -DskipTests`命令，将前端的静态资源文件打包出来。命令执行完成以后，修改`application.yml`配置文件，然后点击启动，本地启动成功之后，访问 http://localhost:9010。具体的`IDEA`启动及配置见图：
 
-**IDEA 打包**
+#### **2.1 IDEA 打包**
 
-![IDEA打包](assets/agent-manager%20maven%20打包.png)
+![agent-manager IDEA 打包](assets/agent-manager打包.png)
 
-**修改 Agent-Manager 配置文件**
+#### **2.2 修改 Agent-Manager 配置文件**
 
 ![agent-manager配置文件修改](assets/agent-manager%20配置.png)
 
-**启动 Agent-Manager**
+#### **2.3 启动 Agent-Manager**
 
 ![agent-manager 启动](assets/agent-manager%20启动.png)
 
-**Agent-Manager 浏览器访问**
+#### **2.4 Agent-Manager 浏览器访问**
 
 ![agent-manager 浏览器访问](assets/agent-manager%20浏览器访问.png)
 

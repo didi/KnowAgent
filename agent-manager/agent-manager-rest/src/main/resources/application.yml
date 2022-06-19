@@ -42,6 +42,15 @@ spring:
       pool-prepared-statements: true
       max-open-prepared-statements: 50
       filters: stat,wall
+  auv-job:
+    jdbc-url: jdbc:mysql://116.85.36.196:3306/agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+    username: root
+    password: Didiyun@888
+    driver-class-name: org.mariadb.jdbc.Driver
+    max-lifetime: 60000
+    init-sql: true
+    init-thread-num: 10
+    max-thread-num: 20
   http:
     encoding:
       force: true
@@ -54,15 +63,6 @@ spring:
       enabled: true
       max-file-size: 600MB
       max-request-size: 600MB
-  auv-job:
-    jdbc-url: jdbc:mysql://116.85.36.196:3306/agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
-    username: root
-    password: Didiyun@888
-    driver-class-name: org.mariadb.jdbc.Driver
-    max-lifetime: 60000
-    init-sql: true
-    init-thread-num: 10
-    max-thread-num: 20
   transaction:
     default-timeout: 300
   main:
