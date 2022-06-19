@@ -49,10 +49,10 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 2. 源代码编译打包
 
-1. 在编译打包Agent项目前，请先对`System-Metrics`项目与`Agent-Manager`项目进行编译打包。
+1. 在编译打包 Agent 项目前，请先对`System-Metrics`项目与`Agent-Manager`项目进行编译打包。
    - `System-Metrics`项目编译打包方法：进入`system-metrcis`目录，执行`mvn clean install`命令。
    - `Agent-Manager`项目编译打包方法见上文`Agent-Manager`部分。
-2. 今日`agent`目录，执行`sh build.sh`命令，得到output目录。
+2. 进入`agent`目录，执行`sh build.sh`命令，得到output目录。
 
 ## 3. 配置文件修改
 
@@ -64,5 +64,14 @@ config.port=Agent-Manager服务配置的http端口（默认：9010）
 
 ## 4. 启动与停止
 
-在`output`目录下，执行`sh start.sh`即可启动 Agent 进程，执行`sh stop.sh`即可停止 Agent 进程。
+​	在`output`目录下，执行`sh start.sh`即可启动 Agent 进程，执行`sh stop.sh`即可停止 Agent 进程。
 
+## 5. 更高性能
+
+​	采用 jdk11+ 将会大幅提升采集性能（感兴趣可移步[《向量化计算加速Agent采集》](向量化计算加速Agent采集.md)），具体方式如下：
+
+1. 安装 jdk11+。
+2. 进入`agent`目录，打开 pom.xml 文件，将编译版本从1.8改为实际安装的jdk版本，如下图。
+3. 按上述流程，对 Agent 项目进行编译打包。
+
+![jdk11升级](assets/jdk11升级.png)
