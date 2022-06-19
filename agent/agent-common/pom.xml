@@ -4,28 +4,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.didichuxing.datachannel</groupId>
-        <artifactId>log-agent</artifactId>
+        <artifactId>agent</artifactId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>log-agent-sink</artifactId>
+    <artifactId>agent-common</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.didichuxing.datachannel</groupId>
-            <artifactId>log-agent-engine</artifactId>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.didichuxing.datachannel</groupId>
-            <artifactId>log-agent-channel</artifactId>
-        </dependency>
-
-        <!-- kafka -->
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka-clients</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
 
         <dependency>
@@ -34,16 +27,22 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- dependency by agent-manager-common -->
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>4.0.2</version>
-            <scope>test</scope>
+            <groupId>com.didichuxing.datachannel</groupId>
+            <artifactId>agent-manager-common</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math</artifactId>
+            <version>2.2</version>
         </dependency>
 
     </dependencies>

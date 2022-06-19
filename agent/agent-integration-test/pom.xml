@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.didichuxing.datachannel</groupId>
-        <artifactId>log-agent</artifactId>
+        <artifactId>agent</artifactId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>log-agent-integration-test</artifactId>
+    <artifactId>agent-integration-test</artifactId>
 
     <dependencies>
 
@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>com.didichuxing.datachannel</groupId>
-            <artifactId>log-agent-source</artifactId>
+            <artifactId>agent-source</artifactId>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -87,7 +87,7 @@
                     <descriptors>
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
                     </descriptors>
-                    <finalName>log-agent-integration-test</finalName>
+                    <finalName>agent-integration-test</finalName>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
             </plugin>
