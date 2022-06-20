@@ -14,6 +14,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.host.HostPaginationRequestDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostAgentVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
@@ -24,12 +25,12 @@ import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.DirectoryLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
+import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -70,7 +71,7 @@ public class RdHostController {
     private DirectoryLogCollectPathManageService directoryLogCollectPathManageService;
 
     @Autowired
-    private AgentMetricsManageService agentMetricsManageService;
+    private MetricsManageService metricsManageService;
 
     @ApiOperation(value = "测试主机名连通性", notes = "")
     @RequestMapping(value = "/connectivity/{hostname}", method = RequestMethod.GET)
@@ -245,7 +246,10 @@ public class RdHostController {
                 }
                 hostAgentVO.setOpenedLogCollectTaskNum(openedLogCollectTaskNum);
                 hostAgentVO.setOpenedLogPathNum(openedLogPathNum);
-                hostAgentVO.setLastestAgentStartupTime(agentMetricsManageService.getLastestAgentStartupTime(agentDO.getHostName()));
+                MetricsProcessPO lastMetricsProcess = metricsManageService.getLastProcessMetric(agentDO.getHostName());
+                if(null != lastMetricsProcess) {
+                    hostAgentVO.setLastestAgentStartupTime(lastMetricsProcess.getProcstartuptime());
+                }
             }
             return hostAgentVO;
         }

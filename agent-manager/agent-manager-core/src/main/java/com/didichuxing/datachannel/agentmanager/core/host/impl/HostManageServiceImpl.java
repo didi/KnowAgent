@@ -21,7 +21,6 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
@@ -59,9 +58,6 @@ public class HostManageServiceImpl implements HostManageService {
 
     @Autowired
     private AgentManageService agentManageService;
-
-    @Autowired
-    private AgentMetricsManageService agentMetricsManageService;
 
     @Autowired
     private ServiceManageService serviceManageService;
@@ -226,7 +222,7 @@ public class HostManageServiceImpl implements HostManageService {
             /*
              * 检查待删除 host 上待采集日志信息是否都已被采集完？如已采集完，可删 host，如未采集完，不可删 host
              */
-            boolean completeCollect = agentMetricsManageService.completeCollect(hostDO);
+            boolean completeCollect = completeCollect(hostDO);
             if(!completeCollect) {//未完成采集
                 throw new ServiceException(
                         String.format("删除Host对象{id=%d}失败，原因为：该主机仍存在未被采集端采集完的日志", hostId),
@@ -252,6 +248,11 @@ public class HostManageServiceImpl implements HostManageService {
                 String.format("删除Host对象={id={%d}}", hostId),
                 operator
         );
+    }
+
+    private boolean completeCollect(HostDO hostDO) {
+        //TODO：
+        return true;
     }
 
     /**

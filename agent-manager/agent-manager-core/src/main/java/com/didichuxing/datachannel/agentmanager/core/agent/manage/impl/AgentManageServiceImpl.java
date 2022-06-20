@@ -17,7 +17,6 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
@@ -52,9 +51,6 @@ public class AgentManageServiceImpl implements AgentManageService {
 
     @Autowired
     private AgentManageServiceExtension agentManageServiceExtension;
-
-    @Autowired
-    private AgentMetricsManageService agentMetricsManageService;
 
     @Autowired
     private OperateRecordService operateRecordService;
@@ -486,7 +482,7 @@ public class AgentManageServiceImpl implements AgentManageService {
          * 校验Agent需要采集的主机集是否存在未被采集完的日志信息
          */
         for (HostDO checkHost : checkHostList) {
-            boolean completeCollect = agentMetricsManageService.completeCollect(checkHost);
+            boolean completeCollect = completeCollect(checkHost);
             if (completeCollect) {//已采集完
                 // do nothing
                 continue;
@@ -495,6 +491,11 @@ public class AgentManageServiceImpl implements AgentManageService {
             }
         }
         return new CheckResult(true);
+    }
+
+    private boolean completeCollect(HostDO checkHost) {
+        //TODO：
+        return true;
     }
 
     @Override
