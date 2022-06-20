@@ -126,13 +126,14 @@ public class HostManageServiceImpl implements HostManageService {
             host.setParentHostName(StringUtils.EMPTY);
             /*
              * 主机ip不可与其他主机ip重复
+             * TODO：暂去 ip 重复校验
              */
-            if(CollectionUtils.isNotEmpty(getHostByIp(host.getIp()))) {
-                throw new ServiceException(
-                        String.format("待创建主机对应 ip={%s} 在系统中已存在", host.getIp()),
-                        ErrorCodeEnum.HOST_IP_DUPLICATE.getCode()
-                );
-            }
+//            if(CollectionUtils.isNotEmpty(getHostByIp(host.getIp()))) {
+//                throw new ServiceException(
+//                        String.format("待创建主机对应 ip={%s} 在系统中已存在", host.getIp()),
+//                        ErrorCodeEnum.HOST_IP_DUPLICATE.getCode()
+//                );
+//            }
         }
 
         /*

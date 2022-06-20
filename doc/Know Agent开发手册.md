@@ -59,7 +59,7 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 #### **2.2 启动 Agent**
 
-
+![agent 启动成功](assets/agent 启动成功.png)
 
 # Know Agent 架构设计
 
