@@ -17,6 +17,7 @@ import com.didichuxing.datachannel.agentmanager.core.errorlogs.impl.ErrorLogsMan
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.LogCollectTaskHealthManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl.LogCollectTaskManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.metrics.impl.MetricsManageServiceImpl;
+import com.didichuxing.datachannel.agentmanager.persistence.*;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
@@ -24,6 +25,7 @@ import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.Age
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -48,10 +50,13 @@ public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
 
-    @Value("${agent.metrics.storage.type}")
-    public String type;
-
     public static final String PACKAGE_SCAN_BASE = "com.didichuxing.datachannel.agentmanager";
+
+    @Value("${agent.metrics.storage.type}")
+    public String metricsStorageType;
+
+    @Autowired
+    private StorageFactoryBuilder storageFactoryBuilder;
 
     /**
      * @param args
@@ -249,8 +254,43 @@ public class AgentManagerApplication {
     }
 
     @Bean
+    public MetricsSystemDAO getMetricsSystemDAO() {
+        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).getMetricsSystemDAO();
+    }
+
+    @Bean
+    public MetricsAgentDAO getMetricsAgentDAO() {
+        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).getMetricsAgentDAO();
+    }
+
+    @Bean
+    public MetricsNetCardDAO getMetricsNetCardDAO() {
+        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).getMetricsNetCardDAO();
+    }
+
+    @Bean
+    public MetricsProcessDAO getMetricsProcessDAO() {
+        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).getMetricsProcessDAO();
+    }
+
+    @Bean
+    public MetricsLogCollectTaskDAO getMetricsLogCollectTaskDAO() {
+        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).getMetricsLogCollectTaskDAO();
+    }
+
+    @Bean
+    public MetricsDiskIODAO getMetricsDiskIODAO() {
+        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).getMetricsDiskIODAO();
+    }
+
+    @Bean
+    public MetricsDiskDAO getMetricsDiskDAO() {
+        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).getMetricsDiskDAO();
+    }
+
+    @Bean
     public AgentMetricsDAO getMetricReader() {
-        if ("es".equals(type)) {
+        if ("es".equals(metricsStorageType)) {
 //            return new AgentMetricsElasticsearchDAOImpl();
             return null;
         } else {

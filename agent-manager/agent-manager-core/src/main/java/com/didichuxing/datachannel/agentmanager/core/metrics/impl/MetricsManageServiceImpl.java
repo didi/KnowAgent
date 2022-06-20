@@ -21,6 +21,7 @@ import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
+import com.didichuxing.datachannel.agentmanager.persistence.*;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,25 +34,25 @@ import java.util.*;
 public class MetricsManageServiceImpl implements MetricsManageService {
 
     @Autowired
-    private MetricsSystemPOMapper metricsSystemDAO;
+    private MetricsSystemDAO metricsSystemDAO;
 
     @Autowired
-    private MetricsAgentPOMapper metricsAgentDAO;
+    private MetricsAgentDAO metricsAgentDAO;
 
     @Autowired
-    private MetricsDiskPOMapper metricsDiskDAO;
+    private MetricsDiskDAO metricsDiskDAO;
 
     @Autowired
-    private MetricsNetCardPOMapper metricsNetCardDAO;
+    private MetricsNetCardDAO metricsNetCardDAO;
 
     @Autowired
-    private MetricsProcessPOMapper metricsProcessDAO;
+    private MetricsProcessDAO metricsProcessDAO;
 
     @Autowired
-    private MetricsLogCollectTaskPOMapper metricsLogCollectTaskDAO;
+    private MetricsLogCollectTaskDAO metricsLogCollectTaskDAO;
 
     @Autowired
-    private MetricsDiskIOPOMapper metricsDiskIODAO;
+    private MetricsDiskIODAO metricsDiskIODAO;
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
