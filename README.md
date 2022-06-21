@@ -1,6 +1,6 @@
 # **Know Agent 一站式日志采集平台**
 
-​	阅读本文档，您可以了解到 `Know Agent` 的用户群体、产品定位等信息，并通过体验地址，快速体验以`应用`为采集粒度，从应用维度批量下发采集任务全流程。若`Know Agent`已在贵司的生产环境进行使用，并想要获得官方更好地支持和指导，可以通过[OCE认证](http://obsuite.didiyun.com/open/openAuth)，加入官方交流平台。
+​	阅读本文档，您可以了解到 `Know Agent` 的用户群体、产品定位等信息，并通过体验地址，快速体验以`应用`为采集粒度，从应用维度批量下发采集任务全流程。若`Know Agent`已在贵司的生产环境进行使用，并想要获得官方更好地支持和指导，可以通过添加微信号`WilliamHu66`，加入官方交流平台。
 
 # 1 产品简介
 
@@ -93,15 +93,9 @@
 
 # 3 Know Agent开源用户交流群
 
-![logi开源用户交流群](doc/assets/logi开源用户交流群.png)
+​	请添加微信号：mike_zhangliang 或 WilliamHu66，回复”Know Agent 加群“。
 
-微信加群：关注公众号 云原生可观测性 回复 "Logi加群"
+# 4 协议
 
-# 4 OCE认证
-
-OCE是一个认证机制和交流平台，为滴滴Logi产品生产用户量身打造，我们会为OCE企业提供更好的技术支持，比如专属的技术沙龙、企业一对一的交流机会、专属的答疑群等，如果贵司Logi产品上了生产，[快来加入吧](http://obsuite.didiyun.com/open/openAuth)
-
-# 5 协议
-
-`Know Agent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)
+​	`Know Agent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)
 
