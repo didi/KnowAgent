@@ -1,7 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.persistence.mysql.factory;
 
 import com.didichuxing.datachannel.agentmanager.persistence.*;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

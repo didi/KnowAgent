@@ -1,24 +1,19 @@
-package elasticsearch;
+package com.didichuxing.datachannel.agentmanager.persistence.elasticsearch;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
-import com.didichuxing.datachannel.agentmanager.persistence.MetricsAgentDAO;
+import com.didichuxing.datachannel.agentmanager.persistence.MetricsSystemDAO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-@Repository(value = "ElasticsearchMetricsAgentDAO")
-public class ElasticsearchMetricsAgentDAO implements MetricsAgentDAO {
+@Repository(value = "ElasticsearchMetricsSystemDAO")
+public class ElasticsearchMetricsSystemDAO implements MetricsSystemDAO {
     @Override
-    public int insertSelective(MetricsAgentPO record) {
+    public int insertSelective(MetricsSystemPO record) {
         return 0;
-    }
-
-    @Override
-    public MetricsAgentPO selectByPrimaryKey(Long id) {
-        return null;
     }
 
     @Override
@@ -33,11 +28,6 @@ public class ElasticsearchMetricsAgentDAO implements MetricsAgentDAO {
 
     @Override
     public List<MetricPoint> getSingleChatStatistic(Map<String, Object> params) {
-        return null;
-    }
-
-    @Override
-    public Double getSumMetricAllAgents(Map<String, Object> params) {
         return null;
     }
 
@@ -62,17 +52,7 @@ public class ElasticsearchMetricsAgentDAO implements MetricsAgentDAO {
     }
 
     @Override
-    public Object getAggregationQueryPerHostNameFromMetricsAgent(Map<String, Object> params) {
-        return null;
-    }
-
-    @Override
-    public MetricsAgentPO getLastRecord(Map<String, Object> params) {
-        return null;
-    }
-
-    @Override
-    public List<MetricsAgentPO> getErrorMetrics(Map<String, Object> params) {
+    public MetricsSystemPO getLastRecord(Map<String, Object> params) {
         return null;
     }
 }

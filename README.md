@@ -89,7 +89,7 @@
 
 [《Know Agent开发手册》](doc/Know Agent开发手册.md)
 
-[《纳管更大的Agent集群》](doc/纳管更大的Agent集群.md)
+[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群.md)
 
 # 3 Know Agent开源用户交流群
 

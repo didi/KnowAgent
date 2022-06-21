@@ -1,4 +1,4 @@
-package elasticsearch;
+package com.didichuxing.datachannel.agentmanager.persistence.elasticsearch;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.ErrorLogPO;
 import com.didichuxing.datachannel.agentmanager.persistence.AgentErrorLogDAO;

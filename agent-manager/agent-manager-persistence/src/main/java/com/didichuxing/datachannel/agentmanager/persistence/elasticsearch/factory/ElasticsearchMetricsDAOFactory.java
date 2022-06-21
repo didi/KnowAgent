@@ -1,4 +1,4 @@
-package elasticsearch.factory;
+package com.didichuxing.datachannel.agentmanager.persistence.elasticsearch.factory;
 
 import com.didichuxing.datachannel.agentmanager.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;

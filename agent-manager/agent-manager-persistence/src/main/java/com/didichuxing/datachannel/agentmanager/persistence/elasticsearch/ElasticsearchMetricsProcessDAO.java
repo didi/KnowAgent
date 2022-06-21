@@ -1,18 +1,18 @@
-package elasticsearch;
+package com.didichuxing.datachannel.agentmanager.persistence.elasticsearch;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO;
-import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
-import com.didichuxing.datachannel.agentmanager.persistence.MetricsSystemDAO;
+import com.didichuxing.datachannel.agentmanager.persistence.MetricsProcessDAO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-@Repository(value = "ElasticsearchMetricsSystemDAO")
-public class ElasticsearchMetricsSystemDAO implements MetricsSystemDAO {
+@Repository(value = "ElasticsearchMetricsProcessDAO")
+public class ElasticsearchMetricsProcessDAO implements MetricsProcessDAO {
     @Override
-    public int insertSelective(MetricsSystemPO record) {
+    public int insertSelective(MetricsProcessPO record) {
         return 0;
     }
 
@@ -28,6 +28,11 @@ public class ElasticsearchMetricsSystemDAO implements MetricsSystemDAO {
 
     @Override
     public List<MetricPoint> getSingleChatStatistic(Map<String, Object> params) {
+        return null;
+    }
+
+    @Override
+    public Double getSumMetricAllAgents(Map<String, Object> params) {
         return null;
     }
 
@@ -52,7 +57,12 @@ public class ElasticsearchMetricsSystemDAO implements MetricsSystemDAO {
     }
 
     @Override
-    public MetricsSystemPO getLastRecord(Map<String, Object> params) {
+    public MetricsProcessPO getLastRecord(Map<String, Object> params) {
+        return null;
+    }
+
+    @Override
+    public Object getAggregationQueryPerHostNameFromMetricsProcess(Map<String, Object> params) {
         return null;
     }
 }

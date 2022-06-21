@@ -10,14 +10,14 @@ public class StorageFactoryBuilder {
 
     @Autowired
     @Qualifier(value = "MySQLMetricsDAOFactory")
-    private MetricsDAOFactory mySQLMetricsDAOFactory;
+    private MetricsDAOFactory metricsDAOFactory;
 
     @Autowired
     @Qualifier(value = "MySQLErrorLogsDAOFactory")
     private ErrorLogsDAOFactory errorLogsDAOFactory;
 
     public MetricsDAOFactory buildMetricsDAOFactory() {
-        return mySQLMetricsDAOFactory;
+        return metricsDAOFactory;
     }
 
     public ErrorLogsDAOFactory buildErrorLogsDAOFactory() {
