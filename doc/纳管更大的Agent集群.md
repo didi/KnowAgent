@@ -2,7 +2,9 @@
 
 1. 实现 `MetricsDAOFactory` 与 `ErrorLogsDAOFactory` 接口
 
-   
+   ![image-20220621182846348](assets/ElasticsearchMetricsDAOFactory.png)
+
+   ![image-20220621182956095](assets/ElasticsearchErrorLogsDAOFactory.png)
 
 2. 实现 `MetricsDAOFactory` 与 `ErrorLogsDAOFactory` 接口中需要创建的各 DAO 接口
 

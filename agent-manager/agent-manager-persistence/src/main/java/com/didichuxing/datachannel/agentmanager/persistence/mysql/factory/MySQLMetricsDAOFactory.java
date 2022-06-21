@@ -10,31 +10,31 @@ public class MySQLMetricsDAOFactory implements MetricsDAOFactory {
 
     @Autowired
     @Qualifier(value = "MySQLMetricsSystemDAO")
-    private MetricsSystemPOMapper metricsSystemDAO;
+    private MetricsSystemDAO metricsSystemDAO;
 
     @Autowired
     @Qualifier(value = "MySQLMetricsAgentDAO")
-    private MetricsAgentPOMapper metricsAgentDAO;
+    private MetricsAgentDAO metricsAgentDAO;
 
     @Autowired
     @Qualifier(value = "MySQLMetricsDiskDAO")
-    private MetricsDiskPOMapper metricsDiskDAO;
+    private MetricsDiskDAO metricsDiskDAO;
 
     @Autowired
     @Qualifier(value = "MySQLMetricsNetCardDAO")
-    private MetricsNetCardPOMapper metricsNetCardDAO;
+    private MetricsNetCardDAO metricsNetCardDAO;
 
     @Autowired
     @Qualifier(value = "MySQLMetricsProcessDAO")
-    private MetricsProcessPOMapper metricsProcessDAO;
+    private MetricsProcessDAO metricsProcessDAO;
 
     @Autowired
     @Qualifier(value = "MySQLMetricsLogCollectTaskDAO")
-    private MetricsLogCollectTaskPOMapper metricsLogCollectTaskDAO;
+    private MetricsLogCollectTaskDAO metricsLogCollectTaskDAO;
 
     @Autowired
     @Qualifier(value = "MySQLMetricsDiskIODAO")
-    private MetricsDiskIOPOMapper metricsDiskIODAO;
+    private MetricsDiskIODAO metricsDiskIODAO;
 
     @Override
     public MetricsSystemDAO createMetricsSystemDAO() {

@@ -10,7 +10,7 @@ public class MySQLErrorLogsDAOFactory implements ErrorLogsDAOFactory {
 
     @Autowired
     @Qualifier(value = "MySQLAgentErrorLogDAO")
-    private ErrorLogMapper agentErrorLogDAO;
+    private AgentErrorLogDAO agentErrorLogDAO;
 
     @Override
     public AgentErrorLogDAO createAgentErrorLogDAO() {
