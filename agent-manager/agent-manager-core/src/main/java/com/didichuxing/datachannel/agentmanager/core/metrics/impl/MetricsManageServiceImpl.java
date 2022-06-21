@@ -1,10 +1,13 @@
 package com.didichuxing.datachannel.agentmanager.core.metrics.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.MetricsLogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.metrics.BusinessMetricsQueryDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricNodeVO;
@@ -14,24 +17,35 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoi
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.common.metrics.*;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
+import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.*;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.*;
+import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.*;
 
 @org.springframework.stereotype.Service
 public class MetricsManageServiceImpl implements MetricsManageService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsManageServiceImpl.class);
 
     @Autowired
     private MetricsSystemDAO metricsSystemDAO;
@@ -66,6 +80,12 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     @Autowired
     private AgentManageService agentManageService;
 
+    @Autowired
+    private KafkaClusterManageService kafkaClusterManageService;
+
+    @Autowired
+    private KafkaClusterManageServiceExtension kafkaClusterManageServiceExtension;
+
     /**
      * top n 默认值
      */
@@ -75,6 +95,169 @@ public class MetricsManageServiceImpl implements MetricsManageService {
      * 指标排序类型 默认值
      */
     private static Integer SORT_METRIC_TYPE_DEFAULT_VALUE = 0;
+
+    /* metrics write 相关 */
+    private volatile boolean metricsWriteStopTrigger = false;
+    private volatile boolean metricsWriteStopped = true;
+    private static final Long RECEIVER_CLOSE_TIME_OUT_MS = 1 * 60 * 1000l;
+    private ReceiverDO lastAgentMetricsReceiver = null;
+    private static final ExecutorService metricsWriteThreadPool = Executors.newSingleThreadExecutor();
+
+    @Override
+    @Transactional
+    public void insertMetrics(String metricsRecord) {
+        handleInsertMetrics(metricsRecord);
+    }
+
+    @Override
+    public void consumeAndWriteMetrics() {
+        /*
+         * 1.）获取 agent metrics 对应接收端信息、topic
+         */
+        ReceiverDO agentMetricsReceiver = kafkaClusterManageService.getAgentMetricsTopicExistsReceiver();
+        /*
+         * 2.）校验较上一次获取是否相同，如不同，则立即进行对应变更处理
+         */
+        if(metricsReceiverChanged(lastAgentMetricsReceiver, agentMetricsReceiver)) {
+            LOGGER.info(
+                    String.format("Metrics receiver changed, before is %s, after is %s", JSON.toJSONString(lastAgentMetricsReceiver), JSON.toJSONString(agentMetricsReceiver))
+            );
+            restartWriteMetrics(agentMetricsReceiver);
+            lastAgentMetricsReceiver = agentMetricsReceiver;
+        }
+    }
+
+    private boolean metricsReceiverChanged(ReceiverDO lastAgentMetricsReceiver, ReceiverDO agentMetricsReceiver) {
+        if(null == lastAgentMetricsReceiver && null == agentMetricsReceiver) {
+            return false;
+        }
+        if(null == agentMetricsReceiver) {
+            return false;
+        }
+        if(null == lastAgentMetricsReceiver && null != agentMetricsReceiver) {
+            return true;
+        }
+        if(
+                !lastAgentMetricsReceiver.getAgentMetricsTopic().equals(agentMetricsReceiver.getAgentMetricsTopic()) ||
+                        !lastAgentMetricsReceiver.getKafkaClusterBrokerConfiguration().equals(agentMetricsReceiver.getKafkaClusterBrokerConfiguration())
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    public void writeMetrics(String agentMetricsTopic, String kafkaClusterBrokerConfiguration) {
+        try {
+            LOGGER.info("Thread: {}, cluster: {}, topic: {}", Thread.currentThread().getName(), kafkaClusterBrokerConfiguration, agentMetricsTopic);
+            Properties properties = kafkaClusterManageServiceExtension.getKafkaConsumerProperties(kafkaClusterBrokerConfiguration);
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+            consumer.subscribe(Arrays.asList(agentMetricsTopic));
+            while (true) {
+                try {
+                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
+                    for (ConsumerRecord<String, String> record : records) {
+                        insertMetrics(record.value());
+                    }
+                    if (metricsWriteStopTrigger) {
+                        consumer.close();
+                        break;
+                    }
+                } catch (Throwable ex) {
+                    LOGGER.error(
+                            String.format("writeMetrics error: %s", ex.getMessage()),
+                            ex
+                    );
+                    consumer.close();
+                    break;
+                }
+            }
+        } catch (Throwable ex) {
+            LOGGER.error(
+                    String.format("writeMetrics error: %s", ex.getMessage()),
+                    ex
+            );
+        } finally {
+            metricsWriteStopped = true;
+        }
+    }
+
+    private void restartWriteMetrics(ReceiverDO agentMetricsReceiver) {
+        LOGGER.info(
+                String.format("restartWriteMetrics: Is going to stop receiver %s", JSON.toJSONString(lastAgentMetricsReceiver))
+        );
+        /*
+         * stop
+         */
+        metricsWriteStopTrigger = true;
+        Long currentTime = System.currentTimeMillis();
+        while (
+                !metricsWriteStopped &&
+                        (System.currentTimeMillis() - currentTime) <= RECEIVER_CLOSE_TIME_OUT_MS
+        ) {
+            try {
+                // 等待现有的kafka consumer线程全部关闭
+                Thread.sleep(1 * 1000);
+            } catch (InterruptedException e) {
+                LOGGER.error("thread interrupted", e);
+            }
+        }
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Stop receiver %s successful", JSON.toJSONString(lastAgentMetricsReceiver))
+        );
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Is going to start receiver %s", JSON.toJSONString(agentMetricsReceiver))
+        );
+        /*
+         * start
+         */
+        metricsWriteStopped = false;
+        metricsWriteStopTrigger = false;
+        metricsWriteThreadPool.execute(() -> writeMetrics(agentMetricsReceiver.getAgentMetricsTopic(), agentMetricsReceiver.getKafkaClusterBrokerConfiguration()));
+        LOGGER.info(
+                String.format("restartWriteErrorLogs: Start receiver %s successful", JSON.toJSONString(agentMetricsReceiver))
+        );
+    }
+
+    private void handleInsertMetrics(String metricsRecord) {
+                if(StringUtils.isNotBlank(metricsRecord)) {
+                    JSONObject object = JSON.parseObject(metricsRecord);
+                    Object taskMetricsObj = object.get("taskMetrics");
+                    Object agentMetricsObj = object.get("agentMetrics");
+                    if(taskMetricsObj != null) {
+                        String taskMetricsStr = taskMetricsObj.toString();
+                        TaskMetrics taskMetrics = JSON.parseObject(taskMetricsStr, TaskMetrics.class);
+                        MetricsLogCollectTaskPO logCollectTaskPO = ConvertUtil.obj2Obj(taskMetrics, MetricsLogCollectTaskPO.class);
+                        metricsLogCollectTaskDAO.insertSelective(logCollectTaskPO);
+                    } else if(agentMetricsObj != null) {
+                        String agentMetricsStr = agentMetricsObj.toString();
+                        AgentMetrics agentMetrics = JSON.parseObject(agentMetricsStr, AgentMetrics.class);
+                        AgentBusinessMetrics agentBusinessMetrics = agentMetrics.getAgentBusinessMetrics();
+                        SystemMetrics systemMetrics = agentMetrics.getSystemMetrics();
+                        ProcessMetrics processMetrics = agentMetrics.getProcessMetrics();
+                        List<DiskIOMetrics> diskIOMetricsList = agentMetrics.getDiskIOMetricsList();
+                        List<DiskMetrics> diskMetricsList = agentMetrics.getDiskMetricsList();
+                        List<NetCardMetrics> netCardMetrics = agentMetrics.getNetCardMetricsList();
+                        MetricsAgentPO metricsAgentPO = ConvertUtil.obj2Obj(agentBusinessMetrics, MetricsAgentPO.class);
+                        MetricsSystemPO metricsSystemPO = ConvertUtil.obj2Obj(systemMetrics, MetricsSystemPO.class);
+                        MetricsProcessPO metricsProcessPO = ConvertUtil.obj2Obj(processMetrics, MetricsProcessPO.class);
+                        List<MetricsDiskIOPO> metricsDiskIOPOS = ConvertUtil.list2List(diskIOMetricsList, MetricsDiskIOPO.class);
+                        List<MetricsDiskPO> metricsDiskPOList = ConvertUtil.list2List(diskMetricsList, MetricsDiskPO.class);
+                        List<MetricsNetCardPO> metricsNetCardPOList = ConvertUtil.list2List(netCardMetrics, MetricsNetCardPO.class);
+                        for (MetricsDiskIOPO metricsDiskIOPO : metricsDiskIOPOS) {
+                            metricsDiskIODAO.insertSelective(metricsDiskIOPO);
+                        }
+                        for (MetricsDiskPO metricsDiskPO : metricsDiskPOList) {
+                            metricsDiskDAO.insertSelective(metricsDiskPO);
+                        }
+                        for (MetricsNetCardPO metricsNetCardPO : metricsNetCardPOList) {
+                            metricsNetCardDAO.insertSelective(metricsNetCardPO);
+                        }
+                        metricsAgentDAO.insertSelective(metricsAgentPO);
+                        metricsSystemDAO.insertSelective(metricsSystemPO);
+                        metricsProcessDAO.insertSelective(metricsProcessPO);
+                    }
+                }
+    }
 
     @Override
     public MetricNodeVO getMetricsTreeByMetricType(Integer metricTypeCode) {

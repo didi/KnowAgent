@@ -36,6 +36,8 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
 
     private static final Integer ADMIN_CLIENT_REQUEST_TIME_OUT_UNIT_MS = 6000;
 
+    private static final String CONSUMER_GROUP_ID = "agentMetricsConsumerGroup";
+
     @Autowired
     private RemoteKafkaClusterService remoteKafkaClusterService;
 
@@ -282,6 +284,19 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
                 adminClient.close();
             }
         }
+    }
+
+    @Override
+    public Properties getKafkaConsumerProperties(String bootstrapServers) {
+            Properties props = new Properties();
+            props.put("bootstrap.servers", bootstrapServers);
+            props.put("group.id", CONSUMER_GROUP_ID);
+            props.put("enable.auto.commit", "true");
+            props.put("auto.commit.interval.ms", "1000");
+            props.put("session.timeout.ms", "30000");
+            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            return props;
     }
 
     private AdminClient getAdminClient(String kafkaClusterBrokerConfiguration) {

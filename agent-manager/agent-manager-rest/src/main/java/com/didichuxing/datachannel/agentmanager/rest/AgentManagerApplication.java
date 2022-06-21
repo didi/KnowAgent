@@ -19,9 +19,6 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl.
 import com.didichuxing.datachannel.agentmanager.core.metrics.impl.MetricsManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.persistence.*;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.AgentMetricsDAO;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.impl.AgentMetricsRDSImpl;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +32,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.util.CollectionUtils;
-
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -88,10 +84,22 @@ public class AgentManagerApplication {
             @Override
             public void run() {
                 try {
-                    MetricService metricService = ctx.getBean(MetricService.class);
-                    metricService.resetMetricConsumers();
+                    MetricsManageServiceImpl metricsManageServiceImpl = ctx.getBean(MetricsManageServiceImpl.class);
+                    metricsManageServiceImpl.consumeAndWriteMetrics();
                 } catch (Exception ex) {
                     LOGGER.error(String.format(" write metrics to db error, root cause is: %s", ex.getMessage()), ex);
+                }
+            }
+        },0, 5, TimeUnit.SECONDS);
+
+        pool.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ErrorLogsManageServiceImpl errorLogsManageServiceImpl = ctx.getBean(ErrorLogsManageServiceImpl.class);
+                    errorLogsManageServiceImpl.consumeAndWriteErrorLogs();
+                } catch (Exception ex) {
+                    LOGGER.error(String.format(" write error logs to db error, root cause is: %s", ex.getMessage()), ex);
                 }
             }
         },0, 5, TimeUnit.SECONDS);
@@ -289,13 +297,8 @@ public class AgentManagerApplication {
     }
 
     @Bean
-    public AgentMetricsDAO getMetricReader() {
-        if ("es".equals(metricsStorageType)) {
-//            return new AgentMetricsElasticsearchDAOImpl();
-            return null;
-        } else {
-            return new AgentMetricsRDSImpl();
-        }
+    public AgentErrorLogDAO getAgentErrorLogDAO() {
+        return storageFactoryBuilder.buildErrorLogsDAOFactory(metricsStorageType).getAgentErrorLogDAO();
     }
 
 }

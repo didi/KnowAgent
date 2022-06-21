@@ -11,10 +11,22 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPan
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointLine;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.OperatorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 
 import java.util.List;
 
 public interface MetricsManageService {
+
+    /**
+     * 添加指标记录集
+     * @param metricsRecord 待添加指标记录对象
+     */
+    void insertMetrics(String metricsRecord);
+
+    /**
+     * 消费并写入指标数据
+     */
+    void consumeAndWriteMetrics();
 
     /**
      * 根据给定指标类型获取该指标类型下的指标集（以树形式组织）

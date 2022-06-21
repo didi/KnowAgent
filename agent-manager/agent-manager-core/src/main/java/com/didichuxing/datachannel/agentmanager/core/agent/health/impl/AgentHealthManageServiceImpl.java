@@ -27,14 +27,10 @@ import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterMa
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentHealthMapper;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.ErrorLogMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class AgentHealthManageServiceImpl implements AgentHealthManageService {

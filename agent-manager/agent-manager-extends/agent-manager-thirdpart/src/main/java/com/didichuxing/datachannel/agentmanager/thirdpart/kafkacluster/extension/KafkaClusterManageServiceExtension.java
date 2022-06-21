@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 public interface KafkaClusterManageServiceExtension {
@@ -93,5 +94,7 @@ public interface KafkaClusterManageServiceExtension {
      * @return 返回根据 kafka broker 配置获取到的 topic 集
      */
     Set<String> listTopics(String kafkaClusterBrokerConfiguration);
+
+    Properties getKafkaConsumerProperties(String bootstrapServers);
 
 }

@@ -1,7 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.task.resource.metric;
 
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
-import com.didichuxing.datachannel.agentmanager.thirdpart.agent.metrics.MetricService;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
 import com.didiglobal.logi.auvjob.core.job.JobContext;

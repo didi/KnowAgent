@@ -6,7 +6,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.health.Agen
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.ErrorLogMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

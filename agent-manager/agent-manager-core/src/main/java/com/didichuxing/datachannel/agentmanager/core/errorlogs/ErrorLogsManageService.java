@@ -5,6 +5,17 @@ import java.util.List;
 public interface ErrorLogsManageService {
 
     /**
+     * 添加错误日志记录集
+     * @param errorLogRecord 待添加错误日志记录对象
+     */
+    void insertErrorLogs(String errorLogRecord);
+
+    /**
+     * 消费 & 写入错误日志
+     */
+    void consumeAndWriteErrorLogs();
+
+    /**
      * 获取给定时间范围内给定agent错误日志集
      * @param hostName agent 宿主机名
      * @param startTime 开始时间
