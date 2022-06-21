@@ -81,7 +81,7 @@ agent:
 
 metrics:
   expire:
-    days: 1
+    days: 7
 
 system:
   config:
