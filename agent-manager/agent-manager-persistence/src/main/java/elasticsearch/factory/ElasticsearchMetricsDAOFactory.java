@@ -1,44 +1,74 @@
 package elasticsearch.factory;
 
 import com.didichuxing.datachannel.agentmanager.persistence.*;
-import elasticsearch.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @org.springframework.stereotype.Component("ElasticsearchMetricsDAOFactory")
 public class ElasticsearchMetricsDAOFactory implements MetricsDAOFactory {
 
+    @Autowired
+    @Qualifier(value = "ElasticsearchMetricsSystemDAO")
+    private MetricsSystemDAO metricsSystemDAO;
+
+    @Autowired
+    @Qualifier(value = "ElasticsearchMetricsAgentDAO")
+    private MetricsAgentDAO metricsAgentDAO;
+
+    @Autowired
+    @Qualifier(value = "ElasticsearchMetricsDiskDAO")
+    private MetricsDiskDAO metricsDiskDAO;
+
+    @Autowired
+    @Qualifier(value = "ElasticsearchMetricsNetCardDAO")
+    private MetricsNetCardDAO metricsNetCardDAO;
+
+    @Autowired
+    @Qualifier(value = "ElasticsearchMetricsProcessDAO")
+    private MetricsProcessDAO metricsProcessDAO;
+
+    @Autowired
+    @Qualifier(value = "ElasticsearchMetricsLogCollectTaskDAO")
+    private MetricsLogCollectTaskDAO metricsLogCollectTaskDAO;
+
+    @Autowired
+    @Qualifier(value = "ElasticsearchMetricsDiskIODAO")
+    private MetricsDiskIODAO metricsDiskIODAO;
+
+
     @Override
     public MetricsSystemDAO createMetricsSystemDAO() {
-        return new ElasticsearchMetricsSystemDAO();
+        return metricsSystemDAO;
     }
 
     @Override
     public MetricsAgentDAO createMetricsAgentDAO() {
-        return new ElasticsearchMetricsAgentDAO();
+        return metricsAgentDAO;
     }
 
     @Override
     public MetricsDiskDAO createMetricsDiskDAO() {
-        return new ElasticsearchMetricsDiskDAO();
+        return metricsDiskDAO;
     }
 
     @Override
     public MetricsNetCardDAO createMetricsNetCardDAO() {
-        return new ElasticsearchMetricsNetCardDAO();
+        return metricsNetCardDAO;
     }
 
     @Override
     public MetricsProcessDAO createMetricsProcessDAO() {
-        return new ElasticsearchMetricsProcessDAO();
+        return metricsProcessDAO;
     }
 
     @Override
     public MetricsLogCollectTaskDAO createMetricsLogCollectTaskDAO() {
-        return new ElasticsearchMetricsLogCollectTaskDAO();
+        return metricsLogCollectTaskDAO;
     }
 
     @Override
     public MetricsDiskIODAO createMetricsDiskIODAO() {
-        return new ElasticsearchMetricsDiskIODAO();
+        return metricsDiskIODAO;
     }
 
 }

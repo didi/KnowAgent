@@ -2,7 +2,6 @@ package elasticsearch.factory;
 
 import com.didichuxing.datachannel.agentmanager.persistence.AgentErrorLogDAO;
 import com.didichuxing.datachannel.agentmanager.persistence.ErrorLogsDAOFactory;
-import elasticsearch.ElasticsearchAgentErrorLogDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
