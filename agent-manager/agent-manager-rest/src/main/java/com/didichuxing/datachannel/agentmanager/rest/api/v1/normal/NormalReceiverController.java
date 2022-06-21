@@ -67,17 +67,12 @@ public class NormalReceiverController {
     }
 
     @ApiOperation(value = "根据接收端id获取该接收端对应kafka集群的所有topic列表", notes = "")
-    @RequestMapping(value = "/{receiverId}/topics", method = RequestMethod.GET)
+    @RequestMapping(value = "/topics", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Set<String>> listTopics(@PathVariable Long receiverId) {
-        ReceiverDO receiverDO = kafkaClusterManageService.getById(receiverId);
-        if(null == receiverDO) {
-            return Result.build(
-                    ErrorCodeEnum.KAFKA_CLUSTER_NOT_EXISTS.getCode(),
-                    String.format("接收端对应Kafka集群{id=%d}在系统中不存在", receiverId)
-            );
-        }
-        Set<String> topics = kafkaClusterManageServiceExtension.listTopics(receiverDO.getKafkaClusterBrokerConfiguration());
+    public Result<Set<String>> listTopics(
+            @RequestParam(value = "brokerServers") String brokerServers
+    ) {
+        Set<String> topics = kafkaClusterManageServiceExtension.listTopics(brokerServers);
         return Result.buildSucc(topics);
     }
 
