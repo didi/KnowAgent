@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.receiver.Receive
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.receiver.ReceiverTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
@@ -141,6 +142,7 @@ public class NormalReceiverController {
             receiverVO.setKafkaClusterProducerInitConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
             receiverVO.setAgentErrorLogsTopic(receiverDO.getAgentErrorLogsTopic());
             receiverVO.setAgentMetricsTopic(receiverDO.getAgentMetricsTopic());
+            receiverVO.setReceiverType(ReceiverTypeEnum.fromCode(receiverDO.getReceiverType()).getDescription());
             receiverVOList.add(receiverVO);
         }
         return receiverVOList;

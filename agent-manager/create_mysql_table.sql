@@ -392,6 +392,7 @@ CREATE TABLE `tb_kafka_cluster` (
                                     `operator` varchar(64) NOT NULL DEFAULT '' COMMENT '操作人',
                                     `agent_metrics_send_topic` varchar(255) DEFAULT '' COMMENT 'Agent指标信息发往的topic名',
                                     `agent_error_logs_send_topic` varchar(255) DEFAULT '' COMMENT 'Agent错误日志信息发往的topic名',
+                                    `receiver_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '接收端类型：0：kafka',
                                     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                     `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                     PRIMARY KEY (`id`) USING BTREE,

@@ -26,6 +26,17 @@ public class ReceiverCreateDTO {
     @ApiModelProperty(value = "agent metrics 流对应 topic 名")
     private String agentMetricsTopic;
 
+    @ApiModelProperty(value = "接收端类型 0：kafka")
+    private Integer receiverType;
+
+    public Integer getReceiverType() {
+        return receiverType;
+    }
+
+    public void setReceiverType(Integer receiverType) {
+        this.receiverType = receiverType;
+    }
+
     public String getAgentErrorLogsTopic() {
         return agentErrorLogsTopic;
     }

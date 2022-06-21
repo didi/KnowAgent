@@ -47,9 +47,6 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
     private KafkaClusterMapper kafkaClusterDAO;
 
     @Autowired
-    private RemoteKafkaClusterService remoteKafkaClusterService;
-
-    @Autowired
     private KafkaClusterManageServiceExtension kafkaClusterManageServiceExtension;
 
     @Autowired
