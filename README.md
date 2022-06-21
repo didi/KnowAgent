@@ -81,7 +81,9 @@
 # 2 相关文档
 ## 2.1 产品文档
 
-[《Know Agent一站式日志采集平台》](doc/Know Agent一站式日志采集平台.md)
+[《Know Agent一站式日志采集平台介绍》](doc/Know Agent一站式日志采集平台.md)
+
+[《快速搭建一站式Know Agent体验环境》](doc/快速搭建一站式Know Agent体验环境.md)
 
 [《Know Agent安装部署手册》](doc/Know Agent安装部署手册.md)
 
@@ -97,5 +99,5 @@
 
 # 4 协议
 
-​	`Know Agent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)
+​	`Know Agent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)。
 
