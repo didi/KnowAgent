@@ -72,6 +72,9 @@ agent:
   metrics:
     storage:
       type: rds
+  error-logs:
+    storage:
+      type: rds
   http:
       request:
         port: 20230

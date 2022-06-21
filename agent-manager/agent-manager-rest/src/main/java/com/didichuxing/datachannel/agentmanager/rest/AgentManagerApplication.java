@@ -51,6 +51,9 @@ public class AgentManagerApplication {
     @Value("${agent.metrics.storage.type}")
     public String metricsStorageType;
 
+    @Value("${agent.error-logs.storage.type}")
+    public String errorLogsStorageType;
+
     @Autowired
     private StorageFactoryBuilder storageFactoryBuilder;
 
@@ -298,7 +301,7 @@ public class AgentManagerApplication {
 
     @Bean("agentErrorLogDAO")
     public AgentErrorLogDAO getAgentErrorLogDAO() {
-        return storageFactoryBuilder.buildErrorLogsDAOFactory(metricsStorageType).createAgentErrorLogDAO();
+        return storageFactoryBuilder.buildErrorLogsDAOFactory(errorLogsStorageType).createAgentErrorLogDAO();
     }
 
 }
