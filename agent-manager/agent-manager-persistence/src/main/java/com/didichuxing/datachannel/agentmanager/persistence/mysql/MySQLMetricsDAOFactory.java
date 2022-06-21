@@ -4,35 +4,35 @@ import com.didichuxing.datachannel.agentmanager.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-@org.springframework.stereotype.Component("mySQLMetricsDAOFactory")
+@org.springframework.stereotype.Component("MySQLMetricsDAOFactory")
 public class MySQLMetricsDAOFactory implements MetricsDAOFactory {
 
     @Autowired
-    @Qualifier(value = "mySQLMetricsSystemDAO")
+    @Qualifier(value = "MySQLMetricsSystemDAO")
     private MetricsSystemPOMapper metricsSystemDAO;
 
     @Autowired
-    @Qualifier(value = "mySQLMetricsAgentDAO")
+    @Qualifier(value = "MySQLMetricsAgentDAO")
     private MetricsAgentPOMapper metricsAgentDAO;
 
     @Autowired
-    @Qualifier(value = "mySQLMetricsDiskDAO")
+    @Qualifier(value = "MySQLMetricsDiskDAO")
     private MetricsDiskPOMapper metricsDiskDAO;
 
     @Autowired
-    @Qualifier(value = "mySQLMetricsNetCardDAO")
+    @Qualifier(value = "MySQLMetricsNetCardDAO")
     private MetricsNetCardPOMapper metricsNetCardDAO;
 
     @Autowired
-    @Qualifier(value = "mySQLMetricsProcessDAO")
+    @Qualifier(value = "MySQLMetricsProcessDAO")
     private MetricsProcessPOMapper metricsProcessDAO;
 
     @Autowired
-    @Qualifier(value = "mySQLMetricsLogCollectTaskDAO")
+    @Qualifier(value = "MySQLMetricsLogCollectTaskDAO")
     private MetricsLogCollectTaskPOMapper metricsLogCollectTaskDAO;
 
     @Autowired
-    @Qualifier(value = "mySQLMetricsDiskIODAO")
+    @Qualifier(value = "MySQLMetricsDiskIODAO")
     private MetricsDiskIOPOMapper metricsDiskIODAO;
 
     @Override
