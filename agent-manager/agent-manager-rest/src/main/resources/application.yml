@@ -69,15 +69,9 @@ spring:
     allow-circular-references: true
 
 agent:
-  metrics:
-    storage:
-      type: rds
-  error-logs:
-    storage:
-      type: rds
   http:
-      request:
-        port: 20230
+    request:
+      port: 20230
 
 metrics:
   expire:

@@ -48,12 +48,6 @@ public class AgentManagerApplication {
 
     public static final String PACKAGE_SCAN_BASE = "com.didichuxing.datachannel.agentmanager";
 
-    @Value("${agent.metrics.storage.type}")
-    public String metricsStorageType;
-
-    @Value("${agent.error-logs.storage.type}")
-    public String errorLogsStorageType;
-
     @Autowired
     private StorageFactoryBuilder storageFactoryBuilder;
 
@@ -266,42 +260,42 @@ public class AgentManagerApplication {
 
     @Bean("metricsSystemDAO")
     public MetricsSystemDAO getMetricsSystemDAO() {
-        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).createMetricsSystemDAO();
+        return storageFactoryBuilder.buildMetricsDAOFactory().createMetricsSystemDAO();
     }
 
     @Bean("metricsAgentDAO")
     public MetricsAgentDAO getMetricsAgentDAO() {
-        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).createMetricsAgentDAO();
+        return storageFactoryBuilder.buildMetricsDAOFactory().createMetricsAgentDAO();
     }
 
     @Bean("metricsNetCardDAO")
     public MetricsNetCardDAO getMetricsNetCardDAO() {
-        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).createMetricsNetCardDAO();
+        return storageFactoryBuilder.buildMetricsDAOFactory().createMetricsNetCardDAO();
     }
 
     @Bean("metricsProcessDAO")
     public MetricsProcessDAO getMetricsProcessDAO() {
-        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).createMetricsProcessDAO();
+        return storageFactoryBuilder.buildMetricsDAOFactory().createMetricsProcessDAO();
     }
 
     @Bean("metricsLogCollectTaskDAO")
     public MetricsLogCollectTaskDAO getMetricsLogCollectTaskDAO() {
-        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).createMetricsLogCollectTaskDAO();
+        return storageFactoryBuilder.buildMetricsDAOFactory().createMetricsLogCollectTaskDAO();
     }
 
     @Bean("metricsDiskIODAO")
     public MetricsDiskIODAO getMetricsDiskIODAO() {
-        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).createMetricsDiskIODAO();
+        return storageFactoryBuilder.buildMetricsDAOFactory().createMetricsDiskIODAO();
     }
 
     @Bean("metricsDiskDAO")
     public MetricsDiskDAO getMetricsDiskDAO() {
-        return storageFactoryBuilder.buildMetricsDAOFactory(metricsStorageType).createMetricsDiskDAO();
+        return storageFactoryBuilder.buildMetricsDAOFactory().createMetricsDiskDAO();
     }
 
     @Bean("agentErrorLogDAO")
     public AgentErrorLogDAO getAgentErrorLogDAO() {
-        return storageFactoryBuilder.buildErrorLogsDAOFactory(errorLogsStorageType).createAgentErrorLogDAO();
+        return storageFactoryBuilder.buildErrorLogsDAOFactory().createAgentErrorLogDAO();
     }
 
 }
