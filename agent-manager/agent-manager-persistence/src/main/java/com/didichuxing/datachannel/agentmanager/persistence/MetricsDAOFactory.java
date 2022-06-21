@@ -2,18 +2,18 @@ package com.didichuxing.datachannel.agentmanager.persistence;
 
 public interface MetricsDAOFactory {
 
-    MetricsSystemDAO getMetricsSystemDAO();
+    MetricsSystemDAO createMetricsSystemDAO();
 
-    MetricsAgentDAO getMetricsAgentDAO();
+    MetricsAgentDAO createMetricsAgentDAO();
 
-    MetricsDiskDAO getMetricsDiskDAO();
+    MetricsDiskDAO createMetricsDiskDAO();
 
-    MetricsNetCardDAO getMetricsNetCardDAO();
+    MetricsNetCardDAO createMetricsNetCardDAO();
 
-    MetricsProcessDAO getMetricsProcessDAO();
+    MetricsProcessDAO createMetricsProcessDAO();
 
-    MetricsLogCollectTaskDAO getMetricsLogCollectTaskDAO();
+    MetricsLogCollectTaskDAO createMetricsLogCollectTaskDAO();
 
-    MetricsDiskIODAO getMetricsDiskIODAO();
+    MetricsDiskIODAO createMetricsDiskIODAO();
 
 }

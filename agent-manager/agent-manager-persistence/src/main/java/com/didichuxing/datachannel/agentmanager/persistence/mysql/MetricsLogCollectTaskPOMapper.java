@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-@Repository(value = "metricsLogCollectTaskDAO")
+@Repository(value = "mySQLMetricsLogCollectTaskDAO")
 public interface MetricsLogCollectTaskPOMapper extends MetricsLogCollectTaskDAO {
 
 }

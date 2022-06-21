@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-@Repository(value = "metricsNetCardDAO")
+@Repository(value = "mySQLMetricsNetCardDAO")
 public interface MetricsNetCardPOMapper extends MetricsNetCardDAO {
 
 }

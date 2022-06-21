@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-@Repository(value = "metricsProcessDAO")
+@Repository(value = "mySQLMetricsProcessDAO")
 public interface MetricsProcessPOMapper extends MetricsProcessDAO {
 
 }

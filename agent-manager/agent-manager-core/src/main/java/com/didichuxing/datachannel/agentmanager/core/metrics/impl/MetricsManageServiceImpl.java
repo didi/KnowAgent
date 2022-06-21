@@ -36,6 +36,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
@@ -48,24 +49,31 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetricsManageServiceImpl.class);
 
     @Autowired
+    @Qualifier(value = "metricsSystemDAO")
     private MetricsSystemDAO metricsSystemDAO;
 
     @Autowired
+    @Qualifier(value = "metricsAgentDAO")
     private MetricsAgentDAO metricsAgentDAO;
 
     @Autowired
+    @Qualifier(value = "metricsDiskDAO")
     private MetricsDiskDAO metricsDiskDAO;
 
     @Autowired
+    @Qualifier(value = "metricsNetCardDAO")
     private MetricsNetCardDAO metricsNetCardDAO;
 
     @Autowired
+    @Qualifier(value = "metricsProcessDAO")
     private MetricsProcessDAO metricsProcessDAO;
 
     @Autowired
+    @Qualifier(value = "metricsLogCollectTaskDAO")
     private MetricsLogCollectTaskDAO metricsLogCollectTaskDAO;
 
     @Autowired
+    @Qualifier(value = "metricsDiskIODAO")
     private MetricsDiskIODAO metricsDiskIODAO;
 
     @Autowired

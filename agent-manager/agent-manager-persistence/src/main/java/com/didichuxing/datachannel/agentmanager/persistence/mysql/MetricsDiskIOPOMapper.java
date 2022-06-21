@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-@Repository(value = "metricsDiskIODAO")
+@Repository(value = "mySQLMetricsDiskIODAO")
 public interface MetricsDiskIOPOMapper extends MetricsDiskIODAO {
 
 }
