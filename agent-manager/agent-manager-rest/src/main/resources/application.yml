@@ -72,12 +72,6 @@ agent:
   metrics:
     storage:
       type: rds
-    datasource:
-      elasticsearch:
-        ip: 1
-        port: 1
-        agentMetricsIndexName: 1
-        agentErrorLogIndexName: 1
   http:
       request:
         port: 20230

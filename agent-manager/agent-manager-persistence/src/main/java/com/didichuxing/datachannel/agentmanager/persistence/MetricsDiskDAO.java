@@ -9,11 +9,12 @@ import java.util.Map;
 
 public interface MetricsDiskDAO {
 
-    int insert(MetricsDiskPO record);
-
+    /**
+     * 插入给定指标数据
+     * @param record 待插入指标数据
+     * @return 非 0 表示插入成功
+     */
     int insertSelective(MetricsDiskPO record);
-
-    MetricsDiskPO selectByPrimaryKey(Long id);
 
     /**
      * @param params

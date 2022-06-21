@@ -9,10 +9,18 @@ import java.util.Map;
 
 public interface MetricsAgentDAO {
 
-    int insert(MetricsAgentPO record);
-
+    /**
+     * 插入给定指标数据
+     * @param record 待插入指标数据
+     * @return 非 0 表示插入成功
+     */
     int insertSelective(MetricsAgentPO record);
 
+    /**
+     * 根据 id 获取对应指标记录
+     * @param id 指标 id
+     * @return 返回根据 id 获取到的对应指标记录
+     */
     MetricsAgentPO selectByPrimaryKey(Long id);
 
     /**

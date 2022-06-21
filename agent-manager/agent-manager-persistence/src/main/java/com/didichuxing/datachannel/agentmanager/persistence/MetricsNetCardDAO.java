@@ -9,11 +9,12 @@ import java.util.Map;
 
 public interface MetricsNetCardDAO {
 
-    int insert(MetricsNetCardPO record);
-
+    /**
+     * 插入给定指标数据
+     * @param record 待插入指标数据
+     * @return 非 0 表示插入成功
+     */
     int insertSelective(MetricsNetCardPO record);
-
-    MetricsNetCardPO selectByPrimaryKey(Long id);
 
     /**
      * @param params

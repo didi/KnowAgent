@@ -9,9 +9,12 @@ import java.util.Map;
 
 public interface MetricsProcessDAO {
 
+    /**
+     * 插入给定指标数据
+     * @param record 待插入指标数据
+     * @return 非 0 表示插入成功
+     */
     int insertSelective(MetricsProcessPO record);
-
-    MetricsProcessPO selectByPrimaryKey(Long id);
 
     /**
      * @param params
