@@ -1,17 +1,17 @@
-# Agent Manager
+# 1 Agent Manager
 
-## 1. 环境准备
+## 1.1 环境准备
 
 - java 8+ （运行环境）
 - MySQL 5.7 （数据存储）
 - Maven 3.5+ （后端打包依赖）
 - node 14.15.1+ （用于打包依赖，其中npm版本6.14.8）
 
-## 2. 源代码编译打包
+## 1.2 源代码编译打包
 
 ​	下载好源代码后，进入`agent-manager`目录，执行`sh build.sh`命令，得到output目录。
 
-## 3. MySQL-DB初始化
+## 1.3 MySQL-DB初始化
 
 ​	进入`agent-manager`目录，执行[create_mysql_table.sql](../agent-manager/create_mysql_table.sql)中的SQL命令，从而创建所需的MySQL库及表，默认创建的库名是`agent_manager`。
 
@@ -20,7 +20,7 @@
 mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 ```
 
-## 4. 配置文件修改
+## 1.4 配置文件修改
 
 ```
 # application.yml 是配置文件，最简单的是仅修改MySQL相关的配置即可启动
@@ -32,33 +32,33 @@ auv-job.username：同配置项 spring.datasource.druid.username
 auv-job.password：同配置项 spring.datasource.druid.password
 ```
 
-## 5. 启动与停止
+## 1.5 启动与停止
 
 ​	在`output`目录下，执行`sh start.sh`即可启动 Agent-Manager 进程，执行`sh stop.sh`即可停止 Agent-Manager 进程。
 
-## 6. 使用
+## 1.6 使用
 
 ​	本地启动的话，访问`http://localhost:9010`。更多参考：[《Know Agent用户使用手册》](Know Agent用户使用手册.md)
 
-# Agent
+# 2 Agent
 
-## 1. 环境准备
+## 2.1 环境准备
 
 - java 8+ （运行环境）
 - Maven 3.5+ （后端打包依赖）
 
-## 2. 主机名设置
+## 2.2 主机名设置
 
 ​	在安装 Agent 前，请设置好需要安装 Agent 的主机对应主机名，并确保该主机名是唯一的。
 
-## 3. 源代码编译打包
+## 2.3 源代码编译打包
 
 1. 在编译打包 Agent 项目前，请先对`System-Metrics`项目与`Agent-Manager`项目进行编译打包。
    - `System-Metrics`项目编译打包方法：进入`system-metrcis`目录，执行`mvn clean install`命令。
    - `Agent-Manager`项目编译打包方法见上文`Agent-Manager`部分。
 2. 进入`agent`目录，执行`sh build.sh`命令，得到output目录。
 
-## 4. 配置文件修改
+## 2.4 配置文件修改
 
 ```
 # conf/settings.properties 是配置文件，最简单的是仅修改Agent-Manager平台的相关配置即可启动
@@ -66,11 +66,11 @@ config.ip=运行Agent-Manager服务的机器ip
 config.port=Agent-Manager服务配置的http端口（默认：9010）
 ```
 
-## 5. 启动与停止
+## 2.5 启动与停止
 
 ​	在`output`目录下，执行`sh start.sh`即可启动 Agent 进程，执行`sh stop.sh`即可停止 Agent 进程。
 
-## 6. 更高性能
+## 2.6 更高性能
 
 ​	采用 jdk11+ 将会大幅提升采集性能（感兴趣可移步[《向量化计算加速Agent采集》](向量化计算加速Agent采集.md)），具体方式如下：
 
