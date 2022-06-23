@@ -213,7 +213,7 @@
   - 去 Agent-Manager 依赖：Agent 配置变更通过配置文件变动感知，以取代向 Agent-Manager 发起请求获取配置。Agent 提供定时获取配置并渲染成 Agent 配置文件对应的插件接口，并提供默认的基于 Agent-Manager 配置定时获取、渲染配置插件。
 
 - Pipeline 具备 Aggregator 能力，更好的适配各种类型的数据采集场景（包括但不限于 IOT 数据）：
-  - Pipeline 模式：单个或多个 Source -> Processor Chain -> Aggregator -> Processor Chain -> 单个或多个 Sink。
+  - Pipeline 模式：单个或多个 Source -> Processor Chain（可选） -> Aggregator（可选） -> Processor Chain（可选） -> 单个或多个 Sink。
 
 - 插件化设计，具备高可扩展性，为数据采集多样化、生态化奠定基础：
   - 插件类型：
