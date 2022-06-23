@@ -212,11 +212,8 @@
 
   - 去 Agent-Manager 依赖：Agent 配置变更通过配置文件变动感知，以取代向 Agent-Manager 发起请求获取配置。Agent 提供定时获取配置并渲染成 Agent 配置文件对应的插件接口，并提供默认的基于 Agent-Manager 配置定时获取、渲染配置插件。
 
-- 提供如下两种 Pipeline 类型采集模式，更好适配市面上各种类型的数据源数据采集（包括但不限于 IOT 数据）：
-  - 文件/目录类采集模式：新增目录类文件采集，支持子目录递归采集。
-  - 普通采集模式：
-    - Pipeline 具备 Aggregator 能力。
-    - Pipeline 模式：单个或多个 Source -> Processor Chain -> Aggregator -> Processor Chain -> 单个或多个 Sink。
+- Pipeline 具备 Aggregator 能力，更好的适配各种类型的数据采集场景（包括但不限于 IOT 数据）：
+  - Pipeline 模式：单个或多个 Source -> Processor Chain -> Aggregator -> Processor Chain -> 单个或多个 Sink。
 
 - 插件化设计，具备高可扩展性，为数据采集多样化、生态化奠定基础：
   - 插件类型：
@@ -229,7 +226,7 @@
     - Metrics System Plugin：指标系统插件。
     - Http Service Plugin：Http 服务插件。
 
-  - 提供企业级默认插件：
+  - 提供常用企业级插件：
 
     - ConfigLoadCrontab Plugin：
       - Agent Manage rConfig Loader
@@ -238,7 +235,7 @@
 
       - TailSource：
         - Master File（参考：Know Agent 1.0 采集）
-        - Directory
+        - Directory（支持子目录递归采集）
 
       - Http Source
       - JDBC Source
@@ -293,11 +290,11 @@
 - 去 Kafka 依赖，最小依赖仅 MySQL：
   - Agent 指标获取通过轮询Agent对应指标服务接口方式实现。
 
-- 具备管控各类 Agent、采集任务的泛化能力：
-  - 核心 E-R 元数据存储弱 Schema 化，仅存储必要信息（如：id、类型）与关系数据，具体业务字段 JSON 化，通过 Agent Manager 接口、版本进行核心流程控制。
+- 具备强大的泛化管控能力。如：管控不同类型的 Agent、采集任务、接收端等：
+  - 核心 E-R 元数据存储弱 Schema 化，结构化存储仅保留必要信息（如：id、类型）与关系数据，业务字段 JSON 化，具体业务操作插件化实现。 Agent-Manager 根据类型、版本信息装载、调用不同的插件实现，确保核心流程的稳定。
   - 插件化设计：
-    - 各管理模块中的具体业务操作全部插件化方式实现
-    - 提供企业级默认插件：
+    - 各具体业务操作全部以插件化方式实现。
+    - 提供常用企业级插件：
       - 采集任务
         - MasterFile2Kafka 类型：
           - 采集任务管理插件
