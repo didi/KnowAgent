@@ -201,24 +201,173 @@
 
 ## **展望**
 
-未来我们会在以下几个方面进行持续改进：
+​	未来将推出 Know Agent 2.0，2.0 版本相比当前版本，将在如下方面进行改进：
 
 **Agent**
 
-- 支持完善的目录采集
-- 更好的可扩展性：插件化的 Source、Sink、Interceptor Chain、序列化协议，为数据采集多样化、生态化奠定基础
-- 具备 Aggregator 能力，并插件化，便于 IOT 数据采集
-- 更高的采集性能与更低的资源消耗
-- 支持更多平台
-- 支持云原生数据采集
+- 去依赖，确保 Agent 内核独立、稳定：
+  - 去 Kafka 依赖：
+    - 指标数据流：Agent 提供基于 Http 协议的指标查询 Restful 接口，Agent-Manager 通过轮询该服务接口进行指标采集以取代目前指标上报 Kafka 方式。
+    - 错误日志数据流：Agent 提供基于 Http 协议的其自身日志文件读取/下载 Restful 接口，Agent-Manager 通过该服务接口获取 Agent 相关错误日志数据。
+
+  - 去 Agent-Manager 依赖：Agent 配置变更通过配置文件变动感知，以取代向 Agent-Manager 发起请求获取配置。Agent 提供定时获取配置并渲染成 Agent 配置文件对应的插件接口，并提供默认的基于 Agent-Manager 配置定时获取、渲染配置插件。
+
+- 提供如下两种 Pipeline 类型采集模式，更好适配市面上各种类型的数据源数据采集（包括但不限于 IOT 数据）：
+  - 文件/目录类采集模式：新增目录类文件采集，支持子目录递归采集。
+  - 普通采集模式：
+    - Pipeline 具备 Aggregator 能力。
+    - Pipeline 模式：单个或多个 Source -> Processor Chain -> Aggregator -> Processor Chain -> 单个或多个 Sink。
+
+- 插件化设计，具备高可扩展性，为数据采集多样化、生态化奠定基础：
+  - 插件类型：
+    - ConfigLoadCrontab Plugin：定时获取配置并渲染成 Agent 配置文件的插件。
+    - Source Plugin：数据源读取插件。
+    - Sink Plugin：数据发送插件。
+    - Channel Plugin：数据临时存放的队列插件。
+    - Processor Chain Plugin：数据处理算子（集）插件。
+    - Data Serialization Protocol Plugin：数据序列化协议插件。
+    - Metrics System Plugin：指标系统插件。
+    - Http Service Plugin：Http 服务插件。
+
+  - 提供企业级默认插件：
+
+    - ConfigLoadCrontab Plugin：
+      - Agent Manage rConfig Loader
+
+    - Source Plugin：
+
+      - TailSource：
+        - Master File（参考：Know Agent 1.0 采集）
+        - Directory
+
+      - Http Source
+      - JDBC Source
+
+    - Sink Plugin：
+      - Kafka Sink
+      - Elasticsearch Sink
+
+    - Channel Plugin：
+      - Memory Channel
+
+    - Processor Chain Plugin：
+      -  Data Filter Processor
+      - Field Extract Processor：
+        - JSON
+        - XML
+        - Regular Expression
+
+    - Data Serialization Protocol Plugin：
+      - JSON
+      - ProtocolBuffer
+
+    - Metrics System Plugin：
+      - System Metrics
+      - Process Metrics
+      - Agent Business Metrics
+      - Collect Task Metrics
+
+    - Http Service Plugin：
+      - Metrics Query Service
+      - File Content Read Service
+      - File Download Service
+      - Agent Log File Download Service
+      - File System Browse Service
+      - File Name Match Rule Preview Service
+      - File Name Suffix Match Rule Preview Service
+
+  - 插件支持多语言开发
+    - C/C++
+    - Lua
+    - Go
+
+- 跨平台支持：
+  - Linux
+  - AIX
+  - Windows
+
+- 高性能：基于 C++ 开发，降低内存、CPU 消耗，提升采集性能。
 
 **Agent-Manager**
 
-- 不同类型采集任务管理、健康度巡检、故障诊断能力插件化
-- 不同类型的接收端管理能力插件化
-- 默认提供目录型采集任务的健康度巡检、故障诊断插件
-- 更好的采集任务配置体验
-- 更好的可视化体验
+- 去 Kafka 依赖，最小依赖仅 MySQL：
+  - Agent 指标获取通过轮询Agent对应指标服务接口方式实现。
+
+- 具备管控各类 Agent、采集任务的泛化能力：
+  - 核心 E-R 元数据存储弱 Schema 化，仅存储必要信息（如：id、类型）与关系数据，具体业务字段 JSON 化，通过 Agent Manager 接口、版本进行核心流程控制。
+  - 插件化设计：
+    - 各管理模块中的具体业务操作全部插件化方式实现
+    - 提供企业级默认插件：
+      - 采集任务
+        - MasterFile2Kafka 类型：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+        - Directory2Kafka 类型：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+        - JDBC2Kafka 类型：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+        - Http2Kafka 类型采：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+        - MasterFile2Elasticsearch 类型：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+        - Directory2Elasticsearch 类型：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+        - JDBC2Elasticsearch 类型：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+        - Http2Elasticsearch 类型：
+          - 采集任务管理插件
+          - 采集任务指标持久化、可视化查询插件
+          - 采集任务健康度巡检插件
+          - 采集任务故障诊断插件
+
+      - Agent
+        - Agent 2.0 管理插件
+        - Agent 2.0 指标持久化、可视化查询插件
+        - Agent 2.0 健康度巡检插件
+        - Agent 2.0 故障诊断插件
+
+      - 接收端
+        - Kafka 类型接收端管理插件
+        - Elasticsearch 类型接收端管理插件
+
+      - Agent/采集配置下发：
+        - 配置渲染插件：
+          - Agent 2.0 配置渲染插件
+          - MasterFile2Kafka 类型采集任务配置渲染插件
+          - Directory2Kafka 类型采集任务配置渲染插件
+          - JDBC2Kafka 类型采集任务配置渲染插件
+          - Http2Kafka 类型采集任务配置渲染插件
+          - MasterFile2Elasticsearch 类型采集任务配置渲染插件
+          - Directory2Elasticsearch 类型采集任务配置渲染插件
+          - JDBC2Elasticsearch 类型采集任务配置渲染插件
+          - Http2Elasticsearch 类型采集任务配置渲染插件
+
+        - 配置下发时的主机过滤插件：
+          - 基于主机全量属性的 SQL 语法过滤插件
+
+- 更好的采集任务、Agent 故障修复体验：
+  - 采集任务、Agent 故障修复向导化
+
 
 **持续回馈开源社区**
 
