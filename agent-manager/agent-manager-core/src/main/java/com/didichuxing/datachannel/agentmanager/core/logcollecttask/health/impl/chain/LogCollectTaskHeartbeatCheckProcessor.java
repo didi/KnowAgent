@@ -51,12 +51,25 @@ public class LogCollectTaskHeartbeatCheckProcessor extends BaseProcessor {
                  */
                 AgentDO agentDO = getRelaAgent(context);
                 if(null != agentDO) {
-                    setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.AGENT_BREAKDOWN);
+                    setLogCollectTaskHealthInfo(
+                            context,
+                            LogCollectTaskHealthInspectionResultEnum.AGENT_BREAKDOWN,
+                            context.getHostDO().getHostName(),
+                            agentDO.getHostName()
+                    );
                 } else {
-                    setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.HOST_NOT_BIND_AGENT);
+                    setLogCollectTaskHealthInfo(
+                            context,
+                            LogCollectTaskHealthInspectionResultEnum.HOST_NOT_BIND_AGENT,
+                            context.getHostDO().getHostName()
+                    );
                 }
             } else {//不存活
-                setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.HOST_UNABLE_CONNECT);
+                setLogCollectTaskHealthInfo(
+                        context,
+                        LogCollectTaskHealthInspectionResultEnum.HOST_UNABLE_CONNECT,
+                        context.getHostDO().getHostName()
+                );
             }
         }
     }

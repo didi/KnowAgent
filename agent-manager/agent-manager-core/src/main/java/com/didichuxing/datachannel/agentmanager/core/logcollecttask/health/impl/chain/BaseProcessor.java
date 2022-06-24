@@ -41,14 +41,15 @@ public abstract class BaseProcessor implements Processor {
      */
     protected abstract void process(LogCollectTaskHealthCheckContext context);
 
-    protected void setLogCollectTaskHealthInfo(LogCollectTaskHealthCheckContext context, LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum) {
+    protected void setLogCollectTaskHealthInfo(
+            LogCollectTaskHealthCheckContext context,
+            LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum,
+            String... logCollectTaskHealthInspectionDescriptionParameters
+    ) {
         context.setLogCollectTaskHealthLevelEnum(logCollectTaskHealthInspectionResultEnum.getLogCollectTaskHealthLevelEnum());
         String logCollectTaskHealthDescription = String.format(
-                "%s:LogCollectTaskId={%d}, FileLogCollectPath={%s}, HostName={%s}",
                 logCollectTaskHealthInspectionResultEnum.getDescription(),
-                context.getLogCollectTaskDO().getId(),
-                context.getFileLogCollectPathDO().getPath(),
-                context.getHostDO().getHostName()
+                logCollectTaskHealthInspectionDescriptionParameters
         );
         context.setLogCollectTaskHealthDescription(logCollectTaskHealthDescription);
         context.setLogCollectTaskHealthInspectionResultEnum(logCollectTaskHealthInspectionResultEnum);

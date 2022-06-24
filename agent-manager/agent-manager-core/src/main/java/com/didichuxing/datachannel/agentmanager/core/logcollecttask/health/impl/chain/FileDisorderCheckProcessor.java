@@ -41,7 +41,12 @@ public class FileDisorderCheckProcessor extends BaseProcessor {
         );
         if (fileDisorder) {
             // 存在乱序
-            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER);
+            setLogCollectTaskHealthInfo(
+                    context,
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_DISORDER,
+                    context.getHostDO().getHostName(),
+                    context.getFileLogCollectPathDO().getPath()
+            );
         }
     }
 

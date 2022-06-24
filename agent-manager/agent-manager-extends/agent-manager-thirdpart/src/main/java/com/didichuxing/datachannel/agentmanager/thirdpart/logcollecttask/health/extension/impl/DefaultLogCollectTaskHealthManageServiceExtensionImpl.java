@@ -36,7 +36,7 @@ public class DefaultLogCollectTaskHealthManageServiceExtensionImpl implements Lo
         logCollectorTaskHealthPO.setLogCollectTaskHealthDescription(StringUtils.EMPTY);
         logCollectorTaskHealthPO.setLogCollectTaskId(logCollectTaskDO.getId());
         logCollectorTaskHealthPO.setLogCollectTaskHealthLevel(LogCollectTaskHealthLevelEnum.GREEN.getCode());
-        logCollectorTaskHealthPO.setLogCollectTaskHealthInspectionResultType(LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED.HEALTHY.getCode());
+        logCollectorTaskHealthPO.setLogCollectTaskHealthInspectionResultType(LogCollectTaskHealthInspectionResultEnum.HEALTHY.getCode());
         logCollectorTaskHealthPO.setOperator(CommonConstant.getOperator(operator));
         return logCollectorTaskHealthPO;
     }

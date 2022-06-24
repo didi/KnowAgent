@@ -329,10 +329,8 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
             if (topicLimitExists) {//存在下游 topic 端被限流
                 logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getLogCollectTaskHealthLevelEnum();
                 logCollectTaskHealthDescription = String.format(
-                        "%s:LogCollectTaskId={%d}, kafkaClusterId={%d}, sendTopic={%s}",
                         LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS.getDescription(),
-                        logCollectTaskDO.getId(),
-                        logCollectTaskDO.getKafkaClusterId(),
+                        logCollectTaskDO.getLogCollectTaskName(),
                         logCollectTaskDO.getSendTopic()
                 );
                 logCollectTaskHealthInspectionResultEnum = LogCollectTaskHealthInspectionResultEnum.TOPIC_LIMIT_EXISTS;
@@ -344,9 +342,8 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
             if (notRelateAnyHost) {//logcollecttask 未关联主机
                 logCollectTaskHealthLevelEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getLogCollectTaskHealthLevelEnum();
                 logCollectTaskHealthDescription = String.format(
-                        "%s:LogCollectTaskId={%d}",
                         LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST.getDescription(),
-                        logCollectTaskDO.getId()
+                        logCollectTaskDO.getLogCollectTaskName()
                 );
                 logCollectTaskHealthInspectionResultEnum = LogCollectTaskHealthInspectionResultEnum.NOT_RELATE_ANY_HOST;
             }

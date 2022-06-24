@@ -40,7 +40,12 @@ public class TooLargeTruncateExistsCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (tooLargeTruncateExists) {// 存在异常截断
-            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS);
+            setLogCollectTaskHealthInfo(
+                    context,
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SIZE_OVERRUN_TRUNCATE_EXISTS,
+                    context.getHostDO().getHostName(),
+                    context.getFileLogCollectPathDO().getPath()
+            );
         }
     }
 
