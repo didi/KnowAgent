@@ -279,7 +279,7 @@
       - JSON
       - ProtocolBuffer
 
-    - Metrics System Plugin：
+    - Metrics Plugin：
       - System Metrics
       - Process Metrics
       - Agent Business Metrics
