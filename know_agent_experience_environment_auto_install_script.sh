@@ -86,7 +86,7 @@ function Start_agent(){
 	wget -O "/tmp/agent_${agent_version}.tar.gz" https://s3-gzpu.didistatic.com/knowagent/agent_""${agent_version}"".tar.gz
 	tar -zxf /tmp/agent_${agent_version}.tar.gz -C $Dir/
 	cd $Dir/agent_"${agent_version}"
-	sh control start
+	sh start.sh
 }
 
 
