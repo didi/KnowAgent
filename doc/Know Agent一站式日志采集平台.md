@@ -221,10 +221,12 @@
     - Source Plugin：数据源读取插件。
     - Sink Plugin：数据发送插件。
     - Channel Plugin：数据临时存放的队列插件。
+    - Limiter Plugin：限流插件。
     - Processor Chain Plugin：数据处理算子（集）插件。
     - Data Serialization Protocol Plugin：数据序列化协议插件。
     - Metrics System Plugin：指标系统插件。
     - Http Service Plugin：Http 服务插件。
+    - Cleaner Plugin：清理插件。
 
   - 提供常用企业级插件：
 
@@ -234,8 +236,23 @@
     - Source Plugin：
 
       - TailSource：
-        - Master File（参考：Know Agent 1.0 采集）
-        - Directory（支持子目录递归采集）
+        - 采集类型，新增 Directory 类型采集，共支持两种采集类型：
+          - Master File（参考：Know Agent 1.0 采集）
+          - Directory
+            - 支持子目录递归采集。
+            - 目录内的多文件组采集支持分时调度，非一个文件组对应一个线程采集。确保即使在目录内存在巨量文件组的场景下，仍具备可控的线程资源消耗。
+
+        - 采集配置
+          - 新增行内切片支持。
+          - 切片规则新增正则切片方式，共支持两种类型的切片规则：
+            - 日期/时间模式串切片（Know Agent 1.0 方式）。
+            - 正则切片。
+
+          - 文件过滤支持黑、白名单自由组合
+          - 新增采集起始时间设置，三种类型
+            - Earliest
+            - Lastest
+            - 自定义时间
 
       - Http Source
       - JDBC Source
@@ -246,6 +263,10 @@
 
     - Channel Plugin：
       - Memory Channel
+
+    - Limiter Plugin
+      - Bytes Limiter
+      - CPU Usage Limiter
 
     - Processor Chain Plugin：
       -  Data Filter Processor
@@ -272,6 +293,9 @@
       - File System Browse Service
       - File Name Match Rule Preview Service
       - File Name Suffix Match Rule Preview Service
+
+    - Cleaner Plugin
+      - Log File Cleaner
 
   - 插件支持多语言开发
     - C/C++
