@@ -1,17 +1,17 @@
 
-import { IAgentParam } from '../api';
-import { EChartOption } from 'echarts';
+// import { IAgentParam } from '../api';
+// import { EChartOption } from 'echarts';
 
-export interface IAgentHostParams extends IAgentParam {
-  agentHealthLevelList: number[]; // 健康度 0:红 1：黄 2：绿色
-  agentVersionIdList: any[]; // Agent版本id
-  containerList: any[]; // 主机类型 0：主机 1：容器
-  hostCreateTimeEnd: number; // 主机创建时间结束检索时间
-  hostCreateTimeStart: number; // 主机创建时间起始检索时间
-  serviceIdList: number[]; // 服务Id
-  hostName: string; // 主机名
-  ip: string; // ip
-}
+// export interface IAgentHostParams extends IAgentParam {
+//   agentHealthLevelList: number[]; // 健康度 0:红 1：黄 2：绿色
+//   agentVersionIdList: any[]; // Agent版本id
+//   containerList: any[]; // 主机类型 0：主机 1：容器
+//   hostCreateTimeEnd: number; // 主机创建时间结束检索时间
+//   hostCreateTimeStart: number; // 主机创建时间起始检索时间
+//   serviceIdList: number[]; // 服务Id
+//   hostName: string; // 主机名
+//   ip: string; // ip
+// }
 
 export interface IAgentQueryFormColumns {
   agentHealthLevelList: number[];
@@ -144,12 +144,12 @@ export interface IMetricPoints { // 每条折线的数据
   value: number; // Agent指标的某个数据点对应值
 }
 
-export interface IMetricOptions {
-  title: string;
-  selfHide: boolean;
-  metricOptions: EChartOption;
-  metricPanelGroupName: string;
-}
+// export interface IMetricOptions {
+//   title: string;
+//   selfHide: boolean;
+//   metricOptions: EChartOption;
+//   metricPanelGroupName: string;
+// }
 
 export interface IAgentPieParams {
   agentId: string | number,

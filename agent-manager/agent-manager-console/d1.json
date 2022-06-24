@@ -1,17 +1,20 @@
 {
-  "preset": "",
-  "generator": "@didi/d1-generator-opensource",
-  "version": "0.0.1",
   "appConfig": {
+    "appName": "Logi-AM",
     "ident": "agent",
     "port": "8001",
-    "appName": "agent-fe",
+    "webpackCustom": "",
     "entry": [
       {
-        "src": "",
-        "title": "",
-        "name": "agent"
+        "title": "agent首页",
+        "name": "agent",
+        "src": "./src/index.tsx",
+        "template": "./src/index.html"
       }
     ]
-  }
+  },
+  "preset": "@didi/d1-preset-opensource",
+  "builderType": "@didi/d1-preset-opensource",
+  "localBuilderVersion": true,
+  "mockDir": "../../"
 }

@@ -1,0 +1,467 @@
+{
+  "grid": "{gutter:10,grid:24,num:1}",
+  "dataInfo": {},
+  "name": "0",
+  "path": "",
+  "title": "0",
+  "key": "0",
+  "componentName": "contentComponent",
+  "children": [
+    {
+      "grid": { "gutter": 10, "grid": 24, "num": 1 },
+      "dataInfo": {},
+      "name": "0-1",
+      "path": "",
+      "title": "0-1",
+      "key": "0-1",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": { "gutter": 10, "grid": 24 },
+          "dataInfo": {
+            "config": [
+              { "label": "主机IP", "key": "hostIp", "span": 1 },
+              { "label": "主机类型", "key": "container", "span": 1 },
+              { "label": "宿主机名", "key": "parentHostName", "span": 1 },
+              { "label": "新增时间", "key": "hostCreateTime", "span": 1 }
+            ],
+            "xl": 8,
+            "xxl": 6,
+            "containerLayout": {
+              "gutter": 10,
+              "awd": true,
+              "xl": [8, 8, 8, 8],
+              "xxl": [6, 6, 6, 6]
+            },
+            "dataSource": {
+              "name": "myj-test-deployment",
+              "tag": [
+                "app:myj-test-deployment",
+                "app:myj-test-deployment",
+                "test:deployment",
+                "app:myj-test-deployment"
+              ],
+              "create": "root",
+              "cluster": "cluster203",
+              "annotations": [
+                "boos",
+                "myj-test-deployment",
+                "deployment",
+                "app:myj-test-deployment"
+              ],
+              "updateStrategy": "滚动更新",
+              "namespace": "myj-test-deployment",
+              "description": "测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用",
+              "selector": "app:myj-test-deployment"
+            },
+            "column": { "xxl": 2, "xl": 2 },
+            "title": "基本信息",
+            "dataSourceUrlConfig": { "api": "" },
+            "labelWidth": "150px",
+            "needColon": true
+          },
+          "name": "0-1-0",
+          "path": "",
+          "title": "Prodescription",
+          "key": "0-1-0",
+          "componentName": "Prodescription",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": { "padding": "24px 24px 0" },
+          "checked": false
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent详情",
+      "pageName": "agent_detail",
+      "tplName": "",
+      "pageKey": "agent_detail",
+      "checked": false
+    },
+    {
+      "grid": { "gutter": 10, "grid": 24, "num": 1 },
+      "dataInfo": {},
+      "name": "0-2",
+      "path": "",
+      "title": "0-2",
+      "key": "0-2",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": { "gutter": 10, "grid": 24 },
+          "dataInfo": {
+            "config": [
+              { "label": "Agent版本号", "key": "agentVersion", "span": 1 },
+              { "label": "版本描述", "key": "versionDescription", "span": 1 },
+              {
+                "title": "",
+                "dataIndex": "",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "span": 1,
+                "label": " CPU核数上限",
+                "key": " CPU"
+              }
+            ],
+            "xl": 8,
+            "xxl": 6,
+            "containerLayout": {
+              "gutter": 10,
+              "awd": true,
+              "xl": [8, 8, 8],
+              "xxl": [6, 6, 6]
+            },
+            "dataSource": {
+              "name": "myj-test-deployment",
+              "tag": [
+                "app:myj-test-deployment",
+                "app:myj-test-deployment",
+                "test:deployment",
+                "app:myj-test-deployment"
+              ],
+              "create": "root",
+              "cluster": "cluster203",
+              "annotations": [
+                "boos",
+                "myj-test-deployment",
+                "deployment",
+                "app:myj-test-deployment"
+              ],
+              "updateStrategy": "滚动更新",
+              "namespace": "myj-test-deployment",
+              "description": "测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用",
+              "selector": "app:myj-test-deployment"
+            },
+            "column": { "xxl": 2, "xl": 2 },
+            "title": "基础配置信息",
+            "labelWidth": "150px"
+          },
+          "name": "0-2-0",
+          "path": "",
+          "title": "Prodescription",
+          "key": "0-2-0",
+          "componentName": "Prodescription",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": { "padding": "24px 24px 0" },
+          "checked": false
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent详情1",
+      "pageName": "agent_detail_1",
+      "tplName": "agent_detail",
+      "pageKey": "agent_detail_1",
+      "checked": false
+    },
+    {
+      "grid": { "gutter": 10, "grid": 24, "num": 1 },
+      "dataInfo": {},
+      "name": "0-3",
+      "path": "",
+      "title": "0-3",
+      "key": "0-3",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": { "gutter": 10, "grid": 24 },
+          "dataInfo": {
+            "config": [
+              { "label": "指标流接收机群", "key": "name", "span": 1 },
+              { "label": "错误日志接收集群", "key": "description", "span": 1 },
+              { "label": "指标流接收topic", "key": "create", "span": 1 },
+              { "label": "错误日志接收topic", "key": "cluster", "span": 1 },
+              { "label": "生产端属性", "key": "annotations", "span": 1 },
+              { "label": "生产端属性", "key": "updateStrategy", "span": 1 },
+              {
+                "title": "",
+                "dataIndex": "",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "span": 1,
+                "label": "配置信息",
+                "key": "configuration"
+              }
+            ],
+            "xl": 8,
+            "xxl": 6,
+            "containerLayout": {
+              "gutter": 10,
+              "awd": true,
+              "xl": [8, 8, 8, 8, 8, 8, 8],
+              "xxl": [6, 6, 6, 6, 6, 6, 6]
+            },
+            "dataSource": {
+              "name": "myj-test-deployment",
+              "tag": [
+                "app:myj-test-deployment",
+                "app:myj-test-deployment",
+                "test:deployment",
+                "app:myj-test-deployment"
+              ],
+              "create": "root",
+              "cluster": "cluster203",
+              "annotations": [
+                "boos",
+                "myj-test-deployment",
+                "deployment",
+                "app:myj-test-deployment"
+              ],
+              "updateStrategy": "滚动更新",
+              "namespace": "myj-test-deployment",
+              "description": "测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用测试Nginx应用",
+              "selector": "app:myj-test-deployment"
+            },
+            "title": "高级配置信息",
+            "column": { "xxl": 2, "xl": 2 },
+            "labelWidth": "150px"
+          },
+          "name": "0-3-0",
+          "path": "",
+          "title": "Prodescription",
+          "key": "0-3-0",
+          "componentName": "Prodescription",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": { "padding": "24px 24px 0" },
+          "checked": false
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent详情2",
+      "pageName": "agent_detail_2",
+      "tplName": "agent_detail_1",
+      "pageKey": "agent_detail_2",
+      "checked": false
+    },
+    {
+      "grid": { "gutter": 10, "grid": 24, "num": 1 },
+      "dataInfo": {},
+      "name": "0-4",
+      "path": "",
+      "title": "0-4",
+      "key": "0-4",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": { "gutter": 10, "grid": 24 },
+          "dataInfo": {
+            "bordered": false,
+            "loading": false,
+            "columns": [
+              {
+                "title": "采集任务ID",
+                "dataIndex": "Thu Jan 20 2022 19:37:46 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "采集路径ID",
+                "dataIndex": "Thu Jan2 20 2022 19:37:46 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "主文件名",
+                "dataIndex": "Thu Jan 20 2022 19:38:47 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "主机名",
+                "dataIndex": "Thu Jan 20 2022 19:38:57 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "当前采集流量 & 条数/30s",
+                "dataIndex": "Thu Jan 20 2022 19:39:11 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "当前最大延迟",
+                "dataIndex": "Thu Jan 20 2022 19:39:25 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "当前采集时间",
+                "dataIndex": "Thu Jan 20 2022 19:39:47 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "文件最近修改时间",
+                "dataIndex": "Thu Jan 20 2022 19:40:05 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "限流时长/30s",
+                "dataIndex": "Thu Jan 20 2022 19:40:16 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "异常截断条数/30s",
+                "dataIndex": "Thu Jan 20 2022 19:40:25 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "文件是否存在",
+                "dataIndex": "Thu Jan 20 2022 19:40:38 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "文件是否存在乱序",
+                "dataIndex": "Thu Jan 20 2022 19:40:49 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "文件是否存在日志切片错误",
+                "dataIndex": "Thu Jan 20 2022 19:41:00 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "文件过滤量/30s",
+                "dataIndex": "Thu Jan 20 2022 19:41:11 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "近一次心跳时间",
+                "dataIndex": "Thu Jan 20 2022 19:41:34 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "采集状态",
+                "dataIndex": "Thu Jan 20 2022 19:41:59 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "采集文件信息",
+                "dataIndex": "Thu Jan 20 2022 19:42:10 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "近一次指标详情",
+                "dataIndex": "Thu Jan 20 2022 19:42:20 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              }
+            ],
+            "queryFormArray": [],
+            "dataSourceUrlConfig": {
+              "api": "",
+              "methods": "request",
+              "params": "",
+              "resCallback": "(data)=>{return []}"
+            },
+            "isCustomPg": true,
+            "paginationProps": {
+              "show": true,
+              "current": 1,
+              "pageSize": 10,
+              "total": 100
+            },
+            "size": "default",
+            "expandable": false,
+            "tableTitle": "高级表格",
+            "tooltip": "高级表格 tooltip",
+            "showHeader": true,
+            "footer": true,
+            "rowSelection": {},
+            "scroll": { "x": "max-content" },
+            "hasData": true,
+            "toolBarRender": true,
+            "tableFunction": {
+              "reload": false,
+              "search": false,
+              "export": false,
+              "import": false,
+              "custom": false
+            },
+            "search": {
+              "showQueryForm": false,
+              "searchText": "查询",
+              "resetText": "重置",
+              "showOptionBtns": false,
+              "colConfig": 6
+            },
+            "options": {
+              "show": true,
+              "density": true,
+              "fullScreen": true,
+              "setting": true
+            },
+            "tableHeaderTitle": true,
+            "tableHeaderCustomColumns": true
+          },
+          "name": "0-4-0",
+          "path": "",
+          "title": "ProTableProject",
+          "key": "0-4-0",
+          "componentName": "ProTableProject",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": { "padding": "24px" },
+          "checked": false
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent详情3",
+      "pageName": "agent_detail_3",
+      "tplName": "agent_detail_2",
+      "pageKey": "agent_detail_3",
+      "checked": false
+    }
+  ],
+  "lelf": 0,
+  "version": "",
+  "nodeTitle": "",
+  "nodeStyle": {},
+  "containerStyle": {},
+  "chilrenPages": [],
+  "pageDesc": "Agent详情",
+  "pageName": "agent_detail",
+  "tplName": "agent_detail_3",
+  "pageKey": "agent_detail"
+}

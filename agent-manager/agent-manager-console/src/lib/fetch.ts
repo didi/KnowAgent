@@ -1,6 +1,6 @@
-import { notification } from 'antd';
-import { csrfTokenMethod } from '../api/api';
-import store from '../store';
+import { notification } from '@didi/dcloud-design';
+// import { csrfTokenMethod } from '../api/api';
+// import store from '../store';
 
 const window = self.window;
 
@@ -21,7 +21,7 @@ const checkStatus = (res: Response) => {
     return null;
   }
 
-  if ((res.status == 500)) {
+  if (res.status == 500) {
     notification.error({
       message: '错误',
       duration: 3,
@@ -39,7 +39,7 @@ const filter = (init: IInit) => (res: IRes) => {
   }
 
   if (res.code !== 0 && res.code !== 200) {
-    if (res.code === 21001) return
+    if (res.code === 21001) return;
     if (!init.errorNoTips) {
       notification.error({
         message: '错误',
@@ -74,15 +74,15 @@ export default function fetch(url: string, init?: IInit) {
     'Content-Type': 'application/json',
   });
 
-  if (csrfTokenMethod.includes(init.method || 'GET')) {
-    init.headers = Object.assign({}, init.headers || {
-      'Content-Type': 'application/json',
-    });
-  }
+  // if (csrfTokenMethod.includes(init.method || 'GET')) {
+  //   init.headers = Object.assign({}, init.headers || {
+  //     'Content-Type': 'application/json',
+  //   });
+  // }
 
   return window
     .fetch(url, init)
-    .then(res => checkStatus(res))
+    .then((res) => checkStatus(res))
     .then((res) => res?.json())
     .then(filter(init));
 }
@@ -94,7 +94,7 @@ export function formFetch(url: string, init?: IInit) {
 
   return window
     .fetch(url, init)
-    .then(res => checkStatus(res))
+    .then((res) => checkStatus(res))
     .then((res) => res?.json())
     .then(filter(init));
 }

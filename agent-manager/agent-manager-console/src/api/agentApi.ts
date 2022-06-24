@@ -1,4 +1,4 @@
-import { IStringMap } from "../interface/common";
+import { IStringMap } from '../interface/common';
 
 const prefixMap = {
   v1: '/api/v1/normal/agent',
@@ -35,4 +35,4 @@ export const agentApiMap: IAgentApi = {
   logCollectTask: getApi('/metrics/log-collect-task'),
   //  日志采集路径数占比 (饼图)
   logCollectPath: getApi('/metrics/log-collect-path'),
-}
+};

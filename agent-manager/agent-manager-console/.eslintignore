@@ -1,5 +1,5 @@
-node_modules/*
-config/*
-src/packages/ccp/*
-src/assets/iconfont/*
-src/packages/Charts/LiquidFillGauge/*
+test/
+scripts/
+build/
+public/
+types/
