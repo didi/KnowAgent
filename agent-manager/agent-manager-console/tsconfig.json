@@ -1,34 +1,31 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "noImplicitAny": true,
-    "target": "es2015",
-    "module": "es2015",
-    "strict": true,
-    "jsx": "react",
-    "allowJs": true,
-    "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@pkgs/*": ["src/packages/*"],
-      "@common/*": ["src/common/*"],
-      "@cpts/*": ["src/components/*"],
-      "@interface": ["src/interface"],
+      "*": [
+        "src/*"
+      ],
+      "@apis": ["src/api"],
+      "@tpl_packages": ["src/packages"],
     },
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es2015",
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
   },
   "include": [
     "src/**/*"
   ],
   "exclude": [
-    "node_modules/*",
-    "dist/*",
-    "examples/*",
+    "node_modules",
+    "pub/*",
   ],
 }

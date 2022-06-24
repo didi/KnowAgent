@@ -1,0 +1,21 @@
+.tree-table {
+  width: 100%;
+  min-height: 600px;
+  display: flex;
+  background: #fff;
+  &-tree {
+    flex: 0 0 240px;
+    background: #F8FAFD;
+    padding: 16px 20px 0 20px;
+    .ant-tree {
+      background: #F8FAFD !important;
+    }
+  }
+  &-table {
+    flex: 0 0 calc(~"100% - 240px");
+    padding: 16px 20px 0 20px;
+    &-button {
+      margin-top: 20px;
+    }
+  }
+}

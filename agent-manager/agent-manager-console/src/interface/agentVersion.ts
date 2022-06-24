@@ -1,5 +1,5 @@
 
-import { IAgentParam } from '../api';
+// import { IAgentParam } from '../api';
 export interface IKeyValue {
   key: number;
   value: string;
@@ -14,13 +14,13 @@ export interface IAgentVersionQueryFormColumns {
 }
 
 
-export interface IAgentVersionParams extends IAgentParam {
-  limitFrom?: number;
-  limitSize?: number;
-  agentVersionList?: any,
-  agentPackageName?: string,
-  agentVersionCreateTimeStart?: any,
-}
+// export interface IAgentVersionParams extends IAgentParam {
+//   limitFrom?: number;
+//   limitSize?: number;
+//   agentVersionList?: any,
+//   agentPackageName?: string,
+//   agentVersionCreateTimeStart?: any,
+// }
 
 export interface IAgentVersionVo {
   pageNo: number; // 当前第几页

@@ -1,5 +1,5 @@
 
-import { IAgentParam } from '../api';
+// import { IAgentParam } from '../api';
 export interface IKeyValue {
   key: number;
   value: string;
@@ -13,16 +13,16 @@ export interface IOperationTaskQueryFormColumns {
   locAgentVersionTaskCreateTime: moment.Moment[],
 }
 
-export interface IOperationTaskParams extends IAgentParam {
-  limitFrom?: number;
-  limitSize?: number;
-  agentOperationTaskId?: any;
-  agentOperationTaskName?: string;
-  agentOperationTaskTypeList?: any;
-  agentOperationTaskStatusList?: any;
-  agentOperationTaskCreateTimeStart?: any;
-  agentOperationTaskCreateTimeEnd?: any;
-}
+// export interface IOperationTaskParams extends IAgentParam {
+//   limitFrom?: number;
+//   limitSize?: number;
+//   agentOperationTaskId?: any;
+//   agentOperationTaskName?: string;
+//   agentOperationTaskTypeList?: any;
+//   agentOperationTaskStatusList?: any;
+//   agentOperationTaskCreateTimeStart?: any;
+//   agentOperationTaskCreateTimeEnd?: any;
+// }
 
 export interface IOperationTaskVo {
   pageNo: number; // 当前第几页

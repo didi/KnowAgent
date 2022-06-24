@@ -1,79 +1,137 @@
 const pkgJson = require('../../package');
 export const systemKey = pkgJson.ident;
+
 export const leftMenus = {
   name: `${systemKey}`,
-  path: 'main',
-  icon: '#icon-jiqun',
+  icon: 'icon-jiqun',
+  path: '/',
   children: [
+    // {
+    //   name: "demo",
+    //   path: "demo",
+    //   icon: "icon-a-cebiandaohang-zhibiaotancha",
+    //   children: [
+    //     {
+    //       name: "physics",
+    //       path: "physics",
+    //       icon: "#icon-luoji",
+    //     },
+    //     {
+    //       name: "logic",
+    //       path: "logic",
+    //       icon: "#icon-jiqun1",
+    //     },
+    //   ],
+    // },
     {
-      name: 'dashboard',
-      path: 'dashboard',
-      icon: '#icon-jiqun1',
+      name: 'home',
+      path: '/',
+      icon: 'icon-wodegongzuotai',
     },
+    // Agent中心
     {
       name: 'main',
-      path: '',
-      icon: '#icon-jiqun1',
+      path: 'main',
+      icon: 'icon-Agentzhongxin',
       children: [
         {
           name: 'list',
-          path: 'list',
+          path: '',
           icon: '#icon-luoji',
-          permissionPoint: 'Agent_agent_management_page',
-        }, {
+        },
+        {
           name: 'agentVersion',
           path: 'agentVersion',
           icon: '#icon-jiqun1',
-          permissionPoint: 'Agent_agent_version_page',
         },
-        // {
-        //   name: 'operationTasks',
-        //   path: 'operationTasks',
-        //   icon: '#icon-jiqun1',
-        //   permissionPoint: 'Agent_operational_tasks_page',
-        // },
-        // {
-        //   name: 'hola',
-        //   path: 'hola',
-        //   icon: '#icon-jiqun1',
-        // }
+        {
+          name: 'agent-kanban',
+          path: 'agent-kanban',
+          icon: '#icon-jiqun1',
+        },
       ],
     },
+    // {
+    //   name: 'collect',
+    //   path: 'collect',
+    //   icon: 'icon-cebiandaohang-caijirenwu',
+    //   children: [
+    //     {
+    //       name: 'metric',
+    //       path: 'metric',
+    //       icon: '#icon-luoji',
+    //     },
+    //   ],
+    // },
     {
       name: 'dataSource',
       path: 'dataSource',
-      icon: '#icon-jiqun1',
-      children: [
-        {
-          name: 'appList',
-          path: 'appList',
-          icon: '#icon-luoji',
-          permissionPoint: 'Agent_dataSource_app_page',
-        }],
+      icon: 'icon-cebiandaohang-shujuyuan',
     },
     {
       name: 'receivingTerminal',
       path: 'receivingTerminal',
-      icon: '#icon-jiqun1',
-      children: [
-        {
-          name: 'clusterList',
-          path: 'clusterList',
-          icon: '#icon-luoji',
-          permissionPoint: 'Agent_receivingterminal_cluster_page',
-        }],
+      icon: 'icon-jieshouduanguanli',
     },
+    // {
+    //   name: 'collect',
+    //   path: 'collect',
+    //   icon: '#icon-jiqun1',
+    // },
     {
       name: 'collect',
       path: 'collect',
-      icon: '#icon-jiqun1',
-      permissionPoint: 'Agent_collect_page',
+      icon: 'icon-cebiandaohang-caijirenwu',
+      children: [
+        {
+          name: 'list',
+          path: '',
+          icon: '#icon-luoji',
+        },
+        {
+          name: 'metric',
+          path: 'metric',
+          icon: '#icon-luoji',
+        },
+      ],
+    },
+    {
+      name: 'tool',
+      path: 'tool',
+      icon: 'icon-a-cebiandaohang-zhibiaotancha',
+      children: [
+        {
+          name: 'indicator-probe',
+          path: 'indicator-probe',
+          icon: 'icon-a-cebiandaohang-zhibiaotancha',
+        },
+      ],
     },
     {
       name: 'operationRecord',
       path: 'operationRecord',
-      icon: '#icon-jiqun1',
-      permissionPoint: 'Agent_operationRecord_page',
+      icon: 'icon-caozuojilu',
     },
+    // {
+    //   name: "kafka",
+    //   path: "kafka",
+    //   icon: "icon-cebiandaohang-caijirenwu",
+    //   children: [
+    //     {
+    //       name: "physics",
+    //       path: "physics",
+    //       icon: "#icon-luoji",
+    //     },
+    //   ],
+    // },
   ],
+};
+
+// key值需要与locale zh 中key值一致
+export const permissionPoints = {
+  [`menu.${systemKey}.home`]: true,
+};
+
+export const ROUTER_CACHE_KEYS = {
+  home: `menu.${systemKey}.home`,
 };

@@ -1,7 +1,5 @@
-
-import { IAgentParam } from '../api';
+// import { IAgentParam } from '../api';
 import { IService } from './agent';
-
 
 export interface IKeyValue {
   key: number;
@@ -14,22 +12,22 @@ export interface ICollectQueryFormColumns {
   logCollectTaskHealthLevelList: number[];
   logCollectTaskId: number;
   logCollectTaskName: string;
-  locCollectTaskCreateTime: moment.Moment[],
+  locCollectTaskCreateTime: moment.Moment[];
 }
 
-export interface ICollectTaskParams extends IAgentParam {
-  limitFrom?: number;
-  limitSize?: number;
-  pageNo?: number;
-  pageSize?: number;
-  serviceIdList: number[]; // 服务id
-  logCollectTaskTypeList: number[]; // 采集任务类型 0：常规流式采集 1：按指定时间范围采集
-  logCollectTaskHealthLevelList: number[]; // 日志采集任务健康度  0:红 1：黄 2：绿色
-  logCollectTaskId: number; // 日志采集任务id
-  logCollectTaskName: string; // 日志采集任务名
-  locCollectTaskCreateTimeEnd: number; // 日志采集任务创建时间结束检索时间
-  locCollectTaskCreateTimeStart: number; // 日志采集任务创建时间起始检索时间
-}
+// export interface ICollectTaskParams extends IAgentParam {
+//   limitFrom?: number;
+//   limitSize?: number;
+//   pageNo?: number;
+//   pageSize?: number;
+//   serviceIdList: number[]; // 服务id
+//   logCollectTaskTypeList: number[]; // 采集任务类型 0：常规流式采集 1：按指定时间范围采集
+//   logCollectTaskHealthLevelList: number[]; // 日志采集任务健康度  0:红 1：黄 2：绿色
+//   logCollectTaskId: number; // 日志采集任务id
+//   logCollectTaskName: string; // 日志采集任务名
+//   locCollectTaskCreateTimeEnd: number; // 日志采集任务创建时间结束检索时间
+//   locCollectTaskCreateTimeStart: number; // 日志采集任务创建时间起始检索时间
+// }
 
 export interface ICollectTaskVo {
   pageNo: number; // 当前第几页
@@ -61,25 +59,27 @@ export interface IReceiverVO {
 }
 
 export interface ILogCollectTaskBase {
-  logCollectTaskName: string; // 日志采集任务名 
+  logCollectTaskName: string; // 日志采集任务名
   logCollectTaskType: number; // 采集模式 ————  0：常规流式采集 1：按指定时间范围采集
   oldDataFilterType: number; // 历史数据过滤 ———— 0：不过滤 1：从当前时间开始采集 2：从自定义时间开始采集，自定义时间取collectStartBusinessTime属性值
   collectStartBusinessTime: number; // 日志采集任务对应采集开始业务时间 注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 & oldDataFilterTyp = 2 时，该值必填
   collectEndBusinessTime: number; // 日志采集任务对应采集结束业务时间 注：针对 logCollectTaskType = 1 情况，该值必填；logCollectTaskType = 0 情况，该值不填
-  logCollectTaskRemark: string; // 日志采集任务备注 
-  directoryLogCollectPathList: IDirectoryLogCollectPath[];	// 目录类型采集路径集
-  fileLogCollectPathList: IFileLogCollectPath[];	// 文件类型路径采集配置
+  logCollectTaskRemark: string; // 日志采集任务备注
+  directoryLogCollectPathList: IDirectoryLogCollectPath[]; // 目录类型采集路径集
+  fileLogCollectPathList: IFileLogCollectPath[]; // 文件类型路径采集配置
   logCollectTaskExecuteTimeoutMs: number; // 采集完成时间限制 ———— 日志采集任务执行超时时间，注意：该字段仅在日志采集任务类型为类型"按指定时间范围采集"时才存在值
-  limitPriority: number; // 采集任务限流保障优先级 0：高 1：中 2：低 
+  limitPriority: number; // 采集任务限流保障优先级 0：高 1：中 2：低
   sendTopic: string; // Topic ———— 采集任务采集的日志需要发往的topic名
   advancedConfigurationJsonString: string; // 高级配置信息 ———— 采集任务高级配置项集，为json形式字符串
   id: number; // 日志采集任务id 添加时不填，更新时必填
+  opencollectDelay?: boolean; // 是否开启采集延时监控
+  collectDelayThresholdMs?: number; //采集延迟监控 ———— 该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~当前时间间隔
 }
 
 export interface ILogCollectTask extends ILogCollectTaskBase {
   serviceIdList: number[]; // 采集应用 ———— 采集服务集 step1
   hostFilterRuleDTO: IHostFilterRule; // 主机范围 ———— 主机过滤规则 step1
-  logContentFilterLogicDTO: ILogContentFilterRule;// 日志过滤内容规则 step2
+  logContentFilterLogicDTO: ILogContentFilterRule; // 日志过滤内容规则 step2
   kafkaClusterId: number[]; // kafka集群 ———— 采集任务采集的日志需要发往的对应Kafka集群信息id step4
 }
 
@@ -127,9 +127,8 @@ export interface IFileLogCollectPath extends ILogCollectPath {
 export interface IHostFilterRule {
   needHostFilterRule: number; // 0否-全部 1是-部分 ———— 是否需要主机过滤规则 0：否 1：是
   filterSQL: string; // sql ———— 主机筛选命中sql，白名单
-  hostNames: string[]; // 主机名 ———— 主机名命中列表，白名单 
+  hostNames: string[]; // 主机名 ———— 主机名命中列表，白名单
 }
-
 
 export interface ILogContentFilterRule {
   logContentFilterExpression: string; // 日志内容过滤表达式，needLogContentFilter为1时必填
@@ -168,14 +167,14 @@ export interface IHostDetail {
 }
 
 export interface ICollectPieParams {
-  taskId: string | number,
-  logCollectPathId: string | number,
+  taskId: string | number;
+  logCollectPathId: string | number;
 }
 
 export interface ICollectLineParams {
-  taskId: string | number,
-  logCollectPathId: string | number,
-  hostName: string,
+  taskId: string | number;
+  logCollectPathId: string | number;
+  hostName: string;
   startTime: number;
   endTime: number;
   eachHost: boolean;

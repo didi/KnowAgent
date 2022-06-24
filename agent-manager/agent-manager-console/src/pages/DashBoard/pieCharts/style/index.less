@@ -1,0 +1,124 @@
+.pie-dashboard-wrap {
+  padding: 0 24px;
+  background-color: #f0f2f5;
+
+  &-title {
+    line-height: 54px;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    color: #212529;
+  }
+}
+
+.piedashboardbox {
+  height: 286px;
+  width: 100%;
+  display: flex;
+}
+
+.dashboard-piechart {
+  flex: 1;
+  padding: 24px 0 24px 24px;
+  float: left;
+  height: 276px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  &:first-of-type {
+    margin-right: 24px;
+  }
+  &-header {
+    width: 100%;
+    &-title {
+      font-size: 13px;
+      color: #495057;
+      font-weight: bolder;
+    }
+  }
+  &-faulttask {
+    margin: 24px 0 0 59px;
+    float: left;
+    width: 163px;
+    height: 190px;
+    overflow: hidden;
+    &-icon {
+      width: 100%;
+      &-item {
+        font-size: 16px;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+      &-title {
+        text-align: justify;
+        line-height: 22px;
+        vertical-align: middle;
+        > a {
+          font-size: 14px;
+          color: #212529;
+          &:hover {
+            cursor: pointer;
+            color: #556ee6;
+          }
+        }  
+      }
+    }
+    &-content {
+      height: 100%;
+      overflow-y: scroll;
+      margin-top: 4px;
+      margin-left: 19px;
+      /* 整个滚动条 */
+      &::-webkit-scrollbar {
+        width: 4px;
+        display: none;
+      }
+
+      /* 鼠标指针浮动显示 */
+      &:hover::-webkit-scrollbar {
+        display: block;
+      }
+
+      /* 滚动条轨道 */
+      &::-webkit-scrollbar-track {
+        width: 4px;
+        background: #f5f7fb;
+        border-radius: 2px;
+      }
+
+      /* 滚定条滑块 */
+      &::-webkit-scrollbar-thumb {
+        width: 4px;
+        height: 48px;
+        background: #dcdfe6;
+        border-radius: 2px;
+      }
+
+      &-ul {
+        padding-left: 0;
+
+        &-li {
+          width: 132px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          list-style: none;
+          letter-spacing: 0;
+          text-align: justify;
+          margin-bottom: 4px;
+          font-size: 12px;
+          letter-spacing: 0;
+          text-align: justify;
+          line-height: 20px;
+          overflow: hidden;
+          > a {
+            color: #495057 !important;
+            &:hover {
+              cursor: pointer;
+              color: #556ee6!important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
