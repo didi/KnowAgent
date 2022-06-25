@@ -1,5 +1,4 @@
-
-import { IAgentParam } from '../api';
+// import { IAgentParam } from '../api';
 
 export interface IKeyValue {
   key: number;
@@ -11,18 +10,18 @@ export interface IDataSourceQueryFormColumns {
   serviceId: number[];
   logAgentVersionTaskHealthLevels: number[];
   logAgentVersionTaskIdOrName: string;
-  locAgentVersionTaskCreateTime: moment.Moment[],
+  locAgentVersionTaskCreateTime: moment.Moment[];
 }
 
-export interface IDataSourceParams extends IAgentParam {
-  limitFrom?: number;
-  limitSize?: number;
-  serviceName?: string;
-  servicename?: string;
-  serviceCreateTimeStart?: any;
-  hostIdList?: any;
-  id?: number;
-}
+// export interface IDataSourceParams extends IAgentParam {
+//   limitFrom?: number;
+//   limitSize?: number;
+//   serviceName?: string;
+//   servicename?: string;
+//   serviceCreateTimeStart?: any;
+//   hostIdList?: any;
+//   id?: number;
+// }
 export interface IDataSourceVo {
   pageNo: number; // 当前第几页
   pageSize: number; // 每页记录行数
@@ -30,6 +29,21 @@ export interface IDataSourceVo {
   total: number;
   id?: number;
   hostList?: IDataSource[];
+}
+
+export interface HostInfo {
+  hostName: string;
+  hostType: number; //主机类型 0：主机 1：容器 ,
+  ip: string; // ip
+}
+
+export interface IK8sDataSource {
+  duplicateHostNameHostList: HostInfo; // 主机名重复主机信息集 ,
+  duplicateIpHostList: HostInfo; // ip重复主机信息集 ,
+  relateHostNum: number; // 关联主机数 ,
+  serviceName: string; // 服务名 ,
+  syncSuccess: number; // 同步状态 0：失败 1：成功
+  [key: string]: any;
 }
 
 export interface IDataSource {
@@ -49,7 +63,7 @@ export interface ILogDataSource {
 }
 
 export interface ILogDataSourcePath {
-  charset: string; // 
+  charset: string; //
 }
 
 export interface IHostDetail {

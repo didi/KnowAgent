@@ -1,4 +1,4 @@
-import { IAgentParam } from '../api';
+// import { IAgentParam } from '../api';
 
 export interface IKeyValue {
   key: number;

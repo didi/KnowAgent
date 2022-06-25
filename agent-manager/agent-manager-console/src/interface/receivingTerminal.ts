@@ -1,5 +1,5 @@
 
-import { IAgentParam } from '../api';
+// import { IAgentParam } from '../api';
 
 export interface IKeyValue {
   key: number;
@@ -14,15 +14,15 @@ export interface IReceivingTerminalQueryFormColumns {
   locAgentVersionTaskCreateTime: moment.Moment[],
 }
 
-export interface IReceivingTerminalParams extends IAgentParam {
-  limitFrom?: number;
-  limitSize?: number;
-  kafkaClusterName?: string;
-  receiverCreateTimeStart?: any;
-  receiverCreateTimeEnd?: any;
-  kafkaClusterBrokerConfiguration?: any;
-  kafkaClusterProducerInitConfiguration?: any;
-}
+// export interface IReceivingTerminalParams extends IAgentParam {
+//   limitFrom?: number;
+//   limitSize?: number;
+//   kafkaClusterName?: string;
+//   receiverCreateTimeStart?: any;
+//   receiverCreateTimeEnd?: any;
+//   kafkaClusterBrokerConfiguration?: any;
+//   kafkaClusterProducerInitConfiguration?: any;
+// }
 
 export interface IReceivingTerminalVo {
   pageNo: number; // 当前第几页
