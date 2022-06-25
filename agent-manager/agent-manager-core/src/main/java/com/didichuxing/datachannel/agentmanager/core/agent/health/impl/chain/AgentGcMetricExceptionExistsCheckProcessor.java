@@ -38,7 +38,11 @@ public class AgentGcMetricExceptionExistsCheckProcessor extends BaseProcessor {
         );
         // 存在异常
         if (agentGcMetricExceptionExists) {
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_GC_METRIC_EXCEPTION, context);
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.AGENT_GC_METRIC_EXCEPTION,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
         }
     }
 

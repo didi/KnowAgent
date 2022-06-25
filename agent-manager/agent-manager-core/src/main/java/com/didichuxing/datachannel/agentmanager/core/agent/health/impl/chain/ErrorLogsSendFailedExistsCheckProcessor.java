@@ -56,20 +56,39 @@ public class ErrorLogsSendFailedExistsCheckProcessor extends BaseProcessor {
                         context.getAgentDO().getErrorLogsProducerConfiguration()
                 );
                 if(agentErrorLogsReceiverConfigValid) {
-                    setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_SEND_FAILED_EXISTS_CAUSE_BY_AGENT_PROCESS_BREAK_DOWN, context);
+                    setAgentHealthCheckResult(
+                            AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_SEND_FAILED_EXISTS_CAUSE_BY_AGENT_PROCESS_BREAK_DOWN,
+                            context,
+                            context.getAgentDO().getHostName()
+                    );
                 } else {
                     /*
                      * 继续判断是否 broker 无法连通 or 配置错误
                      */
                     ReceiverDO receiverDO = context.getKafkaClusterManageService().getById(context.getAgentDO().getErrorLogsSendReceiverId());
                     if(!context.getKafkaClusterManageService().checkBrokerConfigurationValid(receiverDO.getKafkaClusterBrokerConfiguration())) {
-                        setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED, context);
+                        setAgentHealthCheckResult(
+                                AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED,
+                                context,
+                                context.getAgentDO().getHostName(),
+                                receiverDO.getKafkaClusterBrokerConfiguration()
+                        );
                     } else {
-                        setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_ERROR, context);
+                        setAgentHealthCheckResult(
+                                AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_ERROR,
+                                context,
+                                context.getAgentDO().getHostName(),
+                                receiverDO.getKafkaClusterProducerInitConfiguration(),
+                                receiverDO.getAgentErrorLogsTopic()
+                        );
                     }
                 }
             } else {
-                setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS, context);
+                setAgentHealthCheckResult(
+                        AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS,
+                        context,
+                        context.getAgentDO().getHostName()
+                );
             }
         }
     }

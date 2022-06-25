@@ -38,7 +38,11 @@ public class AgentStartupFrequentlyExistsCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (agentStartupFrequentlyExists) {// 存在 agent 非人工启动过频
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_STARTUP_FREQUENTLY, context);
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.AGENT_STARTUP_FREQUENTLY,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
         }
     }
 

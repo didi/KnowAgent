@@ -47,12 +47,14 @@ public abstract class BaseProcessor implements Processor {
      * @param agentHealthInspectionResultEnum 日志采集任务健康度巡检结果枚举
      * @param context agent 健康度巡检上下文对象
      */
-    protected void setAgentHealthCheckResult(AgentHealthInspectionResultEnum agentHealthInspectionResultEnum, AgentHealthCheckContext context) {
+    protected void setAgentHealthCheckResult(
+            AgentHealthInspectionResultEnum agentHealthInspectionResultEnum,
+            AgentHealthCheckContext context,
+            String... agentHealthInspectionDescriptionParameters
+    ) {
         String agentHealthDescription = String.format(
-                "%s:AgentId={%d}, HostName={%s}",
                 agentHealthInspectionResultEnum.getDescription(),
-                context.getAgentDO().getId(),
-                context.getAgentDO().getHostName()
+                agentHealthInspectionDescriptionParameters
         );
         context.setAgentHealthLevelEnum(agentHealthInspectionResultEnum.getAgentHealthLevel());
         context.setAgentHealthDescription(agentHealthDescription);

@@ -34,7 +34,11 @@ public class AgentNotRelateAnyLogCollectTaskExceptionExistsCheckProcessor extend
                 )
         );
         if (notRelateAnyLogCollectTask) {
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.NOT_RELATE_ANY_LOGCOLLECTTASK, context);
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.NOT_RELATE_ANY_LOGCOLLECTTASK,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
         }
     }
 

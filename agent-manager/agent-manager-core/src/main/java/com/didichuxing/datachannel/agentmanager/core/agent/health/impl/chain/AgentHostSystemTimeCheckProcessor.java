@@ -32,7 +32,11 @@ public class AgentHostSystemTimeCheckProcessor extends BaseProcessor {
          */
         boolean valid = checkHostSystemTime(context.getLastMetricsSystem());
         if(!valid) {// 如不正确
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.HOST_SYSTEM_TIME_IN_VALID, context);
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.HOST_SYSTEM_TIME_IN_VALID,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
         }
     }
 
