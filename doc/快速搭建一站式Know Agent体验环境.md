@@ -48,7 +48,7 @@
 
 ## 3.1 创建 Agent 指标流与错误日志流对应的 Kafka Topic
 
-​	进入 Know Agent 一站式体验环境安装目录，在 `Kafka安装目录/bin`目录下，先执行`source ~/.bashrc`命令，然后执行`sh kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic 请替换为topic名`命令，创建 Agent 指标流与错误日志流对应的 Kafka Topic，如下图：
+​	进入 Know Agent 一站式体验环境安装目录，在 `Kafka安装目录/bin`目录下，先执行`source ~/.bashrc`命令，然后执行`sh kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic 请替换topic名`命令，创建 Agent 指标流与错误日志流对应的 Kafka Topic，如下图：
 
 ![image-20220624170025875](assets/Know Agent一站式体验环境 Agent Metrics、Error Logs 流 kafka topic 创建.png)
 
