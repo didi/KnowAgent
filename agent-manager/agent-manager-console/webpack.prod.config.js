@@ -10,8 +10,6 @@ module.exports = {
         profile: true
       }
     ),
-    /* config.plugin('hard-source-webpack-plugin') */
-    new (require('hard-source-webpack-plugin'))(),
     /* config.plugin('mini-css-extract-plugin') */
     new (require('mini-css-extract-plugin'))(
       {
@@ -200,13 +198,13 @@ module.exports = {
             options: {
               sourceMap: false,
               plugins: [
-                  calc(),
-                  presetEnv({
-                    browsers: 'chrome >= 58, ie >= 11',
-                    autoprefixer: true,
-                    stage: 3,
-                  }),
-                ]
+                calc(),
+                presetEnv({
+                  browsers: 'chrome >= 58, ie >= 11',
+                  autoprefixer: true,
+                  stage: 3,
+                }),
+              ]
             }
           }
         ]
@@ -234,13 +232,13 @@ module.exports = {
             options: {
               sourceMap: false,
               plugins: [
-                  calc(),
-                  presetEnv({
-                    browsers: 'chrome >= 58, ie >= 11',
-                    autoprefixer: true,
-                    stage: 3,
-                  }),
-                ]
+                calc(),
+                presetEnv({
+                  browsers: 'chrome >= 58, ie >= 11',
+                  autoprefixer: true,
+                  stage: 3,
+                }),
+              ]
             }
           },
           /* config.module.rule('module-less').use('less-loader') */
