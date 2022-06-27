@@ -37,7 +37,11 @@ public class AgentFdUsageMetricExceptionExistsCheckProcessor extends BaseProcess
         );
         //  存在异常
         if (agentFdUsageMetricExceptionExists) {
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_FD_USAGE_METRIC_EXCEPTION, context);
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.AGENT_FD_USAGE_METRIC_EXCEPTION,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
         }
     }
 

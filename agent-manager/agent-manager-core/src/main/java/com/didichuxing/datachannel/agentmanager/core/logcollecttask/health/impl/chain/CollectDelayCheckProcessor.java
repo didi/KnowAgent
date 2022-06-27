@@ -128,7 +128,12 @@ public class CollectDelayCheckProcessor extends BaseProcessor {
                 }
             }
             if(allFilesCollectFinished) {
-                setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_BUSINESS_DATA_WRITE_SLOW);
+                setLogCollectTaskHealthInfo(
+                        context,
+                        LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_BUSINESS_DATA_WRITE_SLOW,
+                        context.getHostDO().getHostName(),
+                        context.getFileLogCollectPathDO().getPath()
+                );
                 return;
             }
         }
@@ -143,7 +148,12 @@ public class CollectDelayCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (dataSendFailedExists) {//存在下游接收端写入失败
-            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_DATA_SEND_FAILED);
+            setLogCollectTaskHealthInfo(
+                    context,
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_DATA_SEND_FAILED,
+                    context.getHostDO().getHostName(),
+                    context.getFileLogCollectPathDO().getPath()
+            );
             return;
         }
         /*
@@ -173,12 +183,16 @@ public class CollectDelayCheckProcessor extends BaseProcessor {
             ) {//存在 full gc 过频
                 setLogCollectTaskHealthInfo(
                         context,
-                        LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_HOST_CPU_USAGE_LIMIT_EXISTS_CAUSE_BY_AGENT_FULL_GC_OVER_FREQUENCY
+                        LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_HOST_CPU_USAGE_LIMIT_EXISTS_CAUSE_BY_AGENT_FULL_GC_OVER_FREQUENCY,
+                        context.getHostDO().getHostName(),
+                        context.getFileLogCollectPathDO().getPath()
                 );
             } else {//不存在 full gc 过频
                 setLogCollectTaskHealthInfo(
                         context,
-                        LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_HOST_CPU_USAGE_LIMIT_EXISTS
+                        LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_HOST_CPU_USAGE_LIMIT_EXISTS,
+                        context.getHostDO().getHostName(),
+                        context.getFileLogCollectPathDO().getPath()
                 );
             }
             return;
@@ -190,12 +204,16 @@ public class CollectDelayCheckProcessor extends BaseProcessor {
         if(channelUsage.equals(100d)) {//sink 端瓶颈
             setLogCollectTaskHealthInfo(
                     context,
-                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_SINK_SLOW
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_SINK_SLOW,
+                    context.getHostDO().getHostName(),
+                    context.getFileLogCollectPathDO().getPath()
             );
         } else {//source 端瓶颈
             setLogCollectTaskHealthInfo(
                     context,
-                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_SOURCE_SLOW
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_COLLECT_DELAYED_CAUSE_BY_SOURCE_SLOW,
+                    context.getHostDO().getHostName(),
+                    context.getFileLogCollectPathDO().getPath()
             );
         }
     }

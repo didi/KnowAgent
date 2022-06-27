@@ -39,7 +39,12 @@ public class LogSliceErrorExistsCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (errorLogsExists) {// 存在日志切片错误
-            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS);
+            setLogCollectTaskHealthInfo(
+                    context,
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_LOG_SLICE_ERROR_EXISTS,
+                    context.getHostDO().getHostName(),
+                    context.getFileLogCollectPathDO().getPath()
+            );
         }
     }
 

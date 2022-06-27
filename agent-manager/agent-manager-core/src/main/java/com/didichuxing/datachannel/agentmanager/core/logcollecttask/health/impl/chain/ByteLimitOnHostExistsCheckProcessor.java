@@ -50,12 +50,16 @@ public class ByteLimitOnHostExistsCheckProcessor extends BaseProcessor {
             ) {//存在 full gc 过频
                 setLogCollectTaskHealthInfo(
                         context,
-                        LogCollectTaskHealthInspectionResultEnum.HOST_CPU_USAGE_LIMIT_EXISTS_CAUSE_BY_AGENT_FULL_GC_OVER_FREQUENCY
+                        LogCollectTaskHealthInspectionResultEnum.HOST_CPU_USAGE_LIMIT_EXISTS_CAUSE_BY_AGENT_FULL_GC_OVER_FREQUENCY,
+                        context.getHostDO().getHostName(),
+                        context.getFileLogCollectPathDO().getPath()
                 );
             } else {//不存在 full gc 过频
                 setLogCollectTaskHealthInfo(
                         context,
-                        LogCollectTaskHealthInspectionResultEnum.HOST_CPU_USAGE_LIMIT_EXISTS
+                        LogCollectTaskHealthInspectionResultEnum.HOST_CPU_USAGE_LIMIT_EXISTS,
+                        context.getHostDO().getHostName(),
+                        context.getFileLogCollectPathDO().getPath()
                 );
             }
         }

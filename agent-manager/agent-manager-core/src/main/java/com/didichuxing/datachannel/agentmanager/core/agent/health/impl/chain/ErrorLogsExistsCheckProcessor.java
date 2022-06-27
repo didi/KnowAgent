@@ -39,7 +39,11 @@ public class ErrorLogsExistsCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (errorLogsExists) {// agent 存在错误日志输出
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_EXISTS, context);
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_EXISTS,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
         }
     }
 

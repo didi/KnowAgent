@@ -35,7 +35,12 @@ public class ConcurrentCollectExistsCheckProcessor extends BaseProcessor {
                 context.getMetricsManageService()
         );
         if (concurrentCollectExists) {// 存在并发采集
-            setLogCollectTaskHealthInfo(context, LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT);
+            setLogCollectTaskHealthInfo(
+                    context,
+                    LogCollectTaskHealthInspectionResultEnum.LOG_PATH_CONCURRENT_COLLECT,
+                    context.getHostDO().getHostName(),
+                    context.getFileLogCollectPathDO().getPath()
+            );
         }
     }
 

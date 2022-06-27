@@ -37,7 +37,12 @@ public class AgentCpuUsageMetricExceptionExistsCheckProcessor extends BaseProces
         );
         // 存在异常
         if (agentCpuUsageMetricExceptionExists) {
-            setAgentHealthCheckResult(AgentHealthInspectionResultEnum.AGENT_CPU_USAGE_METRIC_EXCEPTION, context);
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.AGENT_CPU_USAGE_METRIC_EXCEPTION,
+                    context,
+                    context.getAgentDO().getHostName(),
+                    String.format("%d%", context.getAgentDO().getCpuLimitThreshold())
+            );
         }
     }
 
