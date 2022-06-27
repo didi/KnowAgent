@@ -26,7 +26,7 @@ module.exports = {
           isDebug: false,
           isProduction: false
         },
-        filename: require('path').resolve(__dirname, 'build/pages/agent.html'),
+        filename: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/pages/agent.html'),
         template: require('path').resolve(__dirname, 'src/index.html'),
         chunks: [
           'agent',
@@ -71,7 +71,7 @@ module.exports = {
   ],
   output: {
     filename: 'js/[name].[contenthash].js',
-    path: require('path').resolve(__dirname, 'build/env'),
+    path: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/env'),
     publicPath: '/env/'
   },
   resolve: {
