@@ -227,6 +227,7 @@ public class MetricsManageServiceImpl implements MetricsManageService {
     }
 
     private void handleInsertMetrics(String metricsRecord) {
+            try {
                 if(StringUtils.isNotBlank(metricsRecord)) {
                     JSONObject object = JSON.parseObject(metricsRecord);
                     Object taskMetricsObj = object.get("taskMetrics");
@@ -265,6 +266,16 @@ public class MetricsManageServiceImpl implements MetricsManageService {
                         metricsProcessDAO.insertSelective(metricsProcessPO);
                     }
                 }
+            } catch (Exception ex) {
+                LOGGER.error(
+                        String.format(
+                                "handleInsertMetrics {%s} error, root cause is: %s",
+                                metricsRecord,
+                                ex.getMessage()
+                        ),
+                        ex
+                );
+            }
     }
 
     @Override
