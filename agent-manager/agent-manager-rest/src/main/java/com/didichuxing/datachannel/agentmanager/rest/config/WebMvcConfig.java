@@ -16,13 +16,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private HeaderHandlerInterceptor headerHandlerInterceptor;
 
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addViewController("/").setViewName("index");
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/agent").setViewName("pages/agent");
+        registry.addViewController("/").setViewName("pages/agent");
 //        registry.addViewController("/index.html").setViewName("index");
 //        registry.addViewController("/agent").setViewName("index");
 //        registry.addViewController("/agent/**").setViewName("index");
-//    }
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -36,6 +37,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 
         // FE
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/pages/", "classpath:/templates/env/");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/");
+//        registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/pages/", "classpath:/templates/env/");
     }
 }
