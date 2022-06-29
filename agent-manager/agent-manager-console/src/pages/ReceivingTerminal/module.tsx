@@ -18,7 +18,7 @@ import {
   Modal,
 } from '@didi/dcloud-design';
 import { request } from '../../request/index';
-import { getReceiversTopic, getTopics } from '../../api/agent';
+import { getTopics } from '../../api/agent';
 
 const hostTypes = [
   {
@@ -112,11 +112,11 @@ export const ActionClusterForm = (props: any) => {
         cluster.agentMetricsTopic && agentMetricsTopic.length ? 1 : 0,
         cluster.agentErrorLogsTopic && agentErrorLogsTopic.length ? 2 : 0,
       ]);
-      cluster?.id ? getReceiverTopic(cluster.id) : _getTopics();
     }
     if (props.containerData?.operationName === '编辑') {
       setEdit(true);
     }
+    _getTopics();
   }, []);
 
   useEffect(() => {
@@ -172,19 +172,6 @@ export const ActionClusterForm = (props: any) => {
       });
     }
   }, [edit]);
-
-  const getReceiverTopic = (id: number) => {
-    getReceiversTopic(id)
-      .then((res: string[]) => {
-        const data = res.map((ele) => {
-          return { text: ele, value: ele };
-        });
-        setReceiverTopic(data);
-      })
-      .catch((err: any) => {
-        // console.log(err);
-      });
-  };
 
   const _getTopics = async () => {
     const res = await getTopics();

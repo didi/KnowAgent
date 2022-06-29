@@ -3,7 +3,7 @@ import { InputNumber, Form, Radio, Select, Input, AutoComplete, Collapse, Col, S
 import { clientFormItemLayout } from './config';
 import { NavRouterLink } from '../../components/CustomComponent';
 import { IReceivers } from '../../interface/agent';
-import { getReceivers, getReceiversTopic } from '../../api/agent';
+import { getReceivers, getTopics } from '../../api/agent';
 import { DataSourceItemType } from '../../interface/common';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
 // import MonacoEditor from '../../components/editor/monacoEditor';
@@ -36,10 +36,6 @@ const ClientClearSelfMonitor = (props: any) => {
     setOpenDelay(checked);
   };
 
-  const onReceiverChange = (value: number) => {
-    getReceiverTopic(value); // 等对接Kafka集群时再修复
-  };
-
   const getReceiversList = () => {
     getReceivers()
       .then((res: IReceivers[]) => {
@@ -50,33 +46,22 @@ const ClientClearSelfMonitor = (props: any) => {
       });
   };
 
-  const getReceiverTopic = (id: number) => {
-    getReceiversTopic(id)
-      .then((res: string[]) => {
-        const data = res.map((ele) => {
-          return { text: ele, value: ele };
-        });
-        setReceiverTopic(data);
-      })
-      .catch((err: any) => {
-        // console.log(err);
-      });
+  const getReceiverTopic = async () => {
+    const res = await getTopics();
+    const data = res.map((ele) => {
+      return { text: ele, value: ele };
+    });
+    setReceiverTopic(data);
   };
 
   useEffect(() => {
     getReceiversList();
+    getReceiverTopic();
   }, []);
 
   useEffect(() => {
     setOpenDelay(getFieldValue('step3_opencollectDelay'));
   }, [getFieldValue('step3_opencollectDelay')]);
-
-  useEffect(() => {
-    const id = getFieldValue('step4_kafkaClusterId');
-    if (id || id === 0) {
-      getReceiverTopic(id);
-    }
-  }, [getFieldValue('step4_kafkaClusterId')]);
 
   const collapseCallBack = (key: any) => {
     setActiveKeys(key);
@@ -113,7 +98,7 @@ const ClientClearSelfMonitor = (props: any) => {
               })}
             </Select>
           )} */}
-          <Select onChange={onReceiverChange} className="w-300" placeholder="请选择集群">
+          <Select className="w-300" placeholder="请选择集群">
             {receivers.map((ele, index) => {
               return (
                 <Select.Option key={index} value={ele.id}>
