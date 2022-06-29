@@ -46,9 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.didichuxing.datachannel.agentmanager.common.constant.PermissionConstant.*;
 
@@ -185,6 +183,16 @@ public class NormalLogCollectTaskController {
                 sliceDTO.getSliceTimestampPrefixStringIndex()
         );
         return Result.buildSucc(logList);
+    }
+
+    @ApiOperation(value = "获取所有文件名后缀匹配正则样例集", notes = "")
+    @RequestMapping(value = "/file-name-suffix-regular-expression-examples-tips", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<Map<String, String>> get() {
+        Map<String, String> fileNameSuffixRegularExpressionExample2TipsMap = new HashMap<>();
+        fileNameSuffixRegularExpressionExample2TipsMap.put("info.log.1", ".\\d");
+        fileNameSuffixRegularExpressionExample2TipsMap.put("info.log.2022-06-16-14", ".\\S");
+        return Result.buildSucc(fileNameSuffixRegularExpressionExample2TipsMap);
     }
 
     /**
