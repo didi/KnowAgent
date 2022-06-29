@@ -20,12 +20,13 @@ module.exports = {
     /* config.plugin('html-template?entry=agent') */
     new (require('html-webpack-plugin'))(
       {
-        title: 'agent首页',
+        title: 'KnowAgent',
         context: {
           env: 'env',
           isDebug: false,
           isProduction: false
         },
+        favicon: './favicon.ico',
         filename: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/pages/agent.html'),
         template: require('path').resolve(__dirname, 'src/index.html'),
         chunks: [
@@ -67,7 +68,13 @@ module.exports = {
         filename: 'sourcemap/[file].map',
         publicPath: '/agent/sourcemap/env/'
       }
-    )
+    ),
+    new (require('copy-webpack-plugin'))([
+      {
+        from: require('path').resolve(__dirname, 'favicon.ico'),
+        to: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/env/favicon.ico'),
+      },
+    ])
   ],
   output: {
     filename: 'js/[name].[contenthash].js',
