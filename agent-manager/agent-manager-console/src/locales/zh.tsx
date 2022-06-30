@@ -9,6 +9,8 @@ export default {
   [`menu`]: 'Agent',
   [`menu.${systemKey}`]: '我的工作台',
   [`menu.${systemKey}.home`]: '我的工作台',
+  [`menu.${systemKey}.home.devops`]: '运维视角',
+  [`menu.${systemKey}.home.operation`]: '运营视角',
   [`menu.${systemKey}.demo`]: 'Agent中心',
   [`menu.${systemKey}.demo.physics`]: 'Agent版本',
   [`menu.${systemKey}.demo.logic`]: 'Agent管理',

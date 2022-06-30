@@ -6,27 +6,20 @@ export const leftMenus = {
   icon: 'icon-jiqun',
   path: '/',
   children: [
-    // {
-    //   name: "demo",
-    //   path: "demo",
-    //   icon: "icon-a-cebiandaohang-zhibiaotancha",
-    //   children: [
-    //     {
-    //       name: "physics",
-    //       path: "physics",
-    //       icon: "#icon-luoji",
-    //     },
-    //     {
-    //       name: "logic",
-    //       path: "logic",
-    //       icon: "#icon-jiqun1",
-    //     },
-    //   ],
-    // },
     {
       name: 'home',
-      path: '/',
+      path: 'version',
       icon: 'icon-wodegongzuotai',
+      children: [
+        {
+          name: 'operation',
+          path: 'operation',
+        },
+        {
+          name: 'devops',
+          path: 'devops',
+        },
+      ],
     },
     // Agent中心
     {

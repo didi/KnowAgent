@@ -40,7 +40,7 @@ const HomePage = (): JSX.Element => {
         <div className="dashboard" id="dashboardWrap">
           {dashBoardData && (
             <>
-              <HeaderCard dashBoardData={dashBoardData} />
+              <PieCharts dashBoardData={dashBoardData} />
               <LineCharts dashBoardData={dashBoardData} />
             </>
           )}

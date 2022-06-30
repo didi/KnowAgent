@@ -5,7 +5,7 @@ import { yyyyMMDDHHMMss, HHmmssSSS, yyyyMMDDHHMMssSSS, yyyyMMDDHHMMssSS, fuhao }
 import LogRepeatForm from './LogRepeatForm';
 // import { regChar } from '../../constants/reg';
 import { logFilePathKey } from './dateRegAndGvar';
-import { getCollectPathList, getCollectTaskFiles, getFileContent } from '../../api/collect';
+import { getCollectPathList, getCollectTaskFiles, getFileContent, getRuleTips } from '../../api/collect';
 import './index.less';
 import { getSliceRule } from '../../api/collect';
 import { regLogSliceTimestampPrefixString } from '../../constants/reg';
@@ -27,8 +27,6 @@ const dateType: any = {
   // 'YYYY-MM-DD': regYymd,
   // 'YY-MM-DD': regYmd,
 };
-
-const regs = ['.\\d', '.\\S'];
 
 // 获取选中的内容，并将内容匹配对应规则放入时间戳表单中
 let sliceTimestampPrefixString = '';
@@ -100,10 +98,11 @@ const LogFileType = (props: any) => {
   const [fileArrList, setFileArrList] = useState([]);
   const [content, setContent] = useState('');
   const [contentVisible, setContentVisible] = useState(false);
-  const [hostNameList, setHostNameList] = useState<any>([...props.hostList]);
+  const [hostNameList, setHostNameList] = useState<any>(props.hostList || []);
   const [start, setStart] = useState(0);
   const [slicePre, setSlicePre] = useState<string[]>([]); // 日志切片列表
   const [isShow, setShow] = useState(false); // 是否显示日志切片框
+  const [regTips, setRegTips] = useState([]);
   const { setFieldsValue, getFieldValue } = props.form;
 
   const initial = props?.addFileLog && !!Object.keys(props?.addFileLog)?.length;
@@ -230,6 +229,12 @@ const LogFileType = (props: any) => {
   }, [props.sliceRule]);
 
   useEffect(() => {
+    getRuleTips().then((res) => {
+      setRegTips(Object.values(res));
+    });
+  }, []);
+
+  useEffect(() => {
     if (editUrl) {
       setSuffixfiles(props.suffixfiles);
     }
@@ -244,7 +249,7 @@ const LogFileType = (props: any) => {
   }, [props.isNotLogPath]);
 
   useEffect(() => {
-    setHostNameList(props.hostList);
+    setHostNameList(props.hostList || []);
   }, [props.hostList]);
 
   return (
@@ -289,7 +294,7 @@ const LogFileType = (props: any) => {
           <Col span={12}>
             <Form.Item name="step2_file_suffixMatchRegular" initialValue={[]}>
               <Select mode="tags" onChange={onSelectChange} placeholder="请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$">
-                {regs.map((item) => (
+                {regTips.map((item) => (
                   <Select.Option key={item} value={item}>
                     {item}
                   </Select.Option>

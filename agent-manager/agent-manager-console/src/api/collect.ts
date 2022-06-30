@@ -81,3 +81,7 @@ export const getSliceRule = (params: any) => {
     body: params,
   });
 };
+
+export const getRuleTips = () => {
+  return fetch(apiMap.getRuleTips);
+};
