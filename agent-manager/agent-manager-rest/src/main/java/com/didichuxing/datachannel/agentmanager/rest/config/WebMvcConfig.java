@@ -18,11 +18,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+
         registry.addViewController("/agent").setViewName("pages/agent");
         registry.addViewController("/").setViewName("pages/agent");
-//        registry.addViewController("/index.html").setViewName("index");
-//        registry.addViewController("/agent").setViewName("index");
-//        registry.addViewController("/agent/**").setViewName("index");
+
     }
 
     @Override
@@ -32,12 +31,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         // SWAGGER
         registry.addResourceHandler("/swagger-ui.html", "/swagger/**", "swagger-resources").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 
         // FE
         registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/");
-//        registry.addResourceHandler("/**").addResourceLocations("classpath:/templates/pages/", "classpath:/templates/env/");
+
     }
 }
