@@ -55,8 +55,7 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 2.3 源代码编译打包
 
-1. 在编译打包 Agent 项目前，请先对`System-Metrics`项目与`Agent-Manager`项目进行编译打包。
-   - `System-Metrics`项目编译打包方法：进入`system-metrcis`目录，执行`mvn clean install`命令。
+1. 在编译打包 Agent 项目前，请先对`Agent-Manager`项目进行编译打包。
    - `Agent-Manager`项目编译打包方法见上文`Agent-Manager`部分。
 2. 进入`agent`目录，执行`sh build.sh`命令，得到output目录。
 
