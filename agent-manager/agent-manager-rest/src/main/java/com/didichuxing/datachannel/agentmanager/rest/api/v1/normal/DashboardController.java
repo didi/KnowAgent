@@ -1,8 +1,8 @@
 package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
 
-import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.DashBoardVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.MaintenanceDashBoardVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.OperatingDashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.DashboardManageService;
 import io.swagger.annotations.Api;
@@ -22,15 +22,26 @@ public class DashboardController {
     @Autowired
     private DashboardManageService dashboardManageService;
 
-    @ApiOperation(value = "获取dashboard全量指标", notes = "")
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ApiOperation(value = "获取运营大盘全量指标", notes = "")
+    @RequestMapping(value = "/operating", method = RequestMethod.GET)
     @ResponseBody
-    public Result<DashBoardVO> dashboard() {
-        if(null == GlobalProperties.dashBoardVO) {
-            LOGGER.info("class=DashboardController||method=dashboard||msg=load dashboardVO from db.");
-            GlobalProperties.dashBoardVO = dashboardManageService.build();
-        }
-        return Result.buildSucc(GlobalProperties.dashBoardVO);
+    public Result<OperatingDashBoardVO> operatingDashboard() {
+//        if(null == GlobalProperties.dashBoardVO) {
+//            LOGGER.info("class=DashboardController||method=dashboard||msg=load dashboardVO from db.");
+//            GlobalProperties.dashBoardVO = dashboardManageService.build();
+//        }
+        return Result.buildSucc(null);
+    }
+
+    @ApiOperation(value = "获取运维大盘全量指标", notes = "")
+    @RequestMapping(value = "/maintenance", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<MaintenanceDashBoardVO> maintenanceDashboard() {
+//        if(null == GlobalProperties.dashBoardVO) {
+//            LOGGER.info("class=DashboardController||method=dashboard||msg=load dashboardVO from db.");
+//            GlobalProperties.dashBoardVO = dashboardManageService.build();
+//        }
+        return Result.buildSucc(null);
     }
 
 }
