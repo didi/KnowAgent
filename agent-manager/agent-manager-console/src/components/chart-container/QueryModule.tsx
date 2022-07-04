@@ -172,12 +172,12 @@ const QueryModule: React.FC<propsType> = ({ indicatorSelectModule, layout, filte
           {tabKey === '1' && (
             <Row gutter={[16, 16]}>
               <Col span={8}>
-                <div className="label-name">采集任务：</div>
+                <div className="label-name">采集任务名：</div>
                 <Select
                   showSearch
                   allowClear
                   suffixIcon={<IconFont type="icon-xiala" />}
-                  placeholder="请选择采集任务"
+                  placeholder="请选择采集任务名"
                   labelInValue={true}
                   value={{ value: logCollectTaskId }}
                   optionFilterProp="label"
@@ -194,13 +194,13 @@ const QueryModule: React.FC<propsType> = ({ indicatorSelectModule, layout, filte
                 </Select>
               </Col>
               <Col span={8}>
-                <div className="label-name">path：</div>
+                <div className="label-name">采集路径：</div>
                 {logCollectTaskId ? (
                   <Select
                     showSearch
                     allowClear
                     suffixIcon={<IconFont type="icon-xiala" />}
-                    placeholder="请选择path"
+                    placeholder="请选择采集路径"
                     labelInValue={true}
                     value={{ value: pathId }}
                     disabled={logCollectTaskId !== null ? false : true}
@@ -223,7 +223,7 @@ const QueryModule: React.FC<propsType> = ({ indicatorSelectModule, layout, filte
                       showSearch
                       allowClear
                       suffixIcon={<IconFont type="icon-xiala" />}
-                      placeholder="请选择path"
+                      placeholder="请选择采集路径"
                       labelInValue={true}
                       value={{ value: pathId }}
                       disabled={logCollectTaskId !== null ? false : true}
@@ -244,13 +244,13 @@ const QueryModule: React.FC<propsType> = ({ indicatorSelectModule, layout, filte
                 )}
               </Col>
               <Col span={8}>
-                <div className="label-name">host：</div>
+                <div className="label-name">主机名：</div>
                 {logCollectTaskId ? (
                   <Select
                     showSearch
                     allowClear
                     suffixIcon={<IconFont type="icon-xiala" />}
-                    placeholder="请选择host"
+                    placeholder="请选择主机名"
                     labelInValue={true}
                     value={{ value: hostName }}
                     disabled={logCollectTaskId !== null ? false : true}
@@ -273,7 +273,7 @@ const QueryModule: React.FC<propsType> = ({ indicatorSelectModule, layout, filte
                       showSearch
                       allowClear
                       suffixIcon={<IconFont type="icon-xiala" />}
-                      placeholder="请选择host"
+                      placeholder="请选择主机名"
                       labelInValue={true}
                       value={{ value: hostName }}
                       disabled={logCollectTaskId !== null ? false : true}
@@ -298,12 +298,12 @@ const QueryModule: React.FC<propsType> = ({ indicatorSelectModule, layout, filte
           {tabKey === '0' && (
             <Row gutter={[16, 16]}>
               <Col span={indicatorSelectModule?.menuList?.length > 1 ? 24 : 8}>
-                <div className="label-name">Agent：</div>
+                <div className="label-name">Agent 主机名：</div>
                 <Select
                   showSearch
                   allowClear
                   suffixIcon={<IconFont type="icon-xiala" />}
-                  placeholder="请选择Agent"
+                  placeholder="请选择Agent主机名"
                   style={{ width: indicatorSelectModule?.menuList?.length > 1 ? '224px' : 'auto' }}
                   labelInValue={true}
                   value={{ value: agent }}

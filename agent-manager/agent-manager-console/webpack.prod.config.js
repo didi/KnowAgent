@@ -19,22 +19,23 @@ module.exports = {
     ),
     /* config.plugin('html-template?entry=agent') */
     new (require('html-webpack-plugin'))(
-        {
-          title: 'agent首页',
-          context: {
-            env: 'env',
-            isDebug: false,
-            isProduction: false
-          },
-          filename: require('path').resolve(__dirname, '../agent-manager-rest/src/main/resources/templates/pages/agent.html'),
-          template: require('path').resolve(__dirname, 'src/index.html'),
-          chunks: [
-            'agent',
-            'vendor',
-            'common',
-            'runtime'
-          ]
-        }
+      {
+        title: 'KnowAgent',
+        context: {
+          env: 'env',
+          isDebug: false,
+          isProduction: false
+        },
+        favicon: './favicon.ico',
+        filename: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/pages/agent.html'),
+        template: require('path').resolve(__dirname, 'src/index.html'),
+        chunks: [
+          'agent',
+          'vendor',
+          'common',
+          'runtime'
+        ]
+      }
     ),
     /* config.plugin('script-ext-html-webpack-plugin') */
     new (require('script-ext-html-webpack-plugin'))(
@@ -63,11 +64,17 @@ module.exports = {
     ),
     /* config.plugin('SourceMapDevToolPlugin') */
     new SourceMapDevToolPlugin(
-        {
-          filename: 'sourcemap/[file].map',
-          publicPath: '/agent/sourcemap/env/'
-        }
-    )
+      {
+        filename: 'sourcemap/[file].map',
+        publicPath: '/agent/sourcemap/env/'
+      }
+    ),
+    new (require('copy-webpack-plugin'))([
+      {
+        from: require('path').resolve(__dirname, 'favicon.ico'),
+        to: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/env/favicon.ico'),
+      },
+    ])
   ],
   output: {
     filename: 'js/[name].[contenthash].js',

@@ -76,7 +76,7 @@ export const getAgentInfo = (info: any) => {
       key: 'described',
     },
     {
-      label: 'CPU核数上限',
+      label: 'Agent CPU 限流阈值(单位：核)',
       key: 'cpuLimitThreshold',
     },
   ];
@@ -87,11 +87,11 @@ export const getAgentInfo = (info: any) => {
 export const getAgentSeniorInfo = (info: any) => {
   const columns = [
     {
-      label: '指标流接收集群',
+      label: '指标流接收集群 id',
       key: 'metricsSendReceiverId',
     },
     {
-      label: '错误日志接收集群',
+      label: '错误日志接收集群 id',
       key: 'errorLogsSendReceiverId',
     },
     {

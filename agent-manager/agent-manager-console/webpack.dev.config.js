@@ -22,13 +22,14 @@ module.exports = {
     /* config.plugin('html-template?entry=agent') */
     new (require('html-webpack-plugin'))(
       {
-        title: 'agent首页',
+        title: 'KnowAgent',
         context: {
           env: 'env',
           isDebug: true,
           isProduction: false
         },
         filename: 'agent.html',
+        favicon: './favicon.ico',
         template: require('path').resolve(__dirname, 'src/index.html'),
         chunks: [
           'agent',
@@ -210,13 +211,13 @@ module.exports = {
             options: {
               sourceMap: 'inline',
               plugins: [
-                  calc(),
-                  presetEnv({
-                    browsers: 'chrome >= 58, ie >= 11',
-                    autoprefixer: true,
-                    stage: 3,
-                  }),
-                ]
+                calc(),
+                presetEnv({
+                  browsers: 'chrome >= 58, ie >= 11',
+                  autoprefixer: true,
+                  stage: 3,
+                }),
+              ]
             }
           }
         ]
@@ -248,13 +249,13 @@ module.exports = {
             options: {
               sourceMap: 'inline',
               plugins: [
-                  calc(),
-                  presetEnv({
-                    browsers: 'chrome >= 58, ie >= 11',
-                    autoprefixer: true,
-                    stage: 3,
-                  }),
-                ]
+                calc(),
+                presetEnv({
+                  browsers: 'chrome >= 58, ie >= 11',
+                  autoprefixer: true,
+                  stage: 3,
+                }),
+              ]
             }
           },
           /* config.module.rule('module-less').use('less-loader') */

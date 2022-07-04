@@ -1,6 +1,5 @@
 import HomePage from './DashBoard';
-import { DemoPage } from './DemoPage';
-
+import Devops from './DashBoard/Devops';
 import AgentList from './AgentList';
 import AgentVersion from './AgentVersion';
 import AgentDetail from './AgentDetail';
@@ -14,26 +13,22 @@ import AgentKanban from './AgentKanban';
 import CollectTaskKanban from './CollectTaskKanban';
 import CollectTaskPage from './CollectTaskPage';
 import AddAcquisitionTask from './add-collect-task';
+import IndexPage from './IndexPage';
 export const pageRoutes = [
   {
     path: '/',
     exact: true,
-    component: HomePage,
+    component: IndexPage,
   },
   {
-    path: '/home',
+    path: '/version/operation',
     exact: true,
     component: HomePage,
   },
   {
-    path: '/demo/physics',
+    path: '/version/devops',
     exact: true,
-    component: DemoPage,
-  },
-  {
-    path: '/demo/test',
-    exact: true,
-    component: AgentDetail,
+    component: Devops,
   },
   {
     path: '/main',
@@ -54,12 +49,12 @@ export const pageRoutes = [
     component: AgentVersion,
   },
   {
-    path: '/dataSource',
+    path: '/meta/dataSource',
     exact: true,
     component: ApplicationList,
   },
   {
-    path: '/receivingTerminal',
+    path: '/meta/receivingTerminal',
     exact: true,
     component: ReceivingTerminal,
   },
@@ -79,7 +74,7 @@ export const pageRoutes = [
     component: OperationRecord,
   },
   {
-    path: '/main/agent-kanban',
+    path: '/monitor/agent-kanban',
     exact: true,
     component: AgentKanban,
   },
@@ -89,7 +84,7 @@ export const pageRoutes = [
     component: IndicatorProbe,
   },
   {
-    path: '/collect/metric',
+    path: '/monitor/metric',
     exact: 'true',
     component: CollectTaskKanban,
   },

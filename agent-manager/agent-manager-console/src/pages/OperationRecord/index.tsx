@@ -51,12 +51,7 @@ const AutoPage = (props) => {
       );
     });
   };
-  const headerLeftContent = (
-    <>
-      操作记录
-      <span>页面</span>
-    </>
-  );
+  const headerLeftContent = <>操作记录</>;
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
   }, []);

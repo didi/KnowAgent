@@ -52,6 +52,7 @@ export const apiMap = {
   getDataFormat: getApi('/normal/system-config/datetime-format'), // 获取系统配置的所有日期/时间格式
   getFileContent: getApi('/normal/collect-task/file-content'), // 读取文件内容 注：最多读取 100 行
   getSliceRule: getApi('/normal/collect-task/slice_rule'), // 根据给定日志样本与切片时间戳串获取对应切片规则配置
+  getRuleTips: getApi(`/normal/collect-task/file-name-suffix-regular-expression-examples-tips`),
   // version
   getVersionList: getApi('/op/version/paging'),
   actionVersion: getApi('/op/version'),

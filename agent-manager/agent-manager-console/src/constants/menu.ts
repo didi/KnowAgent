@@ -6,27 +6,36 @@ export const leftMenus = {
   icon: 'icon-jiqun',
   path: '/',
   children: [
-    // {
-    //   name: "demo",
-    //   path: "demo",
-    //   icon: "icon-a-cebiandaohang-zhibiaotancha",
-    //   children: [
-    //     {
-    //       name: "physics",
-    //       path: "physics",
-    //       icon: "#icon-luoji",
-    //     },
-    //     {
-    //       name: "logic",
-    //       path: "logic",
-    //       icon: "#icon-jiqun1",
-    //     },
-    //   ],
-    // },
     {
       name: 'home',
-      path: '/',
+      path: 'version',
       icon: 'icon-wodegongzuotai',
+      children: [
+        {
+          name: 'operation',
+          path: 'operation',
+        },
+        {
+          name: 'devops',
+          path: 'devops',
+        },
+      ],
+    },
+    //元数据中心
+    {
+      name: 'meta',
+      path: 'meta',
+      icon: 'icon-cebiandaohang-shujuyuan',
+      children: [
+        {
+          name: 'dataSource',
+          path: 'dataSource',
+        },
+        {
+          name: 'receivingTerminal',
+          path: 'receivingTerminal',
+        },
+      ],
     },
     // Agent中心
     {
@@ -43,58 +52,32 @@ export const leftMenus = {
           name: 'agentVersion',
           path: 'agentVersion',
           icon: '#icon-jiqun1',
-        },
-        {
-          name: 'agent-kanban',
-          path: 'agent-kanban',
-          icon: '#icon-jiqun1',
-        },
+        }
       ],
     },
-    // {
-    //   name: 'collect',
-    //   path: 'collect',
-    //   icon: 'icon-cebiandaohang-caijirenwu',
-    //   children: [
-    //     {
-    //       name: 'metric',
-    //       path: 'metric',
-    //       icon: '#icon-luoji',
-    //     },
-    //   ],
-    // },
-    {
-      name: 'dataSource',
-      path: 'dataSource',
-      icon: 'icon-cebiandaohang-shujuyuan',
-    },
-    {
-      name: 'receivingTerminal',
-      path: 'receivingTerminal',
-      icon: 'icon-jieshouduanguanli',
-    },
-    // {
-    //   name: 'collect',
-    //   path: 'collect',
-    //   icon: '#icon-jiqun1',
-    // },
+    //采集任务管理
     {
       name: 'collect',
       path: 'collect',
       icon: 'icon-cebiandaohang-caijirenwu',
+    },
+    //监控中心
+    {
+      name: 'monitor',
+      path: 'monitor',
+      icon: 'icon-jieshouduanguanli',
       children: [
-        {
-          name: 'list',
-          path: '',
-          icon: '#icon-luoji',
-        },
         {
           name: 'metric',
           path: 'metric',
-          icon: '#icon-luoji',
+        },
+        {
+          name: 'agent-kanban',
+          path: 'agent-kanban',
         },
       ],
     },
+    //运维中心
     {
       name: 'tool',
       path: 'tool',
@@ -103,27 +86,15 @@ export const leftMenus = {
         {
           name: 'indicator-probe',
           path: 'indicator-probe',
-          icon: 'icon-a-cebiandaohang-zhibiaotancha',
         },
       ],
     },
+    //操作记录
     {
       name: 'operationRecord',
       path: 'operationRecord',
       icon: 'icon-caozuojilu',
     },
-    // {
-    //   name: "kafka",
-    //   path: "kafka",
-    //   icon: "icon-cebiandaohang-caijirenwu",
-    //   children: [
-    //     {
-    //       name: "physics",
-    //       path: "physics",
-    //       icon: "#icon-luoji",
-    //     },
-    //   ],
-    // },
   ],
 };
 

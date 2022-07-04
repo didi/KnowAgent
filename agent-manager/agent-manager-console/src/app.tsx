@@ -6,9 +6,10 @@ import dantdEnUS from '@didi/dcloud-design/lib/locale/en_US';
 import intlZhCN from './locales/zh';
 import intlEnUS from './locales/en';
 import { systemKey, leftMenus } from './constants/menu';
-import { DLayout, AppContainer, RouteGuard, Empty } from '@didi/dcloud-design';
+import { DLayout, AppContainer, RouteGuard, Empty, Image } from '@didi/dcloud-design';
 import { pageRoutes } from './pages';
 import './index.less';
+import img from './image/logo.png';
 
 interface ILocaleMap {
   [index: string]: any;
@@ -48,7 +49,12 @@ const App = () => {
     >
       <Router basename={systemKey}>
         <DLayout.DSkoteLayout
-          siderbarNavTitle={<i className="iconfont icon-a-agentlogo" />}
+          siderbarNavTitle={
+            <>
+              <Image width={24} src={img} />
+              <i className="iconfont icon-a-agentlogo" />
+            </>
+          }
           noFooter
           headerLeftContent={'我的工作台'}
           defaultSideCollpsed={false}

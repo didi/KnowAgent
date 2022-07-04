@@ -48,12 +48,7 @@ const AutoPage = (props: any) => {
       setPageData(props.pageTreeData);
     }
   }, [props.pageTreeData]);
-  const headerLeftContent = (
-    <>
-      Agent版本
-      <span>页面</span>
-    </>
-  );
+  const headerLeftContent = <>Agent版本</>;
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
   }, []);

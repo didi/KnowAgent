@@ -6,7 +6,7 @@ export const HomePage = () => {
   const headerLeftContent = (
     <>
       表格
-      <span>页面</span>
+
     </>
   );
   useEffect(() => {
