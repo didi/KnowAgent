@@ -3,7 +3,10 @@ package com.didichuxing.datachannel.agentmanager.rest;
 import cn.hutool.core.lang.ClassScanner;
 import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.dashboard.DashBoardDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.MaintenanceDashBoardVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.OperatingDashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
@@ -105,7 +108,9 @@ public class AgentManagerApplication {
             public void run() {
                 try {
                     DashboardManageServiceImpl dashboardManageServiceImpl = ctx.getBean(DashboardManageServiceImpl.class);
-                    GlobalProperties.dashBoardDO = dashboardManageServiceImpl.build();
+                    DashBoardDO dashBoardDO = dashboardManageServiceImpl.build();
+                    GlobalProperties.maintenanceDashBoardVO = MaintenanceDashBoardVO.cast2MaintenanceDashBoardVO(dashBoardDO);
+                    GlobalProperties.operatingDashBoardVO = OperatingDashBoardVO.cast2OperatingDashBoardVO(dashBoardDO);
                 } catch (Exception ex) {
                     LOGGER.error(String.format(" build dashboard error, root cause is: %s", ex.getMessage()), ex);
                 }

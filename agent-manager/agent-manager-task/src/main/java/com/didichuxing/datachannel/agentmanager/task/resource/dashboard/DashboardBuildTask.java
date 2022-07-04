@@ -3,6 +3,7 @@ package com.didichuxing.datachannel.agentmanager.task.resource.dashboard;
 import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.dashboard.DashBoardDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.MaintenanceDashBoardVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.OperatingDashBoardVO;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.DashboardManageService;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
@@ -24,7 +25,9 @@ public class DashboardBuildTask implements Job {
     public Object execute(JobContext jobContext) throws Exception {
         LOGGER.info("start to run DashboardBuildTask");
         try {
-            GlobalProperties.dashBoardDO = dashboardManageService.build();
+            DashBoardDO dashBoardDO = dashboardManageService.build();
+            GlobalProperties.maintenanceDashBoardVO = MaintenanceDashBoardVO.cast2MaintenanceDashBoardVO(dashBoardDO);
+            GlobalProperties.operatingDashBoardVO = OperatingDashBoardVO.cast2OperatingDashBoardVO(dashBoardDO);
         } catch (Exception ex) {
             //TODO：logger
             return String.format("failed!! msg=%s", ex.getMessage());

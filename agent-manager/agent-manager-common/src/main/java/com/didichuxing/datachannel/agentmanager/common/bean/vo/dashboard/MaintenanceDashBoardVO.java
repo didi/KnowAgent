@@ -1,11 +1,14 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.dashboard.DashBoardDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
+import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class MaintenanceDashBoardVO {
@@ -66,10 +69,10 @@ public class MaintenanceDashBoardVO {
     /********************************** part 2 **********************************/
 
     @ApiModelProperty(value = "主机各操作系统类型 - 数量 key：操作系统类型 value：数量")
-    private List<Pair<String, Long>> osTypeNumberPairList;
+    private Map<String, Long> osTypeCountMap;
 
     @ApiModelProperty(value = "Agent 各版本 - 数量 key：Agent 版本 value：数量")
-    private List<Pair<String, Long>> agentVersionNumberPairList;
+    private Map<String, Long> agentVersionCountMap;
 
     @ApiModelProperty(value = "系统当前处于red状态日志采集任务列表集 key：日志采集任务名 value：日志采集任务 id")
     private List<Pair<String, Long>> redLogCollectTaskNameIdPairList;
@@ -85,74 +88,76 @@ public class MaintenanceDashBoardVO {
 
     /********************************** part 3 **********************************/
 
-    /*************************** agent 视角 ***************************/
-
     @ApiModelProperty(value = "当前主机时间误差时长 top5 Agents（单位：秒）")
-    private List<Pair<String, Double>> ntpGapTop5Agents;
+    private MetricPanel ntpGapTop5Agents;
 
     @ApiModelProperty(value = "当前进程 cpu 使用率 top5 Agents（单位：%）")
-    private List<Pair<String, Double>> cpuUsageTop5Agents;
+    private MetricPanel cpuUsageTop5Agents;
 
     @ApiModelProperty(value = "当前进程内存使用量 top5 Agents（单位：MB）")
-    private List<Pair<String, Double>> memoryUsedTop5Agents;
+    private MetricPanel memoryUsedTop5Agents;
 
     @ApiModelProperty(value = "当前系统带宽使用量 top5 Agents（单位：MB）")
-    private List<Pair<String, Double>> bandWidthUsedTop5Agents;
+    private MetricPanel bandWidthUsedTop5Agents;
 
     @ApiModelProperty(value = "当前系统带宽使用率 top5 Agents（单位：%）")
-    private List<Pair<String, Double>> bandWidthUsageTop5Agents;
+    private MetricPanel bandWidthUsageTop5Agents;
 
     @ApiModelProperty(value = "当日 Agent 进程 full gc 次数 top5 Agents（单位：次）")
-    private List<Pair<String, Double>> fullGcTimesDayTop5Agents;
+    private MetricPanel fullGcTimesDayTop5Agents;
 
     @ApiModelProperty(value = "当前 Agent 进程 fd 使用量 top5 Agents（单位：个）")
-    private List<Pair<String, Double>> fdUsedTop5Agents;
+    private MetricPanel fdUsedTop5Agents;
 
     @ApiModelProperty(value = "当前 Agent 进程上行流量 top5 Agents（单位：MB）")
-    private List<Pair<String, Double>> uplinkBytesTop5Agents;
+    private MetricPanel uplinkBytesTop5Agents;
 
     @ApiModelProperty(value = "近1分钟 Agent 进程发送日志条数 top5 Agents（单位：条）")
-    private List<Pair<String, Double>> sendLogEventsLast1MinuteTop5Agents;
+    private MetricPanel sendLogEventsLast1MinuteTop5Agents;
 
     @ApiModelProperty(value = "近1分钟 Agent 进程发送日志量 top5 Agents（单位：MB）")
-    private List<Pair<String, Double>> sendBytesLast1MinuteTop5Agents;
+    private MetricPanel sendBytesLast1MinuteTop5Agents;
 
     @ApiModelProperty(value = "当日 Agent 进程发送日志量 top5 Agents（单位：GB）")
-    private List<Pair<String, Double>> sendBytesDayTop5Agents;
+    private MetricPanel sendBytesDayTop5Agents;
 
     @ApiModelProperty(value = "当日 Agent 进程发送日志条数 top5 Agents（单位：条）")
-    private List<Pair<String, Double>> sendLogEventsDayTop5Agents;
+    private MetricPanel sendLogEventsDayTop5Agents;
 
     @ApiModelProperty(value = "当前具有运行状态的日志采集任务数 top5 Agents（单位：个）")
-    private List<Pair<String, Double>> runningLogCollectTasksTop5Agents;
+    private MetricPanel runningLogCollectTasksTop5Agents;
 
     @ApiModelProperty(value = "当前具有运行状态的日志采集路径数 top5 Agents（单位：个）")
-    private List<Pair<String, Double>> runningLogCollectPathsTop5Agents;
+    private MetricPanel runningLogCollectPathsTop5Agents;
 
     /*************************** logCollectTask 视角 ***************************/
 
     @ApiModelProperty(value = "当前采集的日志业务时间最大延时 top5 采集任务（单位：秒）")
-    private List<Pair<String, Double>> logTimeDelayTop5LogCollectTasks;
+    private MetricPanel logTimeDelayTop5LogCollectTasks;
 
     @ApiModelProperty(value = "当日限流时长 top5 采集任务（单位：秒）")
-    private List<Pair<String, Double>> limitTimeTop5LogCollectTasks;
+    private MetricPanel limitTimeTop5LogCollectTasks;
 
     @ApiModelProperty(value = "近1分钟发送日志量 top5 采集任务（单位：MB）")
-    private List<Pair<String, Double>> sendBytesLast1MinuteTop5LogCollectTasks;
+    private MetricPanel sendBytesLast1MinuteTop5LogCollectTasks;
 
     @ApiModelProperty(value = "近1分钟发送日志条数 top5 采集任务（单位：条）")
-    private List<Pair<String, Double>> sendLogEventsLast1MinuteTop5LogCollectTasks;
+    private MetricPanel sendLogEventsLast1MinuteTop5LogCollectTasks;
 
     @ApiModelProperty(value = "当日发送日志量 top5 采集任务（单位：GB）")
-    private List<Pair<String, Double>> sendBytesDayTop5LogCollectTasks;
+    private MetricPanel sendBytesDayTop5LogCollectTasks;
 
     @ApiModelProperty(value = "当日发送日志条数 top5 采集任务（单位：条）")
-    private List<Pair<String, Double>> sendLogEventsDayTop5LogCollectTasks;
+    private MetricPanel sendLogEventsDayTop5LogCollectTasks;
 
     @ApiModelProperty(value = "当前关联主机数 top5 采集任务（单位：个）")
     private MetricPanel relateHostsTop5LogCollectTasks;
 
     @ApiModelProperty(value = "当前关联 Agent 数 top5 采集任务（单位：个）")
     private MetricPanel relateAgentsTop5LogCollectTasks;
+
+    public static MaintenanceDashBoardVO cast2MaintenanceDashBoardVO(DashBoardDO dashBoardDO) {
+        return ConvertUtil.obj2Obj(dashBoardDO, MaintenanceDashBoardVO.class);
+    }
 
 }
