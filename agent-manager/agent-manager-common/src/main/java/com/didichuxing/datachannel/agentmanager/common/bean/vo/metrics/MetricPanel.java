@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,5 +33,8 @@ public class MetricPanel {
 
     @ApiModelProperty(value = "多根折线图类型指标值")
     private List<MetricPointLine> multiLineChatValue;
+
+    @ApiModelProperty(value = "柱状图类型指标值")
+    private List<Pair<Object, Object>> histogramChatValue;
 
 }

@@ -19,6 +19,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostType
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
@@ -517,6 +518,18 @@ public class HostManageServiceImpl implements HostManageService {
     @Override
     public Long countAllContainer() {
         return hostDAO.countByHostType(HostTypeEnum.CONTAINER.getCode());
+    }
+
+    @Override
+    public Long countAllFaultyHost() {
+        Long faultyCount = 0l;
+        List<HostDO> hostDOList = list();
+        for(HostDO hostDO : hostDOList) {
+            if(!NetworkUtil.ping(hostDO.getHostName())) {
+                faultyCount++;
+            }
+        }
+        return faultyCount;
     }
 
 }

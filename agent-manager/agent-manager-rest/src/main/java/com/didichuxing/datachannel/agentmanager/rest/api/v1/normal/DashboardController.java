@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
 
+import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.MaintenanceDashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.OperatingDashBoardVO;
@@ -26,22 +27,14 @@ public class DashboardController {
     @RequestMapping(value = "/operating", method = RequestMethod.GET)
     @ResponseBody
     public Result<OperatingDashBoardVO> operatingDashboard() {
-//        if(null == GlobalProperties.dashBoardVO) {
-//            LOGGER.info("class=DashboardController||method=dashboard||msg=load dashboardVO from db.");
-//            GlobalProperties.dashBoardVO = dashboardManageService.build();
-//        }
-        return Result.buildSucc(null);
+        return Result.buildSucc(GlobalProperties.operatingDashBoardVO);
     }
 
     @ApiOperation(value = "获取运维大盘全量指标", notes = "")
     @RequestMapping(value = "/maintenance", method = RequestMethod.GET)
     @ResponseBody
     public Result<MaintenanceDashBoardVO> maintenanceDashboard() {
-//        if(null == GlobalProperties.dashBoardVO) {
-//            LOGGER.info("class=DashboardController||method=dashboard||msg=load dashboardVO from db.");
-//            GlobalProperties.dashBoardVO = dashboardManageService.build();
-//        }
-        return Result.buildSucc(null);
+        return Result.buildSucc(GlobalProperties.maintenanceDashBoardVO);
     }
 
 }

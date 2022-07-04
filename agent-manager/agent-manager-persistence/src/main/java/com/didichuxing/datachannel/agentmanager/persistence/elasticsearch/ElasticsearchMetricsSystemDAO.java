@@ -55,4 +55,9 @@ public class ElasticsearchMetricsSystemDAO implements MetricsSystemDAO {
     public MetricsSystemPO getLastRecord(Map<String, Object> params) {
         return null;
     }
+
+    @Override
+    public Double getSumMetricAllAgents(Map<String, Object> params) {
+        return null;
+    }
 }

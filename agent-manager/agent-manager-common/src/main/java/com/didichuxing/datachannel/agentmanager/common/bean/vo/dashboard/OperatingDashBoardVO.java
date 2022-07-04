@@ -1,7 +1,9 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.dashboard.DashBoardDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanel;
+import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -53,24 +55,28 @@ public class OperatingDashBoardVO {
     /*************************** Application 视角 ***************************/
 
     @ApiModelProperty(value = "近1分钟发送日志量 top5 应用（单位：MB）")
-    private List<Pair<String, Double>> sendBytesLast1MinuteTop5Applications;
+    private MetricPanel sendBytesLast1MinuteTop5Applications;
 
     @ApiModelProperty(value = "近1分钟发送日志条数 top5 应用（单位：条）")
-    private List<Pair<String, Double>> sendLogEventsLast1MinuteTop5Applications;
+    private MetricPanel sendLogEventsLast1MinuteTop5Applications;
 
     @ApiModelProperty(value = "当日发送日志量 top5 应用（单位：GB）")
-    private List<Pair<String, Double>> sendBytesDayTop5Applications;
+    private MetricPanel sendBytesDayTop5Applications;
 
     @ApiModelProperty(value = "当日发送日志条数 top5 应用（单位：条）")
-    private List<Pair<String, Double>> sendLogEventsDayTop5Applications;
+    private MetricPanel sendLogEventsDayTop5Applications;
 
     @ApiModelProperty(value = "当前关联主机数 top5 应用（单位：个）")
-    private List<Pair<String, Double>> relateHostsTop5Applications;
+    private MetricPanel relateHostsTop5Applications;
 
     @ApiModelProperty(value = "当前关联 Agent 数 top5 应用（单位：个）")
-    private List<Pair<String, Double>> relateAgentsTop5Applications;
+    private MetricPanel relateAgentsTop5Applications;
 
     @ApiModelProperty(value = "当前关联采集任务数 top5 应用（单位：个）")
-    private List<Pair<String, Double>> relateLogCollectTaskTop5Applications;
+    private MetricPanel relateLogCollectTaskTop5Applications;
+
+    public static OperatingDashBoardVO cast2OperatingDashBoardVO(DashBoardDO dashBoardDO) {
+        return ConvertUtil.obj2Obj(dashBoardDO, OperatingDashBoardVO.class);
+    }
 
 }
