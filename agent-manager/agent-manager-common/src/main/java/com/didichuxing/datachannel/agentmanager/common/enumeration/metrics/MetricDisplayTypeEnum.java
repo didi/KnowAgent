@@ -7,7 +7,8 @@ public enum MetricDisplayTypeEnum {
 
     LABLE(1,"lable类型指标"),
     MULTI_LINE_CHAT(2, "折线图-多根类型指标"),
-    SINGLE_LINE_CHAT(3,"折线图-单根类型指标")
+    SINGLE_LINE_CHAT(3,"折线图-单根类型指标"),
+    HISTOGRAM_CHAT(4, "柱状图")
     ;
 
     public Integer getCode() {

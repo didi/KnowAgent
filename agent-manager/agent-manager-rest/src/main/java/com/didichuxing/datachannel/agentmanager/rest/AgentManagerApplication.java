@@ -23,7 +23,6 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -106,7 +105,7 @@ public class AgentManagerApplication {
             public void run() {
                 try {
                     DashboardManageServiceImpl dashboardManageServiceImpl = ctx.getBean(DashboardManageServiceImpl.class);
-                    GlobalProperties.dashBoardVO = dashboardManageServiceImpl.build();
+                    GlobalProperties.dashBoardDO = dashboardManageServiceImpl.build();
                 } catch (Exception ex) {
                     LOGGER.error(String.format(" build dashboard error, root cause is: %s", ex.getMessage()), ex);
                 }

@@ -89,4 +89,13 @@ public interface MetricsSystemDAO {
      */
     MetricsSystemPO getLastRecord(Map<String, Object> params);
 
+    /**
+     * @param params
+     *  function：聚合函数名
+     *  fieldName：字段名
+     *  startTime：心跳开始时间戳
+     *  endTime：心跳结束时间戳
+     */
+    Double getSumMetricAllAgents(Map<String, Object> params);
+
 }

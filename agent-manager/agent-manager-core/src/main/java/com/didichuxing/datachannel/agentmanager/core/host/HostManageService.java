@@ -153,7 +153,9 @@ public interface HostManageService {
      */
     Long countAllContainer();
 
-
-
+    /**
+     * @return 返回全量故障主机数
+     */
+    Long countAllFaultyHost();
 
 }
