@@ -22,12 +22,7 @@ const menuList: Imenu[] = [
   },
 ];
 const IndicatorProbe: React.FC<propsType> = () => {
-  const headerLeftContent = (
-    <>
-      指标探查
-      <span>页面</span>
-    </>
-  );
+  const headerLeftContent = <>指标探查</>;
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
   }, []);

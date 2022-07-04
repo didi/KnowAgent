@@ -49,12 +49,12 @@ export const pageRoutes = [
     component: AgentVersion,
   },
   {
-    path: '/dataSource',
+    path: '/meta/dataSource',
     exact: true,
     component: ApplicationList,
   },
   {
-    path: '/receivingTerminal',
+    path: '/meta/receivingTerminal',
     exact: true,
     component: ReceivingTerminal,
   },
@@ -74,7 +74,7 @@ export const pageRoutes = [
     component: OperationRecord,
   },
   {
-    path: '/main/agent-kanban',
+    path: '/monitor/agent-kanban',
     exact: true,
     component: AgentKanban,
   },
@@ -84,7 +84,7 @@ export const pageRoutes = [
     component: IndicatorProbe,
   },
   {
-    path: '/collect/metric',
+    path: '/monitor/metric',
     exact: 'true',
     component: CollectTaskKanban,
   },

@@ -52,12 +52,7 @@ const AutoPage = (props: any) => {
       setPageData(props.pageTreeData);
     }
   }, [props.pageTreeData]);
-  const headerLeftContent = (
-    <>
-      应用管理
-      <span>页面</span>
-    </>
-  );
+  const headerLeftContent = <>应用管理</>;
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
   }, []);

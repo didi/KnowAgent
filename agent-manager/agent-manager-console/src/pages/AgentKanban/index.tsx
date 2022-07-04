@@ -23,12 +23,7 @@ const menuList: Imenu[] = [
 ];
 const IndicatorProbe: React.FC<propsType> = () => {
   const { state } = useLocation<Istate>();
-  const headerLeftContent = (
-    <>
-      指标看板
-      <span>页面</span>
-    </>
-  );
+  const headerLeftContent = <>指标看板</>;
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
   }, []);

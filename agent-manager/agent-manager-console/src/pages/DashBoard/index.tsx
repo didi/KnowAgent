@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { AppContainer, Spin } from '@didi/dcloud-design';
 import { EventBusTypes } from '../../constants/event-types';
 import HeaderCard from './headerCard';
-import PieCharts from './pieCharts';
 import LineCharts from './lineCharts';
-import { getDashboard } from './service';
+import { getOperatingDashboard } from './service';
 import './style/index.less';
 import BackToTop from './BackToTop';
 
@@ -20,7 +19,7 @@ const HomePage = (): JSX.Element => {
 
   const getData = () => {
     setLoading(true);
-    getDashboard()
+    getOperatingDashboard()
       .then((res: any) => {
         setDashBoardData(res);
         setLoading(false);
@@ -41,7 +40,7 @@ const HomePage = (): JSX.Element => {
           {dashBoardData && (
             <>
               <HeaderCard dashBoardData={dashBoardData} />
-              <LineCharts dashBoardData={dashBoardData} />
+              {/* <LineCharts dashBoardData={dashBoardData} /> */}
             </>
           )}
         </div>

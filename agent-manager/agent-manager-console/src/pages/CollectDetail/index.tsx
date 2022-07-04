@@ -121,12 +121,7 @@ const AgentDetail = (props: any) => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
   }, [collectDetail]);
 
-  const headerLeftContent = (
-    <>
-      采集任务详情
-      <span>页面</span>
-    </>
-  );
+  const headerLeftContent = <>采集任务详情</>;
 
   useEffect(() => {
     getDetail();

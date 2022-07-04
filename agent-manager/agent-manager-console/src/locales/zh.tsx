@@ -18,18 +18,20 @@ export default {
   /** agent中心 */
   [`menu.${systemKey}.main`]: 'Agent中心',
   [`menu.${systemKey}.main.list`]: 'Agent管理',
-  [`menu.${systemKey}.main.agentVersion`]: 'Agent版本',
+  [`menu.${systemKey}.main.agentVersion`]: 'Agent版本管理',
   [`menu.${systemKey}.main.agent-kanban`]: '指标看板',
 
-  [`menu.${systemKey}.dataSource`]: '应用管理',
+  [`menu.${systemKey}.meta`]: '元数据中心',
+  [`menu.${systemKey}.meta.dataSource`]: '应用管理',
+  [`menu.${systemKey}.meta.receivingTerminal`]: '接收端管理',
 
-  [`menu.${systemKey}.receivingTerminal`]: '接收端管理',
-
-  [`menu.${systemKey}.collect`]: '采集任务',
-  [`menu.${systemKey}.collect.metric`]: '指标看板',
+  [`menu.${systemKey}.collect`]: '采集任务管理',
+  [`menu.${systemKey}.monitor`]: '监控中心',
+  [`menu.${systemKey}.monitor.metric`]: '采集任务指标看板',
+  [`menu.${systemKey}.monitor.agent-kanban`]: 'Agent指标看板',
   [`menu.${systemKey}.collect.list`]: '采集任务管理',
   [`menu.${systemKey}.operationRecord`]: '操作记录',
-  [`menu.${systemKey}.tool`]: '工具箱',
+  [`menu.${systemKey}.tool`]: '运维中心',
   [`menu.${systemKey}.tool.indicator-probe`]: '指标探查',
   // [`menu.${systemKey}.kafka`]: "Kafka管理",
   // [`menu.${systemKey}.kafka.physics`]: "物理集群",

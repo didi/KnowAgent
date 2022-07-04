@@ -4,7 +4,7 @@ import { EventBusTypes } from '../../constants/event-types';
 import HeaderCard from './headerCard';
 import PieCharts from './pieCharts';
 import LineCharts from './lineCharts';
-import { getDashboard } from './service';
+import { getDevopsDashboard } from './service';
 import './style/index.less';
 import BackToTop from './BackToTop';
 
@@ -20,7 +20,7 @@ const HomePage = (): JSX.Element => {
 
   const getData = () => {
     setLoading(true);
-    getDashboard()
+    getDevopsDashboard()
       .then((res: any) => {
         setDashBoardData(res);
         setLoading(false);

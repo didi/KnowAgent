@@ -9,7 +9,7 @@ import { systemKey, leftMenus } from './constants/menu';
 import { DLayout, AppContainer, RouteGuard, Empty, Image } from '@didi/dcloud-design';
 import { pageRoutes } from './pages';
 import './index.less';
-const img = require('./image/logo.png');
+import img from './image/logo.png';
 
 interface ILocaleMap {
   [index: string]: any;
