@@ -75,7 +75,7 @@ public interface MetricsManageService {
      * @param endTime 结束时间戳
      * @param sortTimeField 排序字段名
      * @param logCollectTaskByServiceNames 日志采集任务相关指标是否按 serviceNames 进行分组统计 true：service names 分组统计 false：logCollectTask id 分组统计，非日志采集任务相关指标忽略该属性
-     * @return 返回给定指标 topN agent 对应指标时序
+     * @return 返回给定指标 topN agent 对应柱状图指标集
      */
     List<Pair<Object, Object>> getTopNByMetric(MetricFieldEnum metricFieldEnum, Long startTime, Long endTime, String sortTimeField, boolean logCollectTaskByServiceNames);
 
