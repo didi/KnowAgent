@@ -24,6 +24,7 @@ import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCo
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
@@ -74,6 +75,9 @@ public class HostManageServiceImpl implements HostManageService {
 
     @Autowired
     private OperateRecordService operateRecordService;
+
+    @Autowired
+    private LogCollectTaskHealthDetailManageService logCollectTaskHealthDetailManageService;
 
     /**
      * 根据主机id获取对应主机对象
@@ -235,6 +239,10 @@ public class HostManageServiceImpl implements HostManageService {
          * 删除主机 & 服务关联关系
          */
         serviceHostManageService.deleteByHostId(hostDO.getId());
+        /*
+         * 删除 host 相关 tb_log_collect_task_health_detail 信息
+         */
+        logCollectTaskHealthDetailManageService.deleteByHostName(hostDO.getHostName());
         /*
          * 删除主机信息
          */

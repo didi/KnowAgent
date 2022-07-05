@@ -210,4 +210,10 @@ public class LogCollectTaskHealthDetailManageServiceImpl implements LogCollectTa
         logCollectTaskHealthDetailDAO.deleteByLogCollectTaskId(logCollectTaskId);
     }
 
+    @Override
+    @Transactional
+    public void deleteByHostName(String hostName) {
+        logCollectTaskHealthDetailDAO.deleteByHostName(hostName);
+    }
+
 }

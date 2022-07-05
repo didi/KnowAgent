@@ -37,4 +37,6 @@ public interface LogCollectTaskHealthDetailPOMapper {
 
     void deleteById(Long id);
 
+    void deleteByHostName(String hostName);
+
 }

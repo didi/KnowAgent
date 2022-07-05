@@ -164,4 +164,10 @@
       log_slice_check_healthy_heartbeat_time = #{logSliceCheckHealthyHeartbeatTime,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteByHostName" parameterType="java.lang.String" >
+    delete from tb_log_collect_task_health_detail
+    where host_name = #{hostName,jdbcType=VARCHAR}
+  </delete>
+
 </mapper>

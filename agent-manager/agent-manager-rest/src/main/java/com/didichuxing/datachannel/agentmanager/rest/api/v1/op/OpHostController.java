@@ -52,7 +52,7 @@ public class OpHostController {
                     "入参ignoreUncompleteCollect取值范围为[0,1]"
             );
         }
-        hostManageService.deleteHost(hostId, ignoreUncompleteCollect == 0 ? false : true, false, SpringTool.getUserName());
+        hostManageService.deleteHost(hostId, ignoreUncompleteCollect == 0 ? false : true, true, SpringTool.getUserName());
         return Result.buildSucc();
     }
 

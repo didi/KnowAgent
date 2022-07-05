@@ -49,4 +49,6 @@ public interface LogCollectTaskHealthDetailManageService {
 
     void deleteByLogCollectTaskId(Long logCollectTaskId);
 
+    void deleteByHostName(String hostName);
+
 }
