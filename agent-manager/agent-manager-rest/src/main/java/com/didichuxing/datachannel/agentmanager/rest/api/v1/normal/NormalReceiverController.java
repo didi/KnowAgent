@@ -159,8 +159,8 @@ public class NormalReceiverController {
         if(null != dto.getReceiverCreateTimeStart()) {
             receiverPaginationQueryConditionDO.setCreateTimeStart(new Date(dto.getReceiverCreateTimeStart()));
         }
-        if(StringUtils.isNotBlank(dto.getQueryTerm())) {
-            receiverPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
+        if(StringUtils.isNotBlank(dto.getKafkaClusterBrokerConfiguration())) {
+            receiverPaginationQueryConditionDO.setKafkaClusterBrokerConfiguration(dto.getKafkaClusterBrokerConfiguration().replace("_", "\\_").replace("%", "\\%"));
         }
         receiverPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         receiverPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());

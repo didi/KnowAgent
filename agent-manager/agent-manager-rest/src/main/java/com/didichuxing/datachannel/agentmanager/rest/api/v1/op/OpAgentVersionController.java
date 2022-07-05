@@ -127,6 +127,9 @@ public class OpAgentVersionController {
         if(null != dto.getQueryTerm()) {
             agentVersionPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
+        if(StringUtils.isNotBlank(dto.getAgentVersionDescription())) {
+            agentVersionPaginationQueryConditionDO.setAgentVersionDescription(dto.getAgentVersionDescription().replace("_", "\\_").replace("%", "\\%"));
+        }
         agentVersionPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         agentVersionPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());
         agentVersionPaginationQueryConditionDO.setSortColumn(dto.getSortColumn());

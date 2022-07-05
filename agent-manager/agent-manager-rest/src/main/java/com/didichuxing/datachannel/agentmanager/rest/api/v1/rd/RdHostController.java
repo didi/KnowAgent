@@ -132,7 +132,7 @@ public class RdHostController {
         hostPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());
         hostPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         if (StringUtils.isNotBlank(dto.getIp())) {
-            hostPaginationQueryConditionDO.setIp(dto.getIp());
+            hostPaginationQueryConditionDO.setIp(dto.getIp().replace("_", "\\_").replace("%", "\\%"));
         }
         if (StringUtils.isNotBlank(dto.getHostName())) {
             hostPaginationQueryConditionDO.setHostName(dto.getHostName().replace("_", "\\_").replace("%", "\\%"));

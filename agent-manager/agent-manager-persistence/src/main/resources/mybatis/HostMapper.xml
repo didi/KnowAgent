@@ -100,12 +100,11 @@
     LEFT JOIN tb_agent_health as t5 ON t5.agent_id = t3.id
     <where>
       1 = 1
-      <if test="queryTerm != null">
-        and (
-            t1.host_name like concat('%',#{queryTerm},'%')
-            or
-            t1.ip like concat('%',#{queryTerm},'%')
-        )
+      <if test="hostName != null">
+        and t1.host_name like concat('%',#{hostName},'%')
+      </if>
+      <if test="ip != null">
+        and t1.ip like concat('%',#{ip},'%')
       </if>
       <if test="agentVersionIdList != null">
           and t3.agent_version_id in
@@ -174,12 +173,11 @@
     LEFT JOIN tb_agent_health as t5 ON t5.agent_id = t3.id
     <where>
       1 = 1
-      <if test="queryTerm != null">
-        and (
-        t1.host_name like concat('%',#{queryTerm},'%')
-        or
-        t1.ip like concat('%',#{queryTerm},'%')
-        )
+      <if test="hostName != null">
+        and t1.host_name like concat('%',#{hostName},'%')
+      </if>
+      <if test="ip != null">
+        and t1.ip like concat('%',#{ip},'%')
       </if>
       <if test="agentVersionIdList != null">
         and t3.agent_version_id in

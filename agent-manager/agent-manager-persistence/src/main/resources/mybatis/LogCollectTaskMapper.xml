@@ -86,12 +86,11 @@
 	INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
     <where>
       1 = 1
-      <if test="queryTerm != null">
-          and (
-            t1.log_collect_task_name like concat('%',#{queryTerm},'%')
-            or
-            t1.id like concat('%',#{queryTerm},'%')
-          )
+      <if test="logCollectTaskName != null">
+        and t1.log_collect_task_name like concat('%',#{logCollectTaskName},'%')
+      </if>
+      <if test="logCollectTaskId != null">
+        and t1.id = #{logCollectTaskId}
       </if>
       <if test="logCollectTaskTypeList != null">
           and t1.log_collect_task_type in
@@ -148,12 +147,11 @@
     INNER JOIN tb_log_collect_task_health t3 ON t3.log_collect_task_id = t1.id
     <where>
       1 = 1
-      <if test="queryTerm != null">
-        and (
-        t1.log_collect_task_name like concat('%',#{queryTerm},'%')
-        or
-        t1.id like concat('%',#{queryTerm},'%')
-        )
+      <if test="logCollectTaskName != null">
+        and t1.log_collect_task_name like concat('%',#{logCollectTaskName},'%')
+      </if>
+      <if test="logCollectTaskId != null">
+        and t1.id = #{logCollectTaskId}
       </if>
       <if test="logCollectTaskTypeList != null">
         and t1.log_collect_task_type in

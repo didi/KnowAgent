@@ -100,8 +100,8 @@
     ) t2 ON t2.service_id = t1.id
     <where>
       1 = 1
-      <if test="queryTerm != null">
-        and t1.service_name like concat('%',#{queryTerm},'%')
+      <if test="serviceName != null">
+        and t1.service_name like concat('%',#{serviceName},'%')
       </if>
       <if test="createTimeStart != null">
         and t1.create_time >= #{createTimeStart}
@@ -141,8 +141,8 @@
     ) t2 ON t2.service_id = t1.id
     <where>
       1 = 1
-      <if test="queryTerm != null">
-        and t1.service_name like concat('%',#{queryTerm},'%')
+      <if test="serviceName != null">
+        and t1.service_name like concat('%',#{serviceName},'%')
       </if>
       <if test="createTimeStart != null">
         and t1.create_time >= #{createTimeStart}

@@ -45,6 +45,11 @@ public class AgentVersionPaginationQueryConditionDO {
      */
     private String queryTerm;
 
+    /**
+     * 版本描述信息
+     */
+    private String agentVersionDescription;
+
     public String getQueryTerm() {
         return queryTerm;
     }
@@ -114,6 +119,14 @@ public class AgentVersionPaginationQueryConditionDO {
 
     public Boolean getAsc() {
         return asc;
+    }
+
+    public String getAgentVersionDescription() {
+        return agentVersionDescription;
+    }
+
+    public void setAgentVersionDescription(String agentVersionDescription) {
+        this.agentVersionDescription = agentVersionDescription;
     }
 
     public void setAsc(Boolean asc) {
