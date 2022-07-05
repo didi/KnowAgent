@@ -6,16 +6,16 @@ module.exports = {
   plugins: [
     /* config.plugin('ProgressPlugin') */
     new ProgressPlugin(
-        {
-          profile: true
-        }
+      {
+        profile: true
+      }
     ),
     /* config.plugin('mini-css-extract-plugin') */
     new (require('mini-css-extract-plugin'))(
-        {
-          filename: 'css/[name].[contenthash].css',
-          chunkFilename: 'css/[name].[contenthash].css'
-        }
+      {
+        filename: 'css/[name].[contenthash].css',
+        chunkFilename: 'css/[name].[contenthash].css'
+      }
     ),
     /* config.plugin('html-template?entry=agent') */
     new (require('html-webpack-plugin'))(
@@ -27,7 +27,7 @@ module.exports = {
           isProduction: false
         },
         favicon: './favicon.ico',
-        filename: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/pages/agent.html'),
+        filename: require('path').resolve(__dirname, '../agent-manager-rest/src/main/resources/templates/pages/agent.html'),
         template: require('path').resolve(__dirname, 'src/index.html'),
         chunks: [
           'agent',
@@ -39,28 +39,28 @@ module.exports = {
     ),
     /* config.plugin('script-ext-html-webpack-plugin') */
     new (require('script-ext-html-webpack-plugin'))(
-        {
-          custom: {
-            test: /\.js$/,
-            attribute: 'crossorigin',
-            value: 'anonymous'
-          }
+      {
+        custom: {
+          test: /\.js$/,
+          attribute: 'crossorigin',
+          value: 'anonymous'
         }
+      }
     ),
     /* config.plugin('d1-plugin-case-sensitive-paths') */
     new (require('case-sensitive-paths-webpack-plugin'))(
-        {
-          debug: false
-        }
+      {
+        debug: false
+      }
     ),
     /* config.plugin('webpack-manifest-plugin') */
     new (require('webpack-manifest-plugin'))(),
     /* config.plugin('webpack.DefinePlugin') */
     new DefinePlugin(
-        {
-          'process.env.config': '"development"',
-          'process.env.NODE_ENV': '"development"'
-        }
+      {
+        'process.env.config': '"development"',
+        'process.env.NODE_ENV': '"development"'
+      }
     ),
     /* config.plugin('SourceMapDevToolPlugin') */
     new SourceMapDevToolPlugin(
@@ -72,7 +72,7 @@ module.exports = {
     new (require('copy-webpack-plugin'))([
       {
         from: require('path').resolve(__dirname, 'favicon.ico'),
-        to: require('path').resolve(__dirname, '../agent-manager-rest/target/classes/env/favicon.ico'),
+        to: require('path').resolve(__dirname, '../agent-manager-rest/src/main/resources/templates/env/favicon.ico'),
       },
     ])
   ],
