@@ -43,16 +43,9 @@ public class OpHostController {
     @RequestMapping(value = "/{hostId}", method = RequestMethod.DELETE)
     @ResponseBody
     public Result deleteHost(
-            @PathVariable Long hostId,
-            @RequestParam (value = "ignoreUncompleteCollect") Integer ignoreUncompleteCollect
+            @PathVariable Long hostId
     ) {
-        if(0 != ignoreUncompleteCollect & 1 != ignoreUncompleteCollect) {
-            return Result.build(
-                    ErrorCodeEnum.ILLEGAL_PARAMS.getCode(),
-                    "入参ignoreUncompleteCollect取值范围为[0,1]"
-            );
-        }
-        hostManageService.deleteHost(hostId, ignoreUncompleteCollect == 0 ? false : true, true, SpringTool.getUserName());
+        hostManageService.deleteHost(hostId, true, true, SpringTool.getUserName());
         return Result.buildSucc();
     }
 
