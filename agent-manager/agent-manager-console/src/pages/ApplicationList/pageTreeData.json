@@ -152,6 +152,19 @@
             ],
             "queryFormArray": [
               {
+                "type": "input",
+                "title": "应用名",
+                "dataIndex": "serviceName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
                 "type": "dateRangePicker",
                 "title": "新增时间",
                 "placeholder": [

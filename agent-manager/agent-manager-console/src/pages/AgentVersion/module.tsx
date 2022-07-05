@@ -104,7 +104,8 @@ export const ActionVersionForm: React.FC = (props: any) => {
         modifyAgentVersion(params)
           .then((res: any) => {
             message.success('修改成功！');
-            // getData() //调用传入的genData函数更新列表数据
+            props.genData();
+            //调用传入的genData函数更新列表数据
             props.setVisible(false);
           })
           .catch((err: any) => {
