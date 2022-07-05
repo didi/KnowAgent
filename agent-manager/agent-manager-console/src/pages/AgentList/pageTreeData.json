@@ -32,7 +32,14 @@
               {
                 "title": "主机名",
                 "dataIndex": "hostName",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [
                   {
                     "operationName": "",
@@ -55,13 +62,27 @@
               {
                 "title": "主机IP",
                 "dataIndex": "ip",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": []
               },
               {
                 "title": "主机类型",
                 "dataIndex": "container",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [],
                 "sorter": true,
                 "valueType": "hostType"
@@ -69,20 +90,41 @@
               {
                 "title": "承载应用",
                 "dataIndex": "serviceList",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": []
               },
               {
                 "title": "Agent版本号",
                 "dataIndex": "agentVersion",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [],
                 "sorter": false
               },
               {
                 "title": "Agent健康度",
                 "dataIndex": "agentHealthLevel",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [
                   {
                     "operationName": "",
@@ -114,14 +156,28 @@
               {
                 "title": "新增时间",
                 "dataIndex": "hostCreateTime",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [],
                 "valueType": "dateTime"
               },
               {
                 "title": "操作",
                 "dataIndex": "Thu Jan 20 2022 18:56:17 GMT+0800 (中国标准时间)",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [
                   {
                     "operationName": "编辑",
@@ -203,6 +259,32 @@
                 "option": "agentvisionArr"
               },
               {
+                "type": "input",
+                "title": "主机名",
+                "dataIndex": "hostName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "input",
+                "title": "IP",
+                "dataIndex": "ip",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
                 "type": "select",
                 "title": "健康度",
                 "dataIndex": "agentHealthLevelList",
@@ -253,7 +335,10 @@
                 "type": "dateRangePicker",
                 "title": "新增时间",
                 "dataIndex": "hostCreateTime",
-                "placeholder": ["开始时间", "结束时间"],
+                "placeholder": [
+                  "开始时间",
+                  "结束时间"
+                ],
                 "initialValue": "",
                 "componentProps": {
                   "maxLength": 128

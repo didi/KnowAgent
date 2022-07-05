@@ -32,7 +32,14 @@
               {
                 "title": "任务ID",
                 "dataIndex": "logCollectTaskId",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [
                   {
                     "operationName": "",
@@ -55,41 +62,68 @@
               {
                 "title": "任务名",
                 "dataIndex": "logCollectTaskName",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": []
-              },
-              {
-                "title": "采集模式",
-                "dataIndex": "logCollectTaskType",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
-                "operationArray": [],
-                "sorter": false,
-                "valueType": "logCollectTaskType"
               },
               {
                 "title": "采集应用",
                 "dataIndex": "serviceList_bak",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": []
               },
               {
                 "title": "接收端集群",
                 "dataIndex": "receiverVO_bak",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [],
                 "sorter": false
               },
               {
                 "title": "接收端Topic",
                 "dataIndex": "receiverTopic",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [],
                 "sorter": false
               },
               {
                 "title": "健康度",
                 "dataIndex": "logCollectTaskHealthLevel",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [
                   {
                     "operationName": "",
@@ -121,7 +155,14 @@
               {
                 "title": "创建时间",
                 "dataIndex": "logCollectTaskFinishTime",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [],
                 "sorter": true,
                 "valueType": "logCollectTaskCreateTime"
@@ -129,7 +170,14 @@
               {
                 "title": "操作",
                 "dataIndex": "options",
-                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
                 "operationArray": [
                   {
                     "operationName": "编辑",
@@ -222,6 +270,19 @@
                 "option": "servicesList"
               },
               {
+                "type": "input",
+                "title": "采集任务名",
+                "dataIndex": "logCollectTaskName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
                 "type": "select",
                 "title": "健康度",
                 "dataIndex": "logCollectTaskHealthLevelList",
@@ -234,7 +295,7 @@
                   "showArrow": true,
                   "maxTagCount": 0,
                   "style": {
-                    "width": "200px"
+                    "width": "100px"
                   }
                 },
                 "option": "healthList"
@@ -242,7 +303,10 @@
               {
                 "type": "dateRangePicker",
                 "title": "创建时间",
-                "placeholder": ["开始时间", "结束时间"],
+                "placeholder": [
+                  "开始时间",
+                  "结束时间"
+                ],
                 "dataIndex": "locCollectTaskCreateTime",
                 "initialValue": "",
                 "componentProps": {
