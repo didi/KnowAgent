@@ -216,7 +216,7 @@ public class HostManageServiceImpl implements HostManageService {
                             hostId,
                             JSON.toJSONString(serviceNameList)
                     ),
-                    ErrorCodeEnum.AGENT_COLLECT_NOT_COMPLETE.getCode()
+                    ErrorCodeEnum.RELATION_SERVICES_EXISTS_WHEN_DELETE_HOST.getCode()
             );
         }
         /*

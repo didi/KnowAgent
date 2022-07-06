@@ -39,7 +39,7 @@ public class OpHostController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除主机 0：删除成功 10000：参数错误 23000：待删除主机在系统不存在 23004：主机存在关联的容器导致主机删除失败 22001：Agent存在未采集完的日志", notes = "")
+    @ApiOperation(value = "删除主机 0：删除成功 10000：参数错误 23000：待删除主机在系统不存在 23004：主机存在关联的容器导致主机删除失败 22001：Agent存在未采集完的日志 23008：主机存在关联的应用导致主机删除失败 ", notes = "")
     @RequestMapping(value = "/{hostId}", method = RequestMethod.DELETE)
     @ResponseBody
     public Result deleteHost(

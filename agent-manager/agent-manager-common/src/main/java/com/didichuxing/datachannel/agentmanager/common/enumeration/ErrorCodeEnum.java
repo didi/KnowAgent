@@ -48,6 +48,7 @@ public enum ErrorCodeEnum {
     HOST_IP_DUPLICATE(23005, "ip 在系统中已存在"),
     RELATION_AGENT_EXISTS_WHEN_DELETE_HOST(23006, "主机存在关联Agent导致主机删除失败"),
     UNKNOWN_HOST_TYPE(23007, "未知主机类型"),
+    RELATION_SERVICES_EXISTS_WHEN_DELETE_HOST(23008, "主机存在关联的应用导致主机删除失败"),
     /*
      * KafkaCluster 相关 26000 ~ 26999
      */
