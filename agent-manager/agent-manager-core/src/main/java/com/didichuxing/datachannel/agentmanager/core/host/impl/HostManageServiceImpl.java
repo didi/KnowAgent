@@ -202,6 +202,39 @@ public class HostManageServiceImpl implements HostManageService {
             }
         }
         /*
+         * 校验待删除主机是否关联 service
+         */
+        List<ServiceDO> serviceDOList = serviceManageService.getServicesByHostId(hostDO.getId());
+        if(CollectionUtils.isNotEmpty(serviceDOList)) {
+            List<String> serviceNameList = new ArrayList<>(serviceDOList.size());
+            for (ServiceDO serviceDO : serviceDOList) {
+                serviceNameList.add(serviceDO.getServicename());
+            }
+            throw new ServiceException(
+                    String.format(
+                            "删除Host对象{id=%d}失败，原因为：该主机存在关联应用 %s，请在应用管理解除对应关联关系再进行删除",
+                            hostId,
+                            JSON.toJSONString(serviceNameList)
+                    ),
+                    ErrorCodeEnum.AGENT_COLLECT_NOT_COMPLETE.getCode()
+            );
+        }
+        /*
+         * 校验待删除主机上日志是否已采集完
+         */
+        if(!ignoreUncompleteCollect) {
+            /*
+             * 检查待删除 host 上待采集日志信息是否都已被采集完？如已采集完，可删 host，如未采集完，不可删 host
+             */
+            boolean completeCollect = completeCollect(hostDO);
+            if(!completeCollect) {//未完成采集
+                throw new ServiceException(
+                        String.format("删除Host对象{id=%d}失败，原因为：该主机仍存在未被采集端采集完的日志", hostId),
+                        ErrorCodeEnum.AGENT_COLLECT_NOT_COMPLETE.getCode()
+                );
+            }
+        }
+        /*
          * 校验待删除 host 是否存在 agent？如存在 agent，根据入参是否级联删除关联agent对象，进行删 agent
          */
         AgentDO agentDO = agentManageService.getAgentByHostName(hostDO.getHostName());
@@ -220,25 +253,6 @@ public class HostManageServiceImpl implements HostManageService {
                 );
             }
         }
-        /*
-         * 校验待删除主机上日志是否已采集完
-         */
-        if(!ignoreUncompleteCollect) {
-            /*
-             * 检查待删除 host 上待采集日志信息是否都已被采集完？如已采集完，可删 host，如未采集完，不可删 host
-             */
-            boolean completeCollect = completeCollect(hostDO);
-            if(!completeCollect) {//未完成采集
-                throw new ServiceException(
-                        String.format("删除Host对象{id=%d}失败，原因为：该主机仍存在未被采集端采集完的日志", hostId),
-                        ErrorCodeEnum.AGENT_COLLECT_NOT_COMPLETE.getCode()
-                );
-            }
-        }
-        /*
-         * 删除主机 & 服务关联关系
-         */
-        serviceHostManageService.deleteByHostId(hostDO.getId());
         /*
          * 删除 host 相关 tb_log_collect_task_health_detail 信息
          */
