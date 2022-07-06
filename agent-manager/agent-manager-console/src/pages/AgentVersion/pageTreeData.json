@@ -149,7 +149,7 @@
                 "componentProps": {
                   "maxLength": 128,
                   "style": {
-                    "width": "200px"
+                    "minWidth": "150px"
                   }
                 },
                 "option": "agentvisionArr"
@@ -163,7 +163,7 @@
                 "componentProps": {
                   "maxLength": 128,
                   "style": {
-                    "width": "200px"
+                    "minWidth": "150px"
                   }
                 }
               },
@@ -176,7 +176,7 @@
                 "componentProps": {
                   "maxLength": 128,
                   "style": {
-                    "width": "200px"
+                    "minWidth": "150px"
                   }
                 }
               },
@@ -190,7 +190,10 @@
                 ],
                 "initialValue": "",
                 "componentProps": {
-                  "maxLength": 128
+                  "maxLength": 128,
+                  "style": {
+                    "width": "350px"
+                  }
                 }
               }
             ],

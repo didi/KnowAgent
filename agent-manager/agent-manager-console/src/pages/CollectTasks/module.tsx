@@ -501,17 +501,14 @@ export const switchTask = (props: any) => {
 };
 
 export const showDiagnosisContent = (props: any) => {
-  console.log(props, 'props---');
   props.history.push({ pathname: '/collect/detail', state: { taskId: props.logCollectTaskId } });
 };
 
 export const addCollectTask = (props: any) => {
-  console.log(props, 'addOrEditCollectTask');
   props.history.push({ pathname: '/collect/add-task' });
 };
 
 export const editCollectTask = (props: any) => {
-  console.log(props, 'addOrEditCollectTask');
   props.history.push({ pathname: '/collect/add-task', state: { taskId: props.logCollectTaskId } });
 };
 

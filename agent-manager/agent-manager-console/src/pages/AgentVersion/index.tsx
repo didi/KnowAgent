@@ -12,7 +12,7 @@ const pageTreeData = require('./pageTreeData.json');
 const AutoPage = (props: any) => {
   const PageContainter = (ele) => {
     return (
-      <div className="pageContainter" style={{ padding: '24px', backgroundColor: '#F8F8FB' }}>
+      <div className={`pageContainter agent-version`} style={{ padding: '24px', backgroundColor: '#F8F8FB' }}>
         {ele.children}
       </div>
     );
@@ -59,7 +59,7 @@ const AutoPage = (props: any) => {
 
   return (
     <>
-      <PageContainter>
+      <PageContainter className={'agent-version"'} >
         <RenderComponents children={pageData.children} />
       </PageContainter>
     </>

@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-// import * as actions from '../../actions';
-// import { connect } from 'react-redux';
-// import { Dispatch } from 'redux';
 import classNames from 'classnames';
-import { Modal, Steps, Form, Button, Spin, AppContainer, Container } from '@didi/dcloud-design';
+import { Modal, Steps, Form, Button, Spin, AppContainer } from '@didi/dcloud-design';
 import CollectObjectConfiguration from './CollectObjectConfiguration';
+import CollectLogPathConfiguration from './CollectLogPathConfiguration';
 import CollectLogConfiguration from './CollectLogConfiguration';
+import CollectLogRuleConfiguration from './CollectLogRuleConfiguration';
 import ClientClearSelfMonitor from './ClientClearSelfMonitor';
-// import ReceiverAdvancedConfiguration from './ReceiverAdvancedConfiguration';
 import { NavRouterLink } from '../../components/CustomComponent';
 import { addCollectTask, getCollectDetails, editCollectTask, getDataFormat } from '../../api/collect';
-// import { ILogCollectTask, ILogCollectTaskDetail } from '../../interface/collect';
-import { RouteComponentProps, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { setStepParams, setEditThreeParams, setEditFourParams } from './config';
 import { setLimitUnit, useDebounce } from '../../lib/utils';
 import moment from 'moment';
@@ -40,6 +37,7 @@ const StepsForm = (props: any) => {
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const { validateFields, resetFields, setFieldsValue, getFieldValue } = form;
+  const [serviceId, setServiceId] = useState(0);
   // step1 编辑时复原页面1的动作
   const [collectMode, setCollectMode] = useState(0);
   const [openHistory, setOpenHistory] = useState(false);
@@ -80,13 +78,37 @@ const StepsForm = (props: any) => {
           hostNameList={(list) => {
             setHostList(list);
           }}
+          serviceId={serviceId}
         />
       ),
     },
     {
-      title: '采集日志配置',
+      title: '采集路径配置',
       content: (
-        <CollectLogConfiguration
+        <CollectLogPathConfiguration
+          form={form}
+          hostNames={hostNames}
+          collectLogType={collectLogType}
+          logFilter={logFilter}
+          cataPathlist={cataPathlist}
+          slicingRuleLog={slicingRuleLog}
+          filePathList={filePathList}
+          setFilePathList={setFilePathList}
+          slicingRuleLogList={slicingRuleLogList}
+          suffixfilesList={suffixfilesList}
+          isNotLogPath={isNotLogPath}
+          setisNotLogPath={setisNotLogPath}
+          hostList={hostList}
+          dataFormat={dataFormat}
+          sliceRule={sliceRule}
+          editUrl={editUrl}
+        />
+      ),
+    },
+    {
+      title: '切片规则配置',
+      content: (
+        <CollectLogRuleConfiguration
           form={form}
           hostNames={hostNames}
           collectLogType={collectLogType}
@@ -109,10 +131,6 @@ const StepsForm = (props: any) => {
       title: '接收端配置与监控',
       content: <ClientClearSelfMonitor form={form} logType="file" editUrl={editUrl} collectDetail={collectDetail} />,
     },
-    // {
-    //   title: '接收端与高级配置',
-    //   content: <ReceiverAdvancedConfiguration form={props.form} />,
-    // }
   ];
 
   const onStepsChange = (current: number) => {
@@ -127,12 +145,6 @@ const StepsForm = (props: any) => {
           if (errors) {
             const errorReg = validateStepRegex[currentStep];
             const err = {} as any;
-            // for (let key in errors.values) {
-            //   if (key.indexOf(`step${currentStep + 1}`) === -1) {
-            //     err[key] = errors[key];
-            //   }
-            // }
-            // form.resetFields(Object.keys(err));
             const contentErrorKey = errors.errorFields.find((errorItem) => {
               if (errorReg.test(errorItem.name[0])) {
                 return true;
@@ -162,12 +174,6 @@ const StepsForm = (props: any) => {
         if (errors) {
           const errorReg = validateStepRegex[currentStep];
           const err = {} as any;
-          // for (let key in errors.values) {
-          //   if (key.indexOf(`step${currentStep + 1}`) === -1) {
-          //     err[key] = errors[key];
-          //   }
-          // }
-          // form.resetFields(Object.keys(err));
           const contentErrorKey = errors.errorFields.find((errorItem) => {
             if (errorReg.test(errorItem.name[0])) {
               return true;
@@ -324,6 +330,7 @@ const StepsForm = (props: any) => {
     let step1_historyFilter = '' as string;
     let step1_collectStartBusinessTime = moment();
     setCollectMode(objs.logCollectTaskType);
+    setServiceId(serviceIdList[0]);
     //props.setCollectType(objs.logCollectTaskType);
     if (objs.logCollectTaskType === 0) {
       if (objs.oldDataFilterType === 0) {
@@ -365,9 +372,6 @@ const StepsForm = (props: any) => {
       }
     }
 
-    // const hostNameList = result.hostList?.filter((item: any) => {
-    //   return objs.hostFilterRuleVO?.hostNames.map(ele => Number(ele)).includes(item.id)
-    // })
     if (result?.hostList?.length) {
       setHostNameList([...result.hostList]);
       setHostNames(result.hostList);
@@ -504,7 +508,7 @@ const StepsForm = (props: any) => {
   return (
     <Spin style={{ padding: '20px 40px' }} spinning={loading}>
       <div className="p-steps-form steps-form">
-        <Steps className="fixed-step" current={currentStep} onChange={onStepsChange}>
+        <Steps className="fixed-step" current={currentStep} onChange={onStepsChange} labelPlacement={'vertical'}>
           {steps?.map((item) => (
             <Step key={item.title} title={item.title} />
           ))}

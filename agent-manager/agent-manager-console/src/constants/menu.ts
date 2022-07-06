@@ -65,7 +65,7 @@ export const leftMenus = {
     {
       name: 'monitor',
       path: 'monitor',
-      icon: 'icon-jieshouduanguanli',
+      icon: 'icon-cebiandaohang-jiankongzhongxin',
       children: [
         {
           name: 'metric',

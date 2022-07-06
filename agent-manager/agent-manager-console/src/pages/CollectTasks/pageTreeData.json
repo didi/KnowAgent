@@ -256,6 +256,19 @@
             ],
             "queryFormArray": [
               {
+                "type": "input",
+                "title": "采集任务名",
+                "dataIndex": "logCollectTaskName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
                 "type": "select",
                 "title": "采集应用",
                 "dataIndex": "service",
@@ -268,19 +281,6 @@
                   }
                 },
                 "option": "servicesList"
-              },
-              {
-                "type": "input",
-                "title": "采集任务名",
-                "dataIndex": "logCollectTaskName",
-                "placeholder": "请输入",
-                "initialValue": "",
-                "componentProps": {
-                  "maxLength": 128,
-                  "style": {
-                    "width": "200px"
-                  }
-                }
               },
               {
                 "type": "select",

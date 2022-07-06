@@ -245,20 +245,6 @@
             ],
             "queryFormArray": [
               {
-                "type": "select",
-                "title": "Agent版本号",
-                "dataIndex": "agentVersion",
-                "placeholder": "请输入",
-                "initialValue": "",
-                "componentProps": {
-                  "maxLength": 128,
-                  "style": {
-                    "width": "200px"
-                  }
-                },
-                "option": "agentvisionArr"
-              },
-              {
                 "type": "input",
                 "title": "主机名",
                 "dataIndex": "hostName",
@@ -283,6 +269,20 @@
                     "width": "200px"
                   }
                 }
+              },
+              {
+                "type": "select",
+                "title": "Agent版本号",
+                "dataIndex": "agentVersion",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "agentvisionArr"
               },
               {
                 "type": "select",

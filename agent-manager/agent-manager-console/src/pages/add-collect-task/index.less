@@ -1,19 +1,23 @@
 .fixed-step {
   &.dcloud-steps {
-    position: fixed;
-    width: calc(100vw - 260px);
+    position: absolute;
+    width: 100%;
     z-index: 1;
     background-color: white;
-    padding: 20px 0px 10px;
+    padding: 20px 80px 0px 0px;
   }
 }
 
 .p-steps-form {
   padding-left: 40px;
 
+  .dcloud-steps-item-content {
+    width: 120px;
+  }
+
   &-content {
     height: calc(100vh - 110px);
-    padding-top: 75px;
+    padding-top: 145px;
     overflow: scroll;
 
     .dcloud-form-item {
@@ -42,6 +46,19 @@
   }
 }
 
+.logFileList {
+  width: 400px;
+  height: 150px;
+  overflow: auto;
+  border: 1px solid #d9d9d9;
+
+  li {
+    line-height: normal;
+    margin: 5px 0;
+    padding: 0 5px;
+  }
+}
+
 .set-up {
   .w-100 {
     width: 100px;
@@ -55,17 +72,8 @@
     width: 300px;
   }
 
-  .logFileList {
-    width: 320px;
-    height: 150px;
-    overflow: auto;
-    border: 1px solid #d9d9d9;
-
-    li {
-      line-height: normal;
-      margin: 5px 0;
-      padding: 0 5px;
-    }
+  .dcloud-row {
+    flex-wrap: nowrap;
   }
 }
 
@@ -130,6 +138,7 @@
 .steps-form {
   .p-steps-edit {
     width: 100%;
+
     // height: 32px;
     .edit-btns {
       float: right;
@@ -207,6 +216,10 @@
     height: 300px;
     // margin: 10px 0;
   }
+}
+
+.pre-content-text {
+  height: 200px;
 }
 
 .slice-pre {

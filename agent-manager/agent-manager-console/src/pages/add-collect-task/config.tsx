@@ -32,8 +32,8 @@ export const codingFormatTypes = [
 ];
 
 export const contentFormItemLayout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 20 },
+  labelCol: { span: 4 },
+  wrapperCol: { span: 22 },
 };
 
 export const clientFormItemLayout = {
@@ -43,7 +43,7 @@ export const clientFormItemLayout = {
 
 export const collectLogFormItemLayout = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 15 },
+  wrapperCol: { span: 22 },
 };
 
 export const getParams = (obj: any, field: string, index: number) => {
