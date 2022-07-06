@@ -15,12 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,7 +43,6 @@ public class OpAgentController {
     @ApiOperation(value = "修改Agent信息", notes = "")
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_MACHINE_EDIT)
     public Result updateAgent(@RequestBody AgentUpdateDTO dto) {
         AgentDO agentDO = ConvertUtil.obj2Obj(dto, AgentDO.class);
         agentManageService.updateAgent(agentDO, SpringTool.getUserName());
@@ -69,6 +63,16 @@ public class OpAgentController {
             }
         }
         return Result.buildSucc(Boolean.FALSE);
+    }
+
+    @ApiOperation(value = "删除 agent 0：删除成功 10000：参数错误 22000：Agent 不存在 22001：Agent存在未采集完的日志", notes = "")
+    @RequestMapping(value = "/{agentId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public Result deleteAgent(
+            @PathVariable Long agentId
+    ) {
+        agentManageService.deleteAgentById(agentId, true, true, SpringTool.getUserName());
+        return Result.buildSucc();
     }
 
 }
