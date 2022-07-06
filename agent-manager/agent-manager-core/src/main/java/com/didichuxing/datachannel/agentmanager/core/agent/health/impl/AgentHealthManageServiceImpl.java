@@ -340,12 +340,7 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
          * 构建上下文对象
          */
         AgentHealthDO agentHealthDO = getByAgentId(agentDO.getId());//agentDO关联的AgentHealth对象
-        String agentHealthDescription = String.format(
-                "%s:AgentId={%d}, HostName={%s}",
-                AgentHealthInspectionResultEnum.HEALTHY.getDescription(),
-                agentDO.getId(),
-                agentDO.getHostName()
-        );//AgentHealth检查描述
+        String agentHealthDescription = AgentHealthInspectionResultEnum.HEALTHY.getDescription();//AgentHealth检查描述
         AgentHealthCheckContext agentHealthCheckContext = new AgentHealthCheckContext();
         agentHealthCheckContext.setAgentDO(agentDO);
         agentHealthCheckContext.setAgentHealthDO(agentHealthDO);

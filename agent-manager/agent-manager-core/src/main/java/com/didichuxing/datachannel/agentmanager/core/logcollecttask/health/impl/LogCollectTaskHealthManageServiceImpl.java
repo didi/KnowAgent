@@ -276,7 +276,7 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
          * 进入巡检流程，初始化
          */
         LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = LogCollectTaskHealthLevelEnum.GREEN;//日志采集任务健康度检查结果
-        String logCollectTaskHealthDescription = "";//日志采集任务健康检查描述
+        String logCollectTaskHealthDescription = LogCollectTaskHealthInspectionResultEnum.HEALTHY.getDescription();//日志采集任务健康检查描述
         LogCollectTaskHealthInspectionResultEnum logCollectTaskHealthInspectionResultEnum = LogCollectTaskHealthInspectionResultEnum.HEALTHY;//日志采集任务检查明细项枚举对象
 
         if (CollectionUtils.isNotEmpty(fileLogCollectPathDOList)) {

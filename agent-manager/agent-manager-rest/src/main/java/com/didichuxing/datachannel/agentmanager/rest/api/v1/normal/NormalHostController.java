@@ -126,6 +126,7 @@ public class NormalHostController {
                     );
                 } else {
                     hostAgentVO.setAgentHealthLevel(agentHealthDO.getAgentHealthLevel());
+                    hostAgentVO.setAgentHealthDescription(agentHealthDO.getAgentHealthDescription());
                 }
                 hostAgentVO.setAgentId(relationAgentDO.getId());
                 AgentVersionDO agentVersionDO = agentVersionManageService.getById(relationAgentDO.getAgentVersionId());
