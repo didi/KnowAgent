@@ -222,6 +222,7 @@ public class RdHostController {
                     );
                 } else {
                     hostAgentVO.setAgentHealthLevel(agentHealthDO.getAgentHealthLevel());
+                    hostAgentVO.setAgentHealthDescription(agentHealthDO.getAgentHealthDescription());
                 }
 
                 hostAgentVO.setAgentId(agentDO.getId());

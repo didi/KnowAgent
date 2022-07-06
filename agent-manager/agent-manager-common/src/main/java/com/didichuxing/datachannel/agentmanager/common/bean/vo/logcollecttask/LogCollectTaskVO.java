@@ -73,6 +73,9 @@ public class LogCollectTaskVO {
     @ApiModelProperty(value = "日志采集任务健康度", notes="")
     private Integer logCollectTaskHealthLevel;
 
+    @ApiModelProperty(value = "日志采集任务健康描述信息", notes="")
+    private String logCollectTaskHealthDescription;
+
     @ApiModelProperty(value = "日志采集任务创建人", notes="")
     private String logCollectTaskCreator;
 
@@ -297,5 +300,13 @@ public class LogCollectTaskVO {
 
     public void setCollectDelayThresholdMs(Long collectDelayThresholdMs) {
         this.collectDelayThresholdMs = collectDelayThresholdMs;
+    }
+
+    public String getLogCollectTaskHealthDescription() {
+        return logCollectTaskHealthDescription;
+    }
+
+    public void setLogCollectTaskHealthDescription(String logCollectTaskHealthDescription) {
+        this.logCollectTaskHealthDescription = logCollectTaskHealthDescription;
     }
 }

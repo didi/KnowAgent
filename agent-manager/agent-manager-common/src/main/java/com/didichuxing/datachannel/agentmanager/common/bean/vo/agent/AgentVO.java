@@ -45,6 +45,9 @@ public class AgentVO {
     @ApiModelProperty(value = "Agent健康度 0：红 1：黄 2：绿")
     private Integer healthLevel;
 
+    @ApiModelProperty(value = "agent健康描述信息")
+    private String agentHealthDescription;
+
     @ApiModelProperty(value = "Agent指标信息发送端属性")
     private String metricsProducerConfiguration;
 
@@ -57,6 +60,14 @@ public class AgentVO {
 
     public void setMetricsProducerConfiguration(String metricsProducerConfiguration) {
         this.metricsProducerConfiguration = metricsProducerConfiguration;
+    }
+
+    public String getAgentHealthDescription() {
+        return agentHealthDescription;
+    }
+
+    public void setAgentHealthDescription(String agentHealthDescription) {
+        this.agentHealthDescription = agentHealthDescription;
     }
 
     public String getErrorLogsProducerConfiguration() {

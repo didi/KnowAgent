@@ -2,12 +2,15 @@ package com.didichuxing.datachannel.agentmanager.rest.api.v1.rd;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.version.AgentVersionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.ListFilesDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.AgentVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionManageService;
 import io.swagger.annotations.Api;
@@ -28,6 +31,9 @@ public class RdAgentController {
     @Autowired
     private AgentVersionManageService agentVersionManageService;
 
+    @Autowired
+    private AgentHealthManageService agentHealthManageService;
+
     @ApiOperation(value = "根据id获取Agent对象信息", notes = "")
     @RequestMapping(value = "/{agentId}", method = RequestMethod.GET)
     @ResponseBody
@@ -45,6 +51,16 @@ public class RdAgentController {
             }
             AgentVO agentVO = ConvertUtil.obj2Obj(agentDO, AgentVO.class);
             agentVO.setVersion(agentVersionDO.getVersion());
+            AgentHealthDO agentHealthDO = agentHealthManageService.getByAgentId(agentDO.getId());
+            if (null == agentHealthDO) {
+                throw new ServiceException(
+                        String.format("AgentHealth={agentId=%d}在系统中不存在", agentDO.getId()),
+                        ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
+                );
+            } else {
+                agentVO.setHealthLevel(agentHealthDO.getAgentHealthLevel());
+                agentVO.setAgentHealthDescription(agentHealthDO.getAgentHealthDescription());
+            }
             return Result.buildSucc(agentVO);
         }
     }

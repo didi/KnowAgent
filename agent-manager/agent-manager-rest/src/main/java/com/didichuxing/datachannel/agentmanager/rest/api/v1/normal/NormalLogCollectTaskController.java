@@ -466,6 +466,7 @@ public class NormalLogCollectTaskController {
         }
         logCollectTaskVO.setLogCollectTaskHealthLevel(logCollectTaskHealthDO.getLogCollectTaskHealthLevel());
         logCollectTaskVO.setLogCollectTaskCreator(logCollectTaskHealthDO.getOperator());
+        logCollectTaskVO.setLogCollectTaskHealthDescription(logCollectTaskHealthDO.getLogCollectTaskHealthDescription());
         logCollectTaskVO.setKafkaProducerConfiguration(logCollectTaskDO.getKafkaProducerConfiguration());
         logCollectTaskVO.setLogContentSliceRule(JSON.parseObject(logCollectTaskDO.getLogContentSliceRuleLogicJsonString(), LogSliceRuleVO.class));
         logCollectTaskVO.setFileNameSuffixMatchRule(JSON.parseObject(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString(), FileNameSuffixMatchRuleVO.class));
