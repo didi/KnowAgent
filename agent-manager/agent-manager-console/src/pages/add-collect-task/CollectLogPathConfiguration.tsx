@@ -13,6 +13,7 @@ const CollectLogConfiguration = (props: any) => {
       <Form form={props.form} {...collectLogFormItemLayout} layout={'vertical'}>
         <LoopAddLogPath
           form={props.form}
+          editUrl={props.editUrl}
           hostNames={props.hostNames}
           suffixfilesList={props.suffixfilesList}
           filePathList={props.filePathList}

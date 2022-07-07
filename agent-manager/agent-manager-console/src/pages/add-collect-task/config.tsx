@@ -37,8 +37,8 @@ export const contentFormItemLayout = {
 };
 
 export const clientFormItemLayout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 15 },
+  labelCol: { span: 12 },
+  wrapperCol: { span: 22 },
 };
 
 export const collectLogFormItemLayout = {

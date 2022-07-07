@@ -149,6 +149,9 @@ const StepsForm = (props: any) => {
               if (errorReg.test(errorItem.name[0])) {
                 return true;
               }
+              if (currentStep == 2 && validateStepRegex[1].test(errorItem.name[0])) {
+                return true;
+              }
               return false;
             });
             // 只有相应的步骤出现未填写参数的情况，才会阻断下一步
@@ -172,10 +175,14 @@ const StepsForm = (props: any) => {
       })
       .catch((errors) => {
         if (errors) {
+          console.log(errors);
           const errorReg = validateStepRegex[currentStep];
           const err = {} as any;
           const contentErrorKey = errors.errorFields.find((errorItem) => {
             if (errorReg.test(errorItem.name[0])) {
+              return true;
+            }
+            if (currentStep == 2 && validateStepRegex[1].test(errorItem.name[0])) {
               return true;
             }
             return false;
@@ -192,9 +199,36 @@ const StepsForm = (props: any) => {
   };
 
   const handlePrev = () => {
-    setCurrentStep((prevStep) => {
-      return prevStep - 1;
-    });
+    form
+      .validateFields()
+      .then(() => {
+        setCurrentStep((prevStep) => {
+          return prevStep + 1;
+        });
+      })
+      .catch((errors) => {
+        if (errors) {
+          console.log(errors);
+          const errorReg = validateStepRegex[currentStep];
+          const err = {} as any;
+          const contentErrorKey = errors.errorFields.find((errorItem) => {
+            if (errorReg.test(errorItem.name[0])) {
+              return true;
+            }
+            if (currentStep == 2 && validateStepRegex[1].test(errorItem.name[0])) {
+              return true;
+            }
+            return false;
+          });
+          // 只有相应的步骤出现未填写参数的情况，才会阻断下一步
+          if (contentErrorKey) {
+            return;
+          }
+          setCurrentStep((prevStep) => {
+            return prevStep - 1;
+          });
+        }
+      });
   };
 
   const processParameters = (values: any) => {
@@ -259,6 +293,9 @@ const StepsForm = (props: any) => {
           const contentErrorKey = errors.errorFields.find((errorItem) => {
             // 产品变更字段命名未变
             if (errorReg.test(errorItem.name[0]) || (currentStep === 2 && validateStepRegex[currentStep + 1]).test(errorItem.name[0])) {
+              return true;
+            }
+            if (currentStep == 2 && validateStepRegex[1].test(errorItem.name[0])) {
               return true;
             }
             return false;

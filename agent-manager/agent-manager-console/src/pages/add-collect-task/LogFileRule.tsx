@@ -26,6 +26,8 @@ const dateType: any = {
   'HH:mm:ss.SSS': regHmsS,
 };
 
+const exampleValue = `[2022-06-28 22:01:26,464] INFO [ProducerStateManager partition=data-0]Writing producer snapshot at offset 21957007 (kafka.log.ProducerStateManager)\n[2022-06-28 22:01:26,467] INFO [Log Partition partition=data-0, dir=/data0/kafka-logs] Rolled new log segment at offset 21957007 in 6ms.(kafka.Log)\n`;
+
 const { TextArea } = Input;
 const { Option } = Select;
 const useDebounce = (fn: any, delay: number, dep = []) => {
@@ -60,6 +62,7 @@ const LogFileType = (props: any) => {
   const [regTips, setRegTips] = useState([]);
   const [showFileLoad, setShowFileLoad] = useState(false);
   const { setFieldsValue, getFieldValue } = props.form;
+  const [exampaleVisbile, setExampleVisible] = useState(false);
 
   const options =
     hostNameList.length > 0 &&
@@ -85,7 +88,7 @@ const LogFileType = (props: any) => {
     setFieldsValue({ 'step2_${props.logType}_selectionType': res });
     setShowFileLoad(false);
   };
-  const getSelectionType = async () => {
+  const getSelectionType = async (e) => {
     const text = document.querySelector('.pre-content-text');
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -94,15 +97,19 @@ const LogFileType = (props: any) => {
     // @ts-ignore
     const end = text.selectionEnd;
     const selObj = window?.getSelection()?.toString() || document.getSelection()?.toString();
+    if (!selObj) return;
     let startIndex = content.lastIndexOf('\n', start);
     if (startIndex === -1) {
       startIndex = 0;
     }
-    const endIndex = content.indexOf('\n', end);
+    let endIndex = content.indexOf('\n', end);
+    if (endIndex === -1) {
+      endIndex = content.length - 1;
+    }
     const sliceLine = content.slice(startIndex, endIndex);
     const params = {
       content: sliceLine,
-      sliceDateTimeStringStartIndex: sliceLine.indexOf(selObj),
+      sliceDateTimeStringStartIndex: sliceLine.indexOf(selObj) > -1 ? sliceLine.indexOf(selObj) : 0,
       sliceDateTimeStringEndIndex: sliceLine.indexOf(selObj) + selObj.length - 1,
     };
     const res = await getSliceRule(params);
@@ -114,6 +121,11 @@ const LogFileType = (props: any) => {
       });
     }
   };
+  const handleContentChange = (e) => {
+    setContent(e.currentTarget.value);
+    // onHandleContentPre();
+  };
+
   // 日志预览按钮
   const slicePreview = () => {
     const userCopyContent = getFieldValue(`step2_${props.logType}_selectionType`);
@@ -183,11 +195,12 @@ const LogFileType = (props: any) => {
             <Col span={22}>
               <TextArea
                 value={content}
+                onChange={handleContentChange}
                 className="pre-content-text"
                 onBlur={(e) => {
                   setStart(e.target.selectionStart);
                 }}
-                onClick={getSelectionType}
+                onSelect={getSelectionType}
               />
             </Col>
             <Button onClick={handleContentPre} style={{ marginLeft: '10px' }}>
@@ -219,6 +232,7 @@ const LogFileType = (props: any) => {
         <Form.Item
           className="col-time-stramp"
           extra="注：填写时间戳，或复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始"
+          labelCol={{ span: 12 }}
           label={
             <div>
               日志切片规则
@@ -226,13 +240,16 @@ const LogFileType = (props: any) => {
                 <IconFont type="icon-tishi"></IconFont>
               </Tooltip>
               ：
+              <Button type="link" size="small" onClick={slicePreview}>
+                日志切片结果预览
+              </Button>
             </div>
           }
         >
           <Row>
             <Col span={6}>
               <Row style={{ display: 'flex', alignItems: 'baseline' }}>
-                <Col span={6}>
+                <Col span={5}>
                   <span>左起第</span>
                 </Col>
                 <Col span={10}>
@@ -266,7 +283,7 @@ const LogFileType = (props: any) => {
                 </Col>
               </Row>
             </Col>
-            <Col span={6} style={{ margin: '0 10px' }}>
+            <Col span={7} style={{ margin: '0 10px' }}>
               <Form.Item
                 name={`step2_${props.logType}_sliceTimestampPrefixString`}
                 rules={[
@@ -286,34 +303,66 @@ const LogFileType = (props: any) => {
                   },
                 ]}
               >
-                <Input onChange={() => setStart(-1)} className="w-200" placeholder="请输入切片时间戳前缀字符串" />
+                <Input onChange={() => setStart(-1)} placeholder="请输入切片时间戳前缀字符串" />
               </Form.Item>
             </Col>
-            <Col span={6} style={{ margin: '0 10px' }}>
+            <Col span={8} style={{ margin: '0 20px' }}>
               <Form.Item
                 name={`step2_${props.logType}_sliceTimestampFormat`}
                 initialValue={Object.keys(dateType)[0]}
                 rules={[{ required: true, message: '请选择或者输入时间格式' }]}
               >
-                <AutoComplete
-                  dataSource={options}
-                  style={{ width: 180 }}
-                  className="step2_file_sliceTimestampFormat"
-                  onChange={() => setStart(-1)}
-                />
+                <AutoComplete dataSource={options} className="step2_file_sliceTimestampFormat" onChange={() => setStart(-1)} />
               </Form.Item>
             </Col>
-            <Col span={3} style={{ margin: '0 10px' }}>
-              <Button type="primary" onClick={slicePreview}>
-                切片预览
-              </Button>
-            </Col>
+            <Button type="link" onClick={() => setExampleVisible(true)} style={{ marginLeft: '-20px' }}>
+              切片规则配置样例
+            </Button>
           </Row>
         </Form.Item>
-        <Row style={{ marginLeft: '16.5%' }} className="slice-pre">
-          <Col span={10} style={{ display: 'inline-block' }}>
+        <Modal
+          title="切片规则配置样例"
+          visible={exampaleVisbile}
+          onOk={() => setExampleVisible(false)}
+          onCancel={() => setExampleVisible(false)}
+        >
+          <Form.Item label="原始日志内容">
+            <TextArea readOnly value={exampleValue} style={{ height: '200px' }}></TextArea>
+          </Form.Item>
+          <Form.Item label="日志切片规则">
+            <Row>
+              <Col span={9}>
+                <Row style={{ display: 'flex', alignItems: 'baseline' }}>
+                  <Col span={8}>
+                    <span>左起第</span>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item>
+                      <InputNumber value={2} style={{ margin: '0 5px', width: '40px' }} readOnly />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <span>个匹配上</span>
+                  </Col>
+                </Row>
+              </Col>
+              <Col span={5} style={{ margin: '0 20px' }}>
+                <Form.Item>
+                  <Input value={'['} readOnly placeholder="请输入切片时间戳前缀字符串" />
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item>
+                  <Input value="yyyy-MM-dd HH:mm:ss,SSS" readOnly />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Modal>
+        <Row className="slice-pre">
+          <Col span={20} style={{ display: 'inline-block' }}>
             {isShow && (
-              <div className="slicePreview" style={{ height: '120px', border: '1px solid #CCC' }}>
+              <div className="slicePreview" style={{ height: '150px', border: '1px solid #CCC' }}>
                 {slicePre &&
                   slicePre.map((item: any, key) => {
                     if (item === '') {
@@ -330,7 +379,7 @@ const LogFileType = (props: any) => {
           </Col>
         </Row>
       </div>
-    </div>
+    </div >
   );
 };
 

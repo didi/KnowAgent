@@ -150,7 +150,6 @@ const LogFileType = (props: any) => {
       suffixRegular: logSuffixfilesValue?.[0],
       hostName,
     };
-    console.log();
     if (logFilePath && hostName) {
       getCollectTaskFiles(params).then((res) => {
         // logArr[key] = res.message.split()

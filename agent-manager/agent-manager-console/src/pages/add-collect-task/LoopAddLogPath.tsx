@@ -84,7 +84,6 @@ const LoopAddLogFileType = (props: any) => {
       suffixRegular: logSuffixfilesValue?.[0],
       hostName,
     };
-    console.log(logFilePath, hostName);
     if (logFilePath && hostName) {
       getCollectTaskFiles(params).then((res) => {
         setFileArrList(res);
@@ -173,8 +172,10 @@ const LoopAddLogFileType = (props: any) => {
 
   useEffect(() => {
     resetList(props.filePathList);
-    logPathList.current = [...props.filePathList];
-  }, [props.filePathList]);
+    if (props.editUrl) {
+      logPathList.current = [...props.filePathList];
+    }
+  }, [props.filePathList, props.editUrl]);
 
   useEffect(() => {
     getRuleTips().then((res) => {
