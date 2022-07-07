@@ -184,7 +184,7 @@ export const Containers = (props: any): JSX.Element => {
         <Button type={'primary'} icon={<IconFont type="icon-tishi" />}>
           <Link
             to={{
-              pathname: '/collect/metric',
+              pathname: '/monitor/metric',
               state: {
                 logCollectTaskId: props.containerData?.logCollectTaskId,
               },

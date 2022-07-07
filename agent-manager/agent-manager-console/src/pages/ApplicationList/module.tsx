@@ -128,9 +128,11 @@ export const ActionAppForm = (props: any) => {
     getHostlist();
     if (props.containerData && props.containerData.id) {
       getServiceDetail(props.containerData.id).then((res: any) => {
+        const hostList = res.hostList || [];
+        props.form.setFieldsValue({ hostIdList: hostList.map((item: any) => item.id) });
         setappForm({
           serviceName: res.serviceName,
-          targetKeys: res.hostList.map((item: any) => item.id),
+          targetKeys: hostList.map((item: any) => item.id),
         });
       });
     }
@@ -198,7 +200,6 @@ export const ActionAppForm = (props: any) => {
               //   return !!value && new RegExp(regName).test(value);
               // },
               validator: (_, v, c) => {
-                console.log(v, 'vv');
                 if (appForm.serviceName || (!!v && new RegExp(regName).test(v))) {
                   c();
                   return;

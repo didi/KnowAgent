@@ -319,7 +319,7 @@ export const NewHostForm: React.FC = (props: any) => {
           {testHide && (
             <span
               style={{ color: testResult ? '#2fc25b' : '#f5222d' }}
-              // className={testResult ? 'success' : 'fail'}
+            // className={testResult ? 'success' : 'fail'}
             >
               {testResult ? '测试成功！' : '测试失败！'}
             </span>
@@ -523,7 +523,7 @@ export const Containers = (props: any): JSX.Element => {
         }}
       >
         <Button type={'primary'} icon={<IconFont type="icon-tishi" />}>
-          <Link to={{ pathname: '/main/agent-kanban', state: { agent: props?.containerData?.hostName } }} style={{ color: '#ffffff' }}>
+          <Link to={{ pathname: '/monitor/agent-kanban', state: { agent: props?.containerData?.hostName } }} style={{ color: '#ffffff' }}>
             前往Agent指标看板
           </Link>
         </Button>
@@ -601,7 +601,7 @@ const HostConfigurationForm = (props: any) => {
       // labelCol={{ span: 4 }}
       // wrapperCol={{ span: 20 }}
       layout="horizontal"
-      // onFinish={handleHostSubmit}
+    // onFinish={handleHostSubmit}
     >
       <div
         className="agent-list-head"
