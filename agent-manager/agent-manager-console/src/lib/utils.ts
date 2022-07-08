@@ -344,3 +344,19 @@ export function countChange(limit: number) {
   }
   return sizeStr;
 }
+
+export const numberToFixed = (value: number, num = 2) => {
+  if (value === null || isNaN(value)) return '-';
+  value = Number(value);
+  return Number.isInteger(+value) ? +value : (+value).toFixed(num);
+};
+
+export function numTrans(value) {
+  if (value < 10000) {
+    return value;
+  } else if (value < 10000 * 10000) {
+    return numberToFixed(value / 10000) + '万';
+  } else {
+    return numberToFixed(value / (10000 * 10000)) + '亿';
+  }
+}

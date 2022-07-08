@@ -203,7 +203,7 @@ const StepsForm = (props: any) => {
       .validateFields()
       .then(() => {
         setCurrentStep((prevStep) => {
-          return prevStep + 1;
+          return prevStep - 1;
         });
       })
       .catch((errors) => {

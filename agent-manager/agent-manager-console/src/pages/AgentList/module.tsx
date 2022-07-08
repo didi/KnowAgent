@@ -622,7 +622,9 @@ const HostConfigurationForm = (props: any) => {
                 },
               ]}
             >
-              <span>{hostDetail?.hostName}</span>
+              <Tooltip title={hostDetail?.hostName}>
+                <span className="agent-list-hostname">{hostDetail?.hostName}</span>
+              </Tooltip>
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -656,7 +658,7 @@ const HostConfigurationForm = (props: any) => {
           )}
         </Row>
       </div>
-    </Form>
+    </Form >
   );
 };
 
@@ -799,23 +801,36 @@ const AgentConfigurationForm = (props: any) => {
               expandIconPosition="right"
               onChange={collapseCallBack}
               activeKey={activeKeys?.length ? ['high'] : []}
+              ghost
             >
               <Panel
-                header={<h3>高级配置</h3>}
-                extra={
-                  <a>
-                    {activeKeys?.length ? (
-                      <>
-                        收起&nbsp;
-                        <UpOutlined />
-                      </>
-                    ) : (
-                      <>
-                        展开&nbsp;
-                        <DownOutlined />
-                      </>
-                    )}
-                  </a>
+                header={
+                  <div
+                    style={{
+                      display: 'flex',
+                      flex: 'auto',
+                      alignItems: 'center',
+                      marginRight: '80px',
+                      marginLeft: '-10px',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    高级配置
+                    <Divider plain></Divider>
+                    <a style={{ display: 'flex', alignItems: 'center' }}>
+                      {activeKeys?.length ? (
+                        <>
+                          收起&nbsp;
+                          <UpOutlined />
+                        </>
+                      ) : (
+                        <>
+                          展开&nbsp;
+                          <DownOutlined />
+                        </>
+                      )}
+                    </a>
+                  </div>
                 }
                 showArrow={false}
                 key="high"
@@ -946,13 +961,6 @@ const AgentConfigurationForm = (props: any) => {
                       label="配置信息"
                       name="advancedConfigurationJsonString"
                       initialValue={agentDetail?.advancedConfigurationJsonString}
-                      rules={[
-                        {
-                          required: true,
-                          message: '请输入',
-                          // initialValue: agentDetail?.advancedConfigurationJsonString || '',
-                        },
-                      ]}
                     >
                       {/* <MonacoEditor {...props} /> */}
                       <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />
@@ -983,7 +991,7 @@ export const ModifyHost: React.FC = (props: any) => {
 // 删除主机
 export const deleteAgentHost = (props: any) => {
   Modal.confirm({
-    title: props.agentId ? '该主机已安装Agent，请先卸载' : `是否确认删除${props.hostName}？`,
+    title: props.agentId ? '该主机已安装Agent，请先卸载' : `是否确认删除主机名为${props.hostName}的主机？`,
     content: <span className="fail">{!props.agentId && '删除操作不可恢复，请谨慎操作！'}</span>,
     okText: '确认',
     cancelText: '取消',

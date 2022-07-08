@@ -179,7 +179,11 @@ const LoopAddLogFileType = (props: any) => {
 
   useEffect(() => {
     getRuleTips().then((res) => {
-      setRegTips(Object.values(res));
+      setRegTips(
+        Object.keys(res).map((key: any) => {
+          return { value: res[key], desc: `${res[key]}（${key}）` };
+        })
+      );
     });
   }, []);
 
@@ -203,8 +207,8 @@ const LoopAddLogFileType = (props: any) => {
             <Form.Item name="step2_file_suffixMatchRegular" initialValue={[]}>
               <Select mode="tags" onChange={onSelectChange} placeholder="请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$">
                 {regTips.map((item) => (
-                  <Select.Option key={item} value={item}>
-                    {item}
+                  <Select.Option key={item.value} value={item.value}>
+                    {item.desc}
                   </Select.Option>
                 ))}
               </Select>
@@ -252,8 +256,8 @@ const LoopAddLogFileType = (props: any) => {
                 <Form.Item labelCol={{ span: 8 }} label="采集文件后缀匹配样式" name="step2_file_suffixMatchRegular_example">
                   <Select mode="tags" placeholder="请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$">
                     {regTips.map((item) => (
-                      <Select.Option key={item} value={item}>
-                        {item}
+                      <Select.Option key={item.value} value={item.value}>
+                        {item.desc}
                       </Select.Option>
                     ))}
                   </Select>

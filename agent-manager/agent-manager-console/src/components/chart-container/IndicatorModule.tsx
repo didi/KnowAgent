@@ -209,6 +209,7 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
         pathIdCur?.label ? (subTitle += `/${pathIdCur?.label?.replace(/(^\/+)(.*)/g, '$2')}`) : '';
         hostNameCur?.label ? (subTitle += `/${hostNameCur?.label?.replace(/(^\/+)(.*)/g, '$2')}`) : '';
       }
+      // AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [`${tabKey === '1' ? '采集任务' : 'Agent'}指标探查（${subTitle}）`]);
       title += `(${subTitle})`;
       item.title = title;
       item.agent = agentCur?.value;

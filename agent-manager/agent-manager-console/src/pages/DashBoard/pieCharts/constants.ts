@@ -1,3 +1,5 @@
+import { numberToFixed } from '../../../lib/utils';
+
 export const createOption = (data: any) => {
   const text = !isNaN(Number((data[2].value / data[0].totalValue).toFixed(2)) * 100)
     ? Number((data[2].value / data[0].totalValue).toFixed(2)) * 100 + '%'
@@ -17,8 +19,8 @@ export const createOption = (data: any) => {
         fontSize: 14,
         color: '#495057',
       },
-      left: '47%',
-      top: '42%',
+      left: '50%',
+      top: '26%',
     },
     tooltip: {
       trigger: 'item',
@@ -52,7 +54,9 @@ export const createOption = (data: any) => {
     series: [
       {
         type: 'pie',
-        radius: ['100%', '60%'],
+        radius: ['52%', '32%'],
+        center: ['50%', '30%'],
+        data,
         avoidLabelOverlap: false,
         hoverAnimation: false,
         label: {
@@ -65,6 +69,54 @@ export const createOption = (data: any) => {
         },
       },
     ],
+  };
+  return options;
+};
+
+export const getPieChartOption = (data: any, totalValue = 0, customOptions = {}) => {
+  const options = {
+    tooltip: {
+      trigger: 'item',
+      confine: true,
+      textStyle: {
+        fontSize: 12,
+        color: '#495057',
+        fontWeight: 'normal',
+      },
+      extraCssText: 'box-shadow: 0 2px 12px 0 rgba(31,50,82,0.18); border-radius: 2px; border: none; height: 44px; line-height: 25px;',
+    },
+    legend: {
+      orient: 'vertical',
+      bottom: 13,
+      type: 'scroll',
+      height: 148,
+      left: 0,
+      itemHeight: 8,
+      itemWidth: 8,
+      formatter: (name) => {
+        const item = data.find((row) => row.name);
+        console.log(item, totalValue, data, name);
+        return name + '\t' + numberToFixed((item?.value / totalValue) * 100) + '%';
+      },
+    },
+    series: [
+      {
+        type: 'pie',
+        radius: '52%',
+        center: ['50%', '30%'],
+        data,
+        hoverAnimation: false,
+        label: {
+          show: false,
+          position: 'center',
+        },
+        animation: false,
+        labelLine: {
+          show: false,
+        },
+      },
+    ],
+    ...customOptions,
   };
   return options;
 };

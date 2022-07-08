@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { InputNumber, Form, Radio, Select, Input, AutoComplete, Collapse, Row, Col, Switch } from '@didi/dcloud-design';
+import { InputNumber, Form, Radio, Select, Input, AutoComplete, Collapse, Row, Col, Switch, Divider } from '@didi/dcloud-design';
 import { clientFormItemLayout } from './config';
 import { NavRouterLink } from '../../components/CustomComponent';
 import { IReceivers } from '../../interface/agent';
@@ -24,7 +24,6 @@ const ClientClearSelfMonitor = (props: any) => {
     border: 0,
     overflow: 'hidden',
     padding: '10px 0 0',
-    background: '#fafafa',
   };
 
   const openHistoryChange = (checked: any) => {
@@ -186,24 +185,37 @@ const ClientClearSelfMonitor = (props: any) => {
           onChange={collapseCallBack}
           activeKey={activeKeys?.length ? ['high'] : []}
           destroyInactivePanel
+          ghost
           style={{ background: 'none', marginRight: '100px' }}
         >
           <Panel
-            header={<h2 style={{ display: 'inline-block', color: '#a2a2a5', marginLeft: '15px' }}>高级配置</h2>}
-            extra={
-              <a>
-                {activeKeys?.length ? (
-                  <>
-                    收起&nbsp;
-                    <UpOutlined />
-                  </>
-                ) : (
-                  <>
-                    展开&nbsp;
-                    <DownOutlined />
-                  </>
-                )}
-              </a>
+            header={
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 'auto',
+                  alignItems: 'center',
+                  marginRight: '80px',
+                  marginLeft: '-10px',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                高级配置
+                <Divider plain></Divider>
+                <a style={{ display: 'flex', alignItems: 'center' }}>
+                  {activeKeys?.length ? (
+                    <>
+                      收起&nbsp;
+                      <UpOutlined />
+                    </>
+                  ) : (
+                    <>
+                      展开&nbsp;
+                      <DownOutlined />
+                    </>
+                  )}
+                </a>
+              </div>
             }
             showArrow={false}
             key="high"

@@ -208,6 +208,7 @@ export const ActionAppForm = (props: any) => {
               },
             },
           ]}
+          style={{ flexDirection: props.containerData.id ? 'row' : 'column', alignItems: props.containerData.id ? 'baseline' : '' }}
         >
           {appForm.serviceName ? (
             appForm.serviceName

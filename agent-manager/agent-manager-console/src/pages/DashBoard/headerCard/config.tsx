@@ -1,5 +1,5 @@
-import { byteToMB } from '../utils';
 import { Utils } from '@didi/dcloud-design';
+import { numTrans } from '../../../lib/utils';
 
 export const cardList = [
   {
@@ -28,6 +28,7 @@ export const cardList = [
     text: '未关联主机服务数',
     textCode: 1,
     textApi: 'nonRelateAnyHostServiceNum',
+    show: false,
   },
   {
     title: '采集任务数',
@@ -50,6 +51,7 @@ export const cardList = [
     api: 'agentCpuCoresSpend',
     icon: 'icon-a-cpuhaofei',
     unit: 'core',
+    show: false,
   },
   {
     title: '全部agent 内存耗费',
@@ -59,6 +61,7 @@ export const cardList = [
     // unit: 'GB',
     type: 'formatSize',
     format: Utils.formatSize,
+    show: false,
   },
   {
     title: '全部agent实时上行流量',
@@ -81,6 +84,7 @@ export const cardList = [
     tip: 'byte',
     type: 'formatSize',
     format: Utils.formatSize,
+    show: false,
   },
   {
     title: '全部agent当日采集条数',
@@ -90,6 +94,7 @@ export const cardList = [
     unit: '条',
     tip: '条',
     // format: countChange,
+    show: false,
   },
   {
     title: '近1分钟agent采集量',
@@ -98,6 +103,7 @@ export const cardList = [
     icon: 'icon-dangricaijiliang',
     tip: 'byte',
     format: Utils.formatSize,
+    show: false,
   },
   {
     title: '近1分钟agent采集条数',
@@ -106,5 +112,154 @@ export const cardList = [
     icon: 'icon-dangricaijitiaoshu',
     unit: '条',
     tip: '条',
+    show: false,
   },
 ];
+
+export const getCardList = (type: string) => {
+  return [
+    {
+      title: '应用数',
+      code: '',
+      api: 'serviceNum',
+      icon: 'icon-fuwushu',
+      text: '未关联主机服务数',
+      textCode: 1,
+      textApi: 'nonRelateAnyHostServiceNum',
+      show: true,
+    },
+    {
+      title: '主机数',
+      code: 4,
+      api: 'hostNum',
+      icon: 'icon-zhujizongshu',
+      text: '容器数',
+      textCode: 5,
+      textApi: 'containerNum',
+      show: true,
+    },
+    {
+      title: 'Agent数',
+      code: 6,
+      api: 'agentNum',
+      icon: 'icon-Agentzongshu',
+      text: '空转agent数',
+      textCode: 1,
+      textApi: 'nonRelateAnyLogCollectTaskAgentNum',
+      show: true,
+    },
+    {
+      title: 'Agent 版本数',
+      code: 6,
+      api: 'agentVersionNumber',
+      icon: 'icon-Agentzongshu',
+      text: '空转agent数',
+      textCode: 1,
+      textApi: 'nonRelateAnyLogCollectTaskAgentNum', // TODO: 字段确认
+      show: type == 'yunwei',
+    },
+
+    {
+      title: '采集任务数',
+      code: 0,
+      api: 'logCollectTaskNum',
+      icon: 'icon-caijirenwuzongshu',
+      text: '僵尸采集任务数',
+      textCode: 7,
+      textApi: 'nonRelateAnyHostLogCollectTaskNum',
+      show: true,
+    },
+    {
+      title: '采集路径数',
+      code: 2,
+      api: 'logCollectPathNum',
+      icon: 'icon-caijilujingzongshu',
+      show: type === 'yunwei',
+    },
+    {
+      title: '全部agent cpu耗费',
+      code: '',
+      api: 'agentCpuCoresSpend',
+      icon: 'icon-a-cpuhaofei',
+      unit: 'core',
+      show: type === 'yunying',
+    },
+    {
+      title: '全部agent 内存耗费',
+      code: '',
+      api: 'agentMemorySpend',
+      icon: 'icon-neicunhaofei',
+      // unit: 'GB',
+      type: 'formatSize',
+      format: Utils.formatSize,
+      show: type === 'yunying',
+    },
+    {
+      title: '全量主机实时上行流量',
+      code: '',
+      api: 'agentUplinkBytes',
+      icon: 'icon-shanghangliuliang',
+      // unit: 'M',
+      tip: 'byte',
+      format: Utils.formatSize,
+      type: 'formatSize',
+      text: '全量主机实时下行流量',
+      textCode: '',
+      textApi: 'agentDownLinkBytes',
+      show: true,
+    },
+    {
+      title: '全部agent实时上行流量',
+      code: '',
+      api: 'agentUplinkBytes',
+      icon: 'icon-shanghangliuliang',
+      // unit: 'M',
+      tip: 'byte',
+      format: Utils.formatSize,
+      type: 'formatSize',
+      text: '全部agent实时下行流量',
+      textCode: '',
+      textApi: 'agentDownLinkBytes',
+      show: true,
+    },
+    {
+      title: '近1分钟agent采集量',
+      code: '',
+      api: 'agentSendBytesLast1Minute',
+      icon: 'icon-dangricaijiliang',
+      tip: 'byte',
+      format: Utils.formatSize,
+      show: type === 'yunying',
+    },
+    {
+      title: '近1分钟agent采集条数',
+      code: '',
+      api: 'agentSendLogEventsLast1Minute',
+      icon: 'icon-dangricaijitiaoshu',
+      unit: '条',
+      tip: '条',
+      format: numTrans,
+      show: type === 'yunying',
+    },
+    {
+      title: '全部agent当日采集量',
+      code: 10,
+      api: 'agentSendBytesDay',
+      icon: 'icon-dangricaijiliang',
+      tip: 'byte',
+      type: 'formatSize',
+      format: Utils.formatSize,
+      show: type === 'yunying',
+    },
+    {
+      title: '全部agent当日采集条数',
+      code: 11,
+      api: 'agentSendLogEventsDay',
+      icon: 'icon-dangricaijitiaoshu',
+      unit: '条',
+      tip: '条',
+      format: numTrans,
+      show: type === 'yunying',
+    },
+  ].filter((row) => row.show);
+};

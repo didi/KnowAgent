@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { cardList } from './config';
+import { cardList, getCardList } from './config';
 import { Container, IconFont, Tooltip } from '@didi/dcloud-design';
 import classNames from 'classnames';
 
 interface IProps {
   dashBoardData: Record<string, any>;
+  type?: string;
 }
 
 const headerClass = 'dashboardHeader';
 
 const HeaderCard = (props: IProps): JSX.Element => {
-  const { dashBoardData } = props;
+  const { dashBoardData, type = '' } = props;
   const [dataSource, setDataSource] = useState<Record<string, any>>({});
 
   useEffect(() => {
@@ -20,8 +21,8 @@ const HeaderCard = (props: IProps): JSX.Element => {
   return (
     <div className={headerClass}>
       <h3 className={`${headerClass}-title`}>采集任务</h3>
-      <Container gutter={24} awd={true} xl={6} xxl={4} className={`${headerClass}-wrap`}>
-        {cardList.map((item, index) => (
+      <Container gutter={24} awd={true} xl={6} xxl={6} className={`${headerClass}-wrap`}>
+        {getCardList(type).map((item, index) => (
           <Container key={index} flex={'auto'}>
             <div className={`${headerClass}-item`}>
               <div className={`${headerClass}-item-icon`}>
@@ -35,7 +36,9 @@ const HeaderCard = (props: IProps): JSX.Element => {
                       <span className={`${headerClass}-item-content-context-num`}>
                         {dataSource[item.api] && item.format ? parseFloat(item.format(dataSource[item.api], 2)) : dataSource[item.api]}
                       </span>
-                      <span className={`${headerClass}-item-content-context-span`}>{item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)}</span>
+                      <span className={`${headerClass}-item-content-context-span`}>
+                        {item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)}
+                      </span>
                     </>
                   ) : (
                     <>
@@ -45,20 +48,24 @@ const HeaderCard = (props: IProps): JSX.Element => {
                       <span className={`${headerClass}-item-content-context-span`}>{item.unit ? item.unit : '个'}</span>
                     </>
                   )}
-
                 </div>
                 {item.text ? (
                   <div className={`${headerClass}-item-content-text`}>
-                    <span className={`${headerClass}-item-content-text-label`}><span className='scale-font'>{item.text}：</span></span>
+                    <span className={`${headerClass}-item-content-text-label`}>
+                      <span className="scale-font">{item.text}：</span>
+                    </span>
                     <span className={`${headerClass}-item-content-text-span`}>
                       {item.type === 'formatSize' ? (
                         <Tooltip
                           title={
-                            ((dataSource[item.textApi] && item.format ? parseFloat(item.format(dataSource[item.textApi], 2)) : dataSource[item.textApi]) ||
-                              0) + (item.format(dataSource[item.api])?.match(/[A-Za-z]*$/))
+                            ((dataSource[item.textApi] && item.format
+                              ? parseFloat(item.format(dataSource[item.textApi], 2))
+                              : dataSource[item.textApi]) || 0) + item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)
                           }
                         >
-                          {dataSource[item.textApi] && item.format ? parseFloat(item.format(dataSource[item.textApi], 2)) : dataSource[item.textApi]}
+                          {dataSource[item.textApi] && item.format
+                            ? parseFloat(item.format(dataSource[item.textApi], 2))
+                            : dataSource[item.textApi]}
                           <span>{item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)}</span>
                         </Tooltip>
                       ) : (
@@ -72,7 +79,6 @@ const HeaderCard = (props: IProps): JSX.Element => {
                           <span>{item.unit ? item.unit : '个'}</span>
                         </Tooltip>
                       )}
-
                     </span>
                   </div>
                 ) : null}

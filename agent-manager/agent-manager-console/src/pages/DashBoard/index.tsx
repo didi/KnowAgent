@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { AppContainer, Spin } from '@didi/dcloud-design';
 import { EventBusTypes } from '../../constants/event-types';
 import HeaderCard from './headerCard';
-import LineCharts from './lineCharts';
 import { getOperatingDashboard } from './service';
 import './style/index.less';
 import BackToTop from './BackToTop';
+import BarCharts from './BarCharts';
+import { appBarList } from './config';
 
 const HomePage = (): JSX.Element => {
   const headerLeftContent = <>我的工作台</>;
@@ -39,8 +40,8 @@ const HomePage = (): JSX.Element => {
         <div className="dashboard" id="dashboardWrap">
           {dashBoardData && (
             <>
-              <HeaderCard dashBoardData={dashBoardData} />
-              {/* <LineCharts dashBoardData={dashBoardData} /> */}
+              <HeaderCard type="yunying" dashBoardData={dashBoardData} />
+              <BarCharts barList={appBarList} type="应用视角 TOP5" dashBoardData={dashBoardData} />
             </>
           )}
         </div>
