@@ -53,8 +53,21 @@ const DashBoardPieCharts = (props: { dashBoardData: Record<string, any> }): JSX.
     <div className="pie-dashboard-wrap">
       <h3 className="pie-dashboard-wrap-title">状态监控</h3>
       <div className="piedashboardbox">
-        <PieChart id="collect" dataSource={getPieData('osTypeCountMap')} title={'主机操作系统类型分布'} />
-        <PieChart id="agent" chartClassName="green-bg" dataSource={getPieData('agentVersionCountMap')} title={'Agent版本类型分布'} />
+        <PieChart
+          id="collect"
+          renderLegend={true}
+          customOptions={{ legend: { show: false } }}
+          dataSource={getPieData('osTypeCountMap')}
+          title={'主机操作系统类型分布'}
+        />
+        <PieChart
+          id="agent"
+          customOptions={{ legend: { show: false } }}
+          renderLegend={true}
+          chartClassName="green-bg"
+          dataSource={getPieData('agentVersionCountMap')}
+          title={'Agent版本类型分布'}
+        />
         <PieChart
           id="task"
           tabData={[

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as echarts from 'echarts/core';
 
 import {
@@ -28,6 +28,8 @@ import {
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import throttle from 'lodash/throttle';
+import { pieColors } from '../pieCharts/constants';
+import { numberToFixed } from '../../../lib/utils';
 
 // 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
 export type ECOptions = echarts.ComposeOption<
@@ -68,10 +70,14 @@ export interface ILine {
   width?: number | string;
   height?: number;
   linkTo?: any;
+  renderLegend?: any;
+  legendData?: any[];
+  totalValue?: number;
 }
 
 export const Bar = (props: ILine) => {
-  const { option, height, id, linkTo, item } = props;
+  const { option, height, id, linkTo, item, legendData, className, totalValue } = props;
+  const [legendChecked, setLegendChecked] = useState<Record<string, boolean>>({});
 
   const myChart = useRef(null);
 
@@ -107,8 +113,52 @@ export const Bar = (props: ILine) => {
     };
   }, [option]);
 
-  return (
-    <>
+  const renderLegends = (chartInstance) => {
+    const dispatchEchartsAction = (name) => {
+      chartInstance.dispatchAction({
+        type: !legendChecked[name] ? 'legendUnSelect' : 'legendSelect',
+        name,
+      });
+      setLegendChecked({
+        ...legendChecked,
+        [name]: !legendChecked[name],
+      });
+    };
+
+    const hoverOrLeave = (name: string, type: string) => {
+      chartInstance.dispatchAction({
+        type: type === 'over' ? 'highlight' : 'downplay',
+        name,
+      });
+    };
+
+    return (
+      <div className="custom-legend">
+        {legendData.map((item, index) => (
+          <div
+            className="item"
+            onMouseOver={() => hoverOrLeave(item.name, 'over')}
+            onMouseLeave={() => hoverOrLeave(item.name, 'leave')}
+            onClick={() => dispatchEchartsAction(item.name)}
+            key={item.name}
+          >
+            <div className="dot">
+              <div className="rect" style={{ background: legendChecked[item.name] ? '#ccc' : pieColors[index % 9] }}></div>
+              <div className="title" style={{ color: legendChecked[item.name] ? '#ccc' : '#495057' }}>
+                <span>{item.name}</span>
+              </div>
+            </div>
+            <span className="unit" style={{ color: legendChecked[item.name] ? '#ccc' : '#495057' }}>
+              {numberToFixed((item?.value / totalValue) * 100) + '%'}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderChart = useMemo(() => {
+    return (
       <div
         id={props.id}
         key={props.id}
@@ -118,6 +168,12 @@ export const Bar = (props: ILine) => {
           height: props.height || 260,
         }}
       ></div>
+    );
+  }, [id, className, height]);
+  return (
+    <>
+      {renderChart}
+      {props.renderLegend && renderLegends(myChart.current)}
     </>
   );
 };

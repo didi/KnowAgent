@@ -10,19 +10,21 @@
     display: flex;
     flex-flow: row wrap;
     row-gap: 16px;
-    align-content: flex-start;
-    column-gap: 16px;
   }
 }
 
 .bar-item {
   background: #F8F9FA;
   border-radius: 8px;
-  flex: 0 0 32%;
+  width: calc((100% - 32px) / 3);
   box-sizing: border-box;
   height: 260px;
 
   &.dcloud-empty {
     padding-top: 70px;
   }
+}
+
+.bar-item:not(:nth-child(3n)) {
+  margin-right: 16px;
 }

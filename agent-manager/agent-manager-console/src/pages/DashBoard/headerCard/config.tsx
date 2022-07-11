@@ -153,7 +153,7 @@ export const getCardList = (type: string) => {
       code: 6,
       api: 'agentVersionNumber',
       icon: 'icon-Agentzongshu',
-      text: '空转agent数',
+      text: '未运行任何Agent实例的版本数',
       textCode: 1,
       textApi: 'nonRelateAnyLogCollectTaskAgentNum', // TODO: 字段确认
       show: type == 'yunwei',

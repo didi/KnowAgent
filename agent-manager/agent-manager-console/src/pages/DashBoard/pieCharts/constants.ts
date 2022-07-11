@@ -1,5 +1,7 @@
 import { numberToFixed } from '../../../lib/utils';
 
+export const pieColors = ['#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'];
+
 export const createOption = (data: any) => {
   const text = !isNaN(Number((data[2].value / data[0].totalValue).toFixed(2)) * 100)
     ? Number((data[2].value / data[0].totalValue).toFixed(2)) * 100 + '%'
@@ -12,11 +14,11 @@ export const createOption = (data: any) => {
       textVerticalAlign: 'center',
       itemGap: 0,
       textStyle: {
-        fontSize: 28,
+        fontSize: 26,
         color: '#212529',
       },
       subtextStyle: {
-        fontSize: 14,
+        fontSize: 13,
         color: '#495057',
       },
       left: '50%',
@@ -54,7 +56,7 @@ export const createOption = (data: any) => {
     series: [
       {
         type: 'pie',
-        radius: ['52%', '32%'],
+        radius: ['48%', '28%'],
         center: ['50%', '30%'],
         data,
         avoidLabelOverlap: false,
@@ -84,6 +86,16 @@ export const getPieChartOption = (data: any, totalValue = 0, customOptions = {})
         fontWeight: 'normal',
       },
       extraCssText: 'box-shadow: 0 2px 12px 0 rgba(31,50,82,0.18); border-radius: 2px; border: none; height: 44px; line-height: 25px;',
+      formatter: (params: any) => {
+        const val = numberToFixed((params?.value / totalValue) * 100);
+        const tip =
+          `<span style="display:inline-block;margin-right:8px;border-radius:50%; width:6px; height:6px; background-color:${params.color};"></span>` +
+          params.name +
+          '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
+          val +
+          '%';
+        return tip;
+      },
     },
     legend: {
       orient: 'vertical',
@@ -95,14 +107,13 @@ export const getPieChartOption = (data: any, totalValue = 0, customOptions = {})
       itemWidth: 8,
       formatter: (name) => {
         const item = data.find((row) => row.name);
-        console.log(item, totalValue, data, name);
         return name + '\t' + numberToFixed((item?.value / totalValue) * 100) + '%';
       },
     },
     series: [
       {
         type: 'pie',
-        radius: '52%',
+        radius: '48%',
         center: ['50%', '30%'],
         data,
         hoverAnimation: false,

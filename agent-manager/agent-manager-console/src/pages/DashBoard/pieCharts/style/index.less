@@ -43,9 +43,12 @@
     width: 100%;
 
     &-title {
-      font-size: 13px;
-      color: #495057;
-      font-weight: bolder;
+      font-family: PingFangSC-Medium;
+      font-size: 16px;
+      color: #212529;
+      letter-spacing: 0;
+      text-align: justify;
+      line-height: 22px;
     }
   }
 
@@ -177,6 +180,50 @@
         color: rgba(255, 125, 65);
         background: rgba(255, 125, 65);
       }
+    }
+  }
+}
+
+.custom-legend {
+  height: 148px;
+  overflow: scroll;
+  position: relative;
+  top: -162px;
+
+  .item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 11px;
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #495057;
+    letter-spacing: 0;
+    text-align: justify;
+    line-height: 20px;
+
+    .dot {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .rect {
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .title {
+      max-width: 222px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+    }
+
+    .unit {
+      margin-right: 20px;
     }
   }
 }
