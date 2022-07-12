@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-
+import service from 'request/axiosConfig';
+import { IconFont } from '@didi/dcloud-design';
 export const hostTypeMap = {
   0: '物理机',
   1: '容器',
@@ -11,6 +12,11 @@ export const timeFormat = 'YYYY-MM-DD HH:mm:ss';
 
 export const getHostInfo = (info: any) => {
   const columns = [
+    {
+      label: '主机名',
+      key: 'hostname',
+      span: 1,
+    },
     {
       label: '主机IP',
       key: 'ip',
@@ -25,37 +31,28 @@ export const getHostInfo = (info: any) => {
       span: 1,
     },
     {
+      label: '承载应用',
+      key: 'serviceList',
+      renderCustom: (t: any) => {
+        try {
+          const services = JSON.parse(t);
+          return services.map((service) => service.servicename).join(',');
+        } catch (error) {
+          return t || '-';
+        }
+      },
+      span: 1,
+    },
+    {
       label: '宿主机名',
       key: 'parentHostName',
       invisible: info?.container === 0,
       span: 1,
     },
-    // {
-    //   label: 'Agent版本名',
-    //   key: 'agentVersion',
-    // },
-    // {
-    //   label: '已开启日志采集任务数',
-    //   key: 'openedLogCollectTaskNum',
-    // }, {
-    //   label: '已开启日志采集路径数',
-    //   key: 'openedLogPathNum',
-    // },
-    // {
-    //   label: '最近 agent 启动时间',
-    //   key: 'lastestAgentStartupTime',
-    //   render: (t: number) => moment(t).format(timeFormat),
-    //   invisible: !(info.agentId !== null),
-    // },
-    // {
-    //   label: '所属机房',
-    //   key: 'machineZone',
-    // },
     {
       label: '新增时间',
       key: 'hostCreateTime',
       renderCustom: (t: number) => {
-        console.log(t, 'moment(t).format(timeFormat)');
         return moment(t).format(timeFormat);
       },
       span: 1,
@@ -70,14 +67,65 @@ export const getAgentInfo = (info: any) => {
     {
       label: 'Agent版本号',
       key: 'version',
+      span: 1,
     },
     {
       label: '版本描述',
       key: 'described',
+      span: 1,
+    },
+    {
+      label: 'Agent健康度',
+      key: 'healthLevel',
+      renderCustom: (t: number) => {
+        const render: JSX.Element = (
+          <span style={{ fontSize: '20px' }}>
+            {t == 0 ? <IconFont type="icon-hong" /> : t == 1 ? <IconFont type="icon-huang" /> : t == 2 ? <IconFont type="icon-lv" /> : null}
+          </span>
+        );
+        return render;
+      },
+      span: 1,
+    },
+    {
+      label: 'Agent健康度描述信息',
+      key: 'agentHealthDescription',
+      span: 1,
     },
     {
       label: 'Agent CPU 限流阈值(单位：核)',
       key: 'cpuLimitThreshold',
+      span: 1,
+    },
+    {
+      label: '指标流接收集群 id',
+      key: 'metricsSendReceiverId',
+      span: 1,
+    },
+    {
+      label: '错误日志接收集群 id',
+      key: 'errorLogsSendReceiverId',
+      span: 1,
+    },
+    {
+      label: '指标流接收Topic',
+      key: 'metricsSendTopic',
+      span: 1,
+    },
+    {
+      label: '错误日志接收Topic',
+      key: 'errorLogsSendTopic',
+      span: 1,
+    },
+    {
+      label: '指标流生产端属性',
+      key: 'metricsProducerConfiguration',
+      span: 1,
+    },
+    {
+      label: '错误日志生产端属性',
+      key: 'errorLogsProducerConfiguration',
+      span: 1,
     },
   ];
 
@@ -86,30 +134,6 @@ export const getAgentInfo = (info: any) => {
 
 export const getAgentSeniorInfo = (info: any) => {
   const columns = [
-    {
-      label: '指标流接收集群 id',
-      key: 'metricsSendReceiverId',
-    },
-    {
-      label: '错误日志接收集群 id',
-      key: 'errorLogsSendReceiverId',
-    },
-    {
-      label: '指标流接收Topic',
-      key: 'metricsSendTopic',
-    },
-    {
-      label: '错误日志接收Topic',
-      key: 'errorLogsSendTopic',
-    },
-    {
-      label: '指标流生产端属性',
-      key: 'metricsProducerConfiguration',
-    },
-    {
-      label: '错误日志生产端属性',
-      key: 'errorLogsProducerConfiguration',
-    },
     {
       label: '配置信息',
       key: 'advancedConfigurationJsonString',

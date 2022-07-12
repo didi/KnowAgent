@@ -130,6 +130,11 @@ export const editOpAgent = (params: any) => {
     data: JSON.stringify(params),
   });
 };
+export const deleteAgentAPI = (agentId: number) => {
+  return request(`/api/v1/op/hosts/${agentId}`, {
+    method: 'DELETE',
+  });
+};
 
 export const deleteHost = (hostId: number, ignoreUncompleteCollect: number) => {
   return request(`/api/v1/op/hosts/${hostId}?ignoreUncompleteCollect=${ignoreUncompleteCollect}`, {
@@ -468,23 +473,8 @@ const menuLists = [
 ];
 
 export const Containers = (props: any): JSX.Element => {
-  console.log(props, 'Containers');
   const [isGroup, setIsgroup] = useState(true);
   const [menuList, setMenuList] = useState<any[]>(menuLists);
-  useEffect(() => {
-    setTimeout(() => {
-      // const list = [
-      //   {
-      //     name: "Agent",
-      //     key: '0', // 固定
-      //     url: ''
-      //   }
-      // ];
-      // setMenuList(list);
-      // setIsgroup(true);
-    }, 2000);
-  }, []);
-
   return (
     <div className="test-chartcontain">
       <ChartContainer
@@ -991,13 +981,39 @@ export const ModifyHost: React.FC = (props: any) => {
 // 删除主机
 export const deleteAgentHost = (props: any) => {
   Modal.confirm({
-    title: props.agentId ? '该主机已安装Agent，请先卸载' : `是否确认删除主机名为${props.hostName}的主机？`,
-    content: <span className="fail">{!props.agentId && '删除操作不可恢复，请谨慎操作！'}</span>,
+    title: `是否确认删除主机名为${props.hostName}的${props.agentId ? 'Agent' : ''}与主机？`,
+    content: <span className="fail">{props.agentId ? '请先卸载或停止 agent 进程' : '删除操作不可恢复，请谨慎操作！'}</span>,
+    okText: '确认',
+    cancelText: '取消',
+    onOk() {
+      deleteHost(props.hostId, 0).then((res: any) => {
+        // 0：不忽略数据未采集完 1：忽略数据未采集完
+        // 删除主机 0：删除成功
+        // 10000：参数错误 ==> 不可删除
+        // 23000：待删除主机在系统不存在 ==> 不可删除
+        // 23004：主机存在关联的容器导致主机删除失败 ==> 不可删除
+        // 22001：Agent存在未采集完的日志 ==> 不可能存在这种情况
+        if (res.code === 0) {
+          Modal.success({ content: '删除成功！' });
+          props.genData();
+        } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
+          Modal.error({ content: res.message });
+        }
+      });
+    },
+  });
+};
+
+// 删除Agent
+export const deleteAgent = (props: any) => {
+  Modal.confirm({
+    title: `是否确认删除主机名为${props.hostName}的Agent？`,
+    content: <span className="fail">{'请先卸载或停止 agent 进程'}</span>,
     okText: '确认',
     cancelText: '取消',
     onOk() {
       !props.agentId &&
-        deleteHost(props.hostId, 0).then((res: any) => {
+        deleteAgentAPI(props.agentId).then((res: any) => {
           // 0：不忽略数据未采集完 1：忽略数据未采集完
           // 删除主机 0：删除成功
           // 10000：参数错误 ==> 不可删除
@@ -1214,6 +1230,14 @@ export const agentHealthLevel = (record, value) => {
   );
 };
 
+export const goldMetricIcon = (record, value) => {
+  return (
+    <span>
+      <IconFont type={record.agentId ? 'icon-huangjinzhibiao' : 'icon-huangjinzhibiao1'} />
+    </span>
+  );
+};
+
 export const HealthMap = (props: any) => {
   console.log('HealthMap', props);
   return (
@@ -1243,4 +1267,15 @@ export const HealthMap = (props: any) => {
   );
 };
 
-export default { hostNameArr, agentvisionArr, servicesList, hostNameList, healthList, agentHealthLevel, HealthMap };
+export default {
+  hostNameArr,
+  agentvisionArr,
+  servicesList,
+  hostNameList,
+  healthList,
+  agentHealthLevel,
+  HealthMap,
+  deleteAgentHost,
+  deleteAgent,
+  goldMetricIcon,
+};

@@ -136,6 +136,7 @@ const AgentDetail = (props: any) => {
         <div style={{ marginBottom: '20px' }}>
           <ProDescriptions
             title={'基本信息'}
+            labelStyle={{ minWidth: '180px' }}
             column={{
               xxl: 2,
               xl: 2,
@@ -161,7 +162,7 @@ const AgentDetail = (props: any) => {
               dataSource: collectTastData,
               paginationProps: { ...pagination },
               tableHeaderTitle: true, // 展示表格自定义标题
-              tableHeaderTitleText: '采集任务', // 自定义标题文本内容
+              tableHeaderTitleText: '关联主机', // 自定义标题文本内容
               tableHeaderCustomColumns: true, // 表格Header右侧自定义列
               attrs: {
                 // className: 'frameless-table', // 纯无边框表格类名

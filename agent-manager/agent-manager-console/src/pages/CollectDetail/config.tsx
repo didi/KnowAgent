@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Tag, Tooltip } from '@didi/dcloud-design';
+import { Tag, Tooltip, IconFont } from '@didi/dcloud-design';
 
 export const hostTypeMap = {
   0: '物理机',
@@ -30,8 +30,8 @@ export const renderTooltip = (text: string, num?: number) => {
           {text?.length > figure ? text?.substring(0, figure) + '...' : text}
         </Tooltip>
       ) : (
-          <Tag />
-        )}
+        <Tag />
+      )}
     </>
   );
 };
@@ -42,39 +42,58 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       label: '采集任务ID',
       key: 'id',
     },
-    // {
-    //   label: '所属项目',
-    //   key: 'project',
-    // },
+    {
+      label: '采集应用名',
+      key: 'logCollectTaskName',
+    },
     {
       label: '关联Agent数',
       key: 'relateAgentNum',
       // invisible: !detail.collectStartBusinessTime,
     },
     // {
-    //   label: '采集应用名',
-    //   key: 'logCollectTaskName',
-    // },
-    // {
     //   label: '采集模式',
     //   key: 'logCollectTaskType',
     //   renderCustom: (t: any) => collectModeMap[t],
     // },
-    // {
-    //   label: '接收端集群',
-    //   key: 'logCollectTaskType', // kafkaClusterName
-    //   renderCustom: (t, record: any) => renderTooltip(record?.kafkaClusterName),
-    // },
-    // {
-    //   label: '接收端Topic',
-    //   key: 'sendTopic',
-    // },
     {
-      label: '创建时间',
-      key: 'collectStartBusinessTime',
-      // invisible: !detail.collectStartBusinessTime,
-      renderCustom: (t: number) => moment(t).format(timeFormat),
+      label: '接收端集群',
+      key: 'receiver', // kafkaClusterName
+      renderCustom: (t: any) => {
+        try {
+          const receiver = JSON.parse(t);
+          return renderTooltip(receiver?.kafkaClusterName);
+        } catch (error) {
+          return '-';
+        }
+      },
     },
+    {
+      label: '接收端Topic',
+      key: 'sendTopic',
+    },
+    {
+      label: '采集任务健康度',
+      key: 'logCollectTaskHealthLevel',
+      renderCustom: (t: any) => {
+        const render: JSX.Element = (
+          <span style={{ fontSize: '20px' }}>
+            {t == 0 ? <IconFont type="icon-hong" /> : t == 1 ? <IconFont type="icon-huang" /> : t == 2 ? <IconFont type="icon-lv" /> : null}
+          </span>
+        );
+        return render;
+      },
+    },
+    {
+      label: '采集任务健康度描述',
+      key: 'logCollectTaskHealthDescription',
+    },
+    // {
+    //   label: '创建时间',
+    //   key: 'collectStartBusinessTime',
+    //   // invisible: !detail.collectStartBusinessTime,
+    //   renderCustom: (t: number) => moment(t).format(timeFormat),
+    // },
     // {
     //   label: '结束时间',
     //   key: 'collectEndBusinessTime',
@@ -113,6 +132,10 @@ export const getAssociateHostColumns = (getHostDetail: any) => {
       render: (t: number) => {
         return t ? <Tag color={healthMap[t]}>{healthMap[t]}</Tag> : '-';
       },
+    },
+    {
+      title: 'Agent健康度描述',
+      dataIndex: 'agentHealthDescription',
     },
     {
       title: 'Agent版本',

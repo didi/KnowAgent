@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Input, Row, Col, InputNumber, Radio, Select, Checkbox, Modal } from '@didi/dcloud-design';
 import './index.less';
-import { AppContainer, Container } from '@didi/dcloud-design';
-import ProTableProject from './module/tpl-protable/index';
-import ProFormProject from './module/tpl-proform/index';
-import Prodescription from './module/tpl-prodescription/index';
-import * as customHandle from './module';
-import * as filterMap from './filtter';
-import { EventBusTypes } from '../../constants/event-types';
-const pageTreeData = require('./pageTreeData.json');
+import { Container } from '@didi/dcloud-design';
+import ProTableProject from '../tpl-protable/index';
+import ProFormProject from '../tpl-proform/index';
+import Prodescription from '../tpl-prodescription/index';
+const pageTreeData = null;
 
-const AutoPage = (props: any) => {
+const AutoPage = (props) => {
   const PageContainter = (ele) => {
-    return (
-      <div className="pageContainter" style={{ padding: '24px', backgroundColor: '#F8F8FB' }}>
-        {ele.children}
-      </div>
-    );
+    return <div className="pageContainter">{ele.children}</div>;
   };
   // const {pageTreeData}=props;
-  const [pageData, setPageData] = useState<any>(pageTreeData || props?.pageTreeData);
+  const [pageData, setPageData] = useState<any>(pageTreeData || props.pageTreeData);
   const Components = {
     ProTableProject: ProTableProject,
     ProFormProject: ProFormProject,
@@ -28,7 +20,7 @@ const AutoPage = (props: any) => {
   const [visible, setVisible] = useState(false);
   const returnRender = (item, slot) => {
     if (slot.children.length === 0) {
-      return Components[slot.componentName]({ config: slot.dataInfo, customHandle: customHandle, filterMap: filterMap.formatMap });
+      return Components[slot.componentName]({ config: slot.dataInfo });
     } else {
       return RenderComponents(slot);
     }
@@ -53,10 +45,6 @@ const AutoPage = (props: any) => {
       setPageData(props.pageTreeData);
     }
   }, [props.pageTreeData]);
-  const headerLeftContent = <>Agent管理</>;
-  useEffect(() => {
-    AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
-  }, []);
 
   return (
     <>

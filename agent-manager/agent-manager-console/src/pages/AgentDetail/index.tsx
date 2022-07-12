@@ -120,6 +120,7 @@ const AgentDetail = (props: any) => {
       <div className={'agemt-detail-box'} style={{ padding: '24px', backgroundColor: '#ffffff' }}>
         <div style={{ marginBottom: '20px' }}>
           <ProDescriptions
+            labelStyle={{ minWidth: '180px' }}
             title={'主机信息'}
             column={{
               xxl: 2,
@@ -138,7 +139,8 @@ const AgentDetail = (props: any) => {
             <div style={{ marginBottom: '20px' }}>
               <ProDescriptions
                 title={'Agent 基础配置信息'}
-                labelStyle={{ minWidth: 240 }}
+                labelStyle={{ minWidth: '180px' }}
+                contentStyle={{ minWidth: '100px' }}
                 column={{
                   xxl: 2,
                   xl: 2,
@@ -154,7 +156,7 @@ const AgentDetail = (props: any) => {
             <div style={{ marginBottom: '20px' }}>
               <ProDescriptions
                 title={'Agent 高级配置信息'}
-                contentStyle={{ minWidth: 100 }}
+                contentStyle={{ minWidth: '180px' }}
                 column={{
                   xxl: 2,
                   xl: 2,

@@ -202,7 +202,7 @@
                   {
                     "operationName": "黄金指标",
                     "operationKey": "delete",
-                    "type": "icon-huangjinzhibiao",
+                    "type": "custom",
                     "baseData": "{}",
                     "footer": false,
                     "triggerType": "modalOrDrawer",
@@ -220,7 +220,23 @@
                       "customTitle": true
                     },
                     "customContentFormModal": "_customContent",
-                    "customPageName": "Containers"
+                    "customPageName": "Containers",
+                    "renderCustomName": "goldMetricIcon"
+                  },
+                  {
+                    "operationName": "删除Agent",
+                    "operationKey": "deleteAgent",
+                    "baseData": "{}",
+                    "triggerType": "confirm",
+                    "containerType": "modal",
+                    "optConfig": {
+                      "title": "",
+                      "content": "删除",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "customPageName": "deleteAgent"
                   },
                   {
                     "operationName": "删除主机",
