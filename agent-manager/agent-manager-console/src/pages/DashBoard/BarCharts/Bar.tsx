@@ -30,6 +30,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 import throttle from 'lodash/throttle';
 import { pieColors } from '../pieCharts/constants';
 import { numberToFixed } from '../../../lib/utils';
+import { Tooltip } from '@didi/dcloud-design';
 
 // 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
 export type ECOptions = echarts.ComposeOption<
@@ -131,9 +132,10 @@ export const Bar = (props: ILine) => {
         name,
       });
     };
+    const clientWidth1440 = document.body.clientWidth === 1440;
 
     return (
-      <div className="custom-legend">
+      <div className={`custom-legend ${clientWidth1440 ? 'width-1440' : ''}`}>
         {legendData.map((item, index) => (
           <div
             className="item"
@@ -144,9 +146,14 @@ export const Bar = (props: ILine) => {
           >
             <div className="dot">
               <div className="rect" style={{ background: legendChecked[item.name] ? '#ccc' : pieColors[index % 9] }}></div>
-              <div className="title" style={{ color: legendChecked[item.name] ? '#ccc' : '#495057' }}>
-                <span>{item.name}</span>
-              </div>
+              <Tooltip title={item.name}>
+                <div
+                  className={`title ${clientWidth1440 ? 'width-1440' : ''}`}
+                  style={{ color: legendChecked[item.name] ? '#ccc' : '#495057' }}
+                >
+                  <span>{item.name}</span>
+                </div>
+              </Tooltip>
             </div>
             <span className="unit" style={{ color: legendChecked[item.name] ? '#ccc' : '#495057' }}>
               {numberToFixed((item?.value / totalValue) * 100) + '%'}

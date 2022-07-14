@@ -1,7 +1,32 @@
-import { Empty } from '@didi/dcloud-design';
+import { Empty, Utils } from '@didi/dcloud-design';
 import React, { useEffect, useState } from 'react';
 import { Bar, ECOptions } from './Bar';
 import './index.less';
+
+const valueEnum = {
+  1: 'b',
+  2: 'mb',
+  3: 'ms',
+  4: 's',
+  6: 'date',
+  7: 'ns',
+};
+
+const valueFormatFn = (value, baseUnit, displayUnit) => {
+  if (displayUnit == 0 || valueEnum[baseUnit] === valueEnum[displayUnit]) {
+    return value;
+  }
+  if (!valueEnum[displayUnit]) {
+    return value?.toFixed(2);
+  }
+  if (valueEnum[displayUnit] === 'mb') {
+    return Utils.transBToMB(value);
+  }
+  if (baseUnit === 3 && displayUnit === 4) {
+    return value / 1000;
+  }
+  return Number(Utils.formatTimeValueByType(value, valueEnum[baseUnit], valueEnum[displayUnit]))?.toFixed(2);
+};
 
 const BarCharts = (props: {
   barList: any[];
@@ -15,6 +40,7 @@ const BarCharts = (props: {
   };
   const getBarOption = (item) => {
     const data = props.dashBoardData?.[item.key]?.histogramChatValue || [];
+    const row = props.dashBoardData?.[item.key];
     let xAxisData = data.map((item) => item.key);
 
     if (props.getKeys) {
@@ -62,8 +88,14 @@ const BarCharts = (props: {
         axisLabel: {
           color: '#464646',
           formatter: (value) => {
-            return item.formatter ? item.formatter(value) : value;
+            return item.formatter ? item.formatter(value) : valueFormatFn(value, row.baseUnit, row.displayUnit);
           },
+        },
+      },
+      tooltip: {
+        show: true,
+        formatter: (params: any) => {
+          return item.formatter ? item.formatter(params.value) : '' + valueFormatFn(params.value, row.baseUnit, row.displayUnit);
         },
       },
       grid: {

@@ -129,7 +129,6 @@ const AgentDetail = (props: any) => {
     // state?.agentId && getAgentDetail();
   }, []);
 
-  console.log(props, 'AgentDetail');
   return (
     <div style={{ padding: '24px', backgroundColor: '#F8F8FB' }}>
       <div style={{ padding: '24px', backgroundColor: '#ffffff' }}>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { cardList, getCardList } from './config';
+import { getCardList } from './config';
 import { Container, IconFont, Tooltip } from '@didi/dcloud-design';
-import classNames from 'classnames';
 
 interface IProps {
   dashBoardData: Record<string, any>;
@@ -38,6 +37,7 @@ const HeaderCard = (props: IProps): JSX.Element => {
                       </span>
                       <span className={`${headerClass}-item-content-context-span`}>
                         {item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)}
+                        {item.unit}
                       </span>
                     </>
                   ) : (
@@ -66,7 +66,10 @@ const HeaderCard = (props: IProps): JSX.Element => {
                           {dataSource[item.textApi] && item.format
                             ? parseFloat(item.format(dataSource[item.textApi], 2))
                             : dataSource[item.textApi]}
-                          <span>{item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)}</span>
+                          <span>
+                            {item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)}
+                            {item.unit}
+                          </span>
                         </Tooltip>
                       ) : (
                         <Tooltip
@@ -76,6 +79,43 @@ const HeaderCard = (props: IProps): JSX.Element => {
                           }
                         >
                           {dataSource[item.textApi] && item.format ? item.format(dataSource[item.textApi]) : dataSource[item.textApi]}
+                          <span>{item.unit ? item.unit : '个'}</span>
+                        </Tooltip>
+                      )}
+                    </span>
+                  </div>
+                ) : null}
+                {item.text1 ? (
+                  <div className={`${headerClass}-item-content-text no-margin`}>
+                    <span className={`${headerClass}-item-content-text-label`}>
+                      <span className="scale-font">{item.text1}：</span>
+                    </span>
+                    <span className={`${headerClass}-item-content-text-span`}>
+                      {item.type === 'formatSize' ? (
+                        <Tooltip
+                          title={
+                            ((dataSource[item.textApi1] && item.format
+                              ? parseFloat(item.format(dataSource[item.textApi1], 2))
+                              : dataSource[item.textApi1]) || 0) + item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)
+                          }
+                        >
+                          {dataSource[item.textApi1] && item.format
+                            ? parseFloat(item.format(dataSource[item.textApi1], 2))
+                            : dataSource[item.textApi1]}
+                          <span>
+                            {item.format(dataSource[item.api])?.match(/[A-Za-z]*$/)}
+                            {item.unit}
+                          </span>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip
+                          title={
+                            ((dataSource[item.textApi1] && item.format
+                              ? item.format(dataSource[item.textApi1])
+                              : dataSource[item.textApi1]) || 0) + (item.unit ? item.unit : '个')
+                          }
+                        >
+                          {dataSource[item.textApi1] && item.format ? item.format(dataSource[item.textApi1]) : dataSource[item.textApi1]}
                           <span>{item.unit ? item.unit : '个'}</span>
                         </Tooltip>
                       )}

@@ -85,7 +85,7 @@ const LogFileType = (props: any) => {
     };
     const res = await getFileContent(params);
     setContent(res);
-    setFieldsValue({ 'step2_${props.logType}_selectionType': res });
+    setFieldsValue({ 'step3_${props.logType}_selectionType': res });
     setShowFileLoad(false);
   };
   const getSelectionType = async (e) => {
@@ -115,9 +115,9 @@ const LogFileType = (props: any) => {
     const res = await getSliceRule(params);
     if (res) {
       setFieldsValue({
-        [`step2_${props.logType}_sliceTimestampPrefixString`]: res.sliceTimestampPrefixString || '',
-        [`step2_${props.logType}_sliceTimestampFormat`]: res.sliceTimestampFormat,
-        [`step2_${props.logType}_sliceTimestampPrefixStringIndex`]: res.sliceTimestampPrefixStringIndex,
+        [`step3_${props.logType}_sliceTimestampPrefixString`]: res.sliceTimestampPrefixString || '',
+        [`step3_${props.logType}_sliceTimestampFormat`]: res.sliceTimestampFormat,
+        [`step3_${props.logType}_sliceTimestampPrefixStringIndex`]: res.sliceTimestampPrefixStringIndex,
       });
     }
   };
@@ -128,10 +128,10 @@ const LogFileType = (props: any) => {
 
   // 日志预览按钮
   const slicePreview = () => {
-    const userCopyContent = getFieldValue(`step2_${props.logType}_selectionType`);
-    const slicePrefixString = getFieldValue(`step2_${props.logType}_sliceTimestampPrefixString`);
-    const sliceFormat = getFieldValue(`step2_${props.logType}_sliceTimestampFormat`);
-    let slicePrefixStringIndex = getFieldValue(`step2_${props.logType}_sliceTimestampPrefixStringIndex`);
+    const userCopyContent = getFieldValue(`step3_${props.logType}_selectionType`);
+    const slicePrefixString = getFieldValue(`step3_${props.logType}_sliceTimestampPrefixString`);
+    const sliceFormat = getFieldValue(`step3_${props.logType}_sliceTimestampFormat`);
+    let slicePrefixStringIndex = getFieldValue(`step3_${props.logType}_sliceTimestampPrefixStringIndex`);
     // let newVal = userCopyContent.slice(start < 0 ? 0 : start)
     if (slicePrefixStringIndex < 0) {
       slicePrefixStringIndex = 0;
@@ -151,9 +151,9 @@ const LogFileType = (props: any) => {
   useEffect(() => {
     if (props.edit) {
       setFieldsValue({
-        [`step2_${props.logType}_sliceTimestampPrefixString`]: props.sliceRule.sliceTimestampPrefixString || '',
-        [`step2_${props.logType}_sliceTimestampFormat`]: props.sliceRule.sliceTimestampFormat,
-        [`step2_${props.logType}_sliceTimestampPrefixStringIndex`]: props.sliceRule.sliceTimestampPrefixStringIndex,
+        [`step3_${props.logType}_sliceTimestampPrefixString`]: props.sliceRule.sliceTimestampPrefixString || '',
+        [`step3_${props.logType}_sliceTimestampFormat`]: props.sliceRule.sliceTimestampFormat,
+        [`step3_${props.logType}_sliceTimestampPrefixStringIndex`]: props.sliceRule.sliceTimestampPrefixStringIndex,
       });
     }
   }, [props.sliceRule]);
@@ -186,7 +186,7 @@ const LogFileType = (props: any) => {
     <div className="set-up" key={props.getKey}>
       <div className="log-repeat-form">
         <Form.Item label="切片配置划取方法说明：">
-          <span>
+          <span style={{ position: 'absolute', top: '-28px', left: '150px' }}>
             请用光标在原始日志文本框中划取用于区分两条不同日志的日期/时间字符串，系统将根据您划取的日期/时间模式串自动识别，并在下方自动配置好日志切片规则。
           </span>
         </Form.Item>
@@ -208,27 +208,6 @@ const LogFileType = (props: any) => {
             </Button>
           </Row>
         </Form.Item>
-        <Modal title="远程主机日志加载" visible={showFileLoad} onOk={onHandleContentPre} onCancel={() => setShowFileLoad(false)}>
-          <Form.Item
-            label="关联主机"
-            initialValue={props.hostList[0]?.hostName}
-            name="step2_hostName"
-            rules={[{ message: '请选择映射主机名称' }]}
-          >
-            <Select showSearch style={{ width: 200 }} placeholder="请选择主机" optionFilterProp="children">
-              {options}
-            </Select>
-          </Form.Item>
-          <Form.Item label="日志路径" name={`step2_file_path_0`}>
-            <Select>
-              {props.filePathList.map((item) => (
-                <Select.Option key={item} value={item}>
-                  {item}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-        </Modal>
         <Form.Item
           className="col-time-stramp"
           extra="注：填写时间戳，或复制日志文本并通过划取时间戳自动填写，复制文本时，为保证正确性，需从日志任一段落行首开始"
@@ -236,7 +215,7 @@ const LogFileType = (props: any) => {
           label={
             <div>
               日志切片规则
-              <Tooltip title="tips：在日志预览框划取日期/时间字符串，可自动获取日志切片规则参数" placement="topRight">
+              <Tooltip title="tips：在日志预览框划取日期/时间字符串，可自动获取日志切片规则参数" placement="right">
                 <IconFont type="icon-tishi"></IconFont>
               </Tooltip>
               ：
@@ -254,8 +233,7 @@ const LogFileType = (props: any) => {
                 </Col>
                 <Col span={10}>
                   <Form.Item
-                    name={`step2_${props.logType}_sliceTimestampPrefixStringIndex`}
-                    initialValue={0}
+                    name={`step3_${props.logType}_sliceTimestampPrefixStringIndex`}
                     rules={[
                       {
                         required: true,
@@ -275,7 +253,13 @@ const LogFileType = (props: any) => {
                       },
                     ]}
                   >
-                    <InputNumber style={{ margin: '0 5px', width: '65px' }} min={0} max={99999999} precision={0} />
+                    <InputNumber
+                      style={{ width: '90%' }}
+                      min={0}
+                      max={99999999}
+                      precision={0}
+                      placeholder="从0开始计数"
+                    />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -285,7 +269,7 @@ const LogFileType = (props: any) => {
             </Col>
             <Col span={7} style={{ margin: '0 10px' }}>
               <Form.Item
-                name={`step2_${props.logType}_sliceTimestampPrefixString`}
+                name={`step3_${props.logType}_sliceTimestampPrefixString`}
                 rules={[
                   {
                     // required: true,
@@ -303,16 +287,20 @@ const LogFileType = (props: any) => {
                   },
                 ]}
               >
-                <Input onChange={() => setStart(-1)} placeholder="请输入切片时间戳前缀字符串" />
+                <Input onChange={() => setStart(-1)} placeholder="请输入标记切片的日期/时间字符串前缀字符" />
               </Form.Item>
             </Col>
             <Col span={8} style={{ margin: '0 20px' }}>
               <Form.Item
-                name={`step2_${props.logType}_sliceTimestampFormat`}
-                initialValue={Object.keys(dateType)[0]}
+                name={`step3_${props.logType}_sliceTimestampFormat`}
                 rules={[{ required: true, message: '请选择或者输入时间格式' }]}
               >
-                <AutoComplete dataSource={options} className="step2_file_sliceTimestampFormat" onChange={() => setStart(-1)} />
+                <AutoComplete
+                  dataSource={options}
+                  className="step2_file_sliceTimestampFormat"
+                  onChange={() => setStart(-1)}
+                  placeholder="请输入标记切片的日期/时间模式串"
+                />
               </Form.Item>
             </Col>
             <Button type="link" onClick={() => setExampleVisible(true)} style={{ marginLeft: '-20px' }}>
@@ -321,6 +309,7 @@ const LogFileType = (props: any) => {
           </Row>
         </Form.Item>
         <Modal
+          width={600}
           title="切片规则配置样例"
           visible={exampaleVisbile}
           onOk={() => setExampleVisible(false)}
@@ -338,7 +327,7 @@ const LogFileType = (props: any) => {
                   </Col>
                   <Col span={8}>
                     <Form.Item>
-                      <InputNumber value={2} style={{ margin: '0 5px', width: '40px' }} readOnly />
+                      <InputNumber value={0} style={{ margin: '0 5px', width: '40px' }} readOnly />
                     </Form.Item>
                   </Col>
                   <Col span={8}>
@@ -346,12 +335,12 @@ const LogFileType = (props: any) => {
                   </Col>
                 </Row>
               </Col>
-              <Col span={5} style={{ margin: '0 20px' }}>
+              <Col span={4} style={{ margin: '0 10px' }}>
                 <Form.Item>
                   <Input value={'['} readOnly placeholder="请输入切片时间戳前缀字符串" />
                 </Form.Item>
               </Col>
-              <Col span={8}>
+              <Col span={10}>
                 <Form.Item>
                   <Input value="yyyy-MM-dd HH:mm:ss,SSS" readOnly />
                 </Form.Item>
@@ -360,26 +349,61 @@ const LogFileType = (props: any) => {
           </Form.Item>
         </Modal>
         <Row className="slice-pre">
-          <Col span={20} style={{ display: 'inline-block' }}>
+          <Col span={20} style={{ display: 'inline-block', marginTop: '10px' }}>
             {isShow && (
-              <div className="slicePreview" style={{ height: '150px', border: '1px solid #CCC' }}>
-                {slicePre &&
-                  slicePre.map((item: any, key) => {
-                    if (item === '') {
-                      return null;
-                    }
-                    return (
-                      <span key={key} style={{ color: item.valid === 0 ? 'red' : 'black' }}>
-                        {item?.record}
-                      </span>
-                    );
-                  })}
-              </div>
+              <>
+                <div>
+                  日志切片结果：
+                  <Tooltip
+                    title="切片结果中黑色字体表示切片正常的日志数据行，红色字体表示因无法匹配日志切片规则导致切片错误的日志数据行"
+                    placement="right"
+                  >
+                    <IconFont type="icon-tishi"></IconFont>
+                  </Tooltip>
+                </div>
+                <div className="slicePreview" style={{ height: '150px', background: '#fff', border: '1px solid #CCC' }}>
+                  {slicePre &&
+                    slicePre.map((item: any, key) => {
+                      if (item === '') {
+                        return null;
+                      }
+                      return (
+                        <span key={key} style={{ color: item.valid === 0 ? 'red' : 'black' }}>
+                          {item?.record}
+                        </span>
+                      );
+                    })}
+                </div>
+              </>
             )}
           </Col>
         </Row>
+        <Modal title="远程主机日志加载" visible={showFileLoad} onOk={onHandleContentPre} onCancel={() => setShowFileLoad(false)}>
+          <Form form={props.form}>
+            <Form.Item
+              label="关联主机"
+              initialValue={props.hostList[0]?.hostName}
+              name="step2_hostName"
+              rules={[{ message: '请选择映射主机名称' }]}
+            >
+              <Select showSearch style={{ width: 200 }} placeholder="请选择主机" optionFilterProp="children">
+                {options}
+              </Select>
+            </Form.Item>
+            <Form.Item label="日志路径">
+              <Select defaultValue={props.filePathList[0]}>
+                {props.filePathList.map((item) => (
+                  <Select.Option key={item} value={item}>
+                    {item}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Form>
+
+        </Modal>
       </div>
-    </div >
+    </div>
   );
 };
 

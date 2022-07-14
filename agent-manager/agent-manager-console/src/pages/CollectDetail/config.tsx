@@ -78,7 +78,7 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       renderCustom: (t: any) => {
         const render: JSX.Element = (
           <span style={{ fontSize: '20px' }}>
-            {t == 0 ? <IconFont type="icon-hong" /> : t == 1 ? <IconFont type="icon-huang" /> : t == 2 ? <IconFont type="icon-lv" /> : null}
+            {t == 2 ? <IconFont type="icon-hong" /> : t == 1 ? <IconFont type="icon-huang" /> : t == 0 ? <IconFont type="icon-lv" /> : null}
           </span>
         );
         return render;

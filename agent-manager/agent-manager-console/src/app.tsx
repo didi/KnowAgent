@@ -62,7 +62,7 @@ const App = () => {
           leftMenus={leftMenus}
           sidebarTheme={'dark'}
           getUserInfo={fn}
-          needSettingsIcon={true}
+          needSettingsIcon={false}
         >
           <RouteGuard routeList={pageRoutes} />
         </DLayout.DSkoteLayout>

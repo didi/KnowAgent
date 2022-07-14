@@ -156,8 +156,37 @@
 
   .tab-panel {
     position: relative;
-    top: -182px;
+    top: -178px;
     padding-left: 8px;
+
+    &.width-1440 {
+      top: -200px;
+    }
+
+    .list-item {
+      color: #556EE6;
+
+      .link-icon {
+        width: 14px;
+        height: 14px;
+        color: #fff;
+        background: #556EE6;
+        margin-right: 3px;
+        border-radius: 7px;
+
+        svg {
+          width: 9px;
+        }
+
+        &.red-bg {
+          background: rgba(255, 125, 65);
+        }
+      }
+    }
+
+    .dcloud-tabs-nav {
+      margin: 0 0 12px 0;
+    }
 
     .dcloud-tabs-tab {
       font-family: PingFangSC-Regular;
@@ -165,6 +194,7 @@
       color: #212529;
       letter-spacing: 0;
       text-align: justify;
+      line-height: 20px;
     }
 
     &.red-bg {
@@ -186,9 +216,14 @@
 
 .custom-legend {
   height: 148px;
-  overflow: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
-  top: -162px;
+  top: -128px;
+
+  &.width-1440 {
+    top: -150px;
+  }
 
   .item {
     display: flex;
@@ -220,6 +255,10 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       display: inline-block;
+
+      &.width-1440 {
+        max-width: 162px;
+      }
     }
 
     .unit {

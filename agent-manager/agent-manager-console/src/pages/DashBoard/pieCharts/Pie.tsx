@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { List, Tabs } from '@didi/dcloud-design';
-import { createOption, getPieChartOption } from './constants';
+import { getPieChartOption } from './constants';
 import { IconFont } from '@didi/dcloud-design';
 import { TextRouterLink } from '../utils';
-import { Link } from 'react-router-dom';
 import './style/index.less';
 import { Bar, ECOptions } from '../BarCharts/Bar';
 const { TabPane } = Tabs;
@@ -23,6 +22,11 @@ const className = `dashboard-piechart`;
 
 const PieChart = (props: IProps): JSX.Element => {
   const { id, dataSource = [], title, chartClassName, customOptions, height, tabData, renderLegend } = props;
+  const [activeKey, setActiveKey] = useState('error');
+  // TODO: 业务放到外层
+  const linkTo = (name, item) => {
+    setActiveKey(name.includes('故障') ? 'error' : 'warning');
+  };
 
   const renderChart = () => {
     let totalValue = 0;
@@ -34,6 +38,7 @@ const PieChart = (props: IProps): JSX.Element => {
     return (
       <Bar
         id={id}
+        linkTo={linkTo}
         height={height || 393}
         renderLegend={renderLegend}
         totalValue={totalValue}
@@ -45,17 +50,19 @@ const PieChart = (props: IProps): JSX.Element => {
   };
 
   const renderTab = () => {
+    const clientWidth1440 = document.body.clientWidth === 1440;
+
     return (
-      <Tabs className={`tab-panel ${chartClassName}`}>
+      <Tabs activeKey={activeKey} className={`tab-panel ${chartClassName} ${clientWidth1440 ? 'width-1440' : ''}`}>
         {tabData.map((item) => (
           <TabPane tab={item.title} key={item.key}>
             <List
               dataSource={item.list}
               renderItem={(row: any) => (
-                <>
-                  <IconFont color={chartClassName === 'red-bg' ? 'rgba(255, 125, 65)' : '#556ee6'} type="icon-link-o" />
+                <div className={`list-item ${chartClassName}`}>
+                  <IconFont className={`link-icon ${chartClassName || ''}`} type="icon-link-o" />
                   <TextRouterLink textLength={26} needToolTip element={row.key} href={item.href} state={item.getState(row)} />
-                </>
+                </div>
               )}
             ></List>
           </TabPane>

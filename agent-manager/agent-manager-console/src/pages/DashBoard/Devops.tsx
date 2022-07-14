@@ -40,10 +40,20 @@ const HomePage = (): JSX.Element => {
   const getBarXData = (data) => {
     return data.map((item) => item.key?.logCollectTaskName);
   };
+
   const linkTo = (name, item) => {
     const data = dashBoardData?.[item.key]?.histogramChatValue || [];
     const taskId = data.filter((row) => row.key?.logCollectTaskName === name)?.[0]?.key?.id;
     history.push({ pathname: '/collect/detail', state: { taskId } });
+  };
+
+  const linkToAgentDetail = (name, item) => {
+    const data = dashBoardData?.[item.key]?.histogramChatValue || [];
+    const hostName = data.filter((row) => row.key === name)?.[0]?.key;
+    history.push({
+      pathname: '/main/detail',
+      state: { hostName },
+    });
   };
 
   return (
@@ -54,7 +64,7 @@ const HomePage = (): JSX.Element => {
             <>
               <HeaderCard type="yunwei" dashBoardData={dashBoardData} />
               <PieCharts dashBoardData={dashBoardData} />
-              <BarCharts barList={agentBarList} type="Agent视角 TOP5" dashBoardData={dashBoardData} />
+              <BarCharts linkTo={linkToAgentDetail} barList={agentBarList} type="Agent视角 TOP5" dashBoardData={dashBoardData} />
               <BarCharts
                 barList={taskBarList}
                 linkTo={linkTo}

@@ -6,6 +6,7 @@ export const createOption = (data: any) => {
   const text = !isNaN(Number((data[2].value / data[0].totalValue).toFixed(2)) * 100)
     ? Number((data[2].value / data[0].totalValue).toFixed(2)) * 100 + '%'
     : '0%';
+  const clientWidth1440 = document.body.clientWidth === 1440;
   const options = {
     title: {
       text,
@@ -21,8 +22,8 @@ export const createOption = (data: any) => {
         fontSize: 13,
         color: '#495057',
       },
-      left: '50%',
-      top: '26%',
+      left: '49%',
+      top: clientWidth1440 ? '22%' : '24%',
     },
     tooltip: {
       trigger: 'item',
@@ -56,8 +57,8 @@ export const createOption = (data: any) => {
     series: [
       {
         type: 'pie',
-        radius: ['48%', '28%'],
-        center: ['50%', '30%'],
+        radius: clientWidth1440 ? ['58.9%', '40%'] : ['47%', '33%'],
+        center: clientWidth1440 ? ['50%', '26%'] : ['50%', '28%'],
         data,
         avoidLabelOverlap: false,
         hoverAnimation: false,
@@ -76,6 +77,8 @@ export const createOption = (data: any) => {
 };
 
 export const getPieChartOption = (data: any, totalValue = 0, customOptions = {}) => {
+  const clientWidth1440 = document.body.clientWidth === 1440;
+
   const options = {
     tooltip: {
       trigger: 'item',
@@ -113,8 +116,8 @@ export const getPieChartOption = (data: any, totalValue = 0, customOptions = {})
     series: [
       {
         type: 'pie',
-        radius: '48%',
-        center: ['50%', '30%'],
+        radius: clientWidth1440 ? '58.9%' : '47%',
+        center: clientWidth1440 ? ['50%', '26%'] : ['50%', '28%'],
         data,
         hoverAnimation: false,
         label: {

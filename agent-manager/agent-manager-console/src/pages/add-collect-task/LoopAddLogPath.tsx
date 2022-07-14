@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { IconFont, Button, Input, Select, Form, Row, Col, useDynamicList, Modal } from '@didi/dcloud-design';
+import { IconFont, Button, Input, Select, Form, Row, Col, useDynamicList, Modal, AutoComplete } from '@didi/dcloud-design';
 import { setlogFilePathKey } from './dateRegAndGvar';
 import { getCollectTaskFiles, getRuleTips, getFileContent, getSliceRule } from '../../api/collect';
 import { logFilePathKey } from './dateRegAndGvar';
@@ -17,6 +17,8 @@ const LoopAddLogFileType = (props: any) => {
   const [hostNameList, setHostNameList] = useState<any>(props.hostList || []);
   const [fileArrList, setFileArrList] = useState([]);
   const [isModalVisible, setVisible] = useState(false);
+  const [previewPath, setPreviewPath] = useState([]);
+
 
   const options =
     hostNameList.length > 0 &&
@@ -44,6 +46,7 @@ const LoopAddLogFileType = (props: any) => {
     const copylist = cloneDeep(logPathList.current);
     const delValue = copylist.splice(index, 1);
     logPathList.current = copylist;
+    setPreviewPath(logPathList.current);
     const copyPathlist = cloneDeep(copylogPathList.current);
     copyPathlist.splice(copylogPathList.current.indexOf(delValue), 1);
     copylogPathList.current = copyPathlist;
@@ -106,13 +109,22 @@ const LoopAddLogFileType = (props: any) => {
     }
   }, 100);
 
+  const onSearch = (searchText: string) => {
+    if (!searchText) {
+      setPreviewPath(logPathList.current);
+    } else {
+      const filterPath = logPathList.current.filter((item: any) => item.indexOf(searchText) > -1);
+      setPreviewPath(filterPath);
+    }
+  }
+
   const row = (index: any, item: any) => (
     <div key={getKey(index)}>
       {/* <Collapse activeKey={['1']}>
         <Panel header='' key="1" showArrow={false}> */}
       <Form.Item
         key={getKey(index)}
-        label={`${index == 0 ? '日志路径' : ''}`}
+        label={`${index == 0 ? '日志文件路径' : ''}`}
         extra={`${list.length - 1 === index ? '可增加，最多10个, 默认与上一个选择配置项内容保持一致。' : ''}`}
       >
         <Row>
@@ -127,11 +139,11 @@ const LoopAddLogFileType = (props: any) => {
                     setTimeout(() => {
                       const listFiterLength = logPathList.current.filter((item) => item == value).length;
                       if (!value) {
-                        rule.message = '请输入日志路径';
-                        cb(`请输入日志路径${getKey(index)}`);
+                        rule.message = '请输入日志文件路径';
+                        cb(`请输入日志文件路径${getKey(index)}`);
                       } else if (listFiterLength > 1 && (allvalidate.current ? copylogPathList.current.includes(value) : true)) {
-                        rule.message = '日志路径不能重复';
-                        cb(`请输入日志路径重复`);
+                        rule.message = '日志文件路径不能重复';
+                        cb(`请输入日志文件路径重复`);
                       } else {
                         props.setFilePathList(logPathList.current.filter((item: any) => item));
                         cb();
@@ -201,7 +213,7 @@ const LoopAddLogFileType = (props: any) => {
         list.map((ele, index) => {
           return row(index, ele);
         })}
-      <Form.Item label="采集文件后缀匹配样式" extra="注:如需验证或遇到操作困难,可点击预览,展示日志路径下文件列表">
+      <Form.Item label="采集文件后缀名匹配正则" extra="注:如需验证或遇到操作困难,可点击预览,展示日志路径下文件列表">
         <Row>
           <Col span={21}>
             <Form.Item name="step2_file_suffixMatchRegular" initialValue={[]}>
@@ -224,14 +236,14 @@ const LoopAddLogFileType = (props: any) => {
       <Modal title="路径预览" visible={isModalVisible} onOk={() => setVisible(false)} onCancel={() => setVisible(false)}>
         <Row>
           <Col span={22}>
-            <Form.Item label="日志路径" name={`step2_file_path_0_example`}>
-              <Select>
-                {logPathList.current.map((item) => (
-                  <Select.Option key={item} value={item}>
-                    {item}
-                  </Select.Option>
+            <Form.Item label="日志文件路径" labelCol={{ span: 5 }} name={`step2_file_path_0_example`}>
+              <AutoComplete onSearch={onSearch}>
+                {previewPath.map((path: string) => (
+                  <AutoComplete.Option key={path} value={path}>
+                    {path}
+                  </AutoComplete.Option>
                 ))}
-              </Select>
+              </AutoComplete>
             </Form.Item>
           </Col>
         </Row>
@@ -253,7 +265,7 @@ const LoopAddLogFileType = (props: any) => {
             </Row>
             <Row align="middle">
               <Col span={22}>
-                <Form.Item labelCol={{ span: 8 }} label="采集文件后缀匹配样式" name="step2_file_suffixMatchRegular_example">
+                <Form.Item labelCol={{ span: 5 }} label="采集文件后缀名匹配正则" name="step2_file_suffixMatchRegular_example">
                   <Select mode="tags" placeholder="请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$">
                     {regTips.map((item) => (
                       <Select.Option key={item.value} value={item.value}>
@@ -271,7 +283,7 @@ const LoopAddLogFileType = (props: any) => {
             </Row>
             <Row>
               <Col span={23}>
-                <Form.Item label="路径预览结果">
+                <Form.Item label="路径预览结果" labelCol={{ span: 5 }}>
                   <ul className={`logfile_list logFileList`}>
                     {fileArrList && fileArrList?.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)}
                   </ul>
@@ -281,7 +293,7 @@ const LoopAddLogFileType = (props: any) => {
           </>
         ) : null}
       </Modal>
-    </div>
+    </div >
   );
 };
 

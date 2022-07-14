@@ -144,7 +144,7 @@ export const taskBarList = [
   },
   {
     key: 'relateAgentsTop5LogCollectTasks',
-    title: '当前关联 Agent 数 top5 采集任务（单位：个）s',
+    title: '当前关联 Agent 数 top5 采集任务（单位：个）',
     formatter: (value: number) => numTrans(value),
   },
 ];
