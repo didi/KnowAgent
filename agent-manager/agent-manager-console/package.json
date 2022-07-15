@@ -51,7 +51,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/runtime": "^7.5.5",
-    "@didi/dcloud-design": "1.1.15",
+    "@didi/dcloud-design": "1.1.16",
     "@types/lodash": "^4.14.138",
     "@types/react-router-dom": "^5.3.3",
     "@types/single-spa-react": "^2.12.0",
