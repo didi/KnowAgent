@@ -19,7 +19,7 @@ const HeaderCard = (props: IProps): JSX.Element => {
 
   return (
     <div className={headerClass}>
-      <h3 className={`${headerClass}-title`}>采集任务</h3>
+      <h3 className={`${headerClass}-title`}></h3>
       <Container gutter={24} awd={true} xl={6} xxl={6} className={`${headerClass}-wrap`}>
         {getCardList(type).map((item, index) => (
           <Container key={index} flex={'auto'}>

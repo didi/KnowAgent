@@ -36,7 +36,7 @@ const LoopAddLogFileType = (props: any) => {
     setlogFilePathKey(key); // 同步日志路径的key值，防止减少日志路径key值乱
     props.setisNotLogPath(false);
   };
-  const [debouncedCallApi] = useState(() => _.debounce(handlelogSuffixfiles, 0)); // 做事件防抖时，为了防止每次触发都会重新渲染，维护一个state函数，让每次执行的时候都是同一个函数
+  const [debouncedCallApi] = useState(() => _.debounce(handlelogSuffixfiles, 100)); // 做事件防抖时，为了防止每次触发都会重新渲染，维护一个state函数，让每次执行的时候都是同一个函数
   const addPush = () => {
     push('');
     allvalidate.current = false;
@@ -80,7 +80,7 @@ const LoopAddLogFileType = (props: any) => {
 
   const handlelogFileExample = useDebounce(() => {
     const logSuffixfilesValue = getFieldValue(`step2_file_suffixMatchRegular_example`);
-    const logFilePath = getFieldValue(`step2_file_path_0_example`);
+    const logFilePath = getFieldValue(`step2_filePath_0_example`);
     const hostName = getFieldValue(`step2_hostName_example`);
     const params = {
       path: logFilePath,
@@ -100,7 +100,7 @@ const LoopAddLogFileType = (props: any) => {
     // 弹窗问题
     setFieldsValue({
       step2_file_suffixMatchRegular_example: getFieldValue('step2_file_suffixMatchRegular'),
-      step2_file_path_0_example: getFieldValue('step2_file_path_0'),
+      step2_filePath_0_example: getFieldValue('step2_file_path_0'),
       step2_hostName_example: getFieldValue('step2_hostName'),
     });
     setVisible(true);
@@ -236,7 +236,7 @@ const LoopAddLogFileType = (props: any) => {
       <Modal title="路径预览" visible={isModalVisible} onOk={() => setVisible(false)} onCancel={() => setVisible(false)}>
         <Row>
           <Col span={22}>
-            <Form.Item label="日志文件路径" labelCol={{ span: 5 }} name={`step2_file_path_0_example`}>
+            <Form.Item label="日志文件路径" labelCol={{ span: 5 }} name={`step2_filePath_0_example`}>
               <AutoComplete onSearch={onSearch}>
                 {previewPath.map((path: string) => (
                   <AutoComplete.Option key={path} value={path}>
@@ -265,7 +265,7 @@ const LoopAddLogFileType = (props: any) => {
             </Row>
             <Row align="middle">
               <Col span={22}>
-                <Form.Item labelCol={{ span: 5 }} label="采集文件后缀名匹配正则" name="step2_file_suffixMatchRegular_example">
+                <Form.Item labelCol={{ span: 8 }} label="采集文件后缀名匹配正则" name="step2_file_suffixMatchRegular_example">
                   <Select mode="tags" placeholder="请输入后缀的正则匹配，不包括分隔符。如：^([\d]{0,6})$">
                     {regTips.map((item) => (
                       <Select.Option key={item.value} value={item.value}>

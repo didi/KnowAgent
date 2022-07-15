@@ -51,7 +51,7 @@ const DashBoardPieCharts = (props: { dashBoardData: Record<string, any> }): JSX.
 
   return (
     <div className="pie-dashboard-wrap">
-      <h3 className="pie-dashboard-wrap-title">状态监控</h3>
+      <h3 className="pie-dashboard-wrap-title"></h3>
       <div className="piedashboardbox">
         <PieChart
           id="collect"

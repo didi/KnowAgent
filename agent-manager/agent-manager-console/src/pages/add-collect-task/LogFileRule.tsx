@@ -185,7 +185,7 @@ const LogFileType = (props: any) => {
   return (
     <div className="set-up" key={props.getKey}>
       <div className="log-repeat-form">
-        <Form.Item label="切片配置划取方法说明：">
+        <Form.Item label="切片配置划取方法说明：" style={{ marginBottom: '-20px' }}>
           <span style={{ position: 'absolute', top: '-28px', left: '150px' }}>
             请用光标在原始日志文本框中划取用于区分两条不同日志的日期/时间字符串，系统将根据您划取的日期/时间模式串自动识别，并在下方自动配置好日志切片规则。
           </span>
@@ -361,7 +361,7 @@ const LogFileType = (props: any) => {
                     <IconFont type="icon-tishi"></IconFont>
                   </Tooltip>
                 </div>
-                <div className="slicePreview" style={{ height: '150px', background: '#fff', border: '1px solid #CCC' }}>
+                <div className="slicePreview" style={{ height: '200px', background: '#fff', border: '1px solid #CCC' }}>
                   {slicePre &&
                     slicePre.map((item: any, key) => {
                       if (item === '') {

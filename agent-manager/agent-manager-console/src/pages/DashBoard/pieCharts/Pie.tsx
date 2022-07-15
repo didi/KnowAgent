@@ -49,11 +49,15 @@ const PieChart = (props: IProps): JSX.Element => {
     );
   };
 
+  const onTabChange = (key: string) => {
+    setActiveKey(key);
+  };
+
   const renderTab = () => {
     const clientWidth1440 = document.body.clientWidth === 1440;
 
     return (
-      <Tabs activeKey={activeKey} className={`tab-panel ${chartClassName} ${clientWidth1440 ? 'width-1440' : ''}`}>
+      <Tabs activeKey={activeKey} onChange={onTabChange} className={`tab-panel ${chartClassName} ${clientWidth1440 ? 'width-1440' : ''}`}>
         {tabData.map((item) => (
           <TabPane tab={item.title} key={item.key}>
             <List

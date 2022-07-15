@@ -8,7 +8,7 @@ export const getCardList = (type: string) => {
       code: '',
       api: 'serviceNum',
       icon: 'icon-fuwushu',
-      text: type == 'yunwei' ? '未关联主机服务数' : '',
+      text: type == 'yunwei' ? '未关联主机的应用数' : '',
       textCode: 1,
       textApi: type == 'yunwei' ? 'nonRelateAnyHostServiceNum' : '',
       show: true,

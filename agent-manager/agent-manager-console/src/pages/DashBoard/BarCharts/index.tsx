@@ -93,9 +93,10 @@ const BarCharts = (props: {
         },
       },
       tooltip: {
-        show: true,
+        trigger: 'axis',
         formatter: (params: any) => {
-          return item.formatter ? item.formatter(params.value) : '' + valueFormatFn(params.value, row.baseUnit, row.displayUnit);
+          const value = params[0].value;
+          return item.formatter ? '' + item.formatter(value) : '' + valueFormatFn(value, row.baseUnit, row.displayUnit);
         },
       },
       grid: {

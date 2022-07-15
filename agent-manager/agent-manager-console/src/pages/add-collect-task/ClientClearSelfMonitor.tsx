@@ -196,7 +196,7 @@ const ClientClearSelfMonitor = (props: any) => {
           activeKey={activeKeys?.length ? ['high'] : []}
           destroyInactivePanel
           ghost
-          style={{ background: 'none', marginRight: '100px' }}
+          style={{ background: 'none', marginRight: '80px' }}
         >
           <Panel
             header={

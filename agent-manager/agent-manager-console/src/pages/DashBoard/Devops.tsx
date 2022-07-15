@@ -43,16 +43,16 @@ const HomePage = (): JSX.Element => {
 
   const linkTo = (name, item) => {
     const data = dashBoardData?.[item.key]?.histogramChatValue || [];
-    const taskId = data.filter((row) => row.key?.logCollectTaskName === name)?.[0]?.key?.id;
-    history.push({ pathname: '/collect/detail', state: { taskId } });
+    const logCollectTaskId = data.filter((row) => row.key?.logCollectTaskName === name)?.[0]?.key?.id;
+    history.push({ pathname: '/monitor/metric', state: { logCollectTaskId } });
   };
 
   const linkToAgentDetail = (name, item) => {
     const data = dashBoardData?.[item.key]?.histogramChatValue || [];
-    const hostName = data.filter((row) => row.key === name)?.[0]?.key;
+    const agent = data.filter((row) => row.key === name)?.[0]?.key;
     history.push({
-      pathname: '/main/detail',
-      state: { hostName },
+      pathname: '/monitor/agent-kanban',
+      state: { agent },
     });
   };
 
