@@ -136,6 +136,7 @@ const AgentDetail = (props: any) => {
           <ProDescriptions
             title={'基本信息'}
             labelStyle={{ minWidth: '180px' }}
+            contentStyle={{ minWidth: '180px' }}
             column={{
               xxl: 2,
               xl: 2,

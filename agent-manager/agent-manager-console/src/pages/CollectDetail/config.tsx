@@ -63,6 +63,31 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       key: 'relateAgentNum',
     },
     {
+      label: '采集路径',
+      key: 'fileLogCollectPathList',
+      renderCustom: (t: any) => {
+        try {
+          const fileLogCollectPathList = JSON.parse(t);
+          const pathString = fileLogCollectPathList.map((path: any) => path?.path || '');
+          return pathString.join(';');
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
+    {
+      label: '切片规则',
+      key: 'logContentSliceRule',
+      renderCustom: (t: any) => {
+        try {
+          const rule = JSON.parse(t);
+          return `左起第${rule.sliceTimestampPrefixStringIndex}个匹配上${rule.sliceTimestampPrefixString}${rule.sliceTimestampFormat}`;
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
+    {
       label: '接收端集群',
       key: 'receiver', // kafkaClusterName
       renderCustom: (t: any) => {
