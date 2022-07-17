@@ -14,7 +14,7 @@ export const getHostInfo = (info: any) => {
   const columns = [
     {
       label: '主机名',
-      key: 'hostname',
+      key: 'hostName',
       span: 1,
     },
     {
@@ -67,11 +67,6 @@ export const getAgentInfo = (info: any) => {
     {
       label: 'Agent版本号',
       key: 'version',
-      span: 1,
-    },
-    {
-      label: '版本描述',
-      key: 'described',
       span: 1,
     },
     {

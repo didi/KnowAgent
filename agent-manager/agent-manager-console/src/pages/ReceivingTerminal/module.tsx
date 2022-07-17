@@ -89,6 +89,9 @@ export const ActionClusterForm = (props: any) => {
     cluster.listData && cluster.listData.filter((item: { agentErrorLogsTopic: any }) => item.agentErrorLogsTopic);
   const [edit, setEdit] = useState(false);
   const [receiverTopic, setReceiverTopic] = useState([] as any);
+  const [receiverErrorTopic, setErrorReceiverTopic] = useState([] as any);
+  const [originReceiverTopic, setOriginReceiverTopic] = useState([] as any);
+
 
   const handleChange = (e: any) => {
     setCheckValue(e);
@@ -176,9 +179,28 @@ export const ActionClusterForm = (props: any) => {
   const _getTopics = async () => {
     const res = await getTopics();
     const data = res.map((ele) => {
-      return { text: ele, value: ele };
+      return { label: ele, value: ele };
     });
     setReceiverTopic(data);
+    setErrorReceiverTopic(data);
+    setOriginReceiverTopic(data);
+  };
+
+  const onSearch = (searchText: string) => {
+    if (!searchText) {
+      setReceiverTopic(originReceiverTopic);
+    } else {
+      const filterTopic = originReceiverTopic.filter((item: any) => item.label.indexOf(searchText) > -1);
+      setReceiverTopic(filterTopic);
+    }
+  };
+  const onSearchTopic = (searchText: string) => {
+    if (!searchText) {
+      setErrorReceiverTopic(originReceiverTopic);
+    } else {
+      const filterTopic = originReceiverTopic.filter((item: any) => item.label.indexOf(searchText) > -1);
+      setErrorReceiverTopic(filterTopic);
+    }
   };
 
   return (
@@ -313,7 +335,7 @@ export const ActionClusterForm = (props: any) => {
               },
             ]}
           >
-            <AutoComplete placeholder="请选择或输入" dataSource={receiverTopic} children={<Input />} />
+            <AutoComplete placeholder="请选择或输入" options={receiverTopic} onSearch={onSearch} />
           </Form.Item>
         )}
         {checkValue.includes(2) && (
@@ -339,7 +361,7 @@ export const ActionClusterForm = (props: any) => {
               },
             ]}
           >
-            <AutoComplete placeholder="请选择或输入" dataSource={receiverTopic} children={<Input />} />
+            <AutoComplete placeholder="请选择或输入" options={receiverTopic} onSearch={onSearchTopic} />
           </Form.Item>
         )}
       </Form>

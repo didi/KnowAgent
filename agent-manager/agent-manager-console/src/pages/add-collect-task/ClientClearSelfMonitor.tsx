@@ -17,6 +17,7 @@ const ClientClearSelfMonitor = (props: any) => {
   const { getFieldValue } = props.form;
   const [receivers, setReceivers] = useState([] as any);
   const [receiverTopic, setReceiverTopic] = useState([] as any);
+  const [originReceiverTopic, setOriginReceiverTopic] = useState([] as any);
   const [activeKeys, setActiveKeys] = useState([] as string[]);
   const [openDelay, setOpenDelay] = useState(false);
 
@@ -43,9 +44,18 @@ const ClientClearSelfMonitor = (props: any) => {
   const getReceiverTopic = async () => {
     const res = await getTopics();
     const data = res.map((ele) => {
-      return { text: ele, value: ele };
+      return { label: ele, value: ele };
     });
     setReceiverTopic(data);
+    setOriginReceiverTopic(data);
+  };
+  const onSearch = (searchText: string) => {
+    if (!searchText) {
+      setReceiverTopic(originReceiverTopic);
+    } else {
+      const filterTopic = originReceiverTopic.filter((item: any) => item.label.indexOf(searchText) > -1);
+      setReceiverTopic(filterTopic);
+    }
   };
 
   useEffect(() => {
@@ -54,8 +64,8 @@ const ClientClearSelfMonitor = (props: any) => {
   }, []);
 
   useEffect(() => {
-    setOpenDelay(getFieldValue('step3_opencollectDelay'));
-  }, [getFieldValue('step3_opencollectDelay')]);
+    setOpenDelay(getFieldValue('step4_opencollectDelay'));
+  }, [getFieldValue('step4_opencollectDelay')]);
 
   const collapseCallBack = (key: any) => {
     setActiveKeys(key);
@@ -68,7 +78,7 @@ const ClientClearSelfMonitor = (props: any) => {
           label={
             <>
               Kafka集群： 如目标集群不在下拉列表，请至
-              <NavRouterLink needToolTip element={' 接收端管理>Kafka集群 '} href="/receivingTerminal/clusterList" />
+              <NavRouterLink needToolTip element={' 接收端管理>Kafka集群 '} href="/meta/receivingTerminal" />
               新增
             </>
           }
@@ -87,7 +97,7 @@ const ClientClearSelfMonitor = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item
-          name="step3_productionSide"
+          name="step4_productionSide"
           label="生产端属性"
           initialValue={
             !props.editUrl
@@ -117,26 +127,26 @@ const ClientClearSelfMonitor = (props: any) => {
           validateTrigger={['onChange', 'onBlur']}
           rules={[{ required: true, message: '请选择Topic' }]}
         >
-          <AutoComplete placeholder="请选择或输入" dataSource={receiverTopic} children={<Input />} />
+          <AutoComplete placeholder="请选择或输入" options={receiverTopic} onSearch={onSearch} />
         </Form.Item>
         <Row>
           <Col span={12}>
             {props.logType === 'file' && (
               <>
                 <Form.Item
-                  name="step3_opencollectDelay"
+                  name="step4_opencollectDelay"
                   label="采集延迟监控"
                   className="collectDelayWrap"
                   extra="注：仅支持对按业务时间顺序进行输出的日志进行延迟监控"
                 >
-                  <Switch onChange={openHistoryChange} checked={getFieldValue('step3_opencollectDelay')} />
+                  <Switch onChange={openHistoryChange} checked={getFieldValue('step4_opencollectDelay')} />
                 </Form.Item>
                 {openDelay && (
                   <div className="collectDelayThresholdMs">
                     <div>该任务下Agent客户端延迟超过</div>
                     <Form.Item
-                      className="step3_collectDelayThresholdMs"
-                      name="step3_collectDelayThresholdMs"
+                      className="step4_collectDelayThresholdMs"
+                      name="step4_collectDelayThresholdMs"
                       initialValue={10}
                       rules={[
                         {
@@ -165,7 +175,7 @@ const ClientClearSelfMonitor = (props: any) => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="step3_limitPriority"
+              name="step4_limitPriority"
               initialValue={1}
               label="任务保障等级"
               extra="限流时，资源优先分配给任务保障等级高的采集任务"
@@ -186,7 +196,7 @@ const ClientClearSelfMonitor = (props: any) => {
           activeKey={activeKeys?.length ? ['high'] : []}
           destroyInactivePanel
           ghost
-          style={{ background: 'none', marginRight: '100px' }}
+          style={{ background: 'none', marginRight: '80px' }}
         >
           <Panel
             header={
@@ -221,8 +231,8 @@ const ClientClearSelfMonitor = (props: any) => {
             key="high"
             style={customPanelStyle}
           >
-            <Form.Item name="step4_advancedConfigurationJsonString" initialValue="" label="配置信息" wrapperCol={{ span: 24 }}>
-              <TextArea style={{ height: 120 }} placeholder="请输入配置信息" />
+            <Form.Item name="step4_advancedConfigurationJsonString" initialValue="" wrapperCol={{ span: 24 }}>
+              <TextArea style={{ height: 120, marginTop: -20 }} placeholder="请输入配置信息" />
             </Form.Item>
           </Panel>
         </Collapse>

@@ -129,7 +129,6 @@ const AgentDetail = (props: any) => {
     // state?.agentId && getAgentDetail();
   }, []);
 
-  console.log(props, 'AgentDetail');
   return (
     <div style={{ padding: '24px', backgroundColor: '#F8F8FB' }}>
       <div style={{ padding: '24px', backgroundColor: '#ffffff' }}>
@@ -137,6 +136,7 @@ const AgentDetail = (props: any) => {
           <ProDescriptions
             title={'基本信息'}
             labelStyle={{ minWidth: '180px' }}
+            contentStyle={{ minWidth: '180px' }}
             column={{
               xxl: 2,
               xl: 2,

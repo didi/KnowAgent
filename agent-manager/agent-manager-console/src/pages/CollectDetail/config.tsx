@@ -43,19 +43,50 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       key: 'id',
     },
     {
-      label: '采集应用名',
+      label: '采集任务名',
       key: 'logCollectTaskName',
+    },
+    {
+      label: '采集应用',
+      key: 'services',
+      renderCustom: (t: any) => {
+        try {
+          const services = JSON.parse(t);
+          return services[0].servicename;
+        } catch (error) {
+          return '-';
+        }
+      },
     },
     {
       label: '关联Agent数',
       key: 'relateAgentNum',
-      // invisible: !detail.collectStartBusinessTime,
     },
-    // {
-    //   label: '采集模式',
-    //   key: 'logCollectTaskType',
-    //   renderCustom: (t: any) => collectModeMap[t],
-    // },
+    {
+      label: '采集路径',
+      key: 'fileLogCollectPathList',
+      renderCustom: (t: any) => {
+        try {
+          const fileLogCollectPathList = JSON.parse(t);
+          const pathString = fileLogCollectPathList.map((path: any) => path?.path || '');
+          return pathString.join(';');
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
+    {
+      label: '切片规则',
+      key: 'logContentSliceRule',
+      renderCustom: (t: any) => {
+        try {
+          const rule = JSON.parse(t);
+          return `左起第${rule.sliceTimestampPrefixStringIndex}个匹配上${rule.sliceTimestampPrefixString}${rule.sliceTimestampFormat}`;
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
     {
       label: '接收端集群',
       key: 'receiver', // kafkaClusterName
@@ -78,7 +109,7 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       renderCustom: (t: any) => {
         const render: JSX.Element = (
           <span style={{ fontSize: '20px' }}>
-            {t == 0 ? <IconFont type="icon-hong" /> : t == 1 ? <IconFont type="icon-huang" /> : t == 2 ? <IconFont type="icon-lv" /> : null}
+            {t == 2 ? <IconFont type="icon-hong" /> : t == 1 ? <IconFont type="icon-huang" /> : t == 0 ? <IconFont type="icon-lv" /> : null}
           </span>
         );
         return render;
@@ -88,18 +119,6 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       label: '采集任务健康度描述',
       key: 'logCollectTaskHealthDescription',
     },
-    // {
-    //   label: '创建时间',
-    //   key: 'collectStartBusinessTime',
-    //   // invisible: !detail.collectStartBusinessTime,
-    //   renderCustom: (t: number) => moment(t).format(timeFormat),
-    // },
-    // {
-    //   label: '结束时间',
-    //   key: 'collectEndBusinessTime',
-    //   // invisible: !detail.collectEndBusinessTime,
-    //   render: (t: number) => moment(t).format(timeFormat),
-    // },
     {
       label: '创建人',
       key: 'logCollectTaskCreator',

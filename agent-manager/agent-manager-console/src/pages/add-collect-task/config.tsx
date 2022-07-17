@@ -203,20 +203,20 @@ export const setStepParams = (values: any) => {
     }, // 采集文件名后缀匹配规则
     logSliceRuleDTO: {
       // sliceType: getParams(values, 'sliceType', index), // 日志内容切片类型 0：时间戳切片 1：正则匹配切片
-      sliceTimestampPrefixStringIndex: values.step2_file_sliceTimestampPrefixStringIndex, // 切片时间戳前缀字符串左起第几个，index计数从1开始
-      sliceTimestampPrefixString: values.step2_file_sliceTimestampPrefixString || '', //切片时间戳前缀字符串
-      sliceTimestampFormat: values.step2_file_sliceTimestampFormat || '', //切片 时间戳格式
-      sliceRegular: values.step2_file_sliceRegular || '', // 正则匹配 ———— 切片正则
+      sliceTimestampPrefixStringIndex: values.step3_file_sliceTimestampPrefixStringIndex, // 切片时间戳前缀字符串左起第几个，index计数从1开始
+      sliceTimestampPrefixString: values.step3_file_sliceTimestampPrefixString || '', //切片时间戳前缀字符串
+      sliceTimestampFormat: values.step3_file_sliceTimestampFormat || '', //切片 时间戳格式
+      sliceRegular: values.step3_file_sliceRegular || '', // 正则匹配 ———— 切片正则
     }, // 日志切片规则
     // >>>>>>>> Step2 <<<<<<<<<
 
     // >>>>>>>> Step3 <<<<<<<<<
     kafkaClusterId: values.step4_kafkaClusterId, // kafka集群 ———— 采集任务采集的日志需要发往的对应Kafka集群信息id
-    kafkaProducerConfiguration: values.step3_productionSide || '', // kafka生产端属性
+    kafkaProducerConfiguration: values.step4_productionSide || '', // kafka生产端属性
     sendTopic: values.step4_sendTopic, // Topic ———— 采集任务采集的日志需要发往的topic名 (values.step3_collectDelayThresholdMs ?? 0) * 60 * 1000
-    opencollectDelay: values.step3_opencollectDelay, // 是否开启采集延时监控
-    collectDelayThresholdMs: values.step3_opencollectDelay ? values?.step3_collectDelayThresholdMs * 60 * 1000 || 10 * 60 * 1000 : 0, //采集延迟监控 ———— 该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~当前时间间隔
-    limitPriority: values.step3_limitPriority, // 采集任务限流保障优先级 0：高 1：中 2：低
+    opencollectDelay: values.step4_opencollectDelay, // 是否开启采集延时监控
+    collectDelayThresholdMs: values.step4_opencollectDelay ? values?.step4_collectDelayThresholdMs * 60 * 1000 || 10 * 60 * 1000 : 0, //采集延迟监控 ———— 该路径的日志对应采集延迟监控阈值 单位：ms，该阈值表示：该采集路径对应到所有待采集主机上正在采集的业务时间最小值 ~当前时间间隔
+    limitPriority: values.step4_limitPriority, // 采集任务限流保障优先级 0：高 1：中 2：低
     advancedConfigurationJsonString: values.step4_advancedConfigurationJsonString, //高级配置信息 ———— 采集任务高级配置项集，为json形式字符串
     // >>>>>>>> Step3 <<<<<<<<<
   } as unknown as ILogCollectTask;
@@ -226,22 +226,22 @@ export const setStepParams = (values: any) => {
 //处理编辑传参 EditStep3
 export const setEditThreeParams = (objs: ILogCollectTaskDetail) => {
   let step3_fdOffsetExpirationTimeMs = '' as unknown;
-  let step3_collectDelayThresholdMs = '' as unknown;
-  let step3_opencollectDelay = false;
+  let step4_collectDelayThresholdMs = '' as unknown;
+  let step4_opencollectDelay = false;
   if (objs.directoryLogCollectPathList?.length) {
     step3_fdOffsetExpirationTimeMs = objs.directoryLogCollectPathList[0]?.fdOffsetExpirationTimeMs;
   } else {
     step3_fdOffsetExpirationTimeMs = objs.fileLogCollectPathList[0]?.fdOffsetExpirationTimeMs;
-    step3_opencollectDelay = objs.collectDelayThresholdMs > 0 ? true : false;
-    step3_collectDelayThresholdMs = (objs.collectDelayThresholdMs * 1) / 60 / 1000;
+    step4_opencollectDelay = objs.collectDelayThresholdMs > 0 ? true : false;
+    step4_collectDelayThresholdMs = (objs.collectDelayThresholdMs * 1) / 60 / 1000;
   }
   return {
     // step3_fdOffsetExpirationTimeMs, // 客户端offset（采集位点记录）清理
-    step3_collectDelayThresholdMs, // 采集延迟监控
-    step3_opencollectDelay, // 是否开启采集延迟监控
-    step3_productionSide: objs.kafkaProducerConfiguration, // kafka生产端属性
+    step4_collectDelayThresholdMs, // 采集延迟监控
+    step4_opencollectDelay, // 是否开启采集延迟监控
+    step4_productionSide: objs.kafkaProducerConfiguration, // kafka生产端属性
     step3_logCollectTaskExecuteTimeoutMs: objs.logCollectTaskExecuteTimeoutMs || 0, // 采集完成时间限制
-    step3_limitPriority: objs.limitPriority, // 采集任务限流保障优先级 0：高 1：中 2：低
+    step4_limitPriority: objs.limitPriority, // 采集任务限流保障优先级 0：高 1：中 2：低
   } as any;
 };
 //处理编辑传参 EditStep4

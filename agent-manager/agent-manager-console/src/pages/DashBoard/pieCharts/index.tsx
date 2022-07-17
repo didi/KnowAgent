@@ -51,7 +51,7 @@ const DashBoardPieCharts = (props: { dashBoardData: Record<string, any> }): JSX.
 
   return (
     <div className="pie-dashboard-wrap">
-      <h3 className="pie-dashboard-wrap-title">状态监控</h3>
+      <h3 className="pie-dashboard-wrap-title"></h3>
       <div className="piedashboardbox">
         <PieChart
           id="collect"
@@ -75,7 +75,7 @@ const DashBoardPieCharts = (props: { dashBoardData: Record<string, any> }): JSX.
               title: '故障任务',
               key: 'error',
               list: dataSource.redLogCollectTaskNameIdPairList,
-              href: '/collect',
+              href: '/collect/detail',
               getState: (row) => {
                 return {
                   taskId: row.value,
@@ -86,7 +86,7 @@ const DashBoardPieCharts = (props: { dashBoardData: Record<string, any> }): JSX.
               title: '预警任务',
               key: 'warning',
               list: dataSource.yellowLogCollectTaskNameIdPairList,
-              href: '/collect',
+              href: '/collect/detail',
               getState: (row) => {
                 return {
                   taskId: row.value,
@@ -104,7 +104,7 @@ const DashBoardPieCharts = (props: { dashBoardData: Record<string, any> }): JSX.
             {
               title: '故障Agent',
               key: 'error',
-              href: '/main',
+              href: '/main/detail',
               list: dataSource.redAgentHostNameIdPairList,
               getState: (row) => {
                 return {
@@ -116,7 +116,7 @@ const DashBoardPieCharts = (props: { dashBoardData: Record<string, any> }): JSX.
             {
               title: '预警Agent',
               key: 'warning',
-              href: '/main',
+              href: '/main/detail',
               list: dataSource.yellowAgentHostNameIdPairList,
               getState: (row) => {
                 return {

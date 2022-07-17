@@ -477,8 +477,10 @@ const ProTableMoudle = (props: any) => {
                   handleConfirmContentFormModal({ ...item.itemsData, ...row });
                   // showModalConfirm(row, item.itemsData);
                 } else if (item?.itemsData?.customContentFormModal === '_customContent') {
-                  handleCustomContentFormModal({ ...item.itemsData, ...row });
-                  setVisible(true);
+                  if (row?.agentId) {
+                    handleCustomContentFormModal({ ...item.itemsData, ...row });
+                    setVisible(true);
+                  }
                 } else {
                   handleContentFormModal({ ...item.itemsData, ...row });
                   setVisible(true);

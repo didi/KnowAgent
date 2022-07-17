@@ -23,6 +23,7 @@
 
     &-title {
       line-height: 54px;
+      height: 24px;
       margin: 0;
       padding-left: 12px;
       font-size: 16px;
@@ -55,7 +56,7 @@
       &-content {
         float: left;
         height: 100%;
-        width: 182px;
+        width: 188px;
 
         &-title {
           font-size: 14px;
@@ -83,13 +84,18 @@
         }
 
         &-text {
-          margin-top: 8px;
+          margin-top: 5px;
           color: #ff5656;
-          line-height: 22px;
-          width: 181px;
+          line-height: 2px;
+          height: 18px;
+          width: 220px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+
+          &.no-margin {
+            margin-top: 0px;
+          }
 
           &-label {
             font-size: 12px;
@@ -108,6 +114,7 @@
             line-height: 22px;
           }
         }
+
       }
     }
   }

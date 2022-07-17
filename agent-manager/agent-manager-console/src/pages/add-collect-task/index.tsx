@@ -166,8 +166,9 @@ const StepsForm = (props: any) => {
 
   const handleNext = () => {
     //校验每一步的参数
+    const currentFilelds = Object.keys(form.getFieldsValue()).filter((field) => validateStepRegex[currentStep].test(field));
     form
-      .validateFields()
+      .validateFields(currentFilelds)
       .then(() => {
         setCurrentStep((prevStep) => {
           return prevStep + 1;
@@ -437,10 +438,10 @@ const StepsForm = (props: any) => {
       // step2_maxBytesPerLogEvent: objs.maxBytesPerLogEvent * 1 > flowUnitList[1].value ? (objs.maxBytesPerLogEvent * 1 / Number(flowUnitList[1].value)) : (objs.maxBytesPerLogEvent * 1 / Number(flowUnitList[0].value)),// 单条日志大小上限
       // Number(values.step2_maxBytesPerLogEvent) * Number(values.step2_flowunit)
       step2_maxBytesPerLogEvent: setLimitUnit(objs.maxBytesPerLogEvent)?.maxBytesPerLogEvent, // 单条日志大小上限
-      step2_file_sliceTimestampPrefixStringIndex: objs.logContentSliceRule?.sliceTimestampPrefixStringIndex, // 左起第几个匹配
-      step2_file_sliceTimestampPrefixString: objs.logContentSliceRule?.sliceTimestampPrefixString, // 左起第几个匹配
-      step2_file_sliceTimestampFormat: objs.logContentSliceRule?.sliceTimestampFormat, // 时间戳格式
-      step2_file_sliceRegular: objs.logContentSliceRule?.sliceRegular, // 日志切片规则选1 出现 切片正则
+      step3_file_sliceTimestampPrefixStringIndex: objs.logContentSliceRule?.sliceTimestampPrefixStringIndex, // 左起第几个匹配
+      step3_file_sliceTimestampPrefixString: objs.logContentSliceRule?.sliceTimestampPrefixString, // 左起第几个匹配
+      step3_file_sliceTimestampFormat: objs.logContentSliceRule?.sliceTimestampFormat, // 时间戳格式
+      step3_file_sliceRegular: objs.logContentSliceRule?.sliceRegular, // 日志切片规则选1 出现 切片正则
       step2_file_suffixMatchRegular: objs.fileNameSuffixMatchRule?.suffixMatchRegular || '', // 选1出现采集文件后缀匹配
     };
     setLogFilter(logObj.step2_needLogContentFilter);
@@ -466,10 +467,10 @@ const StepsForm = (props: any) => {
         step2_catalog_maxBytesPerLogEvent_: setLimitUnit(cata?.maxBytesPerLogEvent, 2)?.maxBytesPerLogEvent, // 单条日志大小上限
         step2_catalog_flowunit_: setLimitUnit(cata?.maxBytesPerLogEvent, 2)?.flowunit, // 单位 1024 KB
         step2_catalog_sliceType_: cata.logSliceRuleVO?.sliceType, // 日志切片规则 0时间戳 1正则匹配
-        step2_catalog_sliceTimestampPrefixStringIndex_: cata.logSliceRuleVO?.sliceTimestampPrefixStringIndex || 0, // 左起第几个匹配
-        step2_catalog_sliceTimestampPrefixString_: cata.logSliceRuleVO?.sliceTimestampPrefixString || '', // 切片时间戳前缀字符串
-        step2_catalog_sliceTimestampFormat_: cata.logSliceRuleVO?.sliceTimestampFormat || '', // 时间戳格式
-        step2_catalog_sliceRegular_: cata.logSliceRuleVO?.sliceRegular || '', // 日志切片规则选1 出现 切片正则
+        step3_catalog_sliceTimestampPrefixStringIndex_: cata.logSliceRuleVO?.sliceTimestampPrefixStringIndex || 0, // 左起第几个匹配
+        step3_catalog_sliceTimestampPrefixString_: cata.logSliceRuleVO?.sliceTimestampPrefixString || '', // 切片时间戳前缀字符串
+        step3_catalog_sliceTimestampFormat_: cata.logSliceRuleVO?.sliceTimestampFormat || '', // 时间戳格式
+        step3_catalog_sliceRegular_: cata.logSliceRuleVO?.sliceRegular || '', // 日志切片规则选1 出现 切片正则
       };
       const cataObj = {};
       Object.assign(cataObj, logObj, pathObj, cataBase);
@@ -495,10 +496,10 @@ const StepsForm = (props: any) => {
         filelog[`step2_file_path_${index}`] = ele.path; // 文件日志路径
         filelog[`step2_file_suffixSeparationCharacter_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixSeparationCharacter; // 文件名后缀分隔字符
         // filelog[`step2_file_suffixMatchType_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixMatchType; // 采集文件后缀匹配 0固定格式匹配 1正则匹配
-        filelog[`step2_file_suffixLength_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixLength || ''; // 选0出现采集文件后缀匹配
-        filelog[`step2_file_maxBytesPerLogEvent_${index}`] = setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.maxBytesPerLogEvent; // 单条日志大小上限
-        filelog[`step2_file_flowunit_${index}`] = setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.flowunit; // 单位 1024 KB
-        filelog[`step2_file_sliceType_${index}`] = ele.logSliceRuleVO?.sliceType; // 日志切片规则 0时间戳 1正则匹配
+        filelog[`step3_file_suffixLength_${index}`] = ele.fileNameSuffixMatchRuleVO?.suffixLength || ''; // 选0出现采集文件后缀匹配
+        filelog[`step3_file_maxBytesPerLogEvent_${index}`] = setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.maxBytesPerLogEvent; // 单条日志大小上限
+        filelog[`step3_file_flowunit_${index}`] = setLimitUnit(ele?.maxBytesPerLogEvent, 2)?.flowunit; // 单位 1024 KB
+        filelog[`step3_file_sliceType_${index}`] = ele.logSliceRuleVO?.sliceType; // 日志切片规则 0时间戳 1正则匹配
         return filelog;
       });
       setFilePathList(filePathArr);
@@ -534,7 +535,7 @@ const StepsForm = (props: any) => {
     if (editUrl) {
       getCollectDetail();
     } else {
-      setFieldsValue({ step3_opencollectDelay: 10 });
+      setFieldsValue({ step4_opencollectDelay: 10 });
     }
     _getDataFormat();
     setHostNameList([]); // 清除映射主机列表，进入新增任务时不显示
