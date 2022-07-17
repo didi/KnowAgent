@@ -37,6 +37,11 @@
             <artifactId>agent-manager-remote</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.didichuxing.datachannel</groupId>
+            <artifactId>agent-manager-persistence</artifactId>
+        </dependency>
+
         <!-- elasticsearch -->
         <dependency>
             <groupId>org.elasticsearch</groupId>

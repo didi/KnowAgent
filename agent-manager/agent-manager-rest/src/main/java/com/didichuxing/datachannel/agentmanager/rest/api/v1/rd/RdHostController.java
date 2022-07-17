@@ -170,26 +170,36 @@ public class RdHostController {
     @RequestMapping(value = "/{hostId}", method = RequestMethod.GET)
     @ResponseBody
     public Result<HostAgentVO> getHostAndAgentByHostId(@PathVariable Long hostId) {
-        try {
-            HostAgentVO hostAgentVO = getHostAndAgentVOByHostId(hostId);
+        HostDO hostDO = hostManageService.getById(hostId);
+        if (null == hostDO) {
+            return Result.buildSucc(null);
+        } else {
+            HostAgentVO hostAgentVO = getHostAndAgentVOByHostDO(hostDO);
             return Result.buildSucc(hostAgentVO);
-        } catch (ServiceException ex) {
-            return Result.build(ex.getServiceExceptionCode(), ex.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "根据hostname获取Host&Agent对象信息", notes = "")
+    @RequestMapping(value = "/host-agent", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<HostAgentVO> getHostAndAgentByHostName(@RequestParam(value = "hostName") String hostName) {
+        HostDO hostDO = hostManageService.getHostByHostName(hostName);
+        if (null == hostDO) {
+            return Result.buildSucc(null);
+        } else {
+            HostAgentVO hostAgentVO = getHostAndAgentVOByHostDO(hostDO);
+            return Result.buildSucc(hostAgentVO);
         }
     }
 
     /**
      * 根据host对象id获取Host&Agent对象信息
      *
-     * @param hostId host 对象 id
+     * @param hostDO host 对象
      * @return 返回根据host对象id获取到的Host&Agent对象信息
      * @throws ServiceException 执行该函数过程中出现的异常
      */
-    private HostAgentVO getHostAndAgentVOByHostId(Long hostId) throws ServiceException {
-        HostDO hostDO = hostManageService.getById(hostId);
-        if (null == hostDO) {
-            return null;
-        } else {
+    private HostAgentVO getHostAndAgentVOByHostDO(HostDO hostDO) throws ServiceException {
             HostAgentVO hostAgentVO = new HostAgentVO();
             /*
              * 设置主机相关信息
@@ -229,7 +239,7 @@ public class RdHostController {
                 AgentVersionDO agentVersionDO = agentVersionManageService.getById(agentDO.getAgentVersionId());
                 if (null == agentVersionDO) {
                     throw new ServiceException(
-                            String.format("hostId={%d}对应主机上的agent对象={%s}对应agentVersion={agentVersionId={%d}}对象在系统中不存在", hostId, JSON.toJSONString(agentDO), agentDO.getAgentVersionId()),
+                            String.format("hostId={%d}对应主机上的agent对象={%s}对应agentVersion={agentVersionId={%d}}对象在系统中不存在", hostDO.getId(), JSON.toJSONString(agentDO), agentDO.getAgentVersionId()),
                             ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode()
                     );
                 }
@@ -253,7 +263,6 @@ public class RdHostController {
                 }
             }
             return hostAgentVO;
-        }
     }
 
 }

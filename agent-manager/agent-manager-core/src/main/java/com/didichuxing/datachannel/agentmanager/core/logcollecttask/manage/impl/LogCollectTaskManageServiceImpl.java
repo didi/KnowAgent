@@ -440,7 +440,11 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         ListCompareResult<FileLogCollectPathDO> fileLogCollectPathDOListCompareResult = ListCompareUtil.compare(logCollectTaskDOSource.getFileLogCollectPathList(), logCollectTaskDO.getFileLogCollectPathList(), new Comparator<FileLogCollectPathDO, String>() {
             @Override
             public String getKey(FileLogCollectPathDO fileLogCollectPathDO) {
-                return fileLogCollectPathDO.getId().toString();
+                if(null != fileLogCollectPathDO.getId()) {
+                    return fileLogCollectPathDO.getId().toString();
+                } else {
+                    return UUID.randomUUID().toString();
+                }
             }
 
             @Override
