@@ -42,27 +42,43 @@ public class RdAgentController {
         if (null == agentDO) {
             return Result.buildSucc(null);
         } else {
-            AgentVersionDO agentVersionDO = agentVersionManageService.getById(agentDO.getAgentVersionId());
-            if (null == agentVersionDO) {
-                return Result.build(
-                        ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode(),
-                        String.format("Agent对象={agentId={%d}}对应AgentVerison对象={agentVersionId={%d}}在系统中不存在", agentId, agentDO.getAgentVersionId())
-                );
-            }
-            AgentVO agentVO = ConvertUtil.obj2Obj(agentDO, AgentVO.class);
-            agentVO.setVersion(agentVersionDO.getVersion());
-            AgentHealthDO agentHealthDO = agentHealthManageService.getByAgentId(agentDO.getId());
-            if (null == agentHealthDO) {
-                throw new ServiceException(
-                        String.format("AgentHealth={agentId=%d}在系统中不存在", agentDO.getId()),
-                        ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
-                );
-            } else {
-                agentVO.setHealthLevel(agentHealthDO.getAgentHealthLevel());
-                agentVO.setAgentHealthDescription(agentHealthDO.getAgentHealthDescription());
-            }
-            return Result.buildSucc(agentVO);
+            return Result.buildSucc(getByAgentDO(agentDO));
         }
+    }
+
+    @ApiOperation(value = "根据hostname获取Agent对象信息", notes = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<AgentVO> getByHostName(@RequestParam(value = "hostName") String hostName) {
+        AgentDO agentDO = agentManageService.getAgentByHostName(hostName);
+        if (null == agentDO) {
+            return Result.buildSucc(null);
+        } else {
+            return Result.buildSucc(getByAgentDO(agentDO));
+        }
+    }
+
+    private AgentVO getByAgentDO(AgentDO agentDO) {
+        AgentVersionDO agentVersionDO = agentVersionManageService.getById(agentDO.getAgentVersionId());
+        if (null == agentVersionDO) {
+            throw new ServiceException(
+                    String.format("Agent对象={agentId={%d}}对应AgentVerison对象={agentVersionId={%d}}在系统中不存在", agentDO.getId(), agentDO.getAgentVersionId()),
+                    ErrorCodeEnum.SYSTEM_INTERNAL_ERROR.getCode()
+            );
+        }
+        AgentVO agentVO = ConvertUtil.obj2Obj(agentDO, AgentVO.class);
+        agentVO.setVersion(agentVersionDO.getVersion());
+        AgentHealthDO agentHealthDO = agentHealthManageService.getByAgentId(agentDO.getId());
+        if (null == agentHealthDO) {
+            throw new ServiceException(
+                    String.format("AgentHealth={agentId=%d}在系统中不存在", agentDO.getId()),
+                    ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
+            );
+        } else {
+            agentVO.setHealthLevel(agentHealthDO.getAgentHealthLevel());
+            agentVO.setAgentHealthDescription(agentHealthDO.getAgentHealthDescription());
+        }
+        return agentVO;
     }
 
     @ApiOperation(value = "根据给定路径 & 文件匹配正则获取匹配到的文件列表集", notes = "")
