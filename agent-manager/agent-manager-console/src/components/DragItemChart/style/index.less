@@ -4,6 +4,8 @@
   padding: 24px;
   color: #495057 !important;
   z-index: 99;
+  pointer-events: none;
+
   .header-title {
     float: left;
     font-size: 13px;
@@ -20,24 +22,29 @@
   width: 100%;
   transform: translate(-50%, -50%);
   text-align: center;
-  > span p {
+
+  >span p {
     margin: 0;
     padding: 0;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   &-value {
     font-size: 60px;
     color: #495057;
     line-height: 90px;
   }
+
   &-subValue {
     font-size: 24px;
     color: #74788d;
   }
+
   .dcloud-popover-arrow {
     display: none;
   }
+
   .dcloud-popover {
     top: 0 !important;
     width: 80%;

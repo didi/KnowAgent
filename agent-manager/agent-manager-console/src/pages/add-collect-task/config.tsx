@@ -199,7 +199,9 @@ export const setStepParams = (values: any) => {
       // suffixSeparationCharacter: getParams(values, 'suffixSeparationCharacter', index) || '', // 文件名后缀分隔字符
       // suffixMatchType: getParams(values, 'suffixMatchType', index), // 文件名后缀匹配类型 0：长度 1：正则
       // suffixLength: getParams(values, 'suffixLength', index) || '', // 文件名后缀长度 suffixMatchType为0时必填
-      suffixMatchRegular: values.step2_file_suffixMatchRegular?.[0] || '', //文件名后缀长度 suffixMatchType为1时必填
+      suffixMatchRegular: Array.isArray(values.step2_file_suffixMatchRegular)
+        ? values.step2_file_suffixMatchRegular[0]
+        : values.step2_file_suffixMatchRegular || '', //文件名后缀长度 suffixMatchType为1时必填
     }, // 采集文件名后缀匹配规则
     logSliceRuleDTO: {
       // sliceType: getParams(values, 'sliceType', index), // 日志内容切片类型 0：时间戳切片 1：正则匹配切片

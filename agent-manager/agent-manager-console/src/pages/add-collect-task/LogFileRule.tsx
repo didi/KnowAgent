@@ -77,7 +77,7 @@ const LogFileType = (props: any) => {
     setShowFileLoad(true);
   };
   const onHandleContentPre = async () => {
-    const logFilePath = getFieldValue(`step2_file_path_${logFilePathKey}`); //getFieldValue(`step2_file_path_${logFilePathKey}`);
+    const logFilePath = getFieldValue(`step3_logPath_test`); //getFieldValue(`step2_file_path_${logFilePathKey}`);
     const hostName = getFieldValue(`step2_hostName`); //getFieldValue(`step2_hostName`);
     const params = {
       path: encodeURIComponent(logFilePath),
@@ -390,7 +390,7 @@ const LogFileType = (props: any) => {
                 {options}
               </Select>
             </Form.Item>
-            <Form.Item label="日志路径">
+            <Form.Item label="日志路径" name="step3_logPath_test">
               <Select defaultValue={props.filePathList[0]}>
                 {props.filePathList.map((item) => (
                   <Select.Option key={item} value={item}>

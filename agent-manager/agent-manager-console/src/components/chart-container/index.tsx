@@ -147,7 +147,7 @@ const ChartContainer: React.FC<propsType> = ({ filterData, dragModule, reloadMod
           dateStrings,
           ...filterData,
         });
-      }, 0);
+      }, 150);
     }
   }, [filterData]);
 
@@ -224,7 +224,7 @@ const ChartContainer: React.FC<propsType> = ({ filterData, dragModule, reloadMod
         dateStrings: dateStringsArr,
         ...queryData,
       });
-    }, 0);
+    }, 150);
     setIsRelative(isRelative);
   };
 
@@ -239,7 +239,7 @@ const ChartContainer: React.FC<propsType> = ({ filterData, dragModule, reloadMod
           dateStrings,
           ...ortherData,
         });
-      }, 0);
+      }, 150);
     }
   };
 

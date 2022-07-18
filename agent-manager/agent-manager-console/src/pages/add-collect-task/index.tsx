@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import { Modal, Steps, Form, Button, Spin, AppContainer } from '@didi/dcloud-design';
 import CollectObjectConfiguration from './CollectObjectConfiguration';
 import CollectLogPathConfiguration from './CollectLogPathConfiguration';
-import CollectLogConfiguration from './CollectLogConfiguration';
 import CollectLogRuleConfiguration from './CollectLogRuleConfiguration';
 import ClientClearSelfMonitor from './ClientClearSelfMonitor';
 import { NavRouterLink } from '../../components/CustomComponent';
@@ -55,7 +54,7 @@ const StepsForm = (props: any) => {
   const [slicingRuleLogList, setSlicingRuleLogList] = useState([] as number[]); // LogRepeatForm file 循环 (cata/file重复)页面
   const [suffixfilesList, setSuffixfilesList] = useState([] as number[]); // LogFileType （file里面的）循环 页面
   const [isNotLogPath, setisNotLogPath] = useState(false);
-  const [fileLogCollectDetail, setFileLogCollectDetail] = useState({} as { id: number; logCollectTaskId: number }); // 编辑时文件类型路径采集配置
+  const [fileLogCollectDetail, setFileLogCollectDetail] = useState([{}] as [{ id: number; logCollectTaskId: number }]); // 编辑时文件类型路径采集配置
   const [hostList, setHostList] = useState([]);
   const [dataFormat, setDataFormat] = useState([]);
   const [sliceRule, setSliceRule] = useState({});
@@ -235,11 +234,13 @@ const StepsForm = (props: any) => {
   const processParameters = (values: any) => {
     const params = setStepParams(values);
     if (editUrl) {
-      const fileDetail = params.fileLogCollectPathList[0];
-      fileDetail.id = fileLogCollectDetail.id;
-      fileDetail.logCollectTaskId = fileLogCollectDetail.logCollectTaskId;
+      //新增路径对象的id和任务id
+      params.fileLogCollectPathList = params.fileLogCollectPathList.map((fileDetail: any, index: number) => {
+        fileDetail.id = fileLogCollectDetail[index]?.id || '';
+        fileDetail.logCollectTaskId = fileLogCollectDetail[0].logCollectTaskId;
+        return fileDetail;
+      });
       params.id = state.taskId;
-      params.fileLogCollectPathList[0] = fileDetail;
       return editTask(params);
     }
     return addTask(params);
@@ -338,7 +339,7 @@ const StepsForm = (props: any) => {
       .then((res: any) => {
         setCollectDetail(res);
         assignmentParameters(res);
-        setFileLogCollectDetail(res.fileLogCollectPathList[0]);
+        setFileLogCollectDetail(res.fileLogCollectPathList);
         setLoading(false);
         setSliceRule(res.logContentSliceRule);
       })

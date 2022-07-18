@@ -67,6 +67,7 @@ const BarCharts = (props: {
             color: '#D3D8E4',
           },
         },
+        triggerEvent: !!props.linkTo,
         axisLine: {
           lineStyle: {
             color: '#D3D8E4',

@@ -58,13 +58,14 @@ const IndicatorDrawer: React.FC<propsType> = ({ onClose, onSure, emitReload, vis
     const resMap = {};
     let isStop = false;
     Object.keys(childRef.current).forEach((key) => {
-      if (key === currentKey) {
-        let res = childRef.current[key].getGroups();
+      let res = childRef.current[key].getGroups();
+      if (res) {
         res = res.sort((a, b) => b.groupId - a.groupId);
         resMap[key] = res;
-        if (!res) {
-          isStop = true;
-        }
+      }
+
+      if (!res) {
+        isStop = true;
       }
     });
     if (isStop) return;
