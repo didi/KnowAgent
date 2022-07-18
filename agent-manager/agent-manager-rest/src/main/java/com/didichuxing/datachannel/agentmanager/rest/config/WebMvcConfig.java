@@ -22,6 +22,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/agent").setViewName("pages/agent");
         registry.addViewController("/").setViewName("pages/agent");
 
+        registry.addViewController("/agent/**").setViewName("pages/agent");
+
     }
 
     @Override
