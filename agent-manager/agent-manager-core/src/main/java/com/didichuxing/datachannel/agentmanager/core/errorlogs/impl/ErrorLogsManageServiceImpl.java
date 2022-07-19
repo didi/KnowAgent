@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.core.errorlogs.ErrorLogsManageSe
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.AgentErrorLogDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -53,8 +54,22 @@ public class ErrorLogsManageServiceImpl implements ErrorLogsManageService {
     }
 
     private void handleInsertErrorLogs(String errorLogRecord) {
-        ErrorLogPO errorLogPO = JSON.parseObject(errorLogRecord, ErrorLogPO.class);
-        agentErrorLogDAO.insertSelective(errorLogPO);
+        if(StringUtils.isNotBlank(errorLogRecord)) {
+            ErrorLogPO errorLogPO = JSON.parseObject(errorLogRecord, ErrorLogPO.class);
+            if(null != errorLogPO) {
+                processErrorLogPOFieldTooLarge(errorLogPO);
+                agentErrorLogDAO.insertSelective(errorLogPO);
+            }
+        }
+    }
+
+    private void processErrorLogPOFieldTooLarge(ErrorLogPO errorLogPO) {
+        if(errorLogPO.getThrowable().length() > 2000) {
+            errorLogPO.setThrowable(errorLogPO.getThrowable().substring(0, 2000));
+        }
+        if(errorLogPO.getLogMsg().length() > 255) {
+            errorLogPO.setLogMsg(errorLogPO.getLogMsg().substring(0, 255));
+        }
     }
 
     @Override
