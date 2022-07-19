@@ -25,7 +25,12 @@ const PieChart = (props: IProps): JSX.Element => {
   const [activeKey, setActiveKey] = useState('error');
   // TODO: 业务放到外层
   const linkTo = (name, item) => {
-    setActiveKey(name.includes('故障') ? 'error' : 'warning');
+    if (name.includes('故障')) {
+      setActiveKey('error');
+    }
+    if (name.includes('预警')) {
+      setActiveKey('warning');
+    }
   };
 
   const renderChart = () => {
@@ -63,7 +68,7 @@ const PieChart = (props: IProps): JSX.Element => {
             <List
               dataSource={item.list}
               renderItem={(row: any) => (
-                <div className={`list-item ${chartClassName}`}>
+                <div className={`list-item ${chartClassName} ${activeKey}`}>
                   <IconFont className={`link-icon ${chartClassName || ''}`} type="icon-link-o" />
                   <TextRouterLink textLength={26} needToolTip element={row.key} href={item.href} state={item.getState(row)} />
                 </div>

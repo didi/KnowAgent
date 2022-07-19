@@ -361,7 +361,7 @@ export const ActionClusterForm = (props: any) => {
               },
             ]}
           >
-            <AutoComplete placeholder="请选择或输入" options={receiverTopic} onSearch={onSearchTopic} />
+            <AutoComplete placeholder="请选择或输入" options={receiverErrorTopic} onSearch={onSearchTopic} />
           </Form.Item>
         )}
       </Form>

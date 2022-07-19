@@ -77,7 +77,7 @@ const LogFileType = (props: any) => {
     setShowFileLoad(true);
   };
   const onHandleContentPre = async () => {
-    const logFilePath = getFieldValue(`step2_file_path_${logFilePathKey}`); //getFieldValue(`step2_file_path_${logFilePathKey}`);
+    const logFilePath = getFieldValue(`step3_logPath_test`); //getFieldValue(`step2_file_path_${logFilePathKey}`);
     const hostName = getFieldValue(`step2_hostName`); //getFieldValue(`step2_hostName`);
     const params = {
       path: encodeURIComponent(logFilePath),
@@ -296,7 +296,6 @@ const LogFileType = (props: any) => {
                 rules={[{ required: true, message: '请选择或者输入时间格式' }]}
               >
                 <AutoComplete
-                  dataSource={options}
                   className="step2_file_sliceTimestampFormat"
                   onChange={() => setStart(-1)}
                   placeholder="请输入标记切片的日期/时间模式串"
@@ -390,7 +389,7 @@ const LogFileType = (props: any) => {
                 {options}
               </Select>
             </Form.Item>
-            <Form.Item label="日志路径">
+            <Form.Item label="日志路径" name="step3_logPath_test" initialValue={props.filePathList[0]}>
               <Select defaultValue={props.filePathList[0]}>
                 {props.filePathList.map((item) => (
                   <Select.Option key={item} value={item}>

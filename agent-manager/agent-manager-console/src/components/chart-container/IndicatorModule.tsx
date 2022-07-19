@@ -379,9 +379,17 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
 
   const sure = () => {
     if (isIndicatorProbe) {
-      const metricTreeMapsData = getLocalStorage(`metricTreeMaps${tabKey}`) || {};
       let objkey = agentCur?.value;
-      if (currentKey === '1') {
+      if (objkey) {
+        if (!agentCur?.value && selectedRowKeys?.length > 0) {
+          message.warning('请选择agent');
+          return false;
+        }
+        if (agentCur?.value && !selectedRowKeys?.length) {
+          message.warning('请选择agent指标');
+          return false;
+        }
+      } else {
         if (!logCollectTaskCur?.value) {
           message.warning('请选择采集任务');
           return false;
@@ -393,19 +401,9 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
         objkey = logCollectTaskCur?.value;
         pathIdCur?.value ? (objkey += `/${pathIdCur?.value}`) : '';
         hostNameCur?.value ? (objkey += `/${hostNameCur?.value}`) : '';
-      } else {
-        if (!agentCur?.value && selectedRowKeys?.length > 0) {
-          message.warning('请选择agent');
-          return false;
-        }
-        if (agentCur?.value && !selectedRowKeys?.length) {
-          message.warning('请选择agent指标');
-          return false;
-        }
       }
       const treeDataAllNew = changeTreeDataAll(treeDataAll);
       const metricTreeMapsDataNew = {
-        ...metricTreeMapsData,
         [objkey]: treeDataAllNew,
       };
       objkey && setLocalStorage(`metricTreeMaps${tabKey}`, metricTreeMapsDataNew);

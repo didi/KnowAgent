@@ -51,6 +51,9 @@ const LoopAddLogFileType = (props: any) => {
     copyPathlist.splice(copylogPathList.current.indexOf(delValue), 1);
     copylogPathList.current = copyPathlist;
     remove(index);
+    logPathList.current.forEach((item: any, index: number) => {
+      return setFieldsValue({ [`step2_file_path_${index}`]: item });
+    });
     props.setFilePathList(logPathList.current.filter((item: any) => item));
   };
 
@@ -84,7 +87,7 @@ const LoopAddLogFileType = (props: any) => {
     const hostName = getFieldValue(`step2_hostName_example`);
     const params = {
       path: logFilePath,
-      suffixRegular: logSuffixfilesValue?.[0],
+      suffixRegular: Array.isArray(logSuffixfilesValue) ? logSuffixfilesValue.join(',') : logSuffixfilesValue,
       hostName,
     };
     if (logFilePath && hostName) {
@@ -103,6 +106,7 @@ const LoopAddLogFileType = (props: any) => {
       step2_filePath_0_example: getFieldValue('step2_file_path_0'),
       step2_hostName_example: getFieldValue('step2_hostName'),
     });
+    setPreviewPath(logPathList.current);
     setVisible(true);
     if (serviceId && logFilePath) {
       props.setisNotLogPath(true);

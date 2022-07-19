@@ -7,10 +7,6 @@ import LogFileRule from './LogFileRule';
 const CollectLogConfiguration = (props: any) => {
   const [logListFile, setLogListFile] = useState([]);
 
-  useEffect(() => {
-    console.log(props.collectLogType, props.logFilter);
-  }, [props.collectLogType, props.logFilter]);
-
   return (
     <div className="set-up collect-log-config">
       <Form form={props.form} {...collectLogFormItemLayout} layout={'vertical'}>

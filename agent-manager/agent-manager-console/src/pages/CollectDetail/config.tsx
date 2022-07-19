@@ -69,7 +69,23 @@ export const collectTaskDetailBaseInfo = (info: any) => {
         try {
           const fileLogCollectPathList = JSON.parse(t);
           const pathString = fileLogCollectPathList.map((path: any) => path?.path || '');
-          return pathString.join(';');
+          return (
+            <Tooltip title={pathString.join(';')} placement="bottomLeft">
+              <span>{pathString.join(';')}</span>
+            </Tooltip>
+          );
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
+    {
+      label: '采集文件后缀名匹配正则',
+      key: 'fileNameSuffixMatchRule',
+      renderCustom: (t: any) => {
+        try {
+          const fileNameSuffixMatchRule = JSON.parse(t);
+          return fileNameSuffixMatchRule.suffixMatchRegular || `-`;
         } catch (error) {
           return '-';
         }
@@ -81,7 +97,7 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       renderCustom: (t: any) => {
         try {
           const rule = JSON.parse(t);
-          return `左起第${rule.sliceTimestampPrefixStringIndex}个匹配上${rule.sliceTimestampPrefixString}${rule.sliceTimestampFormat}`;
+          return `左起第${rule.sliceTimestampPrefixStringIndex}个${rule.sliceTimestampPrefixString} 匹配上 ${rule.sliceTimestampFormat}`;
         } catch (error) {
           return '-';
         }
@@ -102,6 +118,38 @@ export const collectTaskDetailBaseInfo = (info: any) => {
     {
       label: '接收端Topic',
       key: 'sendTopic',
+    },
+    {
+      label: '采集延迟监控',
+      key: 'collectDelayThresholdMs',
+      renderCustom: (t: any) => {
+        try {
+          const collectDelayThresholdMs = Number(t);
+          return collectDelayThresholdMs / 60 / 1000 + '分钟';
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
+    {
+      label: '任务保障等级',
+      key: 'limitPriority',
+      renderCustom: (t: any) => {
+        try {
+          const limitPriority = Number(t);
+          return limitPriority == 0 ? '高' : limitPriority == 1 ? '中' : '低';
+        } catch (error) {
+          return '-';
+        }
+      },
+    },
+    {
+      label: '高级配置',
+      key: 'advancedConfigurationJsonString',
+    },
+    {
+      label: '生产端属性',
+      key: 'kafkaProducerConfiguration',
     },
     {
       label: '采集任务健康度',
