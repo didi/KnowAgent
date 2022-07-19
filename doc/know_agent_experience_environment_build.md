@@ -60,4 +60,4 @@
 
 ## 3.2 各项功能使用
 
-​	见[《Know Agent用户使用手册》](Know Agent用户使用手册.md)。
+​	见[《Know Agent用户使用手册》](know_agent_user_manual.md)。

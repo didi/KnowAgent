@@ -40,7 +40,7 @@ auv-job.password：同配置项 spring.datasource.druid.password
 
 ## 1.6 使用
 
-​	本地启动的话，访问`http://localhost:9010`。更多参考：[《Know Agent用户使用手册》](Know Agent用户使用手册.md)
+​	本地启动的话，访问`http://localhost:9010`。更多参考：[《Know Agent用户使用手册》](know_agent_user_manual.md)
 
 # 2 Agent
 

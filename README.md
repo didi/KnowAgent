@@ -83,15 +83,15 @@
 
 [《Know Agent一站式日志采集平台介绍》](doc/know_agent_summary.md)
 
-[《快速搭建一站式Know Agent体验环境》](doc/快速搭建一站式Know Agent体验环境.md)
+[《快速搭建一站式Know Agent体验环境》](doc/know_agent_experience_environment_build.md)
 
-[《Know Agent安装部署手册》](doc/Know Agent安装部署手册.md)
+[《Know Agent安装部署手册》](doc/know_agent_install_deploy.md)
 
-[《Know Agent用户使用手册》](doc/Know Agent用户使用手册.md)
+[《Know Agent用户使用手册》](doc/know_agent_user_manual.md)
 
-[《Know Agent开发手册》](doc/Know Agent开发手册.md)
+[《Know Agent开发手册》](doc/know_agent_develop.md)
 
-[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群.md)
+[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/know_agent_metrics_error_logs_store_extend.md)
 
 # 3 Know Agent开源用户交流群
 
