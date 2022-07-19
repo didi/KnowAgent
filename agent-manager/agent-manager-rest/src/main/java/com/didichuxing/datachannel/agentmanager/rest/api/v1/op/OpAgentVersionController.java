@@ -50,7 +50,7 @@ public class OpAgentVersionController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除Agent版本", notes = "")
+    @ApiOperation(value = "删除Agent版本 0：删除成功 29000：待删除 AgentVersion 在系统中不存在 29002：AgentVersion在系统中存在关联，无法删除", notes = "")
     @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
     @CheckPermission(permission = AGENT_VERSION_DELETE)

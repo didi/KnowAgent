@@ -47,7 +47,7 @@ public class OpServiceController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除服务集 入参为待删除服务id集（逗号分割）", notes = "")
+    @ApiOperation(value = "删除服务集 入参为待删除服务id集（逗号分割）0：删除成功 27000：待删除 Service 不存在 27003：Service删除失败，原因为：系统存在Service关联的日志采集任务", notes = "")
     @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
     public Result deleteService(@PathVariable String ids) {

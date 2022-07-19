@@ -87,7 +87,7 @@ public enum ErrorCodeEnum {
      */
     AGENT_VERSION_NOT_EXISTS(29000, "AgentVersion在系统中不存在"),
     AGENT_VERSION_DUPLICATE(29001, "AgentVersion在系统中已存在"),
-    AGENT_VERSION_RELATION_EXISTS(29002, "AgentVersion在系统中存在关联，删除时将无法删除"),
+    AGENT_VERSION_RELATION_EXISTS(29002, "AgentVersion在系统中存在关联的Agent，无法删除"),
     AGENT_NEED_NOT_TO_BE_CHECK(29003, "Agent处于健康度检查黑名单中，无需检查"),
     AGENT_PACKAGE_FILE_EXISTS(29004, "Agent安装文件在系统中已存在"),
     /*
