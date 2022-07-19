@@ -81,7 +81,7 @@
 # 2 相关文档
 ## 2.1 产品文档
 
-[《Know Agent一站式日志采集平台介绍》](doc/Know Agent一站式日志采集平台.md)
+[《Know Agent一站式日志采集平台介绍》](doc/know_agent_summary.md)
 
 [《快速搭建一站式Know Agent体验环境》](doc/快速搭建一站式Know Agent体验环境.md)
 
