@@ -92,7 +92,7 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除日志采集任务", notes = "")
+    @ApiOperation(value = "删除日志采集任务 0：删除成功 10000：参数错误 28000：待删除 LogCollectTask 不存在", notes = "")
     @RequestMapping(value = "/{logCollectTaskId}", method = RequestMethod.DELETE)
     @ResponseBody
     @CheckPermission(permission = AGENT_TASK_DELETE)

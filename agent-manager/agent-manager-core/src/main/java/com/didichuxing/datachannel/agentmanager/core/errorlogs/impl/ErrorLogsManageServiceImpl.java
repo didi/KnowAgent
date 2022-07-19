@@ -8,6 +8,7 @@ import com.didichuxing.datachannel.agentmanager.core.errorlogs.ErrorLogsManageSe
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.AgentErrorLogDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -53,8 +54,22 @@ public class ErrorLogsManageServiceImpl implements ErrorLogsManageService {
     }
 
     private void handleInsertErrorLogs(String errorLogRecord) {
-        ErrorLogPO errorLogPO = JSON.parseObject(errorLogRecord, ErrorLogPO.class);
-        agentErrorLogDAO.insertSelective(errorLogPO);
+        if(StringUtils.isNotBlank(errorLogRecord)) {
+            ErrorLogPO errorLogPO = JSON.parseObject(errorLogRecord, ErrorLogPO.class);
+            if(null != errorLogPO) {
+                processErrorLogPOFieldTooLarge(errorLogPO);
+                agentErrorLogDAO.insertSelective(errorLogPO);
+            }
+        }
+    }
+
+    private void processErrorLogPOFieldTooLarge(ErrorLogPO errorLogPO) {
+        if(errorLogPO.getThrowable().length() > 2000) {
+            errorLogPO.setThrowable(errorLogPO.getThrowable().substring(0, 2000));
+        }
+        if(errorLogPO.getLogMsg().length() > 255) {
+            errorLogPO.setLogMsg(errorLogPO.getLogMsg().substring(0, 255));
+        }
     }
 
     @Override
@@ -119,26 +134,44 @@ public class ErrorLogsManageServiceImpl implements ErrorLogsManageService {
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
             consumer.subscribe(Arrays.asList(agentErrorLogsTopic));
             while (true) {
+                ConsumerRecords<String, String> records = null;
                 try {
-                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
-                    for (ConsumerRecord<String, String> record : records) {
-                        insertErrorLogs(record.value());
+                    records = consumer.poll(Duration.ofSeconds(5));
+                } catch (Throwable ex) {
+                    LOGGER.warn(
+                            String.format("class=%s||method=%s||errorMsg=consumer poll records error, root cause is: %s", this.getClass().getName(), "writeErrorLogs", ex.getMessage()),
+                            ex
+                    );
+                    consumer.close();
+                    consumer = new KafkaConsumer<>(properties);
+                }
+                try {
+                    if(null != records) {
+                        for (ConsumerRecord<String, String> record : records) {
+                            insertErrorLogs(record.value());
+                        }
                     }
+                } catch (Throwable ex) {
+                    LOGGER.warn(
+                            String.format("class=%s||method=%s||errorMsg=write errorLogs to store failed, root cause is: %s", this.getClass().getName(), "writeErrorLogs", ex.getMessage()),
+                            ex
+                    );
+                }
+                try {
                     if (errorLogsWriteStopTrigger) {
                         consumer.close();
                         break;
                     }
                 } catch (Throwable ex) {
                     LOGGER.error(
-                            String.format("writeErrorLogs error: %s", ex.getMessage()),
+                            String.format("class=%s||method=%s||errorMsg=close consumer failed, root cause is: %s", this.getClass().getName(), "writeErrorLogs", ex.getMessage()),
                             ex
                     );
-                    consumer.close();
                 }
             }
         } catch (Throwable ex) {
             LOGGER.error(
-                    String.format("writeErrorLogs error: %s", ex.getMessage()),
+                    String.format("class=%s||method=%s||errorMsg=writeErrorLogs error, root cause is: %s", this.getClass().getName(), "writeErrorLogs", ex.getMessage()),
                     ex
             );
         } finally {

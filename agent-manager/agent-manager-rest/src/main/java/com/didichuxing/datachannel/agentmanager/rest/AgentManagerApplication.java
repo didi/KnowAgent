@@ -150,7 +150,7 @@ public class AgentManagerApplication {
                     LogCollectTaskHealthManageServiceImpl logCollectTaskHealthManageService = ctx.getBean(LogCollectTaskHealthManageServiceImpl.class);
                     List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
                     if (CollectionUtils.isEmpty(logCollectTaskDOList)) {
-                        LOGGER.warn("class=LogCollectTaskHealthCheckTask||method=execute||msg=LogCollectTaskDO List task is empty!!");
+                        LOGGER.info("class=LogCollectTaskHealthCheckTask||method=execute||msg=LogCollectTaskDO List task is empty!!");
                     }
                     List<Future> futures = Lists.newArrayList();
                     for (LogCollectTaskDO logCollectTaskDO : logCollectTaskDOList) {
@@ -179,7 +179,7 @@ public class AgentManagerApplication {
                     AgentHealthManageServiceImpl agentHealthManageService = ctx.getBean(AgentHealthManageServiceImpl.class);
                     List<AgentDO> agentDOList = agentManageService.list();
                     if (CollectionUtils.isEmpty(agentDOList)) {
-                        LOGGER.warn("class=AgentHealthCheckTask||method=execute||msg=AgentDO List task is empty!!");
+                        LOGGER.info("class=AgentHealthCheckTask||method=execute||msg=AgentDO List task is empty!!");
                     }
                     List<Future> futures = Lists.newArrayList();
                     for (AgentDO agentDO : agentDOList) {
