@@ -349,10 +349,6 @@
             </plugin>
         </plugins>
 
-        <!--        <filters>-->
-        <!--            <filter>${user.dir}/${profile.id}.properties</filter>-->
-        <!--        </filters>-->
-
         <resources>
             <resource>
                 <directory>src/main/conf</directory>
