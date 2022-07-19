@@ -58,6 +58,8 @@
     </dependency>
   </dependencies>
   <properties>
-    <kafka.version>2.3.0</kafka.version>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <kafka.version>2.7.0</kafka.version>
   </properties>
 </project>

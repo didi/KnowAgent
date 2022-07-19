@@ -92,7 +92,6 @@ export const ActionClusterForm = (props: any) => {
   const [receiverErrorTopic, setErrorReceiverTopic] = useState([] as any);
   const [originReceiverTopic, setOriginReceiverTopic] = useState([] as any);
 
-
   const handleChange = (e: any) => {
     setCheckValue(e);
     if (!edit) {
@@ -393,24 +392,28 @@ export const DeleteActionCluster: React.FC = (props: any) => {
       console.log(props.submitEvent, 'props.submitEvent');
       if (containerData?.id && !containerData?.isBatch) {
         // 删除版本单行操作
-        deleteReceive(props.containerData.id).then((res: any) => {
-          props.setVisible(false);
-          props.genData();
-          notification.success({
-            message: '删除成功',
-            duration: 3,
-          });
-        });
+        deleteReceive(props.containerData.id)
+          .then((res: any) => {
+            props.setVisible(false);
+            props.genData();
+            notification.success({
+              message: '删除成功',
+              duration: 3,
+            });
+          })
+          .finally(() => props.setVisible(false));
       } else if (containerData?.selectRowKeys.length > 0 && containerData?.isBatch) {
         // 删除版本批量操作 需要替换接口
-        deleteReceive(containerData?.selectRowKeys?.join()).then((res: any) => {
-          props.setVisible(false);
-          props.genData();
-          notification.success({
-            message: '删除成功',
-            duration: 3,
-          });
-        });
+        deleteReceive(containerData?.selectRowKeys?.join())
+          .then((res: any) => {
+            props.setVisible(false);
+            props.genData();
+            notification.success({
+              message: '删除成功',
+              duration: 3,
+            });
+          })
+          .finally(() => props.setVisible(false));
       }
     }
   }, [props.submitEvent]);

@@ -998,6 +998,8 @@ export const deleteAgentHost = (props: any) => {
           props.genData();
         } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
           Modal.error({ content: res.message });
+        } else {
+          Modal.error({ content: res.message });
         }
       });
     },
@@ -1024,6 +1026,8 @@ export const deleteAgent = (props: any) => {
             Modal.success({ content: res.message || '删除成功！' });
             props.genData();
           } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
+            Modal.error({ content: res.message });
+          } else {
             Modal.error({ content: res.message });
           }
         });
@@ -1068,10 +1072,10 @@ export const hostNameList = async () => {
       value: 0,
       title: '物理机',
     },
-    {
-      value: 1,
-      title: '容器',
-    },
+    // {
+    //   value: 1,
+    //   title: '容器',
+    // },
     // {
     //   value: 2,
     //   label: 'VM虚拟机',

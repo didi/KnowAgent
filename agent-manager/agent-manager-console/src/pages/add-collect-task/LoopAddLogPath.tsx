@@ -6,9 +6,8 @@ import { logFilePathKey } from './dateRegAndGvar';
 import _, { cloneDeep } from 'lodash';
 import './index.less';
 
-
 const LoopAddLogFileType = (props: any) => {
-  const { list, remove, getKey, push, resetList, sortForm } = useDynamicList<any>(['']);
+  const { list, remove, getKey, push, replace, resetList, sortForm } = useDynamicList<any>(['']);
   const { setFieldsValue, getFieldValue } = props.form;
   const logPathList = useRef<any>([]);
   const copylogPathList = useRef<any>([]);
@@ -19,7 +18,6 @@ const LoopAddLogFileType = (props: any) => {
   const [isModalVisible, setVisible] = useState(false);
   const [previewPath, setPreviewPath] = useState([]);
 
-
   const options =
     hostNameList.length > 0 &&
     hostNameList.map((group: any, index: number) => {
@@ -29,12 +27,10 @@ const LoopAddLogFileType = (props: any) => {
         </Select.Option>
       );
     });
-  const handlelogSuffixfiles = async (key: number) => {
+  const handlelogSuffixfiles = async (key: number, val) => {
     const logFilePath = await getFieldValue(`step2_file_path_${key}`);
     logPathList.current[key] = logFilePath;
-    sortForm(logPathList.current);
     setlogFilePathKey(key); // 同步日志路径的key值，防止减少日志路径key值乱
-    props.setisNotLogPath(false);
   };
   const [debouncedCallApi] = useState(() => _.debounce(handlelogSuffixfiles, 100)); // 做事件防抖时，为了防止每次触发都会重新渲染，维护一个state函数，让每次执行的时候都是同一个函数
   const addPush = () => {
@@ -46,15 +42,11 @@ const LoopAddLogFileType = (props: any) => {
     const copylist = cloneDeep(logPathList.current);
     const delValue = copylist.splice(index, 1);
     logPathList.current = copylist;
-    setPreviewPath(logPathList.current);
     const copyPathlist = cloneDeep(copylogPathList.current);
     copyPathlist.splice(copylogPathList.current.indexOf(delValue), 1);
     copylogPathList.current = copyPathlist;
+    setPreviewPath(logPathList.current);
     remove(index);
-    logPathList.current.forEach((item: any, index: number) => {
-      return setFieldsValue({ [`step2_file_path_${index}`]: item });
-    });
-    props.setFilePathList(logPathList.current.filter((item: any) => item));
   };
 
   const onSelectChange = (value) => {
@@ -120,7 +112,7 @@ const LoopAddLogFileType = (props: any) => {
       const filterPath = logPathList.current.filter((item: any) => item.indexOf(searchText) > -1);
       setPreviewPath(filterPath);
     }
-  }
+  };
 
   const row = (index: any, item: any) => (
     <div key={getKey(index)}>
@@ -160,7 +152,7 @@ const LoopAddLogFileType = (props: any) => {
             >
               <Input
                 key={getKey(index)}
-                onInput={() => debouncedCallApi(getKey(index))}
+                onChange={(val) => debouncedCallApi(getKey(index), val)}
                 className={`step2_file_path_input${getKey(index)}`}
                 placeholder="如：/home/xiaoju/changjiang/logs/app.log"
                 name={`step2_file_path_${getKey(index)}`}
@@ -183,7 +175,7 @@ const LoopAddLogFileType = (props: any) => {
           </Col>
         </Row>
       </Form.Item>
-    </div >
+    </div>
   );
 
   useEffect(() => {
@@ -213,10 +205,9 @@ const LoopAddLogFileType = (props: any) => {
 
   return (
     <div className="set-up loopaddlog-filetype">
-      {list &&
-        list.map((ele, index) => {
-          return row(index, ele);
-        })}
+      {list.map((ele, index) => {
+        return row(index, ele);
+      })}
       <Form.Item label="采集文件后缀名匹配正则" extra="注:如需验证或遇到操作困难,可点击预览,展示日志路径下文件列表">
         <Row>
           <Col span={21}>
@@ -297,7 +288,7 @@ const LoopAddLogFileType = (props: any) => {
           </>
         ) : null}
       </Modal>
-    </div >
+    </div>
   );
 };
 
