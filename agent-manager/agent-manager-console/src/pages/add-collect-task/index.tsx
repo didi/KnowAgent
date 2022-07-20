@@ -240,7 +240,6 @@ const StepsForm = (props: any) => {
       //新增路径对象的id和任务id
       params.fileLogCollectPathList = params.fileLogCollectPathList.map((fileDetail: any, index: number) => {
         const findIndex = hookPathList.findIndex((path) => path == fileDetail.path);
-        console.log(findIndex, hookPathList, fileLogCollectDetail);
         fileDetail.id = findIndex > -1 ? fileLogCollectDetail[findIndex]?.id : '';
         fileDetail.logCollectTaskId = fileLogCollectDetail[0].logCollectTaskId;
         return fileDetail;

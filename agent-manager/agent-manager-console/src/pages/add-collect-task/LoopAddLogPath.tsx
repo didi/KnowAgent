@@ -200,6 +200,7 @@ const LoopAddLogFileType = (props: any) => {
     resetList(props.originFilePathList);
     if (props.editUrl) {
       setHookPathList([...props.originFilePathList]);
+      props.setHookPathList([...props.originFilePathList]);
       logPathList.current = [...props.originFilePathList];
       copylogPathList.current = [...props.originFilePathList];
     }
