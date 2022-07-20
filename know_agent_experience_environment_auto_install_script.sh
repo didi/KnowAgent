@@ -56,6 +56,7 @@ function Start_Kafka_ZK(){
 	sleep 5
 	sh $Dir/kafka_"${kafka_version}"/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic metrics
 	sh $Dir/kafka_"${kafka_version}"/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic errorlogs
+	sh $Dir/kafka_"${kafka_version}"/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic data
 }
 
 function Start_LogPrint(){
