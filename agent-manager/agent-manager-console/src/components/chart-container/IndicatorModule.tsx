@@ -381,20 +381,20 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
     if (isIndicatorProbe) {
       let objkey = agentCur?.value;
       if (objkey) {
-        if (!agentCur?.value && selectedRowKeys?.length > 0) {
+        if (currentKey === '0' && !agentCur?.value && selectedRowKeys?.length > 0) {
           message.warning('请选择agent');
           return false;
         }
-        if (agentCur?.value && !selectedRowKeys?.length) {
+        if (currentKey === '0' && agentCur?.value && !selectedRowKeys?.length) {
           message.warning('请选择agent指标');
           return false;
         }
       } else {
-        if (!logCollectTaskCur?.value) {
+        if (currentKey === '1' && !logCollectTaskCur?.value) {
           message.warning('请选择采集任务');
           return false;
         }
-        if (logCollectTaskCur?.value && !selectedRowKeys?.length) {
+        if (currentKey === '1' && logCollectTaskCur?.value && !selectedRowKeys?.length) {
           message.warning('请选择采集任务指标');
           return false;
         }

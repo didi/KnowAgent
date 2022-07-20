@@ -51,6 +51,8 @@ const StepsForm = (props: any) => {
 
   const [slicingRuleLog, setSlicingRuleLog] = useState(0); // LogRepeatForm cata (cata/file重复)页面
   const [filePathList, setFilePathList] = useState(['']);
+  const [originFilePathList, setOriginFilePathList] = useState(['']);
+  const [hookPathList, setHookPathList] = useState(['']);
   const [slicingRuleLogList, setSlicingRuleLogList] = useState([] as number[]); // LogRepeatForm file 循环 (cata/file重复)页面
   const [suffixfilesList, setSuffixfilesList] = useState([] as number[]); // LogFileType （file里面的）循环 页面
   const [isNotLogPath, setisNotLogPath] = useState(false);
@@ -91,8 +93,9 @@ const StepsForm = (props: any) => {
           logFilter={logFilter}
           cataPathlist={cataPathlist}
           slicingRuleLog={slicingRuleLog}
-          filePathList={filePathList}
+          originFilePathList={originFilePathList}
           setFilePathList={setFilePathList}
+          setHookPathList={setHookPathList}
           slicingRuleLogList={slicingRuleLogList}
           suffixfilesList={suffixfilesList}
           isNotLogPath={isNotLogPath}
@@ -236,7 +239,8 @@ const StepsForm = (props: any) => {
     if (editUrl) {
       //新增路径对象的id和任务id
       params.fileLogCollectPathList = params.fileLogCollectPathList.map((fileDetail: any, index: number) => {
-        fileDetail.id = fileLogCollectDetail[index]?.id || '';
+        const findIndex = hookPathList.findIndex((path) => path == fileDetail.path);
+        fileDetail.id = findIndex > -1 ? fileLogCollectDetail[findIndex]?.id : '';
         fileDetail.logCollectTaskId = fileLogCollectDetail[0].logCollectTaskId;
         return fileDetail;
       });
@@ -504,6 +508,7 @@ const StepsForm = (props: any) => {
         return filelog;
       });
       setFilePathList(filePathArr);
+      setOriginFilePathList(filePathArr);
       setSlicingRuleLogList(slicingRuleLogArr);
       setSuffixfilesList(suffixLengthArr);
       let fileOth = {};

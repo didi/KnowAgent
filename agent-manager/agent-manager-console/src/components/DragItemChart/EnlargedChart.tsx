@@ -224,6 +224,7 @@ const EnlargedChart = (
         </Space> */}
         {visible && (
           <SingleChart
+            showHeader={false}
             chartTypeProp="line"
             wrapStyle={{
               width: '100%',
@@ -236,9 +237,8 @@ const EnlargedChart = (
                   str += `<div style="font-size: 12px;color: #212529;line-height: 20px; margin-top: 4px; margin-bottom: 4px;">${params[0].axisValue}</div>`;
                   const lineColor = params.map((item) => {
                     str += `<div style="display: flex; min-width: 140px; justify-content: space-between;line-height: 20px;color: #495057;">
-                  <div style="margin-right: 20px;"><span style="display:inline-block;margin-right:8px;border-radius:50%;width:6px;height:6px;background-color:${
-                    item.color
-                  };"></span><span>${item.name}</span></div>
+                  <div style="margin-right: 20px;"><span style="display:inline-block;margin-right:8px;border-radius:50%;width:6px;height:6px;background-color:${item.color
+                      };"></span><span>${item.name}</span></div>
                   <div>${unitFormatFn(item.value)}</div>
                 </div>`;
                     const color = item.marker?.split('background-color:')[1]?.slice(0, 7);
@@ -287,25 +287,25 @@ const EnlargedChart = (
               const data =
                 type === 3
                   ? singleLineChatValue?.metricPointList?.map((item: any) => {
-                      return {
-                        ...item,
-                        name: singleLineChatValue?.name,
-                        timeMinute: moment(item.timeStampMinute).format('HH:mm'),
-                        value: valueFormatFn(item.last, baseUnit, displayUnit),
-                        last: valueFormatFn(item.last, baseUnit, displayUnit) + unitEnum[displayUnit],
-                      };
-                    })
+                    return {
+                      ...item,
+                      name: singleLineChatValue?.name,
+                      timeMinute: moment(item.timeStampMinute).format('HH:mm'),
+                      value: valueFormatFn(item.last, baseUnit, displayUnit),
+                      last: valueFormatFn(item.last, baseUnit, displayUnit) + unitEnum[displayUnit],
+                    };
+                  })
                   : multiLineChatValue?.map((item) => {
-                      return item?.metricPointList.map((el) => {
-                        return {
-                          ...el,
-                          timeMinute: moment(el.timeStampMinute).format('HH:mm'),
-                          name: item?.name,
-                          value: valueFormatFn(el.last, baseUnit, displayUnit),
-                          last: valueFormatFn(el.last, baseUnit, displayUnit) + unitEnum[displayUnit],
-                        };
-                      });
+                    return item?.metricPointList.map((el) => {
+                      return {
+                        ...el,
+                        timeMinute: moment(el.timeStampMinute).format('HH:mm'),
+                        name: item?.name,
+                        value: valueFormatFn(el.last, baseUnit, displayUnit),
+                        last: valueFormatFn(el.last, baseUnit, displayUnit) + unitEnum[displayUnit],
+                      };
                     });
+                  });
               setUnitDataObj({
                 baseUnit,
                 displayUnit,
