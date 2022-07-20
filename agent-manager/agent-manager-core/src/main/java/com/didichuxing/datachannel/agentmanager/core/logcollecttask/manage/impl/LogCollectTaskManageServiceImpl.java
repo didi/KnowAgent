@@ -313,7 +313,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          */
         if (null == logCollectTaskId) {
             throw new ServiceException(
-                    "入参logCollectTaskId不可为空",
+                    "删除失败：待删除采集任务id不可为空",
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
             );
         }
@@ -322,7 +322,7 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          */
         if (null == logCollectorTaskDAO.selectByPrimaryKey(logCollectTaskId)) {
             throw new ServiceException(
-                    String.format("删除logCollectTask对象{logCollectTaskId=%d}失败，原因为：系统中不存在id={%d}的logCollectTask对象", logCollectTaskId, logCollectTaskId),
+                    "删除失败：待删除采集任务在系统中不存在",
                     ErrorCodeEnum.LOGCOLLECTTASK_NOT_EXISTS.getCode()
             );
         }

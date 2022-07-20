@@ -175,7 +175,7 @@ public class HostManageServiceImpl implements HostManageService {
          */
         if(null == hostId) {
             throw new ServiceException(
-                    "入参hostId不可为空",
+                    "删除失败：待删除主机id不可为空",
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
             );
         }
@@ -185,7 +185,7 @@ public class HostManageServiceImpl implements HostManageService {
         HostDO hostDO = getHostById(hostId);
         if(null == hostDO) {
             throw new ServiceException(
-                    String.format("删除Host对象{id=%d}失败，原因为：系统中不存在id为{%d}的主机对象", hostId, hostId),
+                    "删除失败：待删除主机在系统中不存在",
                     ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
             );
         }
@@ -196,7 +196,7 @@ public class HostManageServiceImpl implements HostManageService {
             List<HostDO> containerList = getContainerListByParentHostName(hostDO.getHostName());
             if(CollectionUtils.isNotEmpty(containerList)) {
                 throw new ServiceException(
-                        String.format("待删除主机={id={%d}}上挂载{%d}个容器，请先删除这些容器", hostId, containerList.size()),
+                        String.format("删除失败：待删除主机上挂载有%d个容器，请先删除这些容器", containerList.size()),
                         ErrorCodeEnum.RELATION_CONTAINER_EXISTS_WHEN_DELETE_HOST.getCode()
                 );
             }
@@ -206,15 +206,10 @@ public class HostManageServiceImpl implements HostManageService {
          */
         List<ServiceDO> serviceDOList = serviceManageService.getServicesByHostId(hostDO.getId());
         if(CollectionUtils.isNotEmpty(serviceDOList)) {
-            List<String> serviceNameList = new ArrayList<>(serviceDOList.size());
-            for (ServiceDO serviceDO : serviceDOList) {
-                serviceNameList.add(serviceDO.getServicename());
-            }
             throw new ServiceException(
                     String.format(
-                            "删除Host对象{id=%d}失败，原因为：该主机存在关联应用 %s，请在应用管理解除对应关联关系再进行删除",
-                            hostId,
-                            JSON.toJSONString(serviceNameList)
+                            "删除失败：待删除主机存在%d个关联的应用",
+                            serviceDOList.size()
                     ),
                     ErrorCodeEnum.RELATION_SERVICES_EXISTS_WHEN_DELETE_HOST.getCode()
             );
@@ -229,7 +224,7 @@ public class HostManageServiceImpl implements HostManageService {
             boolean completeCollect = completeCollect(hostDO);
             if(!completeCollect) {//未完成采集
                 throw new ServiceException(
-                        String.format("删除Host对象{id=%d}失败，原因为：该主机仍存在未被采集端采集完的日志", hostId),
+                        "删除失败：待删除主机存在未被采集完的日志",
                         ErrorCodeEnum.AGENT_COLLECT_NOT_COMPLETE.getCode()
                 );
             }
@@ -248,7 +243,7 @@ public class HostManageServiceImpl implements HostManageService {
                 }
             } else {
                 throw new ServiceException(
-                        String.format("待删除主机={id=%d}上关联有Agent，请先删除关联的Agent={id=%d}", hostId, agentDO.getId()),
+                        "删除失败：待删除主机关联有 Agent，请先删除关联的 Agent",
                         ErrorCodeEnum.RELATION_AGENT_EXISTS_WHEN_DELETE_HOST.getCode()
                 );
             }

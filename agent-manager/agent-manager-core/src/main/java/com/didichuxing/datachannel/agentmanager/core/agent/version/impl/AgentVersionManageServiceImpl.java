@@ -151,7 +151,7 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         AgentVersionDO agentVersionDO = getById(agentVersionId);
         if(null == agentVersionDO) {
             throw new ServiceException(
-                    String.format("待删除 AgentVersion={id=%d}在系统中不存在", agentVersionId),
+                    "删除失败：待删除 Agent 版本在系统中不存在",
                     ErrorCodeEnum.AGENT_VERSION_NOT_EXISTS.getCode()
             );
         }
@@ -161,7 +161,7 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         List<AgentDO> relationAgentDOList = agentManageService.getAgentsByAgentVersionId(agentVersionId);
         if(CollectionUtils.isNotEmpty(relationAgentDOList)) {
             throw new ServiceException(
-                    String.format("待删除 AgentVersion={id=%d}在系统中存在关联的Agent={%s}，无法删除对应 AgentVersion ", agentVersionId, JSON.toJSONString(relationAgentDOList)),
+                    String.format("删除失败：待删除 Agent 版本在系统中存在%d个关联的 Agent", relationAgentDOList.size()),
                     ErrorCodeEnum.AGENT_VERSION_RELATION_EXISTS.getCode()
             );
         }

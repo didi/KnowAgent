@@ -226,7 +226,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         AgentDO agentDO = getAgentByHostName(hostName);
         if (null == agentDO) {
             throw new ServiceException(
-                    String.format("根据hostName删除Agent对象失败，原因为：系统中不存在hostName为{%s}的Agent对象", hostName),
+                    "删除失败：待删除 Agent 在系统中不存在",
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
             );
         }
@@ -401,7 +401,7 @@ public class AgentManageServiceImpl implements AgentManageService {
         AgentDO agentDO = getById(id);
         if (null == agentDO) {
             throw new ServiceException(
-                    String.format("系统中不存在id={%d}的Agent对象", id),
+                    "删除失败：待删除 Agent 在系统中不存在",
                     ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
             );
         }

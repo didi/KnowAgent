@@ -315,14 +315,14 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
     private void handleRemoveKafkaClusterById(Long id, boolean ignoreLogCollectTaskAndAgentRelationCheck, String operator) throws ServiceException {
         if (null == id) {
             throw new ServiceException(
-                    "入参id不可为空",
+                    "删除失败：待删除接收端id不可为空",
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
             );
         }
         KafkaClusterPO kafkaClusterPO = kafkaClusterDAO.selectByPrimaryKey(id);
         if (null == kafkaClusterPO) {
             throw new ServiceException(
-                    String.format("根据id={%d}删除KafkaCluster对象失败，原因为：系统中不存在id为{%d}的KafkaCluster对象", id, id),
+                    "删除失败：待删除接收端在系统中不存在",
                     ErrorCodeEnum.KAFKA_CLUSTER_NOT_EXISTS.getCode()
             );
         }
@@ -333,14 +333,14 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
             List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getLogCollectTaskListByKafkaClusterId(id);
             if(CollectionUtils.isNotEmpty(logCollectTaskDOList)) {
                 throw new ServiceException(
-                        String.format("待删除KafkaCluster={id=%d}存在{%d}个关联的LogCollectTask，请先解除关联", id, logCollectTaskDOList.size()),
+                        String.format("删除失败：待删除接收端存在%d个关联的采集任务", logCollectTaskDOList.size()),
                         ErrorCodeEnum.KAFKA_CLUSTER_DELETE_FAILED_CAUSE_BY_RELA_LOGCOLLECTTASK_EXISTS.getCode()
                 );
             }
             List<AgentDO> agentDOList = agentManageService.getAgentListByKafkaClusterId(id);
             if(CollectionUtils.isNotEmpty(agentDOList)) {
                 throw new ServiceException(
-                        String.format("待删除KafkaCluster={id=%d}存在{%d}个关联的Agent，请先解除关联", id, agentDOList.size()),
+                        String.format("删除失败：待删除接收端存在%d个关联的Agent", agentDOList.size()),
                         ErrorCodeEnum.KAFKA_CLUSTER_DELETE_FAILED_CAUSE_BY_RELA_AGENT_EXISTS.getCode()
                 );
             }
