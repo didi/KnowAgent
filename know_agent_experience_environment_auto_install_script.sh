@@ -53,6 +53,9 @@ function Start_Kafka_ZK(){
 	nohup sh $Dir/kafka_"${kafka_version}"/bin/zookeeper-server-start.sh $Dir/kafka_"${kafka_version}"/config/zookeeper.properties &
 	sleep 3
 	nohup sh $Dir/kafka_"${kafka_version}"/bin/kafka-server-start.sh $Dir/kafka_"${kafka_version}"/config/server.properties &
+	sleep 5
+	sh $Dir/kafka_"${kafka_version}"/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic metrics
+	sh $Dir/kafka_"${kafka_version}"/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic errorlogs
 }
 
 function Start_LogPrint(){
