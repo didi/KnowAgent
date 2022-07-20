@@ -8,7 +8,7 @@ import './index.less';
 
 const LoopAddLogFileType = (props: any) => {
   const { list, remove, getKey, push, replace, resetList, sortForm } = useDynamicList<any>(['']);
-  const { setFieldsValue, getFieldValue } = props.form;
+  const { setFieldsValue, getFieldValue, getFieldsValue } = props.form;
   const logPathList = useRef<any>([]);
   const copylogPathList = useRef<any>([]);
   const allvalidate = useRef<any>(false);
@@ -17,6 +17,7 @@ const LoopAddLogFileType = (props: any) => {
   const [fileArrList, setFileArrList] = useState([]);
   const [isModalVisible, setVisible] = useState(false);
   const [previewPath, setPreviewPath] = useState([]);
+  const [hookPathList, setHookPathList] = useState(['']);
 
   const options =
     hostNameList.length > 0 &&
@@ -42,11 +43,15 @@ const LoopAddLogFileType = (props: any) => {
     const copylist = cloneDeep(logPathList.current);
     const delValue = copylist.splice(index, 1);
     logPathList.current = copylist;
-    const copyPathlist = cloneDeep(copylogPathList.current);
-    copyPathlist.splice(copylogPathList.current.indexOf(delValue), 1);
-    copylogPathList.current = copyPathlist;
+    copylogPathList.current = copylist;
     setPreviewPath(logPathList.current);
+    props.setFilePathList(logPathList.current);
+    const newList = hookPathList.map((path, i) => {
+      return index == i ? '' : path;
+    });
     remove(index);
+    setHookPathList(newList);
+    props.setHookPathList(newList);
   };
 
   const onSelectChange = (value) => {
@@ -133,26 +138,39 @@ const LoopAddLogFileType = (props: any) => {
                   required: true,
                   validator: (rule: any, value: string, cb: any) => {
                     setTimeout(() => {
-                      const listFiterLength = logPathList.current.filter((item) => item == value).length;
+                      logPathList.current[index] = value;
+                      if (JSON.stringify(logPathList.current) === JSON.stringify(copylogPathList.current)) {
+                        if (
+                          value &&
+                          logPathList.current.findIndex((p, i) => {
+                            return i < index && p == value;
+                          }) < 0
+                        ) {
+                          cb();
+                        }
+                      }
                       if (!value) {
                         rule.message = '请输入日志文件路径';
+                        copylogPathList.current[index] = value;
                         cb(`请输入日志文件路径${getKey(index)}`);
-                      } else if (listFiterLength > 1 && (allvalidate.current ? copylogPathList.current.includes(value) : true)) {
+                      } else if (copylogPathList.current.includes(value)) {
                         rule.message = '日志文件路径不能重复';
+                        copylogPathList.current[index] = value;
                         cb(`请输入日志文件路径重复`);
                       } else {
+                        copylogPathList.current[index] = value;
                         props.setFilePathList(logPathList.current.filter((item: any) => item));
                         cb();
                       }
-                      copylogPathList.current.push(value);
-                    }, 100);
+                      // console.log(logPathList.current, copylogPathList.current, index, value);
+                    }, 0);
                   },
                 },
               ]}
             >
               <Input
                 key={getKey(index)}
-                onChange={(val) => debouncedCallApi(getKey(index), val)}
+                // onChange={(val) => debouncedCallApi(getKey(index), val)}
                 className={`step2_file_path_input${getKey(index)}`}
                 placeholder="如：/home/xiaoju/changjiang/logs/app.log"
                 name={`step2_file_path_${getKey(index)}`}
@@ -179,11 +197,13 @@ const LoopAddLogFileType = (props: any) => {
   );
 
   useEffect(() => {
-    resetList(props.filePathList);
+    resetList(props.originFilePathList);
     if (props.editUrl) {
-      logPathList.current = [...props.filePathList];
+      setHookPathList([...props.originFilePathList]);
+      logPathList.current = [...props.originFilePathList];
+      copylogPathList.current = [...props.originFilePathList];
     }
-  }, [props.filePathList, props.editUrl]);
+  }, [props.originFilePathList, props.editUrl]);
 
   useEffect(() => {
     getRuleTips().then((res) => {
@@ -233,11 +253,13 @@ const LoopAddLogFileType = (props: any) => {
           <Col span={22}>
             <Form.Item label="日志文件路径" labelCol={{ span: 5 }} name={`step2_filePath_0_example`}>
               <AutoComplete onSearch={onSearch}>
-                {previewPath.map((path: string) => (
-                  <AutoComplete.Option key={path} value={path}>
-                    {path}
-                  </AutoComplete.Option>
-                ))}
+                {previewPath
+                  .filter((item) => item)
+                  .map((path: string) => (
+                    <AutoComplete.Option key={path} value={path}>
+                      {path}
+                    </AutoComplete.Option>
+                  ))}
               </AutoComplete>
             </Form.Item>
           </Col>

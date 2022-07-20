@@ -16,7 +16,8 @@ const CollectLogConfiguration = (props: any) => {
           editUrl={props.editUrl}
           hostNames={props.hostNames}
           suffixfilesList={props.suffixfilesList}
-          filePathList={props.filePathList}
+          originFilePathList={props.originFilePathList}
+          setHookPathList={props.setHookPathList}
           setFilePathList={props.setFilePathList}
           slicingRuleLogList={props.slicingRuleLogList}
           setLogListFile={setLogListFile}
