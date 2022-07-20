@@ -21,7 +21,7 @@
 
 ### ![image-20220624155844938](assets/创建know agent一站式体验环境安装目录.png)2.2.2 拷贝安装脚本至安装目录
 
-​	请将[《Know Agent一站式体验环境一键安装脚本》](know_agent_experience_environment_auto_install_script.sh)拷贝至上一步创建的安装目录中，如下图：
+​	请将[《Know Agent一站式体验环境一键安装脚本》](../know_agent_experience_environment_auto_install_script.sh)拷贝至上一步创建的安装目录中，如下图：
 
 ![image-20220624160111592](assets/拷贝Know Agent一站式体验环境一键安装脚本.png)
 
