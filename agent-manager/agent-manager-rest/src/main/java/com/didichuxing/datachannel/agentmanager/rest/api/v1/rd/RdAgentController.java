@@ -87,7 +87,7 @@ public class RdAgentController {
     public Result<List<String>> listFiles(
             @RequestBody ListFilesDTO listFilesDTO
     ) {
-        return Result.buildSucc(agentManageService.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular()));
+        return agentManageService.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular());
     }
 
 }

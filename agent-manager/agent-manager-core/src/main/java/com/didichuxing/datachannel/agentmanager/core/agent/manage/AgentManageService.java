@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.manage;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 
 import java.util.List;
@@ -107,7 +108,7 @@ public interface AgentManageService {
      * @param suffixMatchRegular 文件后缀名匹配规则
      * @return 返回根据给定路径 & 文件后缀匹配正则匹配到的符合匹配规则的文件名集
      */
-    List<String> listFiles(String hostName, String path, String suffixMatchRegular);
+    Result<List<String>> listFiles(String hostName, String path, String suffixMatchRegular);
 
     /**
      * @return 返回系统全量 agent 数
