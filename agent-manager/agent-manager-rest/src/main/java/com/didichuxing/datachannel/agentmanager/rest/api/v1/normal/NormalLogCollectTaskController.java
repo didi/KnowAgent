@@ -152,7 +152,7 @@ public class NormalLogCollectTaskController {
             @RequestBody ListFilesDTO listFilesDTO
 
     ) {
-        return Result.buildSucc(agentManageServiceExtension.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular()));
+        return agentManageServiceExtension.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular());
     }
 
     @ApiOperation(value = "根据给定日志样本与切片时间戳串获取对应切片规则配置", notes = "")
@@ -169,7 +169,7 @@ public class NormalLogCollectTaskController {
             @RequestParam(value = "hostName") String hostName,
             @RequestParam(value = "path") String path
     ) {
-        return Result.buildSucc(agentManageServiceExtension.readFileContent(hostName, path));
+        return agentManageServiceExtension.readFileContent(hostName, path);
     }
 
     @ApiOperation(value = "根据给定日志切片条件与待切片日志内容获取对应日志切片结果集", notes = "")

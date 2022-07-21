@@ -3,6 +3,8 @@ package com.didichuxing.datachannel.agent.node.service.http.server;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.io.IOUtils;
@@ -40,14 +42,32 @@ public class Path extends Handler implements HttpHandler {
         List<String> validFileList = new ArrayList<>();
         if (StringUtils.isBlank(path)) {
             LOGGER.error("path is empty!!");
-            writer(JSON.toJSONString(Collections.EMPTY_LIST), httpExchange);
+            writer(
+                    JSON.toJSONString(
+                            Result.build(
+                                    ErrorCodeEnum.ILLEGAL_PARAMS.getCode(),
+                                    "路径参数不可为空",
+                                    JSON.toJSONString(Collections.EMPTY_LIST)
+                            )
+                    ),
+                    httpExchange
+            );
             return;
         }
         File fileOrDir = new File(path);
 
         if (!fileOrDir.exists()) {
             LOGGER.error("file not found, path: {}", path);
-            writer(JSON.toJSONString(Collections.EMPTY_LIST), httpExchange);
+            writer(
+                    JSON.toJSONString(
+                            Result.build(
+                                    ErrorCodeEnum.FILE_NOT_EXISTS.getCode(),
+                                    "路径不存在",
+                                    JSON.toJSONString(Collections.EMPTY_LIST)
+                            )
+                    ),
+                    httpExchange
+            );
             return;
         }
         if (fileOrDir.isDirectory()) {
@@ -95,6 +115,13 @@ public class Path extends Handler implements HttpHandler {
                 }
             }
         }
-        writer(JSON.toJSONString(validFileList), httpExchange);
+        writer(
+                JSON.toJSONString(
+                        Result.buildSucc(
+                                validFileList
+                        )
+                ),
+                httpExchange
+        );
     }
 }
