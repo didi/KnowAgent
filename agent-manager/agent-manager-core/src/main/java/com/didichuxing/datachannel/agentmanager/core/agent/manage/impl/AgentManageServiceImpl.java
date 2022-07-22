@@ -2,6 +2,7 @@ package com.didichuxing.datachannel.agentmanager.core.agent.manage.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
@@ -356,7 +357,7 @@ public class AgentManageServiceImpl implements AgentManageService {
     }
 
     @Override
-    public List<String> listFiles(String hostName, String path, String suffixMatchRegular) {
+    public Result<List<String>> listFiles(String hostName, String path, String suffixMatchRegular) {
         /*
          * 根据对应主机类型获取 其 real path
          */

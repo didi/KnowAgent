@@ -2,6 +2,8 @@ package com.didichuxing.datachannel.agent.node.service.http.server;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.io.IOUtils;
@@ -33,24 +35,58 @@ public class FileContent extends Handler implements HttpHandler {
         String path = json.getString("path");
         if (StringUtils.isBlank(path)) {
             LOGGER.error("path is empty!!");
-            writer(JSON.toJSONString(Collections.EMPTY_LIST), httpExchange);
+            writer(
+                    JSON.toJSONString(
+                            Result.build(
+                                    ErrorCodeEnum.ILLEGAL_PARAMS.getCode(),
+                                    "路径参数不可为空",
+                                    JSON.toJSONString(Collections.EMPTY_LIST)
+                            )
+                    ),
+                    httpExchange
+            );
             return;
         }
         File fileOrDir = new File(path);
         if (!fileOrDir.exists()) {
             LOGGER.error("file not found, path: {}", path);
-            writer(JSON.toJSONString(Collections.EMPTY_LIST), httpExchange);
+            writer(
+                    JSON.toJSONString(
+                            Result.build(
+                                    ErrorCodeEnum.FILE_NOT_EXISTS.getCode(),
+                                    "待加载文件内容的文件不存在",
+                                    JSON.toJSONString(Collections.EMPTY_LIST)
+                            )
+                    ),
+                    httpExchange
+            );
             return;
         }
         if (fileOrDir.isDirectory()) {
             LOGGER.error("file is directory, path: {}", path);
-            writer(JSON.toJSONString(Collections.EMPTY_LIST), httpExchange);
+            writer(
+                    JSON.toJSONString(
+                            Result.build(
+                                    ErrorCodeEnum.FILE_IS_DIRECTORY.getCode(),
+                                    "待加载文件内容的文件为目录",
+                                    JSON.toJSONString(Collections.EMPTY_LIST)
+                            )
+                    ),
+                    httpExchange
+            );
             return;
         }
         /*
          * 读取文件内容，防止文件过大，最多读取100行文件内容
          */
-        writer(getFileContent(fileOrDir), httpExchange);
+        writer(
+                JSON.toJSONString(
+                        Result.buildSucc(
+                                getFileContent(fileOrDir)
+                        )
+                ),
+                httpExchange
+        );
     }
 
     private String getFileContent(File file) {
@@ -62,7 +98,6 @@ public class FileContent extends Handler implements HttpHandler {
             Integer lines = 0;
             while ((line = br.readLine()) != null && lines < 100) {
                 fileContent += line + System.getProperty("line.separator", "\n");
-                ;
                 lines++;
             }
         } catch (FileNotFoundException e) {

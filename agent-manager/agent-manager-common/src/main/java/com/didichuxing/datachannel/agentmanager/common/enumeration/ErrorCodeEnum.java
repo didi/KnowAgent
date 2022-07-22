@@ -100,6 +100,8 @@ public enum ErrorCodeEnum {
      */
     FILE_UPLOAD_FAILED(31000, "文件上传失败"),
     FILE_DOWNLOAD_FAILED(31001, "文件下载失败"),
+    FILE_NOT_EXISTS(31002, "文件不存在"),
+    FILE_IS_DIRECTORY(31003, "文件为目录"),
     /*
      * AgentOperationTask操作 相关 32000 ~ 32999
      */

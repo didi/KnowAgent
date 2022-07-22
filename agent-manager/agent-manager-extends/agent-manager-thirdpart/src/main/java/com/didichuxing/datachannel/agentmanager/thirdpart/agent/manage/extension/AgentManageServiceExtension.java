@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.operationtask.AgentOperationTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
@@ -72,8 +73,8 @@ public interface AgentManageServiceExtension {
      * @param suffixRegular 文件后缀匹配正则
      * @return 根据给定主文件路径与文件后缀匹配正则获取满足匹配对应规则的文件集
      */
-    List<String> listFiles(String hostName, String path, String suffixRegular);
+    Result<List<String>> listFiles(String hostName, String path, String suffixRegular);
 
-    String readFileContent(String hostName, String path);
+    Result<String> readFileContent(String hostName, String path);
 
 }

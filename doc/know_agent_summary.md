@@ -15,7 +15,7 @@
 
 ​	除此以外，超大规模采集引擎集群的运维保障也是一个坑。首先是采集引擎复杂的采集配置就是一个极易出错的环节，而且配置出错以后往往无法及时发现，通常需要通过业务方反向传至运维方才能感知配置错误，这甚至会影响到业务的正确运行，如何降低运维人员配置采集引擎的心智负担，提升配置体验？
 
-​	再者，如何做好采集引擎的可观测性，能帮助资深采集引擎运维人员或采集引擎研发人员尽快定位、问题？以往，运维人员或研发人员定位故障问题或性能瓶颈点，通常需要借助很多第三方工具、登录采集引擎宿主机去查看相关指标、日志，费时费力、效率低下不说，主要是很多关键指标因没能及时采集，导致定位问题时无法通过这些关键指标定位问题线索，只能靠日志、源码、经验在脑海中复现问题发生现场，这不是一般运维与研发人员做的来的，换句话说，如果没有良好的可观测性，将大幅提高问题定位门槛与成本。
+​	再者，如何做好采集引擎的可观测性，能帮助资深采集引擎运维人员或采集引擎研发人员尽快定位问题？以往，运维人员或研发人员定位故障问题或性能瓶颈点，通常需要借助很多第三方工具、登录采集引擎宿主机去查看相关指标、日志，费时费力、效率低下不说，主要是很多关键指标因没能及时采集，导致定位问题时无法通过这些关键指标定位问题线索，只能靠日志、源码、经验在脑海中复现问题发生现场，这不是一般运维与研发人员做的来的，换句话说，如果没有良好的可观测性，将大幅提高问题定位门槛与成本。
 
 ​	最后，如何做好超大规模采集引擎集群的治理，能将超大规模采集集群的运维保障工作平滑地交付缺乏采集引擎先验知识的普通运维团队？这些都是必须要解决的问题。
 
@@ -71,7 +71,7 @@
 ​	接入包括两块：
 
 1. 采集引擎：采集引擎支持自动注册，自动上报其宿主机信息，上报的宿主机信息可作为元数据的一部分。
-2. 元数据：元数据包括主机、应用、以及主机-应用关联关系。元数据信息即可通过界面操作手动维护，也可通过文件导入、与 CMDB 自动同步方式进行维护。
+2. 元数据：元数据包括主机、应用、以及主机-应用关联关系。元数据信息即可通过页面操作手动维护，也可通过 Excel 文件导入方式进行维护。
 
 ##### 采集任务易配置
 
@@ -135,7 +135,7 @@
 
 ​	Know Agent 最小外部依赖组件有 2 个：
 
-1. MySQL：用于存储 Agent Manager 元数据，与 Agent 上报的指标、错误日志数据（Agent上报的指标、错误日志支持Elasticsearch存储以应对大规模的 Agent 集群管控）。
+1. MySQL：用于存储 Agent Manager 元数据，与 Agent 上报的指标、错误日志数据。Agent上报的指标、错误日志数据可扩展支持其他存储引擎（如：Elasticsearch）存储以应对大规模的 Agent 集群管控。扩展方式参见[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](know_agent_metrics_error_logs_store_extend.md)。
 2. Kafka：作为采集的日志数据、以及 Agent 上报的指标、错误日志数据的消息总线。
 
 ​	Agent 有三个数据流：
@@ -144,7 +144,7 @@
 2. 指标流：用于将Agent、采集任务相关指标上报至Kafka。
 3. 错误日志流：用于将Agent错误日志上报至Kafka。
 
-​	Agent Manager 启动后会持续消费 Agent 指标流与错误日志流对应的 Topic，然后将指标、错误日志数据根据配置写入对应存储（默认存储为MySQL，存储类型支持：MySQL、Elasticsearch，并支持通过接口方式扩展其他存储），Agent Manager 将根据这些数据对所管控的 Agent、采集任务进行健康度巡检、故障诊断，以及指标展示。
+​	Agent Manager 启动后会持续消费 Agent 指标流与错误日志流对应的 Topic，然后将指标、错误日志数据根据配置写入对应存储引擎，Agent Manager 将根据这些数据对所管控的 Agent、采集任务进行健康度巡检、故障诊断，以及指标展示。
 
 ## Agent 架构
 
@@ -164,7 +164,7 @@
 
 ## Agent Manager架构
 
-![Agent-Manager 架构](assets/Agent-Manager 架构.png)
+![image-20220721194358194](assets/Agent-Manager 架构.png)
 
 ## 特性
 
@@ -201,195 +201,17 @@
 
 ## **展望**
 
-​	未来将推出 Know Agent 2.0，2.0 版本相比当前版本，将在如下方面进行改进：
+​	未来将在如下两个方面进行改进：
 
-**Agent**
-
-- 去依赖，确保 Agent 内核独立、稳定：
-  - 去 Kafka 依赖：
-    - 指标数据流：Agent 提供基于 Http 协议的指标查询 Restful 接口，Agent-Manager 通过轮询该服务接口进行指标采集以取代目前指标上报 Kafka 方式。
-    - 错误日志数据流：Agent 提供基于 Http 协议的其自身日志文件读取/下载 Restful 接口，Agent-Manager 通过该服务接口获取 Agent 相关错误日志数据。
-
-  - 去 Agent-Manager 依赖：Agent 配置变更通过配置文件变动感知，以取代向 Agent-Manager 发起请求获取配置。Agent 提供定时获取配置并渲染成 Agent 配置文件对应的插件接口，并提供默认的基于 Agent-Manager 配置定时获取、渲染配置插件。
-
-- Pipeline 具备 Aggregator 能力，更好的适配各种类型的数据采集场景（包括但不限于 IOT 数据）：
-  - Pipeline 模式：单个或多个 Source -> Processor Chain（可选） -> Aggregator（可选） -> Processor Chain（可选） -> 单个或多个 Sink。
-
-- 插件化设计，具备高可扩展性，为数据采集多样化、生态化奠定基础：
-  - 插件类型：
-    - ConfigLoadCrontab Plugin：定时获取配置并渲染成 Agent 配置文件的插件。
-    - Source Plugin：数据源读取插件。
-    - Sink Plugin：数据发送插件。
-    - Channel Plugin：数据临时存放的队列插件。
-    - Limiter Plugin：限流插件。
-    - Processor Chain Plugin：数据处理算子（集）插件。
-    - Data Serialization Protocol Plugin：数据序列化协议插件。
-    - Metrics System Plugin：指标系统插件。
-    - Http Service Plugin：Http 服务插件。
-    - Cleaner Plugin：清理插件。
-
-  - 提供常用企业级插件：
-
-    - ConfigLoadCrontab Plugin：
-      - Agent Manage rConfig Loader
-
-    - Source Plugin：
-
-      - TailSource：
-        - 采集类型，新增 Directory 类型采集，共支持两种采集类型：
-          - Master File（参考：Know Agent 1.0 采集）
-          - Directory
-            - 支持子目录递归采集。
-            - 目录内的多文件组采集支持分时调度，非一个文件组对应一个线程采集。确保即使在目录内存在巨量文件组的场景下，仍具备可控的线程资源消耗。
-
-        - 采集配置
-          - 新增行内切片支持。
-          - 切片规则新增正则切片方式，共支持两种类型的切片规则：
-            - 日期/时间模式串切片（Know Agent 1.0 方式）。
-            - 正则切片。
-
-          - 文件过滤支持黑、白名单自由组合
-          - 新增采集起始时间设置，三种类型
-            - Earliest
-            - Lastest
-            - 自定义时间
-
-      - Http Source
-      - JDBC Source
-
-    - Sink Plugin：
-      - Kafka Sink
-      - Elasticsearch Sink
-
-    - Channel Plugin：
-      - Memory Channel
-
-    - Limiter Plugin
-      - Bytes Limiter
-      - CPU Usage Limiter
-
-    - Processor Chain Plugin：
-      -  Data Filter Processor
-      - Field Extract Processor：
-        - JSON
-        - XML
-        - Regular Expression
-
-    - Data Serialization Protocol Plugin：
-      - JSON
-      - ProtocolBuffer
-
-    - Metrics Plugin：
-      - System Metrics
-      - Process Metrics
-      - Agent Business Metrics
-      - Collect Task Metrics
-
-    - Http Service Plugin：
-      - Metrics Query Service
-      - File Content Read Service
-      - File Download Service
-      - Agent Log File Download Service
-      - File System Browse Service
-      - File Name Match Rule Preview Service
-      - File Name Suffix Match Rule Preview Service
-
-    - Cleaner Plugin
-      - Log File Cleaner
-
-  - 插件支持多语言开发
-    - C/C++
-    - Lua
-    - Go
-
-- 跨平台支持：
-  - Linux
-  - AIX
-  - Windows
-
-- 更高的性能与更低的资源消耗：基于 C++ 开发，降低内存、CPU 消耗，提升采集性能。
-
-**Agent-Manager**
-
-- 去 Kafka 依赖，仅依赖 MySQL：
-  - Agent 指标获取通过轮询Agent对应指标服务接口方式实现。
-
-- 高可扩展，具备强大的泛化管控能力。如：管控不同类型的 Agent、采集任务、接收端等：
-  - 核心 E-R 元数据存储弱 Schema 化，结构化存储仅保留必要信息（如：id、类型）与关系数据，业务字段 JSON 化，具体业务操作插件化实现。 Agent-Manager 根据类型、版本信息装载、调用不同的插件实现，确保核心流程的稳定。
-  - 插件化设计：
-    - 各具体业务操作全部以插件化方式实现。
-    - 提供常用企业级插件：
-      - 采集任务
-        - MasterFile2Kafka 类型：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-        - Directory2Kafka 类型：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-        - JDBC2Kafka 类型：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-        - Http2Kafka 类型采：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-        - MasterFile2Elasticsearch 类型：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-        - Directory2Elasticsearch 类型：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-        - JDBC2Elasticsearch 类型：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-        - Http2Elasticsearch 类型：
-          - 采集任务管理插件
-          - 采集任务指标持久化、可视化查询插件
-          - 采集任务健康度巡检插件
-          - 采集任务故障诊断插件
-
-      - Agent
-        - Agent 2.0 管理插件
-        - Agent 2.0 指标持久化、可视化查询插件
-        - Agent 2.0 健康度巡检插件
-        - Agent 2.0 故障诊断插件
-
-      - 接收端
-        - Kafka 类型接收端管理插件
-        - Elasticsearch 类型接收端管理插件
-
-      - Agent/采集配置下发：
-        - 配置渲染插件：
-          - Agent 2.0 配置渲染插件
-          - MasterFile2Kafka 类型采集任务配置渲染插件
-          - Directory2Kafka 类型采集任务配置渲染插件
-          - JDBC2Kafka 类型采集任务配置渲染插件
-          - Http2Kafka 类型采集任务配置渲染插件
-          - MasterFile2Elasticsearch 类型采集任务配置渲染插件
-          - Directory2Elasticsearch 类型采集任务配置渲染插件
-          - JDBC2Elasticsearch 类型采集任务配置渲染插件
-          - Http2Elasticsearch 类型采集任务配置渲染插件
-
-        - 配置下发时的主机过滤插件：
-          - 基于主机全量属性的 SQL 语法过滤插件
-
-- 更好的采集任务、Agent 故障修复体验：
-  - 采集任务、Agent 故障修复向导化
-
+1. ​	全面支持容器日志采集：
+   - 支持各类容器日志存储方式的采集：stdout、hostPath、emptyDir、PV。
+   - Agent 支持 DaemonSet 与 SideCar 两种部署模式，以灵活适配各场景需求。
+   - 支持 k8s 元数据注入：namespace、pod、node、env var、lables。
+   - 支持基于 k8s 自动构建元数据体系（应用 - 主机 - 容器）与容器内路径到宿主机路径的映射。
+   - 支持包含容器日志采集场景的采集任务健康度巡检、故障诊断（主要针对容器漂移场景）。
+   - 支持容器日志采集完成后的日志自动清理。
+2. ​	Agent 上报的指标、错误日志数据支持 Elasticsearch 存储，Agent-Manager 原生支持大规模的 Agent 集群管控。
 
 **持续回馈开源社区**
 
-​	Know Agent 已经开源（项目地址：https://github.com/didi/LogiAM），作为在滴滴内部经过多年的大量复杂、核心场景验证过的采集引擎与管控平台，我们会持续对其进行核心业务抽象，回馈社区，我们也希望热心的社区同学和我们交流想法，共同提升 Know Agent 的功能和体验。
+​	Know Agent 已经开源（项目地址：https://github.com/didi/KnowAgent），作为在滴滴内部经过多年的大量复杂、核心场景验证过的采集引擎与管控平台，我们会持续对其进行核心业务抽象，回馈社区，我们也希望热心的社区同学和我们交流想法，共同提升 Know Agent 的功能和体验。

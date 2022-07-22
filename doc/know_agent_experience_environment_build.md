@@ -21,7 +21,7 @@
 
 ### ![image-20220624155844938](assets/创建know agent一站式体验环境安装目录.png)2.2.2 拷贝安装脚本至安装目录
 
-​	请将[《Know Agent一站式体验环境一键安装脚本》](know_agent_experience_environment_auto_install_script.sh)拷贝至上一步创建的安装目录中，如下图：
+​	请将[《Know Agent一站式体验环境一键安装脚本》](../know_agent_experience_environment_auto_install_script.sh)拷贝至上一步创建的安装目录中，如下图：
 
 ![image-20220624160111592](assets/拷贝Know Agent一站式体验环境一键安装脚本.png)
 
@@ -46,18 +46,10 @@
 
 # 3. 开始体验
 
-## 3.1 在 Agent-Manager 配置 Agent 的指标流、错误日志流对应的接收端
+## 3.1 进入 Agent-Manager 管理平台
 
-​	打开浏览器，输入地址：http://请替换为KnowAgent一站式体验环境安装主机ip:9010，进入 Agent-Manager 管理平台，在**接收端管理**模块，点击**新增接收端**按钮，进入**新增接收端**页面。
+​	打开浏览器，输入地址：http://请替换为KnowAgent一站式体验环境安装主机ip:9010，即可进入 Agent-Manager 管理平台。
 
-### 3.1.1 配置接收端集群地址
-
-​	在**新增接收端**页面的**集群地址**输入框中填写`localhost:9092`。	
-
-### 3.1.2 配置 Topic
-
-​	在**新增接收端**页面，勾选**设置为默认指标流接受集群**与**设置为默认错误日志流接受集群**两个选项，并在**指标流接收Topic**与**错误日志流接收Topic**下拉列表框分别选择 metrics 与 errorlogs。
-
-## 3.2 各项功能使用
+## 3.2 体验各项功能
 
 ​	见[《Know Agent用户使用手册》](know_agent_user_manual.md)。

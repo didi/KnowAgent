@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.operationtask.AgentOperationTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
@@ -133,7 +134,7 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
     }
 
     @Override
-    public List<String> listFiles(String hostName, String path, String suffixRegular) {
+    public Result<List<String>> listFiles(String hostName, String path, String suffixRegular) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         Map<String, String> contentMap = new HashMap<>();
@@ -146,14 +147,14 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
                 JSON.toJSONString(contentMap)
         );
         if(StringUtils.isNotBlank(result)) {
-            return JSON.parseObject(result, List.class);
+            return JSON.parseObject(result, Result.class);
         } else {
             return null;
         }
     }
 
     @Override
-    public String readFileContent(String hostName, String path) {
+    public Result<String> readFileContent(String hostName, String path) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         Map<String, String> contentMap = new HashMap<>();
@@ -164,7 +165,11 @@ public class DefaultAgentManageServiceExtensionImpl implements AgentManageServic
                 headers,
                 JSON.toJSONString(contentMap)
         );
-        return result;
+        if(StringUtils.isNotBlank(result)) {
+            return JSON.parseObject(result, Result.class);
+        } else {
+            return null;
+        }
     }
 
 }
