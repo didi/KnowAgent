@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Collapse } from '@didi/dcloud-design';
-import { collectLogTypes, codingFormatTypes, collectLogFormItemLayout } from './config';
+import { collectLogTypes, codingFormatTypes, collectSpliceRuleItemLayout } from './config';
 import './index.less';
 import LogFileRule from './LogFileRule';
 
@@ -9,7 +9,7 @@ const CollectLogConfiguration = (props: any) => {
 
   return (
     <div className="set-up collect-log-config">
-      <Form form={props.form} {...collectLogFormItemLayout} layout={'vertical'}>
+      <Form form={props.form} {...collectSpliceRuleItemLayout} layout={'vertical'}>
         <LogFileRule
           form={props.form}
           setLogListFile={setLogListFile}

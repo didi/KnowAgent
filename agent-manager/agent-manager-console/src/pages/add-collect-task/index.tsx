@@ -202,36 +202,39 @@ const StepsForm = (props: any) => {
   };
 
   const handlePrev = () => {
-    form
-      .validateFields()
-      .then(() => {
-        setCurrentStep((prevStep) => {
-          return prevStep - 1;
-        });
-      })
-      .catch((errors) => {
-        if (errors) {
-          console.log(errors);
-          const errorReg = validateStepRegex[currentStep];
-          const err = {} as any;
-          const contentErrorKey = errors.errorFields.find((errorItem) => {
-            if (errorReg.test(errorItem.name[0])) {
-              return true;
-            }
-            if (currentStep == 2 && validateStepRegex[1].test(errorItem.name[0])) {
-              return true;
-            }
-            return false;
-          });
-          // 只有相应的步骤出现未填写参数的情况，才会阻断下一步
-          if (contentErrorKey) {
-            return;
-          }
-          setCurrentStep((prevStep) => {
-            return prevStep - 1;
-          });
-        }
-      });
+    setCurrentStep((prevStep) => {
+      return prevStep - 1;
+    });
+    // form
+    //   .validateFields()
+    //   .then(() => {
+    //     setCurrentStep((prevStep) => {
+    //       return prevStep - 1;
+    //     });
+    //   })
+    //   .catch((errors) => {
+    //     if (errors) {
+    //       console.log(errors);
+    //       const errorReg = validateStepRegex[currentStep];
+    //       const err = {} as any;
+    //       const contentErrorKey = errors.errorFields.find((errorItem) => {
+    //         if (errorReg.test(errorItem.name[0])) {
+    //           return true;
+    //         }
+    //         if (currentStep == 2 && validateStepRegex[1].test(errorItem.name[0])) {
+    //           return true;
+    //         }
+    //         return false;
+    //       });
+    //       // 只有相应的步骤出现未填写参数的情况，才会阻断下一步
+    //       if (contentErrorKey) {
+    //         return;
+    //       }
+    //       setCurrentStep((prevStep) => {
+    //         return prevStep - 1;
+    //       });
+    //     }
+    //   });
   };
 
   const processParameters = (values: any) => {
@@ -550,71 +553,75 @@ const StepsForm = (props: any) => {
   }, []);
 
   return (
-    <Spin style={{ padding: '20px 40px' }} spinning={loading}>
+    <Spin spinning={loading}>
       <div className="p-steps-form steps-form">
-        <Steps className="fixed-step" current={currentStep} onChange={onStepsChange} labelPlacement={'vertical'}>
-          {steps?.map((item) => (
-            <Step key={item.title} title={item.title} />
-          ))}
-        </Steps>
-        <div className="p-steps-form-content">
-          {steps?.map((item, itemIdx) => {
-            const itemCls = classNames('p-steps-form-content-item', currentStep === itemIdx && 'p-steps-form-content-item-active');
-            return (
-              <div key={`step-${itemIdx}`} className={itemCls}>
-                {item.content}
-              </div>
-            );
-          })}
-          {/* <div>{steps[currentStep].content}</div> */}
+        <div className="p-steps-form-wrapper">
+          <Steps className="fixed-step" current={currentStep} onChange={onStepsChange} labelPlacement={'vertical'}>
+            {steps?.map((item) => (
+              <Step key={item.title} title={item.title} />
+            ))}
+          </Steps>
         </div>
-        <div className="p-steps-form-action p-steps-edit">
-          {!editUrl ? (
-            <>
-              {currentStep > 0 && (
-                <Button className="mr-10" onClick={handlePrev}>
-                  上一步
-                </Button>
-              )}
-              {currentStep < steps.length - 1 && (
-                <Button type="primary" onClick={handleNext}>
-                  下一步
-                </Button>
-              )}
-              {currentStep === steps.length - 1 && (
-                <Button type="primary" onClick={handleAddTaskSubmit}>
-                  完成
-                </Button>
-              )}
-              <div className="edit-btns">
-                <Button>
-                  <NavRouterLink element="取消" href="/collect" />
-                </Button>
-              </div>
-            </>
-          ) : (
-            <>
-              {currentStep > 0 && (
-                <Button className="mr-10" onClick={handlePrev}>
-                  上一步
-                </Button>
-              )}
-              {currentStep < steps.length - 1 && (
-                <Button type="primary" onClick={handleNext}>
-                  下一步
-                </Button>
-              )}
-              {/* {currentStep === steps.length - 1 && (<Button type="primary" onClick={handleAddTaskSubmit}>完成</Button>)} */}
-              <div className="edit-btns">
-                <Button type="primary" className="mr-10" onClick={handleEditTaskSubmit}>
-                  确认
-                </Button>
-                <Button>
-                  <NavRouterLink element="取消" href="/collect" />
-                </Button>
-              </div>
-            </>
-          )}
+        <div className="p-steps-form-content-wrapper">
+          <div className="p-steps-form-content">
+            {steps?.map((item, itemIdx) => {
+              const itemCls = classNames('p-steps-form-content-item', currentStep === itemIdx && 'p-steps-form-content-item-active');
+              return (
+                <div key={`step-${itemIdx}`} className={itemCls}>
+                  {item.content}
+                </div>
+              );
+            })}
+            {/* <div>{steps[currentStep].content}</div> */}
+          </div>
+          <div className="p-steps-form-action p-steps-edit">
+            {!editUrl ? (
+              <>
+                {currentStep > 0 && (
+                  <Button className="mr-10" onClick={handlePrev}>
+                    上一步
+                  </Button>
+                )}
+                {currentStep < steps.length - 1 && (
+                  <Button type="primary" onClick={handleNext}>
+                    下一步
+                  </Button>
+                )}
+                {currentStep === steps.length - 1 && (
+                  <Button type="primary" onClick={handleAddTaskSubmit}>
+                    完成
+                  </Button>
+                )}
+                <div className="edit-btns">
+                  <Button>
+                    <NavRouterLink element="取消" href="/collect" />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                {currentStep > 0 && (
+                  <Button className="mr-10" onClick={handlePrev}>
+                    上一步
+                  </Button>
+                )}
+                {currentStep < steps.length - 1 && (
+                  <Button type="primary" onClick={handleNext}>
+                    下一步
+                  </Button>
+                )}
+                {/* {currentStep === steps.length - 1 && (<Button type="primary" onClick={handleAddTaskSubmit}>完成</Button>)} */}
+                <div className="edit-btns">
+                  <Button type="primary" className="mr-10" onClick={handleEditTaskSubmit}>
+                    确认
+                  </Button>
+                  <Button>
+                    <NavRouterLink element="取消" href="/collect" />
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </Spin>

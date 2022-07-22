@@ -1,26 +1,45 @@
+@content-width: 850px;
+
 .fixed-step {
   &.dcloud-steps {
-    position: absolute;
-    width: 100%;
-    z-index: 1;
+    width: @content-width;
+    margin: 0 auto;
     background-color: white;
-    padding: 20px 40px 0px 40px;
+    padding: 24px 0px 0px 0px;
+    position: relative;
+    right: 15px;
+  }
+}
+
+.collect-task {
+  .dcloud-form-item-label {
+    text-align: left;
   }
 }
 
 .p-steps-form {
   position: relative;
+  margin: 20px 20px 0 20px;
+  background-color: #fff;
+
+  &-wrapper {
+    width: 100%;
+    overflow: scroll;
+  }
 
   .dcloud-steps-item-content {
     width: 120px;
   }
 
-  &-content {
-    min-width: 900px;
-    height: calc(100vh - 110px);
-    padding-top: 145px;
-    margin-left: 40px;
+  &-content-wrapper {
+    height: calc(100vh - 180px);
     overflow: scroll;
+  }
+
+  &-content {
+    width: @content-width;
+    padding-top: 60px;
+    margin: 0 auto;
 
     .dcloud-form-item {
       margin-bottom: 6px;
@@ -40,19 +59,31 @@
   }
 
   &-action {
-    padding: 0 40px;
+    width: @content-width;
+    margin: 0 auto;
+    padding: 20px 0;
 
     button+button {
       margin-left: 8px;
     }
   }
+
+  .slice-pre {
+    margin-right: 24px;
+  }
 }
 
 .logFileList {
-  width: 400px;
+  width: 430px;
   height: 150px;
   overflow: auto;
   border: 1px solid #d9d9d9;
+
+  &_error {
+    border: 1px solid red;
+    color: red;
+    padding-left: 10px;
+  }
 
   li {
     line-height: normal;
@@ -141,7 +172,7 @@
 
 .steps-form {
   .p-steps-edit {
-    width: 100%;
+    width: @content-width;
 
     .edit-btns {
       float: right;
@@ -174,7 +205,6 @@
   padding: 0 5px;
   position: relative;
   top: 5px;
-  left: 5px;
 
   ul {
     width: 320px;

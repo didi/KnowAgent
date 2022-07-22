@@ -130,7 +130,7 @@ const ClientClearSelfMonitor = (props: any) => {
           <AutoComplete placeholder="请选择或输入" options={receiverTopic} onSearch={onSearch} />
         </Form.Item>
         <Row>
-          <Col span={12}>
+          <Col span={15}>
             {props.logType === 'file' && (
               <>
                 <Form.Item
@@ -173,7 +173,7 @@ const ClientClearSelfMonitor = (props: any) => {
               </>
             )}
           </Col>
-          <Col span={12}>
+          <Col span={9}>
             <Form.Item
               name="step4_limitPriority"
               initialValue={1}
@@ -205,7 +205,6 @@ const ClientClearSelfMonitor = (props: any) => {
                   display: 'flex',
                   flex: 'auto',
                   alignItems: 'center',
-                  marginRight: '80px',
                   marginLeft: '-10px',
                   whiteSpace: 'nowrap',
                 }}
