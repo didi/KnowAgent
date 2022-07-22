@@ -32,17 +32,21 @@ export const codingFormatTypes = [
 ];
 
 export const contentFormItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 22 },
+  labelCol: { span: 12 },
+  wrapperCol: { span: 24 },
 };
 
 export const clientFormItemLayout = {
-  labelCol: { span: 12 },
-  wrapperCol: { span: 22 },
+  labelCol: { span: 20 },
+  wrapperCol: { span: 24 },
 };
 
 export const collectLogFormItemLayout = {
-  labelCol: { span: 4 },
+  labelCol: { span: 12 },
+  wrapperCol: { span: 24 },
+};
+export const collectSpliceRuleItemLayout = {
+  labelCol: { span: 12 },
   wrapperCol: { span: 22 },
 };
 

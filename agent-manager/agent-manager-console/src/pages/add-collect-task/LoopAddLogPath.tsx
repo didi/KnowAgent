@@ -18,6 +18,7 @@ const LoopAddLogFileType = (props: any) => {
   const [isModalVisible, setVisible] = useState(false);
   const [previewPath, setPreviewPath] = useState([]);
   const [hookPathList, setHookPathList] = useState(['']);
+  const [logFileListClass, setLogFileListClass] = useState('');
 
   const options =
     hostNameList.length > 0 &&
@@ -88,9 +89,15 @@ const LoopAddLogFileType = (props: any) => {
       hostName,
     };
     if (logFilePath && hostName) {
-      getCollectTaskFiles(params).then((res) => {
-        setFileArrList(res);
-      });
+      getCollectTaskFiles(params)
+        .then((res) => {
+          setLogFileListClass('');
+          setFileArrList(res);
+        })
+        .catch((res) => {
+          setLogFileListClass('logFileList_error');
+          setFileArrList([res]);
+        });
     }
   }, 0);
 
@@ -249,7 +256,13 @@ const LoopAddLogFileType = (props: any) => {
           </Col>
         </Row>
       </Form.Item>
-      <Modal title="路径预览" visible={isModalVisible} onOk={() => setVisible(false)} onCancel={() => setVisible(false)}>
+      <Modal
+        title="路径预览"
+        visible={isModalVisible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        className={'collect-task'}
+      >
         <Row>
           <Col span={22}>
             <Form.Item label="日志文件路径" labelCol={{ span: 5 }} name={`step2_filePath_0_example`}>
@@ -294,7 +307,7 @@ const LoopAddLogFileType = (props: any) => {
                 </Form.Item>
               </Col>
               <Col span={2}>
-                <Button type="link" style={{ marginLeft: '-40px', marginTop: '10px' }} onClick={handlelogFileExample}>
+                <Button type="link" style={{ marginTop: '10px' }} onClick={handlelogFileExample}>
                   预览
                 </Button>
               </Col>
@@ -302,8 +315,10 @@ const LoopAddLogFileType = (props: any) => {
             <Row>
               <Col span={23}>
                 <Form.Item label="路径预览结果" labelCol={{ span: 5 }}>
-                  <ul className={`logfile_list logFileList`}>
-                    {fileArrList && fileArrList?.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)}
+                  <ul className={`logfile_list logFileList ${logFileListClass}`}>
+                    {logFileListClass
+                      ? fileArrList && fileArrList[0]?.message
+                      : fileArrList && fileArrList?.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)}
                   </ul>
                 </Form.Item>
               </Col>

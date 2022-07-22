@@ -79,7 +79,9 @@ const advanceTime = {
 
 const ChartContainer: React.FC<propsType> = ({ filterData, dragModule, reloadModule, indicatorSelectModule, isGold = false }) => {
   const [groups, setGroups] = useState<any[]>(dragModule.groupsData);
-  const [gridNum, setGridNum] = useState<number>(8);
+  const clientWidth = document.body.clientWidth;
+
+  const [gridNum, setGridNum] = useState<number>(clientWidth < 1920 ? 12 : 8);
   const [gutterNum, setGutterNum] = useState<any>([16, 16]);
   const [dateStrings, setDateStrings] = useState<number[]>([
     moment().valueOf() - 60 * 60 * 1000 - advanceTime.THIRTY,

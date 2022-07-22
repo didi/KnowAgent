@@ -186,7 +186,7 @@ const LogFileType = (props: any) => {
     <div className="set-up" key={props.getKey}>
       <div className="log-repeat-form">
         <Form.Item label="切片配置划取方法说明：" style={{ marginBottom: '-20px' }}>
-          <span style={{ position: 'absolute', top: '-28px', left: '150px' }}>
+          <span style={{ position: 'absolute', top: '-28px', left: '150px', width: '560px' }}>
             请用光标在原始日志文本框中划取用于区分两条不同日志的日期/时间字符串，系统将根据您划取的日期/时间模式串自动识别，并在下方自动配置好日志切片规则。
           </span>
         </Form.Item>
@@ -228,10 +228,10 @@ const LogFileType = (props: any) => {
           <Row>
             <Col span={6}>
               <Row style={{ display: 'flex', alignItems: 'baseline' }}>
-                <Col span={5}>
+                <Col span={8}>
                   <span>左起第</span>
                 </Col>
-                <Col span={10}>
+                <Col span={8}>
                   <Form.Item
                     name={`step3_${props.logType}_sliceTimestampPrefixStringIndex`}
                     rules={[
@@ -290,7 +290,7 @@ const LogFileType = (props: any) => {
                 <Input onChange={() => setStart(-1)} placeholder="请输入标记切片的日期/时间字符串前缀字符" />
               </Form.Item>
             </Col>
-            <Col span={8} style={{ margin: '0 20px' }}>
+            <Col span={8} style={{ margin: '0 20px 0 10px' }}>
               <Form.Item
                 name={`step3_${props.logType}_sliceTimestampFormat`}
                 rules={[{ required: true, message: '请选择或者输入时间格式' }]}
