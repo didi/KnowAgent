@@ -148,7 +148,7 @@ export const collectTaskDetailBaseInfo = (info: any) => {
       key: 'advancedConfigurationJsonString',
     },
     {
-      label: '生产端属性',
+      label: '数据接收端生产者属性',
       key: 'kafkaProducerConfiguration',
     },
     {

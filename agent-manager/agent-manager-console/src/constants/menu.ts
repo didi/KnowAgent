@@ -52,7 +52,7 @@ export const leftMenus = {
           name: 'agentVersion',
           path: 'agentVersion',
           icon: '#icon-jiqun1',
-        }
+        },
       ],
     },
     //采集任务管理
@@ -90,11 +90,11 @@ export const leftMenus = {
       ],
     },
     //操作记录
-    {
-      name: 'operationRecord',
-      path: 'operationRecord',
-      icon: 'icon-caozuojilu',
-    },
+    // {
+    //   name: 'operationRecord',
+    //   path: 'operationRecord',
+    //   icon: 'icon-caozuojilu',
+    // },
   ],
 };
 
