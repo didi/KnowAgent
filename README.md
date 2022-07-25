@@ -6,11 +6,21 @@
 
 ​	`Know Agent` 源于滴滴多年来在各核心场景沉淀的超大规模采集引擎集群运维实践经验。经历过多方考验，对于大规模 Agent 日志采集的治理管控，采集任务与 Agent 的可观测性、健康度巡检、故障诊断已经沉淀出一套完善的解决方案。`Know Agent` 以应用为采集粒度，满足了从业务层面创建采集任务的需求，并易于将文件采集作为流式计算的一种可靠数据源进行接入、管理。
 
-## 1.1 快速体验地址
+## 1.1 前置申明
+
+### 1.1.1 Agent 与采集任务管控规模
+
+​	`Know Agent` 基于最小依赖、便于体验，采用 MySQL 存储 Agent 的 Metrics 与 Error Logs 数据。受制于 MySQL 性能瓶颈，在单个采集任务对应一个采集路径、Metrics 与 Error Logs 数据保存周期为一周的情况下，支持 50 个 Agent 与 50 个采集任务的管控。如需要管控更多的 Agent 与采集任务，参见[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/know_agent_metrics_error_logs_store_extend.md)。
+
+### 1.1.2 容器采集
+
+​	`Know Agent`目前对容器日志采集未实现平台化支持，未来将提供全面的容器日志采集平台化支持，参见[《Know Agent一站式日志采集平台介绍》](doc/know_agent_summary.md)**展望**部分。
+
+## 1.2 快速体验地址
 
 - 体验地址 [http://116.85.14.32:9010](http://116.85.14.32:9010) 
 
-## 1.2 用户体验地图
+## 1.3 用户体验地图
 
 - 我的工作台
   - 运营大盘：展示运营相关的核心指标数据。
@@ -32,7 +42,7 @@
   - 指标探查：查看 Agent 与采集任务的运行时全景指标，支持多 Agent、多采集任务进行对比分析、一体化观测。
 
 
-## 1.3 核心优势
+## 1.4 核心优势
 
 **一站式日志采集方案**
 
@@ -65,7 +75,7 @@
 |     是否容易配置     |              否              |              否              |                              是                              |
 |   大规模运维复杂度   |             极高             |             极高             |                              低                              |
 
-## 1.4 Know Agent 架构
+## 1.5 Know Agent 架构
 
 ​	`Know Agent` 是一站式的日志采集平台，包括两个组件：
 
@@ -74,11 +84,11 @@
 
 <img src="doc/assets/know agent总体设计.png" alt="logi-am架构" style="zoom:50%;" />	
 
-### 1.4.1 Agent 架构
+### 1.5.1 Agent 架构
 
 <img src="doc/assets/know agent架构.png" alt="know agent架构" style="zoom: 50%;" />
 
-### 1.4.2 Agent Manager 架构
+### 1.5.2 Agent Manager 架构
 
 ![Agent-Manager 架构](doc/assets/Agent-Manager 架构.png)
 
@@ -96,6 +106,8 @@
 [《Know Agent开发手册》](doc/know_agent_develop.md)
 
 [《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/know_agent_metrics_error_logs_store_extend.md)
+
+[《Know Agent代码贡献指南》](doc/know_agent_contributing.md)
 
 # 3 Know Agent开源用户交流群
 
