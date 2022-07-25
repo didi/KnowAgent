@@ -88,63 +88,13 @@ public class NormalMetadataController {
         return Result.buildSucc(paginationResult);
     }
 
-    @ApiOperation(value = "下载 meta data excel 文件模板", notes = "")
+    @ApiOperation(value = "返回 meta data excel 文件模板下载请求对应链接", notes = "")
     @RequestMapping(value = "/meta-data-excel-template", method = RequestMethod.GET)
     @ResponseBody
-    public void downloadMetaDataExcelTemplate(HttpServletResponse response) {
-        String fileSeparator = System.getProperty("file.separator");
-        String path = FileUtils.class.getResource("/").getPath() + "files" + fileSeparator + "meta_data_excel_template.xlsx";
-        InputStream is = null;
-        OutputStream os = null;
-        try{
-            File file =new File(path);
-            String fileName = file.getName();
-            is = new BufferedInputStream(new FileInputStream(file));
-            byte[] buffer = new byte[is.available()];
-            is.read(buffer);
-            // 清空response
-            response.reset();
-            // 设置response的Header
-            response.setCharacterEncoding("UTF-8");
-            /*
-             * Content-Disposition的作⽤：告知浏览器以何种⽅式显⽰响应返回的⽂件，⽤浏览器打开还是以附件的形式下载到本地保存
-             * attachment表⽰以附件⽅式下载   inline表⽰在线打开   "Content-Disposition: inline; filename=⽂件名.mp3"
-             * filename表⽰⽂件的默认名称，因为⽹络传输只⽀持URL编码的相关⽀付，因此需要将⽂件名URL编码后进⾏传输,前端收到后需要反编码才能获取到真正的名称
-             */
-            response.addHeader("Content-Disposition","attachment;filename="+ URLEncoder.encode(fileName,"UTF-8"));
-            // 设置浏览器⽂件的⼤⼩
-            response.addHeader("Content-Length",""+ file.length());
-            os = new BufferedOutputStream(response.getOutputStream());
-            response.setContentType("application/octet-stream");
-            os.write(buffer);
-            os.flush();
-        } catch(IOException ex){
-            LOGGER.error(
-                    String.format("下载 meta data excel 文件模板失败，原因为：%s ", ex.getMessage()),
-                    ex
-            );
-        } finally {
-            try {
-                if (null != is) {
-                    is.close();
-                }
-            } catch (IOException ex) {
-                LOGGER.error(
-                        String.format("下载 meta data excel 文件模板时，关闭输入流失败，原因为：%s ", ex.getMessage()),
-                        ex
-                );
-            }
-            try {
-                if(null != os) {
-                    os.close();
-                }
-            } catch (IOException ex) {
-                LOGGER.error(
-                        String.format("下载 meta data excel 文件模板时，关闭输出流失败，原因为：%s ", ex.getMessage()),
-                        ex
-                );
-            }
-        }
+    public Result<String> downloadMetaDataExcelTemplate(HttpServletResponse response) {
+        return Result.buildSucc(
+                "/files/meta_data_excel_template.xlsx"
+        );
     }
 
     private List<MetaDataFilePaginationRecordVO> metaDataFileDOList2MetaDataFilePaginationRecordVOList(List<MetaDataFileDO> metaDataFileDOList) {
