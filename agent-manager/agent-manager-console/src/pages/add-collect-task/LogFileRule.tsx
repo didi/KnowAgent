@@ -253,13 +253,7 @@ const LogFileType = (props: any) => {
                       },
                     ]}
                   >
-                    <InputNumber
-                      style={{ width: '90%' }}
-                      min={0}
-                      max={99999999}
-                      precision={0}
-                      placeholder="从0开始计数"
-                    />
+                    <InputNumber style={{ width: '90%' }} min={0} max={99999} precision={0} placeholder="从0开始计数" />
                   </Form.Item>
                 </Col>
                 <Col span={8}>
@@ -399,7 +393,6 @@ const LogFileType = (props: any) => {
               </Select>
             </Form.Item>
           </Form>
-
         </Modal>
       </div>
     </div>

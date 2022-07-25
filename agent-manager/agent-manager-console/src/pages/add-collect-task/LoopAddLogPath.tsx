@@ -96,6 +96,7 @@ const LoopAddLogFileType = (props: any) => {
         })
         .catch((res) => {
           setLogFileListClass('logFileList_error');
+          setFileArrList([]);
         });
     }
   }, 0);
