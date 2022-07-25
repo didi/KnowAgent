@@ -196,7 +196,7 @@ const ClientClearSelfMonitor = (props: any) => {
           activeKey={activeKeys?.length ? ['high'] : []}
           destroyInactivePanel
           ghost
-          style={{ background: 'none', marginRight: '80px' }}
+          style={{ background: 'none' }}
         >
           <Panel
             header={
@@ -210,7 +210,7 @@ const ClientClearSelfMonitor = (props: any) => {
                 }}
               >
                 高级配置
-                <Divider plain></Divider>
+                <Divider plain style={{ width: '750px', minWidth: '0' }}></Divider>
                 <a style={{ display: 'flex', alignItems: 'center' }}>
                   {activeKeys?.length ? (
                     <>

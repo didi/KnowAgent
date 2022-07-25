@@ -264,7 +264,7 @@ export const DeleteAgentVersion: React.FC = (props: any) => {
       }
     }
   }, [props.submitEvent]);
-  return <div>确认删除Agent版本吗？</div>;
+  return <div style={{ padding: '0 24px' }}>确认删除Agent版本吗？</div>;
 };
 
 // agent版本好

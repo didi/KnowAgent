@@ -70,7 +70,7 @@ export const collectTaskDetailBaseInfo = (info: any) => {
           const fileLogCollectPathList = JSON.parse(t);
           const pathString = fileLogCollectPathList.map((path: any) => path?.path || '');
           return (
-            <Tooltip title={pathString.join(';')} placement="bottomLeft">
+            <Tooltip title={pathString.join('\n')} placement="bottomLeft">
               <span>{pathString.join(';')}</span>
             </Tooltip>
           );
@@ -180,7 +180,7 @@ export const getAssociateHostColumns = (getHostDetail: any) => {
     {
       title: '主机名',
       dataIndex: 'hostName',
-      render: (text: string, record: any) => <a onClick={() => getHostDetail(record)}>{text}</a>,
+      // render: (text: string, record: any) => <a onClick={() => getHostDetail(record)}>{text}</a>,
     },
     {
       title: '主机IP',

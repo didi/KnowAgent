@@ -574,7 +574,7 @@ const StepsForm = (props: any) => {
             })}
             {/* <div>{steps[currentStep].content}</div> */}
           </div>
-          <div className="p-steps-form-action p-steps-edit">
+          <div className={`p-steps-form-action p-steps-edit   p-steps-edit_${currentStep} `}>
             {!editUrl ? (
               <>
                 {currentStep > 0 && (

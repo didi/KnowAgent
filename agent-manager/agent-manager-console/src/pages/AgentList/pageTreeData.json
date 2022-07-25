@@ -309,7 +309,7 @@
                 "componentProps": {
                   "maxLength": 128,
                   "mode": "multiple",
-                  "maxTagCount": 0,
+                  "maxTagCount": "responsive",
                   "showArrow": true,
                   "style": {
                     "width": "200px"
@@ -340,6 +340,7 @@
                 "componentProps": {
                   "maxLength": 128,
                   "mode": "multiple",
+                  "maxTagCount": "responsive",
                   "showArrow": true,
                   "style": {
                     "width": "200px"
