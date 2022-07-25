@@ -43,7 +43,9 @@ import java.util.Map;
 @org.springframework.stereotype.Service
 public class ServiceManageServiceImpl implements ServiceManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManageServiceImpl.class);@Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManageServiceImpl.class);
+
+    @Autowired
     private ServiceMapper serviceDAO;
 
     @Autowired

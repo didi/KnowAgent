@@ -102,21 +102,27 @@ public enum ErrorCodeEnum {
     FILE_DOWNLOAD_FAILED(31001, "文件下载失败"),
     FILE_NOT_EXISTS(31002, "文件不存在"),
     FILE_IS_DIRECTORY(31003, "文件为目录"),
+    FILE_CREATE_FAILED(31004, "文件创建失败"),
+    FILE_DELETE_FAILED(31005, "文件删除失败"),
     /*
      * AgentOperationTask操作 相关 32000 ~ 32999
      */
     AGENT_OPERATION_TASK_NOT_EXISTS(32000, "AgentOperationTask不存在"),
-    /**
+    /*
      * Elasticsearch 查询相关 33000 ~ 33999
      */
     ELASTICSEARCH_QUERY_FAILED(33000, "Elasticsearch 查询失败"),
-    /**
+    /*
      * Metrics 查询相关 34000 ~ 34999
      */
     METRIC_NOT_EXISTS(34000, "指标不存在"),
     METRICS_TYPE_NOT_EXISTS(34001,"待查询指标系统不存在"),
     METRICS_QUERY_ERROR(34002, "指标查询错误"),
     METRICS_RECORD_NOT_EXISTS(34003, "指标记录不存在"),
+    /*
+     * MetadataFile 相关 35000 ~ 35999
+     */
+    META_DATA_FILE_NOT_EXISTS(35000, "元数据文件上传记录在系统中不存在"),
 
 
     UNKNOWN(90001, "未知错误"),
