@@ -5,6 +5,8 @@ import { collectTaskDetailBaseInfo, getAssociateHostColumns } from './config';
 import AssociateHostDetail from './AssociateHostDetail';
 import fetch from '../../lib/fetch';
 import { EventBusTypes } from '../../constants/event-types';
+import './index.less';
+
 // export const getAgentHostId = (hostName: string) => {
 //   return fetch(`/api/v1/normal/host?hostname=${hostName}`);
 // };
@@ -131,7 +133,7 @@ const AgentDetail = (props: any) => {
 
   return (
     <div style={{ padding: '24px', backgroundColor: '#F8F8FB' }}>
-      <div style={{ padding: '24px', backgroundColor: '#ffffff' }}>
+      <div style={{ padding: '24px', backgroundColor: '#ffffff' }} className="collect_detail">
         <div style={{ marginBottom: '20px' }}>
           <ProDescriptions
             title={'基本信息'}

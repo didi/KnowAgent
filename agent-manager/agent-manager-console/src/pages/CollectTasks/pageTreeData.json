@@ -293,9 +293,9 @@
                   "mode": "multiple",
                   "allowClear": true,
                   "showArrow": true,
-                  "maxTagCount": 0,
+                  "maxTagCount": "responsive",
                   "style": {
-                    "width": "100px"
+                    "width": "180px"
                   }
                 },
                 "option": "healthList"

@@ -96,7 +96,7 @@ const LoopAddLogFileType = (props: any) => {
         })
         .catch((res) => {
           setLogFileListClass('logFileList_error');
-          setFileArrList([res]);
+          setFileArrList([]);
         });
     }
   }, 0);
@@ -316,9 +316,7 @@ const LoopAddLogFileType = (props: any) => {
               <Col span={23}>
                 <Form.Item label="路径预览结果" labelCol={{ span: 5 }}>
                   <ul className={`logfile_list logFileList ${logFileListClass}`}>
-                    {logFileListClass
-                      ? fileArrList && fileArrList[0]?.message
-                      : fileArrList && fileArrList?.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)}
+                    {fileArrList && fileArrList?.map((logfile: string, key: number) => <li key={key}>{logfile}</li>)}
                   </ul>
                 </Form.Item>
               </Col>
