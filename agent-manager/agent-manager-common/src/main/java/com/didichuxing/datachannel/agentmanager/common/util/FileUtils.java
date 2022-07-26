@@ -25,31 +25,38 @@ public class FileUtils {
      * 上传给定文件
      * @param uploadFile 待上传文件信息
      * @param fileMd5 待上传文件 md 5 值
+     * @param uploadDir 文件上传目录
      * @return 文件存储 path
      */
-    public static String upload(MultipartFile uploadFile, String fileMd5) {
+    public static String upload(
+            MultipartFile uploadFile,
+            String fileMd5,
+            String uploadDir
+    ) {
 
         /*
          * TODO：文件 md 5 签名校验
          */
 
         String fileSeparator = System.getProperty("file.separator");
-        String filePath = FileUtils.class.getResource("/").getPath() + "files" + fileSeparator + UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
+        String filePath = uploadDir + fileSeparator + UUID.randomUUID().toString() + "_" + uploadFile.getOriginalFilename();
         File file = new File(filePath);
         try {
             file.createNewFile();
-        } catch (IOException e) {
+        } catch (IOException ex) {
             throw new ServiceException(
                     String.format("文件上传失败，原因为：上传文件%s在后端创建失败", uploadFile.getOriginalFilename()),
+                    ex,
                     ErrorCodeEnum.FILE_CREATE_FAILED.getCode()
             );
         }
         FileOutputStream fops = null;
         try {
             fops = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException ex) {
             throw new ServiceException(
                     String.format("文件上传失败，原因为：上传文件%s在后端创建以后被删除", uploadFile.getOriginalFilename()),
+                    ex,
                     ErrorCodeEnum.FILE_CREATE_FAILED.getCode()
             );
         }
@@ -57,9 +64,10 @@ public class FileUtils {
             try {
                 fops.write(uploadFile.getBytes());
                 fops.flush();
-            } catch (IOException e) {
+            } catch (IOException ex) {
                 throw new ServiceException(
                         String.format("文件上传失败，原因为：上传文件%s在后端写入数据时出现异常", uploadFile.getOriginalFilename()),
+                        ex,
                         ErrorCodeEnum.FILE_CREATE_FAILED.getCode()
                 );
             } finally {
