@@ -17,6 +17,7 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.MetaDataFileMa
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -32,6 +33,9 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     @Autowired
     private MetaDataFileMapper metaDataFileDAO;
 
+    @Value("${file.upload.dir}")
+    private String uploadDir;
+
     @Override
     @Transactional
     public Long addMetadataFile(MetadataFileDTO dto, String operator) {
@@ -45,7 +49,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         /*
          * 上传文件
          */
-        String filePath = FileUtils.upload(dto.getUploadFile(), dto.getFileMd5());
+        String filePath = FileUtils.upload(dto.getUploadFile(), dto.getFileMd5(), uploadDir);
         /*
          * 构建 MetaDataFileDO 对象
          */
