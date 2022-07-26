@@ -124,7 +124,14 @@ public enum ErrorCodeEnum {
      * MetadataFile 相关 35000 ~ 35999
      */
     META_DATA_FILE_NOT_EXISTS(35000, "元数据文件上传记录在系统中不存在"),
-
+    META_DATA_IN_EXCEL_IS_NULL(35001, "元数据Excel文件内容为空"),
+    META_DATA_HOST_IN_EXCEL_IS_NULL(35002, "元数据Excel文件内容中host sheet为空"),
+    META_DATA_APPLICATION_IN_EXCEL_IS_NULL(35003, "元数据Excel文件内容中application sheet为空"),
+    META_DATA_IN_EXCEL_FIELD_IS_NULL_EXISTS(35004, "元数据Excel文件内容中sheet存在空值字段"),
+    META_DATA_IN_EXCEL_FIELD_INVALID_EXISTS(35005, "元数据Excel文件内容中sheet存在非法值字段"),
+    META_DATA_IN_EXCEL_HOST_HOST_NAME_DUPLICATE(35006, "元数据Excel文件内容中host sheet存在主机名重复主机记录"),
+    META_DATA_IN_EXCEL_APPLICATION_HOST_NAME_NOT_EXISTS(35007, "元数据Excel文件内容中application sheet中关联主机对应主机名在host sheet与系统中不存在"),
+    META_DATA_IN_EXCEL_APPLICATION_APPLICATION_NAME_DUPLICATE(35008, "元数据Excel文件内容中application sheet存在应用名重复应用记录"),
 
     UNKNOWN(90001, "未知错误"),
 

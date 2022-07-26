@@ -61,7 +61,7 @@ public class NormalMetadataController {
     @RequestMapping(value = "/import-result/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public Result importMetaData(@PathVariable Long id) {
-        metadataManageService.importMetaData(id);
+        metadataManageService.importMetaData(id, SpringTool.getUserName());
         return Result.buildSucc();
     }
 
