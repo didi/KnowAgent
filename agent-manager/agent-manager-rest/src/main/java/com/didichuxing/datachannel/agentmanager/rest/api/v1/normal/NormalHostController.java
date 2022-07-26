@@ -77,7 +77,9 @@ public class NormalHostController {
         if (null == hostDO) {
             return Result.buildSucc(null);
         } else {
-            return Result.buildSucc(ConvertUtil.obj2Obj(hostDO, HostVO.class));
+            HostVO hostVO = ConvertUtil.obj2Obj(hostDO, HostVO.class);
+            hostVO.setContainer(hostDO.getContainer());
+            return Result.buildSucc(hostVO);
         }
     }
 

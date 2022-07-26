@@ -36,9 +36,6 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
     @Autowired
     private AgentManageService agentManageService;
 
-    @Autowired
-    private OperateRecordService operateRecordService;
-
     @Override
     @Transactional
     public Long createAgentVersion(AgentVersionDTO agentVersionDTO, String operator) {
