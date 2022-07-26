@@ -46,7 +46,8 @@ public interface MetadataManageService {
     /**
      * 导入元数据信息
      * @param id 元数据上传记录 id
+     * @param operator 操作人
      */
-    void importMetaData(Long id);
+    void importMetaData(Long id, String operator);
 
 }

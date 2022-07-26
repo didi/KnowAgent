@@ -135,7 +135,7 @@ CREATE TABLE `error_log` (
                              `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                              `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                              PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for operate_record
@@ -152,7 +152,7 @@ CREATE TABLE `operate_record` (
                                   `operate_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
                                   PRIMARY KEY (`id`),
                                   KEY `idx_module_business` (`module_id`,`business_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_agent
@@ -179,7 +179,7 @@ CREATE TABLE `tb_agent` (
                             `error_logs_producer_configuration` varchar(256) DEFAULT '',
                             PRIMARY KEY (`id`) USING BTREE,
                             UNIQUE KEY `uniq_host_name` (`host_name`) COMMENT '主机名唯一索引'
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='采集端表：表示一个部署在某host上的采集端';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='采集端表：表示一个部署在某host上的采集端';
 
 -- ----------------------------
 -- Table structure for tb_agent_health
@@ -199,7 +199,7 @@ CREATE TABLE `tb_agent_health` (
                                    `agent_health_inspection_result_type` int(11) DEFAULT NULL COMMENT 'agent巡检结果类型',
                                    PRIMARY KEY (`id`) USING BTREE,
                                    KEY `idx_agent_id` (`agent_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_agent_operation_sub_task
@@ -261,7 +261,7 @@ CREATE TABLE `tb_agent_version` (
                                     PRIMARY KEY (`id`) USING BTREE,
                                     UNIQUE KEY `unq_idx_version` (`version`) USING BTREE,
                                     UNIQUE KEY `unq_idx_file_md5` (`file_md5`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_collect_delay_monitor_black_list
@@ -306,7 +306,7 @@ CREATE TABLE `tb_file_log_collect_path` (
                                             `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                             `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                             PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='文件类型日志采集路径表：表示一个文件类型日志采集路径，FileLogCollectPath：LogCollectorTask 多对一关联关系';
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8 COMMENT='文件类型日志采集路径表：表示一个文件类型日志采集路径，FileLogCollectPath：LogCollectorTask 多对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_global_config
@@ -344,7 +344,7 @@ CREATE TABLE `tb_host` (
                            KEY `idx_ip` (`ip`) USING BTREE COMMENT '主机 ip 索引',
                            KEY `idx_container` (`container`) USING BTREE COMMENT '主机类型索引',
                            KEY `idx_parent_host_name` (`parent_host_name`) USING BTREE COMMENT '宿主机名索引'
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='主机表：表示一台主机，可表示物理机、虚拟机、容器';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='主机表：表示一台主机，可表示物理机、虚拟机、容器';
 
 -- ----------------------------
 -- Table structure for tb_k8s_pod
@@ -398,7 +398,7 @@ CREATE TABLE `tb_kafka_cluster` (
                                     PRIMARY KEY (`id`) USING BTREE,
                                     UNIQUE KEY `unq_kafka_cluster_name` (`kafka_cluster_name`) USING BTREE,
                                     KEY `idx_kafka_cluster_id` (`kafka_cluster_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Kafka集群信息表：表示一个 kafka 集群信息，KafkaCluster：LogCollectorTask 一对多关联关系';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='Kafka集群信息表：表示一个 kafka 集群信息，KafkaCluster：LogCollectorTask 一对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task
@@ -430,7 +430,7 @@ CREATE TABLE `tb_log_collect_task` (
                                        `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                        `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                        PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='日志采集任务表：表示一个待运行在agent的采集任务';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='日志采集任务表：表示一个待运行在agent的采集任务';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_health
@@ -446,7 +446,7 @@ CREATE TABLE `tb_log_collect_task_health` (
                                               `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                                               `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
                                               PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='日志采集任务健康度信息表：表示一个日志采集任务健康度信息，LogCollectorTaskHealth：LogCollectorTask 一对一关联关系';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='日志采集任务健康度信息表：表示一个日志采集任务健康度信息，LogCollectorTaskHealth：LogCollectorTask 一对一关联关系';
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_health_detail
@@ -464,7 +464,7 @@ CREATE TABLE `tb_log_collect_task_health_detail` (
                                                      `log_slice_check_healthy_heartbeat_time` bigint(20) DEFAULT NULL COMMENT ' “日志切片健康检查”为健康时的时间点',
                                                      PRIMARY KEY (`id`) USING BTREE,
                                                      KEY `idx_taskId_pathId_hostName` (`log_collect_task_id`,`path_id`,`host_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_log_collect_task_service
@@ -477,7 +477,27 @@ CREATE TABLE `tb_log_collect_task_service` (
                                                PRIMARY KEY (`id`),
                                                KEY `idx_service_id` (`service_id`),
                                                KEY `idx_logcollecttask_id` (`log_collector_task_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='日志采集任务 & 服务关联关系表：表示服务 & 日志采集任务的关联关系，Service：LogCollectorTask 多对多关联关系';
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COMMENT='日志采集任务 & 服务关联关系表：表示服务 & 日志采集任务的关联关系，Service：LogCollectorTask 多对多关联关系';
+
+-- ----------------------------
+-- Table structure for tb_meta_data_file
+-- ----------------------------
+DROP TABLE IF EXISTS `tb_meta_data_file`;
+CREATE TABLE `tb_meta_data_file` (
+                                     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT ' 主键 id',
+                                     `file_name` varchar(255) DEFAULT NULL COMMENT '文件名',
+                                     `file_path` varchar(255) DEFAULT NULL COMMENT '文件存储路径',
+                                     `file_md5` varchar(255) DEFAULT NULL COMMENT '文件 md5 信息',
+                                     `description` varchar(255) DEFAULT NULL COMMENT '文件描述信息',
+                                     `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                     `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+                                     `operator` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '操作人',
+                                     PRIMARY KEY (`id`) USING BTREE,
+                                     KEY `idx_file_name` (`file_name`) USING BTREE,
+                                     KEY `idx_file_path` (`file_path`) USING BTREE,
+                                     KEY `idx_file_md5` (`file_md5`) USING BTREE,
+                                     KEY `idx_create_time` (`create_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for tb_meta_table_version
@@ -533,7 +553,7 @@ CREATE TABLE `tb_metrics_agent` (
                                     KEY `idx_heartbeatTimeMinute` (`heartbeatTimeMinute`) USING BTREE,
                                     KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`) USING BTREE,
                                     KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=25979 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_disk
@@ -561,7 +581,7 @@ CREATE TABLE `tb_metrics_disk` (
                                    KEY `idx_hostName_systemDiskPath_heartbeatTime` (`hostName`,`systemDiskPath`,`heartbeatTime`),
                                    KEY `idx_hostName_heartbeatTimeMinute` (`hostName`,`heartbeatTimeMinute`),
                                    KEY `idx_heartbeatTime` (`heartbeatTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4117 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=146388 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_disk_io
@@ -742,7 +762,7 @@ CREATE TABLE `tb_metrics_disk_io` (
                                       KEY `idx_hostName_systemDiskDevice_heartbeatTime` (`hostName`,`systemDiskDevice`,`heartbeatTime`),
                                       KEY `idx_hostName_heartbeatTimeMinute` (`hostName`,`heartbeatTimeMinute`),
                                       KEY `idx_heartbeatTime` (`heartbeatTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=4084 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=36910 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for tb_metrics_log_collect_task
@@ -863,7 +883,7 @@ CREATE TABLE `tb_metrics_log_collect_task` (
   KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`),
   KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`),
   KEY `idx_heartbeatTime` (`heartbeatTime`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4077 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=61911 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_net_card
@@ -902,7 +922,7 @@ CREATE TABLE `tb_metrics_net_card` (
                                        KEY `idx_hostName_systemNetCardsBandMacAddress_heartbeatTime` (`hostName`,`systemNetCardsBandMacAddress`,`heartbeatTime`),
                                        KEY `idx_hostName_heartbeatTimeMinute` (`hostName`,`heartbeatTimeMinute`),
                                        KEY `idx_heartbeatTime` (`heartbeatTime`)
-) ENGINE=InnoDB AUTO_INCREMENT=4086 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=47864 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_process
@@ -1125,7 +1145,7 @@ CREATE TABLE `tb_metrics_process` (
                                       KEY `idx_heartbeatTimeMinute` (`heartbeatTimeMinute`),
                                       KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`) USING BTREE,
                                       KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=25979 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_metrics_system
@@ -1379,7 +1399,7 @@ CREATE TABLE `tb_metrics_system` (
                                      KEY `idx_heartbeatTimeMinute` (`heartbeatTimeMinute`) USING BTREE,
                                      KEY `idx_heartbeatTimeHour` (`heartbeatTimeHour`) USING BTREE,
                                      KEY `idx_heartbeatTimeDay` (`heartbeatTimeDay`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4090 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=25979 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ----------------------------
 -- Table structure for tb_service
@@ -1394,7 +1414,7 @@ CREATE TABLE `tb_service` (
                               `extenal_service_id` bigint(20) DEFAULT '0' COMMENT '外部系统服务id，如：夜莺服务节点 id',
                               PRIMARY KEY (`id`),
                               UNIQUE KEY `uniq_service_name` (`service_name`) COMMENT '服务名唯一索引'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='服务表：表示一个服务';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='服务表：表示一个服务';
 
 -- ----------------------------
 -- Table structure for tb_service_host
@@ -1407,7 +1427,7 @@ CREATE TABLE `tb_service_host` (
                                    PRIMARY KEY (`id`),
                                    KEY `idx_host_id` (`host_id`),
                                    KEY `idx_service_id` (`service_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='服务 & 主机关联关系表：表示服务 & 主机的关联关系，Service : Host多对多关联关系';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='服务 & 主机关联关系表：表示服务 & 主机的关联关系，Service : Host多对多关联关系';
 
 -- ----------------------------
 -- Table structure for tb_service_project

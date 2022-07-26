@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
+package com.didichuxing.datachannel.agentmanager.rest.api.v1.op;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.PaginationResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
@@ -19,37 +19,53 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Api(tags = "Normal-Metadata维度相关接口(REST)")
+@Api(tags = "OP-Metadata维度相关接口(REST)")
 @RestController
-@RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "metadata")
-public class NormalMetadataController {
+@RequestMapping(ApiPrefix.API_V1_OP_PREFIX + "metadata")
+public class OpMetadataController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NormalMetadataController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpMetadataController.class);
 
     @Autowired
     private MetadataManageService metadataManageService;
 
-    @ApiOperation(value = "上传 metadata excel 文件 & 描述信息，返回元数据上传记录 id", notes = "")
+    @ApiOperation(
+            value = "上传 metadata excel 文件 & 描述信息，返回元数据上传记录 id。错误状态码：" +
+                    "10000：入参错误 " +
+                    "31004：上传文件在后台创建失败",
+            notes = ""
+    )
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public Result<Long> addMetadataFile(MetadataFileDTO dto) {
+    public Result<Long> addMetadataFile(@RequestBody MetadataFileDTO dto) {
         Long id = metadataManageService.addMetadataFile(dto, SpringTool.getUserName());
         return Result.buildSucc(id);
     }
 
-    @ApiOperation(value = "根据元数据上传记录 id 获取对应 metadata excel 文件内容信息", notes = "")
-    @RequestMapping(value = "/file_content/{id}", method = RequestMethod.GET)
+    @ApiOperation(
+            value = "根据元数据上传记录 id 获取对应 metadata excel 文件内容信息，错误状态码：" +
+                    "35000：元数据文件上传记录在系统中不存在 " +
+                    "31002：元数据文件不存在 " +
+                    "31006：Excel 文件读取失败",
+            notes = ""
+    )
+    @RequestMapping(value = "/file-content/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<MetaDataFileContent> getMetaDataFileContent(Long id) {
+    public Result<MetaDataFileContent> getMetaDataFileContent(@PathVariable Long id) {
         return Result.buildSucc(metadataManageService.getMetaDataFileContent(id));
     }
 
-    @ApiOperation(value = "根据元数据上传记录 id 删除对应 metadata excel 文件上传记录", notes = "")
+    @ApiOperation(
+            value = "根据元数据上传记录 id 删除对应 metadata excel 文件上传记录，错误状态码：" +
+                    "35000：元数据文件上传记录在系统中不存在 " +
+                    "31002：元数据文件不存在 " +
+                    "31005：元数据文件删除失败",
+            notes = ""
+    )
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public Result deleteMetaDataFile(@PathVariable Long id) {
@@ -57,11 +73,27 @@ public class NormalMetadataController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "根据元数据上传记录 id 导入 metadata excel 文件中元数据内容", notes = "")
-    @RequestMapping(value = "/import-result/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(
+            value = "根据元数据上传记录 id 导入 metadata excel 文件中元数据内容，错误状态码：" +
+                    "35000：元数据文件上传记录在系统中不存在 " +
+                    "31002：元数据文件不存在 " +
+                    "31006：Excel 文件读取失败 " +
+                    "35001：元数据Excel文件内容为空 " +
+                    "35002：元数据Excel文件内容中host sheet为空 " +
+                    "35003：元数据Excel文件内容中application sheet为空 " +
+                    "35004：元数据Excel文件内容中sheet存在空值字段 " +
+                    "35005：元数据Excel文件内容中sheet存在非法值字段 " +
+                    "35006：元数据Excel文件内容中host sheet存在主机名重复主机记录 " +
+                    "23003：元数据Excel文件内容中host sheet中主机名在系统中已存在 " +
+                    "35007：元数据Excel文件内容中application sheet中关联主机对应主机名在host sheet与系统中不存在 " +
+                    "35008：元数据Excel文件内容中application sheet存在应用名重复应用记录 " +
+                    "27001：元数据Excel文件内容中application sheet中服务名在系统中已存在 ",
+            notes = ""
+    )
+    @RequestMapping(value = "/import-result/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Result importMetaData(@PathVariable Long id) {
-        metadataManageService.importMetaData(id);
+        metadataManageService.importMetaData(id, SpringTool.getUserName());
         return Result.buildSucc();
     }
 
@@ -86,10 +118,10 @@ public class NormalMetadataController {
         return Result.buildSucc(paginationResult);
     }
 
-    @ApiOperation(value = "返回 meta data excel 文件模板下载请求对应链接", notes = "")
+    @ApiOperation(value = "返回 meta data excel 文件模板下载请求对应链接，端口号后拼该链接即为 excel 模板文件下载链接", notes = "")
     @RequestMapping(value = "/meta-data-excel-template", method = RequestMethod.GET)
     @ResponseBody
-    public Result<String> downloadMetaDataExcelTemplate(HttpServletResponse response) {
+    public Result<String> downloadMetaDataExcelTemplate() {
         return Result.buildSucc(
                 "/files/meta_data_excel_template.xlsx"
         );
