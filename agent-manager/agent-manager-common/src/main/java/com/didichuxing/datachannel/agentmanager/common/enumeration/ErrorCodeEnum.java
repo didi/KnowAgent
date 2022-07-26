@@ -104,6 +104,7 @@ public enum ErrorCodeEnum {
     FILE_IS_DIRECTORY(31003, "文件为目录"),
     FILE_CREATE_FAILED(31004, "文件创建失败"),
     FILE_DELETE_FAILED(31005, "文件删除失败"),
+    EXCEL_FILE_READ_FAILED(31006, "Excel 文件读取失败"),
     /*
      * AgentOperationTask操作 相关 32000 ~ 32999
      */

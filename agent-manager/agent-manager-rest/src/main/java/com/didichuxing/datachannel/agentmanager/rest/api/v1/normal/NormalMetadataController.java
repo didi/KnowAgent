@@ -9,7 +9,6 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.metadata.Metadat
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFileContent;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.metadata.MetaDataFilePaginationRecordVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
-import com.didichuxing.datachannel.agentmanager.common.util.FileUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
 import com.didichuxing.datachannel.agentmanager.core.metadata.MetadataManageService;
 import io.swagger.annotations.Api;
@@ -21,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,6 +61,7 @@ public class NormalMetadataController {
     @RequestMapping(value = "/import-result/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public Result importMetaData(@PathVariable Long id) {
+        metadataManageService.importMetaData(id);
         return Result.buildSucc();
     }
 

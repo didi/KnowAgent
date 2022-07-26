@@ -43,4 +43,10 @@ public interface MetadataManageService {
      */
     Integer queryCountByCondition(MetaDataFilePaginationQueryConditionDO metaDataFilePaginationQueryConditionDO);
 
+    /**
+     * 导入元数据信息
+     * @param id 元数据上传记录 id
+     */
+    void importMetaData(Long id);
+
 }

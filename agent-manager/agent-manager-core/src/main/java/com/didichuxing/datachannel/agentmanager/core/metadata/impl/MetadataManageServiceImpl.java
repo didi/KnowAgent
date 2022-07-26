@@ -10,6 +10,7 @@ import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
+import com.didichuxing.datachannel.agentmanager.common.util.ExcelUtils;
 import com.didichuxing.datachannel.agentmanager.common.util.FileUtils;
 import com.didichuxing.datachannel.agentmanager.core.metadata.MetadataManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.MetaDataFileMapper;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -114,13 +116,32 @@ public class MetadataManageServiceImpl implements MetadataManageService {
         }
         /*
          * 元数据文件读取内容
-         *
-         * TODO：
-         *
          */
-//        ExcelUtils.getListByExcel()
-        return null;
-
+        MetaDataFileContent metaDataFileContent = null;
+        try {
+            List<List<Object>> hostList = ExcelUtils.getListByExcel(
+                    new FileInputStream(file),
+                    metaDataFilePO.getFileName(),
+                    0,
+                    1
+            );
+            List<List<Object>> applicationList = ExcelUtils.getListByExcel(
+                    new FileInputStream(file),
+                    metaDataFilePO.getFileName(),
+                    1,
+                    1
+            );
+            metaDataFileContent = new MetaDataFileContent();
+            metaDataFileContent.setHostTable(hostList);
+            metaDataFileContent.setApplicationTable(applicationList);
+        } catch (Exception ex) {
+            throw new ServiceException(
+                    String.format("Excel 文件读取错误：%s", ex.getMessage()),
+                    ex,
+                    ErrorCodeEnum.EXCEL_FILE_READ_FAILED.getCode()
+            );
+        }
+        return metaDataFileContent;
     }
 
     @Override
@@ -140,6 +161,25 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     @Override
     public Integer queryCountByCondition(MetaDataFilePaginationQueryConditionDO metaDataFilePaginationQueryConditionDO) {
         return metaDataFileDAO.queryCountByCondition(metaDataFilePaginationQueryConditionDO);
+    }
+
+    @Override
+    public void importMetaData(Long id) {
+
+        /*
+         * 读取对应元数据 excel 文件内容
+         */
+        MetaDataFileContent metaDataFileContent = getMetaDataFileContent(id);
+        /*
+         * 元数据 excel 文件内容校验
+         */
+        if(null != metaDataFileContent) {
+
+        }
+        /*
+         * 元数据持久化
+         */
+
     }
 
     private Long handleCreateMetaDataFile(MetaDataFileDO metaDataFileDO, String operator) {
