@@ -3,10 +3,12 @@ package com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.PaginationRequestDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 public class LogCollectTaskPaginationRequestDTO extends PaginationRequestDTO {
 
     @ApiModelProperty(value = "日志采集任务名")
@@ -36,75 +38,7 @@ public class LogCollectTaskPaginationRequestDTO extends PaginationRequestDTO {
     @ApiModelProperty(value = "是否升序", notes="")
     private Boolean asc;
 
-    public String getLogCollectTaskName() {
-        return logCollectTaskName;
-    }
+    @ApiModelProperty(value = "日志采集任务状态 0：暂停 1：运行 2：已完成（状态2仅针对 \"按指定时间范围采集\" 类型）", notes="")
+    private List<Integer> logCollectTaskStatusList;
 
-    public void setLogCollectTaskName(String logCollectTaskName) {
-        this.logCollectTaskName = logCollectTaskName;
-    }
-
-    public List<Integer> getLogCollectTaskTypeList() {
-        return logCollectTaskTypeList;
-    }
-
-    public void setLogCollectTaskTypeList(List<Integer> logCollectTaskTypeList) {
-        this.logCollectTaskTypeList = logCollectTaskTypeList;
-    }
-
-    public List<Integer> getLogCollectTaskHealthLevelList() {
-        return logCollectTaskHealthLevelList;
-    }
-
-    public void setLogCollectTaskHealthLevelList(List<Integer> logCollectTaskHealthLevelList) {
-        this.logCollectTaskHealthLevelList = logCollectTaskHealthLevelList;
-    }
-
-    public Long getLogCollectTaskId() {
-        return logCollectTaskId;
-    }
-
-    public void setLogCollectTaskId(Long logCollectTaskId) {
-        this.logCollectTaskId = logCollectTaskId;
-    }
-
-    public List<Long> getServiceIdList() {
-        return serviceIdList;
-    }
-
-    public void setServiceIdList(List<Long> serviceIdList) {
-        this.serviceIdList = serviceIdList;
-    }
-
-    public Long getLocCollectTaskCreateTimeStart() {
-        return locCollectTaskCreateTimeStart;
-    }
-
-    public void setLocCollectTaskCreateTimeStart(Long locCollectTaskCreateTimeStart) {
-        this.locCollectTaskCreateTimeStart = locCollectTaskCreateTimeStart;
-    }
-
-    public Long getLocCollectTaskCreateTimeEnd() {
-        return locCollectTaskCreateTimeEnd;
-    }
-
-    public void setLocCollectTaskCreateTimeEnd(Long locCollectTaskCreateTimeEnd) {
-        this.locCollectTaskCreateTimeEnd = locCollectTaskCreateTimeEnd;
-    }
-
-    public String getSortColumn() {
-        return sortColumn;
-    }
-
-    public void setSortColumn(String sortColumn) {
-        this.sortColumn = sortColumn;
-    }
-
-    public Boolean getAsc() {
-        return asc;
-    }
-
-    public void setAsc(Boolean asc) {
-        this.asc = asc;
-    }
 }

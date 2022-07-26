@@ -98,6 +98,12 @@
             #{logCollectTaskType}
           </foreach>
       </if>
+      <if test="logCollectTaskStatusList != null">
+        and t1.log_collect_task_status in
+        <foreach collection="logCollectTaskStatusList" item="logCollectTaskStatus" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskStatus}
+        </foreach>
+      </if>
       <if test="logCollectTaskHealthLevelList != null">
           and t3.log_collect_task_health_level in
           <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
@@ -157,6 +163,12 @@
         and t1.log_collect_task_type in
         <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
           #{logCollectTaskType}
+        </foreach>
+      </if>
+      <if test="logCollectTaskStatusList != null">
+        and t1.log_collect_task_status in
+        <foreach collection="logCollectTaskStatusList" item="logCollectTaskStatus" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskStatus}
         </foreach>
       </if>
       <if test="logCollectTaskHealthLevelList != null">

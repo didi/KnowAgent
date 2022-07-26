@@ -357,6 +357,9 @@ public class NormalLogCollectTaskController {
         if (CollectionUtils.isNotEmpty(dto.getServiceIdList())) {
             logCollectTaskPaginationQueryConditionDO.setServiceIdList(dto.getServiceIdList());
         }
+        if (CollectionUtils.isNotEmpty(dto.getLogCollectTaskStatusList())) {
+            logCollectTaskPaginationQueryConditionDO.setLogCollectTaskStatusList(dto.getLogCollectTaskStatusList());
+        }
         if (null != dto.getLogCollectTaskId()) {
             logCollectTaskPaginationQueryConditionDO.setLogCollectTaskId(dto.getLogCollectTaskId());
         }
