@@ -220,7 +220,6 @@ export const ActionVersionForm: React.FC = (props: any) => {
 
 // 删除Agent版本
 export const DeleteAgentVersion: React.FC = (props: any) => {
-  console.log(props, 'DeleteAgentVersion');
   const { containerData, genData } = props;
   useEffect(() => {
     if (props.submitEvent !== 1) {
@@ -236,10 +235,11 @@ export const DeleteAgentVersion: React.FC = (props: any) => {
             props.setVisible(false);
           })
           .catch((err: any) => {
+            props.setVisible(false);
             notification.error({
               message: '错误',
               duration: 3,
-              description: '该版本包有Agent使用！如需删除，请先更改Agent版本',
+              description: err?.message || '该版本包有Agent使用！如需删除，请先更改Agent版本',
             });
           });
       } else if (containerData?.selectRowKeys.length > 0 && containerData?.isBatch) {
@@ -255,10 +255,12 @@ export const DeleteAgentVersion: React.FC = (props: any) => {
             props.setVisible(false);
           })
           .catch((err: any) => {
+            console.log(err);
+            props.setVisible(false);
             notification.error({
               message: '错误',
               duration: 3,
-              description: '该版本包有Agent使用！如需删除，请先更改Agent版本',
+              description: err?.message || '该版本包有Agent使用！如需删除，请先更改Agent版本',
             });
           });
       }

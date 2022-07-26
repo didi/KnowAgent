@@ -11,6 +11,7 @@ import {
   Utils,
   AppContainer,
   Modal,
+  message,
   IconFont,
   Divider,
   InputNumber,
@@ -648,7 +649,7 @@ const HostConfigurationForm = (props: any) => {
           )}
         </Row>
       </div>
-    </Form >
+    </Form>
   );
 };
 
@@ -994,12 +995,20 @@ export const deleteAgentHost = (props: any) => {
         // 23004：主机存在关联的容器导致主机删除失败 ==> 不可删除
         // 22001：Agent存在未采集完的日志 ==> 不可能存在这种情况
         if (res.code === 0) {
-          Modal.success({ content: res.message || '删除成功！' });
+          notification.success({
+            message: '成功',
+            duration: 3,
+            description: res.message || '删除成功！',
+          });
           props.genData();
         } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
-          Modal.error({ content: res.message });
+          notification.error({
+            message: '错误',
+            duration: 3,
+            description: res.message,
+          });
         } else {
-          Modal.error({ content: res.message });
+          notification.error({ message: '错误', duration: 3, description: res.message });
         }
       });
     },
@@ -1023,12 +1032,24 @@ export const deleteAgent = (props: any) => {
           // 23004：主机存在关联的容器导致主机删除失败 ==> 不可删除
           // 22001：Agent存在未采集完的日志 ==> 不可能存在这种情况
           if (res.code === 0) {
-            Modal.success({ content: res.message || '删除成功！' });
+            notification.success({
+              message: '成功',
+              duration: 3,
+              description: res.message || '删除成功！',
+            });
             props.genData();
           } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
-            Modal.error({ content: res.message });
+            notification.error({
+              message: '错误',
+              duration: 3,
+              description: res.message,
+            });
           } else {
-            Modal.error({ content: res.message });
+            notification.error({
+              message: '错误',
+              duration: 3,
+              description: res.message,
+            });
           }
         });
     },
