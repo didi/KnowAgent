@@ -9,7 +9,7 @@ import BarCharts from './BarCharts';
 import { appBarList } from './config';
 
 const HomePage = (): JSX.Element => {
-  const headerLeftContent = <>我的工作台</>;
+  const headerLeftContent = <>运营大盘</>;
 
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);

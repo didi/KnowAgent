@@ -12,7 +12,7 @@ import { agentBarList, taskBarList } from './config';
 import { useHistory } from 'react-router-dom';
 
 const HomePage = (): JSX.Element => {
-  const headerLeftContent = <>我的工作台</>;
+  const headerLeftContent = <>运维大盘</>;
   const history = useHistory();
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
