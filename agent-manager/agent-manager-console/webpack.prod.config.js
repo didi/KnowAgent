@@ -66,7 +66,7 @@ module.exports = {
     new SourceMapDevToolPlugin(
       {
         filename: 'sourcemap/[file].map',
-        publicPath: '/agent/sourcemap/env/'
+        publicPath: '/env/'
       }
     ),
     new (require('copy-webpack-plugin'))([
