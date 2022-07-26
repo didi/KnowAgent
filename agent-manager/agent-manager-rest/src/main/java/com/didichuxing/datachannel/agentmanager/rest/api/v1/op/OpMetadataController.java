@@ -90,7 +90,7 @@ public class OpMetadataController {
                     "27001：元数据Excel文件内容中application sheet中服务名在系统中已存在 ",
             notes = ""
     )
-    @RequestMapping(value = "/import-result/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/import-result/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Result importMetaData(@PathVariable Long id) {
         metadataManageService.importMetaData(id, SpringTool.getUserName());

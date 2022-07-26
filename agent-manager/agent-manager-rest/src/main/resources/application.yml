@@ -84,4 +84,4 @@ system:
 
 file:
   upload:
-    dir:
+    dir: /root/ka/am/output/upload
