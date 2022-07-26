@@ -1,4 +1,4 @@
-package com.didichuxing.datachannel.agentmanager.rest.api.v1.normal;
+package com.didichuxing.datachannel.agentmanager.rest.api.v1.op;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.PaginationResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
@@ -19,17 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Api(tags = "Normal-Metadata维度相关接口(REST)")
+@Api(tags = "OP-Metadata维度相关接口(REST)")
 @RestController
-@RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "metadata")
-public class NormalMetadataController {
+@RequestMapping(ApiPrefix.API_V1_OP_PREFIX + "metadata")
+public class OpMetadataController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NormalMetadataController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OpMetadataController.class);
 
     @Autowired
     private MetadataManageService metadataManageService;
@@ -42,7 +41,7 @@ public class NormalMetadataController {
     )
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public Result<Long> addMetadataFile(MetadataFileDTO dto) {
+    public Result<Long> addMetadataFile(@RequestBody MetadataFileDTO dto) {
         Long id = metadataManageService.addMetadataFile(dto, SpringTool.getUserName());
         return Result.buildSucc(id);
     }
@@ -56,7 +55,7 @@ public class NormalMetadataController {
     )
     @RequestMapping(value = "/file_content/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<MetaDataFileContent> getMetaDataFileContent(Long id) {
+    public Result<MetaDataFileContent> getMetaDataFileContent(@PathVariable Long id) {
         return Result.buildSucc(metadataManageService.getMetaDataFileContent(id));
     }
 
@@ -122,7 +121,7 @@ public class NormalMetadataController {
     @ApiOperation(value = "返回 meta data excel 文件模板下载请求对应链接，端口号后拼该链接即为 excel 模板文件下载链接", notes = "")
     @RequestMapping(value = "/meta-data-excel-template", method = RequestMethod.GET)
     @ResponseBody
-    public Result<String> downloadMetaDataExcelTemplate(HttpServletResponse response) {
+    public Result<String> downloadMetaDataExcelTemplate() {
         return Result.buildSucc(
                 "/files/meta_data_excel_template.xlsx"
         );
