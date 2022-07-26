@@ -53,7 +53,7 @@ public class OpMetadataController {
                     "31006：Excel 文件读取失败",
             notes = ""
     )
-    @RequestMapping(value = "/file_content/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/file-content/{id}", method = RequestMethod.GET)
     @ResponseBody
     public Result<MetaDataFileContent> getMetaDataFileContent(@PathVariable Long id) {
         return Result.buildSucc(metadataManageService.getMetaDataFileContent(id));
