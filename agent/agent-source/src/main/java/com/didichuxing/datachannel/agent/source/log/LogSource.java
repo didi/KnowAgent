@@ -948,11 +948,7 @@ public class LogSource extends AbstractSource {
             FileNode fileNode = wfn.getFileNode();
             long fileLength = 0L;
             try {
-                if (wfn.getIn() != null) {
-                    fileLength = wfn.getIn().length();
-                } else {
-                    fileLength = wfn.getFileNode().getFile().length();
-                }
+                fileLength = wfn.getFileNode().getFile().length();
             } catch (Exception e) {
                 LOGGER.error(
                         String.format("get source metrics error. wfn is %s. root cause is: %s", wfn, e.getMessage()),
