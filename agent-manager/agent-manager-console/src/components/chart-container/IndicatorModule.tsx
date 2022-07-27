@@ -322,6 +322,15 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
 
   const tableSelectChange = (selectedRowKeys) => {
     setSelectedRowKeys(selectedRowKeys);
+    const metricTreeMapsData = getLocalStorage(`metricTreeMaps${tabKey}`) || {};
+    const objkey = agentCur?.value;
+    const treeDataAllNew = changeTreeDataAll(treeDataAll);
+    const metricTreeMapsDataNew = {
+      ...metricTreeMapsData,
+      [objkey]: treeDataAllNew,
+    };
+
+    objkey && setLocalStorage(`metricTreeMaps${tabKey}`, metricTreeMapsDataNew);
   };
 
   const tableSelectSingle = (row, selected, selectedRows) => {
@@ -379,6 +388,8 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
 
   const sure = () => {
     if (isIndicatorProbe) {
+      const metricTreeMapsData = getLocalStorage(`metricTreeMaps${tabKey}`) || {};
+
       let objkey = agentCur?.value;
       if (objkey) {
         if (currentKey === '0' && !agentCur?.value && selectedRowKeys?.length > 0) {
@@ -404,6 +415,7 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
       }
       const treeDataAllNew = changeTreeDataAll(treeDataAll);
       const metricTreeMapsDataNew = {
+        ...metricTreeMapsData,
         [objkey]: treeDataAllNew,
       };
       objkey && setLocalStorage(`metricTreeMaps${tabKey}`, metricTreeMapsDataNew);
