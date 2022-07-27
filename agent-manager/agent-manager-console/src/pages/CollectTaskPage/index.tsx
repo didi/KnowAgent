@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChartContainer, Imenu } from '@didi/dcloud-design';
+import ChartContainer from '../../components/chart-container';
 import DragItem from '../../components/DragItem';
 
 export default (props) => {
@@ -15,22 +15,17 @@ export default (props) => {
   };
   const config = Object.assign({}, defaultConfig, props?.config);
 
-  const menuList: Imenu[] = (
+  const menuList: any[] = (
     config.isHaveTabInMetricTree
       ? [
-          // {
-          //   name: "Agent",
-          //   key: '0', // 固定
-          //   url: ''
-          // },
-          {
-            name: '日志采集',
-            key: '1', // 固定
-            url: '/api/v1/normal/metrics/2',
-          },
-        ].filter((o) => (config?.menuList || []).includes(o.key))
+        {
+          name: '日志采集',
+          key: '1', // 固定
+          url: '/api/v1/normal/metrics/2',
+        },
+      ].filter((o) => (config?.menuList || []).includes(o.key))
       : []
-  ) as Imenu[];
+  ) as any[];
 
   // 分组的数据
   const groupsData = [];

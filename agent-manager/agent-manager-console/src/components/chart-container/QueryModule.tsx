@@ -3,7 +3,7 @@ import { Select, Row, Col, message, Tooltip } from '@didi/dcloud-design';
 const { Option } = Select;
 import './style/query-module.less';
 import { eventBus } from './index';
-import { IconFont } from '@didi/dcloud-design/es/pkgs/icon-project';
+import { IconFont } from '@didi/dcloud-design';
 import { IindicatorSelectModule, IfilterData } from './index';
 import { request } from '../../request/index';
 

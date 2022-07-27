@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Row, Form, Input, Radio, InputNumber, Button, AutoComplete, Select, Col, Tooltip, Modal } from '@didi/dcloud-design';
-import { IconFont } from '@didi/dcloud-design/es/pkgs/icon-project';
+import { IconFont } from '@didi/dcloud-design';
 import { yyyyMMDDHHMMss, HHmmssSSS, yyyyMMDDHHMMssSSS, yyyyMMDDHHMMssSS, fuhao } from './dateRegAndGvar';
 import LogRepeatForm from './LogRepeatForm';
 // import { regChar } from '../../constants/reg';
@@ -308,10 +308,10 @@ const LogFileType = (props: any) => {
           onOk={() => setExampleVisible(false)}
           onCancel={() => setExampleVisible(false)}
         >
-          <Form.Item label="原始日志内容">
+          <Form.Item label="原始日志内容" labelCol={{ span: 4 }}>
             <TextArea readOnly value={exampleValue} style={{ height: '200px' }}></TextArea>
           </Form.Item>
-          <Form.Item label="日志切片规则">
+          <Form.Item label="日志切片规则" labelCol={{ span: 4 }}>
             <Row>
               <Col span={9}>
                 <Row style={{ display: 'flex', alignItems: 'baseline' }}>

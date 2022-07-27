@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { propsType as IcontainerProps } from '@didi/dcloud-design/es/pkgs/container';
+import { propsType as IcontainerProps } from '@didi/dcloud-design/es/extend/container';
 import { SortableContainer, SortableContainerProps } from 'react-sortable-hoc';
 import { Container } from '@didi/dcloud-design';
 

@@ -519,6 +519,14 @@ export const servicesList = async () => {
   });
 };
 
+export const collectStatusList = () => {
+  return [
+    { title: '暂停', value: 0 },
+    { title: '运行', value: 1 },
+    { title: '已完成', value: 2 },
+  ];
+};
+
 // 主机
 export const healthList = () => {
   return taskhealthTypes.map((item) => {
@@ -563,6 +571,11 @@ export const logCollectTaskHealthLevel = (record, value) => {
   );
 };
 
+export const logCollectTaskStatus = (record, value) => {
+  const status = record.logCollectTaskStatus;
+  return status == 0 ? '暂停' : status == 1 ? '运行' : status == 2 ? '已完成' : '-';
+};
+
 // 黄金指标标题 + 健康度自定义Title
 export const HealthMap = (props: any) => {
   console.log('HealthMap', props);
@@ -591,4 +604,4 @@ export const HealthMap = (props: any) => {
   );
 };
 
-export default { servicesList, switchTask, healthList, logCollectTaskHealthLevel, HealthMap };
+export default { servicesList, collectStatusList, switchTask, healthList, logCollectTaskHealthLevel, HealthMap };

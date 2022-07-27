@@ -3,7 +3,7 @@ import React from 'react';
 import { Collapse } from '@didi/dcloud-design';
 const { Panel } = Collapse;
 import { CaretRightOutlined } from '@ant-design/icons';
-import DragGroup from '@didi/dcloud-design/es/pkgs/drag-group';
+import { DragGroup } from '@didi/dcloud-design';
 
 interface propsType extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AppContainer, Imenu } from '@didi/dcloud-design';
+import { AppContainer } from '@didi/dcloud-design';
 import ChartContainer from '../../components/chart-container';
 import { EventBusTypes } from '../../constants/event-types';
 import DragItem from '../../components/DragItem';
@@ -15,7 +15,7 @@ interface Istate {
   agent?: string;
 }
 
-const menuList: Imenu[] = [
+const menuList: any[] = [
   {
     name: '采集任务相关',
     key: '1', // 固定

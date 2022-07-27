@@ -160,7 +160,7 @@ const AgentDetail = (props: any) => {
               showHeader: false,
               rowKey: 'hostName',
               loading: collectLoading,
-              columns: getAssociateHostColumns(getHostDetail),
+              columns: getAssociateHostColumns(getHostDetail) as any,
               dataSource: collectTastData,
               paginationProps: { ...pagination },
               tableHeaderTitle: true, // 展示表格自定义标题

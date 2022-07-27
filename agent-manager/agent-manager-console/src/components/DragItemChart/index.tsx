@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SingleChart, Spin, Tooltip } from '@didi/dcloud-design';
-import type { LineChartProps } from '@didi/dcloud-design/es/pkgs/single-chart/LineChart';
-import type { PieChartProps } from '@didi/dcloud-design/es/pkgs/single-chart/PieChart';
+import type { LineChartProps } from '@didi/dcloud-design/es/extend/single-chart/LineChart';
+import type { PieChartProps } from '@didi/dcloud-design/es/extend/single-chart/PieChart';
 import { Popover } from '@didi/dcloud-design';
 import EnlargedChart from './EnlargedChart';
 import { queryChartData } from './service';

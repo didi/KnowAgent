@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import _, { isArray } from 'lodash';
 import { Button, Drawer, IconFont, Utils, SingleChart } from '@didi/dcloud-design';
 import moment from 'moment';
-import type { LineChartProps } from '@didi/dcloud-design/es/pkgs/single-chart/LineChart';
+import type { LineChartProps } from '@didi/dcloud-design/es/extend/single-chart/LineChart';
 import LinkageTable from './linkageTable';
 const { EventBus } = Utils;
 const busInstance = new EventBus();
