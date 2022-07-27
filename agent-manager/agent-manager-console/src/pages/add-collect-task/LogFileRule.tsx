@@ -308,19 +308,19 @@ const LogFileType = (props: any) => {
           onOk={() => setExampleVisible(false)}
           onCancel={() => setExampleVisible(false)}
         >
-          <Form.Item label="原始日志内容" labelCol={{ span: 4 }}>
-            <TextArea readOnly value={exampleValue} style={{ height: '200px' }}></TextArea>
+          <Form.Item label="原始日志内容" labelCol={{ span: 4 }} wrapperCol={{ span: 24 }}>
+            <TextArea readOnly value={exampleValue} style={{ height: '150px' }}></TextArea>
           </Form.Item>
-          <Form.Item label="日志切片规则" labelCol={{ span: 4 }}>
+          <Form.Item label="日志切片规则" labelCol={{ span: 4 }} wrapperCol={{ span: 24 }}>
             <Row>
               <Col span={9}>
                 <Row style={{ display: 'flex', alignItems: 'baseline' }}>
-                  <Col span={8}>
+                  <Col span={6}>
                     <span>左起第</span>
                   </Col>
-                  <Col span={8}>
+                  <Col span={10}>
                     <Form.Item>
-                      <InputNumber value={0} style={{ margin: '0 5px', width: '40px' }} readOnly />
+                      <InputNumber value={0} style={{ margin: '0 5px', width: '70px' }} readOnly />
                     </Form.Item>
                   </Col>
                   <Col span={8}>

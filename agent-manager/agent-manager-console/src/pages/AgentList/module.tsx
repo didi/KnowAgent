@@ -132,7 +132,7 @@ export const editOpAgent = (params: any) => {
   });
 };
 export const deleteAgentAPI = (agentId: number) => {
-  return request(`/api/v1/op/hosts/${agentId}`, {
+  return request(`/api/v1/op/agent/${agentId}`, {
     method: 'DELETE',
   });
 };
