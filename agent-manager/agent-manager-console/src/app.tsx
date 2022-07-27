@@ -64,7 +64,7 @@ const App = () => {
           getUserInfo={fn}
           needSettingsIcon={false}
         >
-          <RouteGuard routeList={pageRoutes} />
+          <RouteGuard routeList={pageRoutes} noMatch={() => <></>} />
         </DLayout.DSkoteLayout>
       </Router>
     </AppContainer>

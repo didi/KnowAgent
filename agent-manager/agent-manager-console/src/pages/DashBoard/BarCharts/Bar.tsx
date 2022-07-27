@@ -86,7 +86,7 @@ export const Bar = (props: ILine) => {
     myChart.current = echarts.init(document.getElementById(props.id) as HTMLElement);
 
     myChart.current.on('click', function (params) {
-      linkTo && linkTo(params.name, item);
+      linkTo && linkTo(params.value, item);
     });
 
     return () => {

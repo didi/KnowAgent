@@ -231,7 +231,7 @@ export const DeleteAgentVersion: React.FC = (props: any) => {
               message: '删除成功',
               duration: 3,
             });
-            // getData();
+            genData();
             props.setVisible(false);
           })
           .catch((err: any) => {
@@ -251,7 +251,7 @@ export const DeleteAgentVersion: React.FC = (props: any) => {
               message: '删除成功',
               duration: 3,
             });
-            // getData();
+            genData();
             props.setVisible(false);
           })
           .catch((err: any) => {

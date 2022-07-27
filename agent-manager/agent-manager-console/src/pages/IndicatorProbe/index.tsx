@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppContainer, Imenu, SingleChart, Utils } from '@didi/dcloud-design';
+import { AppContainer, SingleChart, Utils } from '@didi/dcloud-design';
 import ChartContainer from '../../components/chart-container';
 import { EventBusTypes } from '../../constants/event-types';
 import DragItem from '../../components/DragItem';
@@ -9,7 +9,7 @@ interface propsType {
   show?: boolean;
 }
 
-const menuList: Imenu[] = [
+const menuList: any[] = [
   {
     name: 'Agent相关',
     key: '0', // 固定

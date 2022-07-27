@@ -132,7 +132,7 @@ export const editOpAgent = (params: any) => {
   });
 };
 export const deleteAgentAPI = (agentId: number) => {
-  return request(`/api/v1/op/hosts/${agentId}`, {
+  return request(`/api/v1/op/agent/${agentId}`, {
     method: 'DELETE',
   });
 };
@@ -1023,35 +1023,34 @@ export const deleteAgent = (props: any) => {
     okText: '确认',
     cancelText: '取消',
     onOk() {
-      !props.agentId &&
-        deleteAgentAPI(props.agentId).then((res: any) => {
-          // 0：不忽略数据未采集完 1：忽略数据未采集完
-          // 删除主机 0：删除成功
-          // 10000：参数错误 ==> 不可删除
-          // 23000：待删除主机在系统不存在 ==> 不可删除
-          // 23004：主机存在关联的容器导致主机删除失败 ==> 不可删除
-          // 22001：Agent存在未采集完的日志 ==> 不可能存在这种情况
-          if (res.code === 0) {
-            notification.success({
-              message: '成功',
-              duration: 3,
-              description: res.message || '删除成功！',
-            });
-            props.genData();
-          } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
-            notification.error({
-              message: '错误',
-              duration: 3,
-              description: res.message,
-            });
-          } else {
-            notification.error({
-              message: '错误',
-              duration: 3,
-              description: res.message,
-            });
-          }
-        });
+      deleteAgentAPI(props.agentId).then((res: any) => {
+        // 0：不忽略数据未采集完 1：忽略数据未采集完
+        // 删除主机 0：删除成功
+        // 10000：参数错误 ==> 不可删除
+        // 23000：待删除主机在系统不存在 ==> 不可删除
+        // 23004：主机存在关联的容器导致主机删除失败 ==> 不可删除
+        // 22001：Agent存在未采集完的日志 ==> 不可能存在这种情况
+        if (res.code === 0) {
+          notification.success({
+            message: '成功',
+            duration: 3,
+            description: res.message || '删除成功！',
+          });
+          props.genData();
+        } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
+          notification.error({
+            message: '错误',
+            duration: 3,
+            description: res.message,
+          });
+        } else {
+          notification.error({
+            message: '错误',
+            duration: 3,
+            description: res.message,
+          });
+        }
+      });
     },
   });
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Row, Form, Input, Radio, InputNumber, Button, AutoComplete, Select, Col, Tooltip } from '@didi/dcloud-design';
-import { IconFont } from '@didi/dcloud-design/es/pkgs/icon-project';
+import { IconFont } from '@didi/dcloud-design';
 import { yyyyMMDDHHMMss, HHmmssSSS, yyyyMMDDHHMMssSSS, yyyyMMDDHHMMssSS, fuhao } from './dateRegAndGvar';
 import LogRepeatForm from './LogRepeatForm';
 // import { regChar } from '../../constants/reg';

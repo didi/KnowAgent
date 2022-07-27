@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SingleChart, Spin, Tooltip } from '@didi/dcloud-design';
-import type { LineChartProps } from '@didi/dcloud-design/es/pkgs/single-chart/LineChart';
-import type { PieChartProps } from '@didi/dcloud-design/es/pkgs/single-chart/PieChart';
+import type { LineChartProps } from '@didi/dcloud-design/es/extend/single-chart/LineChart';
+import type { PieChartProps } from '@didi/dcloud-design/es/extend/single-chart/PieChart';
 import { Popover } from '@didi/dcloud-design';
 import EnlargedChart from './EnlargedChart';
 import { queryChartData } from './service';
@@ -89,7 +89,8 @@ function Chart(props: LineChartProps & PieChartProps & { metricDesc: string }): 
   };
 
   useEffect(() => {
-    // getChartData['type'] = props.title;
+    // 区分不同图表的getChartData方法，在组件卸载时删掉指定的图表chartReload事件
+    getChartData['type'] = props.title;
     eventBus?.on('chartReload', getChartData);
     return () => {
       eventBus.offByType('chartReload', getChartData);
@@ -132,6 +133,7 @@ function Chart(props: LineChartProps & PieChartProps & { metricDesc: string }): 
         </Popover>
       );
     }
+
     return (
       <div
         style={{
@@ -150,6 +152,7 @@ function Chart(props: LineChartProps & PieChartProps & { metricDesc: string }): 
       </div>
     );
   };
+
   return <Spin spinning={loading}>{renderContent()}</Spin>;
 }
 

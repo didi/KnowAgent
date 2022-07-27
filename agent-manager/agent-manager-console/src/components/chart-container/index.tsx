@@ -4,9 +4,9 @@ import { Collapse, Button, Radio, Tooltip, Empty } from '@didi/dcloud-design';
 const { Panel } = Collapse;
 import { arrayMoveImmutable } from 'array-move';
 import { CaretRightOutlined, ReloadOutlined } from '@ant-design/icons';
-import { IconFont } from '@didi/dcloud-design/es/pkgs/icon-project';
+import { IconFont } from '@didi/dcloud-design';
 import moment from 'moment';
-import DragGroup from '@didi/dcloud-design/es/pkgs/drag-group';
+import { DragGroup } from '@didi/dcloud-design';
 import TimeModule from './TimeModule';
 import IndicatorDrawer from './IndicatorDrawer';
 import QueryModule from './QueryModule';
@@ -221,10 +221,11 @@ const ChartContainer: React.FC<propsType> = ({ filterData, dragModule, reloadMod
   const timeChange = (dateStringsArr, isRelative) => {
     const timeArr = JSON.parse(JSON.stringify(dateStringsArr));
     setDateStrings([timeArr[0] - advanceTime.THIRTY, timeArr[1] - advanceTime.THIRTY]);
+    const ortherData = Object.assign(filterData || {}, queryData);
     setTimeout(() => {
       eventBus.emit('chartReload', {
         dateStrings: dateStringsArr,
-        ...queryData,
+        ...ortherData,
       });
     }, 150);
     setIsRelative(isRelative);

@@ -42,6 +42,7 @@ const BarCharts = (props: {
     const data = props.dashBoardData?.[item.key]?.histogramChatValue || [];
     const row = props.dashBoardData?.[item.key];
     let xAxisData = data.map((item) => item.key);
+    const clientWidth1920 = document.body.clientWidth === 1920;
 
     if (props.getKeys) {
       xAxisData = props.getKeys(data);
@@ -76,6 +77,10 @@ const BarCharts = (props: {
         fontFamily: 'PingFangSC-Regular',
         axisLabel: {
           color: '#464646',
+          interval: 0,
+          overflow: 'truncate',
+          width: !clientWidth1920 ? 100 : 145,
+          ellipsis: '...',
         },
       },
       yAxis: {

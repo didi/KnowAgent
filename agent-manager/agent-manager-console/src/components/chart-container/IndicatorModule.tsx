@@ -3,8 +3,8 @@ import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { Table, Layout, Tree, Row, Col, Select, message, Utils } from '@didi/dcloud-design';
 const { DirectoryTree } = Tree;
 const { Content, Sider } = Layout;
-import { IconFont } from '@didi/dcloud-design/es/pkgs/icon-project';
-import SearchSelect from '@didi/dcloud-design/es/pkgs/search-select';
+import { IconFont } from '@didi/dcloud-design';
+import SearchSelect from '@didi/dcloud-design/es/extend/search-select';
 import QueryModule from './QueryModule';
 import { IindicatorSelectModule, eventBus } from './index';
 import './style/index.less';
@@ -322,6 +322,15 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
 
   const tableSelectChange = (selectedRowKeys) => {
     setSelectedRowKeys(selectedRowKeys);
+    const metricTreeMapsData = getLocalStorage(`metricTreeMaps${tabKey}`) || {};
+    const objkey = agentCur?.value;
+    const treeDataAllNew = changeTreeDataAll(treeDataAll);
+    const metricTreeMapsDataNew = {
+      ...metricTreeMapsData,
+      [objkey]: treeDataAllNew,
+    };
+
+    objkey && setLocalStorage(`metricTreeMaps${tabKey}`, metricTreeMapsDataNew);
   };
 
   const tableSelectSingle = (row, selected, selectedRows) => {
@@ -379,6 +388,8 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
 
   const sure = () => {
     if (isIndicatorProbe) {
+      const metricTreeMapsData = getLocalStorage(`metricTreeMaps${tabKey}`) || {};
+
       let objkey = agentCur?.value;
       if (objkey) {
         if (currentKey === '0' && !agentCur?.value && selectedRowKeys?.length > 0) {
@@ -404,6 +415,7 @@ const IndicatorDrawer: React.FC<propsType> = ({ requestUrl, cRef, hide, currentK
       }
       const treeDataAllNew = changeTreeDataAll(treeDataAll);
       const metricTreeMapsDataNew = {
+        ...metricTreeMapsData,
         [objkey]: treeDataAllNew,
       };
       objkey && setLocalStorage(`metricTreeMaps${tabKey}`, metricTreeMapsDataNew);

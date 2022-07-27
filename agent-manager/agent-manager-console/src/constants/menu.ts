@@ -8,7 +8,7 @@ export const leftMenus = {
   children: [
     {
       name: 'home',
-      path: 'version',
+      path: '/version',
       icon: 'icon-wodegongzuotai',
       children: [
         {
@@ -24,7 +24,7 @@ export const leftMenus = {
     //元数据中心
     {
       name: 'meta',
-      path: 'meta',
+      path: '/meta',
       icon: 'icon-cebiandaohang-shujuyuan',
       children: [
         {
@@ -40,7 +40,7 @@ export const leftMenus = {
     // Agent中心
     {
       name: 'main',
-      path: 'main',
+      path: '/main',
       icon: 'icon-Agentzhongxin',
       children: [
         {
@@ -58,13 +58,13 @@ export const leftMenus = {
     //采集任务管理
     {
       name: 'collect',
-      path: 'collect',
+      path: '/collect',
       icon: 'icon-cebiandaohang-caijirenwu',
     },
     //监控中心
     {
       name: 'monitor',
-      path: 'monitor',
+      path: '/monitor',
       icon: 'icon-cebiandaohang-jiankongzhongxin',
       children: [
         {
@@ -80,7 +80,7 @@ export const leftMenus = {
     //运维中心
     {
       name: 'tool',
-      path: 'tool',
+      path: '/tool',
       icon: 'icon-a-cebiandaohang-zhibiaotancha',
       children: [
         {

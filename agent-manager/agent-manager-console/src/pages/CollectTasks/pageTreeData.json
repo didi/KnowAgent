@@ -114,6 +114,25 @@
                 "sorter": false
               },
               {
+                "title": "采集任务状态",
+                "dataIndex": "logCollectTaskStatus",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "type": "custom",
+                    "renderCustomName": "logCollectTaskStatus"
+                  }
+                ],
+                "sorter": false
+              },
+              {
                 "title": "健康度",
                 "dataIndex": "logCollectTaskHealthLevel",
                 "responsive": [
@@ -281,6 +300,24 @@
                   }
                 },
                 "option": "servicesList"
+              },
+              {
+                "type": "select",
+                "title": "采集任务状态",
+                "dataIndex": "logCollectTaskStatusList",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "mode": "multiple",
+                  "allowClear": true,
+                  "showArrow": true,
+                  "maxTagCount": "responsive",
+                  "style": {
+                    "width": "180px"
+                  }
+                },
+                "option": "collectStatusList"
               },
               {
                 "type": "select",

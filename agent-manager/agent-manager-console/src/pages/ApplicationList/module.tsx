@@ -695,7 +695,7 @@ export const K8sDetail: React.FC = (props: any) => {
           showHeader: false,
           rowKey: 'serviceName',
           loading: loading,
-          columns: k8sColums,
+          columns: k8sColums as any,
           dataSource: detailList,
           paginationProps: { ...pagination },
           attrs: {
