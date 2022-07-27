@@ -3,7 +3,6 @@ import { AppContainer, Spin } from '@didi/dcloud-design';
 import { EventBusTypes } from '../../constants/event-types';
 import HeaderCard from './headerCard';
 import PieCharts from './pieCharts';
-import LineCharts from './lineCharts';
 import { getDevopsDashboard } from './service';
 import './style/index.less';
 import BackToTop from './BackToTop';

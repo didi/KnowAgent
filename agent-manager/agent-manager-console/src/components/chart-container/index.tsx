@@ -221,10 +221,11 @@ const ChartContainer: React.FC<propsType> = ({ filterData, dragModule, reloadMod
   const timeChange = (dateStringsArr, isRelative) => {
     const timeArr = JSON.parse(JSON.stringify(dateStringsArr));
     setDateStrings([timeArr[0] - advanceTime.THIRTY, timeArr[1] - advanceTime.THIRTY]);
+    const ortherData = Object.assign(filterData || {}, queryData);
     setTimeout(() => {
       eventBus.emit('chartReload', {
         dateStrings: dateStringsArr,
-        ...queryData,
+        ...ortherData,
       });
     }, 150);
     setIsRelative(isRelative);
