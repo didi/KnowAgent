@@ -153,7 +153,7 @@ public class WorkingFileNode {
             }
         }
         if (intervalTime == 0L) {
-            LOGGER.warn("use currentTime to set intervalTime. uniqueKey is " + uniqueKey);
+            LOGGER.info("use currentTime to set intervalTime. uniqueKey is " + uniqueKey);
             intervalTime = (System.currentTimeMillis() / ONE_HOUR) * ONE_HOUR;
         }
     }
