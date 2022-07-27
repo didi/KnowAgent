@@ -147,14 +147,7 @@ public class PeriodMetricAutoComputeComponent {
                     }
                 }
             } else {
-                LOGGER.error(
-                        String.format(
-                                "class=PeriodMetricAutoComputeComponent||method=unRegisterAutoComputeTask()||errorMsg=unregister auto compute task failed, because id: %s in task's class: %s not exists in externalComputeInstanceId2FutureMap",
-                                id,
-                                instance.getClass().getName()
-                        )
-                );
-                unRegisterSuccessful = false;
+                //对应组件 invoke 两 次，属 正 常 情 况
             }
         } catch (Exception ex) {
             LOGGER.error(

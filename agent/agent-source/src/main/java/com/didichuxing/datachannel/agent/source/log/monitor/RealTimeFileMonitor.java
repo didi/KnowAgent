@@ -14,6 +14,7 @@ import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.engine.loggather.LogGather;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 import com.didichuxing.datachannel.agent.source.log.offset.OffsetManager;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.didichuxing.datachannel.agent.engine.AbstractTask;
@@ -251,14 +252,15 @@ public enum RealTimeFileMonitor implements Monitor {
 
                         for (WatchEvent<?> event : key.pollEvents()) {
                             WatchEvent.Kind<?> kind = event.kind();
-
                             if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-                                for (String dir : keyDirMap.get(key)) {
-                                    processAdd(((Path) event.context()).toString(), dir);
+                                Set<String> set = keyDirMap.get(key);
+                                if(CollectionUtils.isNotEmpty(set)) {
+                                    for (String dir : set) {
+                                        processAdd(((Path) event.context()).toString(), dir);
+                                    }
                                 }
                             }
                         }
-
                         if (!key.reset()) {
                             LOGGER.warn("stop moniotr file change for unknown reason! key is " + key);
                             continue;

@@ -303,14 +303,14 @@ public class WorkingFileNode {
                 return true;
             }
 
-            if (getFileNode().getOffset() > in.length()) {
+            if (getFileNode().getOffset() > getFileNode().getFile().length()) {
                 LOGGER
                     .warn("offset's offset is large than length and set offset to length.offset is "
                           + getFileNode().getFileOffSet() + ", length is " + in.length());
-                getFileNode().setOffset(in.length());
+                getFileNode().setOffset(getFileNode().getFile().length());
                 return true;
             }
-            return getFileNode().getOffset() == in.length();
+            return getFileNode().getOffset() == getFileNode().getFile().length();
         } catch (Exception e) {
             LogGather.recordErrorLog("WorkingFileNode error",
                 "checkFileCollectEnd error..logModelId is " + fileNode.getModelId()
