@@ -139,6 +139,8 @@ const QueryModule: React.FC<propsType> = ({ indicatorSelectModule, layout, filte
   const logCollectTaskIdChange = (vals) => {
     setlogCollectTaskId(vals?.value || null);
     setlogCollectTaskCur(vals);
+    setPathId(null);
+    setHostName(null);
   };
   const hostChange = (vals) => {
     setHostName(vals?.value || null);

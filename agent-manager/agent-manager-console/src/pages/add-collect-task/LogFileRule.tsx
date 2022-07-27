@@ -302,16 +302,16 @@ const LogFileType = (props: any) => {
           </Row>
         </Form.Item>
         <Modal
-          width={600}
+          width={720}
           title="切片规则配置样例"
           visible={exampaleVisbile}
           onOk={() => setExampleVisible(false)}
           onCancel={() => setExampleVisible(false)}
         >
-          <Form.Item label="原始日志内容" labelCol={{ span: 4 }} wrapperCol={{ span: 24 }}>
+          <Form.Item label="原始日志内容" labelCol={{ span: 3 }} wrapperCol={{ span: 24 }}>
             <TextArea readOnly value={exampleValue} style={{ height: '150px' }}></TextArea>
           </Form.Item>
-          <Form.Item label="日志切片规则" labelCol={{ span: 4 }} wrapperCol={{ span: 24 }}>
+          <Form.Item label="日志切片规则" labelCol={{ span: 3 }} wrapperCol={{ span: 24 }}>
             <Row>
               <Col span={9}>
                 <Row style={{ display: 'flex', alignItems: 'baseline' }}>
