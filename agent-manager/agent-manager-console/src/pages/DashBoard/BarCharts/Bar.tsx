@@ -89,6 +89,26 @@ export const Bar = (props: ILine) => {
       linkTo && linkTo(params.value, item);
     });
 
+    myChart.current.on('mouseover', function (params) {
+      if (params.componentType === 'xAxis') {
+        const tooltip = document.getElementById(`extension-${props.id}`);
+
+        tooltip.classList.add('x-mouse-in');
+        tooltip.style.top = '-6px';
+        tooltip.style.left = `${params.event.offsetX - 10}px`;
+        tooltip.style.display = 'inline';
+        tooltip.innerText = params.value;
+      }
+    });
+
+    myChart.current.on('mouseout', function (params) {
+      if (params.componentType === 'xAxis') {
+        const tooltip = document.getElementById(`extension-${props.id}`);
+
+        tooltip.style.display = 'none';
+      }
+    });
+
     return () => {
       myChart.current?.dispose();
       document.getElementById(props.id) && echarts.dispose(document.getElementById(props.id));
@@ -166,15 +186,17 @@ export const Bar = (props: ILine) => {
 
   const renderChart = useMemo(() => {
     return (
-      <div
-        id={props.id}
-        key={props.id}
-        className={props.className}
-        style={{
-          // width: props.width || 380,
-          height: props.height || 260,
-        }}
-      ></div>
+      <div className={props.className}>
+        <div
+          id={props.id}
+          key={props.id}
+          style={{
+            // width: props.width || 380,
+            height: props.height || 260,
+          }}
+        ></div>
+        <div id={`extension-${props.id}`}></div>
+      </div>
     );
   }, [id, className, height]);
   return (
