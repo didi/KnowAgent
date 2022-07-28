@@ -41,7 +41,7 @@ public class OpMetadataController {
     )
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public Result<Long> addMetadataFile(@RequestBody MetadataFileDTO dto) {
+    public Result<Long> addMetadataFile(MetadataFileDTO dto) {
         Long id = metadataManageService.addMetadataFile(dto, SpringTool.getUserName());
         return Result.buildSucc(id);
     }

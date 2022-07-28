@@ -27,14 +27,14 @@ public class MetadataFileDTO {
     private String fileMd5;
 
     public CheckResult checkParameter() {
-        if(StringUtils.isNotBlank(description)) {
+        if(StringUtils.isBlank(description)) {
             return new CheckResult(
                     false,
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode(),
                             "描述信息不可为空"
             );
         }
-        if(StringUtils.isNotBlank(fileMd5)) {
+        if(StringUtils.isBlank(fileMd5)) {
             return new CheckResult(
                     false,
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode(),
