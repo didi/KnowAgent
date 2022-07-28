@@ -1,7 +1,7 @@
 import { DownOutlined } from '@ant-design/icons';
 import React, { useState, useEffect, useMemo } from 'react';
 import { ProTable, IconFont } from '@didi/dcloud-design';
-import { Button, Modal, message, Tooltip } from '@didi/dcloud-design';
+import { Button, Modal, message, Tooltip, Select } from '@didi/dcloud-design';
 import ProFormProject from '../tpl-proform/index';
 import { renderTableOpts } from '@didi/dcloud-design/lib/common-pages/render-table-opts';
 import '@didi/dcloud-design/lib/style/index.less';
@@ -12,6 +12,7 @@ import ModalContainer from './modal-container/ModalContainer';
 import TplAutoPage from '../tpl-autopage';
 import { useLocation, withRouter } from 'react-router-dom';
 import { request } from '../../../request/index';
+import { defaultPagination } from '../../../constants/common';
 const { confirm } = Modal;
 const methods = ['get', 'post', 'formPost', 'filePost', 'put', 'delete'];
 type DataType = {
@@ -321,18 +322,7 @@ const ProTableMoudle = (props: any) => {
   const [searchResult, setSearchResult] = useState('');
   const testForm: any = React.useRef();
 
-  const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-    position: 'bottomRight',
-    showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '50', '100', '200', '500'],
-    showTotal: (total: number) => `共 ${total} 条目`,
-    // locale: {
-    //   items_per_page: '条',
-    // },
-    // selectComponentClass: CustomSelect,
-  });
+  const [pagination, setPagination] = useState(defaultPagination);
   // operationArray: [
   //   {
   //     operationName: '编辑1',
@@ -453,10 +443,12 @@ const ProTableMoudle = (props: any) => {
       if (element.valueType && filterMap[element.valueType]) {
         // eslint-disable-next-line react/display-name
         element.render = (t: any, record: any) => {
-          return (
+          return element.needTooltip ? (
             <Tooltip placement="bottomLeft" title={filterMap[element.valueType](t, record)}>
               {filterMap[element.valueType](t, record)}
             </Tooltip>
+          ) : (
+            filterMap[element.valueType](t, record)
           );
         };
       }
@@ -547,6 +539,7 @@ const ProTableMoudle = (props: any) => {
               ...configureData,
               loading: false,
               paginationProps: {
+                ...pagination,
                 current: result?.pageNo || 2,
                 pageSize: result?.pageSize || 10,
                 total: result?.total || 200,
@@ -558,6 +551,7 @@ const ProTableMoudle = (props: any) => {
               ...configureData,
               loading: false,
               paginationProps: {
+                ...pagination,
                 current: data.pagination?.pageNo || 2,
                 pageSize: data.pagination?.pageSize || 10,
                 total: data.pagination?.total || 200,
@@ -599,7 +593,7 @@ const ProTableMoudle = (props: any) => {
         //   location.href = dat.file_link;
         // });
       },
-      onCancel() { },
+      onCancel() {},
     });
   };
 
@@ -701,7 +695,7 @@ const ProTableMoudle = (props: any) => {
       arr.push({
         label: '导入',
         className: 'dcloud-btn-primary',
-        clickFunc: () => { },
+        clickFunc: () => {},
       });
     }
 
@@ -823,8 +817,8 @@ const ProTableMoudle = (props: any) => {
               rowSelection: newConfig?.rowSelection ? rowSelection : false,
               footer: newConfig?.footer
                 ? () => {
-                  return newConfig?.footer;
-                }
+                    return newConfig?.footer;
+                  }
                 : false,
               onChange: onTableChange,
             },

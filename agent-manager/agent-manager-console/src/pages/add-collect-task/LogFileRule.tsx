@@ -313,7 +313,7 @@ const LogFileType = (props: any) => {
           </Form.Item>
           <Form.Item label="日志切片规则" labelCol={{ span: 3 }} wrapperCol={{ span: 24 }}>
             <Row>
-              <Col span={9}>
+              <Col span={8}>
                 <Row style={{ display: 'flex', alignItems: 'baseline' }}>
                   <Col span={6}>
                     <span>左起第</span>
@@ -328,12 +328,12 @@ const LogFileType = (props: any) => {
                   </Col>
                 </Row>
               </Col>
-              <Col span={4} style={{ margin: '0 10px' }}>
+              <Col span={5} style={{ padding: '0 10px' }}>
                 <Form.Item>
                   <Input value={'['} readOnly placeholder="请输入切片时间戳前缀字符串" />
                 </Form.Item>
               </Col>
-              <Col span={10}>
+              <Col span={11}>
                 <Form.Item>
                   <Input value="yyyy-MM-dd HH:mm:ss,SSS" readOnly />
                 </Form.Item>

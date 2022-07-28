@@ -32,84 +32,45 @@
               {
                 "title": "集群名",
                 "dataIndex": "kafkaClusterName",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [],
                 "sorter": true
               },
               {
                 "title": "集群地址",
                 "dataIndex": "kafkaClusterBrokerConfiguration",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
-                "operationArray": []
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "ellipsis": true
               },
               {
                 "title": "生产端初始化属性",
                 "dataIndex": "kafkaClusterProducerInitConfiguration",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [],
                 "ellipsis": true,
                 "tooltip": true,
-                "width": "400px"
+                "width": "400px",
+                "needTooltip": true,
+                "lineClampOne": true
               },
               {
                 "title": "接收端类型",
                 "dataIndex": "receiverType",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": []
               },
               {
                 "title": "新增时间",
                 "dataIndex": "createTime",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [],
                 "valueType": "dateTime"
               },
               {
                 "title": "操作",
                 "dataIndex": "options",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [
                   {
                     "operationName": "编辑",
@@ -186,10 +147,7 @@
                 "type": "dateRangePicker",
                 "title": "新增时间",
                 "dataIndex": "createTime",
-                "placeholder": [
-                  "开始时间",
-                  "结束时间"
-                ],
+                "placeholder": ["开始时间", "结束时间"],
                 "initialValue": "",
                 "componentProps": {
                   "maxLength": 128

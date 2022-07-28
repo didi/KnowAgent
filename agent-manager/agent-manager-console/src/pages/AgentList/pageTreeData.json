@@ -32,14 +32,7 @@
               {
                 "title": "主机名",
                 "dataIndex": "hostName",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [
                   {
                     "operationName": "",
@@ -62,27 +55,13 @@
               {
                 "title": "主机IP",
                 "dataIndex": "ip",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": []
               },
               {
                 "title": "主机类型",
                 "dataIndex": "container",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [],
                 "sorter": true,
                 "valueType": "hostType"
@@ -90,41 +69,22 @@
               {
                 "title": "承载应用",
                 "dataIndex": "serviceList",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
-                "operationArray": []
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "needTooltip": true,
+                "lineClampOne": true
               },
               {
                 "title": "Agent版本号",
                 "dataIndex": "agentVersion",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [],
                 "sorter": false
               },
               {
                 "title": "Agent健康度",
                 "dataIndex": "agentHealthLevel",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [
                   {
                     "operationName": "",
@@ -156,28 +116,14 @@
               {
                 "title": "新增时间",
                 "dataIndex": "hostCreateTime",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [],
                 "valueType": "dateTime"
               },
               {
                 "title": "操作",
                 "dataIndex": "Thu Jan 20 2022 18:56:17 GMT+0800 (中国标准时间)",
-                "responsive": [
-                  "xs",
-                  "sm",
-                  "md",
-                  "lg",
-                  "xl",
-                  "xxl"
-                ],
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [
                   {
                     "operationName": "编辑",
@@ -352,10 +298,7 @@
                 "type": "dateRangePicker",
                 "title": "新增时间",
                 "dataIndex": "hostCreateTime",
-                "placeholder": [
-                  "开始时间",
-                  "结束时间"
-                ],
+                "placeholder": ["开始时间", "结束时间"],
                 "initialValue": "",
                 "componentProps": {
                   "maxLength": 128
