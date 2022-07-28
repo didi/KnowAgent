@@ -53,7 +53,8 @@
                 "dataIndex": "content",
                 "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
                 "operationArray": [],
-                "width": "450px"
+                "width": "450px",
+                "needTooltip": true
               },
               {
                 "title": "创建人",

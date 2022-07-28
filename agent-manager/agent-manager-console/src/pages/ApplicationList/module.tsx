@@ -499,8 +499,7 @@ export const ActionAppDetail: React.FC = (props: any) => {
         dataSource={props.containerData}
         config={detailConfig}
         column={{ xl: 2, xxl: 2, sm: 2 }}
-        labelWidth={'84px'}
-        labelStyle={{ textAlign: 'right', color: '#74788D', display: 'block' }}
+        labelStyle={{ minWidth: '72px', textAlign: 'right', display: 'block' }}
         customTitle={() => {
           return (
             <div

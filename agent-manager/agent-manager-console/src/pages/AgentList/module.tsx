@@ -325,7 +325,7 @@ export const NewHostForm: React.FC = (props: any) => {
           {testHide && (
             <span
               style={{ color: testResult ? '#2fc25b' : '#f5222d' }}
-            // className={testResult ? 'success' : 'fail'}
+              // className={testResult ? 'success' : 'fail'}
             >
               {testResult ? '测试成功！' : '测试失败！'}
             </span>
@@ -592,7 +592,7 @@ const HostConfigurationForm = (props: any) => {
       // labelCol={{ span: 4 }}
       // wrapperCol={{ span: 20 }}
       layout="horizontal"
-    // onFinish={handleHostSubmit}
+      // onFinish={handleHostSubmit}
     >
       <div
         className="agent-list-head"
@@ -1126,6 +1126,7 @@ const getColmns = (solveClick) => {
       dataIndex: 'errorLogs',
       key: 'errorLogs',
       width: 200,
+      needTooltip: true,
     },
     {
       title: '心跳时间',

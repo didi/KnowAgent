@@ -204,13 +204,7 @@ export const ActionClusterForm = (props: any) => {
 
   return (
     <div style={{ padding: '0 24px' }}>
-      <Form
-        form={props.form}
-        name="actionApp"
-        // labelCol={{ span: 4 }}
-        // wrapperCol={{ span: 20 }}
-        layout="vertical"
-      >
+      <Form form={props.form} name="actionApp" layout="vertical">
         <Form.Item
           label="集群名："
           name="kafkaClusterName"
@@ -282,33 +276,34 @@ export const ActionClusterForm = (props: any) => {
         </Form.Item>
         {/* 设置默认接受集群 需要做判断是否存在禁用按钮 */}
         <div className="metricsCheck" style={{ marginBottom: '20px' }}>
-          <Checkbox.Group
-            value={[...checkValue]}
-            style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
-            onChange={handleChange}
-          >
-            <Tooltip
-              title={
-                agentMetricsTopicList?.length && !cluster?.agentMetricsTopic
-                  ? `当前存在默认指标流接收集群：${agentMetricsTopicList[0]?.agentMetricsTopic || '-'}，请取消选定后再设置新集群。`
-                  : null
-              }
-            >
-              <Checkbox style={{ marginRight: '30px' }} disabled={agentMetricsTopicList?.length && !cluster?.agentMetricsTopic} value={1}>
-                设置为默认指标流接受集群
-              </Checkbox>
-            </Tooltip>
-            <Tooltip
-              title={
-                agentErrorLogsTopicList?.length && !cluster?.agentErrorLogsTopic
-                  ? `当前存在默认错误日志流接受集群：${agentErrorLogsTopicList[0]?.agentErrorLogsTopic || '-'}，请取消选定后再设置新集群。`
-                  : null
-              }
-            >
-              <Checkbox disabled={agentErrorLogsTopicList?.length && !cluster?.agentErrorLogsTopic} value={2}>
-                设置为默认错误日志流接受集群
-              </Checkbox>
-            </Tooltip>
+          <Checkbox.Group value={[...checkValue]} style={{ width: '100%', display: 'flex' }} onChange={handleChange}>
+            {agentMetricsTopicList?.length && !cluster?.agentMetricsTopic ? null : (
+              <Tooltip
+                title={
+                  agentMetricsTopicList?.length && !cluster?.agentMetricsTopic
+                    ? `当前存在默认指标流接收集群：${agentMetricsTopicList[0]?.agentMetricsTopic || '-'}，请取消选定后再设置新集群。`
+                    : null
+                }
+              >
+                <Checkbox style={{ marginRight: '30px' }} disabled={agentMetricsTopicList?.length && !cluster?.agentMetricsTopic} value={1}>
+                  设置为默认指标流接受集群
+                </Checkbox>
+              </Tooltip>
+            )}
+            {agentErrorLogsTopicList?.length && !cluster?.agentErrorLogsTopic ? null : (
+              <Tooltip
+                title={
+                  agentErrorLogsTopicList?.length && !cluster?.agentErrorLogsTopic
+                    ? `当前存在默认错误日志流接受集群：${agentErrorLogsTopicList[0]?.agentErrorLogsTopic || '-'
+                    }，请取消选定后再设置新集群。`
+                    : null
+                }
+              >
+                <Checkbox disabled={agentErrorLogsTopicList?.length && !cluster?.agentErrorLogsTopic} value={2}>
+                  设置为默认错误日志流接受集群
+                </Checkbox>
+              </Tooltip>
+            )}
           </Checkbox.Group>
         </div>
         {checkValue.includes(1) && (

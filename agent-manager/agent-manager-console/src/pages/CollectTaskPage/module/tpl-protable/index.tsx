@@ -433,7 +433,7 @@ const ProTableMoudle = (props: any) => {
                 paginationProps: {
                   current: result?.pageNo || 2,
                   pageSize: result?.pageSize || 10,
-                  total: result?.total || 200,
+                  total: result?.total || 0,
                 },
               });
             } else {
