@@ -551,7 +551,7 @@ const ProTableMoudle = (props: any) => {
                 ...pagination,
                 current: result?.pageNo || 2,
                 pageSize: result?.pageSize || 10,
-                total: result?.total || 200,
+                total: result?.total || 0,
               },
             });
           } else {
@@ -602,7 +602,7 @@ const ProTableMoudle = (props: any) => {
         //   location.href = dat.file_link;
         // });
       },
-      onCancel() {},
+      onCancel() { },
     });
   };
 
@@ -704,7 +704,7 @@ const ProTableMoudle = (props: any) => {
       arr.push({
         label: '导入',
         className: 'dcloud-btn-primary',
-        clickFunc: () => {},
+        clickFunc: () => { },
       });
     }
 
@@ -826,8 +826,8 @@ const ProTableMoudle = (props: any) => {
               rowSelection: newConfig?.rowSelection ? rowSelection : false,
               footer: newConfig?.footer
                 ? () => {
-                    return newConfig?.footer;
-                  }
+                  return newConfig?.footer;
+                }
                 : false,
               onChange: onTableChange,
             },
