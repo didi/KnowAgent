@@ -256,13 +256,13 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                             StringUtils.isBlank(hostType)
             ) {
                 throw new ServiceException(
-                        String.format("host sheet中第%d行的主机名、ip、主机类型不可为空", i),
+                        String.format("host sheet中第%d行的主机名、ip、主机类型不可为空", i+1),
                         ErrorCodeEnum.META_DATA_IN_EXCEL_FIELD_IS_NULL_EXISTS.getCode()
                 );
             }
             if(!hostType.equals(HostTypeEnum.HOST.getDescription())) {
                 throw new ServiceException(
-                        String.format("host sheet中第%d行对应主机类型值非法，合法值范围为：[物理机]", i),
+                        String.format("host sheet中第%d行对应主机类型值非法，合法值范围为：[物理机]", i+1),
                         ErrorCodeEnum.META_DATA_IN_EXCEL_FIELD_INVALID_EXISTS.getCode()
                 );
             }
@@ -294,7 +294,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                             StringUtils.isBlank(relationHost)
             ) {
                 throw new ServiceException(
-                        String.format("application sheet中第%d行的应用名、关联主机对应主机名不可为空", i),
+                        String.format("application sheet中第%d行的应用名、关联主机对应主机名不可为空", i+1),
                         ErrorCodeEnum.META_DATA_IN_EXCEL_FIELD_IS_NULL_EXISTS.getCode()
                 );
             }
@@ -305,7 +305,7 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                                 null == hostManageService.getHostByHostName(relationHostName)
                 ) {
                     throw new ServiceException(
-                            String.format("application sheet中第%d行的关联主机对应主机名%s在host sheet与系统中不存在", i, relationHostName),
+                            String.format("application sheet中第%d行的关联主机对应主机名%s在host sheet与系统中不存在", i+1, relationHostName),
                             ErrorCodeEnum.META_DATA_IN_EXCEL_APPLICATION_HOST_NAME_NOT_EXISTS.getCode()
                     );
                 }
