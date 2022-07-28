@@ -38,6 +38,7 @@ import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageServic
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -258,6 +259,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          * 持久化日志采集任务对象 LogCollectTaskPO
          */
         LogCollectTaskPO logCollectTaskPO = logCollectTaskManageServiceExtension.logCollectTask2LogCollectTaskPO(logCollectTaskDO);
+        if(StringUtils.isBlank(logCollectTaskPO.getAdvancedConfigurationJsonString())) {
+            logCollectTaskPO.setAdvancedConfigurationJsonString(StringUtils.EMPTY);
+        }
         logCollectTaskPO.setOperator(CommonConstant.getOperator(operator));
         logCollectTaskPO.setConfigurationVersion(LogCollectTaskConstant.LOG_COLLECT_TASK_CONFIGURATION_VERSION_INIT);
         logCollectTaskPO.setLogCollectTaskStatus(LogCollectTaskStatusEnum.RUNNING.getCode());
@@ -394,6 +398,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
          */
         LogCollectTaskDO logCollectTaskDO2Save = logCollectTaskManageServiceExtension.updateLogCollectTask(logCollectTaskDOSource, logCollectTaskDO);
         LogCollectTaskPO logCollectTaskPO = logCollectTaskManageServiceExtension.logCollectTask2LogCollectTaskPO(logCollectTaskDO2Save);
+        if(StringUtils.isBlank(logCollectTaskPO.getAdvancedConfigurationJsonString())) {
+            logCollectTaskPO.setAdvancedConfigurationJsonString(StringUtils.EMPTY);
+        }
         logCollectTaskPO.setOperator(CommonConstant.getOperator(operator));
         logCollectTaskPO.setModifyTime(new Date());
         logCollectorTaskDAO.updateByPrimaryKey(logCollectTaskPO);
