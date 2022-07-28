@@ -153,7 +153,7 @@ public class WorkingFileNode {
             }
         }
         if (intervalTime == 0L) {
-            LOGGER.warn("use currentTime to set intervalTime. uniqueKey is " + uniqueKey);
+            LOGGER.info("use currentTime to set intervalTime. uniqueKey is " + uniqueKey);
             intervalTime = (System.currentTimeMillis() / ONE_HOUR) * ONE_HOUR;
         }
     }
@@ -306,7 +306,7 @@ public class WorkingFileNode {
             if (getFileNode().getOffset() > getFileNode().getFile().length()) {
                 LOGGER
                     .warn("offset's offset is large than length and set offset to length.offset is "
-                          + getFileNode().getFileOffSet() + ", length is " + in.length());
+                          + getFileNode().getFileOffSet() + ", length is " + getFileNode().getFile().length());
                 getFileNode().setOffset(getFileNode().getFile().length());
                 return true;
             }
