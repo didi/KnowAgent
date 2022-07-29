@@ -14,6 +14,8 @@ import CollectTaskKanban from './CollectTaskKanban';
 import CollectTaskPage from './CollectTaskPage';
 import AddAcquisitionTask from './add-collect-task';
 import IndexPage from './IndexPage';
+import MetaVersion from './MetaVersion';
+
 export const pageRoutes = [
   {
     path: '/',
@@ -57,6 +59,11 @@ export const pageRoutes = [
     path: '/meta/receivingTerminal',
     exact: true,
     component: ReceivingTerminal,
+  },
+  {
+    path: '/meta/metaVersion',
+    exact: true,
+    component: MetaVersion,
   },
   {
     path: '/collect',
