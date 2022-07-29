@@ -169,8 +169,7 @@ export const ActionFileForm = (props: any) => {
   const _getExcelTemplate = async () => {
     const url = await getExcelTemplate();
     const origin = window.location.origin;
-    const port = window.location.port || '9010';
-    const fileurl = origin + ':' + port + url;
+    const fileurl = origin + url;
     handleDownload(fileurl);
   };
 
@@ -247,9 +246,14 @@ export const previewFile: React.FC = (props: any) => {
 
   const _getFileContent = async () => {
     setLoading(true);
-    const res = (await getFileContent(containerData.id)) as IImportResultType;
-    setDatasource(res);
-    setLoading(false);
+    try {
+      const res = (await getFileContent(containerData.id)) as IImportResultType;
+      res && setDatasource(res);
+    } catch (error) {
+      console.log('error', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

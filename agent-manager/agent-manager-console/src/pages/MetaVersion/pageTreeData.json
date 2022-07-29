@@ -41,7 +41,8 @@
                   "xxl"
                 ],
                 "operationArray": [],
-                "sorter": true
+                "sorter": true,
+                "width": "250px"
               },
               {
                 "title": "描述",
@@ -57,7 +58,7 @@
                 "operationArray": [],
                 "ellipsis": true,
                 "tooltip": true,
-                "width": "300px"
+                "width": "230px"
               },
               {
                 "title": "文件MD5",
@@ -70,7 +71,8 @@
                   "xl",
                   "xxl"
                 ],
-                "operationArray": []
+                "operationArray": [],
+                "width": "280px"
               },
               {
                 "title": "上传时间",
@@ -84,7 +86,8 @@
                   "xxl"
                 ],
                 "operationArray": [],
-                "valueType": "dateTime"
+                "valueType": "dateTime",
+                "width": "200px"
               },
               {
                 "title": "操作",
