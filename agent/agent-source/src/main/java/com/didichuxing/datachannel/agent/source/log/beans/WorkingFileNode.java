@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class WorkingFileNode {
 
     private static final Logger      LOGGER                 = LoggerFactory
-                                                                .getLogger(WorkingFileNode.class);
+            .getLogger(WorkingFileNode.class);
 
     FileNode                         fileNode;
 
@@ -62,7 +62,7 @@ public class WorkingFileNode {
      * 采集文件顺序性
      */
     private AtomicInteger            isFileOrder            = new AtomicInteger(
-                                                                OrderFile.OrderFile.getStatus());
+            OrderFile.OrderFile.getStatus());
 
     /**
      * 采集配置有效性
@@ -100,7 +100,7 @@ public class WorkingFileNode {
         in = new BufferedRandomAccessFile(this.fileNode.getAbsolutePath(), "r");
         if (in.length() < this.fileNode.getOffset()) {
             LOGGER.info("the file length is less than offset！offset:" + this.fileNode.getOffset()
-                        + ",fileNode is " + fileNode.toString());
+                    + ",fileNode is " + fileNode.toString());
             if (location == CollectLocation.Earliest.getLocation()) {
                 this.fileNode.setOffset(0L);
             } else {
@@ -108,7 +108,7 @@ public class WorkingFileNode {
             }
         }
         LOGGER.info("begin to open fileNode. fileNode is " + fileNode.toString() + ", offset is "
-                    + this.fileNode.getOffset());
+                + this.fileNode.getOffset());
         in.seek(this.fileNode.getOffset());
         this.curOffset = this.fileNode.getOffset();
         isFileOpen = true;
@@ -133,21 +133,21 @@ public class WorkingFileNode {
         } else {
             // 从配置获取,此时使用当前时间的时间后缀
             if (logSource.getLogSourceConfig().getMatchConfig().getMatchType() == FileMatchType.Length
-                .getStatus()) {
+                    .getStatus()) {
                 String timeStr = logSource.getLogSourceConfig().getMatchConfig().getFileSuffix();
                 if (StringUtils.isNotBlank(timeStr)) {
                     timeStr = timeStr.substring(1);
                     StandardRolledTimeType tmpTimeType = getTimeType(timeStr);
                     long interval = 0L;
                     if (tmpTimeType == StandardRolledTimeType.YMDH
-                        || tmpTimeType == StandardRolledTimeType.Y_M_D_H) {
+                            || tmpTimeType == StandardRolledTimeType.Y_M_D_H) {
                         interval = ONE_HOUR;
                     } else {
                         interval = ONE_DAY;
                     }
                     LOGGER
-                        .warn("timeType is null. use fileNode's modifyTime() to set intervalTime. uniqueKey is "
-                              + uniqueKey);
+                            .warn("timeType is null. use fileNode's modifyTime() to set intervalTime. uniqueKey is "
+                                    + uniqueKey);
                     intervalTime = (fileNode.getModifyTime() / interval) * interval;
                 }
             }
@@ -185,7 +185,7 @@ public class WorkingFileNode {
             LOGGER.info("success to close fileNode");
         } catch (Exception e) {
             LogGather.recordErrorLog("WorkingFileNode error", "file close failed!, fileInfo is "
-                                                              + this.fileNode.getFileName(), e);
+                    + this.fileNode.getFileName(), e);
         }
     }
 
@@ -200,13 +200,13 @@ public class WorkingFileNode {
             }
         } catch (Exception e) {
             LogGather.recordErrorLog("WorkingFileNode error",
-                "seek offset error! uniqueKey Key is " + uniqueKey, e);
+                    "seek offset error! uniqueKey Key is " + uniqueKey, e);
         }
     }
 
     public boolean open(int location, int retryTimes) {
         LOGGER
-            .info("begin to open fileNode. fileNode is " + fileNode + ", location is " + location);
+                .info("begin to open fileNode. fileNode is " + fileNode + ", location is " + location);
         // 修复批量补采过程中由于文件滚动删除导致补采任务卡住问题
         if (!fileNode.getFile().exists()) {
             LOGGER.info("open@file is not exit! fileNode is " + fileNode.toString());
@@ -221,8 +221,8 @@ public class WorkingFileNode {
             } catch (Exception ex) {
                 if (i == retryTimes - 1) {
                     LOGGER.warn(
-                        "WorkingFileNode error. open file failed; file:"
-                                + this.fileNode.getFileName(), ex);
+                            "WorkingFileNode error. open file failed; file:"
+                                    + this.fileNode.getFileName(), ex);
                     close();
                 } else {
                     try {
@@ -232,10 +232,10 @@ public class WorkingFileNode {
                         Thread.sleep(1000L);
                     } catch (Exception e) {
                         LogGather.recordErrorLog("WorkingFileNode error",
-                            "sleep is interrupt when waiting file to open.", e);
+                                "sleep is interrupt when waiting file to open.", e);
                     }
                     LOGGER.warn("open file failed;file:" + this.fileNode.getFileName()
-                                + ",reTry! time is " + i);
+                            + ",reTry! time is " + i);
                 }
             }
         }
@@ -259,8 +259,8 @@ public class WorkingFileNode {
             if (curOffset > in.length()) {
                 // 此时说明文件被突然清空,重置offset
                 LOGGER.warn("file:" + fileNode.getFileName()
-                            + "'s offset is larger than current.set recorded offset to 0 "
-                            + ",curOffset is " + curOffset + ", length is " + in.length());
+                        + "'s offset is larger than current.set recorded offset to 0 "
+                        + ",curOffset is " + curOffset + ", length is " + in.length());
                 curOffset = 0L;
                 in.seek(curOffset);
                 getFileNode().setOffset(curOffset);
@@ -285,8 +285,8 @@ public class WorkingFileNode {
             }
         } catch (Exception e) {
             LogGather.recordErrorLog("WorkingFileNode error",
-                "checkFileEnd error..logModelId is " + fileNode.getModelId() + ".actualLogPath is "
-                        + fileNode.getFileName(), e);
+                    "checkFileEnd error..logModelId is " + fileNode.getModelId() + ".actualLogPath is "
+                            + fileNode.getFileName(), e);
         }
         return false;
     }
@@ -299,22 +299,22 @@ public class WorkingFileNode {
         try {
             if (!fileNode.getFile().exists()) {
                 LOGGER.info("checkFileCollectEnd@file is not exit! fileNode is "
-                            + fileNode.toString());
+                        + fileNode.toString());
                 return true;
             }
 
             if (getFileNode().getOffset() > getFileNode().getFile().length()) {
                 LOGGER
-                    .warn("offset's offset is large than length and set offset to length.offset is "
-                          + getFileNode().getFileOffSet() + ", length is " + getFileNode().getFile().length());
+                        .warn("offset's offset is large than length and set offset to length.offset is "
+                                + getFileNode().getFileOffSet() + ", length is " + getFileNode().getFile().length());
                 getFileNode().setOffset(getFileNode().getFile().length());
                 return true;
             }
             return getFileNode().getOffset() == getFileNode().getFile().length();
         } catch (Exception e) {
             LogGather.recordErrorLog("WorkingFileNode error",
-                "checkFileCollectEnd error..logModelId is " + fileNode.getModelId()
-                        + ".actualLogPath is " + fileNode.getFileName(), e);
+                    "checkFileCollectEnd error..logModelId is " + fileNode.getModelId()
+                            + ".actualLogPath is " + fileNode.getFileName(), e);
             return false;
         }
     }
@@ -326,7 +326,7 @@ public class WorkingFileNode {
         String path = logSource.getLogPath().getRealPath();
         String fileKey = fileNode.getFileKey();
         List<File> files = FileUtils.getRelatedFiles(path, logSource.getLogSourceConfig()
-            .getMatchConfig());
+                .getMatchConfig());
         if (files != null && files.size() != 0) {
             for (File file : files) {
                 String tmpFileKey = FileUtils.getFileKeyByAttrs(file);
@@ -443,12 +443,12 @@ public class WorkingFileNode {
     @Override
     public String toString() {
         return "WorkingFileNode{" + "fileNode=" + fileNode + ", in=" + in + ", isFileOpen="
-               + isFileOpen + ", curOffset=" + curOffset + ", backflow=" + backflow
-               + ", uniqueKey='" + uniqueKey + '\'' + ", isFileEnd=" + isFileEnd
-               + ", idleRetryTimes=" + idleRetryTimes + ", lastestWaitToCloseTime="
-               + lastestWaitToCloseTime + ", logSource=" + logSource + ", isFileOrder="
-               + isFileOrder + ", isVaildTimeConfig=" + isVaildTimeConfig + ", latestLogTime="
-               + latestLogTime + ", latestLogTimeStr='" + latestLogTimeStr + '\''
-               + ", intervalTime=" + intervalTime + '}';
+                + isFileOpen + ", curOffset=" + curOffset + ", backflow=" + backflow
+                + ", uniqueKey='" + uniqueKey + '\'' + ", isFileEnd=" + isFileEnd
+                + ", idleRetryTimes=" + idleRetryTimes + ", lastestWaitToCloseTime="
+                + lastestWaitToCloseTime + ", logSource=" + logSource + ", isFileOrder="
+                + isFileOrder + ", isVaildTimeConfig=" + isVaildTimeConfig + ", latestLogTime="
+                + latestLogTime + ", latestLogTimeStr='" + latestLogTimeStr + '\''
+                + ", intervalTime=" + intervalTime + '}';
     }
 }
