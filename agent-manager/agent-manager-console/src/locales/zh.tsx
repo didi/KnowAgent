@@ -24,7 +24,7 @@ export default {
   [`menu.${systemKey}.meta`]: '元数据中心',
   [`menu.${systemKey}.meta.dataSource`]: '应用管理',
   [`menu.${systemKey}.meta.receivingTerminal`]: '接收端管理',
-  [`menu.${systemKey}.meta.metaVersion`]: '元数据版本管理',
+  [`menu.${systemKey}.meta.metaVersion`]: '元数据管理',
 
   [`menu.${systemKey}.collect`]: '采集任务管理',
   [`menu.${systemKey}.monitor`]: '监控中心',

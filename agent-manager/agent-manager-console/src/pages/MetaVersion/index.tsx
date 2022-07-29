@@ -56,7 +56,7 @@ const AutoPage = (props: any) => {
     }
   }, [props.pageTreeData]);
 
-  const headerLeftContent = <>元数据版本管理</>;
+  const headerLeftContent = <>元数据管理</>;
 
   useEffect(() => {
     AppContainer.eventBus.emit(EventBusTypes.renderheaderLeft, [headerLeftContent]);
