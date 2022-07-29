@@ -15,7 +15,7 @@ public enum HostTypeEnum {
 
     HostTypeEnum(Integer code, String description) {
         this.code = code;
-        description = description;
+        this.description = description;
     }
 
     public Integer getCode() {
