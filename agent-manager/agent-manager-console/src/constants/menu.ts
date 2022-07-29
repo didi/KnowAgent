@@ -35,6 +35,10 @@ export const leftMenus = {
           name: 'receivingTerminal',
           path: 'receivingTerminal',
         },
+        {
+          name: 'metaVersion',
+          path: 'metaVersion',
+        },
       ],
     },
     // Agent中心
