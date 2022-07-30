@@ -1,6 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.metadata.impl;
 
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.common.ListCompareResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFileContent;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFileDO;
@@ -12,9 +13,8 @@ import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
-import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.common.util.ExcelUtils;
-import com.didichuxing.datachannel.agentmanager.common.util.FileUtils;
+import com.didichuxing.datachannel.agentmanager.common.util.*;
+import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.metadata.MetadataManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
@@ -204,6 +204,10 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     }
 
     private void persistMetaData(String operator, List<List<Object>> hostList, List<List<Object>> applicationList) {
+        /*
+         * 1.）handle host info
+         */
+        List<HostDO> hostDOListTarget = new ArrayList<>();
         for (int i = 0; i < hostList.size(); i++) {
             List<Object> host = hostList.get(i);
             String hostName = host.get(0).toString();
@@ -212,8 +216,45 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             hostDO.setHostName(hostName);
             hostDO.setIp(ip);
             hostDO.setContainer(HostTypeEnum.HOST.getCode());
+            hostDOListTarget.add(hostDO);
+        }
+        List<HostDO> hostDOListSource = hostManageService.list();
+        ListCompareResult<HostDO> hostDOListCompareResult = ListCompareUtil.compare(hostDOListSource, hostDOListTarget, new Comparator<HostDO, String>() {
+            @Override
+            public String getKey(HostDO hostDO) {
+                return hostDO.getHostName();
+            }
+            @Override
+            public boolean compare(HostDO t1, HostDO t2) {
+                if(
+                        t1.getIp().equals(t2.getIp()) &&
+                                t1.getContainer().equals(t2.getContainer())
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            @Override
+            public HostDO getModified(HostDO source, HostDO target) {
+                source.setIp(target.getIp());
+                source.setContainer(target.getContainer());
+                return source;
+            }
+        });
+        for (HostDO hostDO : hostDOListCompareResult.getCreateList()) {
             hostManageService.createHost(hostDO, operator);
         }
+        for (HostDO hostDO : hostDOListCompareResult.getRemoveList()) {
+            hostManageService.deleteHost(hostDO.getId(), true, true, operator);
+        }
+        for (HostDO hostDO : hostDOListCompareResult.getModifyList()) {
+            hostManageService.updateHost(hostDO, operator);
+        }
+        /*
+         * handle service info
+         */
+        List<ServiceDO> serviceDOListTarget = new ArrayList<>();
         for (int i = 0; i < applicationList.size(); i++) {
             List<Object> application = applicationList.get(i);
             String applicationName = application.get(0).toString();
@@ -226,7 +267,65 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             ServiceDO serviceDO = new ServiceDO();
             serviceDO.setHostIdList(hostIdList);
             serviceDO.setServicename(applicationName);
+            serviceDOListTarget.add(serviceDO);
+        }
+        List<ServiceDO> serviceDOListSource = serviceManageService.list();
+        /*
+         * 2.）全量对比 excel 文件数据 & 系统 数据，进行对应持久化操作
+         */
+        ListCompareResult<ServiceDO> serviceDOListCompareResult = ListCompareUtil.compare(serviceDOListSource, serviceDOListTarget, new Comparator<ServiceDO, String>() {
+            @Override
+            public String getKey(ServiceDO serviceDO) {
+                return serviceDO.getServicename();
+            }
+            @Override
+            public boolean compare(ServiceDO source, ServiceDO target) {
+                List<HostDO> hostDOList = hostManageService.getHostsByServiceId(source.getId());
+                List<Long> hostIdListSource = new ArrayList<>();
+                for (HostDO hostDO : hostDOList) {
+                    hostIdListSource.add(hostDO.getId());
+                }
+                List<Long> hostIdListTarget = target.getHostIdList();
+                ListCompareResult<Long> hostIdListCompareResult = ListCompareUtil.compare(hostIdListSource, hostIdListTarget, new Comparator<Long, Long>() {
+                    @Override
+                    public Long getKey(Long hostId) {
+                        return hostId;
+                    }
+                    @Override
+                    public boolean compare(Long t1, Long t2) {
+                        return t1.equals(t2);
+                    }
+                    @Override
+                    public Long getModified(Long source, Long target) {
+                        return source;
+                    }
+                });
+                if(
+                        CollectionUtils.isEmpty(hostIdListCompareResult.getModifyList()) &&
+                                CollectionUtils.isEmpty(hostIdListCompareResult.getCreateList()) &&
+                                CollectionUtils.isEmpty(hostIdListCompareResult.getRemoveList())
+                ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            @Override
+            public ServiceDO getModified(ServiceDO source, ServiceDO target) {
+                source.setHostIdList(target.getHostIdList());
+                return source;
+            }
+        });
+        for (ServiceDO serviceDO : serviceDOListCompareResult.getCreateList()) {
             serviceManageService.createService(serviceDO, operator);
+        }
+        for (ServiceDO serviceDO : serviceDOListCompareResult.getRemoveList()) {
+            List<Long> serviceIdList = new ArrayList<>();
+            serviceIdList.add(serviceDO.getId());
+            serviceManageService.deleteServices(serviceIdList, true, operator);
+        }
+        for (ServiceDO serviceDO : serviceDOListCompareResult.getModifyList()) {
+            serviceManageService.updateService(serviceDO, operator);
         }
     }
 
@@ -274,15 +373,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     ErrorCodeEnum.META_DATA_IN_EXCEL_HOST_HOST_NAME_DUPLICATE.getCode()
             );
         }
-        for (String hostName : hostNameSet) {
-            HostDO hostDO = hostManageService.getHostByHostName(hostName);
-            if(null != hostDO) {
-                throw new ServiceException(
-                        String.format("host sheet中主机名%s在系统中已存在", hostName),
-                        ErrorCodeEnum.HOST_NAME_DUPLICATE.getCode()
-                );
-            }
-        }
         //  application info 校 验
         Set<String> applicationNameSet = new HashSet<>();
         for (int i = 0; i < applicationList.size(); i++) {
@@ -301,11 +391,10 @@ public class MetadataManageServiceImpl implements MetadataManageService {
             String[] relationHostNameArray = relationHost.split(CommonConstant.COMMA);
             for (String relationHostName : relationHostNameArray) {
                 if(
-                        !hostNameSet.contains(relationHostName) &&
-                                null == hostManageService.getHostByHostName(relationHostName)
+                        !hostNameSet.contains(relationHostName)
                 ) {
                     throw new ServiceException(
-                            String.format("application sheet中第%d行的关联主机对应主机名%s在host sheet与系统中不存在", i+1, relationHostName),
+                            String.format("application sheet中第%d行的关联主机对应主机名%s在host sheet不存在", i+1, relationHostName),
                             ErrorCodeEnum.META_DATA_IN_EXCEL_APPLICATION_HOST_NAME_NOT_EXISTS.getCode()
                     );
                 }
@@ -317,15 +406,6 @@ public class MetadataManageServiceImpl implements MetadataManageService {
                     "application sheet存在应用名重复的应用信息",
                     ErrorCodeEnum.META_DATA_IN_EXCEL_APPLICATION_APPLICATION_NAME_DUPLICATE.getCode()
             );
-        }
-        for (String applicationName : applicationNameSet) {
-            ServiceDO serviceDO = serviceManageService.getServiceByServiceName(applicationName);
-            if(null != serviceDO) {
-                throw new ServiceException(
-                        String.format("application sheet中应用名%s在系统中已存在", applicationName),
-                        ErrorCodeEnum.SERVICE_NAME_DUPLICATE.getCode()
-                );
-            }
         }
     }
 
