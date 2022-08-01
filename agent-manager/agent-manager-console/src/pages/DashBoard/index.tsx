@@ -41,7 +41,7 @@ const HomePage = (): JSX.Element => {
           {dashBoardData && (
             <>
               <HeaderCard type="yunying" dashBoardData={dashBoardData} />
-              <BarCharts barList={appBarList} type="" dashBoardData={dashBoardData} />
+              <BarCharts needTrigger={true} barList={appBarList} type="" dashBoardData={dashBoardData} />
             </>
           )}
         </div>

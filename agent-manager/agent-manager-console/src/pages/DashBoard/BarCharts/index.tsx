@@ -34,6 +34,7 @@ const BarCharts = (props: {
   dashBoardData: Record<string, any>;
   getKeys?: any;
   linkTo?: any;
+  needTrigger?: boolean;
 }): JSX.Element => {
   const hasData = (item) => {
     return !!(props.dashBoardData?.[item.key]?.histogramChatValue || []).length;
@@ -68,7 +69,7 @@ const BarCharts = (props: {
             color: '#D3D8E4',
           },
         },
-        triggerEvent: !!props.linkTo,
+        triggerEvent: props?.needTrigger,
         axisLine: {
           lineStyle: {
             color: '#D3D8E4',
