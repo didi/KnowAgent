@@ -48,7 +48,7 @@ public class ExcelUtils {
             sheet = work.getSheetAt(sheetIndex);
             if(sheet != null){
                 //遍历当前sheet中的所有行
-                if(rowStartIndex >= sheet.getLastRowNum()) {
+                if(rowStartIndex > sheet.getLastRowNum()) {
                     throw new Exception(
                             String.format("Excel工作薄第%d个sheet共%d行，无法从第%d行开始读取", sheetIndex, sheet.getLastRowNum(), rowStartIndex)
                     );

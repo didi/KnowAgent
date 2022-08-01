@@ -497,7 +497,7 @@ CREATE TABLE `tb_meta_data_file` (
                                      KEY `idx_file_path` (`file_path`) USING BTREE,
                                      KEY `idx_file_md5` (`file_md5`) USING BTREE,
                                      KEY `idx_create_time` (`create_time`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tb_meta_table_version
