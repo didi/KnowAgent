@@ -144,8 +144,19 @@ function Chart(props: LineChartProps & PieChartProps & { metricDesc: string }): 
         }}
       >
         <div className="single-label-header">
-          <div className="header-title" style={{ cursor: 'default' }}>
-            <Tooltip title={metricDesc}>{title}</Tooltip>
+          <div className="header-title">
+            <Tooltip
+              overlayClassName="long-title-tip"
+              title={
+                <>
+                  {title}
+                  <br />
+                  {metricDesc}
+                </>
+              }
+            >
+              {title}
+            </Tooltip>
           </div>
         </div>
         <div className="single-label-content">{content}</div>

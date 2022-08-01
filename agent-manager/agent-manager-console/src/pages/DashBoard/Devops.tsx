@@ -63,10 +63,17 @@ const HomePage = (): JSX.Element => {
             <>
               <HeaderCard type="yunwei" dashBoardData={dashBoardData} />
               <PieCharts dashBoardData={dashBoardData} />
-              <BarCharts linkTo={linkToAgentDetail} barList={agentBarList} type="Agent视角 TOP5" dashBoardData={dashBoardData} />
+              <BarCharts
+                needTrigger={true}
+                linkTo={linkToAgentDetail}
+                barList={agentBarList}
+                type="Agent视角 TOP5"
+                dashBoardData={dashBoardData}
+              />
               <BarCharts
                 barList={taskBarList}
                 linkTo={linkTo}
+                needTrigger={true}
                 getKeys={getBarXData}
                 type="采集任务视角 TOP5"
                 dashBoardData={dashBoardData}
