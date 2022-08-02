@@ -34,6 +34,8 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ![agent-manager配置文件修改](assets/agent-manager 配置.png)
 
+![image-20220801225745473](assets/agent_manager_upload_directory_configuration.png)
+
 #### **1.1.2.3 启动 Agent-Manager**
 
 ![agent-manager 启动](assets/agent-manager 启动成功.png)

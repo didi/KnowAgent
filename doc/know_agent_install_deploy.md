@@ -32,6 +32,7 @@ spring.datasource.druid.password：数据库用密码
 auv-job.jdbc-url：同配置项 spring.datasource.druid.url
 auv-job.username：同配置项 spring.datasource.druid.username
 auv-job.password：同配置项 spring.datasource.druid.password
+file.upload.dir：上传文件存储目录，请配置为实际存在的目录
 ```
 
 ## 1.5 启动与停止
