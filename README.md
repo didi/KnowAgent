@@ -1,20 +1,20 @@
-# **Know Agent 一站式日志采集平台**
+# **KnowAgent 一站式日志采集平台**
 
-​	阅读本文档，您可以了解到 `Know Agent` 的用户群体、产品定位等信息，并通过体验地址，快速体验以`应用`为采集粒度，从应用维度批量下发采集任务全流程。若`Know Agent`已在贵司的生产环境进行使用，并想要获得官方更好地支持和指导，可以通过添加微信号`WilliamHu66`，加入官方交流平台。
+​	阅读本文档，您可以了解到 `KnowAgent` 的用户群体、产品定位等信息，并通过体验地址，快速体验以`应用`为采集粒度，从应用维度批量下发采集任务全流程。若`KnowAgent`已在贵司的生产环境进行使用，并想要获得官方更好地支持和指导，可以通过添加微信号`WilliamHu66`，加入官方交流平台。
 
 # 1 产品简介
 
-​	`Know Agent` 源于滴滴多年来在各核心场景沉淀的超大规模采集引擎集群运维实践经验。经历过多方考验，对于大规模 Agent 日志采集的治理管控，采集任务与 Agent 的可观测性、健康度巡检、故障诊断已经沉淀出一套完善的解决方案。`Know Agent` 以应用为采集粒度，满足了从业务层面创建采集任务的需求，并易于将文件采集作为流式计算的一种可靠数据源进行接入、管理。
+​	`KnowAgent` 源于滴滴多年来在各核心场景沉淀的超大规模采集引擎集群运维实践经验。经历过多方考验，对于大规模 Agent 日志采集的治理管控，采集任务与 Agent 的可观测性、健康度巡检、故障诊断已经沉淀出一套完善的解决方案。`KnowAgent` 以应用为采集粒度，满足了从业务层面创建采集任务的需求，并易于将文件采集作为流式计算的一种可靠数据源进行接入、管理。
 
 ## 1.1 前置申明
 
 ### 1.1.1 Agent 与采集任务管控规模
 
-​	`Know Agent` 基于最小依赖、便于体验，采用 MySQL 存储 Agent 的 Metrics 与 Error Logs 数据。受制于 MySQL 性能瓶颈，在单个采集任务对应一个采集路径、Metrics 与 Error Logs 数据保存周期为一周的情况下，支持 50 个 Agent 与 50 个采集任务的管控。如需要管控更多的 Agent 与采集任务，参见[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/know_agent_metrics_error_logs_store_extend.md)。
+​	`KnowAgent` 基于最小依赖、便于体验，采用 MySQL 存储 Agent 的 Metrics 与 Error Logs 数据。受制于 MySQL 性能瓶颈，在单个采集任务对应一个采集路径、Metrics 与 Error Logs 数据保存周期为一周的情况下，支持 50 个 Agent 与 50 个采集任务的管控。如需要管控更多的 Agent 与采集任务，参见[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/know_agent_metrics_error_logs_store_extend.md)。
 
 ### 1.1.2 容器采集
 
-​	`Know Agent`目前对容器日志采集未实现平台化支持，未来将提供全面的容器日志采集平台化支持，参见[《Know Agent一站式日志采集平台介绍》](doc/know_agent_summary.md)**展望**部分。
+​	`KnowAgent`目前对容器日志采集未实现平台化支持，未来将提供全面的容器日志采集平台化支持，参见[《KnowAgent一站式日志采集平台介绍》](doc/know_agent_summary.md)**展望**部分。
 
 ## 1.2 快速体验地址
 
@@ -75,9 +75,9 @@
 |     是否容易配置     |              否              |              否              |                              是                              |
 |   大规模运维复杂度   |             极高             |             极高             |                              低                              |
 
-## 1.5 Know Agent 架构
+## 1.5 KnowAgent 架构
 
-​	`Know Agent` 是一站式的日志采集平台，包括两个组件：
+​	`KnowAgent` 是一站式的日志采集平台，包括两个组件：
 
 - Agent：是基于 Java 的高性能、支持多租户隔离的采集引擎，它能在任意情况下（除：待采集数据在被采集前被移除，例如：日志文件被归档或日志文件滚动速度太快导致）保证采集数据的完整性，持续采集速度可达150MB+/秒。
 - Agent Manager：是针对 Agent 的管理平台。用于管理相关元数据、Agent与采集任务，自动巡检 Agent 与采集任务的健康度、故障诊断，指标展示。
@@ -95,25 +95,25 @@
 # 2 相关文档
 ## 2.1 产品文档
 
-[《Know Agent一站式日志采集平台介绍》](doc/know_agent_summary.md)
+[《KnowAgent一站式日志采集平台介绍》](doc/know_agent_summary.md)
 
-[《快速搭建一站式Know Agent体验环境》](doc/know_agent_experience_environment_build.md)
+[《快速搭建一站式KnowAgent体验环境》](doc/know_agent_experience_environment_build.md)
 
-[《Know Agent安装部署手册》](doc/know_agent_install_deploy.md)
+[《KnowAgent安装部署手册》](doc/know_agent_install_deploy.md)
 
-[《Know Agent用户使用手册》](doc/know_agent_user_manual.md)
+[《KnowAgent用户使用手册》](doc/know_agent_user_manual.md)
 
-[《Know Agent开发手册》](doc/know_agent_develop.md)
+[《KnowAgent开发手册》](doc/know_agent_develop.md)
 
 [《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](doc/know_agent_metrics_error_logs_store_extend.md)
 
-[《Know Agent代码贡献指南》](doc/know_agent_contributing.md)
+[《KnowAgent代码贡献指南》](doc/know_agent_contributing.md)
 
-# 3 Know Agent开源用户交流群
+# 3 KnowAgent开源用户交流群
 
-​	请添加微信号：mike_zhangliang 或 WilliamHu66，回复”Know Agent 加群“。
+​	请添加微信号：mike_zhangliang 或 WilliamHu66，回复”KnowAgent 加群“。
 
 # 4 协议
 
-​	`Know Agent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)。
+​	`KnowAgent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)。
 

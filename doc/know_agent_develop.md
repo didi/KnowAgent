@@ -63,7 +63,7 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ![agent 启动成功](assets/agent 启动成功.png)
 
-# 2 Know Agent 简要介绍
+# 2 KnowAgent 简要介绍
 
 ## 2.1 Agent 
 

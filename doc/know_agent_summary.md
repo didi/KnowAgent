@@ -1,4 +1,4 @@
-# Know Agent 一站式日志采集平台
+# KnowAgent 一站式日志采集平台
 
 ## 诞生的背景
 
@@ -126,14 +126,14 @@
 
 # 整体设计	
 
-​	Know Agent 是一站式的日志采集平台，包括两个组件：
+​	KnowAgent 是一站式的日志采集平台，包括两个组件：
 
 - Agent：是基于 Java 的高性能、支持多租户隔离的采集引擎，它能在任意情况下（除：待采集数据在被采集前被移除，例如：日志文件被归档或日志文件滚动速度太快导致）保证采集数据的完整性，持续采集速度可达150MB+/秒。
 - Agent Manager：是针对 Agent 的管理平台。用于管理相关元数据、Agent与采集任务，自动巡检 Agent 与采集任务的健康度、故障诊断，指标展示。
 
 <img src="assets/know agent总体设计.png" alt="logi-am架构" style="zoom:50%;" />	
 
-​	Know Agent 最小外部依赖组件有 2 个：
+​	KnowAgent 最小外部依赖组件有 2 个：
 
 1. MySQL：用于存储 Agent Manager 元数据，与 Agent 上报的指标、错误日志数据。Agent上报的指标、错误日志数据可扩展支持其他存储引擎（如：Elasticsearch）存储以应对大规模的 Agent 集群管控。扩展方式参见[《如何替换Agent的Metrics与Error Logs数据存储引擎以纳管更大的Agent集群》](know_agent_metrics_error_logs_store_extend.md)。
 2. Kafka：作为采集的日志数据、以及 Agent 上报的指标、错误日志数据的消息总线。
@@ -214,4 +214,4 @@
 
 **持续回馈开源社区**
 
-​	Know Agent 已经开源（项目地址：https://github.com/didi/KnowAgent），作为在滴滴内部经过多年的大量复杂、核心场景验证过的采集引擎与管控平台，我们会持续对其进行核心业务抽象，回馈社区，我们也希望热心的社区同学和我们交流想法，共同提升 Know Agent 的功能和体验。
+​	KnowAgent 已经开源（项目地址：https://github.com/didi/KnowAgent），作为在滴滴内部经过多年的大量复杂、核心场景验证过的采集引擎与管控平台，我们会持续对其进行核心业务抽象，回馈社区，我们也希望热心的社区同学和我们交流想法，共同提升 KnowAgent 的功能和体验。

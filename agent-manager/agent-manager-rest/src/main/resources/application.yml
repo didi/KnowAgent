@@ -21,9 +21,9 @@ spring:
       stat-view-servlet:
         enabled: false
       driver-class-name: org.mariadb.jdbc.Driver
-      url:
-      username:
-      password:
+      url: jdbc:mysql://116.85.36.196:3306/agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+      username: root
+      password: Didiyun@888
       initialSize: 10
       validationQueryTimeout: 5000
       transactionQueryTimeout: 60000
@@ -43,9 +43,9 @@ spring:
       max-open-prepared-statements: 50
       filters: stat,wall
   auv-job:
-    jdbc-url:
-    username:
-    password:
+    jdbc-url: jdbc:mysql://116.85.36.196:3306/agent_manager?useUnicode=true&characterEncoding=utf8&jdbcCompliantTruncation=true&allowMultiQueries=true&useSSL=false
+    username: root
+    password: Didiyun@888
     driver-class-name: org.mariadb.jdbc.Driver
     max-lifetime: 60000
     init-sql: true

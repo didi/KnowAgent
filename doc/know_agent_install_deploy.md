@@ -41,7 +41,7 @@ file.upload.dir：上传文件存储目录，请配置为实际存在的目录
 
 ## 1.6 使用
 
-​	本地启动的话，访问`http://localhost:9010`。更多参考：[《Know Agent用户使用手册》](know_agent_user_manual.md)
+​	本地启动的话，访问`http://localhost:9010`。更多参考：[《KnowAgent用户使用手册》](know_agent_user_manual.md)
 
 # 2 Agent
 
