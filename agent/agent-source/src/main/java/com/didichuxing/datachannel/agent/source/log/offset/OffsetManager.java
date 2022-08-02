@@ -98,7 +98,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(OffsetManager.class
                     try {
                         Thread.sleep(PERIOD);
                     } catch (InterruptedException e) {
-                        LogGather.recordErrorLog("OffsetManager error", "sleep error", e);
+//                        LogGather.recordErrorLog("OffsetManager error", "sleep error", e);
                     }
 
                     try {

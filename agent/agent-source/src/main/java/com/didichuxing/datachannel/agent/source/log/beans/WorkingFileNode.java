@@ -312,7 +312,7 @@ public class WorkingFileNode {
             }
             return getFileNode().getOffset() == in.length();
         } catch (Exception e) {
-            LogGather.recordErrorLog("WorkingFileNode error",
+            LOGGER.warn("WorkingFileNode error",
                     "checkFileCollectEnd error..logModelId is " + fileNode.getModelId()
                             + ".actualLogPath is " + fileNode.getFileName(), e);
             return false;
