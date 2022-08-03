@@ -133,7 +133,7 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
                 eventIsNullTimes = 0;
             }
         } catch (Throwable t) {
-            LogGather.recordErrorLog("AbstractSink error", "sendMsg error! key is "
+            LOGGER.warn("AbstractSink error", "sendMsg error! key is "
                                                            + getUniqueKey(), t);
         }
     }
