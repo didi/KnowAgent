@@ -21,11 +21,11 @@ import org.slf4j.LoggerFactory;
  * @Date: 19/6/18 16:30
  */
 public abstract class AbstractSink<T extends Event> extends TaskComponent implements Runnable,
-                                                                         Configurable {
+        Configurable {
 
     private static final Logger     LOGGER                       = LoggerFactory
-                                                                     .getLogger(AbstractSink.class
-                                                                         .getName());
+            .getLogger(AbstractSink.class
+                    .getName());
 
     AbstractChannel                 channel;
 
@@ -120,7 +120,7 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
             if (result != null) {
                 if (taskPatternStatistics != null) {
                     taskPatternStatistics.controlOneRecord(TimeUtils.getNanoTime()
-                                                           - event.getTransNanoTime());
+                            - event.getTransNanoTime());
                 }
             }
             if (event == null) {
@@ -134,7 +134,7 @@ public abstract class AbstractSink<T extends Event> extends TaskComponent implem
             }
         } catch (Throwable t) {
             LOGGER.warn("AbstractSink error", "sendMsg error! key is "
-                                                           + getUniqueKey(), t);
+                    + getUniqueKey(), t);
         }
     }
 
