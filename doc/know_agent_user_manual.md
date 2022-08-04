@@ -390,3 +390,80 @@
 
 ​	如须查看更多采集任务指标，可点击左下方`前往采集任务指标看板`按钮。
 
+# 监控中心
+
+## 采集任务指标看板
+
+​	在这里，可以以指标形式透视采集任务运行时的状态，默认展示采集任务的核心指标，指标看板支持拖拽，如下图：
+
+![image-20220804130445678](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804130445678.png)
+
+​	通过`采集任务名`下拉列表框选择某个采集任务后，可通过`采集路径`、`主机名`下拉列表框选择某个采集路径或某个采集路径下的某个主机进行指标钻取查看，如下图：
+
+![image-20220804130947670](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804130947670.png)
+
+​	单个指标，可点击大图，查看该指标在各个时间点的各统计值（如存在），如下图：
+
+![image-20220804131328332](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804131328332.png)
+
+![image-20220804131439873](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804131439873.png)
+
+​	如须查看更多采集任务指标，可点击指标筛选按钮，选择需要查看的指标，如下图：
+
+![image-20220804131620754](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804131620754.png)
+
+![image-20220804131709574](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804131709574.png)
+
+## Agent 指标看板
+
+​	在这里，可以以指标形式透视 Agent 运行时的状态，默认展示 Agent 的核心指标，指标看板支持拖拽，如下图：
+
+![image-20220804132436622](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804132436622.png)
+
+​	单个指标，可点击大图，查看该指标在各个时间点的各统计值（如存在），如下图：
+
+![image-20220804133001669](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804133001669.png)
+
+![image-20220804132925241](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804132925241.png)
+
+![image-20220804133109058](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804133109058.png)
+
+​	如须查看更多 Agent 指标，可点击指标筛选按钮，选择需要查看的指标，如下图：
+
+![image-20220804134828085](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804134828085.png)
+
+![image-20220804134905503](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804134905503.png)
+
+# 我的工作台
+
+## 运营大盘
+
+​	展示运营相关的核心指标数据，如下图：
+
+![image-20220804135615315](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804135615315.png)
+
+## 运维大盘
+
+​	展示运维相关的核心指标数据，如下图：
+
+![image-20220804135658446](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804135658446.png)
+
+​	在`各健康度类型采集任务分布`与`各健康度类型Agent分布`图中，针对故障任务、预警任务、故障 Agent、预警 Agent，可点击进入采集任务详情页与 Agent 详情页，查看采集任务健康度描述与 Agent 健康度描述信息，如下图：
+
+![image-20220804141412690](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804141412690.png)
+
+​	在 `Agent视角 TOP5`与`采集任务视角 TOP5`部分，针对柱状图对应采集任务名与 Agent 主机名与可点击进入对应采集任务指标看板 与 Agent 指标看板，如下图：
+
+![image-20220804141237814](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804141237814.png)
+
+![image-20220804141303144](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804141303144.png)
+
+# 指标探查
+
+​	用于复杂场景下运维排障场景，可针对 Agent 指标与采集任务指标进行关联分析，也可针对不同的 Agent 指标或采集任务指标进行对比分析，指标看板支持拖拽，如下图：
+
+![image-20220804142800712](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804142800712.png)
+
+![image-20220804142849679](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804142849679.png)
+
+![image-20220804142919876](assets/:Users:didi:Library:Application Support:typora-user-images:image-20220804142919876.png)
