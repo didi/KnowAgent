@@ -17,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -72,6 +73,21 @@ public class OpAgentController {
             @PathVariable Long agentId
     ) {
         agentManageService.deleteAgentById(agentId, true, true, SpringTool.getUserName());
+        return Result.buildSucc();
+    }
+
+    @ApiOperation(value = "批量删除 agent 0：删除成功 10000：参数错误 22000：Agent 不存在 22001：Agent存在未采集完的日志", notes = "")
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public Result deleteAgents(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> agentIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                agentIdList.add(Long.valueOf(id));
+            }
+            agentManageService.deleteAgentByIds(agentIdList, true, true, SpringTool.getUserName());
+        }
         return Result.buildSucc();
     }
 

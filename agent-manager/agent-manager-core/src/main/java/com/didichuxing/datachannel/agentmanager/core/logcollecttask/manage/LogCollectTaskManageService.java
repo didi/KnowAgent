@@ -156,4 +156,11 @@ public interface LogCollectTaskManageService {
      */
     LogSliceRuleVO getSliceRule(String content, Integer sliceDateTimeStringStartIndex, Integer sliceDateTimeStringEndIndex);
 
+    /**
+     * 批量删除日志采集任务
+     * @param logCollectTaskIdList 待删除日志采集任务id集
+     * @param operator 操作人
+     */
+    void deleteLogCollectTasks(List<Long> logCollectTaskIdList, String operator);
+
 }

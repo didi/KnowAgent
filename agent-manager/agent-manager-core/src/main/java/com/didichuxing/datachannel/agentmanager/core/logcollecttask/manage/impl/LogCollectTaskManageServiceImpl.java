@@ -687,6 +687,14 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
     }
 
     @Override
+    @Transactional
+    public void deleteLogCollectTasks(List<Long> logCollectTaskIdList, String operator) {
+        for (Long id : logCollectTaskIdList) {
+            this.handleDeleteLogCollectTask(id, operator);
+        }
+    }
+
+    @Override
     public List<LogCollectTaskDO> getLogCollectTaskListByAgentId(Long agentId) {
         List<HostDO> collectHostDOList = hostManageService.getRelationHostListByAgentId(agentId);//agent 待采集 host 集
         List<LogCollectTaskDO> result = new ArrayList<>();

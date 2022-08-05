@@ -50,4 +50,10 @@ public interface MetadataManageService {
      */
     void importMetaData(Long id, String operator);
 
+    /**
+     * 根据元数据上传记录 id 集删除对应 metadata excel 文件上传记录
+     * @param metaDataFileIdList 元数据上传记录 id 集
+     */
+    void deleteMetaDataFiles(List<Long> metaDataFileIdList);
+
 }

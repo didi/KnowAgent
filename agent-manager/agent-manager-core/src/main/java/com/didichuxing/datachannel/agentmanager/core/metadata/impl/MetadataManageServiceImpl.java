@@ -78,6 +78,10 @@ public class MetadataManageServiceImpl implements MetadataManageService {
     @Override
     @Transactional
     public void deleteMetaDataFile(Long id) {
+        handleDeleteMetaDataFile(id);
+    }
+
+    private void handleDeleteMetaDataFile(Long id) {
         MetaDataFilePO metaDataFilePO = metaDataFileDAO.selectByPrimaryKey(id);
         if(null == metaDataFilePO) {
             throw new ServiceException(
@@ -201,6 +205,14 @@ public class MetadataManageServiceImpl implements MetadataManageService {
          * 元数据持久化
          */
         persistMetaData(operator, hostList, applicationList);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMetaDataFiles(List<Long> metaDataFileIdList) {
+        for (Long id : metaDataFileIdList) {
+            handleDeleteMetaDataFile(id);
+        }
     }
 
     private void persistMetaData(String operator, List<List<Object>> hostList, List<List<Object>> applicationList) {

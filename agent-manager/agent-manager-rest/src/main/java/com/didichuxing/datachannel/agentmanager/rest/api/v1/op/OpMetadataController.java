@@ -74,6 +74,27 @@ public class OpMetadataController {
     }
 
     @ApiOperation(
+            value = "根据元数据上传记录 id 集批量删除对应 metadata excel 文件上传记录，错误状态码：" +
+                    "35000：元数据文件上传记录在系统中不存在 " +
+                    "31002：元数据文件不存在 " +
+                    "31005：元数据文件删除失败",
+            notes = ""
+    )
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public Result deleteMetaDataFiles(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> metaDataFileIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                metaDataFileIdList.add(Long.valueOf(id));
+            }
+            metadataManageService.deleteMetaDataFiles(metaDataFileIdList);
+        }
+        return Result.buildSucc();
+    }
+
+    @ApiOperation(
             value = "根据元数据上传记录 id 导入 metadata excel 文件中元数据内容，错误状态码：" +
                     "35000：元数据文件上传记录在系统中不存在 " +
                     "31002：元数据文件不存在 " +

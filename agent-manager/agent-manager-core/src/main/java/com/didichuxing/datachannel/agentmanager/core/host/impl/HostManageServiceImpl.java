@@ -549,4 +549,12 @@ public class HostManageServiceImpl implements HostManageService {
         return faultyCount;
     }
 
+    @Override
+    @Transactional
+    public void deleteHosts(List<Long> hostIdList, boolean ignoreUncompleteCollect, boolean cascadeDeleteAgentIfExists, String operator) {
+        for (Long hostId : hostIdList) {
+            this.handleDeleteHost(hostId, ignoreUncompleteCollect, cascadeDeleteAgentIfExists, operator);
+        }
+    }
+
 }

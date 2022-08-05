@@ -14,6 +14,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Api(tags = "OP-Host维度相关接口(REST)")
 @RestController
 @RequestMapping(ApiPrefix.API_V1_OP_PREFIX + "hosts")
@@ -46,6 +49,21 @@ public class OpHostController {
             @PathVariable Long hostId
     ) {
         hostManageService.deleteHost(hostId, true, true, SpringTool.getUserName());
+        return Result.buildSucc();
+    }
+
+    @ApiOperation(value = "批量删除主机 0：删除成功 10000：参数错误 23000：待删除主机在系统不存在 23004：主机存在关联的容器导致主机删除失败 22001：Agent存在未采集完的日志 23008：主机存在关联的应用导致主机删除失败 ", notes = "")
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public Result deleteHosts(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> hostIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                hostIdList.add(Long.valueOf(id));
+            }
+            hostManageService.deleteHosts(hostIdList, true, true, SpringTool.getUserName());
+        }
         return Result.buildSucc();
     }
 
