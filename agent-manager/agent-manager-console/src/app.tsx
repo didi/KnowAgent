@@ -6,7 +6,7 @@ import dantdEnUS from '@didi/dcloud-design/lib/locale/en_US';
 import intlZhCN from './locales/zh';
 import intlEnUS from './locales/en';
 import { systemKey, leftMenus } from './constants/menu';
-import { DLayout, AppContainer, RouteGuard, Empty, Image } from '@didi/dcloud-design';
+import { DLayout, AppContainer, RouteGuard, Empty, IconFont } from '@didi/dcloud-design';
 import { pageRoutes } from './pages';
 import './index.less';
 import img from './image/logo.png';
@@ -51,8 +51,7 @@ const App = () => {
         <DLayout.DSkoteLayout
           siderbarNavTitle={
             <>
-              <Image width={24} src={img} />
-              <i className="iconfont icon-a-agentlogo" />
+              <IconFont type="icon-a-knowAgentlogo" style={{ fontSize: '104px' }} className={'header-top-logo'} />
             </>
           }
           noFooter
