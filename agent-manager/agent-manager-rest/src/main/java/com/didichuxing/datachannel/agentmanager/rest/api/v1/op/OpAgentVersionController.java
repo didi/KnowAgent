@@ -50,19 +50,25 @@ public class OpAgentVersionController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除Agent版本", notes = "")
-    @RequestMapping(value = "/{agentVersionId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "删除Agent版本 0：删除成功 29000：待删除 AgentVersion 在系统中不存在 29002：AgentVersion在系统中存在关联，无法删除", notes = "")
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
     @CheckPermission(permission = AGENT_VERSION_DELETE)
-    public Result deleteAgentVersion(@PathVariable Long agentVersionId) {
-        agentVersionManageService.deleteAgentVersion(agentVersionId, SpringTool.getUserName());
+    public Result deleteAgentVersion(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> agentVersionIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                agentVersionIdList.add(Long.valueOf(id));
+            }
+            agentVersionManageService.deleteAgentVersion(agentVersionIdList, SpringTool.getUserName());
+        }
         return Result.buildSucc();
     }
 
     @ApiOperation(value = "下载Agent版本", notes = "")
     @RequestMapping(value = "/{agentVersionId}", method = RequestMethod.GET)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_VERSION_DOWNLOAD)
     public Result<String> downloadAgentVersion(@PathVariable Long agentVersionId, HttpServletResponse response) {
         Result<String> result = Result.buildSucc();
         result.setData(agentVersionManageService.getAgentInstallFileDownloadUrl(agentVersionId));
@@ -117,6 +123,12 @@ public class OpAgentVersionController {
         }
         if(null != dto.getAgentVersionCreateTimeStart()) {
             agentVersionPaginationQueryConditionDO.setAgentVersionCreateTimeStart(new Date(dto.getAgentVersionCreateTimeStart()));
+        }
+        if(null != dto.getQueryTerm()) {
+            agentVersionPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
+        }
+        if(StringUtils.isNotBlank(dto.getAgentVersionDescription())) {
+            agentVersionPaginationQueryConditionDO.setAgentVersionDescription(dto.getAgentVersionDescription().replace("_", "\\_").replace("%", "\\%"));
         }
         agentVersionPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         agentVersionPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());

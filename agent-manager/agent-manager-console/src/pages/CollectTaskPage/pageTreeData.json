@@ -1,0 +1,100 @@
+{
+  "grid":"{gutter:10,grid:24,num:1}",
+  "dataInfo":{
+
+  },
+  "name":"0",
+  "path":"",
+  "title":"0",
+  "key":"0",
+  "componentName":"contentComponent",
+  "children":[
+      {
+          "grid":{
+              "gutter":10,
+              "grid":24,
+              "num":1
+          },
+          "dataInfo":{
+
+          },
+          "name":"0-1",
+          "path":"",
+          "title":"0-1",
+          "key":"0-1",
+          "componentName":"contentComponent",
+          "children":[
+              {
+                  "grid":{
+                      "gutter":10,
+                      "grid":24
+                  },
+                  "dataInfo":{
+                      "reloadIconShow":true,
+                      "isGroup":true,
+                      "groupCount":2,
+                      "groupItemsCount":"4,2",
+                      "itemCount":2,
+                      "isHaveTabInMetricTree":true,
+                      "menuList":[
+                          "0",
+                          "1"
+                      ],
+                      "componentType":"SingleChart"
+                  },
+                  "name":"0-1-0",
+                  "path":"",
+                  "title":"ProChartContainer",
+                  "key":"0-1-0",
+                  "componentName":"ProChartContainer",
+                  "children":[
+
+                  ],
+                  "lelf":2,
+                  "version":"",
+                  "nodeTitle":"",
+                  "nodeStyle":{
+
+                  },
+                  "containerStyle":{
+
+                  },
+                  "checked":true
+              }
+          ],
+          "lelf":"1",
+          "version":"",
+          "nodeTitle":"",
+          "nodeStyle":{
+
+          },
+          "containerStyle":{
+
+          },
+          "chilrenPages":[
+
+          ],
+          "pageDesc":"",
+          "pageName":"collect-task",
+          "tplName":"",
+          "pageKey":"collect-task",
+          "checked":false
+      }
+  ],
+  "lelf":0,
+  "version":"",
+  "nodeTitle":"",
+  "nodeStyle":{
+
+  },
+  "containerStyle":{
+
+  },
+  "chilrenPages":[
+
+  ],
+  "pageDesc":"",
+  "pageName":"collect-task",
+  "tplName":"",
+  "pageKey":"collect-task"
+}

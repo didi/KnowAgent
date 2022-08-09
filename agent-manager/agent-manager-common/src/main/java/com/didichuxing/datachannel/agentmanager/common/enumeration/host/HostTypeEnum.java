@@ -7,7 +7,7 @@ package com.didichuxing.datachannel.agentmanager.common.enumeration.host;
  */
 public enum HostTypeEnum {
 
-    HOST(0, "主机"),
+    HOST(0, "物理机"),
     CONTAINER(1, "容器");
 
     private Integer code;
@@ -15,7 +15,7 @@ public enum HostTypeEnum {
 
     HostTypeEnum(Integer code, String description) {
         this.code = code;
-        description = description;
+        this.description = description;
     }
 
     public Integer getCode() {

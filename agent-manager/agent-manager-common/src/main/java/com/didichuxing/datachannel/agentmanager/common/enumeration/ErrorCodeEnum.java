@@ -36,6 +36,7 @@ public enum ErrorCodeEnum {
     AGENT_UNKNOWN_COLLECT_TYPE(22004, "Agent对应collectType数值型未知"),
     AGENT_HEALTH_NOT_EXISTS(22005, "AgentHealth不存在"),
     AGENT_HEALTH_ERROR_LOGS_EXISTS_CHECK_HEALTHY_TIME_NOT_EXISTS(22006, "AgentHealthy对应ErrorLogsExistsCheckHealthyTime在系统中不存在"),
+
     /*
      * Host 相关 23000 ~ 23999
      */
@@ -47,6 +48,7 @@ public enum ErrorCodeEnum {
     HOST_IP_DUPLICATE(23005, "ip 在系统中已存在"),
     RELATION_AGENT_EXISTS_WHEN_DELETE_HOST(23006, "主机存在关联Agent导致主机删除失败"),
     UNKNOWN_HOST_TYPE(23007, "未知主机类型"),
+    RELATION_SERVICES_EXISTS_WHEN_DELETE_HOST(23008, "主机存在关联的应用导致主机删除失败"),
     /*
      * KafkaCluster 相关 26000 ~ 26999
      */
@@ -85,26 +87,51 @@ public enum ErrorCodeEnum {
      */
     AGENT_VERSION_NOT_EXISTS(29000, "AgentVersion在系统中不存在"),
     AGENT_VERSION_DUPLICATE(29001, "AgentVersion在系统中已存在"),
-    AGENT_VERSION_RELATION_EXISTS(29002, "AgentVersion在系统中存在关联，删除时将无法删除"),
+    AGENT_VERSION_RELATION_EXISTS(29002, "AgentVersion在系统中存在关联的Agent，无法删除"),
     AGENT_NEED_NOT_TO_BE_CHECK(29003, "Agent处于健康度检查黑名单中，无需检查"),
     AGENT_PACKAGE_FILE_EXISTS(29004, "Agent安装文件在系统中已存在"),
     /*
      * LogCollectTaskHealth 相关 30000 ~ 30999
      */
     LOGCOLLECTTASK_HEALTH_NOT_EXISTS(30000, "LogCollectTaskHealth不存在"),
+    SCOPE_COLLECT_LOGCOLLECTTASK_HEALTH_CHECK_NOT_SUPPORT(30001, "不支持时间范围采集类型的采集任务健康度检查"),
     /*
      * 文件操作 相关 31000 ~ 31999
      */
     FILE_UPLOAD_FAILED(31000, "文件上传失败"),
     FILE_DOWNLOAD_FAILED(31001, "文件下载失败"),
+    FILE_NOT_EXISTS(31002, "文件不存在"),
+    FILE_IS_DIRECTORY(31003, "文件为目录"),
+    FILE_CREATE_FAILED(31004, "文件创建失败"),
+    FILE_DELETE_FAILED(31005, "文件删除失败"),
+    EXCEL_FILE_READ_FAILED(31006, "Excel 文件读取失败"),
     /*
      * AgentOperationTask操作 相关 32000 ~ 32999
      */
     AGENT_OPERATION_TASK_NOT_EXISTS(32000, "AgentOperationTask不存在"),
-    /**
+    /*
      * Elasticsearch 查询相关 33000 ~ 33999
      */
     ELASTICSEARCH_QUERY_FAILED(33000, "Elasticsearch 查询失败"),
+    /*
+     * Metrics 查询相关 34000 ~ 34999
+     */
+    METRIC_NOT_EXISTS(34000, "指标不存在"),
+    METRICS_TYPE_NOT_EXISTS(34001,"待查询指标系统不存在"),
+    METRICS_QUERY_ERROR(34002, "指标查询错误"),
+    METRICS_RECORD_NOT_EXISTS(34003, "指标记录不存在"),
+    /*
+     * MetadataFile 相关 35000 ~ 35999
+     */
+    META_DATA_FILE_NOT_EXISTS(35000, "元数据文件上传记录在系统中不存在"),
+    META_DATA_IN_EXCEL_IS_NULL(35001, "元数据Excel文件内容为空"),
+    META_DATA_HOST_IN_EXCEL_IS_NULL(35002, "元数据Excel文件内容中host sheet为空"),
+    META_DATA_APPLICATION_IN_EXCEL_IS_NULL(35003, "元数据Excel文件内容中application sheet为空"),
+    META_DATA_IN_EXCEL_FIELD_IS_NULL_EXISTS(35004, "元数据Excel文件内容中sheet存在空值字段"),
+    META_DATA_IN_EXCEL_FIELD_INVALID_EXISTS(35005, "元数据Excel文件内容中sheet存在非法值字段"),
+    META_DATA_IN_EXCEL_HOST_HOST_NAME_DUPLICATE(35006, "元数据Excel文件内容中host sheet存在主机名重复主机记录"),
+    META_DATA_IN_EXCEL_APPLICATION_HOST_NAME_NOT_EXISTS(35007, "元数据Excel文件内容中application sheet中关联主机对应主机名在host sheet与系统中不存在"),
+    META_DATA_IN_EXCEL_APPLICATION_APPLICATION_NAME_DUPLICATE(35008, "元数据Excel文件内容中application sheet存在应用名重复应用记录"),
 
     UNKNOWN(90001, "未知错误"),
 

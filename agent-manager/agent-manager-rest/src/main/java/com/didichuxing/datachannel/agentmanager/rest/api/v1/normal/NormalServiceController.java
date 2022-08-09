@@ -47,15 +47,8 @@ public class NormalServiceController {
     @ApiOperation(value = "查询服务列表 & 各服务关联的主机数", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    public Result<PaginationResult<ServicePaginationRecordVO>> listServicesAndRelationHostCount(@RequestBody ServicePaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
-        //TODO：获取 projectId
-        String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
-        Long projectId = null;
-        if(StringUtils.isNotBlank(projectIdStr)) {
-            projectId = Long.valueOf(projectIdStr);
-        }
+    public Result<PaginationResult<ServicePaginationRecordVO>> listServicesAndRelationHostCount(@RequestBody ServicePaginationRequestDTO dto) {
         ServicePaginationQueryConditionDO servicePaginationQueryConditionDO = servicePaginationRequestDTO2ServicePaginationQueryConditionDO(dto);
-        servicePaginationQueryConditionDO.setProjectId(projectId);
         List<ServicePaginationRecordVO> servicePaginationRecordVOList = servicePaginationRecordDOList2ServicePaginationRecordVOList(serviceManageService.paginationQueryByConditon(servicePaginationQueryConditionDO));
         PaginationResult<ServicePaginationRecordVO> paginationResult = new PaginationResult<>(servicePaginationRecordVOList, serviceManageService.queryCountByCondition(servicePaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
         return Result.buildSucc(paginationResult);
@@ -86,6 +79,9 @@ public class NormalServiceController {
         }
         if (StringUtils.isNotBlank(dto.getServicename())) {
             servicePaginationQueryConditionDO.setServiceName(dto.getServicename().replace("_", "\\_").replace("%", "\\%"));
+        }
+        if(StringUtils.isNotBlank(dto.getQueryTerm())) {
+            servicePaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
         servicePaginationQueryConditionDO.setSortColumn(dto.getSortColumn());
         servicePaginationQueryConditionDO.setAsc(dto.getAsc());
@@ -119,21 +115,34 @@ public class NormalServiceController {
             serviceDetailVO.setServiceName(serviceDO.getServicename());
             serviceDetailVO.setId(serviceDO.getId());
             List<HostDO> hostDOList = hostManageService.getHostsByServiceId(serviceDO.getId());
-            serviceDetailVO.setHostList(ConvertUtil.list2List(hostDOList, HostVO.class));
+            if(CollectionUtils.isNotEmpty(hostDOList)) {
+                List<HostVO> hostVOList = new ArrayList<>(hostDOList.size());
+                for (HostDO hostDO : hostDOList) {
+                    HostVO hostVO = ConvertUtil.obj2Obj(hostDO, HostVO.class);
+                    hostVO.setContainer(hostDO.getContainer());
+                    hostVOList.add(hostVO);
+                }
+                serviceDetailVO.setHostList(hostVOList);
+            }
             serviceDetailVO.setCreateTime(serviceDO.getCreateTime().getTime());
             return Result.buildSucc(serviceDetailVO);
         }
     }
 
     @ApiOperation(value = "根据id查询对应Service对象是否关联LogCollectTask true：存在 false：不存在", notes = "")
-    @RequestMapping(value = "/rela-logcollecttask-exists/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/rela-logcollecttask-exists/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Boolean> relaLogCollectTaskExists(@PathVariable Long id) {
-        if (CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByServiceId(id))) {
-            return Result.buildSucc(Boolean.TRUE);
-        } else {
-            return Result.buildSucc(Boolean.FALSE);
+    public Result<Boolean> relaLogCollectTaskExists(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            for (String id : idArray) {
+                Long serviceId = Long.valueOf(id);
+                if(CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByServiceId(serviceId))) {
+                    return Result.buildSucc(Boolean.TRUE);
+                }
+            }
         }
+        return Result.buildSucc(Boolean.FALSE);
     }
 
     @ApiOperation(value = "根据id查询对应Service对象是否关联Host true：存在 false：不存在", notes = "")

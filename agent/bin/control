@@ -1,0 +1,245 @@
+#!/bin/bash
+
+workspace=$(cd $(dirname $0) && pwd) # 记录启动脚本所在的位置
+cd $workspace
+
+HOME_DIR=$(cd ~ && pwd)
+
+
+STATUS_URL="http://127.0.0.1:20230/log-agent/version"
+PID_URL="http://127.0.0.1:20230/log-agent/pid"
+
+APP_NAME=log-collector
+TASK_NAME=agent
+LOCK_FILE=var/lock.tmp
+
+
+LOG_DIRS="${workspace}/logs"
+VAR_DIRS="${workspace}/var"
+CONFIG_FILE_NAME="offline.properties"
+
+LINUX_VERSION="7.2"
+
+
+#获取机器的版本号
+function linux_version() {
+    linux_version=`cat /etc/redhat-release`
+    result=$(echo $linux_version | grep "6.7")
+    if [ "X$result" != "X" ]; then
+        LINUX_VERSION="6.7"
+    fi
+}
+
+
+#初始化配置
+function initialize() {
+    #判断文件不存在,直接退出
+    if [ ! -f ${workspace}/properties/${CONFIG_FILE_NAME} ];then
+        echo "${workspace}/properties/${CONFIG_FILE_NAME} not found"
+        exit 1;
+    fi
+
+    #cp -f ${workspace}/properties/${CONFIG_FILE_NAME} ${workspace}/conf/settings.properties
+
+
+    #日志路径
+    mkdir -p ${VAR_DIRS} &>/dev/null
+    mkdir -p ${LOG_DIRS} &>/dev/null
+}
+
+
+function start() {
+    #获取系统linux版本
+    linux_version
+
+    #初始化配置
+    initialize
+
+    #JAVA启动参数
+    # APP_OPTS="-server -Xms1536m -Xmx1536m -Xmn768m -Xss256k -XX:PermSize=48m -XX:MaxPermSize=48m -XX:SurvivorRatio=5 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=1 -XX:+CMSParallelRemarkEnabled -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=68 -XX:MaxDirectMemorySize=64m -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:${workspace}/log/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=3 -XX:GCLogFileSize=10240k -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=../logs -XX:ErrorFile=../logs/hs_err_pid%p.log"
+    JAVA_MEM_OPTS="-Xms1536m -Xmx1536m -Xmn768m -Xss256k -XX:MaxDirectMemorySize=64m"
+    JAVA_GC_OPTS="-XX:+UseConcMarkSweepGC -XX:SurvivorRatio=5 -XX:+ExplicitGCInvokesConcurrent"
+    APP_OPTS="-server ${JAVA_MEM_OPTS} ${JAVA_GC_OPTS}"
+
+    DEBUG_PORT=60300
+    BASE_LIB_JARS=`ls ${workspace}/lib|grep .jar|awk '{print "'${workspace}/lib'/"$0}'|tr "\n" ":"`
+    BASE_CLASS_PATH=${workspace}/classes:${workspace}/conf:$BASE_LIB_JARS
+    JAVA_DEBUG_OPT=" -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=$DEBUG_PORT,server=y,suspend=n"
+    JAVA_OPTS="-DtaskName=$TASK_NAME -Dbaselog=$LOG_DIRS $APP_OPTS"
+    JAVA_OPTS=" $JAVA_OPTS -cp $BASE_CLASS_PATH "
+
+    #判断是否是centos6.7版本的系统
+    if [ "X$LINUX_VERSION" == "X6.7" ];then
+        JAVA_OPTS=" $JAVA_OPTS -Djava.library.path=${workspace}/bin/native_lib/6.7/"
+    else
+        JAVA_OPTS=" $JAVA_OPTS -Djava.library.path=${workspace}/bin/native_lib/7.2/"
+    fi
+
+    # 判断JAVA_HOME是否存在
+    if [ "X$JAVA_HOME" == "X" ];then
+        JAVA="java $JAVA_OPTS"
+    else
+        JAVA="$JAVA_HOME/bin/java $JAVA_OPTS"
+    fi
+
+    # 以写的方式打开文件，文件句柄是200
+    exec 200>${LOCK_FILE}
+
+    # 尝试锁住文件，如果获取不到锁就直接退出
+    flock -n 200 || {
+       echo "another user has obtained the file lock，please wait..."
+       exit 1;
+    }
+
+    nohup $JAVA com.didichuxing.datachannel.agent.node.Agent > /dev/null 2>&1 &
+
+    # 通过agent提供api获取进程名称获取pid, 循环获取pid,如果10秒钟还获取不到pid,则判断进程启动失败
+    local timeout=10
+    for(( i =0; i< $timeout; i++ ));do
+        sleep 1
+        local pid=`curl --connect-timeout 1 --max-time 3 -s $PID_URL`
+        if [ "_x$pid" != "_x" ];then
+            break;
+        fi
+        if [ $i -eq $((timeout-1)) ];then
+            echo "${APP_NAME} start failed"
+            exit 1
+        fi
+    done
+
+    # 判断pid是否运行,并且pid不落地成文件
+    local pid_dir="/proc/${pid}"
+    if [ -d $pid_dir ]; then
+        echo "start ok, pid=$pid"
+    else
+        echo "start failed"
+        exit 1
+    fi
+}
+
+
+function stop() {
+    local timeout=60
+    pid=$(get_pid)
+    if [ "$pid" == "" ];then
+        echo "${APP_NAME} is stoped!"
+        return 0
+    fi
+
+    for (( i=0; i < $timeout; i++ ));do
+        if [ $i -eq $((timeout - 5)) ];then
+            echo "kill -9 ${pid}"
+            kill -9 ${pid} &
+        else
+            echo "kill ${pid} "
+            kill ${pid} &
+        fi
+
+        check_pid
+        if [ $? -eq 0 ];then
+            return 0
+        fi
+        sleep 1
+    done
+}
+
+
+function shutdown() {
+    pid=$(get_pid)
+    kill -9 $pid
+    echo "${APP_NAME} stoped"
+}
+
+
+function restart() {
+    stop
+    sleep 1
+    start
+}
+
+
+function status() {
+    HTTP_CODE=$(curl -s -o /dev/null -s -w "%{http_code}\n" $STATUS_URL)
+    if [ "x_200" == "x_${HTTP_CODE}" ];then
+        echo -n "running, http code: ${HTTP_CODE}"
+    else
+        echo "stopped"
+    fi
+}
+
+
+function version() {
+    version_file="${workspace}/conf/settings.properties"
+    test -f $version_file && cat $version_file | grep "message.version" | cut -d "=" -f 2 || echo "$version_file not found!"
+}
+
+
+function running_version() {
+    echo "----------------------$(date)-${STATUS_URL}------------------"
+    local timeout=10
+    for ((i=0;i<$timeout;i++));do
+        sleep 1
+        response=$(curl --connect-timeout 1 --max-time 3 -s $STATUS_URL)
+        test -n "$response" && break || ( test $i == 9 && echo "curl $STATUS_URL request faild , timeout $i second!" )
+    done
+    echo $response
+}
+
+
+function get_pid() {
+    local pid=$(curl --connect-timeout 1 --max-time 3 -s $PID_URL)
+    expr $pid + 0 &>/dev/null
+    if [ $? != 0 ];then
+        pid=""
+    fi
+    echo $pid
+}
+
+
+function check_pid() {
+    if [ "x_" != "x_${pid}" ]; then
+        running=$(ps -p ${pid}|grep -v "PID TTY" |wc -l)
+        return ${running}
+    fi
+    return 0
+}
+
+## usage
+function usage() {
+    echo "$0 start|stop|shutdown|restart|status|tail|version|running_version"
+}
+
+## main
+action=$1
+case $action in
+    "start" )
+        restart #防止pid被写坏，默认使用restart
+        ;;
+    "stop" )
+        stop
+        ;;
+    "shutdown" )
+        shutdown
+        ;;
+    "restart" )
+        restart
+        ;;
+    "status" )
+        status
+        ;;
+    "version" )
+        version
+        ;;
+    "running_version" )
+        running_version
+        ;;
+    "test" )
+        _test $2
+        ;;
+    "pid" )
+        get_pid
+        ;;
+    * )
+        usage
+        ;;
+esac

@@ -1,5 +1,5 @@
 Configuration:
-  status: debug
+  status: info
   monitorInterval: 30
   Properties:
     Property:
@@ -33,7 +33,7 @@ Configuration:
               onMismatch: DENY
         Policies:
           SizeBasedTriggeringPolicy:
-            size: 10M
+            size: 100M
   Loggers:
     Root:
       level: info
@@ -42,7 +42,7 @@ Configuration:
         - ref: ROLLING_FILE
     Logger:
       - name: platform
-        level: debug
+        level: info
         additivity: false
         AppenderRef:
           - ref: CONSOLE

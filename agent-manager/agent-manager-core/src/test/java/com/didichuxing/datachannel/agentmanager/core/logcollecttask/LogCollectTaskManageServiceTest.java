@@ -1,19 +1,15 @@
 package com.didichuxing.datachannel.agentmanager.core.logcollecttask;
 
+import com.alibaba.fastjson.JSON;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogRecordVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
 import com.didichuxing.datachannel.agentmanager.core.ApplicationTests;
-import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
-import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.DirectoryLogCollectPathManageService;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
-import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
-import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentVersionMapper;
+import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
@@ -21,37 +17,55 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//@Transactional
-//@Rollback
+@Transactional
+@Rollback
 public class LogCollectTaskManageServiceTest extends ApplicationTests {
-
-    @Autowired
-    private ServiceManageService serviceManageService;
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
 
     @Autowired
-    private KafkaClusterManageService kafkaClusterManageService;
+    private LogCollectTaskManageServiceExtension logCollectTaskManageServiceExtension;
 
-    @Autowired
-    private DirectoryLogCollectPathManageService directoryLogCollectPathManageService;
+    @Test
+    public void testSlice() {
+        String content = "[2022-04-12 11:25:08.920] [main] INFO  logger2 -    42512997 1649733908920 7\n" +
+                "[2022-04-12 11:25:08.921] [main] INFO  logger2 -    42512998 1649733908921 8\n" +
+                "[2022-04-12 11:25:08.924] [main] INFO  logger2 -    42512999 1649733908924 9\n" +
+                "[2022-04-12 11:25:08.926] [main] INFO  logger2 -    42513000 1649733908926 0\n" +
+                "[2022-04-12 11:25:08.928] [main] INFO  logger2 -    42513001 1649733908928 1\n" +
+                "[2022-04-12 11:25:08.929] [main] INFO  logger2 -    42513002 1649733908929 2\n" +
+                "[2022-04-12 11:25:08.931] [main] INFO  logger2 -    42513003 1649733908931 3\n" +
+                "[2022-04-12 11:25:08.934] [main] INFO  logger2 -    42513004 1649733908934 4\n" +
+                "[2022-04-12 11:25:08.936] [main] INFO  logger2 -    42513005 1649733908936 5\n" +
+                "[2022-04-12 11:25:08.937] [main] INFO  logger2 -    42513006 1649733908937 6\n";
 
-    @Autowired
-    private FileLogCollectPathManageService fileLogCollectPathManageService;
+        String sliceTimestampFormat = "yyyy-MM-dd HH:mm:ss.SSS";
+        String sliceTimestampPrefixString = "[";
+        Integer sliceTimestampPrefixStringIndex = 0;
+        List<LogRecordVO> logRecordVOList = logCollectTaskManageServiceExtension.slice(
+                content,
+                sliceTimestampFormat,
+                sliceTimestampPrefixString,
+                sliceTimestampPrefixStringIndex
+        );
+        for (LogRecordVO logRecordVO : logRecordVOList) {
+            System.err.println(JSON.toJSONString(logRecordVO));
+            System.err.println("============================================================================");
+        }
 
-    @Autowired
-    private LogCollectTaskHealthManageService logCollectTaskHealthManageService;
+    }
 
-    @Autowired
-    private HostManageService hostManageService;
-
-    @Autowired
-    private AgentManageService agentManageService;
-
-    @Autowired
-    private AgentVersionMapper agentVersionMapper;
-
+    @Test
+    public void testGetSliceRule() {
+        String info = "23123[qdsadq[qweqw[4[2022-05-27 19:02:47!110] [main] INFO  logger2 -  1652852225 1653649367110     \n" +
+                "2022-05-27";
+        Integer startIndex = info.indexOf("2022-05-27 19:02:47.110");
+        Integer endIndex = startIndex + "2022-05-27 19:02:47.110".length() - 1;
+        assert "2022-05-27 19:02:47.110".equals(info.substring(startIndex, endIndex+1));
+        LogSliceRuleVO logSliceRuleVO = logCollectTaskManageService.getSliceRule(info, startIndex, endIndex);
+        assert null != logSliceRuleVO;
+    }
 //    /**
 //     * 测试日志采集任务修改服务接口 case：删除所有对应文件采集路径集
 //     */
@@ -946,12 +960,12 @@ public class LogCollectTaskManageServiceTest extends ApplicationTests {
 //
 //    }
 
-    @Test
-    public void checkHealthTest() {
-        List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
-        for (LogCollectTaskDO task : logCollectTaskDOList) {
-            logCollectTaskManageService.checkLogCollectTaskHealth(task);
-        }
-    }
+//    @Test
+//    public void checkHealthTest() {
+//        List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
+//        for (LogCollectTaskDO task : logCollectTaskDOList) {
+//            logCollectTaskManageService.checkLogCollectTaskHealth(task);
+//        }
+//    }
 
 }

@@ -12,11 +12,6 @@ public class DiskInfo {
     private String path;
 
     /**
-     * 磁盘设备名
-     */
-    private String device;
-
-    /**
      * 磁盘文件系统类型
      */
     private String fsType;
@@ -39,32 +34,27 @@ public class DiskInfo {
     /**
      * 磁盘用量占比（单位：%）
      */
-    private Double usedPercent;
+    private Double bytesUsedPercent;
 
     /**
      * 磁盘inode总数量
      */
-    private Long inodesTotal;
+    private Integer inodesTotal;
 
     /**
      * 磁盘空闲inode数量
      */
-    private Long inodesFree;
+    private Integer inodesFree;
 
     /**
      * 磁盘已用inode数量
      */
-    private Long inodesUsed;
+    private Integer inodesUsed;
 
     /**
      * 磁盘已用inode占比（单位：%）
      */
-    private Long inodesUsedPercent;
-
-    /**
-     * 磁盘io信息
-     */
-    private DiskIOInfo diskIOInfo;
+    private Double inodesUsedPercent;
 
     public String getPath() {
         return path;
@@ -72,14 +62,6 @@ public class DiskInfo {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getDevice() {
-        return device;
-    }
-
-    public void setDevice(String device) {
-        this.device = device;
     }
 
     public String getFsType() {
@@ -114,51 +96,44 @@ public class DiskInfo {
         this.bytesUsed = bytesUsed;
     }
 
-    public Double getUsedPercent() {
-        return usedPercent;
+    public Double getBytesUsedPercent() {
+        return bytesUsedPercent;
     }
 
-    public void setUsedPercent(Double usedPercent) {
-        this.usedPercent = usedPercent;
+    public void setBytesUsedPercent(Double bytesUsedPercent) {
+        this.bytesUsedPercent = bytesUsedPercent;
     }
 
-    public Long getInodesTotal() {
+    public Integer getInodesTotal() {
         return inodesTotal;
     }
 
-    public void setInodesTotal(Long inodesTotal) {
+    public void setInodesTotal(Integer inodesTotal) {
         this.inodesTotal = inodesTotal;
     }
 
-    public Long getInodesFree() {
+    public Integer getInodesFree() {
         return inodesFree;
     }
 
-    public void setInodesFree(Long inodesFree) {
+    public void setInodesFree(Integer inodesFree) {
         this.inodesFree = inodesFree;
     }
 
-    public Long getInodesUsed() {
+    public Integer getInodesUsed() {
         return inodesUsed;
     }
 
-    public void setInodesUsed(Long inodesUsed) {
+    public void setInodesUsed(Integer inodesUsed) {
         this.inodesUsed = inodesUsed;
     }
 
-    public Long getInodesUsedPercent() {
+    public Double getInodesUsedPercent() {
         return inodesUsedPercent;
     }
 
-    public void setInodesUsedPercent(Long inodesUsedPercent) {
+    public void setInodesUsedPercent(Double inodesUsedPercent) {
         this.inodesUsedPercent = inodesUsedPercent;
     }
 
-    public DiskIOInfo getDiskIOInfo() {
-        return diskIOInfo;
-    }
-
-    public void setDiskIOInfo(DiskIOInfo diskIOInfo) {
-        this.diskIOInfo = diskIOInfo;
-    }
 }

@@ -1,112 +1,73 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import _ from 'lodash';
-import { ConfigProvider } from 'antd';
-import { IntlProvider as DantdIntlProvider } from 'antd-advanced'
-import antdZhCN from 'antd/lib/locale/zh_CN';
-import antdEnUS from 'antd/lib/locale/en_US';
-import { IntlProvider } from 'react-intl';
+import dantdZhCN from '@didi/dcloud-design/lib/locale/zh_CN';
+import dantdEnUS from '@didi/dcloud-design/lib/locale/en_US';
 import intlZhCN from './locales/zh';
 import intlEnUS from './locales/en';
-import { InjectIntlContext } from '@pkgs/hooks/useFormatMessage';
-import { Page403, Page404 } from '@pkgs/Exception';
-import LayoutHeaderNav from '@pkgs/Layout';
-import LayoutMain from '@pkgs/Layout/LeftMenu';
-import { leftMenus, systemKey } from './constants/menu';
-import { Provider as ReduxProvider } from 'react-redux';
-import store from './store';
+import { systemKey, leftMenus } from './constants/menu';
+import { DLayout, AppContainer, RouteGuard, Empty, Image } from '@didi/dcloud-design';
+import { pageRoutes } from './pages';
 import './index.less';
-import { Agent } from './pages/agent';
-import { DataSource } from './pages/dataSource';
-import { ReceivingTerminal } from './pages/receivingTerminal';
-import { OperationRecord } from './pages/operationRecord';
-import { Collect } from './pages/collect';
-import { AgentVersion } from './pages/agentVersion';
-import { OperationTasks } from './pages/operationTasks';
-import { Dashboards } from './pages/dashboard';
+import img from './image/logo.png';
+
 interface ILocaleMap {
   [index: string]: any;
 }
 
 const localeMap: ILocaleMap = {
-  zh: {
-    antd: antdZhCN,
-    intl: 'zh',
+  'zh-CN': {
+    dantd: dantdZhCN,
+    intl: 'zh-CN',
     intlMessages: intlZhCN,
-    title: systemKey,
   },
   en: {
-    antd: antdEnUS,
+    dantd: dantdEnUS,
     intl: 'en',
     intlMessages: intlEnUS,
-    title: systemKey,
   },
 };
 
 export const { Provider, Consumer } = React.createContext('zh');
 
-const defaultLanguage = window.localStorage.getItem('language') || navigator.language.substr(0, 2);
-
+const defaultLanguage = 'zh-CN';
 const App = () => {
-  const [language, setLanguage] = useState(defaultLanguage);
-  const antdAdvanceLanguage = language.includes('zh') ? 'zh-CN' : 'en';
-  const intlMessages = _.get(localeMap[language], 'intlMessages', intlZhCN);
-  const title = _.get(localeMap[language], 'title');
+  const intlMessages = _.get(localeMap[defaultLanguage], 'intlMessages', intlZhCN);
+  const locale = _.get(localeMap[defaultLanguage], 'intl', 'zh-CN');
+  const antdLocale = _.get(localeMap[defaultLanguage], 'dantd', dantdZhCN);
+  const fn = () => {
+    return Promise.resolve('test');
+  };
 
   return (
-    <IntlProvider
-      locale={_.get(localeMap[language], 'intl', 'zh')}
-      messages={intlMessages}
+    <AppContainer
+      intlProvider={{ locale, messages: intlMessages }}
+      antdProvider={{
+        locale: antdLocale,
+        renderEmpty: (): JSX.Element => (<Empty description="数据为空~" image={Empty.PRESENTED_IMAGE_CUSTOM} />) as JSX.Element,
+      }}
     >
-      <ConfigProvider locale={_.get(localeMap[language], 'antd', antdZhCN)}>
-        <InjectIntlContext>
-          <Provider value={language}>
-            <DantdIntlProvider locale={antdAdvanceLanguage}>
-              <ReduxProvider store={store}>
-                <BrowserRouter basename={systemKey}>
-                  <Switch>
-                    <Route exact={true} path="/403" component={Page403} />
-                    <Route exact={true} path="/404" component={Page404} />
-                    <LayoutHeaderNav
-                      language={language}
-                      onLanguageChange={setLanguage}
-                      tenantProjectVisible={false}
-                      onMount={() => { }}>
-                      <LayoutMain
-                        siderMenuVisible={true}
-                        systemName={systemKey}
-                        systemNameChn={title}
-                        menus={leftMenus}
-                      >
-                        <Switch>
-                          <Route path="/" exact={true} component={Dashboards} />
-                          <Route path="/list" exact={true} component={Agent} />
-                          <Route path="/detail" exact={true} component={Agent} />
-                          <Route path="/dataSource" exact={true} component={DataSource} />
-                          <Route path="/dataSource/appList" exact={true} component={DataSource} />
-                          <Route path="/receivingTerminal" exact={true} component={ReceivingTerminal} />
-                          <Route path="/receivingTerminal/clusterList" exact={true} component={ReceivingTerminal} />
-                          <Route path="/operationRecord" exact={true} component={OperationRecord} />
-                          <Route path="/collect" exact={true} component={Collect} />
-                          <Route path="/collect/detail" exact={true} component={Collect} />
-                          <Route path="/agentVersion" exact={true} component={AgentVersion} />
-                          {/* <Route path="/operationTasks" exact={true} component={OperationTasks} /> */}
-                          {/* <Route path="/operationTasks/taskDetail" exact={true} component={OperationTasks} /> */}
-                          <Route path="/collect/add-task" exact={true} component={Collect} />
-                          <Route path="/collect/edit-task" exact={true} component={Collect} />
-                          <Route path="/dashboard" exact={true} component={Dashboards} />
-                        </Switch>
-                      </LayoutMain>
-                    </LayoutHeaderNav>
-                    <Route render={() => <Redirect to="/404" />} />
-                  </Switch>
-                </BrowserRouter>
-              </ReduxProvider>
-            </DantdIntlProvider>
-          </Provider>
-        </InjectIntlContext>
-      </ConfigProvider>
-    </IntlProvider>
+      <Router basename={systemKey}>
+        <DLayout.DSkoteLayout
+          siderbarNavTitle={
+            <>
+              <Image width={24} src={img} />
+              <i className="iconfont icon-a-agentlogo" />
+            </>
+          }
+          noFooter
+          headerLeftContent={'我的工作台'}
+          defaultSideCollpsed={false}
+          systemKey={systemKey}
+          leftMenus={leftMenus}
+          sidebarTheme={'dark'}
+          getUserInfo={fn}
+          needSettingsIcon={false}
+        >
+          <RouteGuard routeList={pageRoutes} noMatch={() => <></>} />
+        </DLayout.DSkoteLayout>
+      </Router>
+    </AppContainer>
   );
 };
 

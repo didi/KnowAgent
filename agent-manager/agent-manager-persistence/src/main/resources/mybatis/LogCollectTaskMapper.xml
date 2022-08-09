@@ -70,11 +70,15 @@
     <result column="log_collect_task_status" property="logCollectTaskStatus" jdbcType="INTEGER" />
     <result column="kafka_cluster_id" property="kafkaClusterId" jdbcType="BIGINT" />
     <result column="log_collect_task_finish_time" property="logCollectTaskFinishTime" jdbcType="TIMESTAMP"/>
+    <result column="log_collect_task_health_description" property="logCollectTaskHealthDescription" jdbcType="VARCHAR"/>
+    <result column="log_collect_task_health_inspection_result_type" property="logCollectTaskHealthInspectionResultType" jdbcType="INTEGER"/>
   </resultMap>
+
   <select id="paginationQueryByConditon" resultMap="PaginationQueryByConditonResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationQueryConditionDO" >
     SELECT
       distinct t1.id as log_collect_task_id, t1.log_collect_task_name, t1.log_collect_task_type,
-      t3.log_collect_task_health_level,t1.create_time create_time, t1.send_topic, t1.log_collect_task_status, t1.kafka_cluster_id, t1.log_collect_task_finish_time log_collect_task_finish_time
+      t3.log_collect_task_health_level,t1.create_time create_time, t1.send_topic, t1.log_collect_task_status, t1.kafka_cluster_id, t1.log_collect_task_finish_time log_collect_task_finish_time,
+      t3.log_collect_task_health_description, t3.log_collect_task_health_inspection_result_type
       FROM tb_log_collect_task as t1
     <if test="serviceIdList != null">
       INNER JOIN tb_log_collect_task_service as t2 ON t2.log_collector_task_id = t1.id
@@ -89,28 +93,34 @@
         and t1.id = #{logCollectTaskId}
       </if>
       <if test="logCollectTaskTypeList != null">
-        and t1.log_collect_task_type in
-        <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
-          #{logCollectTaskType}
+          and t1.log_collect_task_type in
+          <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
+            #{logCollectTaskType}
+          </foreach>
+      </if>
+      <if test="logCollectTaskStatusList != null">
+        and t1.log_collect_task_status in
+        <foreach collection="logCollectTaskStatusList" item="logCollectTaskStatus" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskStatus}
         </foreach>
       </if>
       <if test="logCollectTaskHealthLevelList != null">
-        and t3.log_collect_task_health_level in
-        <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
-          #{logCollectTaskHealthLevel}
-        </foreach>
+          and t3.log_collect_task_health_level in
+          <foreach collection="logCollectTaskHealthLevelList" item="logCollectTaskHealthLevel" index="index" open="(" close=")" separator=",">
+            #{logCollectTaskHealthLevel}
+          </foreach>
       </if>
       <if test="serviceIdList != null">
-        and t2.service_id in
-        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
-          #{serviceId}
-        </foreach>
+          and t2.service_id in
+          <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+            #{serviceId}
+          </foreach>
       </if>
       <if test="createTimeStart != null">
-        and t1.create_time >= #{createTimeStart}
+          and t1.create_time >= #{createTimeStart}
       </if>
       <if test="createTimeEnd != null">
-        and #{createTimeEnd} >= t1.create_time
+          and #{createTimeEnd} >= t1.create_time
       </if>
     </where>
     ORDER BY
@@ -153,6 +163,12 @@
         and t1.log_collect_task_type in
         <foreach collection="logCollectTaskTypeList" item="logCollectTaskType" index="index" open="(" close=")" separator=",">
           #{logCollectTaskType}
+        </foreach>
+      </if>
+      <if test="logCollectTaskStatusList != null">
+        and t1.log_collect_task_status in
+        <foreach collection="logCollectTaskStatusList" item="logCollectTaskStatus" index="index" open="(" close=")" separator=",">
+          #{logCollectTaskStatus}
         </foreach>
       </if>
       <if test="logCollectTaskHealthLevelList != null">
@@ -290,4 +306,5 @@
     <include refid="Base_Column_List"/>
     from tb_log_collect_task;
   </select>
+
 </mapper>

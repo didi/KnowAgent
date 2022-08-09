@@ -27,6 +27,9 @@ public class HostPaginationRequestDTO extends PaginationRequestDTO {
     @ApiModelProperty(value = "服务Id")
     private List<Long> serviceIdList;
 
+    @ApiModelProperty(value = "所属机房集")
+    private List<String> machineZoneList;
+
     @ApiModelProperty(value = "主机创建时间起始检索时间", notes="")
     private Long hostCreateTimeStart;
 
@@ -69,6 +72,14 @@ public class HostPaginationRequestDTO extends PaginationRequestDTO {
 
     public void setAgentHealthLevelList(List<Integer> agentHealthLevelList) {
         this.agentHealthLevelList = agentHealthLevelList;
+    }
+
+    public List<String> getMachineZoneList() {
+        return machineZoneList;
+    }
+
+    public void setMachineZoneList(List<String> machineZoneList) {
+        this.machineZoneList = machineZoneList;
     }
 
     public List<Integer> getContainerList() {

@@ -19,6 +19,7 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
+import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceLogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceProjectManageService;
@@ -42,7 +43,9 @@ import java.util.Map;
 @org.springframework.stereotype.Service
 public class ServiceManageServiceImpl implements ServiceManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManageServiceImpl.class);@Autowired
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManageServiceImpl.class);
+
+    @Autowired
     private ServiceMapper serviceDAO;
 
     @Autowired
@@ -62,6 +65,9 @@ public class ServiceManageServiceImpl implements ServiceManageService {
 
     @Autowired
     private ServiceProjectManageService serviceProjectManageService;
+
+    @Autowired
+    private HostManageService hostManageService;
 
     @Override
     @Transactional
@@ -87,8 +93,10 @@ public class ServiceManageServiceImpl implements ServiceManageService {
 
     @Override
     @Transactional
-    public void deleteService(Long id, boolean cascadeDeleteHostAndLogCollectTaskRelation, String operator) {
-        handleDeleteService(id, cascadeDeleteHostAndLogCollectTaskRelation, operator);
+    public void deleteServices(List<Long> serviceIdList, boolean cascadeDeleteHostAndLogCollectTaskRelation, String operator) {
+        for (Long serviceId : serviceIdList) {
+            handleDeleteService(serviceId, cascadeDeleteHostAndLogCollectTaskRelation, operator);
+        }
     }
 
     @Override
@@ -257,36 +265,39 @@ public class ServiceManageServiceImpl implements ServiceManageService {
          */
         if(null == getServiceById(serviceId)) {
             throw new ServiceException(
-                    String.format("待删除Service对象={id=%d}在系统中不存在", serviceId),
+                    "删除失败：待删除应用在系统中不存在",
                     ErrorCodeEnum.SERVICE_NOT_EXISTS.getCode()
             );
         }
         /*
-         * 处理待删除 service & logcollecttask 关联关系
-         * 如非级联删除，将校验待删除 service 是否存在关联 logcollecttask
+         * 处理待删除 service & logcollecttask、service & host 关联关系
+         * 如非级联删除，将校验待删除 service 是否存在关联 logcollecttask & host
          */
         if(cascadeDeleteHostAndLogCollectTaskRelation) {//级联删除
             /*
              * 删除服务-日志采集任务关联关系
              */
             serviceLogCollectTaskManageService.removeServiceLogCollectTaskByServiceId(serviceId);
+            /*
+             * 删除服务-主机关联关系
+             */
+            serviceHostManageService.deleteServiceHostByServiceId(serviceId);
         } else {//不级联删除，此时须校验
             List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getLogCollectTaskListByServiceId(serviceId);
             if(CollectionUtils.isNotEmpty(logCollectTaskDOList)) {//待删除service存在关联logcollecttask
                 throw new ServiceException(
-                        String.format("待删除Service存在{%d}个关联的LogCollectTask，请先解绑这些LogCollectTask & Service关联关系", logCollectTaskDOList.size()),
+                        String.format("删除失败：待删除应用存在%d个关联的采集任务", logCollectTaskDOList.size()),
                         ErrorCodeEnum.SERVICE_DELETE_FAILED_CAUSE_BY_RELA_LOGCOLLECTTASK_EXISTS.getCode()
                 );
             }
+            List<HostDO> hostDOList = hostManageService.getHostsByServiceId(serviceId);
+            if(CollectionUtils.isNotEmpty(hostDOList)) {//待删除service存在关联 host
+                throw new ServiceException(
+                        String.format("删除失败：待删除应用存在%d个关联的主机", hostDOList.size()),
+                        ErrorCodeEnum.SERVICE_DELETE_FAILED_CAUSE_BY_RELA_HOST_EXISTS.getCode()
+                );
+            }
         }
-        /*
-         * 删除服务-主机关联关系
-         */
-        serviceHostManageService.deleteServiceHostByServiceId(serviceId);
-        /*
-         * 删除项目 - 服务关联关系
-         */
-        serviceProjectManageService.deleteByServiceId(serviceId);
         /*
          * 删除服务对象
          */

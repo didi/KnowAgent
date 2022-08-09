@@ -14,6 +14,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.didichuxing.datachannel.agentmanager.common.constant.PermissionConstant.AGENT_APP_EDIT;
 
 @Api(tags = "OP-Service维度相关接口(REST)")
@@ -44,11 +47,18 @@ public class OpServiceController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除服务", notes = "")
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "删除服务集 入参为待删除服务id集（逗号分割）0：删除成功 27000：待删除 Service 不存在 27002：Service删除失败，原因为：系统存在Service关联的主机 27003：Service删除失败，原因为：系统存在Service关联的日志采集任务", notes = "")
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Result deleteService(@PathVariable Long id) {
-        serviceManageService.deleteService(id, false ,SpringTool.getUserName());
+    public Result deleteService(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> serviceIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                serviceIdList.add(Long.valueOf(id));
+            }
+            serviceManageService.deleteServices(serviceIdList, false ,SpringTool.getUserName());
+        }
         return Result.buildSucc();
     }
 

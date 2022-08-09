@@ -10,22 +10,33 @@ import com.didichuxing.datachannel.agentmanager.common.exception.ServiceExceptio
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
-import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.KafkaProducerSecurity;
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.ListTopicsOptions;
+import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.common.PartitionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @org.springframework.stereotype.Service
 public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClusterManageServiceExtension {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultKafkaClusterManageServiceExtensionImpl.class);
+
+    private static final Integer ADMIN_CLIENT_REQUEST_TIME_OUT_UNIT_MS = 6000;
+
+    private static final String CONSUMER_GROUP_ID = "agentMetricsConsumerGroup";
 
     @Autowired
     private RemoteKafkaClusterService remoteKafkaClusterService;
@@ -177,48 +188,6 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
         return ConvertUtil.list2List(kafkaClusterPOList, ReceiverDO.class);
     }
 
-    /**
-     * 根据kafkaClusterProducerInitConfiguration获取appId
-     *
-     * @param kafkaClusterProducerInitConfiguration KafkaCluster对象对应kafkaClusterProducerInitConfiguration属性值
-     * @return 返回根据kafkaClusterProducerInitConfiguration获取到的appId
-     * <p>
-     * TODO：
-     */
-    private KafkaProducerSecurity getKafkaProducerSecurityByKafkaClusterProducerInitConfiguration(String kafkaClusterProducerInitConfiguration) {
-        if (StringUtils.isBlank(kafkaClusterProducerInitConfiguration)) {
-            throw new ServiceException(
-                    "kafkaClusterProducerInitConfiguration不可为空",
-                    ErrorCodeEnum.KAFKA_CLUSTER_PRODUCER_INIT_CONFIGURATION_IS_NULL.getCode()
-            );
-        }
-        String clusterId = "";
-        String appId = "";
-        String password = "";
-        String[] configs = kafkaClusterProducerInitConfiguration.split(",");
-        for (String config : configs) {
-            if (config.startsWith("sasl.jaas.config")) {
-                Pattern pattern = Pattern.compile("username=\"(.*?)\\.(.*?)\"");
-                Matcher matcher = pattern.matcher(config);
-                if (matcher.find()) {
-                    clusterId = matcher.group(1);
-                    appId = matcher.group(2);
-                }
-                Pattern pattern1 = Pattern.compile("password=\"(.*)\";");
-                Matcher matcher1 = pattern1.matcher(config);
-                if (matcher1.find()) {
-                    password = matcher1.group(1);
-                }
-                break;
-            }
-        }
-        KafkaProducerSecurity kafkaProducerSecurity = new KafkaProducerSecurity();
-        kafkaProducerSecurity.setAppId(appId);
-        kafkaProducerSecurity.setPassword(password);
-        kafkaProducerSecurity.setClusterId(clusterId);
-        return kafkaProducerSecurity;
-    }
-
     @Override
     public boolean checkTopicLimitExists(ReceiverDO receiverDO, String topic) {
         Long externalKafkaClusterId = receiverDO.getKafkaClusterId();
@@ -231,7 +200,7 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
         /*
          * 调用kafka-manager对应接口获取kafkaClusterId + sendTopic是否被限流
          */
-        return remoteKafkaClusterService.checkTopicLimitExists(externalKafkaClusterId, topic, getKafkaProducerSecurityByKafkaClusterProducerInitConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration()));
+        return remoteKafkaClusterService.checkTopicLimitExists(externalKafkaClusterId, topic);
     }
 
     @Override
@@ -263,6 +232,93 @@ public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClust
             }
         }
         return result;
+    }
+
+    @Override
+    public Boolean checkProducerConfigurationValid(String brokerConfiguration, String topic, String producerConfiguration) {
+        KafkaProducer kafkaProducer = null;
+        try {
+            Properties properties = new Properties();
+            properties.put("bootstrap.servers", brokerConfiguration);
+            Map<String, String> producerConfigurationMap = producerConfiguration2Map(producerConfiguration);
+            properties.putAll(producerConfigurationMap);
+            kafkaProducer = new KafkaProducer<>(properties);
+            List<PartitionInfo> partitionInfoList = kafkaProducer.partitionsFor(topic);
+            if(CollectionUtils.isNotEmpty(partitionInfoList)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception ex) {
+            if(null != kafkaProducer) {
+                kafkaProducer.close();
+            }
+            return false;
+        } finally {
+            if(null != kafkaProducer) {
+                kafkaProducer.close();
+            }
+        }
+    }
+
+    @Override
+    public Set<String> listTopics(String kafkaClusterBrokerConfiguration) {
+        AdminClient adminClient = null;
+        try {
+            adminClient = getAdminClient(kafkaClusterBrokerConfiguration);
+            ListTopicsResult listTopicsResult = adminClient.listTopics(new ListTopicsOptions().timeoutMs(ADMIN_CLIENT_REQUEST_TIME_OUT_UNIT_MS));
+            Set<String> topicSet = listTopicsResult.names().get();
+            return topicSet;
+        } catch (Exception ex) {
+            LOGGER.error(
+                    String.format(
+                            "class=DefaultKafkaClusterManageServiceExtensionImpl||method=listTopics||msg=list topics from kafka{%s} failed, root cause is: %s",
+                            kafkaClusterBrokerConfiguration,
+                            ex.getMessage()
+                    ),
+                    ex
+            );
+            return null;
+        } finally {
+            if(null != adminClient) {
+                adminClient.close();
+            }
+        }
+    }
+
+    @Override
+    public Properties getKafkaConsumerProperties(String bootstrapServers) {
+            Properties props = new Properties();
+            props.put("bootstrap.servers", bootstrapServers);
+            props.put("group.id", CONSUMER_GROUP_ID);
+            props.put("enable.auto.commit", "true");
+            props.put("auto.commit.interval.ms", "1000");
+            props.put("session.timeout.ms", "30000");
+            props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+            return props;
+    }
+
+    private AdminClient getAdminClient(String kafkaClusterBrokerConfiguration) {
+        Properties props = new Properties();
+        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaClusterBrokerConfiguration);
+        return AdminClient.create(props);
+    }
+
+    private Map<String, String> producerConfiguration2Map(String producerConfiguration) {
+        Map<String, String> producerConfigurationMap = new HashMap<>();
+        String[] configItemArray = producerConfiguration.split(CommonConstant.COMMA);
+        if(ArrayUtils.isNotEmpty(configItemArray)) {
+            for (String configItem : configItemArray) {
+                String[] item = configItem.split(CommonConstant.EQUAL_SIGN);
+                if(ArrayUtils.isNotEmpty(item) || item.length == 2) {
+                    String key = item[0];
+                    String value = item[1];
+                    producerConfigurationMap.put(key, value);
+                }
+            }
+        }
+        return producerConfigurationMap;
     }
 
 }

@@ -7,28 +7,23 @@ package com.didichuxing.datachannel.agentmanager.common.enumeration.agent;
  */
 public enum AgentHealthInspectionResultEnum {
 
-    AGENT_HEART_BEAT_NOT_EXISTS(1, "agent 心跳不存在", AgentHealthLevelEnum.RED),
-    HOST_OF_AGENT_NOT_ALIVE(2, "agent 宿主机不存活", AgentHealthLevelEnum.RED),
-    AGENT_METRICS_CONFIGURATION_NOT_EXISTS(3, "agent 没有配置metrics流对应下游接收端信息", AgentHealthLevelEnum.RED),
-    AGENT_METRICS_RECEIVER_NOT_CONNECTED(4, "agent的metrics流对应下游接收端连通性不正常", AgentHealthLevelEnum.RED),
-    AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS(5, "agent 没有配置errorlogs流对应下游接收端信息", AgentHealthLevelEnum.RED),
-    AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED(6, "agent的errorlogs流对应下游接收端连通性不正常", AgentHealthLevelEnum.RED),
-    AGENT_PROCESS_BROKES_DOWN(7, "agent 进程故障", AgentHealthLevelEnum.RED),
-    AGENT_METRICS_KAFKA_CONFIG_ERROR(8, "agent metrics 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
-    AGENT_ERRORLOGS_KAFKA_CONFIG_ERROR(9, "agent errorlogs 流对下游 kafka 配置项错误",  AgentHealthLevelEnum.RED),
-    AGENT_ERRORLOGS_EXISTS(10, "agent 自身存在 errorlogs 输出 注：errorlogs 属 agent 自身，而非其他任何日志采集任务", AgentHealthLevelEnum.YELLOW),
-    AGENT_STARTUP_FREQUENTLY(11, "agent 非人工启动过频", AgentHealthLevelEnum.YELLOW),
-    AGENT_CPU_USAGE_METRIC_EXCEPTION(12, "agent 进程 cpu 使用率指标异常", AgentHealthLevelEnum.YELLOW),
-    AGENT_GC_METRIC_EXCEPTION(13, "agent 进程 gc 指标异常", AgentHealthLevelEnum.YELLOW),
-    AGENT_FD_USAGE_METRIC_EXCEPTION(14, "agent 进程 fd 使用量指标异常", AgentHealthLevelEnum.YELLOW),
-    ERRORLOGS_TOPIC_LIMIT_EXISTS(15, "errorlogs 对应下游 topic 被限流", AgentHealthLevelEnum.YELLOW),
-    METRICS_TOPIC_LIMIT_EXISTS(16, "metrics 对应下游 topic 被限流", AgentHealthLevelEnum.YELLOW),
-    HOST_CPU_LIMIT_EXISTS(17, "日志采集任务在对应主机端存在 CPU 阀值限流", AgentHealthLevelEnum.YELLOW),
-    HOST_BYTES_LIMIT_EXISTS(18, "日志采集任务在对应主机端存在出口流量阀值限流", AgentHealthLevelEnum.YELLOW),
-    ERRORLOGS_SINK_TOPIC_ERROR_FREQUENTLY(19, "errorlogs 数据写入下游 topic 失败频繁", AgentHealthLevelEnum.YELLOW),
-    METRICS_SINK_TOPIC_ERROR_FREQUENTLY(20, "metrics 数据写入下游 topic 失败频繁", AgentHealthLevelEnum.YELLOW),
-    NOT_RELATE_ANY_LOGCOLLECTTASK(21, "agent 未关联任何日志采集任务", AgentHealthLevelEnum.YELLOW),
-    HEALTHY(0, "日志采集任务健康", AgentHealthLevelEnum.GREEN);
+    HOST_OF_AGENT_NOT_ALIVE(2, "Agent宿主机%s故障-无法连通", AgentHealthLevelEnum.RED),
+    AGENT_METRICS_CONFIGURATION_NOT_EXISTS(3, "Agent%s没有配置指标流对应下游接收端信息", AgentHealthLevelEnum.RED),
+    AGENT_METRICS_CONFIGURATION_ERROR(5, "Agent%s的指标流对应下游接收端生产者配置{producerConfiguration:%s, topic:%s}错误", AgentHealthLevelEnum.RED),
+    AGENT_METRICS_RECEIVER_NOT_CONNECTED(6, "Agent%s的指标流到下游接收端%s的连通性存在异常", AgentHealthLevelEnum.RED),
+    AGENT_ERRORLOGS_CONFIGURATION_NOT_EXISTS(7, "Agent%s没有配置错误日志流对应下游接收端信息", AgentHealthLevelEnum.RED),
+    AGENT_ERRORLOGS_RECEIVER_NOT_CONNECTED(9, "Agent%s的错误日志流到下游接收端%s的连通性存在异常", AgentHealthLevelEnum.RED),
+    AGENT_ERRORLOGS_CONFIGURATION_ERROR(10, "Agent%s的错误日志流对应下游接收端生产者配置{producerConfiguration:%s, topic:%s}错误", AgentHealthLevelEnum.RED),
+    AGENT_PROCESS_BROKES_DOWN(11, "Agent%s进程故障", AgentHealthLevelEnum.RED),
+    AGENT_ERROR_LOGS_EXISTS(14, "Agent%s存在错误日志输出。注意：错误日志属于Agent自身，非其他任何日志采集任务，不影响Agent上运行的任何日志采集任务对应数据完整性", AgentHealthLevelEnum.YELLOW),
+    AGENT_STARTUP_FREQUENTLY(15, "Agent%s存在非人工启动过频情况", AgentHealthLevelEnum.YELLOW),
+    AGENT_CPU_USAGE_METRIC_EXCEPTION(16, "Agent%s进程在近10分钟内存在CPU使用率超过Agent CPU使用率限流阈值%s的情况", AgentHealthLevelEnum.YELLOW),
+    AGENT_GC_METRIC_EXCEPTION(17, "Agent%s进程在近1小时内存在频繁Full GC的情况", AgentHealthLevelEnum.YELLOW),
+    AGENT_FD_USAGE_METRIC_EXCEPTION(18, "Agent%s进程在近10分钟内存在FD使用量过多的情况", AgentHealthLevelEnum.YELLOW),
+    NOT_RELATE_ANY_LOGCOLLECTTASK(25, "Agent%s未关联任何日志采集任务", AgentHealthLevelEnum.YELLOW),
+    HOST_SYSTEM_TIME_IN_VALID(26, "Agent宿主机%s的系统时间不准确", AgentHealthLevelEnum.RED),
+    AGENT_ERROR_LOGS_SEND_FAILED_EXISTS_CAUSE_BY_AGENT_PROCESS_BREAK_DOWN(28, "Agent%s进程故障导致Agent的错误日志发送至下游接收端错误", AgentHealthLevelEnum.RED),
+    HEALTHY(0, "Agent健康", AgentHealthLevelEnum.GREEN);
 
     private Integer code;
     private String description;

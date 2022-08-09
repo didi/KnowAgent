@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthPO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
@@ -33,21 +34,9 @@ public class DefaultLogCollectTaskHealthManageServiceExtensionImpl implements Lo
         }
         LogCollectTaskHealthPO logCollectorTaskHealthPO = new LogCollectTaskHealthPO();
         logCollectorTaskHealthPO.setLogCollectTaskHealthDescription(StringUtils.EMPTY);
-        logCollectorTaskHealthPO.setLogCollectTaskHealthLevel(LogCollectTaskHealthLevelEnum.GREEN.getCode());
         logCollectorTaskHealthPO.setLogCollectTaskId(logCollectTaskDO.getId());
         logCollectorTaskHealthPO.setLogCollectTaskHealthLevel(LogCollectTaskHealthLevelEnum.GREEN.getCode());
-        logCollectorTaskHealthPO.setLastestCollectDqualityTimePerLogFilePathJsonString(StringUtils.EMPTY);
-        Map<Long, Long> filePathId2TimestampMap = new HashMap<>();
-        Long currentTime = System.currentTimeMillis();
-        List<FileLogCollectPathDO> fileLogCollectPathDOList = logCollectTaskDO.getFileLogCollectPathList();
-        for (FileLogCollectPathDO fileLogCollectPathDO : fileLogCollectPathDOList) {
-            filePathId2TimestampMap.put(fileLogCollectPathDO.getId(), currentTime);
-        }
-        String filePathId2TimestampMapJsonString = JSON.toJSONString(filePathId2TimestampMap);
-        logCollectorTaskHealthPO.setLastestAbnormalTruncationCheckHealthyTimePerLogFilePath(filePathId2TimestampMapJsonString);
-        logCollectorTaskHealthPO.setLastestLogSliceCheckHealthyTimePerLogFilePath(filePathId2TimestampMapJsonString);
-        logCollectorTaskHealthPO.setLastestFileDisorderCheckHealthyTimePerLogFilePath(filePathId2TimestampMapJsonString);
-        logCollectorTaskHealthPO.setLastestFilePathExistsCheckHealthyTimePerLogFilePath(filePathId2TimestampMapJsonString);
+        logCollectorTaskHealthPO.setLogCollectTaskHealthInspectionResultType(LogCollectTaskHealthInspectionResultEnum.HEALTHY.getCode());
         logCollectorTaskHealthPO.setOperator(CommonConstant.getOperator(operator));
         return logCollectorTaskHealthPO;
     }

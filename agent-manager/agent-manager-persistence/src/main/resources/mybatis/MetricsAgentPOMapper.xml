@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsAgentPOMapper">
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="hostName" jdbcType="VARCHAR" property="hostname" />
+    <result column="limitTps" jdbcType="BIGINT" property="limittps" />
+    <result column="cpuLimit" jdbcType="DOUBLE" property="cpulimit" />
+    <result column="agentVersion" jdbcType="VARCHAR" property="agentversion" />
+    <result column="readBytes" jdbcType="BIGINT" property="readbytes" />
+    <result column="readCount" jdbcType="BIGINT" property="readcount" />
+    <result column="writeBytes" jdbcType="BIGINT" property="writebytes" />
+    <result column="writeCount" jdbcType="BIGINT" property="writecount" />
+    <result column="errorLogsCount" jdbcType="BIGINT" property="errorlogscount" />
+    <result column="errorLogsSendFailedCount" jdbcType="BIGINT" property="errorlogssendfailedcount" />
+    <result column="normalCollectThreadNumMax" jdbcType="INTEGER" property="normalcollectthreadnummax" />
+    <result column="normalCollectThreadNumSize" jdbcType="INTEGER" property="normalcollectthreadnumsize" />
+    <result column="normalCollectThreadQueueMax" jdbcType="INTEGER" property="normalcollectthreadqueuemax" />
+    <result column="normalCollectThreadQueueSize" jdbcType="INTEGER" property="normalcollectthreadqueuesize" />
+    <result column="temporaryCollectThreadNumMax" jdbcType="INTEGER" property="temporarycollectthreadnummax" />
+    <result column="temporaryCollectThreadNumSize" jdbcType="INTEGER" property="temporarycollectthreadnumsize" />
+    <result column="temporaryCollectThreadQueueMax" jdbcType="INTEGER" property="temporarycollectthreadqueuemax" />
+    <result column="temporaryCollectThreadQueueSize" jdbcType="INTEGER" property="temporarycollectthreadqueuesize" />
+    <result column="collectTaskNum" jdbcType="INTEGER" property="collecttasknum" />
+    <result column="runningCollectTaskNum" jdbcType="INTEGER" property="runningcollecttasknum" />
+    <result column="pauseCollectTaskNum" jdbcType="INTEGER" property="pausecollecttasknum" />
+    <result column="collectPathNum" jdbcType="INTEGER" property="collectpathnum" />
+    <result column="runningCollectPathNum" jdbcType="INTEGER" property="runningcollectpathnum" />
+    <result column="pauseCollectPathNum" jdbcType="INTEGER" property="pausecollectpathnum" />
+    <result column="heartbeatTime" jdbcType="BIGINT" property="heartbeattime" />
+    <result column="heartbeatTimeMinute" jdbcType="BIGINT" property="heartbeattimeminute" />
+    <result column="heartbeatTimeHour" jdbcType="BIGINT" property="heartbeattimehour" />
+    <result column="heartbeatTimeDay" jdbcType="BIGINT" property="heartbeatTimeDay" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, hostName, limitTps, cpuLimit, agentVersion, readBytes, readCount, writeBytes, 
+    writeCount, errorLogsCount, errorLogsSendFailedCount, normalCollectThreadNumMax, 
+    normalCollectThreadNumSize, normalCollectThreadQueueMax, normalCollectThreadQueueSize, 
+    temporaryCollectThreadNumMax, temporaryCollectThreadNumSize, temporaryCollectThreadQueueMax, 
+    temporaryCollectThreadQueueSize, collectTaskNum, runningCollectTaskNum, pauseCollectTaskNum, 
+    collectPathNum, runningCollectPathNum, pauseCollectPathNum, heartbeatTime, heartbeatTimeMinute, 
+    heartbeatTimeHour, heartbeatTimeDay
+  </sql>
+
+  <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
+    <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
+    <result column="last" property="last" jdbcType="DOUBLE" />
+    <result column="min" property="min" jdbcType="DOUBLE" />
+    <result column="max" property="max" jdbcType="DOUBLE" />
+    <result column="mean" property="mean" jdbcType="DOUBLE" />
+    <result column="std" property="std" jdbcType="DOUBLE" />
+    <result column="fiftyFiveQuantile" property="fiftyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="seventyFiveQuantile" property="seventyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyFiveQuantile" property="ninetyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyNineQuantile" property="ninetyNineQuantile" jdbcType="DOUBLE" />
+    <result column="macAddress" property="macAddress" jdbcType="VARCHAR"/>
+    <result column="device" property="device" jdbcType="VARCHAR"/>
+    <result column="path" property="path" jdbcType="VARCHAR"/>
+    <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
+    <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="serviceNames" property="serviceNames" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${fieldName}
+    from tb_metrics_agent
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    order by heartbeatTime desc
+      limit 1
+  </select>
+  <select id="getSingleChatNonStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+      heartbeatTimeMinute
+    from tb_metrics_agent
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+            ${function}(${fieldName}Min) as 'min',
+            ${function}(${fieldName}Max) as 'max',
+            ${function}(${fieldName}Mean) as 'mean',
+            ${function}(${fieldName}Std) as 'std',
+            ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+            ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+            ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+            ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+            heartbeatTimeMinute
+    from tb_metrics_agent
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_metrics_agent
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getSumMetricAllAgents" resultType="java.lang.Double" parameterType="java.util.Map">
+    SELECT SUM(t1.stat) FROM (
+                               SELECT ${function}(${fieldName}) AS 'stat'
+                               from tb_metrics_agent
+                               where heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+                               GROUP BY hostName
+                             ) AS t1
+  </select>
+
+  <resultMap id="TopNByMetricPerHostNameResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO" >
+    <result column="hostName" property="hostName" jdbcType="VARCHAR" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+  <select id="getTopNByMetricPerHostName" resultMap="TopNByMetricPerHostNameResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(${fieldName}) as 'aggVal',
+    hostName as 'hostName'
+    from tb_metrics_agent
+    where
+    ${sortTimeField} = #{sortTime,jdbcType=BIGINT}
+    group by hostName
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+
+  <select id="getSingleChatNonStatisticByHostName" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               heartbeatTimeMinute
+       from tb_metrics_agent
+       where
+         hostName = #{hostName,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatisticByHostName" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               ${function}(${fieldName}Min) as 'min',
+               ${function}(${fieldName}Max) as 'max',
+               ${function}(${fieldName}Mean) as 'mean',
+               ${function}(${fieldName}Std) as 'std',
+               ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+               ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+               ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+               ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+               heartbeatTimeMinute
+       from tb_metrics_agent
+       where
+         hostName = #{hostName,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+
+  <select id="getAggregationQueryPerHostNameFromMetricsAgent" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName})
+    from tb_metrics_agent
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime}
+      and
+      heartbeatTime &lt;= #{endTime}
+  </select>
+
+  <select id="getLastRecord" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_agent
+    where
+    hostName = #{hostName,jdbcType=VARCHAR}
+    order by heartbeatTime desc
+    limit 1
+  </select>
+
+  <select id="getErrorMetrics" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_agent
+    where
+            hostName = #{hostName,jdbcType=VARCHAR}
+        AND
+            errorLogsCount > 0
+        AND
+            heartbeatTime &gt; #{startHeartbeatTime} and heartbeatTime &lt;= #{endHeartbeatTime}
+    order by heartbeatTime asc
+  </select>
+
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    insert into tb_metrics_agent (id, hostName, limitTps, 
+      cpuLimit, agentVersion, readBytes, 
+      readCount, writeBytes, writeCount, 
+      errorLogsCount, errorLogsSendFailedCount, 
+      normalCollectThreadNumMax, normalCollectThreadNumSize, 
+      normalCollectThreadQueueMax, normalCollectThreadQueueSize, 
+      temporaryCollectThreadNumMax, temporaryCollectThreadNumSize, 
+      temporaryCollectThreadQueueMax, temporaryCollectThreadQueueSize, 
+      collectTaskNum, runningCollectTaskNum, 
+      pauseCollectTaskNum, collectPathNum, runningCollectPathNum, 
+      pauseCollectPathNum, heartbeatTime, heartbeatTimeMinute, 
+      heartbeatTimeHour, heartbeatTimeDay)
+    values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{limittps,jdbcType=BIGINT}, 
+      #{cpulimit,jdbcType=DOUBLE}, #{agentversion,jdbcType=VARCHAR}, #{readbytes,jdbcType=BIGINT}, 
+      #{readcount,jdbcType=BIGINT}, #{writebytes,jdbcType=BIGINT}, #{writecount,jdbcType=BIGINT}, 
+      #{errorlogscount,jdbcType=BIGINT}, #{errorlogssendfailedcount,jdbcType=BIGINT}, 
+      #{normalcollectthreadnummax,jdbcType=INTEGER}, #{normalcollectthreadnumsize,jdbcType=INTEGER}, 
+      #{normalcollectthreadqueuemax,jdbcType=INTEGER}, #{normalcollectthreadqueuesize,jdbcType=INTEGER}, 
+      #{temporarycollectthreadnummax,jdbcType=INTEGER}, #{temporarycollectthreadnumsize,jdbcType=INTEGER}, 
+      #{temporarycollectthreadqueuemax,jdbcType=INTEGER}, #{temporarycollectthreadqueuesize,jdbcType=INTEGER}, 
+      #{collecttasknum,jdbcType=INTEGER}, #{runningcollecttasknum,jdbcType=INTEGER}, 
+      #{pausecollecttasknum,jdbcType=INTEGER}, #{collectpathnum,jdbcType=INTEGER}, #{runningcollectpathnum,jdbcType=INTEGER}, 
+      #{pausecollectpathnum,jdbcType=INTEGER}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
+      #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO">
+    insert into tb_metrics_agent
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="hostname != null">
+        hostName,
+      </if>
+      <if test="limittps != null">
+        limitTps,
+      </if>
+      <if test="cpulimit != null">
+        cpuLimit,
+      </if>
+      <if test="agentversion != null">
+        agentVersion,
+      </if>
+      <if test="readbytes != null">
+        readBytes,
+      </if>
+      <if test="readcount != null">
+        readCount,
+      </if>
+      <if test="writebytes != null">
+        writeBytes,
+      </if>
+      <if test="writecount != null">
+        writeCount,
+      </if>
+      <if test="errorlogscount != null">
+        errorLogsCount,
+      </if>
+      <if test="errorlogssendfailedcount != null">
+        errorLogsSendFailedCount,
+      </if>
+      <if test="normalcollectthreadnummax != null">
+        normalCollectThreadNumMax,
+      </if>
+      <if test="normalcollectthreadnumsize != null">
+        normalCollectThreadNumSize,
+      </if>
+      <if test="normalcollectthreadqueuemax != null">
+        normalCollectThreadQueueMax,
+      </if>
+      <if test="normalcollectthreadqueuesize != null">
+        normalCollectThreadQueueSize,
+      </if>
+      <if test="temporarycollectthreadnummax != null">
+        temporaryCollectThreadNumMax,
+      </if>
+      <if test="temporarycollectthreadnumsize != null">
+        temporaryCollectThreadNumSize,
+      </if>
+      <if test="temporarycollectthreadqueuemax != null">
+        temporaryCollectThreadQueueMax,
+      </if>
+      <if test="temporarycollectthreadqueuesize != null">
+        temporaryCollectThreadQueueSize,
+      </if>
+      <if test="collecttasknum != null">
+        collectTaskNum,
+      </if>
+      <if test="runningcollecttasknum != null">
+        runningCollectTaskNum,
+      </if>
+      <if test="pausecollecttasknum != null">
+        pauseCollectTaskNum,
+      </if>
+      <if test="collectpathnum != null">
+        collectPathNum,
+      </if>
+      <if test="runningcollectpathnum != null">
+        runningCollectPathNum,
+      </if>
+      <if test="pausecollectpathnum != null">
+        pauseCollectPathNum,
+      </if>
+      <if test="heartbeattime != null">
+        heartbeatTime,
+      </if>
+      <if test="heartbeattimeminute != null">
+        heartbeatTimeMinute,
+      </if>
+      <if test="heartbeattimehour != null">
+        heartbeatTimeHour,
+      </if>
+      <if test="heartbeatTimeDay != null">
+        heartbeatTimeDay,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hostname != null">
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="limittps != null">
+        #{limittps,jdbcType=BIGINT},
+      </if>
+      <if test="cpulimit != null">
+        #{cpulimit,jdbcType=DOUBLE},
+      </if>
+      <if test="agentversion != null">
+        #{agentversion,jdbcType=VARCHAR},
+      </if>
+      <if test="readbytes != null">
+        #{readbytes,jdbcType=BIGINT},
+      </if>
+      <if test="readcount != null">
+        #{readcount,jdbcType=BIGINT},
+      </if>
+      <if test="writebytes != null">
+        #{writebytes,jdbcType=BIGINT},
+      </if>
+      <if test="writecount != null">
+        #{writecount,jdbcType=BIGINT},
+      </if>
+      <if test="errorlogscount != null">
+        #{errorlogscount,jdbcType=BIGINT},
+      </if>
+      <if test="errorlogssendfailedcount != null">
+        #{errorlogssendfailedcount,jdbcType=BIGINT},
+      </if>
+      <if test="normalcollectthreadnummax != null">
+        #{normalcollectthreadnummax,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadnumsize != null">
+        #{normalcollectthreadnumsize,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadqueuemax != null">
+        #{normalcollectthreadqueuemax,jdbcType=INTEGER},
+      </if>
+      <if test="normalcollectthreadqueuesize != null">
+        #{normalcollectthreadqueuesize,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadnummax != null">
+        #{temporarycollectthreadnummax,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadnumsize != null">
+        #{temporarycollectthreadnumsize,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadqueuemax != null">
+        #{temporarycollectthreadqueuemax,jdbcType=INTEGER},
+      </if>
+      <if test="temporarycollectthreadqueuesize != null">
+        #{temporarycollectthreadqueuesize,jdbcType=INTEGER},
+      </if>
+      <if test="collecttasknum != null">
+        #{collecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="runningcollecttasknum != null">
+        #{runningcollecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="pausecollecttasknum != null">
+        #{pausecollecttasknum,jdbcType=INTEGER},
+      </if>
+      <if test="collectpathnum != null">
+        #{collectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="runningcollectpathnum != null">
+        #{runningcollectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="pausecollectpathnum != null">
+        #{pausecollectpathnum,jdbcType=INTEGER},
+      </if>
+      <if test="heartbeattime != null">
+        #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null">
+        #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null">
+        #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null">
+        #{heartbeatTimeDay,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="deleteByLtHeartbeatTime" parameterType="java.lang.Long">
+    delete from tb_metrics_agent
+    where heartbeatTime &lt; #{heartBeatTime}
+  </delete>
+
+</mapper>

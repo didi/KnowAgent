@@ -1,79 +1,112 @@
 const pkgJson = require('../../package');
 export const systemKey = pkgJson.ident;
+
 export const leftMenus = {
   name: `${systemKey}`,
-  path: 'main',
-  icon: '#icon-jiqun',
+  icon: 'icon-jiqun',
+  path: '/',
   children: [
     {
-      name: 'dashboard',
-      path: 'dashboard',
-      icon: '#icon-jiqun1',
+      name: 'home',
+      path: '/version',
+      icon: 'icon-wodegongzuotai',
+      children: [
+        {
+          name: 'operation',
+          path: 'operation',
+        },
+        {
+          name: 'devops',
+          path: 'devops',
+        },
+      ],
     },
+    //元数据中心
+    {
+      name: 'meta',
+      path: '/meta',
+      icon: 'icon-cebiandaohang-shujuyuan',
+      children: [
+        {
+          name: 'dataSource',
+          path: 'dataSource',
+        },
+        {
+          name: 'receivingTerminal',
+          path: 'receivingTerminal',
+        },
+        {
+          name: 'metaVersion',
+          path: 'metaVersion',
+        },
+      ],
+    },
+    // Agent中心
     {
       name: 'main',
-      path: '',
-      icon: '#icon-jiqun1',
+      path: '/main',
+      icon: 'icon-Agentzhongxin',
       children: [
         {
           name: 'list',
-          path: 'list',
+          path: '',
           icon: '#icon-luoji',
-          permissionPoint: 'Agent_agent_management_page',
-        }, {
+        },
+        {
           name: 'agentVersion',
           path: 'agentVersion',
           icon: '#icon-jiqun1',
-          permissionPoint: 'Agent_agent_version_page',
         },
-        // {
-        //   name: 'operationTasks',
-        //   path: 'operationTasks',
-        //   icon: '#icon-jiqun1',
-        //   permissionPoint: 'Agent_operational_tasks_page',
-        // },
-        // {
-        //   name: 'hola',
-        //   path: 'hola',
-        //   icon: '#icon-jiqun1',
-        // }
       ],
     },
-    {
-      name: 'dataSource',
-      path: 'dataSource',
-      icon: '#icon-jiqun1',
-      children: [
-        {
-          name: 'appList',
-          path: 'appList',
-          icon: '#icon-luoji',
-          permissionPoint: 'Agent_dataSource_app_page',
-        }],
-    },
-    {
-      name: 'receivingTerminal',
-      path: 'receivingTerminal',
-      icon: '#icon-jiqun1',
-      children: [
-        {
-          name: 'clusterList',
-          path: 'clusterList',
-          icon: '#icon-luoji',
-          permissionPoint: 'Agent_receivingterminal_cluster_page',
-        }],
-    },
+    //采集任务管理
     {
       name: 'collect',
-      path: 'collect',
-      icon: '#icon-jiqun1',
-      permissionPoint: 'Agent_collect_page',
+      path: '/collect',
+      icon: 'icon-cebiandaohang-caijirenwu',
     },
+    //监控中心
     {
-      name: 'operationRecord',
-      path: 'operationRecord',
-      icon: '#icon-jiqun1',
-      permissionPoint: 'Agent_operationRecord_page',
+      name: 'monitor',
+      path: '/monitor',
+      icon: 'icon-cebiandaohang-jiankongzhongxin',
+      children: [
+        {
+          name: 'metric',
+          path: 'metric',
+        },
+        {
+          name: 'agent-kanban',
+          path: 'agent-kanban',
+        },
+      ],
     },
+    //运维中心
+    {
+      name: 'tool',
+      path: '/tool',
+      icon: 'icon-a-cebiandaohang-zhibiaotancha',
+      children: [
+        {
+          name: 'indicator-probe',
+          path: 'indicator-probe',
+        },
+      ],
+    },
+    //操作记录
+    // {
+    //   name: 'operationRecord',
+    //   path: 'operationRecord',
+    //   icon: 'icon-caozuojilu',
+    // },
   ],
+};
+
+// key值需要与locale zh 中key值一致
+export const permissionPoints = {
+  [`menu.${systemKey}.home`]: true,
+};
+
+export const ROUTER_CACHE_KEYS = {
+  home: `menu.${systemKey}.home`,
 };

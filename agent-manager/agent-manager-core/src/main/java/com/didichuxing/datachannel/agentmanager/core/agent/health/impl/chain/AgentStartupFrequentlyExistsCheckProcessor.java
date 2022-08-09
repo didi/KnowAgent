@@ -1,59 +1,60 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
-import com.didichuxing.datachannel.agentmanager.common.chain.Context;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsProcessPO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
-import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
-import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
 import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
+import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
 /**
- * @author Ronaldo
- * @Date 2021/11/1
+ * agent 频繁启动检查处理器
+ * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 8, type = HealthCheckProcessorEnum.AGENT)
-public class AgentStartupFrequentlyExistsCheckProcessor implements Processor {
-    @Override
-    public void process(Context context, ProcessorChain chain) {
-        AgentHealthCheckContext agentHealthCheckContext = (AgentHealthCheckContext) context;
-        AgentDO agentDO = agentHealthCheckContext.getAgentDO();
-        AgentHealthDO agentHealthDO = agentHealthCheckContext.getAgentHealthDO();
-        AgentMetricsManageService agentMetricsManageService = agentHealthCheckContext.getAgentMetricsManageService();
+@HealthCheckProcessorAnnotation(seq = 9, type = HealthCheckProcessorEnum.AGENT)
+public class AgentStartupFrequentlyExistsCheckProcessor extends BaseProcessor {
 
+    @Override
+    protected void process(AgentHealthCheckContext context) {
+        /*
+         * 校验 agent 是否为红 黄
+         */
+        if(
+                context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.RED) ||
+                        context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.YELLOW)
+        ) {
+            return;
+        }
         /*
          * 校验是否存在 agent 非人工启动过频
          */
-        boolean agentStartupFrequentlyExists = checkAgentStartupFrequentlyExists(agentDO.getHostName(), agentHealthDO, agentMetricsManageService);
-        // 不存在 agent 非人工启动过频
-        if (!agentStartupFrequentlyExists) {
-            chain.process(context, chain);
-            return;
-        }
-        // 存在 agent 非人工启动过频
-        AgentHealthLevelEnum agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_STARTUP_FREQUENTLY.getAgentHealthLevel();
-        String agentHealthDescription = String.format(
-                "%s:AgentId={%d}, HostName={%s}",
-                AgentHealthInspectionResultEnum.AGENT_STARTUP_FREQUENTLY.getDescription(),
-                agentDO.getId(),
-                agentDO.getHostName()
+        boolean agentStartupFrequentlyExists = checkAgentStartupFrequentlyExists(
+                context.getAgentDO().getHostName(),
+                context.getAgentHealthDO(),
+                context.getLastMetricsProcess(),
+                context.getMetricsManageService()
         );
-        agentHealthCheckContext.setAgentHealthLevelEnum(agentHealthLevelEnum);
-        agentHealthCheckContext.setAgentHealthDescription(agentHealthDescription);
+        if (agentStartupFrequentlyExists) {// 存在 agent 非人工启动过频
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.AGENT_STARTUP_FREQUENTLY,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
+        }
     }
 
     /**
      * 校验是否存在 agent 非人工启动过频
-     *
-     * @param hostName      agent 主机名
+     * @param hostName      agent 宿主机名
      * @param agentHealthDO AgentHealthDO 对象
+     * @param lastMetricsProcess MetricsProcessPO 对象
+     * @param metricsManageService MetricsManageService 对象
      * @return true：存在启动过频 false：不存在启动过频
      */
-    private boolean checkAgentStartupFrequentlyExists(String hostName, AgentHealthDO agentHealthDO, AgentMetricsManageService agentMetricsManageService) {
+    private boolean checkAgentStartupFrequentlyExists(String hostName, AgentHealthDO agentHealthDO, MetricsProcessPO lastMetricsProcess, MetricsManageService metricsManageService) {
         /*
          * 获取 agent 最近一次心跳对应 agent 启动时间，并对比该时间与系统记录的 agent 启动时间是否一致：
          *  一致：表示 agent 自系统记录的启动时间以来未有启动行为 do nothing.
@@ -62,7 +63,7 @@ public class AgentStartupFrequentlyExistsCheckProcessor implements Processor {
          *  是：进一步判断 "系统记录的 agent 启动时间" 是否由人工触发（人工触发判断条件为："系统记录的 agent 启动时间" 对应 agent 是否存在对应安装、升级类型 AgentOperationTask 执行）TODO：该步骤待实现
          *  否：不存在启动过频
          */
-        Long lastestAgentStartupTime = agentMetricsManageService.getLastestAgentStartupTime(hostName);//agent心跳上报最近一次启动时间
+        Long lastestAgentStartupTime = lastMetricsProcess.getProcstartuptime();//agent心跳上报最近一次启动时间
         Long agentStartupTime = agentHealthDO.getAgentStartupTime();//系统记录的agent最近一次启动时间
         if (null == agentStartupTime || agentStartupTime <= 0) {//agent初次启动上报
             agentHealthDO.setAgentStartupTime(lastestAgentStartupTime);
@@ -79,9 +80,7 @@ public class AgentStartupFrequentlyExistsCheckProcessor implements Processor {
                 return false;
             } else {//表示agent非初次启动
                 if (agentHealthDO.getAgentStartupTime() - agentHealthDO.getAgentStartupTimeLastTime() > AgentHealthCheckConstant.AGENT_STARTUP_FREQUENTLY_THRESHOLD) {
-
                     //TODO：判断 "系统记录的 agent 启动时间" 是否由人工触发（人工触发判断条件为："系统记录的 agent 启动时间" 对应 agent 是否存在对应安装、升级类型 AgentOperationTask 执行）
-
                     return true;
                 } else {
                     return false;
@@ -89,4 +88,5 @@ public class AgentStartupFrequentlyExistsCheckProcessor implements Processor {
             }
         }
     }
+
 }

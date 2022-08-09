@@ -1,171 +1,318 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @ApiModel(value = "采集任务指标", description = "")
 public class CollectTaskMetricVO {
+
+    @ApiModelProperty(value = "指标记录 id")
     private Long id;
 
-    @ApiModelProperty(value = "平均读取时间ns")
-    private Long readTimeMean;
+    @ApiModelProperty(value = "日志采集任务 id")
+    private Long collecttaskid;
 
-    @ApiModelProperty(value = "日志过滤剩余数")
-    private Integer filterRemained;
+    @ApiModelProperty(value = "日志采集路径 id")
+    private Long pathid;
 
-    @ApiModelProperty(value = "channel容量")
-    private String channelCapacity;
+    @ApiModelProperty(value = "agent宿主机主机名")
+    private String agenthostname;
 
-    @ApiModelProperty(value = "文件是否存在")
-    private Boolean isFileExist;
+    @ApiModelProperty(value = "日志采集任务对应主机名")
+    private String collecttaskhostname;
 
-    @ApiModelProperty(value = "采集路径id")
-    private Long pathId;
+    @ApiModelProperty(value = "agent宿主机 ip")
+    private String agenthostip;
 
-    @ApiModelProperty(value = "消息发送类型，例如kafka")
-    private String type;
+    @ApiModelProperty(value = "业务时间戳")
+    private Long businesstimestamp;
 
-    @ApiModelProperty(value = "读取数")
-    private Integer readCount;
-
-    @ApiModelProperty(value = "平均发送时间ns")
-    private Long sendTimeMean;
-
-    @ApiModelProperty(value = "主文件名")
-    private String masterFile;
-
-    @ApiModelProperty(value = "文件路径")
-    private String path;
-
-    @ApiModelProperty(value = "agent宿主机名")
-    private String hostname;
-
-    @ApiModelProperty(value = "心跳时间")
-    private Long heartbeatTime;
-
-    @ApiModelProperty(value = "宿主机ip")
-    private String hostIp;
-
-    @ApiModelProperty(value = "清洗数量")
-    private Integer sinkNum;
-
-    @ApiModelProperty(value = "平均flush时间ns")
-    private Long flushTimeMean;
-
-    @ApiModelProperty(value = "最晚采集日志文件名")
-    private String latestFile;
-
-    @ApiModelProperty(value = "日志过大截断数")
-    private Integer filterTooLargeCount;
-
-    @ApiModelProperty(value = "channel类型")
-    @JSONField(name = "channel.type")
-    private String channelType;
-
-    @ApiModelProperty(value = "log model版本")
-    private Integer logModelVersion;
-
-    @ApiModelProperty(value = "topic名称")
-    private String topic;
-
-    @ApiModelProperty(value = "flush次数")
-    private Integer flushCount;
-
-    @ApiModelProperty(value = "最大flush时间ns")
-    private Long flushTimeMax;
-
-    @ApiModelProperty(value = "过滤条数")
-    private Integer filterOut;
-
-    @ApiModelProperty(value = "关联文件数")
-    private Integer relatedFiles;
-
-    @ApiModelProperty(value = "log model所在的主机名（采集容器则为容器名，采集主机则为主机名）")
-    private String logModelHostName;
-
-    @ApiModelProperty(value = "cluster id")
-    private Long clusterId;
-
-    @ApiModelProperty(value = "cpu限流时长")
-    private Integer limitRate;
-
-    @ApiModelProperty(value = "平均control时间")
-    private Long controlTimeMean;
+    @ApiModelProperty(value = "业务时间最大延时")
+    private Long maxbusinesstimestampdelay;
 
     @ApiModelProperty(value = "限流时长")
-    private Long limitTime;
+    private Long limittime;
 
-    @ApiModelProperty(value = "log model id（采集任务id）")
-    private Long logModeId;
+    @ApiModelProperty(value = "采样周期内日志过长被截断条数")
+    private Long toolargetruncatenum;
 
-    @ApiModelProperty(value = "平均flush时间")
-    private Long flushTimeMin;
+    @ApiModelProperty(value = "agent 启动以来日志过长被截断条数")
+    private Long toolargetruncatenumtotal;
 
-    @ApiModelProperty(value = "最小读取时间")
-    private Long readTimeMin;
+    @ApiModelProperty(value = "日志采集路径是否存在")
+    private Integer collectpathisexists;
 
-    @ApiModelProperty(value = "最大发送时间")
-    private Long sendTimeMax;
+    @ApiModelProperty(value = "待采集日志路径是否存在乱序")
+    private Integer disorderexists;
 
-    @ApiModelProperty(value = "")
-    private Integer dynamicLimiter;
+    @ApiModelProperty(value = "待采集日志路径是否存在日志切片错误")
+    private Integer sliceerrorexists;
 
-    @ApiModelProperty(value = "采集路径唯一key")
-    private String logPathKey;
+    @ApiModelProperty(value = "采样周期内读取字节数")
+    private Long readbytes;
 
-    @ApiModelProperty(value = "日志最大时间间隔")
-    private Long maxTimeGap;
+    @ApiModelProperty(value = "采样周期内读取日志条数")
+    private Long readcount;
 
-    @ApiModelProperty(value = "发送byte数")
-    private Integer sendByte;
+    @ApiModelProperty(value = "采样周期内发送字节数")
+    private Long sendbytes;
 
-    @ApiModelProperty(value = "最小发送时间")
-    private Long sendTimeMin;
+    @ApiModelProperty(value = "采样周期内发送日志条数")
+    private Long sendcount;
 
-    @ApiModelProperty(value = "日志业务时间（格式化）")
-    private String logTimeStr;
+    @ApiModelProperty(value = "采样周期内单条日志读取耗时")
+    private Double readtimeperevent;
 
-    @ApiModelProperty(value = "最大control时间")
-    private Long controlTimeMax;
+    @ApiModelProperty(value = "采样周期内单条日志读取最小耗时")
+    private Double readtimepereventmin;
 
-    @ApiModelProperty(value = "发送日志数量")
-    private Integer sendCount;
+    @ApiModelProperty(value = "采样周期内单条日志读取最大耗时")
+    private Double readtimepereventmax;
 
-    @ApiModelProperty(value = "消息源类型")
-    @JSONField(name = "source.type")
-    private String sourceType;
+    @ApiModelProperty(value = "采样周期内单条日志读取平均耗时")
+    private Double readtimepereventmean;
 
-    @ApiModelProperty(value = "日志业务时间戳")
-    private Long logTime;
+    @ApiModelProperty(value = "采样周期内单条日志读取耗时标准差")
+    private Double readtimepereventstd;
 
-    @ApiModelProperty(value = "flush失败次数")
-    private Integer flushFailedCount;
+    @ApiModelProperty(value = "采样周期内单条日志读取耗时55分位数")
+    private Double readtimeperevent55quantile;
 
-    @ApiModelProperty(value = "channel大小")
-    private Integer channelSize;
+    @ApiModelProperty(value = "采样周期内单条日志读取耗时75分位数")
+    private Double readtimeperevent75quantile;
 
-    @ApiModelProperty(value = "超长截断总数")
-    private Integer filterTotalTooLargeCount;
+    @ApiModelProperty(value = "采样周期内单条日志读取耗时95分位数")
+    private Double readtimeperevent95quantile;
 
-    @ApiModelProperty(value = "正在采集的文件列表")
-    private List<CollectFileVO> collectFiles;
+    @ApiModelProperty(value = "采样周期内单条日志读取耗时99分位数")
+    private Double readtimeperevent99quantile;
 
-    @ApiModelProperty(value = "最小control时间")
-    private Long controlTimeMin;
+    @ApiModelProperty(value = "采样周期内单次发送耗时")
+    private Double sendtime;
 
-    @ApiModelProperty(value = "读取byte数")
-    private Integer readByte;
+    @ApiModelProperty(value = "采样周期内单次发送最小耗时")
+    private Double sendtimemin;
 
-    @ApiModelProperty(value = "最大读取时间")
-    private Long readTimeMax;
+    @ApiModelProperty(value = "采样周期内单次发送最大耗时")
+    private Double sendtimemax;
 
-    @ApiModelProperty(value = "*无效字段* 时间格式是否合法")
-    private Boolean validTimeConfig;
+    @ApiModelProperty(value = "采样周期内单次发送耗时均值")
+    private Double sendtimemean;
+
+    @ApiModelProperty(value = "采样周期内单次发送耗时标准差")
+    private Double sendtimestd;
+
+    @ApiModelProperty(value = "采样周期内单次发送耗时55分位数")
+    private Double sendtime55quantile;
+
+    @ApiModelProperty(value = "采样周期内单次发送耗时75分位数")
+    private Double sendtime75quantile;
+
+    @ApiModelProperty(value = "采样周期内单次发送耗时95分位数")
+    private Double sendtime95quantile;
+
+    @ApiModelProperty(value = "采样周期内单次发送耗时99分位数")
+    private Double sendtime99quantile;
+
+    @ApiModelProperty(value = "采样周期内单次flush耗时")
+    private Double flushtime;
+
+    @ApiModelProperty(value = "采样周期内单次flush最小耗时")
+    private Double flushtimemin;
+
+    @ApiModelProperty(value = "采样周期内单次flush最大耗时")
+    private Double flushtimemax;
+
+    @ApiModelProperty(value = "采样周期内单次flush平均耗时")
+    private Double flushtimemean;
+
+    @ApiModelProperty(value = "采样周期内单次flush耗时标准差")
+    private Double flushtimestd;
+
+    @ApiModelProperty(value = "采样周期内单次flush耗时55分位数")
+    private Double flushtime55quantile;
+
+    @ApiModelProperty(value = "采样周期内单次flush耗时75分位数")
+    private Double flushtime75quantile;
+
+    @ApiModelProperty(value = "采样周期内单次flush耗时95分位数")
+    private Double flushtime95quantile;
+
+    @ApiModelProperty(value = "采样周期内单次flush耗时99分位数")
+    private Double flushtime99quantile;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理耗时")
+    private Double processtimeperevent;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理最小耗时")
+    private Double processtimepereventmin;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理最大耗时")
+    private Double processtimepereventmax;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理耗时均值")
+    private Double processtimepereventmean;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理耗时标准差")
+    private Double processtimepereventstd;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理耗时 55 分位数")
+    private Double processtimeperevent55quantile;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理耗时 75 分位数")
+    private Double processtimeperevent75quantile;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理耗时 95 分位数")
+    private Double processtimeperevent95quantile;
+
+    @ApiModelProperty(value = "采样周期内单条日志处理耗时 99 分位数")
+    private Double processtimeperevent99quantile;
+
+    @ApiModelProperty(value = "采样周期内flush数")
+    private Long flushtimes;
+
+    @ApiModelProperty(value = "采样周期内flush失败数")
+    private Long flushfailedtimes;
+
+    @ApiModelProperty(value = "采样周期内日志过滤条数")
+    private Long filtereventsnum;
+
+    @ApiModelProperty(value = "channel 最大容量 - 字节数")
+    private Long channelbytesmax;
+
+    @ApiModelProperty(value = "channel 最大容量 - 日志条数")
+    private Long channelcountmax;
+
+    @ApiModelProperty(value = "channel 日志字节数")
+    private Double channelbytessize;
+
+    @ApiModelProperty(value = "channel 日志字节数最小值")
+    private Double channelbytessizemin;
+
+    @ApiModelProperty(value = "channel 日志字节数最大值")
+    private Double channelbytessizemax;
+
+    @ApiModelProperty(value = "channel 日志字节数均值")
+    private Double channelbytessizemean;
+
+    @ApiModelProperty(value = "channel 日志字节数标准差")
+    private Double channelbytessizestd;
+
+    @ApiModelProperty(value = "channel 日志字节数 55 分位数")
+    private Double channelbytessize55quantile;
+
+    @ApiModelProperty(value = "channel 日志字节数 75 分位数")
+    private Double channelbytessize75quantile;
+
+    @ApiModelProperty(value = "channel 日志字节数 95 分位数")
+    private Double channelbytessize95quantile;
+
+    @ApiModelProperty(value = "channel 日志字节数 99 分位数")
+    private Double channelbytessize99quantile;
+
+    @ApiModelProperty(value = "channel 日志条数")
+    private Double channelcountsize;
+
+    @ApiModelProperty(value = "channel 日志条数最小值")
+    private Double channelcountsizemin;
+
+    @ApiModelProperty(value = "channel 日志条数最大值")
+    private Double channelcountsizemax;
+
+    @ApiModelProperty(value = "channel 日志条数均值")
+    private Double channelcountsizemean;
+
+    @ApiModelProperty(value = "channel 日志条数标准差")
+    private Double channelcountsizestd;
+
+    @ApiModelProperty(value = "channel 日志条数 55 分位数")
+    private Double channelcountsize55quantile;
+
+    @ApiModelProperty(value = "channel 日志条数 75 分位数")
+    private Double channelcountsize75quantile;
+
+    @ApiModelProperty(value = "channel 日志条数 95 分位数")
+    private Double channelcountsize95quantile;
+
+    @ApiModelProperty(value = "channel 日志条数 99 分位数")
+    private Double channelcountsize99quantile;
+
+    @ApiModelProperty(value = "channel 使用率")
+    private Double channelusedpercent;
+
+    @ApiModelProperty(value = "channel 使用率最小值")
+    private Double channelusedpercentmin;
+
+    @ApiModelProperty(value = "channel 使用率最大值")
+    private Double channelusedpercentmax;
+
+    @ApiModelProperty(value = "channel 使用率均值")
+    private Double channelusedpercentmean;
+
+    @ApiModelProperty(value = "channel 使用率标准差")
+    private Double channelusedpercentstd;
+
+    @ApiModelProperty(value = "channel 使用率 55 分位数")
+    private Double channelusedpercent55quantile;
+
+    @ApiModelProperty(value = "channel 使用率 75 分位数")
+    private Double channelusedpercent75quantile;
+
+    @ApiModelProperty(value = "channel 使用率 95 分位数")
+    private Double channelusedpercent95quantile;
+
+    @ApiModelProperty(value = "channel 使用率 99 分位数")
+    private Double channelusedpercent99quantile;
+
+    @ApiModelProperty(value = "数据流对应下游接收端 id")
+    private Long receiverclusterid;
+
+    @ApiModelProperty(value = "数据流对应下游接收端 topic")
+    private String receiverclustertopic;
+
+    @ApiModelProperty(value = "采集路径关联的文件（集）信息")
+    private String collectfiles;
+
+    @ApiModelProperty(value = "采集路径关联的文件数")
+    private Integer relatedfiles;
+
+    @ApiModelProperty(value = "待采集最后一个文件名")
+    private String latestfile;
+
+    @ApiModelProperty(value = "待采集主文件路径h")
+    private String masterfile;
+
+    @ApiModelProperty(value = "采集路径")
+    private String path;
+
+    @ApiModelProperty(value = "日志采集任务类型 0：流式 1：时间范围采集")
+    private Integer collecttasktype;
+
+    @ApiModelProperty(value = "sink 端数")
+    private Integer sinknum;
+
+    @ApiModelProperty(value = "日志采集任务版本号")
+    private Integer collecttaskversion;
+
+    @ApiModelProperty(value = "当前限流阈值")
+    private Long dynamiclimiterthreshold;
+
+    @ApiModelProperty(value = "心跳时间 精度：毫秒")
+    private Long heartbeattime;
+
+    @ApiModelProperty(value = "心跳时间 精度：分钟")
+    private Long heartbeattimeminute;
+
+    @ApiModelProperty(value = "心跳时间 精度：小时")
+    private Long heartbeattimehour;
+
+    @ApiModelProperty(value = "心跳时间 精度：日")
+    private Long heartbeatTimeDay;
+
+    @ApiModelProperty(value = "服务名集")
+    private String serviceNames;
 
     @ApiModelProperty(value = "任务状态 0停止 1运行中 2完成")
     private Integer taskStatus;

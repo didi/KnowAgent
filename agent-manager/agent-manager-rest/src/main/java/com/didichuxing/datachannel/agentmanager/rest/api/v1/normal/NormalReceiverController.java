@@ -8,10 +8,13 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.receiver.Receive
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.receiver.ReceiverTypeEnum;
+import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
+import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -34,6 +37,9 @@ public class NormalReceiverController {
     private KafkaClusterManageService kafkaClusterManageService;
 
     @Autowired
+    private KafkaClusterManageServiceExtension kafkaClusterManageServiceExtension;
+
+    @Autowired
     private RemoteKafkaClusterService remoteKafkaClusterService;
 
     @Autowired
@@ -45,7 +51,6 @@ public class NormalReceiverController {
     @ApiOperation(value = "查询接收端", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_KAFKA_CLUSTER_LIST)
     public Result<PaginationResult<ReceiverVO>> listReceivers(@RequestBody ReceiverPaginationRequestDTO dto) {
         ReceiverPaginationQueryConditionDO receiverPaginationQueryConditionDO = receiverPaginationRequestDTO2ReceiverPaginationQueryConditionDO(dto);
         List<ReceiverVO> receiverVOList = receiverDOList2ReceiverVOList(kafkaClusterManageService.paginationQueryByCondition(receiverPaginationQueryConditionDO));
@@ -62,46 +67,45 @@ public class NormalReceiverController {
     }
 
     @ApiOperation(value = "根据接收端id获取该接收端对应kafka集群的所有topic列表", notes = "")
-    @RequestMapping(value = "/{receiverId}/topics", method = RequestMethod.GET)
+    @RequestMapping(value = "/topics", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Set<String>> listTopics(@PathVariable Long receiverId) {
-        ReceiverDO receiverDO = kafkaClusterManageService.getById(receiverId);
-        if(null == receiverDO) {
-            return Result.build(
-                    ErrorCodeEnum.KAFKA_CLUSTER_NOT_EXISTS.getCode(),
-                    String.format("接收端对应Kafka集群{id=%d}在系统中不存在", receiverId)
-            );
-        }
-        if(null != receiverDO.getKafkaClusterId()) {
-            return Result.buildSucc(remoteKafkaClusterService.getTopicsByKafkaClusterId(receiverDO.getKafkaClusterId()));
-        } else {//case：kafka集群由用户维护而非通过kafka-manager获取
-            return Result.build(
-                    ErrorCodeEnum.SYSTEM_NOT_SUPPORT.getCode(),
-                    String.format("系统不支持！待获取topic列表信息的Kafka集群={id=%d}由用户维护，而非通过Kafka-Manager系统同步获得，系统仅对通过Kafka-Manager系统同步过来的Kafka集群提供该接口支持！", receiverId)
-            );
-        }
+    public Result<Set<String>> listTopics(
+            @RequestParam(value = "brokerServers") String brokerServers
+    ) {
+        Set<String> topics = kafkaClusterManageServiceExtension.listTopics(brokerServers);
+        return Result.buildSucc(topics);
     }
 
     @ApiOperation(value = "根据id查询对应KafkaCluster对象是否关联LogCollectTask true：存在 false：不存在", notes = "")
-    @RequestMapping(value = "/rela-logcollecttask-exists/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/rela-logcollecttask-exists/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Boolean> relaLogCollectTaskExists(@PathVariable Long id) {
-        if(CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByKafkaClusterId(id))) {
-            return Result.buildSucc(Boolean.TRUE);
-        } else {
-            return Result.buildSucc(Boolean.FALSE);
+    public Result<Boolean> relaLogCollectTaskExists(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            for (String id : idArray) {
+                Long kafkaClusterId = Long.valueOf(id);
+                if(CollectionUtils.isNotEmpty(logCollectTaskManageService.getLogCollectTaskListByKafkaClusterId(kafkaClusterId))) {
+                    return Result.buildSucc(Boolean.TRUE);
+                }
+            }
         }
+        return Result.buildSucc(Boolean.FALSE);
     }
 
     @ApiOperation(value = "根据id查询对应KafkaCluster对象是否关联Agent true：存在 false：不存在", notes = "")
-    @RequestMapping(value = "/rela-agent-exists/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/rela-agent-exists/{ids}", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Boolean> relaAgentExists(@PathVariable Long id) {
-        if(CollectionUtils.isNotEmpty(agentManageService.getAgentListByKafkaClusterId(id))) {
-            return Result.buildSucc(Boolean.TRUE);
-        } else {
-            return Result.buildSucc(Boolean.FALSE);
+    public Result<Boolean> relaAgentExists(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            for (String id : idArray) {
+                Long kafkaClusterId = Long.valueOf(id);
+                if(CollectionUtils.isNotEmpty(agentManageService.getAgentListByKafkaClusterId(kafkaClusterId))) {
+                    return Result.buildSucc(Boolean.TRUE);
+                }
+            }
         }
+        return Result.buildSucc(Boolean.FALSE);
     }
 
     @ApiOperation(value = "校验是否已配置系统全局 agent errorlogs & metrics 流对应配置 true：是 false：否", notes = "")
@@ -133,6 +137,7 @@ public class NormalReceiverController {
             receiverVO.setKafkaClusterProducerInitConfiguration(receiverDO.getKafkaClusterProducerInitConfiguration());
             receiverVO.setAgentErrorLogsTopic(receiverDO.getAgentErrorLogsTopic());
             receiverVO.setAgentMetricsTopic(receiverDO.getAgentMetricsTopic());
+            receiverVO.setReceiverType(ReceiverTypeEnum.fromCode(receiverDO.getReceiverType()).getDescription());
             receiverVOList.add(receiverVO);
         }
         return receiverVOList;
@@ -153,6 +158,9 @@ public class NormalReceiverController {
         }
         if(null != dto.getReceiverCreateTimeStart()) {
             receiverPaginationQueryConditionDO.setCreateTimeStart(new Date(dto.getReceiverCreateTimeStart()));
+        }
+        if(StringUtils.isNotBlank(dto.getKafkaClusterBrokerConfiguration())) {
+            receiverPaginationQueryConditionDO.setKafkaClusterBrokerConfiguration(dto.getKafkaClusterBrokerConfiguration().replace("_", "\\_").replace("%", "\\%"));
         }
         receiverPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         receiverPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());

@@ -6,20 +6,15 @@
     <result column="log_collect_task_id" property="logCollectTaskId" jdbcType="BIGINT" />
     <result column="log_collect_task_health_level" property="logCollectTaskHealthLevel" jdbcType="TINYINT" />
     <result column="log_collect_task_health_description" property="logCollectTaskHealthDescription" jdbcType="VARCHAR" />
-    <result column="lastest_collect_dquality_time_per_log_file_path_json_string" property="lastestCollectDqualityTimePerLogFilePathJsonString" jdbcType="VARCHAR" />
+    <result column="log_collect_task_health_inspection_result_type" property="logCollectTaskHealthInspectionResultType" jdbcType="INTEGER" />
     <result column="operator" property="operator" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
-    <result column="lastest_abnormal_truncation_check_healthy_time_per_log_file_path" property="lastestAbnormalTruncationCheckHealthyTimePerLogFilePath" jdbcType="VARCHAR" />
-    <result column="lastest_log_slice_check_healthy_time_per_log_file_path" property="lastestLogSliceCheckHealthyTimePerLogFilePath" jdbcType="VARCHAR" />
-    <result column="lastest_file_disorder_check_healthy_time_per_log_file_path" property="lastestFileDisorderCheckHealthyTimePerLogFilePath" jdbcType="VARCHAR" />
-    <result column="lastest_file_path_exists_check_healthy_time_per_log_file_path" property="lastestFilePathExistsCheckHealthyTimePerLogFilePath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, log_collect_task_id, log_collect_task_health_level, log_collect_task_health_description, 
-    lastest_collect_dquality_time_per_log_file_path_json_string, operator, create_time, 
-    modify_time, lastest_abnormal_truncation_check_healthy_time_per_log_file_path, lastest_log_slice_check_healthy_time_per_log_file_path,
-    lastest_file_disorder_check_healthy_time_per_log_file_path, lastest_file_path_exists_check_healthy_time_per_log_file_path
+    log_collect_task_health_inspection_result_type, operator, create_time,
+    modify_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -43,17 +38,12 @@
   </delete>
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthPO" >
     insert into tb_log_collect_task_health (log_collect_task_id, log_collect_task_health_level,
-      log_collect_task_health_description, lastest_collect_dquality_time_per_log_file_path_json_string, 
-      operator, create_time, modify_time, lastest_abnormal_truncation_check_healthy_time_per_log_file_path, lastest_log_slice_check_healthy_time_per_log_file_path,
-    lastest_file_disorder_check_healthy_time_per_log_file_path, lastest_file_path_exists_check_healthy_time_per_log_file_path
+      log_collect_task_health_description, log_collect_task_health_inspection_result_type,
+      operator, create_time, modify_time
       )
     values (#{logCollectTaskId,jdbcType=BIGINT}, #{logCollectTaskHealthLevel,jdbcType=TINYINT},
-      #{logCollectTaskHealthDescription,jdbcType=VARCHAR}, #{lastestCollectDqualityTimePerLogFilePathJsonString,jdbcType=VARCHAR}, 
-      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP},
-      #{lastestAbnormalTruncationCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR},
-      #{lastestLogSliceCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR},
-      #{lastestFileDisorderCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR},
-      #{lastestFilePathExistsCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR}
+      #{logCollectTaskHealthDescription,jdbcType=VARCHAR}, #{logCollectTaskHealthInspectionResultType,jdbcType=INTEGER},
+      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthPO" >
@@ -61,14 +51,10 @@
     set log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT},
       log_collect_task_health_level = #{logCollectTaskHealthLevel,jdbcType=TINYINT},
       log_collect_task_health_description = #{logCollectTaskHealthDescription,jdbcType=VARCHAR},
-      lastest_collect_dquality_time_per_log_file_path_json_string = #{lastestCollectDqualityTimePerLogFilePathJsonString,jdbcType=VARCHAR},
+      log_collect_task_health_inspection_result_type = #{logCollectTaskHealthInspectionResultType,jdbcType=INTEGER},
       operator = #{operator,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      lastest_abnormal_truncation_check_healthy_time_per_log_file_path = #{lastestAbnormalTruncationCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR},
-      lastest_log_slice_check_healthy_time_per_log_file_path = #{lastestLogSliceCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR},
-      lastest_file_disorder_check_healthy_time_per_log_file_path = #{lastestFileDisorderCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR},
-      lastest_file_path_exists_check_healthy_time_per_log_file_path = #{lastestFilePathExistsCheckHealthyTimePerLogFilePath,jdbcType=VARCHAR}
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

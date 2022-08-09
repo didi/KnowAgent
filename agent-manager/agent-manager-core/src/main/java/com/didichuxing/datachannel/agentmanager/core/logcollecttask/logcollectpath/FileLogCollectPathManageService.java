@@ -48,4 +48,6 @@ public interface FileLogCollectPathManageService {
      */
     Long countAll();
 
+    FileLogCollectPathDO getById(Long id);
+
 }

@@ -19,16 +19,16 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.host.HostType
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.common.util.NetworkUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.configuration.AgentCollectConfigManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.HostMapper;
-import com.didichuxing.datachannel.agentmanager.remote.host.RemoteHostManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.host.extension.HostManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,12 +62,6 @@ public class HostManageServiceImpl implements HostManageService {
     private AgentManageService agentManageService;
 
     @Autowired
-    private RemoteHostManageService remoteHostService;
-
-    @Autowired
-    private AgentMetricsManageService agentMetricsManageService;
-
-    @Autowired
     private ServiceManageService serviceManageService;
 
     @Autowired
@@ -81,6 +75,9 @@ public class HostManageServiceImpl implements HostManageService {
 
     @Autowired
     private OperateRecordService operateRecordService;
+
+    @Autowired
+    private LogCollectTaskHealthDetailManageService logCollectTaskHealthDetailManageService;
 
     /**
      * 根据主机id获取对应主机对象
@@ -130,13 +127,14 @@ public class HostManageServiceImpl implements HostManageService {
             host.setParentHostName(StringUtils.EMPTY);
             /*
              * 主机ip不可与其他主机ip重复
+             * TODO：暂去 ip 重复校验
              */
-            if(CollectionUtils.isNotEmpty(getHostByIp(host.getIp()))) {
-                throw new ServiceException(
-                        String.format("待创建主机对应 ip={%s} 在系统中已存在", host.getIp()),
-                        ErrorCodeEnum.HOST_IP_DUPLICATE.getCode()
-                );
-            }
+//            if(CollectionUtils.isNotEmpty(getHostByIp(host.getIp()))) {
+//                throw new ServiceException(
+//                        String.format("待创建主机对应 ip={%s} 在系统中已存在", host.getIp()),
+//                        ErrorCodeEnum.HOST_IP_DUPLICATE.getCode()
+//                );
+//            }
         }
 
         /*
@@ -177,7 +175,7 @@ public class HostManageServiceImpl implements HostManageService {
          */
         if(null == hostId) {
             throw new ServiceException(
-                    "入参hostId不可为空",
+                    "删除失败：待删除主机id不可为空",
                     ErrorCodeEnum.ILLEGAL_PARAMS.getCode()
             );
         }
@@ -187,7 +185,7 @@ public class HostManageServiceImpl implements HostManageService {
         HostDO hostDO = getHostById(hostId);
         if(null == hostDO) {
             throw new ServiceException(
-                    String.format("删除Host对象{id=%d}失败，原因为：系统中不存在id为{%d}的主机对象", hostId, hostId),
+                    "删除失败：待删除主机在系统中不存在",
                     ErrorCodeEnum.HOST_NOT_EXISTS.getCode()
             );
         }
@@ -198,8 +196,36 @@ public class HostManageServiceImpl implements HostManageService {
             List<HostDO> containerList = getContainerListByParentHostName(hostDO.getHostName());
             if(CollectionUtils.isNotEmpty(containerList)) {
                 throw new ServiceException(
-                        String.format("待删除主机={id={%d}}上挂载{%d}个容器，请先删除这些容器", hostId, containerList.size()),
+                        String.format("删除失败：待删除主机上挂载有%d个容器，请先删除这些容器", containerList.size()),
                         ErrorCodeEnum.RELATION_CONTAINER_EXISTS_WHEN_DELETE_HOST.getCode()
+                );
+            }
+        }
+        /*
+         * 校验待删除主机是否关联 service
+         */
+        List<ServiceDO> serviceDOList = serviceManageService.getServicesByHostId(hostDO.getId());
+        if(CollectionUtils.isNotEmpty(serviceDOList)) {
+            throw new ServiceException(
+                    String.format(
+                            "删除失败：待删除主机存在%d个关联的应用",
+                            serviceDOList.size()
+                    ),
+                    ErrorCodeEnum.RELATION_SERVICES_EXISTS_WHEN_DELETE_HOST.getCode()
+            );
+        }
+        /*
+         * 校验待删除主机上日志是否已采集完
+         */
+        if(!ignoreUncompleteCollect) {
+            /*
+             * 检查待删除 host 上待采集日志信息是否都已被采集完？如已采集完，可删 host，如未采集完，不可删 host
+             */
+            boolean completeCollect = completeCollect(hostDO);
+            if(!completeCollect) {//未完成采集
+                throw new ServiceException(
+                        "删除失败：待删除主机存在未被采集完的日志",
+                        ErrorCodeEnum.AGENT_COLLECT_NOT_COMPLETE.getCode()
                 );
             }
         }
@@ -217,30 +243,15 @@ public class HostManageServiceImpl implements HostManageService {
                 }
             } else {
                 throw new ServiceException(
-                        String.format("待删除主机={id=%d}上关联有Agent，请先删除关联的Agent={id=%d}", hostId, agentDO.getId()),
+                        "删除失败：待删除主机关联有 Agent，请先删除关联的 Agent",
                         ErrorCodeEnum.RELATION_AGENT_EXISTS_WHEN_DELETE_HOST.getCode()
                 );
             }
         }
         /*
-         * 校验待删除主机上日志是否已采集完
+         * 删除 host 相关 tb_log_collect_task_health_detail 信息
          */
-        if(!ignoreUncompleteCollect) {
-            /*
-             * 检查待删除 host 上待采集日志信息是否都已被采集完？如已采集完，可删 host，如未采集完，不可删 host
-             */
-            boolean completeCollect = agentMetricsManageService.completeCollect(hostDO);
-            if(!completeCollect) {//未完成采集
-                throw new ServiceException(
-                        String.format("删除Host对象{id=%d}失败，原因为：该主机仍存在未被采集端采集完的日志", hostId),
-                        ErrorCodeEnum.AGENT_COLLECT_NOT_COMPLETE.getCode()
-                );
-            }
-        }
-        /*
-         * 删除主机 & 服务关联关系
-         */
-        serviceHostManageService.deleteByHostId(hostDO.getId());
+        logCollectTaskHealthDetailManageService.deleteByHostName(hostDO.getHostName());
         /*
          * 删除主机信息
          */
@@ -255,6 +266,11 @@ public class HostManageServiceImpl implements HostManageService {
                 String.format("删除Host对象={id={%d}}", hostId),
                 operator
         );
+    }
+
+    private boolean completeCollect(HostDO hostDO) {
+        //TODO：
+        return true;
     }
 
     /**
@@ -519,6 +535,26 @@ public class HostManageServiceImpl implements HostManageService {
     @Override
     public Long countAllContainer() {
         return hostDAO.countByHostType(HostTypeEnum.CONTAINER.getCode());
+    }
+
+    @Override
+    public Long countAllFaultyHost() {
+        Long faultyCount = 0l;
+        List<HostDO> hostDOList = list();
+        for(HostDO hostDO : hostDOList) {
+            if(!NetworkUtil.ping(hostDO.getHostName())) {
+                faultyCount++;
+            }
+        }
+        return faultyCount;
+    }
+
+    @Override
+    @Transactional
+    public void deleteHosts(List<Long> hostIdList, boolean ignoreUncompleteCollect, boolean cascadeDeleteAgentIfExists, String operator) {
+        for (Long hostId : hostIdList) {
+            this.handleDeleteHost(hostId, ignoreUncompleteCollect, cascadeDeleteAgentIfExists, operator);
+        }
     }
 
 }

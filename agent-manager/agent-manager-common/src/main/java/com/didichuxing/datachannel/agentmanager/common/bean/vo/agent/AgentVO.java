@@ -45,6 +45,39 @@ public class AgentVO {
     @ApiModelProperty(value = "Agent健康度 0：红 1：黄 2：绿")
     private Integer healthLevel;
 
+    @ApiModelProperty(value = "agent健康描述信息")
+    private String agentHealthDescription;
+
+    @ApiModelProperty(value = "Agent指标信息发送端属性")
+    private String metricsProducerConfiguration;
+
+    @ApiModelProperty(value = "Agent错误日志信息发送端属性")
+    private String errorLogsProducerConfiguration;
+
+    public String getMetricsProducerConfiguration() {
+        return metricsProducerConfiguration;
+    }
+
+    public void setMetricsProducerConfiguration(String metricsProducerConfiguration) {
+        this.metricsProducerConfiguration = metricsProducerConfiguration;
+    }
+
+    public String getAgentHealthDescription() {
+        return agentHealthDescription;
+    }
+
+    public void setAgentHealthDescription(String agentHealthDescription) {
+        this.agentHealthDescription = agentHealthDescription;
+    }
+
+    public String getErrorLogsProducerConfiguration() {
+        return errorLogsProducerConfiguration;
+    }
+
+    public void setErrorLogsProducerConfiguration(String errorLogsProducerConfiguration) {
+        this.errorLogsProducerConfiguration = errorLogsProducerConfiguration;
+    }
+
     public void setHealthLevel(Integer healthLevel) {
         this.healthLevel = healthLevel;
     }

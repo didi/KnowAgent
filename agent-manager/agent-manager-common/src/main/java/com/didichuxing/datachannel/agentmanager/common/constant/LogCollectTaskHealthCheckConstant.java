@@ -26,6 +26,12 @@ public class LogCollectTaskHealthCheckConstant {
      * 校验 logcollecttask + logpath 在 host 端是否存在采集端流量阈值限流过程中，获取最近 HOST_CPU_LIMIT_CHECK_LASTEST_MS_THRESHOLD ms 内指标
      */
     public static final Long HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD = 10 * 60 * 1000L;
+
+    /**
+     * 校验 logcollecttask + logpath 在 host 端是否存在下游接收端写入失败，获取最近 DATA_SEND_FAILED_EXISTS_CHECK_LASTEST_MS_THRESHOLD ms 内指标
+     */
+    public static final Long DATA_SEND_FAILED_EXISTS_CHECK_LASTEST_MS_THRESHOLD = 10 * 60 * 1000L;
+
     /**
      * 校验 logcollecttask + logpath 在 host 端是否存在采集端流量阈值限流过程中，限流总时长阈值
      */
@@ -38,9 +44,15 @@ public class LogCollectTaskHealthCheckConstant {
      * 校验 logcollecttask + logpath 在 host 端是否存在多 agent 并发采集过程中，心跳次数阈值
      * agent通常为60s一次
      */
-    public static final Integer CONCURRENT_COLLECT_CHECK_HEARTBEAT_TIMES_THRESHOLD = 30;
+    public static final Integer CONCURRENT_COLLECT_CHECK_HEARTBEAT_TIMES_THRESHOLD = 15;
     /**
      * 校验 logcollecttask + logpath 在 host 端是否存在心跳过程中，获取最近 ALIVE_CHECK_LASTEST_MS_THRESHOLD ms 内指标
      */
     public static final Long ALIVE_CHECK_LASTEST_MS_THRESHOLD = 5 * 60 * 1000L;
+
+    /**
+     * 校验 logcollecttask + logpath 在 host 端是否存在采集端流量阈值限流过程中，获取最近 CHANNEL_USAGE_CHECK_LASTEST_MS_THRESHOLD ms 内指标
+     */
+    public static final Long CHANNEL_USAGE_CHECK_LASTEST_MS_THRESHOLD = 10 * 60 * 1000L;
+
 }

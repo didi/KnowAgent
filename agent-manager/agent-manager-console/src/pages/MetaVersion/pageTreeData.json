@@ -1,0 +1,310 @@
+{
+  "grid": "{gutter:10,grid:24,num:1}",
+  "dataInfo": {},
+  "name": "0",
+  "path": "",
+  "title": "0",
+  "key": "0",
+  "componentName": "contentComponent",
+  "children": [
+    {
+      "grid": {
+        "gutter": 10,
+        "grid": 24,
+        "num": 1
+      },
+      "dataInfo": {},
+      "name": "0-1",
+      "path": "",
+      "title": "0-1",
+      "key": "0-1",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": {
+            "gutter": 10,
+            "grid": 24
+          },
+          "dataInfo": {
+            "bordered": false,
+            "loading": false,
+            "columns": [
+              {
+                "title": "文件名",
+                "dataIndex": "fileName",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "sorter": true,
+                "width": "250px"
+              },
+              {
+                "title": "描述",
+                "dataIndex": "description",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "ellipsis": true,
+                "tooltip": true,
+                "width": "230px"
+              },
+              {
+                "title": "文件MD5",
+                "dataIndex": "fileMd5",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "width": "280px"
+              },
+              {
+                "title": "上传时间",
+                "dataIndex": "uploadTime",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "valueType": "dateTime",
+                "width": "200px"
+              },
+              {
+                "title": "操作",
+                "dataIndex": "options",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "operationName": "预览",
+                    "operationKey": "preview",
+                    "type": "icon-caijishaixuan",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "containerType": "drawer",
+                    "containerConfig": {
+                      "title": "元数据Excel内容预览",
+                      "width": "800px",
+                      "footer": false
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "previewFile"
+                  },
+                  {
+                    "operationName": "删除",
+                    "operationKey": "delete",
+                    "type": "icon-shanchu",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "containerType": "modal",
+                    "containerConfig": {
+                      "title": "删除文件"
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "DeleteFile"
+                  },
+                  {
+                    "operationName": "导入元数据",
+                    "operationKey": "importMeta",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "containerType": "modal",
+                    "containerConfig": {
+                      "title": "导入元数据"
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "importMeta"
+                  }
+                ],
+                "valueType": "option",
+                "fixed": "right",
+                "width": "150px"
+              }
+            ],
+            "queryFormArray": [
+              {
+                "type": "input",
+                "title": "文件名",
+                "dataIndex": "fileName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "input",
+                "title": "描述",
+                "dataIndex": "description",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "input",
+                "title": "文件MD5",
+                "dataIndex": "fileMd5",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "dateRangePicker",
+                "title": "上传时间",
+                "dataIndex": "createTime",
+                "placeholder": [
+                  "开始时间",
+                  "结束时间"
+                ],
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128
+                }
+              }
+            ],
+            "dataSourceUrlConfig": {
+              "api": "/api/v1/op/metadata/paging",
+              "defaultParams": "{\"pageNo\":1,\"pageSize\":20,\"fileName\":\"\",\"description\":\"\",\"fileMd5\":\"\"}",
+              "methods": "post",
+              "params": "function(params){\n  if(params.createTime&&params.createTime.length>0){\n    params.uploadTimeStart = new Date(params.createTime[0]).getTime();\n    params.uploadTimeEnd = new Date(params.createTime[1]).getTime();\n  }\n  return params\n}",
+              "resCallback": "function(data){return {...data,bizData:data.resultSet}}"
+            },
+            "isCustomPg": true,
+            "size": "default",
+            "expandable": false,
+            "tableTitle": "高级表格",
+            "tooltip": "高级表格 tooltip",
+            "showHeader": true,
+            "footer": false,
+            "rowSelection": false,
+            "scroll": {
+              "x": "max-content"
+            },
+            "hasData": true,
+            "toolBarRender": true,
+            "tableFunction": {
+              "reload": false,
+              "search": false,
+              "placeholder": "请输入",
+              "export": false,
+              "import": false,
+              "tableId": "receiving_list",
+              "tableScreen": true,
+              "tableCustomColumns": true,
+              "custom": false,
+              "tableHeaderBtns": [
+                {
+                  "buttonText": "上传元数据文件",
+                  "buttonType": "primary",
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "ActionFileForm",
+                  "containerConfig": {
+                    "title": "元数据上传",
+                    "width": "600px"
+                  }
+                }
+              ]
+            },
+            "search": {
+              "showQueryForm": true,
+              "searchText": "查询",
+              "resetText": "重置",
+              "showOptionBtns": true,
+              "colConfig": 6,
+              "style": {
+                "backgroundColor": "#F8F9FA"
+              }
+            },
+            "options": {
+              "show": true,
+              "density": true,
+              "fullScreen": true,
+              "setting": true
+            },
+            "rowKey": "id"
+          },
+          "name": "0-1-0",
+          "path": "",
+          "title": "ProTableProject",
+          "key": "0-1-0",
+          "componentName": "ProTableProject",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": {
+            "padding": "24px",
+            "backgroundColor": "#FFFFFF"
+          },
+          "checked": true
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent管理",
+      "pageName": "agent_admin",
+      "tplName": "",
+      "pageKey": "agent_admin",
+      "checked": false
+    }
+  ],
+  "lelf": 0,
+  "version": "",
+  "nodeTitle": "",
+  "nodeStyle": {},
+  "containerStyle": {},
+  "chilrenPages": [],
+  "pageDesc": "Agent版本",
+  "pageName": "agent_version",
+  "tplName": "agent_admin",
+  "pageKey": "agent_version"
+}

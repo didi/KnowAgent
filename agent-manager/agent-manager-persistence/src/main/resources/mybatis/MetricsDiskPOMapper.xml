@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsDiskPOMapper" >
+
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="hostName" property="hostname" jdbcType="VARCHAR" />
+    <result column="systemDiskPath" property="systemdiskpath" jdbcType="VARCHAR" />
+    <result column="systemDiskFsType" property="systemdiskfstype" jdbcType="VARCHAR" />
+    <result column="systemDiskBytesTotal" property="systemdiskbytestotal" jdbcType="BIGINT" />
+    <result column="systemDiskBytesFree" property="systemdiskbytesfree" jdbcType="BIGINT" />
+    <result column="systemDiskBytesUsed" property="systemdiskbytesused" jdbcType="BIGINT" />
+    <result column="systemDiskUsedPercent" property="systemdiskusedpercent" jdbcType="DOUBLE" />
+    <result column="systemDiskInodesTotal" property="systemdiskinodestotal" jdbcType="INTEGER" />
+    <result column="systemDiskInodesFree" property="systemdiskinodesfree" jdbcType="INTEGER" />
+    <result column="systemDiskInodesUsed" property="systemdiskinodesused" jdbcType="INTEGER" />
+    <result column="systemDiskInodesUsedPercent" property="systemdiskinodesusedpercent" jdbcType="DOUBLE" />
+    <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
+    <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
+    <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" jdbcType="BIGINT" property="heartbeatTimeDay" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, hostName, systemDiskPath, systemDiskFsType, systemDiskBytesTotal,
+    systemDiskBytesFree, systemDiskBytesUsed, systemDiskUsedPercent, systemDiskInodesTotal, 
+    systemDiskInodesFree, systemDiskInodesUsed, systemDiskInodesUsedPercent,
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay
+  </sql>
+
+  <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
+    <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
+    <result column="last" property="last" jdbcType="DOUBLE" />
+    <result column="min" property="min" jdbcType="DOUBLE" />
+    <result column="max" property="max" jdbcType="DOUBLE" />
+    <result column="mean" property="mean" jdbcType="DOUBLE" />
+    <result column="std" property="std" jdbcType="DOUBLE" />
+    <result column="fiftyFiveQuantile" property="fiftyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="seventyFiveQuantile" property="seventyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyFiveQuantile" property="ninetyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyNineQuantile" property="ninetyNineQuantile" jdbcType="DOUBLE" />
+    <result column="macAddress" property="macAddress" jdbcType="VARCHAR"/>
+    <result column="device" property="device" jdbcType="VARCHAR"/>
+    <result column="path" property="path" jdbcType="VARCHAR"/>
+    <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
+    <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="serviceNames" property="serviceNames" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${fieldName}
+    from tb_metrics_disk
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    order by heartbeatTime desc
+      limit 1
+  </select>
+  <select id="getSingleChatNonStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    SELECT t1.*, t2.systemDiskPath as 'path', t2.systemDiskFsType as 'fsType' FROM
+      (select
+         ${function}(${fieldName}) as 'last',
+         heartbeatTimeMinute
+       from tb_metrics_disk
+       where
+         hostName = #{hostName,jdbcType=VARCHAR}
+         and
+         systemDiskPath = #{path,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_disk as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemDiskPath = #{path,jdbcType=VARCHAR}
+  </select>
+  <select id="getSingleChatStatisticByPath" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    SELECT t1.*, t2.systemDiskPath as 'path', t2.systemDiskFsType as 'fsType' FROM
+      (select
+      ${function}(${fieldName}) as 'last',
+            ${function}(${fieldName}Min) as 'min',
+            ${function}(${fieldName}Max) as 'max',
+            ${function}(${fieldName}Mean) as 'mean',
+            ${function}(${fieldName}Std) as 'std',
+            ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+            ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+            ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+            ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+            heartbeatTimeMinute
+    from tb_metrics_disk
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      systemDiskPath = #{path,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute) as t1
+        LEFT JOIN
+      tb_metrics_disk as t2 ON t2.heartbeatTimeMinute = t1.heartbeatTimeMinute AND t2.hostName = #{hostName,jdbcType=VARCHAR} AND t2.systemDiskPath = #{path,jdbcType=VARCHAR}
+  </select>
+
+  <resultMap id="TopNDiskPathResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskTopPO" >
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+
+  <select id="getTopNDiskPath" resultMap="TopNDiskPathResultMap" parameterType="java.util.Map" >
+    select * from (
+      select
+      ${function}(${fieldName}) as 'aggVal',
+      systemDiskPath as 'path'
+      from tb_metrics_disk
+      where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
+      group by systemDiskPath
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_metrics_disk
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_disk
+  </select>
+
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
+    insert into tb_metrics_disk (id, hostName, systemDiskPath, 
+      systemDiskFsType, systemDiskBytesTotal,
+      systemDiskBytesFree, systemDiskBytesUsed, 
+      systemDiskUsedPercent, systemDiskInodesTotal, 
+      systemDiskInodesFree, systemDiskInodesUsed, 
+      systemDiskInodesUsedPercent, heartbeatTime,
+      heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay)
+    values (#{id,jdbcType=BIGINT}, #{hostname,jdbcType=VARCHAR}, #{systemdiskpath,jdbcType=VARCHAR}, 
+      #{systemdiskfstype,jdbcType=VARCHAR}, #{systemdiskbytestotal,jdbcType=BIGINT},
+      #{systemdiskbytesfree,jdbcType=BIGINT}, #{systemdiskbytesused,jdbcType=BIGINT}, 
+      #{systemdiskusedpercent,jdbcType=DOUBLE}, #{systemdiskinodestotal,jdbcType=INTEGER}, 
+      #{systemdiskinodesfree,jdbcType=INTEGER}, #{systemdiskinodesused,jdbcType=INTEGER}, 
+      #{systemdiskinodesusedpercent,jdbcType=DOUBLE}, #{heartbeattime,jdbcType=BIGINT},
+      #{heartbeattimeminute,jdbcType=BIGINT}, #{heartbeattimehour,jdbcType=BIGINT}, #{heartbeatTimeDay,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsDiskPO" >
+    insert into tb_metrics_disk
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hostname != null" >
+        hostName,
+      </if>
+      <if test="systemdiskpath != null" >
+        systemDiskPath,
+      </if>
+      <if test="systemdiskfstype != null" >
+        systemDiskFsType,
+      </if>
+      <if test="systemdiskbytestotal != null" >
+        systemDiskBytesTotal,
+      </if>
+      <if test="systemdiskbytesfree != null" >
+        systemDiskBytesFree,
+      </if>
+      <if test="systemdiskbytesused != null" >
+        systemDiskBytesUsed,
+      </if>
+      <if test="systemdiskusedpercent != null" >
+        systemDiskUsedPercent,
+      </if>
+      <if test="systemdiskinodestotal != null" >
+        systemDiskInodesTotal,
+      </if>
+      <if test="systemdiskinodesfree != null" >
+        systemDiskInodesFree,
+      </if>
+      <if test="systemdiskinodesused != null" >
+        systemDiskInodesUsed,
+      </if>
+      <if test="systemdiskinodesusedpercent != null" >
+        systemDiskInodesUsedPercent,
+      </if>
+      <if test="heartbeattime != null" >
+        heartbeatTime,
+      </if>
+      <if test="heartbeattimeminute != null" >
+        heartbeatTimeMinute,
+      </if>
+      <if test="heartbeattimehour != null" >
+        heartbeatTimeHour,
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hostname != null" >
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="systemdiskpath != null" >
+        #{systemdiskpath,jdbcType=VARCHAR},
+      </if>
+      <if test="systemdiskfstype != null" >
+        #{systemdiskfstype,jdbcType=VARCHAR},
+      </if>
+      <if test="systemdiskbytestotal != null" >
+        #{systemdiskbytestotal,jdbcType=BIGINT},
+      </if>
+      <if test="systemdiskbytesfree != null" >
+        #{systemdiskbytesfree,jdbcType=BIGINT},
+      </if>
+      <if test="systemdiskbytesused != null" >
+        #{systemdiskbytesused,jdbcType=BIGINT},
+      </if>
+      <if test="systemdiskusedpercent != null" >
+        #{systemdiskusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemdiskinodestotal != null" >
+        #{systemdiskinodestotal,jdbcType=INTEGER},
+      </if>
+      <if test="systemdiskinodesfree != null" >
+        #{systemdiskinodesfree,jdbcType=INTEGER},
+      </if>
+      <if test="systemdiskinodesused != null" >
+        #{systemdiskinodesused,jdbcType=INTEGER},
+      </if>
+      <if test="systemdiskinodesusedpercent != null" >
+        #{systemdiskinodesusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="heartbeattime != null" >
+        #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null" >
+        #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null" >
+        #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="deleteByLtHeartbeatTime" parameterType="java.lang.Long">
+    delete from tb_metrics_disk
+    where heartbeatTime &lt; #{heartBeatTime}
+  </delete>
+
+</mapper>

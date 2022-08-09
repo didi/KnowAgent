@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!-- 数据库驱动 -->
-    <classPathEntry location="/Users/didi/.m2/repository/mysql/mysql-connector-java/5.1.41/mysql-connector-java-5.1.41.jar"/>
+    <classPathEntry location="/Users/didi/.m2/repository/org/mariadb/jdbc/mariadb-java-client/2.5.4/mariadb-java-client-2.5.4.jar"/>
     <context id="BigDataTables" targetRuntime="MyBatis3">
         <!-- 禁用mybatis插件自动生成的注释 -->
         <commentGenerator>
@@ -12,8 +12,8 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
 
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:8099/agent_manager_v2?useSSL=false"
-                password="123456" userId="root" />
+        <jdbcConnection driverClass="org.mariadb.jdbc.Driver" connectionURL="jdbc:mysql://116.85.6.115:3306/logi_agent_manager?useSSL=false"
+                password="Work2019" userId="root" />
 
         <!-- 类型转换器 -->
         <javaTypeResolver type="org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl">
@@ -36,9 +36,24 @@
                 type="XMLMAPPER" />
 
         <!-- table name 可以添加多个table标签-->
-        <table tableName="error_log"  domainObjectName="ErrorLog" enableCountByExample="false"
+        <table tableName="tb_metrics_agent"  domainObjectName="MetricsAgentPO" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" />
+<!--        <table tableName="tb_metrics_log_collect_task"  domainObjectName="MetricsLogCollectTaskPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_net_card"  domainObjectName="MetricsNetCardPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_disk"  domainObjectName="MetricsDiskPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_process"  domainObjectName="MetricsProcessPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
+<!--        <table tableName="tb_metrics_system"  domainObjectName="MetricsSystemPO" enableCountByExample="false"-->
+<!--               enableUpdateByExample="false" enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false" selectByExampleQueryId="false" />-->
 
     </context>
 </generatorConfiguration>

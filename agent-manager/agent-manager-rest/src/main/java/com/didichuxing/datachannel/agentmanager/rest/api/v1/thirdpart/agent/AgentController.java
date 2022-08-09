@@ -15,8 +15,6 @@ import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionM
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(ApiPrefix.API_V1_PREFIX + "agent")
 public class AgentController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AgentController.class);
 
     @Autowired
     private AgentCollectConfigManageService agentCollectConfigManageService;
@@ -62,7 +58,7 @@ public class AgentController {
             );
         }
         AgentDO agentDO = agentRegisterDTO2AgentDO(dto, agentVersionDO);
-        Long agentId = agentManageService.createAgent(agentDO, SpringTool.getUserName());
+        Long agentId = agentManageService.createAgent(agentDO, SpringTool.getUserName(), true);
         return Result.buildSucc(agentId);
     }
 
@@ -78,6 +74,7 @@ public class AgentController {
         agentDO.setIp(dto.getIp());
         agentDO.setHostName(dto.getHostName());
         agentDO.setAgentVersionId(agentVersionDO.getId());
+        agentDO.setCpuLimitThreshold(100);//cpu默认限流 1 cpu core
         return agentDO;
     }
 

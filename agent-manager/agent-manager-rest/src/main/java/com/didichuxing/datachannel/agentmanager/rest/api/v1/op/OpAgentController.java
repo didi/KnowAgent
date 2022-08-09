@@ -5,6 +5,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentUpdateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.AgentVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
@@ -14,13 +15,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,10 +32,18 @@ public class OpAgentController {
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
 
+    @ApiOperation(value = "获取系统全量Agent信息", notes = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<List<AgentVO>> getAllAgents() {
+        List<AgentDO> agentDOList = agentManageService.list();
+        List<AgentVO> agentVOList = ConvertUtil.list2List(agentDOList, AgentVO.class);
+        return Result.buildSucc(agentVOList);
+    }
+
     @ApiOperation(value = "修改Agent信息", notes = "")
     @RequestMapping(value = "", method = RequestMethod.PUT)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_MACHINE_EDIT)
     public Result updateAgent(@RequestBody AgentUpdateDTO dto) {
         AgentDO agentDO = ConvertUtil.obj2Obj(dto, AgentDO.class);
         agentManageService.updateAgent(agentDO, SpringTool.getUserName());
@@ -59,6 +64,21 @@ public class OpAgentController {
             }
         }
         return Result.buildSucc(Boolean.FALSE);
+    }
+
+    @ApiOperation(value = "批量删除 agent 0：删除成功 10000：参数错误 22000：Agent 不存在 22001：Agent存在未采集完的日志", notes = "")
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public Result deleteAgents(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> agentIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                agentIdList.add(Long.valueOf(id));
+            }
+            agentManageService.deleteAgentByIds(agentIdList, true, true, SpringTool.getUserName());
+        }
+        return Result.buildSucc();
     }
 
 }

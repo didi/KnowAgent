@@ -1,27 +1,59 @@
 package com.didichuxing.datachannel.agentmanager.core.metadata;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetadataSyncResult;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFileContent;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFileDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFilePaginationQueryConditionDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.metadata.MetadataFileDTO;
+import java.util.List;
 
-/**
- * 元数据管理服务
- */
 public interface MetadataManageService {
 
-    /*
-     *
-     * 元数据 同步，具体包括：
-     * 1. 同步全量源数据信息：
-     *  1.）定时获取全量 pod 信息 compare & set
-     *  2.）全量 service 信息 compare & set
-     *  3.）全量 host 信息 compare & set
-     *  4.）全量 container 信息 compare & set
-     *
-     * 2. 同步 关联 关系
-     *  1.）同步服务 - 容器关联关系
-     *  2.）同步容器 - 主机关联关系
-     *  3.）同步容器 - pod 关联关系
-     *
+    /**
+     * 添加 metadata excel 文件 & 描述信息，返回元数据上传记录 id
+     * @param dto MetadataFileDTO 对象
+     * @param operator 操作人
+     * @return 创建成功的元数据上传记录 id
      */
-    MetadataSyncResult sync();
+    Long addMetadataFile(MetadataFileDTO dto, String operator);
+
+    /**
+     * 根据元数据上传记录 id 删除对应 metadata excel 文件上传记录
+     * @param id 元数据上传记录 id
+     */
+    void deleteMetaDataFile(Long id);
+
+    /**
+     * 根据元数据上传记录 id 获取对应元数据上传文件内容
+     * @param id 元数据上传记录 id
+     * @return 返回根据元数据上传记录 id 获取到的对应元数据上传文件内容
+     */
+    MetaDataFileContent getMetaDataFileContent(Long id);
+
+    /**
+     * 分页查询
+     * @param metaDataFilePaginationQueryConditionDO 查询条件 MetaDataFilePaginationQueryConditionDO 对象
+     * @return 分页查询结果
+     */
+    List<MetaDataFileDO> paginationQueryByCondition(MetaDataFilePaginationQueryConditionDO metaDataFilePaginationQueryConditionDO);
+
+    /**
+     * 查询结果集数
+     * @param metaDataFilePaginationQueryConditionDO 查询条件 MetaDataFilePaginationQueryConditionDO 对象
+     * @return 查询结果集数
+     */
+    Integer queryCountByCondition(MetaDataFilePaginationQueryConditionDO metaDataFilePaginationQueryConditionDO);
+
+    /**
+     * 导入元数据信息
+     * @param id 元数据上传记录 id
+     * @param operator 操作人
+     */
+    void importMetaData(Long id, String operator);
+
+    /**
+     * 根据元数据上传记录 id 集删除对应 metadata excel 文件上传记录
+     * @param metaDataFileIdList 元数据上传记录 id 集
+     */
+    void deleteMetaDataFiles(List<Long> metaDataFileIdList);
 
 }

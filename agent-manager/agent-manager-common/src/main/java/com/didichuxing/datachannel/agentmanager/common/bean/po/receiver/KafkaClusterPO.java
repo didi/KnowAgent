@@ -44,6 +44,19 @@ public class KafkaClusterPO extends BasePO {
      */
     private String agentMetricsTopic;
 
+    /**
+     * 接收端类型
+     */
+    private Integer receiverType;
+
+    public Integer getReceiverType() {
+        return receiverType;
+    }
+
+    public void setReceiverType(Integer receiverType) {
+        this.receiverType = receiverType;
+    }
+
     public String getAgentErrorLogsTopic() {
         return agentErrorLogsTopic;
     }

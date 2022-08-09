@@ -12,9 +12,6 @@
   <sql id="Base_Column_List">
     tb_service.id, tb_service.service_name, tb_service.operator, tb_service.create_time, tb_service.modify_time, extenal_service_id
   </sql>
-  <!--<sql id="paginationQueryList_Base_Column_List">
-    t1.id,t1.service_name,t1.,count(t2.host_id) as relation_host_num
-  </sql>-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from tb_service
     where id = #{id,jdbcType=BIGINT}
@@ -86,30 +83,17 @@
     where service_name = #{serviceName,jdbcType=VARCHAR}
   </select>
 
-  <!--<select id="paginationQueryList" parameterType="java.lang.String" resultMap="paginationQueryListResultMap">
-    select
-    <include refid="paginationQueryList_Base_Column_List" />
-    from tb_service t1
-    LEFT JOIN tb_service_host t2 ON t1.id = t2.service_id
-    WHERE t1.service_name like '%%'
-    AND t1.create_time BETWEEN '' AND ''
-    ORDER BY
-    limit
-  </select>-->
-
   <resultMap id="PaginationQueryByConditonResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServicePaginationRecordDO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="service_name" jdbcType="VARCHAR" property="servicename" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="relation_host_count" jdbcType="INTEGER" property="relationHostCount" />
   </resultMap>
+
   <select id="paginationQueryByConditon" resultMap="PaginationQueryByConditonResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServicePaginationQueryConditionDO" >
     select
     t1.id id, t1.service_name service_name, t1.create_time create_time, t2.relation_host_count relation_host_count
     from tb_service t1
-    <if test="projectId != null">
-      INNER JOIN tb_service_project t4 ON t1.id = t4.service_id
-    </if>
     LEFT JOIN
     (
       SELECT service_id, COUNT(host_id) as relation_host_count FROM tb_service_host GROUP BY service_id
@@ -124,9 +108,6 @@
       </if>
       <if test="createTimeEnd != null">
         and #{createTimeEnd} >= t1.create_time
-      </if>
-      <if test="projectId != null">
-        and t4.project_id = #{projectId}
       </if>
     </where>
     order by
@@ -154,9 +135,6 @@
     select
     t1.id as c
     from tb_service t1
-    <if test="projectId != null">
-      INNER JOIN tb_service_project t4 ON t1.id = t4.service_id
-    </if>
     LEFT JOIN
     (
     SELECT service_id, COUNT(host_id) as relation_host_count FROM tb_service_host GROUP BY service_id
@@ -172,11 +150,8 @@
       <if test="createTimeEnd != null">
         and #{createTimeEnd} >= t1.create_time
       </if>
-      <if test="projectId != null">
-        and t4.project_id = #{projectId}
-      </if>
     </where>
     ) as t3
   </select>
-</mapper>
 
+</mapper>

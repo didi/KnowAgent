@@ -22,6 +22,9 @@ public class ReceiverPaginationRequestDTO extends PaginationRequestDTO {
     @ApiModelProperty(value = "是否升序", notes="")
     private Boolean asc;
 
+    @ApiModelProperty(value = "kafka集群broker配置")
+    private String kafkaClusterBrokerConfiguration;
+
     public void setKafkaClusterName(String kafkaClusterName) {
         this.kafkaClusterName = kafkaClusterName;
     }
@@ -60,5 +63,13 @@ public class ReceiverPaginationRequestDTO extends PaginationRequestDTO {
 
     public void setAsc(Boolean asc) {
         this.asc = asc;
+    }
+
+    public String getKafkaClusterBrokerConfiguration() {
+        return kafkaClusterBrokerConfiguration;
+    }
+
+    public void setKafkaClusterBrokerConfiguration(String kafkaClusterBrokerConfiguration) {
+        this.kafkaClusterBrokerConfiguration = kafkaClusterBrokerConfiguration;
     }
 }

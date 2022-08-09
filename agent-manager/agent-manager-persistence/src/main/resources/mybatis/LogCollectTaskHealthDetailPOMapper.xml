@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskHealthDetailPOMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="log_collect_task_id" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="path_id" property="pathId" jdbcType="BIGINT" />
+    <result column="host_name" property="hostName" jdbcType="VARCHAR" />
+    <result column="collect_dquality_time" property="collectDqualityTime" jdbcType="BIGINT" />
+    <result column="too_large_truncate_check_healthy_heartbeat_time" property="tooLargeTruncateCheckHealthyHeartbeatTime" jdbcType="BIGINT" />
+    <result column="file_path_exists_check_healthy_heartbeat_time" property="filePathExistsCheckHealthyHeartbeatTime" jdbcType="BIGINT" />
+    <result column="file_disorder_check_healthy_heartbeat_time" property="fileDisorderCheckHealthyHeartbeatTime" jdbcType="BIGINT" />
+    <result column="log_slice_check_healthy_heartbeat_time" property="logSliceCheckHealthyHeartbeatTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, log_collect_task_id, path_id, host_name, collect_dquality_time, too_large_truncate_check_healthy_heartbeat_time, 
+    file_path_exists_check_healthy_heartbeat_time, file_disorder_check_healthy_heartbeat_time, 
+    log_slice_check_healthy_heartbeat_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="get" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health_detail
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT} and path_id = #{pathId,jdbcType=BIGINT} and host_name = #{hostName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByLogCollectTaskId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health_detail
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByLogCollectPathId" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health_detail
+    where path_id = #{logCollectPathId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByLogCollectTaskId" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health_detail
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteById" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
+    insert into tb_log_collect_task_health_detail (id, log_collect_task_id, path_id, 
+      host_name, collect_dquality_time, too_large_truncate_check_healthy_heartbeat_time, 
+      file_path_exists_check_healthy_heartbeat_time, file_disorder_check_healthy_heartbeat_time, 
+      log_slice_check_healthy_heartbeat_time)
+    values (#{id,jdbcType=BIGINT}, #{logCollectTaskId,jdbcType=BIGINT}, #{pathId,jdbcType=BIGINT}, 
+      #{hostName,jdbcType=VARCHAR}, #{collectDqualityTime,jdbcType=BIGINT}, #{tooLargeTruncateCheckHealthyHeartbeatTime,jdbcType=BIGINT}, 
+      #{filePathExistsCheckHealthyHeartbeatTime,jdbcType=BIGINT}, #{fileDisorderCheckHealthyHeartbeatTime,jdbcType=BIGINT}, 
+      #{logSliceCheckHealthyHeartbeatTime,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
+    insert into tb_log_collect_task_health_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="logCollectTaskId != null" >
+        log_collect_task_id,
+      </if>
+      <if test="pathId != null" >
+        path_id,
+      </if>
+      <if test="hostName != null" >
+        host_name,
+      </if>
+      <if test="collectDqualityTime != null" >
+        collect_dquality_time,
+      </if>
+      <if test="tooLargeTruncateCheckHealthyHeartbeatTime != null" >
+        too_large_truncate_check_healthy_heartbeat_time,
+      </if>
+      <if test="filePathExistsCheckHealthyHeartbeatTime != null" >
+        file_path_exists_check_healthy_heartbeat_time,
+      </if>
+      <if test="fileDisorderCheckHealthyHeartbeatTime != null" >
+        file_disorder_check_healthy_heartbeat_time,
+      </if>
+      <if test="logSliceCheckHealthyHeartbeatTime != null" >
+        log_slice_check_healthy_heartbeat_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="logCollectTaskId != null" >
+        #{logCollectTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="pathId != null" >
+        #{pathId,jdbcType=BIGINT},
+      </if>
+      <if test="hostName != null" >
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectDqualityTime != null" >
+        #{collectDqualityTime,jdbcType=BIGINT},
+      </if>
+      <if test="tooLargeTruncateCheckHealthyHeartbeatTime != null" >
+        #{tooLargeTruncateCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+      <if test="filePathExistsCheckHealthyHeartbeatTime != null" >
+        #{filePathExistsCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+      <if test="fileDisorderCheckHealthyHeartbeatTime != null" >
+        #{fileDisorderCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+      <if test="logSliceCheckHealthyHeartbeatTime != null" >
+        #{logSliceCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
+    update tb_log_collect_task_health_detail
+    <set >
+      <if test="logCollectTaskId != null" >
+        log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="pathId != null" >
+        path_id = #{pathId,jdbcType=BIGINT},
+      </if>
+      <if test="hostName != null" >
+        host_name = #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="collectDqualityTime != null" >
+        collect_dquality_time = #{collectDqualityTime,jdbcType=BIGINT},
+      </if>
+      <if test="tooLargeTruncateCheckHealthyHeartbeatTime != null" >
+        too_large_truncate_check_healthy_heartbeat_time = #{tooLargeTruncateCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+      <if test="filePathExistsCheckHealthyHeartbeatTime != null" >
+        file_path_exists_check_healthy_heartbeat_time = #{filePathExistsCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+      <if test="fileDisorderCheckHealthyHeartbeatTime != null" >
+        file_disorder_check_healthy_heartbeat_time = #{fileDisorderCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+      <if test="logSliceCheckHealthyHeartbeatTime != null" >
+        log_slice_check_healthy_heartbeat_time = #{logSliceCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO" >
+    update tb_log_collect_task_health_detail
+    set log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT},
+      path_id = #{pathId,jdbcType=BIGINT},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      collect_dquality_time = #{collectDqualityTime,jdbcType=BIGINT},
+      too_large_truncate_check_healthy_heartbeat_time = #{tooLargeTruncateCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      file_path_exists_check_healthy_heartbeat_time = #{filePathExistsCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      file_disorder_check_healthy_heartbeat_time = #{fileDisorderCheckHealthyHeartbeatTime,jdbcType=BIGINT},
+      log_slice_check_healthy_heartbeat_time = #{logSliceCheckHealthyHeartbeatTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <delete id="deleteByHostName" parameterType="java.lang.String" >
+    delete from tb_log_collect_task_health_detail
+    where host_name = #{hostName,jdbcType=VARCHAR}
+  </delete>
+
+</mapper>

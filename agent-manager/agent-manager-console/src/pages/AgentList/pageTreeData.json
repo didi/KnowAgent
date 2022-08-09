@@ -1,0 +1,417 @@
+{
+  "grid": "{gutter:10,grid:24,num:1}",
+  "dataInfo": {},
+  "name": "0",
+  "path": "",
+  "title": "0",
+  "key": "0",
+  "componentName": "contentComponent",
+  "children": [
+    {
+      "grid": {
+        "gutter": 10,
+        "grid": 24,
+        "num": 1
+      },
+      "dataInfo": {},
+      "name": "0-1",
+      "path": "",
+      "title": "0-1",
+      "key": "0-1",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": {
+            "gutter": 10,
+            "grid": 24
+          },
+          "dataInfo": {
+            "bordered": false,
+            "loading": false,
+            "columns": [
+              {
+                "title": "主机名",
+                "dataIndex": "hostName",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [
+                  {
+                    "operationName": "",
+                    "operationKey": "hostNamejump",
+                    "baseData": "{}",
+                    "triggerType": "confirm",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "customPageName": "jumpAgentDetail"
+                  }
+                ],
+                "sorter": true,
+                "valueType": "option"
+              },
+              {
+                "title": "主机IP",
+                "dataIndex": "ip",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "主机类型",
+                "dataIndex": "container",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "sorter": true,
+                "valueType": "hostType"
+              },
+              {
+                "title": "承载应用",
+                "dataIndex": "serviceList",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "needTooltip": true,
+                "lineClampOne": true
+              },
+              {
+                "title": "Agent版本号",
+                "dataIndex": "agentVersion",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "sorter": false
+              },
+              {
+                "title": "Agent健康度",
+                "dataIndex": "agentHealthLevel",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [
+                  {
+                    "operationName": "",
+                    "type": "custom",
+                    "operationKey": "1",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "drawer",
+                    "containerConfig": {
+                      "title": "HealthMap",
+                      "footer": false,
+                      "customTitle": true,
+                      "width": 1420
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "DiagnosisContent",
+                    "renderCustomName": "agentHealthLevel"
+                  }
+                ],
+                "sorter": true,
+                "valueType": "option"
+              },
+              {
+                "title": "新增时间",
+                "dataIndex": "hostCreateTime",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "valueType": "dateTime"
+              },
+              {
+                "title": "操作",
+                "dataIndex": "Thu Jan 20 2022 18:56:17 GMT+0800 (中国标准时间)",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [
+                  {
+                    "operationName": "编辑",
+                    "operationKey": "edit1",
+                    "type": "icon-bianji",
+                    "baseData": "{\"XFormProps\":{\"formMap\":[{\"key\":\"name\",\"label\":\"姓名\",\"type\":\"input\",\"attrs\":{\"placeholder\":\"请输入姓名\"}},{\"key\":\"age\",\"label\":\"年龄\",\"type\":\"input\"}],\"formData\":{}},\"proFormType\":\"modal\",\"needSubmitter\":true,\"submitterPosition\":\"right\",\"isCustomContent\":true,\"formModalMap\":[{\"grid\":\"{gutter:10,grid:24,num:1}\",\"dataInfo\":{},\"name\":\"0\",\"path\":\"\",\"title\":\"0\",\"key\":\"0\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24,\"num\":1},\"dataInfo\":{},\"name\":\"0-1\",\"path\":\"\",\"title\":\"0-1\",\"key\":\"0-1\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24},\"name\":\"0-1-0\",\"path\":\"\",\"title\":\"ProTableProject\",\"key\":\"0-1-0\",\"componentName\":\"ProTableProject\",\"children\":[],\"lelf\":2,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":true}],\"lelf\":\"1\",\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":false}],\"lelf\":0,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{}}],\"customContentFormModal\":\"{\\\"grid\\\":\\\"{gutter:10,grid:24,num:1}\\\",\\\"dataInfo\\\":{},\\\"name\\\":\\\"0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0\\\",\\\"key\\\":\\\"0\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24,\\\"num\\\":1},\\\"dataInfo\\\":{},\\\"name\\\":\\\"0-1\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0-1\\\",\\\"key\\\":\\\"0-1\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24},\\\"name\\\":\\\"0-1-0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"ProTableProject\\\",\\\"key\\\":\\\"0-1-0\\\",\\\"componentName\\\":\\\"ProTableProject\\\",\\\"children\\\":[],\\\"lelf\\\":2,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":true}],\\\"lelf\\\":\\\"1\\\",\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":false}],\\\"lelf\\\":0,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{}}\"}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "modal",
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "ModifyHost",
+                    "containerConfig": {
+                      "title": "编辑",
+                      "width": "500px"
+                    }
+                  },
+                  {
+                    "operationName": "黄金指标",
+                    "operationKey": "delete",
+                    "type": "custom",
+                    "baseData": "{}",
+                    "footer": false,
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "删除主机",
+                      "content": "是否删除主机",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "drawer",
+                    "containerConfig": {
+                      "title": "HealthMap",
+                      "footer": false,
+                      "width": "1080px",
+                      "customTitle": true
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "Containers",
+                    "renderCustomName": "goldMetricIcon"
+                  },
+                  {
+                    "operationName": "删除Agent",
+                    "operationKey": "deleteAgent",
+                    "baseData": "{}",
+                    "triggerType": "confirm",
+                    "containerType": "modal",
+                    "optConfig": {
+                      "title": "",
+                      "content": "删除",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "customPageName": "deleteAgent"
+                  },
+                  {
+                    "operationName": "删除主机",
+                    "operationKey": "deletehost",
+                    "baseData": "{}",
+                    "triggerType": "confirm",
+                    "containerType": "modal",
+                    "optConfig": {
+                      "title": "",
+                      "content": "删除",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "customPageName": "deleteAgentHost"
+                  }
+                ],
+                "valueType": "option",
+                "fixed": "right",
+                "width": "150px"
+              }
+            ],
+            "queryFormArray": [
+              {
+                "type": "input",
+                "title": "主机名",
+                "dataIndex": "hostName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "input",
+                "title": "IP",
+                "dataIndex": "ip",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "select",
+                "title": "Agent版本号",
+                "dataIndex": "agentVersion",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "agentvisionArr"
+              },
+              {
+                "type": "select",
+                "title": "健康度",
+                "dataIndex": "agentHealthLevelList",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "mode": "multiple",
+                  "maxTagCount": "responsive",
+                  "showArrow": true,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "healthList"
+              },
+              {
+                "type": "select",
+                "title": "承载应用",
+                "dataIndex": "service",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "servicesList"
+              },
+              {
+                "type": "select",
+                "title": "主机类型",
+                "dataIndex": "containerList",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "mode": "multiple",
+                  "maxTagCount": "responsive",
+                  "showArrow": true,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "hostNameList"
+              },
+              {
+                "type": "dateRangePicker",
+                "title": "新增时间",
+                "dataIndex": "hostCreateTime",
+                "placeholder": ["开始时间", "结束时间"],
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128
+                }
+              }
+            ],
+            "dataSourceUrlConfig": {
+              "api": "/api/v1/rd/host/paging",
+              "defaultParams": "{\"pageNo\":1,\"pageSize\":20,\"agentHealthLevelList\":[],\"agentVersionIdList\":[],\"containerList\":[],\"hostCreateTimeEnd\":\"\",\"hostCreateTimeStart\":\"\",\"serviceIdList\":[],\"hostName\":\"\",\"queryTerm\":\"\",\"ip\":\"\"}",
+              "methods": "post",
+              "params": "function(params){\n  if(params.hostCreateTime&&params.hostCreateTime.length>0){\n    params.hostCreateTimeStart = new Date(params.hostCreateTime[0]).getTime();\n    params.hostCreateTimeEnd = new Date(params.hostCreateTime[1]).getTime();\n  }\n if(params.agentVersion){\n     params.agentVersionIdList.push(params.agentVersion)\n}\n  if(params.service){\n     params.serviceIdList.push(params.service)\n}\n if(params.hostName){\n  params.queryTerm=params.hostName\n}\n return params\n}",
+              "resCallback": "function(data){\n  data?.resultSet.forEach(item=>{\n  \tlet serviceList = [];\n  \tif(!item.serviceList||(item.serviceList&&item.serviceList.length<1)){\n      serviceList.push('-')\n    }else {\n     \titem.serviceList.forEach(i=>{\n  \t\t\tserviceList.push(i.servicename)\n  \t\t})\n\t\t}\n  \titem.serviceList=serviceList;\n  })\n  return {...data,bizData:data.resultSet}\n}"
+            },
+            "isCustomPg": true,
+            "paginationProps": {
+              "show": true,
+              "current": 1,
+              "pageSize": 10,
+              "total": 100
+            },
+            "size": "default",
+            "expandable": false,
+            "tableTitle": "高级表格",
+            "tooltip": "高级表格 tooltip",
+            "showHeader": true,
+            "footer": false,
+            "rowSelection": false,
+            "scroll": {
+              "x": "max-content"
+            },
+            "hasData": true,
+            "toolBarRender": true,
+            "tableFunction": {
+              "reload": false,
+              "search": false,
+              "export": false,
+              "import": false,
+              "tableId": "agent_list",
+              "tableScreen": true,
+              "tableCustomColumns": true,
+              "custom": false,
+              "tableHeaderBtns": [
+                {
+                  "buttonText": "新增主机",
+                  "buttonType": "primary",
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "NewHostForm",
+                  "containerConfig": {
+                    "title": "新增主机"
+                  }
+                }
+              ]
+            },
+            "search": {
+              "showQueryForm": true,
+              "searchText": "查询",
+              "resetText": "重置",
+              "showOptionBtns": true,
+              "colConfig": 6,
+              "style": {
+                "backgroundColor": "#F8F9FA"
+              }
+            },
+            "options": {
+              "show": true,
+              "density": true,
+              "fullScreen": true,
+              "setting": true
+            }
+          },
+          "name": "0-1-0",
+          "path": "",
+          "title": "ProTableProject",
+          "key": "0-1-0",
+          "componentName": "ProTableProject",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": {
+            "padding": "24px",
+            "backgroundColor": "#FFFFFF"
+          },
+          "checked": true
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent管理",
+      "pageName": "agent_admin",
+      "tplName": "",
+      "pageKey": "agent_admin",
+      "checked": false
+    }
+  ],
+  "lelf": 0,
+  "version": "",
+  "nodeTitle": "",
+  "nodeStyle": {},
+  "containerStyle": {},
+  "chilrenPages": [],
+  "pageDesc": "Agent管理",
+  "pageName": "agent_list",
+  "tplName": "agent_admin",
+  "pageKey": "agent_list"
+}

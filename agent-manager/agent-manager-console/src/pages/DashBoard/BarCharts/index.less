@@ -1,0 +1,41 @@
+.dashboard-bar-chart {
+
+  margin: 24px;
+
+  .content {
+    background: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-flow: row wrap;
+    row-gap: 16px;
+  }
+}
+
+.bar-item {
+  background: #F8F9FA;
+  border-radius: 8px;
+  width: calc((100% - 32px) / 3);
+  box-sizing: border-box;
+  height: 260px;
+
+  &.dcloud-empty {
+    padding-top: 70px;
+  }
+}
+
+.bar-item:not(:nth-child(3n)) {
+  margin-right: 16px;
+}
+
+.x-mouse-in {
+  position: relative;
+  color: #333;
+  font-size: 12px;
+  padding: 5px;
+  display: inline;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 8px;
+}

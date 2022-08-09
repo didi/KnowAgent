@@ -1,5 +1,6 @@
 package com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.operationtask.AgentOperationTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO;
@@ -64,5 +65,16 @@ public interface AgentManageServiceExtension {
      * @return 返回将给定AgentDO对象转化后的AgentDO对象集
      */
     List<AgentDO> agentPOList2AgentDOList(List<AgentPO> agentPOList);
+
+    /**
+     *
+     * @param hostName 主机名
+     * @param path 主 文件路径
+     * @param suffixRegular 文件后缀匹配正则
+     * @return 根据给定主文件路径与文件后缀匹配正则获取满足匹配对应规则的文件集
+     */
+    Result<List<String>> listFiles(String hostName, String path, String suffixRegular);
+
+    Result<String> readFileContent(String hostName, String path);
 
 }

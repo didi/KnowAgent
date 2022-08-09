@@ -7,7 +7,9 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.FileLogCollectPathDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.config.*;
+import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.YesOrNoEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentCollectTypeEnum;
@@ -18,15 +20,13 @@ import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageSer
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
+import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.collect.configuration.extension.impl.HostFilterRule;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author huqidong
@@ -47,6 +47,9 @@ public class AgentCollectConfigManageServiceImpl implements AgentCollectConfigMa
 
     @Autowired
     private KafkaClusterManageService kafkaClusterManageService;
+
+    @Autowired
+    private ServiceManageService serviceManageService;
 
     @Override
     public AgentCollectConfigDO getAgentConfigDOByHostName(String hostName) {
@@ -376,6 +379,7 @@ public class AgentCollectConfigManageServiceImpl implements AgentCollectConfigMa
         logCollectTaskConfiguration.setOldDataFilterType(logCollectTask.getOldDataFilterType());
         logCollectTaskConfiguration.setFileNameSuffixMatchRuleLogicJsonString(logCollectTask.getFileNameSuffixMatchRuleLogicJsonString());
         logCollectTaskConfiguration.setLogContentSliceRuleLogicJsonString(logCollectTask.getLogContentSliceRuleLogicJsonString());
+        logCollectTaskConfiguration.setServiceNames(getSortedServiceNames(logCollectTask.getId()));
         if (CollectionUtils.isEmpty(logCollectTask.getDirectoryLogCollectPathList()) && CollectionUtils.isEmpty(logCollectTask.getFileLogCollectPathList())) {
             throw new ServiceException(
                     String.format("LogCollectTask={id=%d}关联的目录型采集路径集 & 文件型采集路径集不可都为空", logCollectTask.getId()),
@@ -392,6 +396,16 @@ public class AgentCollectConfigManageServiceImpl implements AgentCollectConfigMa
             logCollectTaskConfiguration.setFileLogCollectPathList(fileLogCollectPathConfigDOList);
         }
         return logCollectTaskConfiguration;
+    }
+
+    private String getSortedServiceNames(Long logCollectTaskId) {
+        List<ServiceDO> serviceDOList = serviceManageService.getServicesByLogCollectTaskId(logCollectTaskId);
+        String[] serviceNameArray = new String[serviceDOList.size()];
+        for (int i = 0; i < serviceDOList.size(); i++) {
+            serviceNameArray[i] = serviceDOList.get(i).getServicename();
+        }
+        Arrays.sort(serviceNameArray);
+        return StringUtils.join(serviceNameArray, CommonConstant.COMMA);
     }
 
     /**

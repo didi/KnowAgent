@@ -14,6 +14,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.didichuxing.datachannel.agentmanager.common.constant.PermissionConstant.AGENT_KAFKA_CLUSTER_EDIT;
 
 @Api(tags = "OP-Receiver维度相关接口(REST)")
@@ -42,11 +45,18 @@ public class OpReceiverController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除接收端", notes = "")
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "删除接收端 入参为待删除接收端对象id集（逗号分割）0：删除成功 10000：参数错误 26000：KafkaCluster不存在 26001：KafkaCluster删除失败，原因为：系统存在KafkaCluster关联的日志采集任务 26002：KafkaCluster删除失败，原因为：系统存在KafkaCluster关联的Agent", notes = "")
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
-    public Result deleteReceiver(@PathVariable Long id) {
-        kafkaClusterManageService.deleteKafkaClusterById(id, false, SpringTool.getUserName());
+    public Result deleteReceiver(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> receiverIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                receiverIdList.add(Long.valueOf(id));
+            }
+            kafkaClusterManageService.deleteKafkaClusterById(receiverIdList, false, SpringTool.getUserName());
+        }
         return Result.buildSucc();
     }
 

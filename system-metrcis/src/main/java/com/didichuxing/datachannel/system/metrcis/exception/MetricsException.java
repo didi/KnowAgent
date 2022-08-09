@@ -1,6 +1,6 @@
 package com.didichuxing.datachannel.system.metrcis.exception;
 
-public class MetricsException extends Exception {
+public class MetricsException extends RuntimeException {
 
     /**
      * 服务层异常对象对应的状态码枚举对象

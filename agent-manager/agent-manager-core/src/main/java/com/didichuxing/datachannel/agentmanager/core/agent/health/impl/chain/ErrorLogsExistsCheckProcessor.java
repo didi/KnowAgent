@@ -1,79 +1,81 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain;
 
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
-import com.didichuxing.datachannel.agentmanager.common.chain.Context;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
-import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
-import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
-import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.AggregationCalcFunctionEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricFieldEnum;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
+import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 
 /**
  * 校验 agent 是否存在错误日志输出
- * @author Ronaldo
- * @Date 2021/10/31
+ * @author william.
  */
-@HealthCheckProcessorAnnotation(seq = 4, type = HealthCheckProcessorEnum.AGENT)
-public class ErrorLogsExistsCheckProcessor implements Processor {
-    @Override
-    public void process(Context context, ProcessorChain chain) {
-        AgentHealthCheckContext agentHealthCheckContext = (AgentHealthCheckContext) context;
-        AgentDO agentDO = agentHealthCheckContext.getAgentDO();
-        AgentHealthDO agentHealthDO = agentHealthCheckContext.getAgentHealthDO();
-        AgentMetricsManageService agentMetricsManageService = agentHealthCheckContext.getAgentMetricsManageService();
+@HealthCheckProcessorAnnotation(seq = 5, type = HealthCheckProcessorEnum.AGENT)
+public class ErrorLogsExistsCheckProcessor extends BaseProcessor {
 
+    @Override
+    protected void process(AgentHealthCheckContext context) {
+        /*
+         * 校验 agent 是否为红 黄
+         */
+        if(
+                context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.RED) ||
+                        context.getAgentHealthLevelEnum().equals(AgentHealthLevelEnum.YELLOW)
+        ) {
+            return;
+        }
         /*
          * 校验 agent 是否存在错误日志输出
          */
-        Long agentHealthCheckTimeEnd = System.currentTimeMillis() - 1000; //Agent健康度检查流程获取agent心跳数据右边界时间，取当前时间前一秒
-        boolean errorLogsExists = checkErrorLogsExists(agentDO.getHostName(), agentHealthDO, agentHealthCheckTimeEnd, agentMetricsManageService);
-        // agent 不存在错误日志输出
-        if (!errorLogsExists) {
-            agentHealthDO.setLastestErrorLogsExistsCheckHealthyTime(agentHealthCheckTimeEnd);
-            chain.process(context, chain);
-            return;
-        }
-        // agent 存在错误日志输出
-        AgentHealthLevelEnum agentHealthLevelEnum = AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_EXISTS.getAgentHealthLevel();
-        String agentHealthDescription = String.format(
-                "%s:AgentId={%d}, HostName={%s}",
-                AgentHealthInspectionResultEnum.AGENT_ERRORLOGS_EXISTS.getDescription(),
-                agentDO.getId(),
-                agentDO.getHostName()
+        boolean errorLogsExists = checkErrorLogsExists(
+                context.getAgentDO().getHostName(),
+                context.getAgentHealthDO(),
+                context.getAgentHealthCheckTimeEnd(),
+                context.getMetricsManageService()
         );
-        agentHealthCheckContext.setAgentHealthLevelEnum(agentHealthLevelEnum);
-        agentHealthCheckContext.setAgentHealthDescription(agentHealthDescription);
+        if (errorLogsExists) {// agent 存在错误日志输出
+            setAgentHealthCheckResult(
+                    AgentHealthInspectionResultEnum.AGENT_ERROR_LOGS_EXISTS,
+                    context,
+                    context.getAgentDO().getHostName()
+            );
+        }
     }
 
     /**
      * 校验 agent 是否存在错误日志输出
-     *
-     * @param hostName                agent 主机名
-     * @param agentHealthDO           AgentHealthDO对象
+     * @param hostName agent 主机名
+     * @param agentHealthDO AgentHealthDO对象
      * @param agentHealthCheckTimeEnd Agent健康度检查流程获取agent心跳数据右边界时间
+     * @param metricsManageService MetricsManageService 对象
      * @return true：存在错误日志输出 false：不存在错误日志输出
      */
-    private boolean checkErrorLogsExists(String hostName, AgentHealthDO agentHealthDO, Long agentHealthCheckTimeEnd, AgentMetricsManageService agentMetricsManageService) {
+    private boolean checkErrorLogsExists(
+            String hostName,
+            AgentHealthDO agentHealthDO,
+            Long agentHealthCheckTimeEnd,
+            MetricsManageService metricsManageService
+    ) {
         /*
-         * 获取自上次"错误日志输出存在"健康点 ~ 当前时间，agent 是否存在错误日志输出
+         * 获取自上次"错误日志输出存在"健康点 ~ 最近一次 agent 业务指标心跳时间，agent 是否存在错误日志输出
          */
-        Long lastestCheckTime = agentHealthDO.getLastestErrorLogsExistsCheckHealthyTime();
-        if (null == lastestCheckTime) {
-            throw new ServiceException(
-                    String.format("Agent={hostName=%s}对应lastestErrorLogsExistsCheckHealthyTime不存在", hostName),
-                    ErrorCodeEnum.AGENT_HEALTH_ERROR_LOGS_EXISTS_CHECK_HEALTHY_TIME_NOT_EXISTS.getCode()
-            );
-        }
-        Integer errorlogsCount = agentMetricsManageService.getErrorLogCount(
-                lastestCheckTime,
+        Object errorLogsCountObj = metricsManageService.getAggregationQueryPerHostNameFromMetricsAgent(
+                hostName,
+                agentHealthDO.getLastestErrorLogsExistsCheckHealthyTime(),
                 agentHealthCheckTimeEnd,
-                hostName
+                AggregationCalcFunctionEnum.SUM.getValue(),
+                MetricFieldEnum.AGENT_ERROR_LOGS_COUNT.getFieldName()
         );
-        return errorlogsCount > 0;
+        Long errorLogsCount = 0L;
+        if(null != errorLogsCountObj) {
+            errorLogsCount = Long.valueOf(errorLogsCountObj.toString());
+        }
+        return errorLogsCount > 0;
     }
+
 }

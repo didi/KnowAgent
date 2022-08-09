@@ -1,13 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.core.agent.manage;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.AgentMetricQueryDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.CollectTaskMetricDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricAggregate;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPointList;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
 
 import java.util.List;
 
@@ -23,9 +17,10 @@ public interface AgentManageService {
      *
      * @param agent    待创建 AgentPO 对象
      * @param operator 操作人
+     * @param createHostWhenHostNotExists agent宿主机不存在时，是否创建对应宿主机信息，true：创建 false：不创建，报异常
      * @return 创建成功的agent对象id
      */
-    Long createAgent(AgentDO agent, String operator);
+    Long createAgent(AgentDO agent, String operator, Boolean createHostWhenHostNotExists);
 
     /**
      * 删除主机名为hostName的Agent对象
@@ -93,16 +88,6 @@ public interface AgentManageService {
     List<AgentDO> getAgentsByAgentVersionId(Long agentVersionId);
 
     /**
-     * 根据 agent id 获取给定时间范围内对应 agent 运行时指标信息
-     *
-     * @param agentId   agent id
-     * @param startTime 开始时间
-     * @param endTime   结束时间
-     * @return 返回根据 agent id 获取到的给定时间范围内对应 agent 运行时指标信息
-     */
-    List<MetricPanelGroup> listAgentMetrics(Long agentId, Long startTime, Long endTime);
-
-    /**
      * @return 返回系统全量Agent对象集
      */
     List<AgentDO> list();
@@ -123,31 +108,7 @@ public interface AgentManageService {
      * @param suffixMatchRegular 文件后缀名匹配规则
      * @return 返回根据给定路径 & 文件后缀匹配正则匹配到的符合匹配规则的文件名集
      */
-    List<String> listFiles(String hostName, String path, String suffixMatchRegular);
-
-    MetricPointList getCpuUsage(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getMemoryUsage(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getFdUsage(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getGcCount(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getSendByte(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getSendCount(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getReadByte(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getReadCount(AgentMetricQueryDO agentMetricQueryDO);
-
-    MetricPointList getErrorLogCount(AgentMetricQueryDO agentMetricQueryDO);
-
-    List<MetricAggregate> getCollectTaskCount(AgentMetricQueryDO agentMetricQueryDO);
-
-    List<MetricAggregate> getCollectPathCount(AgentMetricQueryDO agentMetricQueryDO);
-
-    List<CollectTaskMetricDO> getRelatedTaskMetrics(String hostname);
+    Result<List<String>> listFiles(String hostName, String path, String suffixMatchRegular);
 
     /**
      * @return 返回系统全量 agent 数
@@ -164,12 +125,5 @@ public interface AgentManageService {
      * @return 返回系统中给定健康度的 agent 对象集
      */
     List<AgentDO> getByHealthLevel(Integer agentHealthLevelCode);
-
-    /**
-     * @param startTime 开始时间戳
-     * @param endTime 结束时间戳
-     * @return 返回系统关联日志采集任务数最多 agent 指标集
-     */
-    List<MetricPointList> getTop5LogCollectTaskCount(Long startTime, Long endTime);
 
 }

@@ -1,12 +1,18 @@
 package com.didichuxing.datachannel.system.metrcis.service.linux;
 
 import com.didichuxing.datachannel.system.metrcis.util.FileUtils;
+import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
  * @author Ronaldo
  */
 public class LinuxNetFlow {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxNetFlow.class);
 
     /**
      * 系统接收的字节数
@@ -65,9 +71,9 @@ public class LinuxNetFlow {
         long bytes = 0;
         for (int i = 2; i < fileLines.size(); i++) {
             String[] array = fileLines.get(i).split("\\s+");
-            if ("lo:".equals(array[1])) {
-                continue;
-            }
+//            if ("lo:".equals(array[1])) {
+//                continue;
+//            }
             bytes += Long.parseLong(array[index]);
         }
         return bytes;
@@ -79,7 +85,11 @@ public class LinuxNetFlow {
     public double getSystemReceiveBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.systemReceiveBytes - before.systemReceiveBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
 
     /**
@@ -88,7 +98,11 @@ public class LinuxNetFlow {
     public double getSystemTransmitBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.systemTransmitBytes - before.systemTransmitBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
 
     /**
@@ -97,7 +111,11 @@ public class LinuxNetFlow {
     public double getProcessReceiveBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.processReceiveBytes - before.processReceiveBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
 
     /**
@@ -106,6 +124,21 @@ public class LinuxNetFlow {
     public double getProcessTransmitBytesPs(LinuxNetFlow before) {
         long timeGap = this.currentTime - before.currentTime;
         long bytesGap = this.processTransmitBytes - before.processTransmitBytes;
-        return 1000.0 * bytesGap / timeGap;
+        if(0 != timeGap) {
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
+        } else {
+            return 1000.0 * bytesGap;
+        }
     }
+
+    public double getSystemSendReceiveBytesPs(LinuxNetFlow before) {
+        long timeGap = this.currentTime - before.currentTime;
+        long bytesGap = (this.systemTransmitBytes + this.systemReceiveBytes) - (before.systemTransmitBytes + before.systemReceiveBytes);
+        if(0 != timeGap) {
+            return MathUtil.divideWith2Digit(1000.0 * bytesGap, timeGap);
+        } else {
+            return 1000.0 * bytesGap;
+        }
+    }
+
 }

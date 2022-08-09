@@ -1,46 +1,40 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics;
 
+import com.didichuxing.datachannel.agentmanager.common.bean.common.Pair;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @ApiModel(value = "指标面板")
+@Data
 public class MetricPanel {
 
-    @ApiModelProperty(value = "指标面板名")
-    private String panelName;
+    @ApiModelProperty(value = "指标名")
+    private String name;
 
-    @ApiModelProperty(value = "指标面板包括的指标集")
-    private List<Metric> metricList;
+    @ApiModelProperty(value = "指标类型 1：lable 2：多根折线图 3：单根折线图")
+    private Integer type;
 
-    public MetricPanel(String panelName, List<Metric> metricList) {
-        this.panelName = panelName;
-        this.metricList = metricList;
-    }
+    @ApiModelProperty(value = "基础单位")
+    private Integer baseUnit;
 
-    public void setPanelName(String panelName) {
-        this.panelName = panelName;
-    }
+    @ApiModelProperty(value = "展示单位")
+    private Integer displayUnit;
 
-    public void setMetricList(List<Metric> metricList) {
-        this.metricList = metricList;
-    }
+    @ApiModelProperty(value = "lable类型指标值")
+    private Object lableValue;
 
-    public String getPanelName() {
-        return panelName;
-    }
+    @ApiModelProperty(value = "单根折线图类型指标值")
+    private MetricPointLine singleLineChatValue;
 
-    public List<Metric> getMetricList() {
-        return metricList;
-    }
+    @ApiModelProperty(value = "多根折线图类型指标值")
+    private List<MetricPointLine> multiLineChatValue;
 
-    public Metric buildMetric(String metricName, List<MetricPoint> metricPointList) {
-        Metric metric = new Metric(metricName, metricPointList);
-        this.metricList.add(metric);
-        return metric;
-    }
+    @ApiModelProperty(value = "柱状图类型指标值")
+    private List<Pair<Object, Object>> histogramChatValue;
 
 }

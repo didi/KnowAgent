@@ -8,6 +8,8 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 
 import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 public interface KafkaClusterManageServiceExtension {
 
@@ -76,5 +78,23 @@ public interface KafkaClusterManageServiceExtension {
      * @return 返回获取到的给定接收端对应各Kafka Broker节点对应ip & port
      */
     List<Pair<String, Integer>> getBrokerIp2PortPairList(ReceiverDO receiverDO);
+
+    /**
+     * 校验通过给定 kafka producer 参数构建 kafka producer 对象是否可用
+     * @param brokerConfiguration kafka broker 配置参数
+     * @param topic topic 名
+     * @param producerConfiguration kafka producer 配置
+     * @return true：可用 false：不可用
+     */
+    Boolean checkProducerConfigurationValid(String brokerConfiguration, String topic, String producerConfiguration);
+
+    /**
+     * 根据 kafka broker 配置获取 topic 集
+     * @param kafkaClusterBrokerConfiguration kafka broker 配置
+     * @return 返回根据 kafka broker 配置获取到的 topic 集
+     */
+    Set<String> listTopics(String kafkaClusterBrokerConfiguration);
+
+    Properties getKafkaConsumerProperties(String bootstrapServers);
 
 }

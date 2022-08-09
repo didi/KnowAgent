@@ -9,20 +9,16 @@ import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.version.Ag
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.version.AgentVersionPO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentOperationSubTaskManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.operation.task.AgentOperationTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionManageService;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentVersionMapper;
-import com.didichuxing.datachannel.agentmanager.remote.storage.AbstractStorageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.version.AgentVersionManageServiceExtension;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,19 +34,7 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
     private AgentVersionMapper agentVersionDAO;
 
     @Autowired
-    private AbstractStorageService giftStorageService;
-
-    @Autowired
     private AgentManageService agentManageService;
-
-    @Autowired
-    private OperateRecordService operateRecordService;
-
-    @Autowired
-    private AgentOperationSubTaskManageService agentOperationSubTaskManageService;
-
-    @Autowired
-    private AgentOperationTaskManageService agentOperationTaskManageService;
 
     @Override
     @Transactional
@@ -100,8 +84,10 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
 
     @Override
     @Transactional
-    public void deleteAgentVersion(Long agentVersionId, String operator) {
-        handleDeleteAgentVersion(agentVersionId, operator);
+    public void deleteAgentVersion(List<Long> agentVersionIdList, String operator) {
+        for (Long agentVersionId : agentVersionIdList) {
+            handleDeleteAgentVersion(agentVersionId, operator);
+        }
     }
 
     @Override
@@ -137,9 +123,15 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         }
         String fileName = agentVersionDO.getFileName();
         String fileMd5 = agentVersionDO.getFileMd5();
-        String downloadUrl = giftStorageService.getDownloadUrl(fileName, fileMd5);
-        downloadUrl = downloadUrl.substring(0, downloadUrl.indexOf("?"));//去掉？及后续参数列表 原因：夜莺 端 避 sql 注入，不允许？及后续参数列表
+        String downloadUrl = getDownloadUrl(fileName, fileMd5);
         return downloadUrl;
+    }
+
+    private String getDownloadUrl(String fileName, String fileMd5) {
+        /*
+         * TODO：
+         */
+        return null;
     }
 
     /**
@@ -156,7 +148,7 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         AgentVersionDO agentVersionDO = getById(agentVersionId);
         if(null == agentVersionDO) {
             throw new ServiceException(
-                    String.format("待删除 AgentVersion={id=%d}在系统中不存在", agentVersionId),
+                    "删除失败：待删除 Agent 版本在系统中不存在",
                     ErrorCodeEnum.AGENT_VERSION_NOT_EXISTS.getCode()
             );
         }
@@ -166,24 +158,7 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
         List<AgentDO> relationAgentDOList = agentManageService.getAgentsByAgentVersionId(agentVersionId);
         if(CollectionUtils.isNotEmpty(relationAgentDOList)) {
             throw new ServiceException(
-                    String.format("待删除 AgentVersion={id=%d}在系统中存在关联的Agent={%s}，无法删除对应 AgentVersion ", agentVersionId, JSON.toJSONString(relationAgentDOList)),
-                    ErrorCodeEnum.AGENT_VERSION_RELATION_EXISTS.getCode()
-            );
-        }
-        /*
-         * 校验待删除 agentVersion 是否被未完成 AgentOperationSubTask & AgentOperationTask 所引用
-         */
-        boolean agentOperationTaskExistsByAgentVersionId = agentOperationTaskManageService.unfinishedAgentOperationTaskExistsByAgentVersionId(agentVersionId);
-        boolean agentOperationSubTaskExistsByAgentVersionId = agentOperationSubTaskManageService.unfinishedAgentOperationSubTaskExistsByAgentVersionId(agentVersionId);
-        if(agentOperationTaskExistsByAgentVersionId) {
-            throw new ServiceException(
-                    String.format("待删除AgentVersion={id=%d}在系统中存在关联的AgentOperationTask，无法删除对应AgentVersion ", agentVersionId),
-                    ErrorCodeEnum.AGENT_VERSION_RELATION_EXISTS.getCode()
-            );
-        }
-        if(agentOperationSubTaskExistsByAgentVersionId) {
-            throw new ServiceException(
-                    String.format("待删除AgentVersion={id=%d}在系统中存在关联的AgentOperationSubTask，无法删除对应AgentVersion ", agentVersionId),
+                    String.format("删除失败：待删除 Agent 版本在系统中存在%d个关联的 Agent", relationAgentDOList.size()),
                     ErrorCodeEnum.AGENT_VERSION_RELATION_EXISTS.getCode()
             );
         }
@@ -275,7 +250,7 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
      */
     private void uploadAgentFile(AgentVersionDTO agentVersionDTO) throws ServiceException {
         try {
-            if (!giftStorageService.upload(
+            if (upload(
                     agentVersionDTO.getAgentPackageName(),
                     agentVersionDTO.getFileMd5(),
                     agentVersionDTO.getUploadFile())
@@ -291,6 +266,13 @@ public class AgentVersionManageServiceImpl implements AgentVersionManageService 
                     ErrorCodeEnum.FILE_UPLOAD_FAILED.getCode()
             );
         }
+    }
+
+    private boolean upload(String agentPackageName, String fileMd5, MultipartFile uploadFile) {
+        /*
+         * TODO：
+         */
+        return false;
     }
 
     /**

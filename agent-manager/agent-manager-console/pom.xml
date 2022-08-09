@@ -16,7 +16,7 @@
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.6</version>
+        <version>1.9.1</version>
         <configuration>
           <installDirectory>target</installDirectory>
           <workingDirectory>./</workingDirectory>
@@ -28,7 +28,7 @@
               <goal>install-node-and-npm</goal>
             </goals>
             <configuration>
-              <nodeVersion>v14.15.1</nodeVersion>
+              <nodeVersion>v12.20.0</nodeVersion>
               <npmVersion>6.14.8</npmVersion>
               <nodeDownloadRoot>http://npm.taobao.org/mirrors/node/</nodeDownloadRoot>
               <npmDownloadRoot>https://registry.npm.taobao.org/npm/-/</npmDownloadRoot>
@@ -40,6 +40,7 @@
               <goal>npm</goal>
             </goals>
             <configuration>
+              <npmRegistryURL>http://registry.npm.xiaojukeji.com/</npmRegistryURL>
               <arguments>install</arguments>
             </configuration>
           </execution>

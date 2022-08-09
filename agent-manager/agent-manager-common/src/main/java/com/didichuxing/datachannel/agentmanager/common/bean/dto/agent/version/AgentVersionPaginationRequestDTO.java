@@ -27,6 +27,9 @@ public class AgentVersionPaginationRequestDTO extends PaginationRequestDTO {
     @ApiModelProperty(value = "是否升序排序", notes="")
     private Boolean asc;
 
+    @ApiModelProperty(value = "版本描述信息", notes="")
+    private String agentVersionDescription;
+
     public List<String> getAgentVersionList() {
         return agentVersionList;
     }
@@ -73,5 +76,13 @@ public class AgentVersionPaginationRequestDTO extends PaginationRequestDTO {
 
     public void setAsc(Boolean asc) {
         this.asc = asc;
+    }
+
+    public String getAgentVersionDescription() {
+        return agentVersionDescription;
+    }
+
+    public void setAgentVersionDescription(String agentVersionDescription) {
+        this.agentVersionDescription = agentVersionDescription;
     }
 }

@@ -1,0 +1,286 @@
+@content-width: 850px;
+
+.fixed-step {
+  &.dcloud-steps {
+    width: @content-width;
+    margin: 0 auto;
+    background-color: white;
+    padding: 24px 0px 0px 0px;
+    position: relative;
+    right: 15px;
+  }
+}
+
+.collect-task {
+  .dcloud-form-item-label {
+    text-align: left;
+  }
+}
+
+.p-steps-form {
+  min-width: 1024px;
+  position: relative;
+  margin: 20px 20px 0 20px;
+  background-color: #fff;
+
+  &-wrapper {
+    width: 100%;
+  }
+
+  .dcloud-steps-item-content {
+    width: 120px;
+  }
+
+  &-content-wrapper {
+    height: calc(100vh - 180px);
+    overflow: scroll;
+  }
+
+  &-content {
+    width: @content-width;
+    padding-top: 60px;
+    margin: 0 auto;
+
+    .dcloud-form-item {
+      margin-bottom: 6px;
+    }
+
+    .dcloud-table-tbody>tr>td {
+      padding: 8px 16px 0;
+    }
+
+    &-item {
+      display: none;
+
+      &-active {
+        display: block;
+      }
+    }
+  }
+
+  &-action {
+    width: @content-width;
+    margin: 0 auto;
+    padding: 20px 0;
+
+    button+button {
+      margin-left: 8px;
+    }
+  }
+
+  .slice-pre {}
+}
+
+.logFileList {
+  width: 430px;
+  height: 150px;
+  overflow: auto;
+  border: 1px solid #d9d9d9;
+
+  &_error {
+    border: 1px solid red;
+    color: red;
+    padding-left: 10px;
+  }
+
+  li {
+    line-height: normal;
+    margin: 5px 0;
+    padding: 0 5px;
+  }
+}
+
+.set-up {
+  .w-100 {
+    width: 100px;
+  }
+
+  .w-200 {
+    width: 180px;
+  }
+
+  .w-300 {
+    width: 300px;
+  }
+
+  .dcloud-row {
+    flex-wrap: nowrap;
+  }
+
+  .pre-content-text {
+    height: 200px;
+  }
+}
+
+.collect-log-config {
+  .form-row {
+    height: 64px;
+  }
+}
+
+.collection-object {
+  .form-row {
+    height: 64px;
+  }
+
+  .col-radio-host {
+    width: 400px;
+    margin-bottom: -10px;
+
+    .radio-host-name {
+      span {
+        float: left;
+      }
+
+      .ant-radio {
+        top: 10px;
+      }
+
+      .radio-host-span {
+        width: 60px;
+        float: left;
+        line-height: 35px;
+      }
+
+      .radio-form {
+        float: left;
+      }
+    }
+  }
+}
+
+.log-repeat-form {
+  .col-unit-log {
+    .ant-form-item {
+      margin-bottom: 0px;
+    }
+  }
+
+  .col-time-stramp {
+    .ant-row {
+      height: 30px;
+    }
+  }
+}
+
+.loopaddlog-filetype {
+  max-height: 750px;
+  overflow-y: auto;
+}
+
+.steps-form {
+  .p-steps-edit {
+    width: @content-width;
+
+    &_1 {
+      padding-right: 106px;
+    }
+
+    &_2 {
+      padding-right: 135px;
+    }
+
+    .edit-btns {
+      float: right;
+    }
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.file_list {
+  width: 320px;
+  height: 150px;
+  overflow: auto;
+  border: 1px solid #d9d9d9;
+  margin-left: 26.7%;
+
+  li {
+    line-height: normal;
+    margin: 5px 0;
+    padding: 0 5px;
+  }
+}
+
+.slicePreview {
+  overflow: auto;
+  max-height: 200px;
+  height: 200px;
+  padding: 0 5px;
+  position: relative;
+  top: 5px;
+
+  ul {
+    width: 320px;
+    height: 150px;
+    overflow: auto;
+    border: 1px solid #d9d9d9;
+    margin-left: 26.7%;
+
+    li {
+      line-height: normal;
+      margin: 5px 0;
+      padding: 0 5px;
+    }
+  }
+
+  span {
+    border-bottom: 1px solid #cccccc;
+    display: block;
+    padding: 5px;
+    white-space: pre-wrap;
+    // width: 100px;
+    // word-break: normal;
+  }
+}
+
+.pre-content {
+  margin-bottom: 10px;
+
+  .right-text {
+    text-align: right;
+    margin-bottom: 10px;
+    padding-right: 8px;
+
+    .btn {
+      margin-right: -92px;
+    }
+  }
+
+  .pre-content-text {
+    width: 600px;
+    height: 300px;
+  }
+}
+
+.pre-content-label {
+  display: inline-block;
+  margin: 0 8px 0 158px;
+  position: relative;
+  bottom: 280px;
+}
+
+.collectDelayWrap {
+  display: flex;
+}
+
+.collectDelayThresholdMs {
+  display: flex;
+  margin-left: 60px;
+  align-items: center;
+  position: absolute;
+  top: 27px;
+
+  .step4_collectDelayThresholdMs {
+    display: inline-block;
+    margin: 0 10px;
+  }
+
+  .delay-text {}
+}
+
+.dcloud-collapse-content>.dcloud-collapse-content-box {
+  padding: 0;
+}

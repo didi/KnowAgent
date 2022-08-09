@@ -1,8 +1,12 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask;
 
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
 
+@Data
 public class LogCollectTaskPaginationQueryConditionDO {
 
     /**
@@ -51,107 +55,19 @@ public class LogCollectTaskPaginationQueryConditionDO {
      * 是否升序
      */
     private Boolean asc;
+
     /**
-     * 项目id
+     * 查询关键字
      */
-    private Long projectId;
+    private String queryTerm;
+
+    /**
+     * 日志采集任务状态 0：暂停 1：运行 2：已完成（状态2仅针对 "按指定时间范围采集" 类型）
+     */
+    private List<Integer> logCollectTaskStatusList;
 
     public LogCollectTaskPaginationQueryConditionDO() {
+
     }
 
-    public String getLogCollectTaskName() {
-        return logCollectTaskName;
-    }
-
-    public void setLogCollectTaskName(String logCollectTaskName) {
-        this.logCollectTaskName = logCollectTaskName;
-    }
-
-    public Long getLogCollectTaskId() {
-        return logCollectTaskId;
-    }
-
-    public void setLogCollectTaskId(Long logCollectTaskId) {
-        this.logCollectTaskId = logCollectTaskId;
-    }
-
-    public List<Integer> getLogCollectTaskTypeList() {
-        return logCollectTaskTypeList;
-    }
-
-    public void setLogCollectTaskTypeList(List<Integer> logCollectTaskTypeList) {
-        this.logCollectTaskTypeList = logCollectTaskTypeList;
-    }
-
-    public List<Integer> getLogCollectTaskHealthLevelList() {
-        return logCollectTaskHealthLevelList;
-    }
-
-    public void setLogCollectTaskHealthLevelList(List<Integer> logCollectTaskHealthLevelList) {
-        this.logCollectTaskHealthLevelList = logCollectTaskHealthLevelList;
-    }
-
-    public List<Long> getServiceIdList() {
-        return serviceIdList;
-    }
-
-    public void setServiceIdList(List<Long> serviceIdList) {
-        this.serviceIdList = serviceIdList;
-    }
-
-    public Date getCreateTimeStart() {
-        return createTimeStart;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public void setCreateTimeStart(Date createTimeStart) {
-        this.createTimeStart = createTimeStart;
-    }
-
-    public Date getCreateTimeEnd() {
-        return createTimeEnd;
-    }
-
-    public void setCreateTimeEnd(Date createTimeEnd) {
-        this.createTimeEnd = createTimeEnd;
-    }
-
-    public Integer getLimitFrom() {
-        return limitFrom;
-    }
-
-    public void setLimitFrom(Integer limitFrom) {
-        this.limitFrom = limitFrom;
-    }
-
-    public Integer getLimitSize() {
-        return limitSize;
-    }
-
-    public void setLimitSize(Integer limitSize) {
-        this.limitSize = limitSize;
-    }
-
-    public String getSortColumn() {
-        return sortColumn;
-    }
-
-    public void setSortColumn(String sortColumn) {
-        this.sortColumn = sortColumn;
-    }
-
-    public Boolean getAsc() {
-        return asc;
-    }
-
-    public void setAsc(Boolean asc) {
-        this.asc = asc;
-    }
 }

@@ -15,13 +15,57 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- *
- *
- * @author d06679
- * @date 2017/7/26
- */
 public class DateUtils {
+
+    /**
+     * 根据给定时间戳，将其转化为分钟为单位时间戳
+     * @param timestamp 毫秒时间戳
+     * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
+     */
+    public static Long getMinuteUnitTimeStamp(Long timestamp) {
+        return getMinuteUnitTimeStamp(new Date(timestamp));
+    }
+
+    /**
+     * 根据给定日期/时间，将其转化为分钟为单位时间戳
+     * @param time 待转化日期/时间
+     * @return 返回根据给定日期/时间，将其转化为分钟为单位时间戳
+     */
+    public static Long getMinuteUnitTimeStamp(Date time) {
+        if (time == null) {
+            return null;
+        }
+        time = org.apache.commons.lang3.time.DateUtils.setSeconds(time, 0);
+        time = org.apache.commons.lang3.time.DateUtils.setMilliseconds(time, 0);
+        return time.getTime();
+    }
+
+    /**
+     * 根据给定时间戳，将其转化为分钟为单位时间戳
+     * @param time 毫秒时间戳
+     * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
+     */
+    public static Long getHourUnitTimeStamp(Date time) {
+
+        if (time == null) {
+            return null;
+        }
+
+        time = org.apache.commons.lang3.time.DateUtils.setMinutes(time, 0);
+        time = org.apache.commons.lang3.time.DateUtils.setSeconds(time, 0);
+        time = org.apache.commons.lang3.time.DateUtils.setMilliseconds(time, 0);
+        return time.getTime();
+    }
+
+    /**
+     * 根据给定时间戳，将其转化为分钟为单位时间戳
+     * @param time 毫秒时间戳
+     * @return 返回根据给定时间戳，将其转化为分钟为单位时间戳
+     */
+    public static Long getHourUnitTimeStamp(Long timestamp) {
+        Date time = new Date(timestamp);
+        return getHourUnitTimeStamp(time);
+    }
 
     public static Long date2Long(Date time, String formatStr) {
 
@@ -218,7 +262,7 @@ public class DateUtils {
     }
 
     public static String getDateTimeStr(long time) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         return sdf.format(new Date(time));
     }
 
@@ -313,4 +357,13 @@ public class DateUtils {
         }
         throw new ServiceException("不支持的时间类型：" + value.getClass().getCanonicalName(), ErrorCodeEnum.ILLEGAL_PARAMS.getCode());
     }
+
+    public static Long getDayUnitTimeStamp(Date current) {
+        return getZeroDate(current).getTime();
+    }
+
+    public static Long getDayUnitTimeStamp(Long time) {
+        return getDayUnitTimeStamp(new Date(time));
+    }
+
 }

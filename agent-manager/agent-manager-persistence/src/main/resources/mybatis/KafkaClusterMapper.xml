@@ -12,10 +12,11 @@
     <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
     <result column="agent_error_logs_send_topic" property="agentErrorLogsTopic" jdbcType="VARCHAR" />
     <result column="agent_metrics_send_topic" property="agentMetricsTopic" jdbcType="VARCHAR" />
+    <result column="receiver_type" property="receiverType" jdbcType="TINYINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, kafka_cluster_name, kafka_cluster_broker_configuration, kafka_cluster_producer_init_configuration, kafka_cluster_id,
-    operator, agent_metrics_send_topic, agent_error_logs_send_topic, create_time, modify_time
+    operator, agent_metrics_send_topic, agent_error_logs_send_topic, create_time, modify_time, receiver_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -36,13 +37,16 @@
     <where>
       1 = 1
       <if test="kafkaClusterName != null">
-        and kafka_cluster_name like concat('%',#{kafkaClusterName},'%')
+          and kafka_cluster_name like concat('%',#{kafkaClusterName},'%')
+      </if>
+      <if test="kafkaClusterBrokerConfiguration != null">
+        and kafka_cluster_broker_configuration like concat('%',#{kafkaClusterBrokerConfiguration},'%')
       </if>
       <if test="createTimeStart != null">
-        and create_time >= #{createTimeStart}
+          and create_time >= #{createTimeStart}
       </if>
       <if test="createTimeEnd != null">
-        and #{createTimeEnd} >= create_time
+          and #{createTimeEnd} >= create_time
       </if>
     </where>
     order by
@@ -74,6 +78,9 @@
       <if test="kafkaClusterName != null">
         and kafka_cluster_name like concat('%',#{kafkaClusterName},'%')
       </if>
+      <if test="kafkaClusterBrokerConfiguration != null">
+        and kafka_cluster_broker_configuration like concat('%',#{kafkaClusterBrokerConfiguration},'%')
+      </if>
       <if test="createTimeStart != null">
         and create_time >= #{createTimeStart}
       </if>
@@ -96,11 +103,13 @@
   <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO" useGeneratedKeys="true" keyProperty="id">
     insert into tb_kafka_cluster (id, kafka_cluster_name, kafka_cluster_broker_configuration, 
       kafka_cluster_producer_init_configuration, kafka_cluster_id, operator,agent_metrics_send_topic, agent_error_logs_send_topic,
-      create_time, modify_time)
-    values (#{id,jdbcType=BIGINT}, #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaClusterBrokerConfiguration,jdbcType=VARCHAR}, 
+      create_time, modify_time, receiver_type)
+    values (
+            #{id,jdbcType=BIGINT}, #{kafkaClusterName,jdbcType=VARCHAR}, #{kafkaClusterBrokerConfiguration,jdbcType=VARCHAR},
       #{kafkaClusterProducerInitConfiguration,jdbcType=VARCHAR}, #{kafkaClusterId, jdbcType=BIGINT}, #{operator,jdbcType=VARCHAR},
       #{agentMetricsTopic,jdbcType=VARCHAR}, #{agentErrorLogsTopic,jdbcType=VARCHAR},
-      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{receiverType,jdbcType=TINYINT}
+      )
   </insert>
 
   <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.receiver.KafkaClusterPO" >
@@ -113,7 +122,8 @@
       agent_metrics_send_topic = #{agentMetricsTopic,jdbcType=VARCHAR},
       agent_error_logs_send_topic = #{agentErrorLogsTopic,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      receiver_type = #{receiverType,jdbcType=TINYINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

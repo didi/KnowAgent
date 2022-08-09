@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.optrecord.OperateRecordDAO">
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.OperateRecordDAO">
     <resultMap id="BaseResultMap"
                type="com.didichuxing.datachannel.agentmanager.common.bean.po.operaterecord.OperateRecordPO">
         <result column="id"             jdbcType="INTEGER" property="id"/>

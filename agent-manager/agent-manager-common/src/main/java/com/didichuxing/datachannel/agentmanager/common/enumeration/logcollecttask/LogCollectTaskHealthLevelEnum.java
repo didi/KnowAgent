@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask;
 
+import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
+
 /**
  * @author huqidong
  * @date 2020-09-21
@@ -16,6 +18,15 @@ public enum LogCollectTaskHealthLevelEnum {
     LogCollectTaskHealthLevelEnum(Integer code, String description) {
         this.code = code;
         this.description = description;
+    }
+
+    public static LogCollectTaskHealthLevelEnum fromMetricCode(Integer metricCode) {
+        for (LogCollectTaskHealthLevelEnum value : LogCollectTaskHealthLevelEnum.values()) {
+            if (value.code.equals(metricCode)) {
+                return value;
+            }
+        }
+        return null;
     }
 
     public Integer getCode() {

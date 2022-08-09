@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 public class ReceiverPaginationQueryConditionDO {
@@ -34,6 +36,24 @@ public class ReceiverPaginationQueryConditionDO {
      * 是否升序
      */
     private Boolean asc;
+
+    /**
+     * 查询关键字
+     */
+    private String queryTerm;
+
+    /**
+     * kafka集群broker配置
+     */
+    private String kafkaClusterBrokerConfiguration;
+
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public void setQueryTerm(String queryTerm) {
+        this.queryTerm = queryTerm;
+    }
 
     public ReceiverPaginationQueryConditionDO() {
     }
@@ -92,5 +112,13 @@ public class ReceiverPaginationQueryConditionDO {
 
     public void setAsc(Boolean asc) {
         this.asc = asc;
+    }
+
+    public String getKafkaClusterBrokerConfiguration() {
+        return kafkaClusterBrokerConfiguration;
+    }
+
+    public void setKafkaClusterBrokerConfiguration(String kafkaClusterBrokerConfiguration) {
+        this.kafkaClusterBrokerConfiguration = kafkaClusterBrokerConfiguration;
     }
 }

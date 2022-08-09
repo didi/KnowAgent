@@ -26,12 +26,12 @@ public class NetCardInfo {
     /**
      * 每秒下行流量（单位：字节）
      */
-    private PeriodStatistics<Long> systemNetCardsReceiveBytesPs;
+    private PeriodStatistics systemNetCardsReceiveBytesPs;
 
     /**
      * 每秒上行流量（单位：字节）
      */
-    private PeriodStatistics<Long> systemNetCardsSendBytesPs;
+    private PeriodStatistics systemNetCardsSendBytesPs;
 
     public String getSystemNetCardsBandMacAddress() {
         return systemNetCardsBandMacAddress;
@@ -57,19 +57,19 @@ public class NetCardInfo {
         this.systemNetCardsBandWidth = systemNetCardsBandWidth;
     }
 
-    public PeriodStatistics<Long> getSystemNetCardsReceiveBytesPs() {
+    public PeriodStatistics getSystemNetCardsReceiveBytesPs() {
         return systemNetCardsReceiveBytesPs;
     }
 
-    public void setSystemNetCardsReceiveBytesPs(PeriodStatistics<Long> systemNetCardsReceiveBytesPs) {
+    public void setSystemNetCardsReceiveBytesPs(PeriodStatistics systemNetCardsReceiveBytesPs) {
         this.systemNetCardsReceiveBytesPs = systemNetCardsReceiveBytesPs;
     }
 
-    public PeriodStatistics<Long> getSystemNetCardsSendBytesPs() {
+    public PeriodStatistics getSystemNetCardsSendBytesPs() {
         return systemNetCardsSendBytesPs;
     }
 
-    public void setSystemNetCardsSendBytesPs(PeriodStatistics<Long> systemNetCardsSendBytesPs) {
+    public void setSystemNetCardsSendBytesPs(PeriodStatistics systemNetCardsSendBytesPs) {
         this.systemNetCardsSendBytesPs = systemNetCardsSendBytesPs;
     }
 }

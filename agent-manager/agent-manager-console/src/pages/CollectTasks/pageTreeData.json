@@ -1,0 +1,459 @@
+{
+  "grid": "{gutter:10,grid:24,num:1}",
+  "dataInfo": {},
+  "name": "0",
+  "path": "",
+  "title": "0",
+  "key": "0",
+  "componentName": "contentComponent",
+  "children": [
+    {
+      "grid": {
+        "gutter": 10,
+        "grid": 24,
+        "num": 1
+      },
+      "dataInfo": {},
+      "name": "0-1",
+      "path": "",
+      "title": "0-1",
+      "key": "0-1",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": {
+            "gutter": 10,
+            "grid": 24
+          },
+          "dataInfo": {
+            "bordered": false,
+            "loading": false,
+            "columns": [
+              {
+                "title": "任务ID",
+                "dataIndex": "logCollectTaskId",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "operationName": "",
+                    "operationKey": "1",
+                    "baseData": "{}",
+                    "triggerType": "confirm",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "customPageName": "showDiagnosisContent"
+                  }
+                ],
+                "sorter": false,
+                "valueType": "option"
+              },
+              {
+                "title": "任务名",
+                "dataIndex": "logCollectTaskName",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": []
+              },
+              {
+                "title": "采集应用",
+                "dataIndex": "serviceList_bak",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": []
+              },
+              {
+                "title": "接收端集群",
+                "dataIndex": "receiverVO_bak",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "sorter": false
+              },
+              {
+                "title": "接收端Topic",
+                "dataIndex": "receiverTopic",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "sorter": false
+              },
+              {
+                "title": "采集任务状态",
+                "dataIndex": "logCollectTaskStatus",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "type": "custom",
+                    "renderCustomName": "logCollectTaskStatus"
+                  }
+                ],
+                "sorter": false
+              },
+              {
+                "title": "健康度",
+                "dataIndex": "logCollectTaskHealthLevel",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "operationName": "",
+                    "type": "custom",
+                    "operationKey": "1",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "drawer",
+                    "containerConfig": {
+                      "title": "HealthMap",
+                      "footer": false,
+                      "customTitle": true,
+                      "width": 1420
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "DiagnosisContent",
+                    "renderCustomName": "logCollectTaskHealthLevel"
+                  }
+                ],
+                "sorter": false,
+                "valueType": "option"
+              },
+              {
+                "title": "创建时间",
+                "dataIndex": "logCollectTaskFinishTime",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "sorter": true,
+                "valueType": "logCollectTaskCreateTime"
+              },
+              {
+                "title": "操作",
+                "dataIndex": "options",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "operationName": "编辑",
+                    "operationKey": "edit",
+                    "type": "icon-bianji",
+                    "baseData": "{\"XFormProps\":{\"formMap\":[{\"key\":\"name\",\"label\":\"姓名\",\"type\":\"input\",\"attrs\":{\"placeholder\":\"请输入姓名\"}},{\"key\":\"age\",\"label\":\"年龄\",\"type\":\"input\"}],\"formData\":{}},\"proFormType\":\"modal\",\"needSubmitter\":true,\"submitterPosition\":\"right\",\"isCustomContent\":true,\"formModalMap\":[{\"grid\":\"{gutter:10,grid:24,num:1}\",\"dataInfo\":{},\"name\":\"0\",\"path\":\"\",\"title\":\"0\",\"key\":\"0\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24,\"num\":1},\"dataInfo\":{},\"name\":\"0-1\",\"path\":\"\",\"title\":\"0-1\",\"key\":\"0-1\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24},\"name\":\"0-1-0\",\"path\":\"\",\"title\":\"ProTableProject\",\"key\":\"0-1-0\",\"componentName\":\"ProTableProject\",\"children\":[],\"lelf\":2,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":true}],\"lelf\":\"1\",\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":false}],\"lelf\":0,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{}}],\"customContentFormModal\":\"{\\\"grid\\\":\\\"{gutter:10,grid:24,num:1}\\\",\\\"dataInfo\\\":{},\\\"name\\\":\\\"0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0\\\",\\\"key\\\":\\\"0\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24,\\\"num\\\":1},\\\"dataInfo\\\":{},\\\"name\\\":\\\"0-1\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0-1\\\",\\\"key\\\":\\\"0-1\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24},\\\"name\\\":\\\"0-1-0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"ProTableProject\\\",\\\"key\\\":\\\"0-1-0\\\",\\\"componentName\\\":\\\"ProTableProject\\\",\\\"children\\\":[],\\\"lelf\\\":2,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":true}],\\\"lelf\\\":\\\"1\\\",\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":false}],\\\"lelf\\\":0,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{}}\"}",
+                    "triggerType": "confirm",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerConfig": {
+                      "title": "编辑暂定"
+                    },
+                    "customPageName": "editCollectTask",
+                    "customRenderConfirm": 1
+                  },
+                  {
+                    "operationName": "黄金指标",
+                    "operationKey": "gold",
+                    "type": "icon-huangjinzhibiao",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "黄金指标",
+                      "content": "黄金指标",
+                      "api": "/api",
+                      "methods": "get",
+                      "params": "s"
+                    },
+                    "containerType": "drawer",
+                    "containerConfig": {
+                      "title": "HealthMap",
+                      "footer": false,
+                      "width": "1080px",
+                      "customTitle": true
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "Containers"
+                  },
+                  {
+                    "operationName": "删除",
+                    "operationKey": "delete",
+                    "baseData": "{\"XFormProps\":{\"formMap\":[{\"key\":\"name\",\"label\":\"姓名\",\"type\":\"input\",\"attrs\":{\"placeholder\":\"请输入姓名\"}},{\"key\":\"age\",\"label\":\"年龄\",\"type\":\"input\"}],\"formData\":{}},\"proFormType\":\"modal\",\"needSubmitter\":true,\"submitterPosition\":\"right\",\"isCustomContent\":true,\"formModalMap\":[{\"grid\":\"{gutter:10,grid:24,num:1}\",\"dataInfo\":{},\"name\":\"0\",\"path\":\"\",\"title\":\"0\",\"key\":\"0\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24,\"num\":1},\"dataInfo\":{},\"name\":\"0-1\",\"path\":\"\",\"title\":\"0-1\",\"key\":\"0-1\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24},\"name\":\"0-1-0\",\"path\":\"\",\"title\":\"ProTableProject\",\"key\":\"0-1-0\",\"componentName\":\"ProTableProject\",\"children\":[],\"lelf\":2,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":true}],\"lelf\":\"1\",\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":false}],\"lelf\":0,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{}}],\"customContentFormModal\":\"{\\\"grid\\\":\\\"{gutter:10,grid:24,num:1}\\\",\\\"dataInfo\\\":{},\\\"name\\\":\\\"0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0\\\",\\\"key\\\":\\\"0\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24,\\\"num\\\":1},\\\"dataInfo\\\":{},\\\"name\\\":\\\"0-1\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0-1\\\",\\\"key\\\":\\\"0-1\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24},\\\"name\\\":\\\"0-1-0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"ProTableProject\\\",\\\"key\\\":\\\"0-1-0\\\",\\\"componentName\\\":\\\"ProTableProject\\\",\\\"children\\\":[],\\\"lelf\\\":2,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":true}],\\\"lelf\\\":\\\"1\\\",\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":false}],\\\"lelf\\\":0,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{}}\"}",
+                    "triggerType": "confirm",
+                    "optConfig": {
+                      "title": "删除",
+                      "content": "删除",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "customPageName": "deleteHostClick"
+                  },
+                  {
+                    "operationName": "暂停",
+                    "operationKey": "pause",
+                    "baseData": "{}",
+                    "triggerType": "confirm",
+                    "optConfig": {
+                      "title": "暂停",
+                      "content": "暂停",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "customPageName": "switchTask"
+                  }
+                ],
+                "valueType": "option",
+                "fixed": "right",
+                "width": "150px"
+              }
+            ],
+            "queryFormArray": [
+              {
+                "type": "input",
+                "title": "采集任务名",
+                "dataIndex": "logCollectTaskName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "select",
+                "title": "采集应用",
+                "dataIndex": "service",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "servicesList"
+              },
+              {
+                "type": "select",
+                "title": "采集任务状态",
+                "dataIndex": "logCollectTaskStatusList",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "mode": "multiple",
+                  "allowClear": true,
+                  "showArrow": true,
+                  "maxTagCount": "responsive",
+                  "style": {
+                    "width": "180px"
+                  }
+                },
+                "option": "collectStatusList"
+              },
+              {
+                "type": "select",
+                "title": "健康度",
+                "dataIndex": "logCollectTaskHealthLevelList",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "mode": "multiple",
+                  "allowClear": true,
+                  "showArrow": true,
+                  "maxTagCount": "responsive",
+                  "style": {
+                    "width": "180px"
+                  }
+                },
+                "option": "healthList"
+              },
+              {
+                "type": "dateRangePicker",
+                "title": "创建时间",
+                "placeholder": [
+                  "开始时间",
+                  "结束时间"
+                ],
+                "dataIndex": "locCollectTaskCreateTime",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128
+                }
+              }
+            ],
+            "dataSourceUrlConfig": {
+              "api": "/api/v1/normal/collect-task/paging",
+              "defaultParams": "{\"pageNo\":1,\"pageSize\":20,\"serviceIdList\":[],\"logCollectTaskTypeList\":[],\"logCollectTaskHealthLevelList\":[],\"logCollectTaskId\":\"\",\"logCollectTaskName\":\"\",\"locCollectTaskCreateTimeEnd\":\"\",\"locCollectTaskCreateTimeStart\":\"\"}",
+              "methods": "post",
+              "params": "function(params){\n  if(params.locCollectTaskCreateTime&&params.locCollectTaskCreateTime.length>0){\n    params.locCollectTaskCreateTimeStart = new Date(params.agentVersionCreateTimeStart[0]).getTime();\n    params.locCollectTaskCreateTimeStart = new Date(params.agentVersionCreateTimeStart[1]).getTime();\n  }\n if(params.service){\n     params.serviceIdList.push(params.service)\n}\n  if(params.taskId || params.taskId === 0){\n     params.queryTerm=params.taskId\n}\n return params\n}",
+              "resCallback": "function(data){\n  data?.resultSet.forEach(item=>{\n  \tlet serviceList = [];\n  \titem.serviceList.forEach(i=>{\n  \t\tserviceList.push(i.servicename)\n  \t})\n  \titem.serviceList_bak=serviceList;\n    item.receiverVO_bak=item.receiverVO.kafkaClusterName\n  })\n  return {...data,bizData:data.resultSet}\n}"
+            },
+            "isCustomPg": true,
+            "paginationProps": {
+              "show": true,
+              "current": 1,
+              "pageSize": 10,
+              "total": 100
+            },
+            "size": "default",
+            "expandable": false,
+            "tableTitle": "高级表格",
+            "tooltip": "高级表格 tooltip",
+            "showHeader": true,
+            "footer": false,
+            "rowSelection": false,
+            "scroll": {
+              "x": "max-content"
+            },
+            "hasData": true,
+            "toolBarRender": true,
+            "tableFunction": {
+              "reload": false,
+              "search": false,
+              "export": false,
+              "import": false,
+              "tableId": "collect_test",
+              "tableScreen": true,
+              "tableCustomColumns": true,
+              "custom": false,
+              "tableHeaderBtns": [
+                {
+                  "buttonText": "新增任务",
+                  "buttonType": "primary",
+                  "containerType": "custom",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customPageName": "addCollectTask"
+                }
+              ]
+            },
+            "search": {
+              "showQueryForm": true,
+              "searchText": "查询",
+              "resetText": "重置",
+              "showOptionBtns": true,
+              "colConfig": 6,
+              "style": {
+                "backgroundColor": "#F8F9FA"
+              }
+            },
+            "options": {
+              "show": true,
+              "density": true,
+              "fullScreen": true,
+              "setting": true
+            }
+          },
+          "name": "0-1-0",
+          "path": "",
+          "title": "ProTableProject",
+          "key": "0-1-0",
+          "componentName": "ProTableProject",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": {
+            "padding": "24px",
+            "backgroundColor": "#FFFFFF"
+          },
+          "checked": true
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent管理",
+      "pageName": "agent_admin",
+      "tplName": "",
+      "pageKey": "agent_admin",
+      "checked": false
+    }
+  ],
+  "lelf": 0,
+  "version": "",
+  "nodeTitle": "",
+  "nodeStyle": {},
+  "containerStyle": {},
+  "chilrenPages": [],
+  "pageDesc": "Agent管理",
+  "pageName": "agent_list",
+  "tplName": "agent_admin",
+  "pageKey": "agent_list"
+}

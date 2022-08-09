@@ -1,5 +1,7 @@
 package com.didichuxing.datachannel.agentmanager.common.bean.domain.host;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +38,11 @@ public class HostPaginationQueryConditionDO {
     private List<Long> serviceIdList;
 
     /**
+     * 所属机房集
+     */
+    private List<String> machineZoneList;
+
+    /**
      * 创建时间开始查询时间
      */
     private Date createTimeStart;
@@ -64,10 +71,19 @@ public class HostPaginationQueryConditionDO {
      * 是否升序排序
      */
     private Boolean asc;
+
     /**
-     * 项目id
+     * 查询关键字
      */
-    private Long projectId;
+    private String queryTerm;
+
+    public String getQueryTerm() {
+        return queryTerm;
+    }
+
+    public void setQueryTerm(String queryTerm) {
+        this.queryTerm = queryTerm;
+    }
 
     public String getHostName() {
         return hostName;
@@ -117,14 +133,6 @@ public class HostPaginationQueryConditionDO {
         this.serviceIdList = serviceIdList;
     }
 
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
     public Date getCreateTimeStart() {
         return createTimeStart;
     }
@@ -171,5 +179,13 @@ public class HostPaginationQueryConditionDO {
 
     public void setAsc(Boolean asc) {
         this.asc = asc;
+    }
+
+    public List<String> getMachineZoneList() {
+        return machineZoneList;
+    }
+
+    public void setMachineZoneList(List<String> machineZoneList) {
+        this.machineZoneList = machineZoneList;
     }
 }

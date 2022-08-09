@@ -14,38 +14,25 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttas
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskPaginationRecordDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServiceDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.DirectoryLogCollectPathCreateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.DirectoryLogCollectPathUpdateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.FileLogCollectPathCreateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.FileLogCollectPathUpdateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskCreateDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskPaginationRequestDTO;
-import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.LogCollectTaskUpdateDTO;
+import com.didichuxing.datachannel.agentmanager.common.bean.dto.logcollecttask.web.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.host.HostFilterRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.DirectoryLogCollectPathVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.FileLogCollectPathVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.FileNameSuffixMatchRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskPaginationRecordVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogCollectTaskVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogContentFilterRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.LogSliceRuleVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPanelGroup;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.*;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.receiver.ReceiverVO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.service.ServiceVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.constant.LogCollectTaskConstant;
-import com.didichuxing.datachannel.agentmanager.common.constant.ProjectConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskStatusEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
-import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
+import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -59,10 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.didichuxing.datachannel.agentmanager.common.constant.PermissionConstant.*;
 
@@ -84,7 +68,10 @@ public class NormalLogCollectTaskController {
     private LogCollectTaskHealthManageService logCollectTaskHealthManageService;
 
     @Autowired
-    private HostManageService hostManageService;
+    private LogCollectTaskManageServiceExtension logCollectTaskManageServiceExtension;
+
+    @Autowired
+    private AgentManageServiceExtension agentManageServiceExtension;
 
     @ApiOperation(value = "新增日志采集任务", notes = "")
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -105,29 +92,35 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除日志采集任务", notes = "")
-    @RequestMapping(value = "/{logCollectTaskId}", method = RequestMethod.DELETE)
+    @ApiOperation(value = "批量删除采集任务 入参为待删除采集任务id集（逗号分割）0：删除成功 10000：参数错误 28000：待删除 LogCollectTask 不存在", notes = "")
+    @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
-    @CheckPermission(permission = AGENT_TASK_DELETE)
-    public Result deleteLogCollectTask(@PathVariable Long logCollectTaskId) {
-        logCollectTaskManageService.deleteLogCollectTask(logCollectTaskId, SpringTool.getUserName());
+    public Result deleteLogCollectTasks(@PathVariable String ids) {
+        String[] idArray = ids.split(",");
+        if(null != idArray && idArray.length != 0) {
+            List<Long> logCollectTaskIdList = new ArrayList<>(idArray.length);
+            for (String id : idArray) {
+                logCollectTaskIdList.add(Long.valueOf(id));
+            }
+            logCollectTaskManageService.deleteLogCollectTasks(logCollectTaskIdList, SpringTool.getUserName());
+        }
         return Result.buildSucc();
     }
 
     @ApiOperation(value = "查询日志采集任务列表", notes = "")
     @RequestMapping(value = "/paging", method = RequestMethod.POST)
     @ResponseBody
-    // @CheckPermission(permission = AGENT_TASK_LIST)
-    public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto, HttpServletRequest httpServletRequest) {
-        String projectIdStr = httpServletRequest.getHeader(ProjectConstant.PROJECT_ID_KEY_IN_HTTP_REQUEST_HEADER);
-        Long projectId = null;
-        if (StringUtils.isNotBlank(projectIdStr)) {
-            projectId = Long.valueOf(projectIdStr);
-        }
+    public Result<PaginationResult<LogCollectTaskPaginationRecordVO>> listLogCollectTasks(@RequestBody LogCollectTaskPaginationRequestDTO dto) {
         LogCollectTaskPaginationQueryConditionDO logCollectTaskPaginationQueryConditionDO = LogCollectTaskPaginationRequestDTO2LogCollectTaskPaginationQueryConditionDO(dto);
-        logCollectTaskPaginationQueryConditionDO.setProjectId(projectId);
-        List<LogCollectTaskPaginationRecordVO> logCollectTaskPaginationRecordVOList = logCollectTaskPaginationRecordDOList2LogCollectTaskPaginationRecordVOList(logCollectTaskManageService.paginationQueryByConditon(logCollectTaskPaginationQueryConditionDO));
-        PaginationResult<LogCollectTaskPaginationRecordVO> paginationResult = new PaginationResult<>(logCollectTaskPaginationRecordVOList, logCollectTaskManageService.queryCountByCondition(logCollectTaskPaginationQueryConditionDO), dto.getPageNo(), dto.getPageSize());
+        List<LogCollectTaskPaginationRecordVO> logCollectTaskPaginationRecordVOList = logCollectTaskPaginationRecordDOList2LogCollectTaskPaginationRecordVOList(
+                logCollectTaskManageService.paginationQueryByConditon(logCollectTaskPaginationQueryConditionDO)
+        );
+        PaginationResult<LogCollectTaskPaginationRecordVO> paginationResult = new PaginationResult<>(
+                logCollectTaskPaginationRecordVOList,
+                logCollectTaskManageService.queryCountByCondition(logCollectTaskPaginationQueryConditionDO),
+                dto.getPageNo(),
+                dto.getPageSize()
+        );
         return Result.buildSucc(paginationResult);
     }
 
@@ -150,11 +143,62 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "根据给定LogCollectTask对象id，获取给定时间范围（startTime ~ endTime）内的LogCollectTask运行指标集", notes = "")
-    @RequestMapping(value = "/{logCollectTaskId}/metrics/{startTime}/{endTime}", method = RequestMethod.GET)
+    @ApiOperation(value = "获取系统全量日志采集任务", notes = "")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
-    public Result<List<MetricPanelGroup>> listLogCollectTaskMetrics(@PathVariable Long logCollectTaskId, @PathVariable Long startTime, @PathVariable Long endTime) {
-        return Result.buildSucc(logCollectTaskManageService.listLogCollectTaskMetrics(logCollectTaskId, startTime, endTime));
+    public Result<List<LogCollectTaskVO>> getAll() {
+        List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAll();
+        return Result.buildSucc(ConvertUtil.list2List(logCollectTaskDOList, LogCollectTaskVO.class));
+    }
+
+    @ApiOperation(value = "根据给定主文件路径与文件后缀匹配正则获取满足匹配对应规则的文件集", notes = "")
+    @RequestMapping(value = "/files", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<List<String>> listFiles(
+            @RequestBody ListFilesDTO listFilesDTO
+
+    ) {
+        return agentManageServiceExtension.listFiles(listFilesDTO.getHostName(), listFilesDTO.getPath(), listFilesDTO.getSuffixRegular());
+    }
+
+    @ApiOperation(value = "根据给定日志样本与切片时间戳串获取对应切片规则配置", notes = "")
+    @RequestMapping(value = "/slice_rule", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<LogSliceRuleVO> getSliceRule(@RequestBody SliceSampleDTO sliceSampleDTO) {
+        return Result.buildSucc(logCollectTaskManageService.getSliceRule(sliceSampleDTO.getContent(), sliceSampleDTO.getSliceDateTimeStringStartIndex(), sliceSampleDTO.getSliceDateTimeStringEndIndex()));
+    }
+
+    @ApiOperation(value = "读取文件内容 注：最多读取 100 行", notes = "")
+    @RequestMapping(value = "/file-content", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<String> readFileContent(
+            @RequestParam(value = "hostName") String hostName,
+            @RequestParam(value = "path") String path
+    ) {
+        return agentManageServiceExtension.readFileContent(hostName, path);
+    }
+
+    @ApiOperation(value = "根据给定日志切片条件与待切片日志内容获取对应日志切片结果集", notes = "")
+    @RequestMapping(value = "/result-slice", method = RequestMethod.POST)
+    @ResponseBody
+    public Result<List<LogRecordVO>> slice(@RequestBody SliceDTO sliceDTO) {
+        List<LogRecordVO> logList = logCollectTaskManageServiceExtension.slice(
+                sliceDTO.getContent(),
+                sliceDTO.getSliceTimestampFormat(),
+                sliceDTO.getSliceTimestampPrefixString(),
+                sliceDTO.getSliceTimestampPrefixStringIndex()
+        );
+        return Result.buildSucc(logList);
+    }
+
+    @ApiOperation(value = "获取所有文件名后缀匹配正则样例集", notes = "")
+    @RequestMapping(value = "/file-name-suffix-regular-expression-examples-tips", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<Map<String, String>> get() {
+        Map<String, String> fileNameSuffixRegularExpressionExample2TipsMap = new HashMap<>();
+        fileNameSuffixRegularExpressionExample2TipsMap.put("info.log.1", ".\\d");
+        fileNameSuffixRegularExpressionExample2TipsMap.put("info.log.2022-06-16-14", ".\\S");
+        return Result.buildSucc(fileNameSuffixRegularExpressionExample2TipsMap);
     }
 
     /**
@@ -281,6 +325,8 @@ public class NormalLogCollectTaskController {
                 }
             }
             logCollectTaskPaginationRecordVO.setLogCollectTaskHealthLevel(logCollectTaskPaginationRecordDO.getLogCollectTaskHealthLevel());
+            logCollectTaskPaginationRecordVO.setLogCollectTaskHealthDescription(logCollectTaskPaginationRecordDO.getLogCollectTaskHealthDescription());
+            logCollectTaskPaginationRecordVO.setLogCollectTaskHealthInspectionResultType(logCollectTaskPaginationRecordDO.getLogCollectTaskHealthInspectionResultType());
             logCollectTaskPaginationRecordVO.setLogCollectTaskId(logCollectTaskPaginationRecordDO.getLogCollectTaskId());
             logCollectTaskPaginationRecordVO.setLogCollectTaskName(logCollectTaskPaginationRecordDO.getLogCollectTaskName());
             logCollectTaskPaginationRecordVO.setLogCollectTaskType(logCollectTaskPaginationRecordDO.getLogCollectTaskType());
@@ -317,6 +363,9 @@ public class NormalLogCollectTaskController {
         if (CollectionUtils.isNotEmpty(dto.getServiceIdList())) {
             logCollectTaskPaginationQueryConditionDO.setServiceIdList(dto.getServiceIdList());
         }
+        if (CollectionUtils.isNotEmpty(dto.getLogCollectTaskStatusList())) {
+            logCollectTaskPaginationQueryConditionDO.setLogCollectTaskStatusList(dto.getLogCollectTaskStatusList());
+        }
         if (null != dto.getLogCollectTaskId()) {
             logCollectTaskPaginationQueryConditionDO.setLogCollectTaskId(dto.getLogCollectTaskId());
         }
@@ -325,6 +374,9 @@ public class NormalLogCollectTaskController {
         }
         if (null != dto.getLocCollectTaskCreateTimeStart()) {
             logCollectTaskPaginationQueryConditionDO.setCreateTimeStart(new Date(dto.getLocCollectTaskCreateTimeStart()));
+        }
+        if(StringUtils.isNotBlank(dto.getQueryTerm())) {
+            logCollectTaskPaginationQueryConditionDO.setQueryTerm(dto.getQueryTerm());
         }
         logCollectTaskPaginationQueryConditionDO.setLimitFrom(dto.getLimitFrom());
         logCollectTaskPaginationQueryConditionDO.setLimitSize(dto.getLimitSize());
@@ -423,6 +475,7 @@ public class NormalLogCollectTaskController {
         }
         logCollectTaskVO.setLogCollectTaskHealthLevel(logCollectTaskHealthDO.getLogCollectTaskHealthLevel());
         logCollectTaskVO.setLogCollectTaskCreator(logCollectTaskHealthDO.getOperator());
+        logCollectTaskVO.setLogCollectTaskHealthDescription(logCollectTaskHealthDO.getLogCollectTaskHealthDescription());
         logCollectTaskVO.setKafkaProducerConfiguration(logCollectTaskDO.getKafkaProducerConfiguration());
         logCollectTaskVO.setLogContentSliceRule(JSON.parseObject(logCollectTaskDO.getLogContentSliceRuleLogicJsonString(), LogSliceRuleVO.class));
         logCollectTaskVO.setFileNameSuffixMatchRule(JSON.parseObject(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString(), FileNameSuffixMatchRuleVO.class));

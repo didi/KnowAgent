@@ -7,6 +7,7 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.Fi
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.logcollectpath.FileLogCollectPathManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.FileLogCollectPathMapper;
@@ -30,6 +31,9 @@ public class FileLogCollectPathManageServiceImpl implements FileLogCollectPathMa
     @Autowired
     private FileLogCollectPathMapper fileLogCollectPathDAO;
 
+    @Autowired
+    private LogCollectTaskHealthDetailManageService logCollectTaskHealthDetailManageService;
+
     @Override
     @Transactional
     public Long createFileLogCollectPath(FileLogCollectPathDO fileLogCollectPath, String operator) {
@@ -49,6 +53,10 @@ public class FileLogCollectPathManageServiceImpl implements FileLogCollectPathMa
     @Transactional
     public void deleteFileLogCollectPath(Long id, String operator) {
         fileLogCollectPathDAO.deleteByPrimaryKey(id);
+        /*
+         * 删除对应表 tb_log_collect_task_health_detail 记录
+         */
+        logCollectTaskHealthDetailManageService.deleteByLogCollectPathId(id);
     }
 
     @Override
@@ -68,6 +76,12 @@ public class FileLogCollectPathManageServiceImpl implements FileLogCollectPathMa
     @Override
     public Long countAll() {
         return fileLogCollectPathDAO.countAll();
+    }
+
+    @Override
+    public FileLogCollectPathDO getById(Long id) {
+        FileLogCollectPathPO fileLogCollectPathPO = fileLogCollectPathDAO.selectByPrimaryKey(id);
+        return fileLogCollectPathManageServiceExtension.fileLogCollectPathPO2FileLogCollectPath(fileLogCollectPathPO);
     }
 
     /**

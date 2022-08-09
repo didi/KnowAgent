@@ -49,11 +49,11 @@ public interface AgentVersionManageService {
 
     /**
      * 根据 id 删除给定 agentVersion 对象
-     * @param agentVersionId 待删除 agentVersion 对象 id 值
+     * @param agentVersionIdList 待删除 agentVersion 对象 id 集
      * @param operator 操作人
      * 注：删除 AgentVersion 对象，其关联的文件将不被删除，如文件过多，过大，须对应清理
      */
-    void deleteAgentVersion(Long agentVersionId, String operator);
+    void deleteAgentVersion(List<Long> agentVersionIdList, String operator);
 
     /**
      * 根据条件分页查询 agentVersion 数据集

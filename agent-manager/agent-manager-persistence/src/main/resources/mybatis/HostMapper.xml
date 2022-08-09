@@ -86,16 +86,18 @@
     <result column="agent_version_id" jdbcType="BIGINT" property="agentVersionId" />
     <result column="agent_id" jdbcType="BIGINT" property="agentId" />
     <result column="parent_host_name" jdbcType="VARCHAR" property="parentHostName" />
+    <result column="agent_health_description" jdbcType="VARCHAR" property="agentHealthDescription" />
+    <result column="agent_health_inspection_result_type" jdbcType="INTEGER" property="agentHealthInspectionResultType" />
   </resultMap>
   <select id="paginationQueryByConditon" resultMap="PaginationQueryByConditonResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.host.HostPaginationQueryConditionDO" >
     SELECT
     DISTINCT t1.id AS host_id, t1.host_name as host_name, t1.ip as host_ip, t1.container as host_type,
-    t5.agent_health_level as agent_health_level, t3.agent_version_id as agent_version_id, t1.machine_zone as host_machine_zone, t1.create_time as host_create_time, t3.id as agent_id, t1.parent_host_name as parent_host_name
+    t5.agent_health_level as agent_health_level, t5.agent_health_description as agent_health_description, t5.agent_health_inspection_result_type as agent_health_inspection_result_type,
+    t3.agent_version_id as agent_version_id, t1.machine_zone as host_machine_zone, t1.create_time as host_create_time, t3.id as agent_id, t1.parent_host_name as parent_host_name
     FROM tb_host as t1
     LEFT JOIN tb_service_host as t2 ON t2.host_id = t1.id
     LEFT JOIN tb_agent as t3 ON t3.host_name = t1.host_name
     LEFT JOIN tb_agent_health as t5 ON t5.agent_id = t3.id
-    LEFT JOIN tb_service_project t6 ON t2.service_id = t6.service_id
     <where>
       1 = 1
       <if test="hostName != null">
@@ -105,37 +107,40 @@
         and t1.ip like concat('%',#{ip},'%')
       </if>
       <if test="agentVersionIdList != null">
-        and t3.agent_version_id in
-        <foreach collection="agentVersionIdList" item="agentVersionId" index="index" open="(" close=")" separator=",">
-          #{agentVersionId}
-        </foreach>
+          and t3.agent_version_id in
+          <foreach collection="agentVersionIdList" item="agentVersionId" index="index" open="(" close=")" separator=",">
+            #{agentVersionId}
+          </foreach>
       </if>
       <if test="agentHealthLevelList != null">
-        and t5.agent_health_level in
-        <foreach collection="agentHealthLevelList" item="agentHealthLevel" index="index" open="(" close=")" separator=",">
-          #{agentHealthLevel}
-        </foreach>
+          and t5.agent_health_level in
+          <foreach collection="agentHealthLevelList" item="agentHealthLevel" index="index" open="(" close=")" separator=",">
+            #{agentHealthLevel}
+          </foreach>
       </if>
       <if test="containerList != null">
-        and t1.container in
-        <foreach collection="containerList" item="container" index="index" open="(" close=")" separator=",">
-          #{container}
-        </foreach>
+          and t1.container in
+          <foreach collection="containerList" item="container" index="index" open="(" close=")" separator=",">
+            #{container}
+          </foreach>
       </if>
       <if test="serviceIdList != null">
-        and t2.service_id in
-        <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
-          #{serviceId}
-        </foreach>
+          and t2.service_id in
+          <foreach collection="serviceIdList" item="serviceId" index="index" open="(" close=")" separator=",">
+            #{serviceId}
+          </foreach>
       </if>
-      <if test="projectId != null">
-        and t6.project_id = #{projectId}
+      <if test="machineZoneList != null">
+          and t1.machine_zone in
+          <foreach collection="machineZoneList" item="machineZone" index="index" open="(" close=")" separator=",">
+            #{machineZone}
+          </foreach>
       </if>
       <if test="createTimeStart != null">
-        and t1.create_time >= #{createTimeStart}
+          and t1.create_time >= #{createTimeStart}
       </if>
       <if test="createTimeEnd != null">
-        and #{createTimeEnd} >= t1.create_time
+          and #{createTimeEnd} >= t1.create_time
       </if>
     </where>
     order by
@@ -166,7 +171,6 @@
     LEFT JOIN tb_service_host as t2 ON t2.host_id = t1.id
     LEFT JOIN tb_agent as t3 ON t3.host_name = t1.host_name
     LEFT JOIN tb_agent_health as t5 ON t5.agent_id = t3.id
-    LEFT JOIN tb_service_project t6 ON t2.service_id = t6.service_id
     <where>
       1 = 1
       <if test="hostName != null">
@@ -199,8 +203,11 @@
           #{serviceId}
         </foreach>
       </if>
-      <if test="projectId != null">
-        and t6.project_id = #{projectId}
+      <if test="machineZoneList != null">
+        and t1.machine_zone in
+        <foreach collection="machineZoneList" item="machineZone" index="index" open="(" close=")" separator=",">
+          #{machineZone}
+        </foreach>
       </if>
       <if test="createTimeStart != null">
         and t1.create_time >= #{createTimeStart}

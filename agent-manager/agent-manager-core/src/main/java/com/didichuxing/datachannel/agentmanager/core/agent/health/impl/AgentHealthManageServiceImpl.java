@@ -4,27 +4,33 @@ import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.health.AgentHealthDO;
+import com.didichuxing.datachannel.agentmanager.common.bean.domain.receiver.ReceiverDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.po.agent.health.AgentHealthPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthDetailPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsAgentPO;
+import com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
-import com.didichuxing.datachannel.agentmanager.common.constant.AgentHealthCheckConstant;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
+import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.agent.health.AgentHealthManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.AgentHealthCheckContext;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.context.AgentHealthCheckContext;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
-import com.didichuxing.datachannel.agentmanager.core.agent.metrics.AgentMetricsManageService;
+import com.didichuxing.datachannel.agentmanager.core.errorlogs.ErrorLogsManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
+import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentHealthMapper;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @org.springframework.stereotype.Service
 public class AgentHealthManageServiceImpl implements AgentHealthManageService {
@@ -36,13 +42,16 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
     private AgentHealthMapper agentHealthDAO;
 
     @Autowired
-    private AgentMetricsManageService agentMetricsManageService;
-
-    @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
 
     @Autowired
     private KafkaClusterManageService kafkaClusterManageService;
+
+    @Autowired
+    private MetricsManageService metricsManageService;
+
+    @Autowired
+    private ErrorLogsManageService errorLogsManageService;
 
     @Override
     @Transactional
@@ -89,8 +98,9 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
         agentHealthPO.setAgentHealthDescription(StringUtils.EMPTY);
         agentHealthPO.setAgentHealthLevel(AgentHealthLevelEnum.GREEN.getCode());
         agentHealthPO.setAgentId(agentDO.getId());
-        agentHealthPO.setLastestErrorLogsExistsCheckHealthyTime(System.currentTimeMillis());
+        agentHealthPO.setLastestErrorLogsExistsCheckHealthyTime(0L);
         agentHealthPO.setOperator(CommonConstant.getOperator(operator));
+        agentHealthPO.setAgentHealthInspectionResultType(AgentHealthInspectionResultEnum.HEALTHY.getCode());
         return agentHealthPO;
     }
 
@@ -148,11 +158,32 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
     @Override
     public AgentHealthLevelEnum checkAgentHealth(AgentDO agentDO) {
         /*
-         * 校验日志采集任务是否须被诊断
+         * 校验 agent 是否须被诊断
          */
         CheckResult checkResult = agentNeedCheckHealth(agentDO);
         /*
-         * 诊断对应日志采集任务
+         * agent 是否在一轮指标周期内添加/更新（ps：规避agent添加完，metrics未上报上来，开始巡检逻辑 case）
+         */
+        if(agentCreateOrUpdateJustNow(agentDO)) {
+            return AgentHealthLevelEnum.fromMetricCode(getByAgentId(agentDO.getId()).getAgentHealthLevel());
+        }
+        /*
+         * agent对应 errorlogs & metrics 接收端信息是否在一轮指标周期内添加/更新（ps：规避 agent 添加完，metrics未上报上来，开始巡检逻辑 case）
+         */
+        ReceiverDO errorLogsReceiverDO = kafkaClusterManageService.getById(agentDO.getErrorLogsSendReceiverId());
+        ReceiverDO metricsReceiverDO = kafkaClusterManageService.getById(agentDO.getMetricsSendReceiverId());
+        if(
+                null != errorLogsReceiverDO &&
+                        null != metricsReceiverDO &&
+                        (
+                                receiverCreateOrUpdateJustNow(metricsReceiverDO) ||
+                                        receiverCreateOrUpdateJustNow(errorLogsReceiverDO)
+                                )
+        ) {
+            return AgentHealthLevelEnum.fromMetricCode(getByAgentId(agentDO.getId()).getAgentHealthLevel());
+        }
+        /*
+         * 诊断对应 agent
          */
         if (checkResult.getCheckResult()) {//须诊断对应 agent
             AgentHealthLevelEnum agentHealthLevel = handleCheckAgentHealth(agentDO);
@@ -160,6 +191,94 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
         } else {//该日志采集任务无须被诊断 返回 AgentHealthLevelEnum.GREEN
             return AgentHealthLevelEnum.GREEN;
         }
+    }
+
+    private boolean receiverCreateOrUpdateJustNow(ReceiverDO receiverDO) {
+        Long currentTime = System.currentTimeMillis();
+        if(
+                ((currentTime - receiverDO.getModifyTime().getTime()) > 3 * 60 * 1000l)
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean agentCreateOrUpdateJustNow(AgentDO agentDO) {
+        Long currentTime = System.currentTimeMillis();
+        if(
+                ((currentTime - agentDO.getModifyTime().getTime()) > 3 * 60 * 1000l)
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public List<MetricsAgentPO> getErrorDetails(String hostName) {
+        /*
+         * 根据agentHealthInspectionCode获取对应case在hostName时最近一次健康时间点
+         */
+        AgentDO agentDO = agentManageService.getAgentByHostName(hostName);
+        if(null == agentDO) {
+            throw new ServiceException(
+                    String.format("Agent[hostName=%s]在系统中不存在", hostName),
+                    ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
+            );
+        }
+        AgentHealthPO agentHealthPO = agentHealthDAO.selectByAgentId(agentDO.getId());
+        Long lastCheckHealthyTimestamp = 0L;
+        if(null == agentHealthPO) {
+            throw new ServiceException(
+                    String.format("Agent[hostName=%s]关联的AgentHealth对象在系统中不存在", hostName),
+                    ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
+            );
+        } else {
+            lastCheckHealthyTimestamp = agentHealthPO.getLastestErrorLogsExistsCheckHealthyTime();
+        }
+        /*
+         * 从agent业务指标表查询近一次健康时间点到当前时间点所有心跳信息，根据心跳时间顺序排序
+         */
+        return metricsManageService.getErrorMetrics(hostName, lastCheckHealthyTimestamp, System.currentTimeMillis());
+    }
+
+    @Override
+    @Transactional
+    public void solveErrorDetail(Long agentMetricId) {
+        MetricsAgentPO metricsAgentPO = metricsManageService.getMetricAgent(agentMetricId);
+        if(null == metricsAgentPO) {
+            throw new ServiceException(
+                    String.format("MetricsAgent[id=%d]在系统中不存在", agentMetricId),
+                    ErrorCodeEnum.METRICS_RECORD_NOT_EXISTS.getCode()
+            );
+        } else {
+            String hostName = metricsAgentPO.getHostname();
+            AgentDO agentDO = agentManageService.getAgentByHostName(hostName);
+            if(null == agentDO) {
+                throw new ServiceException(
+                        String.format("Agent[hostName=%s]在系统中不存在", hostName),
+                        ErrorCodeEnum.AGENT_NOT_EXISTS.getCode()
+                );
+            }
+            AgentHealthPO agentHealthPO = agentHealthDAO.selectByAgentId(agentDO.getId());
+            if(null == agentHealthPO) {
+                throw new ServiceException(
+                        String.format("Agent[hostName=%s]关联的AgentHealth对象在系统中不存在", hostName),
+                        ErrorCodeEnum.AGENT_HEALTH_NOT_EXISTS.getCode()
+                );
+            } else {
+                agentHealthPO.setLastestErrorLogsExistsCheckHealthyTime(metricsAgentPO.getHeartbeattime());
+            }
+            agentHealthDAO.updateByPrimaryKey(agentHealthPO);
+            //重走一遍agent诊断流程
+//            checkAgentHealth(agentDO);
+        }
+    }
+
+    @Override
+    public List<String> getErrorLogsInHeartbeatScope(String hostName, Long heartbeatTime) {
+        Long startTime = heartbeatTime - 2 * 60 * 1000;
+        Long endTime = heartbeatTime;
+        return errorLogsManageService.getErrorLogs(hostName, startTime, endTime);
     }
 
     /**
@@ -181,46 +300,57 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
      * @return 返回给定 agent 健康度检查结果
      */
     private AgentHealthLevelEnum handleCheckAgentHealth(AgentDO agentDO) throws ServiceException {
-        AgentHealthDO agentHealthDO = getByAgentId(agentDO.getId());//agentDO关联的AgentHealth对象
-        AgentHealthLevelEnum agentHealthLevelEnum = AgentHealthInspectionResultEnum.HEALTHY.getAgentHealthLevel();
-        String agentHealthDescription = String.format(
-                "%s:AgentId={%d}, HostName={%s}",
-                AgentHealthInspectionResultEnum.HEALTHY.getDescription(),
-                agentDO.getId(),
-                agentDO.getHostName()
-        );//AgentHealth检查描述
-        agentHealthDO.setAgentHealthDescription(agentHealthDescription);
-        agentHealthDO.setAgentHealthLevel(agentHealthLevelEnum.getCode());
-
         /*
-         * 初始化上下文对象
+         * 构建处理链对应上下文对象
          */
-        AgentHealthCheckContext agentHealthCheckContext = new AgentHealthCheckContext();
-        agentHealthCheckContext.setAgentHealthDO(agentHealthDO);
-        agentHealthCheckContext.setAgentDO(agentDO);
-        agentHealthCheckContext.setAgentMetricsManageService(agentMetricsManageService);
-        agentHealthCheckContext.setKafkaClusterManageService(kafkaClusterManageService);
-        agentHealthCheckContext.setLogCollectTaskManageService(logCollectTaskManageService);
-
+        AgentHealthCheckContext agentHealthCheckContext = buildAgentHealthCheckContext(agentDO);
         /*
          * 构建处理链
          */
         ProcessorChain processorChain = getLogCollectTaskHealthCheckProcessorChain();
-
         /*
          * 执行巡检流程
          */
         processorChain.process(agentHealthCheckContext, processorChain);
-
         /*
          * 获取巡检结果并持久化
          */
-        agentHealthLevelEnum = agentHealthCheckContext.getAgentHealthLevelEnum();
-        agentHealthDescription = agentHealthCheckContext.getAgentHealthDescription();
-        agentHealthDO.setAgentHealthDescription(agentHealthDescription);
-        agentHealthDO.setAgentHealthLevel(agentHealthLevelEnum.getCode());
+        updateAgentHealth(agentHealthCheckContext);
+        return agentHealthCheckContext.getAgentHealthLevelEnum();
+    }
+
+    /**
+     * 根据 agent 健康度巡检结果更新对应 AgentHealth 对象
+     * @param context 封装 agent 健康度巡检结果上下文对象
+     */
+    private void updateAgentHealth(AgentHealthCheckContext context) {
+        AgentHealthDO agentHealthDO = context.getAgentHealthDO();
+        agentHealthDO.setAgentHealthLevel(context.getAgentHealthLevelEnum().getCode());
+        agentHealthDO.setAgentHealthDescription(context.getAgentHealthDescription());
+        agentHealthDO.setAgentHealthInspectionResultType(context.getAgentHealthInspectionResultEnum().getCode());
         updateAgentHealth(agentHealthDO, CommonConstant.getOperator(null));
-        return agentHealthLevelEnum;
+    }
+
+    /**
+     * @param agentDO AgentDO 对象
+     * @return 根据给定 AgentDO 对象构建对应 AgentHealthCheckContext 对象
+     */
+    private AgentHealthCheckContext buildAgentHealthCheckContext(AgentDO agentDO) {
+        /*
+         * 构建上下文对象
+         */
+        AgentHealthDO agentHealthDO = getByAgentId(agentDO.getId());//agentDO关联的AgentHealth对象
+        String agentHealthDescription = AgentHealthInspectionResultEnum.HEALTHY.getDescription();//AgentHealth检查描述
+        AgentHealthCheckContext agentHealthCheckContext = new AgentHealthCheckContext();
+        agentHealthCheckContext.setAgentDO(agentDO);
+        agentHealthCheckContext.setAgentHealthDO(agentHealthDO);
+        agentHealthCheckContext.setAgentHealthLevelEnum(AgentHealthInspectionResultEnum.HEALTHY.getAgentHealthLevel());
+        agentHealthCheckContext.setAgentHealthDescription(agentHealthDescription);
+        agentHealthCheckContext.setAgentHealthInspectionResultEnum(AgentHealthInspectionResultEnum.HEALTHY);
+        agentHealthCheckContext.setKafkaClusterManageService(kafkaClusterManageService);
+        agentHealthCheckContext.setLogCollectTaskManageService(logCollectTaskManageService);
+        agentHealthCheckContext.setMetricsManageService(metricsManageService);
+        return agentHealthCheckContext;
     }
 
     /**
@@ -240,196 +370,6 @@ public class AgentHealthManageServiceImpl implements AgentHealthManageService {
             }
         }
         return processorChain;
-    }
-
-    /**
-     * 校验是否存在 agent 非人工启动过频
-     *
-     * @param hostName      agent 主机名
-     * @param agentHealthDO AgentHealthDO 对象
-     * @return true：存在启动过频 false：不存在启动过频
-     */
-    private boolean checkAgentStartupFrequentlyExists(String hostName, AgentHealthDO agentHealthDO) {
-        /*
-         * 获取 agent 最近一次心跳对应 agent 启动时间，并对比该时间与系统记录的 agent 启动时间是否一致：
-         *  一致：表示 agent 自系统记录的启动时间以来未有启动行为 do nothing.
-         *  不一致：表示 agent 自系统记录的启动时间以来存在启动行为，将系统记录的 agent 启动时间记为上一次启动时间，将最近一次心跳对应 agent 启动时间记为系统记录的 agent 启动时间
-         * 判断 "系统记录的 agent 启动时间" - "agent 上一次启动时间" < 对应系统设定阈值：
-         *  是：进一步判断 "系统记录的 agent 启动时间" 是否由人工触发（人工触发判断条件为："系统记录的 agent 启动时间" 对应 agent 是否存在对应安装、升级类型 AgentOperationTask 执行）TODO：该步骤待实现
-         *  否：不存在启动过频
-         */
-        Long lastestAgentStartupTime = agentMetricsManageService.getLastestAgentStartupTime(hostName);//agent心跳上报最近一次启动时间
-        Long agentStartupTime = agentHealthDO.getAgentStartupTime();//系统记录的agent最近一次启动时间
-        if (null == agentStartupTime || agentStartupTime <= 0) {//agent初次启动上报
-            agentHealthDO.setAgentStartupTime(lastestAgentStartupTime);
-            return false;
-        } else {//agent非初次启动上报
-            if (lastestAgentStartupTime.equals(agentStartupTime)) {//表示 agent 自系统记录的启动时间以来未有启动行为
-                //do nothing
-            } else {//表示 agent 自系统记录的启动时间以来存在启动行为，将系统记录的 agent 启动时间记为上一次启动时间，将最近一次心跳对应 agent 启动时间记为系统记录的 agent 启动时间
-                agentHealthDO.setAgentStartupTimeLastTime(agentStartupTime);
-                agentHealthDO.setAgentStartupTime(lastestAgentStartupTime);
-            }
-            Long agentStartupTimeLastTime = agentHealthDO.getAgentStartupTimeLastTime();//agent上一次启动时间
-            if (null == agentStartupTimeLastTime) {//表示agent处于初次启动
-                return false;
-            } else {//表示agent非初次启动
-                if (agentHealthDO.getAgentStartupTime() - agentHealthDO.getAgentStartupTimeLastTime() > AgentHealthCheckConstant.AGENT_STARTUP_FREQUENTLY_THRESHOLD) {
-
-                    //TODO：判断 "系统记录的 agent 启动时间" 是否由人工触发（人工触发判断条件为："系统记录的 agent 启动时间" 对应 agent 是否存在对应安装、升级类型 AgentOperationTask 执行）
-
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-    }
-
-    /**
-     * 校验 agent 是否存在错误日志输出
-     *
-     * @param hostName                agent 主机名
-     * @param agentHealthDO           AgentHealthDO对象
-     * @param agentHealthCheckTimeEnd Agent健康度检查流程获取agent心跳数据右边界时间
-     * @return true：存在错误日志输出 false：不存在错误日志输出
-     */
-    private boolean checkErrorLogsExists(String hostName, AgentHealthDO agentHealthDO, Long agentHealthCheckTimeEnd) {
-        /*
-         * 获取自上次"错误日志输出存在"健康点 ~ 当前时间，agent 是否存在错误日志输出
-         */
-        Long lastestCheckTime = agentHealthDO.getLastestErrorLogsExistsCheckHealthyTime();
-        if (null == lastestCheckTime) {
-            throw new ServiceException(
-                    String.format("Agent={hostName=%s}对应lastestErrorLogsExistsCheckHealthyTime不存在", hostName),
-                    ErrorCodeEnum.AGENT_HEALTH_ERROR_LOGS_EXISTS_CHECK_HEALTHY_TIME_NOT_EXISTS.getCode()
-            );
-        }
-        Integer errorlogsCount = agentMetricsManageService.getErrorLogCount(
-                lastestCheckTime,
-                agentHealthCheckTimeEnd,
-                hostName
-        );
-        return errorlogsCount > 0;
-    }
-
-    /**
-     * 校验在距当前时间的心跳存活判定周期内，agent 是否存或
-     *
-     * @param hostName agent 主机名
-     * @return true：存活 false：不存活
-     */
-    private boolean checkAliveByHeartbeat(String hostName) {
-        /*
-         * 获取近 AgentHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD 时间范围内 agent 心跳数，
-         * 心跳数量 == 0，表示 agent 不存在心跳
-         */
-        Long currentTime = System.currentTimeMillis();
-        Long heartbeatTimes = agentMetricsManageService.getHeartbeatTimesByTimeFrame(
-                currentTime - AgentHealthCheckConstant.ALIVE_CHECK_LASTEST_MS_THRESHOLD,
-                currentTime,
-                hostName
-        );
-        return heartbeatTimes > 0;
-    }
-
-    /**
-     * 校验 agent 端是否存在 cpu 阈值限流
-     *
-     * @param hostName agent 主机名
-     * @return true：存在限流 false：不存在限流
-     */
-    private boolean checkCpuLimitOnAgentExists(String hostName) {
-        /*
-         * 获取近 AgentHealthCheckConstant.HOST_CPU_LIMIT_CHECK_LASTEST_MS_THRESHOLD 时间范围内 hostName 指标集中，
-         * 总限流时间是否超过阈值 AgentHealthCheckConstant.HOST_CPU_LIMIT_MS_THRESHOLD
-         */
-        Long startTime = System.currentTimeMillis();
-        Long endTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_CPU_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
-        Long hostCpuLimiDturationMs = agentMetricsManageService.getHostCpuLimiDturationByTimeFrame(
-                startTime,
-                endTime,
-                hostName
-        );//主机cpu限流时长 单位：ms
-        if (hostCpuLimiDturationMs > AgentHealthCheckConstant.HOST_CPU_LIMIT_MS_THRESHOLD) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 校验 agent 端是否存在出口流量阈值限流
-     *
-     * @param hostName agent 主机名
-     * @return true：存在限流 false：不存在限流
-     */
-    private boolean checkByteLimitOnAgentExists(String hostName) {
-        /*
-         * 获取近 AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD 时间范围内 hostName 指标集中，
-         * 总限流时间是否超过阈值 AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD
-         */
-        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.HOST_BYTE_LIMIT_CHECK_LASTEST_MS_THRESHOLD;
-        Long endTime = System.currentTimeMillis();
-        Long hostByteLimitDurationMs = agentMetricsManageService.getHostByteLimitDurationByTimeFrame(
-                startTime,
-                endTime,
-                hostName
-        );//主机流量限流时长 单位：ms
-        return hostByteLimitDurationMs > AgentHealthCheckConstant.HOST_BYTE_LIMIT_MS_THRESHOLD;
-    }
-
-    /**
-     * 校验是否存在 agent 进程 fd 使用量指标异常
-     *
-     * @param hostName agent 主机名
-     * @return true：存在异常 false：不存在异常
-     */
-    private boolean checkAgentFdUsageMetricExceptionExists(String hostName) {
-        /*
-         * 获取最近一次agent心跳中对应 fd 使用量值，判断该值是否 > AgentHealthCheckConstant.AGENT_FD_USED_THRESHOLD
-         */
-        Integer fdUsage = agentMetricsManageService.getLastestFdUsage(hostName);
-        return fdUsage > AgentHealthCheckConstant.AGENT_FD_USED_THRESHOLD;
-    }
-
-    /**
-     * 校验是否存在 agent 进程 cpu 使用率指标异常
-     *
-     * @param hostName          agent 主机名
-     * @param cpuLimitThreshold agent cpu 限流阈值
-     * @return true：存在异常 false：不存在异常
-     */
-    private boolean checkAgentCpuUageMetricExceptionExists(String hostName, Integer cpuLimitThreshold) {
-        /*
-         * 获取 agent 最近一次心跳对应 cpu_usage（ps：表示一个心跳周期内，cpu平均 使用率）
-         */
-        Integer cpuUsage = agentMetricsManageService.getLastestCpuUsage(hostName);
-        /*
-         * cpu_usage 是否超限
-         */
-        return cpuUsage > cpuLimitThreshold;
-    }
-
-    /**
-     * 校验是否存在 agent 进程 gc 指标异常
-     *
-     * @param hostName agent 主机名
-     * @return true：存在 agent 进程 gc 指标异常 false：不存在 agent 进程 gc 指标异常
-     */
-    private boolean checkAgentGcMetricExceptionExists(String hostName) {
-        /*
-         * 获取 agent 近一小时内 fullgc 次数是否 > 1，如是：表示存在 agent 进程 gc 指标异常 如不是：表示不存在 agent 进程 gc 指标异常
-         *
-         */
-        Long startTime = System.currentTimeMillis() - AgentHealthCheckConstant.AGENT_GC_METRIC_CHECK_LASTEST_MS_THRESHOLD;
-        Long endTime = System.currentTimeMillis();
-        Long agentFullgcTimes = agentMetricsManageService.getAgentFullgcTimesByTimeFrame(
-                startTime,
-                endTime,
-                hostName
-        );
-        return agentFullgcTimes > AgentHealthCheckConstant.AGENT_GC_TIMES_METRIC_CHECK_THRESHOLD;
     }
 
 }

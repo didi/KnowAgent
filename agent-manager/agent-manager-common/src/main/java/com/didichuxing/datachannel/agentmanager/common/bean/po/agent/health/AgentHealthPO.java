@@ -18,6 +18,16 @@ public class AgentHealthPO extends BasePO {
 
     private Long agentStartupTimeLastTime;
 
+    private Integer agentHealthInspectionResultType;
+
+    public Integer getAgentHealthInspectionResultType() {
+        return agentHealthInspectionResultType;
+    }
+
+    public void setAgentHealthInspectionResultType(Integer agentHealthInspectionResultType) {
+        this.agentHealthInspectionResultType = agentHealthInspectionResultType;
+    }
+
     public Long getAgentStartupTime() {
         return agentStartupTime;
     }

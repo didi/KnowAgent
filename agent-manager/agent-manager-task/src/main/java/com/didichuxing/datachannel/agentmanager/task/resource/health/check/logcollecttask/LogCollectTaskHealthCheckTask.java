@@ -2,6 +2,8 @@ package com.didichuxing.datachannel.agentmanager.task.resource.health.check.logc
 
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthDetailManageService;
+import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.LogCollectTaskHealthManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didiglobal.logi.auvjob.annotation.Task;
 import com.didiglobal.logi.auvjob.core.job.Job;
@@ -32,6 +34,9 @@ public class LogCollectTaskHealthCheckTask implements Job {
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
 
+    @Autowired
+    private LogCollectTaskHealthManageService logCollectTaskHealthManageService;
+
     @Override
     public Object execute(JobContext jobContext) throws Exception {
         List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
@@ -42,7 +47,7 @@ public class LogCollectTaskHealthCheckTask implements Job {
         List<Future> futures = Lists.newArrayList();
         for (LogCollectTaskDO logCollectTaskDO : logCollectTaskDOList) {
             futures.add(threadPool.submit(() -> {
-                LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = logCollectTaskManageService.checkLogCollectTaskHealth(logCollectTaskDO);
+                LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = logCollectTaskHealthManageService.checkLogCollectTaskHealth(logCollectTaskDO);
                 LOGGER.info("class=LogCollectTaskHealthCheckTask||method=execute||logCollectTaskId={}||"
                         + "logCollectTaskHealthLevel={}", logCollectTaskDO.getId(), logCollectTaskHealthLevelEnum.getDescription());
                 return logCollectTaskHealthLevelEnum;
