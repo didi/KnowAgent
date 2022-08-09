@@ -22,7 +22,7 @@ export const addMetadata = (params: any) => {
 };
 
 // 根据元数据上传记录 id 删除对应 metadata excel 文件上传记录
-export const deleteMetadata = (id: number) => {
+export const deleteMetadata = (id: number | string) => {
   return request(`/api/v1/op/metadata/${id}`, {
     method: 'DELETE',
   });
@@ -348,6 +348,33 @@ export const DeleteFile: React.FC = (props: any) => {
   return (
     <div style={{ padding: '0 24px' }}>
       <p>是否确认删除{props.containerData?.fileName}？</p>
+      <p>删除操作不可恢复，请谨慎操作！</p>
+    </div>
+  );
+};
+
+// 删除文件
+export const DeleteMetaFile: React.FC = (props: any) => {
+  const { containerData, genData, setVisible } = props;
+
+  useEffect(() => {
+    if (props.submitEvent !== 1) {
+      deleteMetadata(containerData.selectRowKeys.join())
+        .then((res: any) => {
+          setVisible(false);
+          genData();
+          notification.success({
+            message: '删除成功',
+            duration: 3,
+          });
+        })
+        .finally(() => props.setVisible(false));
+    }
+  }, [props.submitEvent]);
+
+  return (
+    <div style={{ padding: '0 24px' }}>
+      <p>是否确认删除？</p>
       <p>删除操作不可恢复，请谨慎操作！</p>
     </div>
   );

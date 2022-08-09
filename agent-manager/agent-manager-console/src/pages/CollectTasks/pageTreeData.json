@@ -371,12 +371,13 @@
             "tooltip": "高级表格 tooltip",
             "showHeader": true,
             "footer": false,
-            "rowSelection": false,
             "scroll": {
               "x": "max-content"
             },
             "hasData": true,
             "toolBarRender": true,
+            "rowSelection": true,
+            "rowKey": "logCollectTaskId",
             "tableFunction": {
               "reload": false,
               "search": false,
@@ -387,6 +388,21 @@
               "tableCustomColumns": true,
               "custom": false,
               "tableHeaderBtns": [
+                {
+                  "buttonText": "删除任务",
+                  "buttonType": "",
+                  "isBatch": true,
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "DeleteCollectTasks",
+                  "containerConfig": {
+                    "title": "删除任务"
+                  }
+                },
                 {
                   "buttonText": "新增任务",
                   "buttonType": "primary",

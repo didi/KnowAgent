@@ -215,7 +215,8 @@
             "tooltip": "高级表格 tooltip",
             "showHeader": true,
             "footer": false,
-            "rowSelection": false,
+            "rowSelection": true,
+            "rowkey": "id",
             "scroll": {
               "x": "max-content"
             },
@@ -232,6 +233,21 @@
               "tableCustomColumns": true,
               "custom": false,
               "tableHeaderBtns": [
+                {
+                  "buttonText": "删除元数据",
+                  "buttonType": "",
+                  "isBatch": true,
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "DeleteMetaFile",
+                  "containerConfig": {
+                    "title": "删除元数据"
+                  }
+                },
                 {
                   "buttonText": "上传元数据文件",
                   "buttonType": "primary",

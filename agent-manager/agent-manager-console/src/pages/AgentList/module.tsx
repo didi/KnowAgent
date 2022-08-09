@@ -145,6 +145,23 @@ export const deleteHost = (hostId: number, ignoreUncompleteCollect: number) => {
     },
   });
 };
+export const batchDeleteHost = (hostId: number[]) => {
+  return request(`/api/v1/op/hosts/${hostId.join()}`, {
+    method: 'DELETE',
+    init: {
+      needCode: true,
+    },
+  });
+};
+
+export const batchDeleteAgent = (agentId: number[]) => {
+  return request(`/api/v1/op/agent/${agentId.join()}`, {
+    method: 'DELETE',
+    init: {
+      needCode: true,
+    },
+  });
+};
 
 export const NewHostForm: React.FC = (props: any) => {
   const [hostType, setHostTypes] = useState(null);
@@ -325,7 +342,7 @@ export const NewHostForm: React.FC = (props: any) => {
           {testHide && (
             <span
               style={{ color: testResult ? '#2fc25b' : '#f5222d' }}
-              // className={testResult ? 'success' : 'fail'}
+            // className={testResult ? 'success' : 'fail'}
             >
               {testResult ? '测试成功！' : '测试失败！'}
             </span>
@@ -592,7 +609,7 @@ const HostConfigurationForm = (props: any) => {
       // labelCol={{ span: 4 }}
       // wrapperCol={{ span: 20 }}
       layout="horizontal"
-      // onFinish={handleHostSubmit}
+    // onFinish={handleHostSubmit}
     >
       <div
         className="agent-list-head"
@@ -978,11 +995,99 @@ export const ModifyHost: React.FC = (props: any) => {
     </div>
   );
 };
-
+//批量删除主机
+export const BatchDeleteHost = (props: any) => {
+  const { containerData, genData } = props;
+  useEffect(() => {
+    if (props.submitEvent !== 1) {
+      batchDeleteHost(containerData.selectRowKeys)
+        .then((res: any) => {
+          if (res.code === 0) {
+            notification.success({
+              message: '成功',
+              duration: 3,
+              description: res.message || '删除成功！',
+            });
+            props.genData();
+          } else {
+            notification.error({
+              message: '错误',
+              duration: 3,
+              description: res.message,
+            });
+          }
+          genData();
+          props.setVisible(false);
+        })
+        .catch((err: any) => {
+          console.log(err);
+          props.setVisible(false);
+        });
+    }
+  }, [props.submitEvent]);
+  return <div style={{ padding: '0 24px' }}>请先卸载或停止 agent 进程，是否确认批量删除所选的Agent</div>;
+};
+//批量删除Agent
+export const BatchDeleteAgent = (props: any) => {
+  const { containerData, genData } = props;
+  let noAgent = false;
+  const agentIds = containerData.listData
+    .filter((host) => containerData.selectRowKeys.indexOf(host.hostId) > -1)
+    .map((item) => {
+      if (typeof item.agentId == 'number' || typeof item.agentId == 'string') {
+        return item.agentId;
+      } else {
+        noAgent = true;
+      }
+    });
+  if (noAgent) {
+    useEffect(() => {
+      if (props.submitEvent !== 1) {
+        props.setVisible(false);
+      }
+    }, [props.submitEvent]);
+    return <div style={{ padding: '0 24px' }}>所选主机必须关联Agent，请重新选择</div>;
+  } else {
+    useEffect(() => {
+      if (props.submitEvent !== 1) {
+        batchDeleteAgent(agentIds)
+          .then((res: any) => {
+            if (res.code === 0) {
+              notification.success({
+                message: '成功',
+                duration: 3,
+                description: res.message || '删除成功！',
+              });
+              props.genData();
+            } else if (res.code === 10000 || res.code === 23000 || res.code === 23004) {
+              notification.error({
+                message: '错误',
+                duration: 3,
+                description: res.message,
+              });
+            } else {
+              notification.error({
+                message: '错误',
+                duration: 3,
+                description: res.message,
+              });
+            }
+            genData();
+            props.setVisible(false);
+          })
+          .catch((err: any) => {
+            console.log(err);
+            props.setVisible(false);
+          });
+      }
+    }, [props.submitEvent]);
+    return <div style={{ padding: '0 24px' }}>请先卸载或停止 agent 进程，是否确认批量删除所选的Agent</div>;
+  }
+};
 // 删除主机
 export const deleteAgentHost = (props: any) => {
   Modal.confirm({
-    title: `是否确认删除主机名为${props.hostName}的${props.agentId ? 'Agent' : ''}与主机？`,
+    title: `是否确认删除主机名为${props.hostName}的${props.agentId ? 'Agent与' : ''}主机？`,
     content: <span className="fail">{props.agentId ? '请先卸载或停止 agent 进程' : '删除操作不可恢复，请谨慎操作！'}</span>,
     okText: '确认',
     cancelText: '取消',
@@ -1302,4 +1407,6 @@ export default {
   deleteAgentHost,
   deleteAgent,
   goldMetricIcon,
+  BatchDeleteHost,
+  BatchDeleteAgent,
 };

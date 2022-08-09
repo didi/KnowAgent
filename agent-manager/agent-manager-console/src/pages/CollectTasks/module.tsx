@@ -99,6 +99,12 @@ export const deleteCollectTask = (logCollectTaskId: number) => {
   });
 };
 
+export const batchDeleteCollectTask = (logCollectTaskIds: string) => {
+  return request(`/api/v1/normal/collect-task/${logCollectTaskIds}`, {
+    method: 'DELETE',
+  });
+};
+
 export const switchCollectTask = (params: any) => {
   return request(`/api/v1/normal/collect-task/switch?logCollectTaskId=${params.logCollectTaskId}&status=${params.status}`);
 };
@@ -447,6 +453,30 @@ export const DiagnosisContent = (props: any) => {
   );
 };
 
+export const DeleteCollectTasks = (props: any) => {
+  const { containerData, genData } = props;
+  useEffect(() => {
+    if (props.submitEvent !== 1) {
+      // 删除版本批量操作 需要替换接口
+      batchDeleteCollectTask(containerData?.selectRowKeys?.join())
+        .then((res: any) => {
+          // message.success('删除成功');
+          notification.success({
+            message: '删除成功',
+            duration: 3,
+          });
+          genData();
+          props.setVisible(false);
+        })
+        .catch((err: any) => {
+          console.log(err);
+          props.setVisible(false);
+        });
+    }
+  }, [props.submitEvent]);
+  return <div style={{ padding: '0 24px' }}>删除操作不可恢复，请谨慎操作！</div>;
+};
+
 //删除采集任务
 export const deleteHostClick = (props: any) => {
   Modal.confirm({
@@ -604,4 +634,12 @@ export const HealthMap = (props: any) => {
   );
 };
 
-export default { servicesList, collectStatusList, switchTask, healthList, logCollectTaskHealthLevel, HealthMap };
+export default {
+  servicesList,
+  collectStatusList,
+  switchTask,
+  healthList,
+  logCollectTaskHealthLevel,
+  HealthMap,
+  DeleteCollectTasks,
+};
