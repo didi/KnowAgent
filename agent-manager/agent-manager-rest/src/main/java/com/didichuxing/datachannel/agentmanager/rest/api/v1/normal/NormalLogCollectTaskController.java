@@ -92,15 +92,6 @@ public class NormalLogCollectTaskController {
         return Result.buildSucc();
     }
 
-    @ApiOperation(value = "删除日志采集任务 0：删除成功 10000：参数错误 28000：待删除 LogCollectTask 不存在", notes = "")
-    @RequestMapping(value = "/{logCollectTaskId}", method = RequestMethod.DELETE)
-    @ResponseBody
-    @CheckPermission(permission = AGENT_TASK_DELETE)
-    public Result deleteLogCollectTask(@PathVariable Long logCollectTaskId) {
-        logCollectTaskManageService.deleteLogCollectTask(logCollectTaskId, SpringTool.getUserName());
-        return Result.buildSucc();
-    }
-
     @ApiOperation(value = "批量删除采集任务 入参为待删除采集任务id集（逗号分割）0：删除成功 10000：参数错误 28000：待删除 LogCollectTask 不存在", notes = "")
     @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody

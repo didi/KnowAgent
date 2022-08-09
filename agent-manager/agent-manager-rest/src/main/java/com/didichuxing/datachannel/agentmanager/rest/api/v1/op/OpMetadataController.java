@@ -60,20 +60,6 @@ public class OpMetadataController {
     }
 
     @ApiOperation(
-            value = "根据元数据上传记录 id 删除对应 metadata excel 文件上传记录，错误状态码：" +
-                    "35000：元数据文件上传记录在系统中不存在 " +
-                    "31002：元数据文件不存在 " +
-                    "31005：元数据文件删除失败",
-            notes = ""
-    )
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public Result deleteMetaDataFile(@PathVariable Long id) {
-        metadataManageService.deleteMetaDataFile(id);
-        return Result.buildSucc();
-    }
-
-    @ApiOperation(
             value = "根据元数据上传记录 id 集批量删除对应 metadata excel 文件上传记录，错误状态码：" +
                     "35000：元数据文件上传记录在系统中不存在 " +
                     "31002：元数据文件不存在 " +

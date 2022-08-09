@@ -66,16 +66,6 @@ public class OpAgentController {
         return Result.buildSucc(Boolean.FALSE);
     }
 
-    @ApiOperation(value = "删除 agent 0：删除成功 10000：参数错误 22000：Agent 不存在 22001：Agent存在未采集完的日志", notes = "")
-    @RequestMapping(value = "/{agentId}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public Result deleteAgent(
-            @PathVariable Long agentId
-    ) {
-        agentManageService.deleteAgentById(agentId, true, true, SpringTool.getUserName());
-        return Result.buildSucc();
-    }
-
     @ApiOperation(value = "批量删除 agent 0：删除成功 10000：参数错误 22000：Agent 不存在 22001：Agent存在未采集完的日志", notes = "")
     @RequestMapping(value = "/{ids}", method = RequestMethod.DELETE)
     @ResponseBody
