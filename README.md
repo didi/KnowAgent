@@ -80,15 +80,15 @@
 - Agent：是基于 Java 的高性能、支持多租户隔离的采集引擎，它能在任意情况下（除：待采集数据在被采集前被移除，例如：日志文件被归档或日志文件滚动速度太快导致）保证采集数据的完整性，持续采集速度可达150MB+/秒。
 - Agent Manager：是针对 Agent 的管理平台。用于管理相关元数据、Agent与采集任务，自动巡检 Agent 与采集任务的健康度、故障诊断，指标展示。
 
-<img src="doc/assets/know agent总体设计.png" alt="logi-am架构" style="zoom:50%;" />	
+<img src="doc/assets/know_agent_structure.png" alt="KnowAgent架构" style="zoom:50%;" />	
 
 ### 1.5.1 Agent 架构
 
-<img src="doc/assets/know agent架构.png" alt="know agent架构" style="zoom: 50%;" />
+<img src="doc/assets/agent_structure.png" alt="Agent架构" style="zoom: 50%;" />
 
 ### 1.5.2 Agent Manager 架构
 
-<img src="doc/assets/Agent-Manager 架构.png" alt="Agent-Manager 架构" style="zoom: 50%;" />
+<img src="doc/assets/agent_manager_structure.png" alt="AgentManager架构" style="zoom: 50%;" />
 
 # 2 相关文档
 ## 2.1 产品文档

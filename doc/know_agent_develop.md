@@ -69,7 +69,7 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ### 2.1.1 架构
 
-![image-20220720230239140](assets/know agent架构.png)
+![image-20220720230239140](assets/agent_structure.png)
 
 ### 2.1.2 各模块介绍
 
