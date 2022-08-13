@@ -28,17 +28,17 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 #### **1.1.2.1 IDEA 打包**
 
-![agent-manager IDEA 打包](assets/development/1.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/1.png" />
 
 #### **1.1.2.2 修改 application.yml 配置文件**
 
-![agent-manager配置文件修改](assets/development/2.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/2.png" />
 
-![image-20220801225745473](assets/development/3.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/3.png" />
 
 #### **1.1.2.3 启动 Agent-Manager**
 
-![agent-manager 启动](assets/development/4.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/4.png" />
 
 ## 1.2 Agent 本地开发环境搭建
 
@@ -57,11 +57,11 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 #### **1.2.2.1 修改 conf/settings.properties 配置文件**
 
-![agent 配置](assets/development/5.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/5.png" />
 
 #### **1.2.2.2 启动 Agent**
 
-![agent 启动成功](assets/development/6.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/6.png" />
 
 # 2 KnowAgent 简要介绍
 
@@ -69,7 +69,7 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ### 2.1.1 架构
 
-![image-20220720230239140](assets/agent_structure.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/agent_structure.png" />
 
 ### 2.1.2 各模块介绍
 
@@ -86,13 +86,13 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ### 2.1.3 核心 E-R 图
 
-![image-20220622153233257](assets/development/7.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/7.png" />
 
 ## 2.2 Agent-Manager
 
 ### 2.2.1 架构
 
-![image-20220622171415441](assets/development/8.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/8.png" />
 
 ### 2.2.2 各模块介绍
 
@@ -109,4 +109,4 @@ mysql -uXXXX -pXXX -h XXX.XXX.XXX.XXX -PXXXX < ./create_mysql_table.sql
 
 ### 2.2.3 核心 E-R 图
 
-![image-20220622164842086](assets/development/9.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/development/9.png" />
