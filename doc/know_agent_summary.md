@@ -4,7 +4,7 @@
 
 ​	滴滴有很多的实时、离线计算任务与数据同步任务，这些任务所涉及到的数据源有很大一部分是散落在各主机上的业务日志与系统日志，涉及的主机数量非常之多（10万+），更关键的是，这些任务有的服务于财务类指标，有的服务于安全、风控类指标（这类指标对应的日志类数据源的数据量非常之大，单个日志文件每秒持续日志写入量达50MB+），有的服务于运维保障，场景复杂多样，侧重点也各有不同，保障等级也各不一样。总结起来，这些计算任务对数据的完整性、实时性要求非常之高。
 
-​	例如有一个涉及财务指标的实时计算任务，实时计算链路如下图：<img src="assets/streaming_compute.png" alt="流式计算链路" style="zoom: 50%;" />
+​	例如有一个涉及财务指标的实时计算任务，实时计算链路如下图：<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/streaming_compute.png" alt="流式计算链路" style="zoom: 50%;" />
 
 ​	实时计算任务对数据的完整性保证依赖于链路中各个组件对数据的完整性保证，链路中 Kafka -> Flink -> Elasticsearch 的数据完整性可保证，但日志数据 -> Kafka，这部分的数据完整性却很难得到保证，这里主要有如下两方面的原因：
 
@@ -131,7 +131,7 @@
 - Agent：是基于 Java 的高性能、支持多租户隔离的采集引擎，它能在任意情况下（除：待采集数据在被采集前被移除，例如：日志文件被归档或日志文件滚动速度太快导致）保证采集数据的完整性，持续采集速度可达150MB+/秒。
 - Agent Manager：是针对 Agent 的管理平台。用于管理相关元数据、Agent与采集任务，自动巡检 Agent 与采集任务的健康度、故障诊断，指标展示。
 
-<img src="assets/know_agent_structure.png" alt="logi-am架构" style="zoom:50%;" />	
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/know_agent_structure.png" alt="logi-am架构" style="zoom:50%;" />	
 
 ​	KnowAgent 最小外部依赖组件有 2 个：
 
@@ -148,7 +148,7 @@
 
 ## Agent 架构
 
-<img src="assets/agent_structure.png" alt="know agent架构" style="zoom: 50%;" />
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/agent_structure.png" alt="know agent架构" style="zoom: 50%;" />
 
 ### 核心概念
 
@@ -164,7 +164,7 @@
 
 ## Agent Manager架构
 
-<img src="assets/agent_manager_structure.png" alt="Agent-Manager架构" style="zoom: 50%;" />
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/agent_manager_structure.png" alt="Agent-Manager架构" style="zoom: 50%;" />
 
 ## 特性
 
