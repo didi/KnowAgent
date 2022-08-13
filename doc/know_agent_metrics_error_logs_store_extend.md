@@ -4,30 +4,30 @@
 
 1. 在`agent-manager-persistence`项目中，创建 Elasticsearch 对应的 `MetricsDAOFactory` 与 `ErrorLogsDAOFactory` 接口实现类，如下图：
 
-   ![image-20220621184418474](assets/ElasticsearchErrorLogsDAOFactory.png)
+   ![image-20220621184418474](assets/store-extend/1.png)
 
-   ![image-20220621184524258](assets/ElasticsearchMetricsDAOFactory.png)
+   ![image-20220621184524258](assets/store-extend/2.png)
 
 2. 在`agent-manager-persistence`项目中，创建`MetricsDAOFactory`与 `ErrorLogsDAOFactory` 接口中需要创建的各 DAO 接口实现类，如下图：
 
-   ![image-20220621185007384](assets/ElasticsearchAgentErrorLogDAO.png)
+   ![image-20220621185007384](assets/store-extend/3.png)
 
-   ![image-20220621185050691](assets/ElasticsearchMetricsAgentDAO.png)
+   ![image-20220621185050691](assets/store-extend/4.png)
 
-   ![image-20220621185157969](assets/ElasticsearchMetricsDiskDAO.png)
+   ![image-20220621185157969](assets/store-extend/5.png)
 
-   ![image-20220621185233405](assets/ElasticsearchMetricsDiskIODAO.png)
+   ![image-20220621185233405](assets/store-extend/6.png)
 
-   ![image-20220621185319328](assets/ElasticsearchMetricsLogCollectTaskDAO.png)
+   ![image-20220621185319328](assets/store-extend/7.png)
 
-   ![image-20220621185358736](assets/ElasticsearchMetricsNetCardDAO.png)
+   ![image-20220621185358736](assets/store-extend/8.png)
 
-   ![image-20220621185454170](assets/ElasticsearchMetricsProcessDAO.png)
+   ![image-20220621185454170](assets/store-extend/9.png)
 
-   ![image-20220621185551437](assets/ElasticsearchMetricsSystemDAO.png)
+   ![image-20220621185551437](assets/store-extend/10.png)
 
    **注意：以上，仅给出实现类的定义，并未具体实现，无法直接使用。具体实现逻辑可参考MySQL相关实现。**
 
 3. 在`agent-manager-rest`项目中，修改 `StorageFactoryBuilder` 类中关于`MetricsDAOFactory`与`ErrorLogsDAOFactory`对象注入名为第一步中创建的 Elasticsearch 对应的 `MetricsDAOFactory` 与 `ErrorLogsDAOFactory` 接口实现类上的注解名，如下图：
 
-   ![image-20220621191237100](assets/StorageFactoryBuilder.png)
+   ![image-20220621191237100](assets/store-extend/11.png)
