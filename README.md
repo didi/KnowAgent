@@ -84,11 +84,11 @@
 
 ### 1.5.1 Agent 架构
 
-<img src="doc/assets/agent_structure.png" alt="Agent架构" style="zoom: 50%;" />
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/agent_structure.png" alt="Agent架构" style="zoom: 50%;" />
 
 ### 1.5.2 Agent Manager 架构
 
-<img src="doc/assets/agent_manager_structure.png" alt="AgentManager架构" style="zoom: 50%;" />
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/agent_manager_structure.png" alt="AgentManager架构" style="zoom: 50%;" />
 
 # 2 相关文档
 ## 2.1 产品文档
