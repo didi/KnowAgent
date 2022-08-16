@@ -19,21 +19,25 @@
 
 ​	在需要安装 KnowAgent 一站式体验环境的主机上创建用于存放 KnowAgent 一站式体验环境所需的各组件安装包的目录，如下图：
 
-### ![image-20220624155844938](assets/创建know agent一站式体验环境安装目录.png)2.2.2 拷贝安装脚本至安装目录
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/experience-environment-build/1.png" />
+
+### 2.2.2 拷贝安装脚本至安装目录
 
 ​	请将[《KnowAgent一站式体验环境一键安装脚本》](../know_agent_experience_environment_auto_install_script.sh)拷贝至上一步创建的安装目录中，如下图：
 
-![image-20220624160111592](assets/拷贝Know Agent一站式体验环境一键安装脚本.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/experience-environment-build/2.png" />
 
-![image-20220624160304804](assets/Know Agent一站式体验环境一键安装脚本copy成功.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/experience-environment-build/3.png" />
 
 ### 2.2.3 执行安装脚本
 
 ​	执行`sh know_agent_experience_environment_auto_install_script.sh`命令运行 KnowAgent 一站式体验环境一键安装脚本，开始 KnowAgent 一站式体验环境的安装、配置。遇到 “Do you need to install MySQL（yes/no）”，请输入 “yes”，如下图：
 
-![image-20220624160908157](assets/Know Agent一站式体验环境一键安装脚本开始执行.png)	Know Agent 一站式体验环境安装成功，如下图：
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/experience-environment-build/4.png" />
 
-![image-20220624161951303](assets/Know Agent一站式体验环境安装成功.png)
+​	Know Agent 一站式体验环境安装成功，如下图：
+
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/experience-environment-build/5.png" />
 
 ## 2.2 离线安装
 

@@ -15,7 +15,7 @@ while((c = nextChar()) != '\n') {
 
 一次循环中有3次操作，读出一个字符 -> 和'\n'比较 -> false写入当前行，所以匹配换行符这个操作就会消耗掉非常多的计算资源，打印出的火焰图也能验证这一点，最长的一段就是在循环匹配换行符的地方。
 
-![向量化计算加速LogAgent采集-火焰图](assets/向量化计算加速LogAgent采集-火焰图.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/vectorization-acceleration/1.png" />
 
 # SIMD与向量化执行
 
@@ -59,7 +59,7 @@ public static int indexOf(byte[] value, int valueCount, byte[] str, int strCount
 
 ​	之后的编写一些测试的case，对比这两种和原本的方式性能会有多大的差别。
 
-![向量化计算加速LogAgent采集-性能对比](assets/向量化计算加速LogAgent采集-性能对比.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/vectorization-acceleration/2.png" />
 
 ​	这个测试结果图标可以得出几个结论
 

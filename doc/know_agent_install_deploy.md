@@ -80,4 +80,4 @@ config.port=Agent-Manager服务配置的http端口（默认：9010）
 2. 进入`agent`目录，打开 pom.xml 文件，将编译版本从1.8改为实际安装的jdk版本，如下图。
 3. 按上述流程，对 Agent 项目进行编译打包。
 
-![jdk11升级](assets/jdk11升级.png)
+<img src="https://images-github.oss-cn-hangzhou.aliyuncs.com/know-agent/install-deploy/1.png" />
