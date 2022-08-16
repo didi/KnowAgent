@@ -33,7 +33,7 @@ d1Config.appConfig.webpackCustom = {
   },
   plugins: [
     // new CountComponentPlugin({
-    //   pathname: '@didi/dcloud-design',
+    //   pathname: 'knowdesign',
     //   startCount: true,
     //   isExportExcel: false,
     // }),

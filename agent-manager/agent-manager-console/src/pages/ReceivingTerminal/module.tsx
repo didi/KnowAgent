@@ -16,7 +16,7 @@ import {
   notification,
   message,
   Modal,
-} from '@didi/dcloud-design';
+} from 'knowdesign';
 import { request } from '../../request/index';
 import { getTopics } from '../../api/agent';
 

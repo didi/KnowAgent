@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps, useLocation } from 'react-router-dom';
-import { ProDescriptions, ProTable, AppContainer, IconFont } from '@didi/dcloud-design';
+import { ProDescriptions, ProTable, AppContainer, IconFont } from 'knowdesign';
 import { collectTaskDetailBaseInfo, getAssociateHostColumns } from './config';
 import AssociateHostDetail from './AssociateHostDetail';
 import fetch from '../../lib/fetch';
@@ -153,7 +153,6 @@ const AgentDetail = (props: any) => {
         </div>
         <div>
           <ProTable
-            isCustomPg={true}
             showQueryForm={false}
             tableProps={{
               tableId: 'collectList',

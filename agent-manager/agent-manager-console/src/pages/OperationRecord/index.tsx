@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { Input, Select } from '@didi/dcloud-design';
+import { Input, Select } from 'knowdesign';
 import './index.less';
-import { AppContainer, Container } from '@didi/dcloud-design';
+import { AppContainer, Container } from 'knowdesign';
 import ProTableProject from './module/tpl-protable/index';
 import ProFormProject from './module/tpl-proform/index';
 import Prodescription from './module/tpl-prodescription/index';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { IconFont, Button, Input, Radio, Form, Collapse, Row, Col, useDynamicList } from '@didi/dcloud-design';
+import { IconFont, Button, Input, Radio, Form, Collapse, Row, Col, useDynamicList } from 'knowdesign';
 import LogFileType from './LogFileType';
 import { judgeEmpty } from '../../lib/utils';
 import { setIndexs } from './config';

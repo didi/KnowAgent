@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Collapse } from '@didi/dcloud-design';
+import { Form, Collapse } from 'knowdesign';
 import { collectLogFormItemLayout } from './config';
 import LoopAddLogPath from './LoopAddLogPath';
 

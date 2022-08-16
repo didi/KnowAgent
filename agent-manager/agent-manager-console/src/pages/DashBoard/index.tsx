@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppContainer, Spin } from '@didi/dcloud-design';
+import { AppContainer, Spin } from 'knowdesign';
 import { EventBusTypes } from '../../constants/event-types';
 import HeaderCard from './headerCard';
 import { getOperatingDashboard } from './service';

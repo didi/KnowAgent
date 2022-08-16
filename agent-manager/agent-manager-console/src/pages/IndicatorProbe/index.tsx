@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppContainer, SingleChart, Utils } from '@didi/dcloud-design';
+import { AppContainer, SingleChart, Utils } from 'knowdesign';
 import ChartContainer from '../../components/chart-container';
 import { EventBusTypes } from '../../constants/event-types';
 import DragItem from '../../components/DragItem';

@@ -1,4 +1,4 @@
-import { Empty, Utils } from '@didi/dcloud-design';
+import { Empty, Utils } from 'knowdesign';
 import React, { useEffect, useState } from 'react';
 import { Bar, ECOptions } from './Bar';
 import './index.less';

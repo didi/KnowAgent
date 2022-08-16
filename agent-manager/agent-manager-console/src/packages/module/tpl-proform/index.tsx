@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, message } from '@didi/dcloud-design';
+import { Form, message } from 'knowdesign';
 import TplAutoPage from '../tpl-autopage';
 import { request } from '../../../request/index';
 // mock数据
@@ -55,7 +55,7 @@ const TplProForm = (props) => {
     };
 
     useEffect(() => {
-      import('@didi/dcloud-design')
+      import('knowdesign')
         .then((data) => {
           setResult(data);
         })

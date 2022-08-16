@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { AppContainer } from '@didi/dcloud-design';
+import { AppContainer } from 'knowdesign';
 import { EventBusTypes } from '../constants/event-types';
 
 export const HomePage = () => {

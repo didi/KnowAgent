@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, IconFont, Select } from '@didi/dcloud-design';
+import { Table, Input, IconFont, Select } from 'knowdesign';
 
 export type linkageTableProps = {
   lineData?: any[];

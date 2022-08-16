@@ -1,6 +1,6 @@
 import Axios from 'axios';
-import { notification } from '@didi/dcloud-design';
-import { getCookie } from '@didi/dcloud-design/es/utils/tools';
+import { notification } from 'knowdesign';
+import { getCookie } from 'knowdesign/es/utils/tools';
 
 // 根据环境配置地址
 // TODO: 确认地址前缀

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { SingleChart, Spin, Tooltip } from '@didi/dcloud-design';
-import type { LineChartProps } from '@didi/dcloud-design/es/extend/single-chart/LineChart';
-import type { PieChartProps } from '@didi/dcloud-design/es/extend/single-chart/PieChart';
-import { Popover } from '@didi/dcloud-design';
+import { SingleChart, Spin, Tooltip } from 'knowdesign';
+import type { LineChartProps } from 'knowdesign/es/extend/single-chart/LineChart';
+import type { PieChartProps } from 'knowdesign/es/extend/single-chart/PieChart';
+import { Popover } from 'knowdesign';
 import EnlargedChart from './EnlargedChart';
 import { queryChartData } from './service';
 import './style/index.less';

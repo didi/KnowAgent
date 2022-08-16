@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Utils } from '@didi/dcloud-design';
+import { Container, Utils } from 'knowdesign';
 import './style/index.less';
 import moment from 'moment';
 import ChartItem from './Item';
@@ -60,27 +60,27 @@ const LineChartList = (props: IProps): JSX.Element => {
         const data =
           type === 3
             ? singleLineChatValue?.metricPointList?.map((item: any) => {
-                return {
-                  ...item,
-                  timeStampMinute: moment(item.timeStampMinute).format('HH:mm'),
-                  name: singleLineChatValue?.name,
-                  value: valueFormatFn(item.last, baseUnit, displayUnit),
-                };
-              })
+              return {
+                ...item,
+                timeStampMinute: moment(item.timeStampMinute).format('HH:mm'),
+                name: singleLineChatValue?.name,
+                value: valueFormatFn(item.last, baseUnit, displayUnit),
+              };
+            })
             : multiLineChatValue?.map((item) => {
-                return (
-                  Array.isArray(item?.metricPointList) &&
-                  item?.metricPointList?.map((el) => {
-                    return {
-                      ...el,
-                      timeStampMinute: moment(el.timeStampMinute).format('HH:mm'),
-                      // name: el.logCollectTaskId || el.device || el.hostName || el.path,
-                      name: item.name,
-                      value: valueFormatFn(el.last, baseUnit, displayUnit),
-                    };
-                  })
-                );
-              });
+              return (
+                Array.isArray(item?.metricPointList) &&
+                item?.metricPointList?.map((el) => {
+                  return {
+                    ...el,
+                    timeStampMinute: moment(el.timeStampMinute).format('HH:mm'),
+                    // name: el.logCollectTaskId || el.device || el.hostName || el.path,
+                    name: item.name,
+                    value: valueFormatFn(el.last, baseUnit, displayUnit),
+                  };
+                })
+              );
+            });
         return {
           data,
           baseUnit,

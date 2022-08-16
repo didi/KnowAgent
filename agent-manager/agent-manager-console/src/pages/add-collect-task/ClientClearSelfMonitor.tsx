@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { InputNumber, Form, Radio, Select, Input, AutoComplete, Collapse, Row, Col, Switch, Divider } from '@didi/dcloud-design';
+import { InputNumber, Form, Radio, Select, Input, AutoComplete, Collapse, Row, Col, Switch, Divider } from 'knowdesign';
 import { clientFormItemLayout } from './config';
 import { NavRouterLink } from '../../components/CustomComponent';
 import { IReceivers } from '../../interface/agent';

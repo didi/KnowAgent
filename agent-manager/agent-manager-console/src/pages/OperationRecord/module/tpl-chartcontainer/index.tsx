@@ -1,5 +1,5 @@
 // import React, { useState } from 'react'
-// import { ChartContainer, Imenu, SingleChart } from '@didi/dcloud-design'
+// import { ChartContainer, Imenu, SingleChart } from 'knowdesign'
 
 // export default (props) => {
 //   const defaultConfig = {
