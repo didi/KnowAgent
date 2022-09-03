@@ -1,6 +1,5 @@
 package com.didichuxing.datachannel.agentmanager.rest.config;
 
-import com.didichuxing.datachannel.agentmanager.rest.interceptor.HeaderHandlerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.stereotype.Component;
@@ -12,9 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootConfiguration
 @Component
 public class WebMvcConfig implements WebMvcConfigurer {
-
-    @Autowired
-    private HeaderHandlerInterceptor headerHandlerInterceptor;
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -28,7 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(headerHandlerInterceptor);
+
     }
 
     @Override
