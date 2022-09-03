@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Breadcrumb, Popconfirm, Dropdown, Tooltip, Descriptions, PageHeader, Spin, Tag } from '@didi/dcloud-design';
+import { Breadcrumb, Popconfirm, Dropdown, Tooltip, Descriptions, PageHeader, Spin, Tag } from 'knowdesign';
 import { withRouter, Link } from 'react-router-dom';
 import { IBaseInfo } from '../interface/common';
 import { cutString } from './../lib/utils';

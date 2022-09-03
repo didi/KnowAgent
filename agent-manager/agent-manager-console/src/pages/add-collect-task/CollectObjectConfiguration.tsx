@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Form, Input, DatePicker, Collapse } from '@didi/dcloud-design';
+import { Select, Form, Input, DatePicker, Collapse } from 'knowdesign';
 import { getServices, getHostListbyServiceId } from '../../api/agent';
 import { contentFormItemLayout } from './config';
 import { regName } from '../../constants/reg';

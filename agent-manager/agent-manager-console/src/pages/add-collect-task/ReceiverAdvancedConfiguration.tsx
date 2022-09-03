@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AutoComplete, Select, Form, Input } from '@didi/dcloud-design';
+import { AutoComplete, Select, Form, Input } from 'knowdesign';
 import { contentFormItemLayout } from './config';
 // import { NavRouterLink } from '../../component/CustomComponent';
 // import MonacoEditor from '../../component/editor/monacoEditor';

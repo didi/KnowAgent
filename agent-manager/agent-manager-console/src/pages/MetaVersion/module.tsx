@@ -1,6 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import React, { useState, useEffect } from 'react';
-import { Form, Input, ProTable, Tooltip, Upload, IconFont, Button, notification, message } from '@didi/dcloud-design';
+import { Form, Input, ProTable, Tooltip, Upload, IconFont, Button, notification, message } from 'knowdesign';
 import { request } from '../../request/index';
 import * as SparkMD5 from 'spark-md5';
 import { formFetch } from '../../lib/fetch';
@@ -277,7 +277,6 @@ export const previewFile: React.FC = (props: any) => {
       </div>
       <div className="host-table">
         <ProTable
-          isCustomPg={true}
           showQueryForm={false}
           tableProps={{
             showHeader: false,
@@ -307,7 +306,6 @@ export const previewFile: React.FC = (props: any) => {
       </div>
       <div className="application-table">
         <ProTable
-          isCustomPg={true}
           showQueryForm={false}
           tableProps={{
             showHeader: false,

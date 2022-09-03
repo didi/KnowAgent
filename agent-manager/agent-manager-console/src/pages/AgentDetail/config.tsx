@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import service from 'request/axiosConfig';
-import { IconFont } from '@didi/dcloud-design';
+import { IconFont } from 'knowdesign';
 export const hostTypeMap = {
   0: '物理机',
   1: '容器',

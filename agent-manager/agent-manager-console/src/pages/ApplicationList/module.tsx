@@ -20,7 +20,7 @@ import {
   Drawer,
   Modal,
   notification,
-} from '@didi/dcloud-design';
+} from 'knowdesign';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { request } from '../../request/index';
@@ -552,7 +552,6 @@ export const ActionAppDetail: React.FC = (props: any) => {
       </div>
       <div style={{ padding: '20px' }}>
         <ProTable
-          isCustomPg={true}
           showQueryForm={false}
           tableProps={{
             showHeader: false,
@@ -688,7 +687,6 @@ export const K8sDetail: React.FC = (props: any) => {
   return (
     <div style={{ padding: '24px 20px 0' }}>
       <ProTable
-        isCustomPg={true}
         showQueryForm={false}
         tableProps={{
           showHeader: false,
@@ -813,7 +811,6 @@ const FailedDetail = (props: any) => {
         {item.type !== 'nameDuplicate' ? (
           <div style={{ padding: '0 20px', margin: '24px 0 8px' }}>
             <ProTable
-              isCustomPg={true}
               showQueryForm={false}
               tableProps={{
                 showHeader: false,

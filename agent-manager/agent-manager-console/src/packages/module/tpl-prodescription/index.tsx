@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ProDescriptions } from '@didi/dcloud-design';
+import { ProDescriptions } from 'knowdesign';
 import { request } from '../../../request/index';
 
 // mock数据
@@ -84,14 +84,14 @@ const BasicInfo = (props) => {
         delete item.tableFunction;
         CustomFun
           ? arr.push({
-              ...item,
-              renderCustom: (ct) => {
-                return <CustomFun content={ct} {...newConfig} />;
-              },
-            })
+            ...item,
+            renderCustom: (ct) => {
+              return <CustomFun content={ct} {...newConfig} />;
+            },
+          })
           : arr.push({
-              ...item,
-            });
+            ...item,
+          });
       } else {
         arr.push({
           ...item,

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Upload, IconFont, message, notification } from '@didi/dcloud-design';
+import { Form, Input, Button, Upload, IconFont, message, notification } from 'knowdesign';
 import * as SparkMD5 from 'spark-md5';
 import { getAgentVersion } from '../../api/agent';
 import { formFetch } from '../../lib/fetch';

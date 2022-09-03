@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
-import { Radio, DatePicker } from '@didi/dcloud-design';
-import { IconFont } from '@didi/dcloud-design';
+import { Radio, DatePicker } from 'knowdesign';
+import { IconFont } from 'knowdesign';
 const RangePicker = DatePicker.RangePicker as any;
 import moment, { Moment } from 'moment';
 

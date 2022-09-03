@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ProTable, Select, Button, IconFont, Form, Modal, Input, Drawer } from '@didi/dcloud-design';
+import { ProTable, Select, Button, IconFont, Form, Modal, Input, Drawer } from 'knowdesign';
 // import { renderTableOpts } from '../../common-pages/render-table-opts'
 // import '../style/index.less';
 // import moment from "moment";

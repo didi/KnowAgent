@@ -9,9 +9,6 @@
   "preset": "@didi/d1-preset-opensource",
   "homepage": "",
   "license": "ISC",
-  "publishConfig": {
-    "registry": "http://registry.npm.xiaojukeji.com/"
-  },
   "repository": {
     "type": "git",
     "url": "git@git.xiaojukeji.com:bigdata-cloud/d1.git"
@@ -52,7 +49,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/runtime": "^7.5.5",
-    "@didi/dcloud-design": "~1.3.5",
+    "knowdesign": "~1.3.5",
     "@types/lodash": "^4.14.138",
     "@types/react-router-dom": "^5.3.3",
     "@types/single-spa-react": "^2.12.0",

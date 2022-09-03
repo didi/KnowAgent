@@ -1,5 +1,5 @@
 import React from 'react';
-import { Utils, IconFont } from '@didi/dcloud-design';
+import { Utils, IconFont } from 'knowdesign';
 const { formatDate, formatDuration, formatSize } = Utils;
 
 const K = 1024;

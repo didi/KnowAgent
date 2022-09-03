@@ -1,5 +1,5 @@
 import React from 'react';
-import { SingleChart, Utils } from '@didi/dcloud-design';
+import { SingleChart, Utils } from 'knowdesign';
 
 interface IProps {
   title: string;
@@ -52,9 +52,8 @@ const ChartItem = (props: IProps): JSX.Element => {
               params
                 .map((item) => {
                   return `<div style="display: flex; min-width: 140px; justify-content: space-between;line-height: 20px;color: #495057;">
-                <div style="margin-right: 20px;"><span style="display:inline-block;margin-right:8px;border-radius:50%;width:6px;height:6px;background-color:${
-                  item.color
-                };"></span><span>${item.name}</span></div>
+                <div style="margin-right: 20px;"><span style="display:inline-block;margin-right:8px;border-radius:50%;width:6px;height:6px;background-color:${item.color
+                    };"></span><span>${item.name}</span></div>
                 <div>${unitFormatFn(item.value)}</div>
               </div>`;
                 })

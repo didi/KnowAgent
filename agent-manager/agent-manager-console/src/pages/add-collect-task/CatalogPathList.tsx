@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Form, Input, useDynamicList } from '@didi/dcloud-design';
+import { Form, Input, useDynamicList } from 'knowdesign';
 import { setList } from './config';
 import './index.less';
 

@@ -1,4 +1,4 @@
-import { notification } from '@didi/dcloud-design';
+import { notification } from 'knowdesign';
 import service from './axiosConfig';
 import { RequestInit, IInit, IRes } from './type';
 

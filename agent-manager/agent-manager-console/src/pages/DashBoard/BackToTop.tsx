@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './style/index.less';
 import _ from 'lodash';
-import { IconFont } from '@didi/dcloud-design';
+import { IconFont } from 'knowdesign';
 
 interface IProps {
   visibleHeight?: number;

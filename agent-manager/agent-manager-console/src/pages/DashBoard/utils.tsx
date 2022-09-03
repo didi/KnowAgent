@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tooltip } from '@didi/dcloud-design';
+import { Tooltip } from 'knowdesign';
 import { Link } from 'react-router-dom';
 
 export function byteToMB(limit: number): any {

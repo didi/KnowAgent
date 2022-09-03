@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Input, Row, Col, InputNumber, Radio, Select, Checkbox, Modal } from '@didi/dcloud-design';
+import { Form, Button, Input, Row, Col, InputNumber, Radio, Select, Checkbox, Modal } from 'knowdesign';
 import './index.less';
-import { AppContainer, Container } from '@didi/dcloud-design';
+import { AppContainer, Container } from 'knowdesign';
 import ProTableProject from './module/tpl-protable/index';
 import ProFormProject from './module/tpl-proform/index';
 import Prodescription from './module/tpl-prodescription/index';

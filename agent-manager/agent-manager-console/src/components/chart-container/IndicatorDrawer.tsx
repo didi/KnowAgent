@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef, useEffect } from 'react';
-import { Drawer, Button, Menu } from '@didi/dcloud-design';
+import { Drawer, Button, Menu } from 'knowdesign';
 import { IindicatorSelectModule, eventBus } from './index';
 import IndicatorModule from './IndicatorModule';
 import './style/indicator-drawer.less';

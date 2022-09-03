@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Row, Col, message, Tooltip } from '@didi/dcloud-design';
+import { Select, Row, Col, message, Tooltip } from 'knowdesign';
 const { Option } = Select;
 import './style/query-module.less';
 import { eventBus } from './index';
-import { IconFont } from '@didi/dcloud-design';
+import { IconFont } from 'knowdesign';
 import { IindicatorSelectModule, IfilterData } from './index';
 import { request } from '../../request/index';
 

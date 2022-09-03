@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps, useLocation, withRouter } from 'react-router-dom';
-import { ProDescriptions, AppContainer, IconFont } from '@didi/dcloud-design';
+import { ProDescriptions, AppContainer, IconFont } from 'knowdesign';
 import { getHostInfo, getAgentInfo, getAgentSeniorInfo, getCollectTaskConfig } from './config';
 import { EventBusTypes } from '../../constants/event-types';
 import fetch from '../../lib/fetch';
@@ -172,7 +172,6 @@ const AgentDetail = (props: any) => {
             </div>
             {/* <div>
             <ProTable
-              isCustomPg={true}
               showQueryForm={false}
               tableProps={{
                 tableId: 'collectList',

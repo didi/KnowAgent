@@ -40,7 +40,6 @@
               <goal>npm</goal>
             </goals>
             <configuration>
-              <npmRegistryURL>http://registry.npm.xiaojukeji.com/</npmRegistryURL>
               <arguments>install</arguments>
             </configuration>
           </execution>
