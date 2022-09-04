@@ -21,13 +21,12 @@ import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.KafkaClusterMapper;
-import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +40,7 @@ import java.util.*;
 @org.springframework.stereotype.Service
 public class KafkaClusterManageServiceImpl implements KafkaClusterManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaClusterManageServiceImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(KafkaClusterManageServiceImpl.class);
 
     @Autowired
     private KafkaClusterMapper kafkaClusterDAO;

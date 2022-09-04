@@ -4,12 +4,12 @@ import com.didichuxing.datachannel.agentmanager.common.bean.common.Result;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
-import org.aspectj.lang.JoinPoint;
+import com.didichuxing.datachannel.agentmanager.common.util.HttpUtils;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +19,8 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class GlobalExceptionProcessInterceptor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionProcessInterceptor.class);
+
+    private static final ILog LOGGER = LogFactory.getLog(GlobalExceptionProcessInterceptor.class);
 
     /**
      * 切入点

@@ -3,22 +3,25 @@ package com.didichuxing.datachannel.agentmanager.core.service;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServicePaginationQueryConditionDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.service.ServicePaginationRecordDO;
 import com.didichuxing.datachannel.agentmanager.core.ApplicationTests;
+import com.didichuxing.datachannel.agentmanager.core.dashboard.impl.DashboardManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 //@Transactional
 //@Rollback
 public class ServiceManageServiceTest extends ApplicationTests {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManageServiceTest.class);@Autowired
+
+    private static final ILog LOGGER = LogFactory.getLog(ServiceManageServiceTest.class);
+
+    @Autowired
     private HostManageService hostManageService;
 
     @Autowired

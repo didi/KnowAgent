@@ -12,6 +12,8 @@ import com.didichuxing.datachannel.agentmanager.common.util.Comparator;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.remote.kafkacluster.RemoteKafkaClusterService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,18 +23,13 @@ import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.PartitionInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @org.springframework.stereotype.Service
 public class DefaultKafkaClusterManageServiceExtensionImpl implements KafkaClusterManageServiceExtension {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultKafkaClusterManageServiceExtensionImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(DefaultKafkaClusterManageServiceExtensionImpl.class);
 
     private static final Integer ADMIN_CLIENT_REQUEST_TIME_OUT_UNIT_MS = 6000;
 

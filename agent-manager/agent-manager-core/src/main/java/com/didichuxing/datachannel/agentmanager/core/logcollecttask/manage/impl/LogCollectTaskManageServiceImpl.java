@@ -37,15 +37,14 @@ import com.didichuxing.datachannel.agentmanager.core.service.ServiceLogCollectTa
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.logcollecttask.manage.extension.LogCollectTaskManageServiceExtension;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -57,7 +56,7 @@ import java.util.*;
 @Service
 public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogCollectTaskManageServiceImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(LogCollectTaskManageServiceImpl.class);
 
     private static final int HEARTBEAT_PERIOD = 30;
 

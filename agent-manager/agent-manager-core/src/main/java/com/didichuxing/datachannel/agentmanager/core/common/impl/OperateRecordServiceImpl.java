@@ -12,15 +12,14 @@ import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.OperateRecordDAO;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +30,9 @@ import java.util.List;
 @Service
 public class OperateRecordServiceImpl implements OperateRecordService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OperateRecordServiceImpl.class);@Autowired
+    private static final ILog LOGGER = LogFactory.getLog(OperateRecordServiceImpl.class);
+
+    @Autowired
     private OperateRecordDAO operateRecordDAO;
 
     /**

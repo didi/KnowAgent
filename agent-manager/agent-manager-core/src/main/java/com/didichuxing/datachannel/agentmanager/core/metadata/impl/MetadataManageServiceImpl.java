@@ -19,10 +19,10 @@ import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.metadata.MetadataManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.MetaDataFileMapper;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +33,7 @@ import java.util.*;
 @org.springframework.stereotype.Service
 public class MetadataManageServiceImpl implements MetadataManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetadataManageServiceImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(MetadataManageServiceImpl.class);
 
     @Value("${file.upload.dir}")
     private String uploadDir;

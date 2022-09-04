@@ -16,7 +16,6 @@
         <module>agent-manager-core</module>
         <module>agent-manager-remote</module>
         <module>agent-manager-rest</module>
-        <module>auv-job-spring-boot-starter</module>
         <module>agent-manager-task</module>
         <module>agent-manager-extends/agent-manager-thirdpart</module>
     </modules>

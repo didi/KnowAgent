@@ -8,12 +8,13 @@ import com.didichuxing.datachannel.agentmanager.core.errorlogs.ErrorLogsManageSe
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.AgentErrorLogDAO;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.impl.DefaultKafkaClusterManageServiceExtensionImpl;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,7 @@ import java.util.concurrent.Executors;
 @org.springframework.stereotype.Service
 public class ErrorLogsManageServiceImpl implements ErrorLogsManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ErrorLogsManageServiceImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(ErrorLogsManageServiceImpl.class);
 
     @Autowired
     @Qualifier(value = "agentErrorLogDAO")

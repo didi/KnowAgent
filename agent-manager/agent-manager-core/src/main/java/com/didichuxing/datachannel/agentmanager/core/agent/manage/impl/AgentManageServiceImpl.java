@@ -22,13 +22,12 @@ import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.kafkacluster.KafkaClusterManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper;
 import com.didichuxing.datachannel.agentmanager.thirdpart.agent.manage.extension.AgentManageServiceExtension;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +39,8 @@ import java.util.List;
  */
 @org.springframework.stereotype.Service
 public class AgentManageServiceImpl implements AgentManageService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AgentManageServiceImpl.class);
+
+    private static final ILog LOGGER = LogFactory.getLog(AgentManageServiceImpl.class);
 
     @Autowired
     private AgentMapper agentDAO;

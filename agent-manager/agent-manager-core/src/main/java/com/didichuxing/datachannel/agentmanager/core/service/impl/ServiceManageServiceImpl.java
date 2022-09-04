@@ -11,13 +11,11 @@ import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHo
 import com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceProjectPO;
 import com.didichuxing.datachannel.agentmanager.common.constant.CommonConstant;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.SourceEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.ModuleEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.operaterecord.OperationEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.service.ServiceTypeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
 import com.didichuxing.datachannel.agentmanager.common.bean.common.CheckResult;
-import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.core.common.OperateRecordService;
 import com.didichuxing.datachannel.agentmanager.core.host.HostManageService;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCollectTaskManageService;
@@ -27,13 +25,12 @@ import com.didichuxing.datachannel.agentmanager.persistence.mysql.ServiceMapper;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceHostManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.agentmanager.thirdpart.service.extension.ServiceManageServiceExtension;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +40,7 @@ import java.util.Map;
 @org.springframework.stereotype.Service
 public class ServiceManageServiceImpl implements ServiceManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceManageServiceImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(ServiceManageServiceImpl.class);
 
     @Autowired
     private ServiceMapper serviceDAO;

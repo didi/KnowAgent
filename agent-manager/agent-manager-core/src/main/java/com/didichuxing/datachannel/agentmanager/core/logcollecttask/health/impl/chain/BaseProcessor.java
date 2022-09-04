@@ -5,15 +5,15 @@ import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.chain.ProcessorChain;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthInspectionResultEnum;
 import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.chain.context.LogCollectTaskHealthCheckContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 
 /**
  * @author william.
  */
 public abstract class BaseProcessor implements Processor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseProcessor.class);
+    private static final ILog LOGGER = LogFactory.getLog(BaseProcessor.class);
 
     @Override
     public void process(Context context, ProcessorChain chain) {

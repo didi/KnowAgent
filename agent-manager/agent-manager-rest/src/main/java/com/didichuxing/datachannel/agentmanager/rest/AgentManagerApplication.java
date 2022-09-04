@@ -2,29 +2,15 @@ package com.didichuxing.datachannel.agentmanager.rest;
 
 import cn.hutool.core.lang.ClassScanner;
 import com.didichuxing.datachannel.agentmanager.common.GlobalProperties;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.dashboard.DashBoardDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.MaintenanceDashBoardVO;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.OperatingDashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.chain.HealthCheckProcessorAnnotation;
 import com.didichuxing.datachannel.agentmanager.common.chain.Processor;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.HealthCheckProcessorEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.agent.AgentHealthLevelEnum;
-import com.didichuxing.datachannel.agentmanager.common.enumeration.logcollecttask.LogCollectTaskHealthLevelEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.EnvUtil;
-import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.AgentHealthManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.agent.manage.impl.AgentManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.dashboard.impl.DashboardManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.errorlogs.impl.ErrorLogsManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.health.impl.LogCollectTaskHealthManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.impl.LogCollectTaskManageServiceImpl;
-import com.didichuxing.datachannel.agentmanager.core.metrics.impl.MetricsManageServiceImpl;
 import com.didichuxing.datachannel.agentmanager.persistence.*;
+import com.didichuxing.datachannel.agentmanager.rest.interceptor.GlobalExceptionProcessInterceptor;
 import com.didichuxing.datachannel.agentmanager.rest.swagger.SwaggerConfiguration;
-import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,9 +19,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.util.CollectionUtils;
 import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * william.
@@ -46,7 +30,7 @@ import java.util.concurrent.*;
 @SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager", "com.didiglobal.logi"})
 public class AgentManagerApplication {
 
-    private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
+    private static final ILog LOGGER = LogFactory.getLog(AgentManagerApplication.class);
 
     public static final String PACKAGE_SCAN_BASE = "com.didichuxing.datachannel.agentmanager";
 

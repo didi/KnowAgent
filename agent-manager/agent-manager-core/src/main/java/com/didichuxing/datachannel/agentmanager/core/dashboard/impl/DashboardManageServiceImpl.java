@@ -16,6 +16,7 @@ import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.Metri
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.MetricUnitEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.metrics.SortTimeFieldEnum;
 import com.didichuxing.datachannel.agentmanager.common.util.DateUtils;
+import com.didichuxing.datachannel.agentmanager.core.agent.health.impl.chain.BaseProcessor;
 import com.didichuxing.datachannel.agentmanager.core.agent.manage.AgentManageService;
 import com.didichuxing.datachannel.agentmanager.core.agent.version.AgentVersionManageService;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.DashboardManageService;
@@ -25,9 +26,9 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.core.service.ServiceManageService;
 import com.didichuxing.datachannel.system.metrcis.util.MathUtil;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -35,7 +36,7 @@ import java.util.*;
 @org.springframework.stereotype.Service
 public class DashboardManageServiceImpl implements DashboardManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardManageServiceImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(DashboardManageServiceImpl.class);
 
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;

@@ -1,20 +1,15 @@
 package com.didichuxing.datachannel.agentmanager.common.util;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.util.TypeUtils;
-import com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import com.google.common.collect.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -27,7 +22,7 @@ import java.util.function.Function;
  */
 public class ConvertUtil {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConvertUtil.class);
+    private static final ILog LOGGER = LogFactory.getLog(ConvertUtil.class);
 
     public static <T> T obj2ObjByJSON(Object srcObj, Class<T> tgtClass) {
         return JSON.parseObject(JSON.toJSONString(srcObj), tgtClass);

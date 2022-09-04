@@ -2,6 +2,8 @@ package com.didichuxing.datachannel.agentmanager.common.util;
 
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.exception.ServiceException;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -10,10 +12,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,7 +25,8 @@ import java.util.Map;
  * @date 20/5/24
  */
 public class HttpUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpUtils.class);
+
+    private static final ILog LOGGER = LogFactory.getLog(HttpUtils.class);
 
     // 连接超时时间, 单位: ms
     private static int CONNECT_TIME_OUT = 15000;

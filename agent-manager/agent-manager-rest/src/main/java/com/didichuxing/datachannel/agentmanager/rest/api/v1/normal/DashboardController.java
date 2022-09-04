@@ -6,10 +6,10 @@ import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.Mainten
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.dashboard.OperatingDashBoardVO;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.core.dashboard.DashboardManageService;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "dashboard")
 public class DashboardController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("DashboardController");
+    private static final ILog LOGGER = LogFactory.getLog(DashboardController.class);
 
     @Autowired
     private DashboardManageService dashboardManageService;
