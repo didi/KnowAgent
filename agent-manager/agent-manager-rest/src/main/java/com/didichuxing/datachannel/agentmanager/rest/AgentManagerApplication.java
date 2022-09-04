@@ -57,6 +57,7 @@ public class AgentManagerApplication {
      * @param args
      */
     public static void main(String[] args) {
+
         /*
          * 加载日志采集任务 & agent 健康度检查处理器
          */
@@ -74,119 +75,6 @@ public class AgentManagerApplication {
             LOGGER.info("Spring Boot use profile: {}", profile);
         }
         LOGGER.info("agent-manager Application started");
-
-        /**
-         * TODO：定时任务 fix
-         */
-        ScheduledExecutorService pool = Executors.newScheduledThreadPool(2);
-
-        pool.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ErrorLogsManageServiceImpl errorLogsManageServiceImpl = ctx.getBean(ErrorLogsManageServiceImpl.class);
-                    errorLogsManageServiceImpl.consumeAndWriteErrorLogs();
-                } catch (Exception ex) {
-                    LOGGER.error(String.format(" write error logs to db error, root cause is: %s", ex.getMessage()), ex);
-                }
-            }
-        },0, 5, TimeUnit.SECONDS);
-
-        pool.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DashboardManageServiceImpl dashboardManageServiceImpl = ctx.getBean(DashboardManageServiceImpl.class);
-                    DashBoardDO dashBoardDO = dashboardManageServiceImpl.build();
-                    GlobalProperties.maintenanceDashBoardVO = MaintenanceDashBoardVO.cast2MaintenanceDashBoardVO(dashBoardDO);
-                    GlobalProperties.operatingDashBoardVO = OperatingDashBoardVO.cast2OperatingDashBoardVO(dashBoardDO);
-                } catch (Exception ex) {
-                    LOGGER.error(String.format(" build dashboard error, root cause is: %s", ex.getMessage()), ex);
-                }
-            }
-        },0, 1, TimeUnit.MINUTES);
-
-        pool.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MetricsManageServiceImpl metricsManageService = ctx.getBean(MetricsManageServiceImpl.class);
-                    metricsManageService.clearExpireMetrics(7);
-                } catch (Exception ex) {
-                    LOGGER.error(String.format(" delete expire metrics error, root cause is: %s", ex.getMessage()), ex);
-                }
-            }
-        },0, 1, TimeUnit.DAYS);
-
-        pool.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ErrorLogsManageServiceImpl errorLogsManageService = ctx.getBean(ErrorLogsManageServiceImpl.class);
-                    errorLogsManageService.clearExpireErrorLogs(7);
-                } catch (Exception ex) {
-                    LOGGER.error(String.format(" delete expire error logs error, root cause is: %s", ex.getMessage()), ex);
-                }
-            }
-        },0, 1, TimeUnit.DAYS);
-
-        ExecutorService logCollectTaskHealthCheckThreadPool = Executors.newFixedThreadPool(2);
-        pool.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    LogCollectTaskManageServiceImpl logCollectTaskManageService = ctx.getBean(LogCollectTaskManageServiceImpl.class);
-                    LogCollectTaskHealthManageServiceImpl logCollectTaskHealthManageService = ctx.getBean(LogCollectTaskHealthManageServiceImpl.class);
-                    List<LogCollectTaskDO> logCollectTaskDOList = logCollectTaskManageService.getAllLogCollectTask2HealthCheck();
-                    if (CollectionUtils.isEmpty(logCollectTaskDOList)) {
-                        LOGGER.info("class=LogCollectTaskHealthCheckTask||method=execute||msg=LogCollectTaskDO List task is empty!!");
-                    }
-                    List<Future> futures = Lists.newArrayList();
-                    for (LogCollectTaskDO logCollectTaskDO : logCollectTaskDOList) {
-                        futures.add(logCollectTaskHealthCheckThreadPool.submit(() -> {
-                            LogCollectTaskHealthLevelEnum logCollectTaskHealthLevelEnum = logCollectTaskHealthManageService.checkLogCollectTaskHealth(logCollectTaskDO);
-                            LOGGER.info("class=LogCollectTaskHealthCheckTask||method=execute||logCollectTaskId={}||"
-                                    + "logCollectTaskHealthLevel={}", logCollectTaskDO.getId(), logCollectTaskHealthLevelEnum.getDescription());
-                            return logCollectTaskHealthLevelEnum;
-                        }));
-                    }
-                    for (Future future : futures) {
-                        future.get();
-                    }
-                } catch (Exception ex) {
-                    LOGGER.error(String.format(" check logCollectTask health error, root cause is: %s", ex.getMessage()), ex);
-                }
-            }
-        },0, 1, TimeUnit.MINUTES);
-
-        ExecutorService agentHealthCheckThreadPool = Executors.newFixedThreadPool(2);
-        pool.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AgentManageServiceImpl agentManageService = ctx.getBean(AgentManageServiceImpl.class);
-                    AgentHealthManageServiceImpl agentHealthManageService = ctx.getBean(AgentHealthManageServiceImpl.class);
-                    List<AgentDO> agentDOList = agentManageService.list();
-                    if (CollectionUtils.isEmpty(agentDOList)) {
-                        LOGGER.info("class=AgentHealthCheckTask||method=execute||msg=AgentDO List task is empty!!");
-                    }
-                    List<Future> futures = Lists.newArrayList();
-                    for (AgentDO agentDO : agentDOList) {
-                        futures.add(agentHealthCheckThreadPool.submit(() -> {
-                            AgentHealthLevelEnum agentHealthLevelEnum = agentHealthManageService.checkAgentHealth(agentDO);
-                            LOGGER.info("class=AgentHealthCheckTask||method=execute||agentId={}||"
-                                    + "agentHealthLevelEnum={}", agentDO.getId(), agentHealthLevelEnum.getDescription());
-                            return agentHealthLevelEnum;
-                        }));
-                    }
-                    for (Future future : futures) {
-                        future.get();
-                    }
-                } catch (Exception ex) {
-                    LOGGER.error(String.format(" check agent health error, root cause is: %s", ex.getMessage()), ex);
-                }
-            }
-        },0, 1, TimeUnit.MINUTES);
 
     }
 
