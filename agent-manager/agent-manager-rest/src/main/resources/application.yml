@@ -96,3 +96,8 @@ system:
 file:
   upload:
     dir: /root/ka/am/output/upload
+
+observability:
+  pointcut: execution(* com.didiglobal..*.*(..)) || execution(* com.didichuxing..*.*(..))
+
+
