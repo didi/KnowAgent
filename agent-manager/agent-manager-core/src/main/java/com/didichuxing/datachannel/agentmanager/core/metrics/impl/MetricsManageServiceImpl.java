@@ -28,6 +28,8 @@ import com.didichuxing.datachannel.agentmanager.core.logcollecttask.manage.LogCo
 import com.didichuxing.datachannel.agentmanager.core.metrics.MetricsManageService;
 import com.didichuxing.datachannel.agentmanager.persistence.*;
 import com.didichuxing.datachannel.agentmanager.thirdpart.kafkacluster.extension.KafkaClusterManageServiceExtension;
+import com.didiglobal.logi.log.ILog;
+import com.didiglobal.logi.log.LogFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -46,7 +48,7 @@ import java.util.concurrent.*;
 @org.springframework.stereotype.Service
 public class MetricsManageServiceImpl implements MetricsManageService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MetricsManageServiceImpl.class);
+    private static final ILog LOGGER = LogFactory.getLog(MetricsManageServiceImpl.class);
 
     @Autowired
     @Qualifier(value = "metricsSystemDAO")

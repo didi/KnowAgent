@@ -43,7 +43,7 @@ import java.util.concurrent.*;
 @EnableAsync
 @EnableScheduling
 @ServletComponentScan
-@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager"})
+@SpringBootApplication(scanBasePackages = {"com.didichuxing.datachannel.agentmanager", "com.didiglobal.logi"})
 public class AgentManagerApplication {
 
     private static final Logger LOGGER           = LoggerFactory.getLogger(AgentManagerApplication.class);
@@ -79,17 +79,6 @@ public class AgentManagerApplication {
          * TODO：定时任务 fix
          */
         ScheduledExecutorService pool = Executors.newScheduledThreadPool(2);
-        pool.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MetricsManageServiceImpl metricsManageServiceImpl = ctx.getBean(MetricsManageServiceImpl.class);
-                    metricsManageServiceImpl.consumeAndWriteMetrics();
-                } catch (Exception ex) {
-                    LOGGER.error(String.format(" write metrics to db error, root cause is: %s", ex.getMessage()), ex);
-                }
-            }
-        },0, 5, TimeUnit.SECONDS);
 
         pool.scheduleWithFixedDelay(new Runnable() {
             @Override
