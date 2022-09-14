@@ -1,6 +1,0 @@
-集成测试使用说明
-1. 编辑conf下的verify.properties的内容，设置日志文件生成规则
-2. 打包安装完成log-agent于指定目录
-3. 打包安装完成log-agent-integration-test于指定目录
-4. 脚本启动log-agent-integration-test，脚本为：sh log-agent-integration-test/bin/start.sh
-5. 查看log-agent-integration-test/logs/test.log内容

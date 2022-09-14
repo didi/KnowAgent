@@ -15,7 +15,6 @@
         <module>agent-sink</module>
         <module>agent-task</module>
         <module>agent-node</module>
-        <module>agent-integration-test</module>
     </modules>
 
     <packaging>pom</packaging>
