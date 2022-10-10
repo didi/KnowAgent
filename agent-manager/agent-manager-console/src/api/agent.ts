@@ -53,8 +53,8 @@ export const getReceiversTopic = (receiverId: number) => {
   return fetch(apiMap.getReceiversTopics + `/${receiverId}/topics`);
 };
 
-export const getTopics = () => {
-  return fetch(apiMap.getTopicsBrokerServers);
+export const getTopics = (brokerServers: string) => {
+  return fetch(apiMap.getTopicsBrokerServers + `${brokerServers || ''}`);
 };
 
 export const addOpHosts = (params: any) => {

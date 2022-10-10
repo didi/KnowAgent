@@ -72,10 +72,6 @@ export const addReceive = (params: any) => {
 };
 
 // kafka集群 => 新增集群
-const mockClister = {
-  agentMetricsTopic: 'agentMetricsTopic',
-  agentErrorLogsTopic: 'agentErrorLogsTopic',
-};
 export const ActionClusterForm = (props: any) => {
   // const [cluster, setHcluster] = useState(formData.record);
   const [cluster, setHcluster] = useState(props.containerData);
@@ -176,8 +172,8 @@ export const ActionClusterForm = (props: any) => {
   }, [edit]);
 
   const _getTopics = async () => {
-    const res = await getTopics();
-    const data = res.map((ele) => {
+    const res = await getTopics(cluster.kafkaClusterBrokerConfiguration);
+    const data = (res || []).map((ele) => {
       return { label: ele, value: ele };
     });
     setReceiverTopic(data);
@@ -294,8 +290,9 @@ export const ActionClusterForm = (props: any) => {
               <Tooltip
                 title={
                   agentErrorLogsTopicList?.length && !cluster?.agentErrorLogsTopic
-                    ? `当前存在默认错误日志流接受集群：${agentErrorLogsTopicList[0]?.agentErrorLogsTopic || '-'
-                    }，请取消选定后再设置新集群。`
+                    ? `当前存在默认错误日志流接受集群：${
+                        agentErrorLogsTopicList[0]?.agentErrorLogsTopic || '-'
+                      }，请取消选定后再设置新集群。`
                     : null
                 }
               >

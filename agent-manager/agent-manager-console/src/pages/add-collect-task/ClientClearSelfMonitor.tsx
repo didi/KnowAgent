@@ -41,9 +41,10 @@ const ClientClearSelfMonitor = (props: any) => {
       });
   };
 
-  const getReceiverTopic = async () => {
-    const res = await getTopics();
-    const data = res.map((ele) => {
+  const getReceiverTopic = async (value) => {
+    const kafkaClusterBrokerConfiguration = receivers.find((item) => item.id === value)?.kafkaClusterBrokerConfiguration;
+    const res = await getTopics(kafkaClusterBrokerConfiguration);
+    const data = (res || []).map((ele) => {
       return { label: ele, value: ele };
     });
     setReceiverTopic(data);
@@ -60,7 +61,6 @@ const ClientClearSelfMonitor = (props: any) => {
 
   useEffect(() => {
     getReceiversList();
-    getReceiverTopic();
   }, []);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const ClientClearSelfMonitor = (props: any) => {
           initialValue=""
           rules={[{ required: true, message: '请选择Kafka集群' }]}
         >
-          <Select className="w-300" placeholder="请选择集群">
+          <Select onChange={(value) => getReceiverTopic(value)} className="w-300" placeholder="请选择集群">
             {receivers.map((ele, index) => {
               return (
                 <Select.Option key={index} value={ele.id}>
