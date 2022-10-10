@@ -6,6 +6,8 @@ import com.didichuxing.datachannel.agentmanager.common.bean.domain.agent.AgentDO
 import com.didichuxing.datachannel.agentmanager.common.bean.domain.logcollecttask.LogCollectTaskDO;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentUpdateDTO;
 import com.didichuxing.datachannel.agentmanager.common.bean.vo.agent.AgentVO;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.AdvancedConfigItem;
+import com.didichuxing.datachannel.agentmanager.common.bean.vo.logcollecttask.AdvancedConfigTips;
 import com.didichuxing.datachannel.agentmanager.common.constant.ApiPrefix;
 import com.didichuxing.datachannel.agentmanager.common.util.ConvertUtil;
 import com.didichuxing.datachannel.agentmanager.common.util.SpringTool;
@@ -25,6 +27,26 @@ import java.util.List;
 @RestController
 @RequestMapping(ApiPrefix.API_V1_OP_PREFIX + "agent")
 public class OpAgentController {
+
+    private static final String AGENT_ADVANCED_CONFIG_TIPS_SUMMARY = "高级配置项采用 json 格式，配置样例：\n" +
+            "{\n" +
+            "    “agentLimitStartThreshold”: 20000000,\n" +
+            "    “agentLimitMinThreshold”: 1000000\n" +
+            "}";
+    private static final List<AdvancedConfigItem> AGENT_ADVANCED_CONFIG_ITEM_ARRAY_LIST = new ArrayList<>();
+
+    static {
+        loadAgentAdvancedConfigItemList();
+    }
+
+    private static void loadAgentAdvancedConfigItemList() {
+        AGENT_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("agentLimitStartThreshold", "agent限流初始阈值。单位：byte，类型：Long", "20000000")
+        );
+        AGENT_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("agentLimitMinThreshold", "agent限流最小阈值。单位：byte，类型：Long", "1000000")
+        );
+    }
 
     @Autowired
     private AgentManageService agentManageService;
@@ -79,6 +101,16 @@ public class OpAgentController {
             agentManageService.deleteAgentByIds(agentIdList, true, true, SpringTool.getUserName());
         }
         return Result.buildSucc();
+    }
+
+    @ApiOperation(value = " Agent 高级配置提示信息", notes = "")
+    @RequestMapping(value = "/advanced-config/tips", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<AdvancedConfigTips> getLogCollectTaskAdvancedConfigTips() {
+        AdvancedConfigTips advancedConfigTips = new AdvancedConfigTips();
+        advancedConfigTips.setSummary(AGENT_ADVANCED_CONFIG_TIPS_SUMMARY);
+        advancedConfigTips.setAdvancedConfigItemList(AGENT_ADVANCED_CONFIG_ITEM_ARRAY_LIST);
+        return Result.buildSucc(advancedConfigTips);
     }
 
 }

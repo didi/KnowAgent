@@ -55,6 +55,100 @@ import static com.didichuxing.datachannel.agentmanager.common.constant.Permissio
 @RequestMapping(ApiPrefix.API_V1_NORMAL_PREFIX + "collect-task")
 public class NormalLogCollectTaskController {
 
+    public static final String LOG_COLLECT_TASK_ADVANCED_CONFIG_TIPS_SUMMARY = "高级配置项采用 json 格式，配置样例：\n" +
+            "{\n" +
+            "    “channelMaxNum”: 1000,\n" +
+            "    “channelMaxBytes”: 10485760,\n" +
+            "     “transFormate”: 1\n" +
+            "}";
+
+    public static final List<AdvancedConfigItem> LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST = new ArrayList<>();
+
+    static {
+        loadLogCollectTaskAdvancedConfigItemList();
+    }
+
+    private static void loadLogCollectTaskAdvancedConfigItemList() {
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("channelMaxBytes", "channel最大容量。单位：byte，类型：Long", String.valueOf(10 * 1024 * 1024L))
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("channelMaxNum", "channel最大条数。单位：条，类型：Integer", String.valueOf(1000))
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("encodeType", "编码类型。类型：String", "UTF-8")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("encodeType", "编码类型。类型：String", "UTF-8")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("otherMetrics", "附属指标集。类型：Map<String, String>", "无默认值")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("otherEvents", "附属事件集。类型：Map<String, String>", "无默认值")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("maxErrorLineNum", "连续maxErrorLineNum行无法解析到日志，则采集结束。单位：行，类型：Integer", "100")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("maxModifyTime", "文件最晚修改时间间隔，如文件最晚修改时间 + maxModifyTime < 当前时间，则该文件将不被进行采集。单位：millisecond，类型：Long", String.valueOf(7 * 24 * 60 * 60 * 1000L))
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("maxThreadNum", "待采集文件缓冲区最大数量。单位：个，类型：Integer", "10")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("orderTimeMaxGap", "两条日志时间戳相差orderTimeMaxGap，即认为是乱序的日志,乱序阈值。单位：millisecond，类型：Long", String.valueOf(10 * 60 * 1000L))
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("readFileType", "文件读取类型，可选范围：0:多行聚合 1:单行。类型：Integer", "0")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("readTimeOut", "日志读取超时时间，即读到文件末尾，等待readTimeOut秒再读一次。单位：millisecond，类型：Long", "3000")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("isAsync", "是否异步发送。类型：Boolean", "true")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("flushBatchSize", "执行flush的批次大小。类型：Integer", "10")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("flushBatchTimeThreshold", "执行flush的超时时间。单位：millisecond，类型：Long", "30000")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("keyFormat", "key格式。类型：String", "")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("keyStartFlag", "key开始标志。类型：String", "")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("keyStartFlagIndex", "key开始位置索引。类型：Integer", "0")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("maxContentSize", "发送kafka最大消息量,即超过4/3M就会做截断。单位：byte，类型：Long", String.valueOf(4 * 1024 * 1024L))
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("regularPartKey", "固定partition key。类型：String", "")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("sendBatchSize", "发送的批次大小。类型：Integer", "50")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("sendBatchTimeThreshold", "发送超时时间。单位：millisecond，类型：Long", "1000")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("transFormate", "传输格式，可选范围：0：List<MqLogEvent> 1: MqLogEvent 2: 原始类型 String。类型：Integer", "0")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("sinkNum", "sink数量。类型：Integer", "1")
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("startThrehold", "采集任务对应起始限流阈值。单位：byte。类型：Long", String.valueOf(200000))
+        );
+        LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST.add(
+                new AdvancedConfigItem("minThreshold", "采集任务对应最小限流阈值。单位：byte。类型：Long", String.valueOf(100000))
+        );
+    }
+
     @Autowired
     private LogCollectTaskManageService logCollectTaskManageService;
 
@@ -481,6 +575,16 @@ public class NormalLogCollectTaskController {
         logCollectTaskVO.setFileNameSuffixMatchRule(JSON.parseObject(logCollectTaskDO.getFileNameSuffixMatchRuleLogicJsonString(), FileNameSuffixMatchRuleVO.class));
         logCollectTaskVO.setCollectDelayThresholdMs(logCollectTaskDO.getCollectDelayThresholdMs());
         return logCollectTaskVO;
+    }
+
+    @ApiOperation(value = "日志采集任务高级配置提示信息", notes = "")
+    @RequestMapping(value = "/advanced-config/tips", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<AdvancedConfigTips> getLogCollectTaskAdvancedConfigTips() {
+        AdvancedConfigTips advancedConfigTips = new AdvancedConfigTips();
+        advancedConfigTips.setSummary(LOG_COLLECT_TASK_ADVANCED_CONFIG_TIPS_SUMMARY);
+        advancedConfigTips.setAdvancedConfigItemList(LOG_COLLECT_TASK_ADVANCED_CONFIG_ITEM_ARRAY_LIST);
+        return Result.buildSucc(advancedConfigTips);
     }
 
 }
