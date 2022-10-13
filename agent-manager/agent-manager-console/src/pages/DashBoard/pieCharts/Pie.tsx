@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { List, Tabs } from '@didi/dcloud-design';
+import { List, Tabs } from 'knowdesign';
 import { getPieChartOption } from './constants';
-import { IconFont } from '@didi/dcloud-design';
+import { IconFont } from 'knowdesign';
 import { TextRouterLink } from '../utils';
 import './style/index.less';
 import { Bar, ECOptions } from '../BarCharts/Bar';

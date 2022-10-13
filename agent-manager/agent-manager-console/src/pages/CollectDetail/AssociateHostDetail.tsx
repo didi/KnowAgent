@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getHostCollectTaskDetails } from '../../api/collect';
 import { IHostDetail } from '../../interface/collect';
-import { ProDescriptions, Drawer } from '@didi/dcloud-design';
+import { ProDescriptions, Drawer } from 'knowdesign';
 import { hostBaseInfo } from './config';
 
 const AssociateHostDetail = (props: any) => {

@@ -1,4 +1,4 @@
-import { notification } from '@didi/dcloud-design';
+import { notification } from 'knowdesign';
 // import { csrfTokenMethod } from '../api/api';
 // import store from '../store';
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { SingleChart } from '@didi/dcloud-design';
+import { SingleChart } from 'knowdesign';
 import { createOption } from './constants';
-import { IconFont } from '@didi/dcloud-design';
+import { IconFont } from 'knowdesign';
 import { TextRouterLink } from '../utils';
 import { Link } from 'react-router-dom';
 import './style/index.less';
@@ -21,8 +21,8 @@ const DashBoardPie = (props: IProps): JSX.Element => {
       {
         value:
           dataSource?.logCollectTaskNum -
-            dataSource?.yellowLogCollectTaskNameIdPairList?.length -
-            dataSource?.redLogCollectTaskNameIdPairList?.length || 0,
+          dataSource?.yellowLogCollectTaskNameIdPairList?.length -
+          dataSource?.redLogCollectTaskNameIdPairList?.length || 0,
         name: '健康率',
         totalValue: dataSource?.logCollectTaskNum,
       },
@@ -92,12 +92,12 @@ const DashBoardPie = (props: IProps): JSX.Element => {
                     state={
                       type === 'collect'
                         ? {
-                            taskId: `${item.value || ''}`,
-                          }
+                          taskId: `${item.value || ''}`,
+                        }
                         : {
-                            agentId: `${item.value || ''}`,
-                            hostName: `${item.key || ''}`,
-                          }
+                          agentId: `${item.value || ''}`,
+                          hostName: `${item.key || ''}`,
+                        }
                     }
                   />
                 </li>
@@ -142,12 +142,12 @@ const DashBoardPie = (props: IProps): JSX.Element => {
                     state={
                       type === 'collect'
                         ? {
-                            taskId: `${item.value || ''}`,
-                          }
+                          taskId: `${item.value || ''}`,
+                        }
                         : {
-                            agentId: `${item.value || ''}`,
-                            hostName: `${item.key || ''}`,
-                          }
+                          agentId: `${item.value || ''}`,
+                          hostName: `${item.key || ''}`,
+                        }
                     }
                   />
                 </li>

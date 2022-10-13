@@ -1,16 +1,16 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
-import { Collapse, Button, Radio, Tooltip, Empty } from '@didi/dcloud-design';
+import { Collapse, Button, Radio, Tooltip, Empty } from 'knowdesign';
 const { Panel } = Collapse;
 import { arrayMoveImmutable } from 'array-move';
 import { CaretRightOutlined, ReloadOutlined } from '@ant-design/icons';
-import { IconFont } from '@didi/dcloud-design';
+import { IconFont } from 'knowdesign';
 import moment from 'moment';
-import { DragGroup } from '@didi/dcloud-design';
+import { DragGroup } from 'knowdesign';
 import TimeModule from './TimeModule';
 import IndicatorDrawer from './IndicatorDrawer';
 import QueryModule from './QueryModule';
-import { Utils } from '@didi/dcloud-design';
+import { Utils } from 'knowdesign';
 import { request } from '../../request/index';
 import './style/index.less';
 

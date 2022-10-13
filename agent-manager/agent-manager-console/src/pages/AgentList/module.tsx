@@ -19,7 +19,7 @@ import {
   Col,
   ProTable,
   notification,
-} from '@didi/dcloud-design';
+} from 'knowdesign';
 import { arrayMoveImmutable } from 'array-move';
 // import { Imenu } from '../index';
 import moment from 'moment';
@@ -1320,7 +1320,6 @@ export const DiagnosisContent = (props: any) => {
       <div style={{ padding: '20px 30px' }}>{containerData.agentHealthDescription}</div>
       <div style={{ padding: '20px' }}>
         <ProTable
-          isCustomPg={true}
           showQueryForm={false}
           tableProps={{
             showHeader: false,

@@ -13,7 +13,7 @@ import {
   Transfer,
   Checkbox,
   AppContainer,
-} from '@didi/dcloud-design';
+} from 'knowdesign';
 import { request } from '../../request/index';
 
 const hostTypes = [
@@ -454,7 +454,7 @@ export const ActionAppForm = (props: any) => {
           onChange={handleChange}
           render={(item) => item.hostName}
           style={{ width: '100%' }}
-          // initialValue: appForm.targetKeys.length > 0 ? appForm.targetKeys : [],
+        // initialValue: appForm.targetKeys.length > 0 ? appForm.targetKeys : [],
         />
       </Form.Item>
     </Form>

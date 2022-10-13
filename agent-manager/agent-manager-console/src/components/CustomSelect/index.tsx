@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Select, IconFont } from '@didi/dcloud-design';
+import { Select, IconFont } from 'knowdesign';
 interface MiniSelectInterface extends React.FC<any> {
   Option: typeof Select.Option;
 }

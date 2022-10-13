@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Select, Form, InputNumber } from '@didi/dcloud-design';
+import { Row, Col, Select, Form, InputNumber } from 'knowdesign';
 import { yyyyMMDDHHMMss, HHmmssSSS, yyyyMMDDHHMMssSSS, yyyyMMDDHHMMssSS, fuhao } from './dateRegAndGvar';
 import './index.less';
 import { lastIndexOf } from 'lodash';
 import { regLogSliceTimestampPrefixString } from '../../constants/reg';
-import { IconFont, Button, Input, Radio, AutoComplete } from '@didi/dcloud-design';
+import { IconFont, Button, Input, Radio, AutoComplete } from 'knowdesign';
 const { TextArea } = Input;
 const { Option } = AutoComplete;
 import { getSlicePreview } from '../../api/collect';
@@ -369,9 +369,9 @@ const LogRepeatForm = (props: any) => {
                 style={{ width: 180 }}
                 className="step2_file_sliceTimestampFormat"
                 onChange={() => setStart(-1)}
-                // onSelect={onSelect}
-                // onSearch={this.onSearch}
-                // placeholder="input here"
+              // onSelect={onSelect}
+              // onSearch={this.onSearch}
+              // placeholder="input here"
               />
             </Form.Item>
           </Col>

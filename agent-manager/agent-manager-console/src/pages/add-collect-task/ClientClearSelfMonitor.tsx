@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { InputNumber, Form, Radio, Select, Input, AutoComplete, Collapse, Row, Col, Switch, Divider } from '@didi/dcloud-design';
+import {
+  InputNumber,
+  Form,
+  Radio,
+  Select,
+  Input,
+  AutoComplete,
+  Collapse,
+  Row,
+  Col,
+  Switch,
+  Divider,
+  Tooltip,
+  IconFont,
+  Table,
+  Modal,
+} from 'knowdesign';
 import { clientFormItemLayout } from './config';
 import { NavRouterLink } from '../../components/CustomComponent';
 import { IReceivers } from '../../interface/agent';
@@ -41,9 +57,10 @@ const ClientClearSelfMonitor = (props: any) => {
       });
   };
 
-  const getReceiverTopic = async () => {
-    const res = await getTopics();
-    const data = res.map((ele) => {
+  const getReceiverTopic = async (value) => {
+    const kafkaClusterBrokerConfiguration = receivers.find((item) => item.id === value)?.kafkaClusterBrokerConfiguration;
+    const res = await getTopics(kafkaClusterBrokerConfiguration);
+    const data = (res || []).map((ele) => {
       return { label: ele, value: ele };
     });
     setReceiverTopic(data);
@@ -60,7 +77,6 @@ const ClientClearSelfMonitor = (props: any) => {
 
   useEffect(() => {
     getReceiversList();
-    getReceiverTopic();
   }, []);
 
   useEffect(() => {
@@ -69,6 +85,29 @@ const ClientClearSelfMonitor = (props: any) => {
 
   const collapseCallBack = (key: any) => {
     setActiveKeys(key);
+  };
+
+  const showAdvanceIntro = (event) => {
+    event.stopPropagation();
+    const columns = [
+      {
+        title: '配置项名称',
+        dataIndex: 'name',
+      },
+      {
+        title: '配置项描述',
+        dataIndex: 'description',
+      },
+      {
+        title: '配置项默认值',
+        dataIndex: 'defaultValue',
+      },
+    ];
+    Modal.info({
+      content: <Table columns={columns} dataSource={[]} />,
+      icon: null,
+      okText: '确认',
+    });
   };
 
   return (
@@ -86,7 +125,7 @@ const ClientClearSelfMonitor = (props: any) => {
           initialValue=""
           rules={[{ required: true, message: '请选择Kafka集群' }]}
         >
-          <Select className="w-300" placeholder="请选择集群">
+          <Select onChange={(value) => getReceiverTopic(value)} className="w-300" placeholder="请选择集群">
             {receivers.map((ele, index) => {
               return (
                 <Select.Option key={index} value={ele.id}>
@@ -209,8 +248,17 @@ const ClientClearSelfMonitor = (props: any) => {
                   whiteSpace: 'nowrap',
                 }}
               >
-                高级配置
-                <Divider plain style={{ width: '750px', minWidth: '0' }}></Divider>
+                <div>
+                  高级配置
+                  <Tooltip title="tips：在日志预览框划取日期/时间字符串，可自动获取日志切片规则参数" placement="right">
+                    <IconFont type="icon-tishi"></IconFont>
+                  </Tooltip>
+                  &nbsp;
+                  <span>
+                    <a onClick={showAdvanceIntro}>高级配置项说明</a>
+                  </span>
+                </div>
+                <Divider plain style={{ width: '650px', minWidth: '0' }}></Divider>
                 <a style={{ display: 'flex', alignItems: 'center' }}>
                   {activeKeys?.length ? (
                     <>

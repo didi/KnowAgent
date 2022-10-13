@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getCardList } from './config';
-import { Container, IconFont, Tooltip } from '@didi/dcloud-design';
+import { Container, IconFont, Tooltip } from 'knowdesign';
 
 interface IProps {
   dashBoardData: Record<string, any>;

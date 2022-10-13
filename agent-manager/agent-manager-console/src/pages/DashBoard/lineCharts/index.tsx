@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs } from '@didi/dcloud-design';
+import { Tabs } from 'knowdesign';
 import { chartListData } from './config';
 import List from './list';
 import './style/index.less';

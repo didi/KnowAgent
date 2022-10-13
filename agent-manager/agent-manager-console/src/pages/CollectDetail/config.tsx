@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Tag, Tooltip, IconFont } from '@didi/dcloud-design';
+import { Tag, Tooltip, IconFont } from 'knowdesign';
 
 export const hostTypeMap = {
   0: '物理机',

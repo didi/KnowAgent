@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AppContainer, Utils } from '@didi/dcloud-design';
+import { AppContainer, Utils } from 'knowdesign';
 import ChartContainer from '../../components/chart-container';
 import { EventBusTypes } from '../../constants/event-types';
 import DragItem from '../../components/DragItem';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Form, Input, Radio, Row, Col, Collapse, InputNumber } from '@didi/dcloud-design';
+import { Select, Form, Input, Radio, Row, Col, Collapse, InputNumber } from 'knowdesign';
 import { collectLogTypes, codingFormatTypes, collectLogFormItemLayout } from './config';
 import LoopAddLogFileType from './LoopAddLogFileType';
 import LogRepeatForm from './LogRepeatForm';

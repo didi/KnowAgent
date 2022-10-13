@@ -1,4 +1,4 @@
-import { Utils } from '@didi/dcloud-design';
+import { Utils } from 'knowdesign';
 import { numTrans } from '../../../lib/utils';
 
 export const getCardList = (type: string) => {

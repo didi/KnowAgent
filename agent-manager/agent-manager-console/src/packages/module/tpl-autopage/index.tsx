@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './index.less';
-import { Container } from '@didi/dcloud-design';
+import { Container } from 'knowdesign';
 import ProTableProject from '../tpl-protable/index';
 import ProFormProject from '../tpl-proform/index';
 import Prodescription from '../tpl-prodescription/index';

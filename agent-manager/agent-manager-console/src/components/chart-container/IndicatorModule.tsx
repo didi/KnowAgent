@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useImperativeHandle } from 'react';
-import { Table, Layout, Tree, Row, Col, Select, message, Utils } from '@didi/dcloud-design';
+import { Table, Layout, Tree, Row, Col, Select, message, Utils } from 'knowdesign';
 const { DirectoryTree } = Tree;
 const { Content, Sider } = Layout;
-import { IconFont } from '@didi/dcloud-design';
-import SearchSelect from '@didi/dcloud-design/es/extend/search-select';
+import { IconFont } from 'knowdesign';
+import SearchSelect from 'knowdesign/es/extend/search-select';
 import QueryModule from './QueryModule';
 import { IindicatorSelectModule, eventBus } from './index';
 import './style/index.less';

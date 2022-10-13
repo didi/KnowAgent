@@ -30,7 +30,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 import throttle from 'lodash/throttle';
 import { pieColors } from '../pieCharts/constants';
 import { numberToFixed } from '../../../lib/utils';
-import { Tooltip } from '@didi/dcloud-design';
+import { Tooltip } from 'knowdesign';
 
 // 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
 export type ECOptions = echarts.ComposeOption<
