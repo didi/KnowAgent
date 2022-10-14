@@ -192,7 +192,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
             lastLinuxCpuTimeProcessCpuUtilTotalPercent = curLinuxCpuTime;
             return MathUtil.divideWith2Digit(Float.valueOf(cpuUsage).doubleValue(), CPU_NUM);
         } catch (Exception e) {
-            LOGGER.error("class=LinuxOSResourceService||method=getCurrentProcessCpuUsage||msg=current process's cpu usage get failed",
+            LOGGER.error("class=LinuxOSResourceService||method=getProcCpuUtilTotalPercentOnly||msg=current process's cpu usage get failed",
                     e);
             return 0d;
         }
@@ -212,11 +212,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuSysOnly() {
-        List<String> lines = getOutputByCmd("pidstat -p %d 1 1 | awk 'NR==4{print $5}'", "当前进程系统态cpu使用率", PID);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuSysOnly()||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("pidstat -p %d 1 1 | awk 'NR==4{print $5}'", "当前进程系统态cpu使用率", PID);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuSysOnly()||msg=data is null");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getProcCpuSysOnly||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -235,13 +240,19 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuUserOnly() {
-        List<String> lines = getOutputByCmd("pidstat -p %d 1 1 | awk 'NR==4{print $4}'", "当前进程系统态cpu使用率", PID);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuUserOnly||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("pidstat -p %d 1 1 | awk 'NR==4{print $4}'", "当前进程系统态cpu使用率", PID);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuUserOnly||msg=data is null");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getProcCpuUserOnly||msg=metric compute error", ex);
             return 0.0d;
         }
+
     }
 
     @Override
@@ -275,11 +286,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuVoluntarySwitchesPSOnly() {
-        List<String> lines = getOutputByCmd("pidstat -w -p %d 1 1 | awk 'NR==4{print $4}'", "进程CPU每秒上下文自愿切换次数", PID);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuVoluntarySwitchesPSOnly||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("pidstat -w -p %d 1 1 | awk 'NR==4{print $4}'", "进程CPU每秒上下文自愿切换次数", PID);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuVoluntarySwitchesPSOnly||msg=data is null");
+                return 0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getProcCpuVoluntarySwitchesPSOnly||msg=metric compute error", ex);
             return 0d;
         }
     }
@@ -298,11 +314,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcCpuNonVoluntarySwitchesPSOnly() {
-        List<String> lines = getOutputByCmd("pidstat -w -p %d 1 1 | awk 'NR==4{print $5}'", "进程CPU每秒上下文非自愿切换次数", PID);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuNonVoluntarySwitchesPSOnly||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("pidstat -w -p %d 1 1 | awk 'NR==4{print $5}'", "进程CPU每秒上下文非自愿切换次数", PID);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxProcMetricsService||method=getProcCpuNonVoluntarySwitchesPSOnly||msg=data is null");
+                return 0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getProcCpuNonVoluntarySwitchesPSOnly||msg=metric compute error", ex);
             return 0d;
         }
     }
@@ -479,7 +500,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
             this.lastLinuxIORateReadRate = curLinuxIORate;
             return ioReadTimesRate;
         } catch (Exception e) {
-            LOGGER.error("class=LinuxOSResourceService||method=getProcIOReadRateOnly||msg=failed to get process IO read rate",
+            LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=getProcIOReadRateOnly||msg=failed to get process IO read rate",
                     e);
         }
         return 0.0d;
@@ -505,7 +526,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
             this.lastLinuxIORateReadBytesRate = curLinuxIORate;
             return ioReadBytesRate;
         } catch (Exception e) {
-            LOGGER.error("class=LinuxOSResourceService||method=getProcIOReadBytesRateOnly||msg=failed to get process IO read bytes rate",
+            LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=getProcIOReadBytesRateOnly||msg=failed to get process IO read bytes rate",
                     e);
         }
         return 0d;
@@ -531,7 +552,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
             this.lastLinuxIORateWriteRate = curLinuxIORate;
             return ioWriteTimesRate;
         } catch (Exception e) {
-            LOGGER.error("class=LinuxOSResourceService||method=getProcIOWriteRateOnly||msg=failed to get process IO write rate",
+            LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=getProcIOWriteRateOnly||msg=failed to get process IO write rate",
                     e);
         }
         return 0d;
@@ -557,7 +578,7 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
             this.lastLinuxIORateWriteBytesRate = curLinuxIORate;
             return ioWriteBytesRate;
         } catch (Exception e) {
-            LOGGER.error("class=LinuxOSResourceService||method=getProcIOWriteBytesRateOnly||msg=failed to get process IO write bytes rate",
+            LOGGER.error("class=LinuxProcessMetricsServiceImpl||method=getProcIOWriteBytesRateOnly||msg=failed to get process IO write bytes rate",
                     e);
         }
         return 0d;
@@ -611,12 +632,17 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Double getProcIOAwaitTimePercentOnly() {
-        List<String> lines = getOutputByCmd("iotop -P -b -n 1 | grep %d | awk 'NR==1{print $10}'",
-                "当前进程io读写等待时间占总时间百分比", PID);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxProcMetricsService||method=getProcIOAwaitTimePercent||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("iotop -P -b -n 1 | grep %d | awk 'NR==1{print $10}'",
+                    "当前进程io读写等待时间占总时间百分比", PID);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxProcMetricsService||method=getProcIOAwaitTimePercent||msg=data is null");
+                return 0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getProcIOAwaitTimePercentOnly||msg=metric compute error", ex);
             return 0d;
         }
     }
@@ -631,12 +657,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private Long getJvmProcYoungGcCountOnly() {
         long gcCounts = 0L;
-        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
-            String name = garbageCollector.getName();
-            if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
-                gcCounts += garbageCollector.getCollectionCount();
+        try {
+            for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                    .getGarbageCollectorMXBeans()) {
+                String name = garbageCollector.getName();
+                if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
+                    gcCounts += garbageCollector.getCollectionCount();
+                }
             }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getJvmProcYoungGcCountOnly||msg=metric compute error", ex);
         }
         return gcCounts;
     }
@@ -651,12 +681,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private Long getJvmProcFullGcCountOnly() {
         long gcCounts = 0L;
-        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
-            String name = garbageCollector.getName();
-            if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
-                gcCounts += garbageCollector.getCollectionCount();
+        try {
+            for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                    .getGarbageCollectorMXBeans()) {
+                String name = garbageCollector.getName();
+                if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
+                    gcCounts += garbageCollector.getCollectionCount();
+                }
             }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getJvmProcFullGcCountOnly||msg=metric compute error", ex);
         }
         return gcCounts;
     }
@@ -671,12 +705,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private Long getJvmProcYoungGcTimeOnly() {
         long gcTime = 0L;
-        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
-            String name = garbageCollector.getName();
-            if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
-                gcTime += garbageCollector.getCollectionTime();
+        try {
+            for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                    .getGarbageCollectorMXBeans()) {
+                String name = garbageCollector.getName();
+                if (StringUtils.isNotBlank(name) && !name.contains("MarkSweep")) {
+                    gcTime += garbageCollector.getCollectionTime();
+                }
             }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getJvmProcYoungGcTimeOnly||msg=metric compute error", ex);
         }
         return gcTime;
     }
@@ -691,12 +729,16 @@ public class LinuxProcessMetricsServiceImpl extends LinuxMetricsService implemen
 
     private Long getJvmProcFullGcTimeOnly() {
         long gcTime = 0L;
-        for (GarbageCollectorMXBean garbageCollector : ManagementFactory
-                .getGarbageCollectorMXBeans()) {
-            String name = garbageCollector.getName();
-            if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
-                gcTime += garbageCollector.getCollectionTime();
+        try {
+            for (GarbageCollectorMXBean garbageCollector : ManagementFactory
+                    .getGarbageCollectorMXBeans()) {
+                String name = garbageCollector.getName();
+                if (StringUtils.isNotBlank(name) && name.contains("MarkSweep")) {
+                    gcTime += garbageCollector.getCollectionTime();
+                }
             }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxProcessMetricsServiceImpl||method=getJvmProcFullGcTimeOnly||msg=metric compute error", ex);
         }
         return gcTime;
     }

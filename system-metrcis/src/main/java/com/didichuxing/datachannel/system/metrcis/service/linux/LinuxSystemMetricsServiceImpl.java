@@ -377,21 +377,26 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuSystemOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "内核态CPU时间占比", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 4) {
-                return Double.valueOf(properties[3]);
+        try {
+            List<String> lines = getOutputByCmd("top -b -n 1", "内核态CPU时间占比", null);
+            if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
+                String[] properties = lines.get(2).split("\\s+");
+                if(properties.length >= 4) {
+                    return Double.valueOf(properties[3]);
+                } else {
+                    LOGGER.error(
+                            String.format("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
+                    );
+                    return 0.0d;
+                }
             } else {
                 LOGGER.error(
                         String.format("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
                 );
                 return 0.0d;
             }
-        } else {
-            LOGGER.error(
-                    String.format("class=LinuxSystemMetricsService()||method=getSystemCpuSystemOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
-            );
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuSystemOnly||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -410,11 +415,21 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUserOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "用户态CPU时间占比", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 2) {
-                return Double.valueOf(properties[1]);
+        try {
+            List<String> lines = getOutputByCmd("top -b -n 1", "用户态CPU时间占比", null);
+            if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
+                String[] properties = lines.get(2).split("\\s+");
+                if(properties.length >= 2) {
+                    return Double.valueOf(properties[1]);
+                } else {
+                    LOGGER.error(
+                            String.format(
+                                    "class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null,lines is:%s",
+                                    JSON.toJSONString(lines)
+                            )
+                    );
+                    return 0.0d;
+                }
             } else {
                 LOGGER.error(
                         String.format(
@@ -424,33 +439,33 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
                 );
                 return 0.0d;
             }
-        } else {
-            LOGGER.error(
-                    String.format(
-                            "class=LinuxSystemMetricsService()||method=getSystemCpuUserOnly||msg=data is null,lines is:%s",
-                            JSON.toJSONString(lines)
-                    )
-            );
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuUserOnly||msg=metric compute error", ex);
             return 0.0d;
         }
     }
 
     private Double getSystemCpuIdleOnly() {
-        List<String> lines = getOutputByCmd("top -b -n 1", "总体cpu空闲率", null);
-        if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
-            String[] properties = lines.get(2).split("\\s+");
-            if(properties.length >= 8) {
-                return Double.valueOf(properties[7]);
+        try {
+            List<String> lines = getOutputByCmd("top -b -n 1", "总体cpu空闲率", null);
+            if (!lines.isEmpty() && lines.size() > 3 && StringUtils.isNotBlank(lines.get(2))) {
+                String[] properties = lines.get(2).split("\\s+");
+                if(properties.length >= 8) {
+                    return Double.valueOf(properties[7]);
+                } else {
+                    LOGGER.error(
+                            String.format("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
+                    );
+                    return 0.0d;
+                }
             } else {
                 LOGGER.error(
                         String.format("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
                 );
                 return 0.0d;
             }
-        } else {
-            LOGGER.error(
-                    String.format("class=LinuxSystemMetricsService()||method=getSystemCpuIdleOnly||msg=data is null, lines is:%s", JSON.toJSONString(lines))
-            );
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuIdleOnly||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -484,12 +499,16 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuSwitchesOnly() {
-        List<String> output = getOutputByCmd("cat /proc/stat | grep 'ctxt' | awk '{print $2}'",
-                "cpu上下文交换次数", null);
-        if (!output.isEmpty() && StringUtils.isNotBlank(output.get(0))) {
-            return Double.parseDouble(output.get(0));
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSwitchesOnly||msg=data is null");
+        try {
+            List<String> output = getOutputByCmd("cat /proc/stat | grep 'ctxt' | awk '{print $2}'",
+                    "cpu上下文交换次数", null);
+            if (!output.isEmpty() && StringUtils.isNotBlank(output.get(0))) {
+                return Double.parseDouble(output.get(0));
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuSwitchesOnly||msg=data is null");
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuSwitchesOnly||msg=metric compute error", ex);
         }
         return 0d;
     }
@@ -508,14 +527,18 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUsageIrqOnly() {
-        List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
-        if (!output.isEmpty() && output.size() >= 3) {
-            String[] properties = output.get(2).split("\\s+");//
-            Double irq = Double.valueOf(properties[11]);
-            return irq;
-        } else {
-            LOGGER.error(
-                    "class=LinuxSystemMetricsService()||method=getSystemCpuUsageIrqOnly||msg=data is null");
+        try {
+            List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
+            if (!output.isEmpty() && output.size() >= 3) {
+                String[] properties = output.get(2).split("\\s+");//
+                Double irq = Double.valueOf(properties[11]);
+                return irq;
+            } else {
+                LOGGER.error(
+                        "class=LinuxSystemMetricsService()||method=getSystemCpuUsageIrqOnly||msg=data is null");
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuUsageIrqOnly||msg=metric compute error", ex);
         }
         return 0d;
     }
@@ -534,13 +557,17 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuUsageSoftIrqOnly() {
-        List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
-        if (!output.isEmpty() && output.size() >= 3) {
-            String[] properties = output.get(2).split("\\s+");//
-            Double softIrq = Double.valueOf(properties[13]);
-            return softIrq;
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUsageSoftIrqOnly||msg=data is null");
+        try {
+            List<String> output = getOutputByCmd("top -bn 1  -i -c", "cpu状态信息", null);
+            if (!output.isEmpty() && output.size() >= 3) {
+                String[] properties = output.get(2).split("\\s+");//
+                Double softIrq = Double.valueOf(properties[13]);
+                return softIrq;
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuUsageSoftIrqOnly||msg=data is null");
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuUsageSoftIrqOnly||msg=metric compute error", ex);
         }
         return 0d;
     }
@@ -560,12 +587,17 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemLoad1Only() {
-        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $4}'", "系统近1分钟平均负载", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            Double systemLoad1 = Double.parseDouble(lines.get(0));
-            return MathUtil.divideWith2Digit(systemLoad1, getSystemCpuCores());
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad1Only||msg=获取系统近1分钟平均负载失败");
+        try {
+            List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $4}'", "系统近1分钟平均负载", null);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                Double systemLoad1 = Double.parseDouble(lines.get(0));
+                return MathUtil.divideWith2Digit(systemLoad1, getSystemCpuCores());
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad1Only||msg=获取系统近1分钟平均负载失败");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemLoad1Only||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -584,12 +616,17 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemLoad5Only() {
-        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $5}'", "系统近5分钟平均负载", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            Double systemLoad5 = Double.parseDouble(lines.get(0));
-            return MathUtil.divideWith2Digit(systemLoad5, getSystemCpuCores());
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad5Only||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $5}'", "系统近5分钟平均负载", null);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                Double systemLoad5 = Double.parseDouble(lines.get(0));
+                return MathUtil.divideWith2Digit(systemLoad5, getSystemCpuCores());
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad5Only||msg=data is null");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemLoad5Only||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -608,12 +645,17 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemLoad15Only() {
-        List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $6}'", "系统近15分钟平均负载", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            Double systemLoad15 = Double.parseDouble(lines.get(0));
-            return MathUtil.divideWith2Digit(systemLoad15, getSystemCpuCores());
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad15Only||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("sar -q 1 1 | grep ':' | awk '{print $6}'", "系统近15分钟平均负载", null);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                Double systemLoad15 = Double.parseDouble(lines.get(0));
+                return MathUtil.divideWith2Digit(systemLoad15, getSystemCpuCores());
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemLoad15Only||msg=data is null");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemLoad15Only||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -631,11 +673,16 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
         systemCpuIOWait.add(getSystemCpuIOWaitOnly());
     }
     private Double getSystemCpuIOWaitOnly() {
-        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $6}'", "等待I/O的CPU时间占比", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIOWaitOnly||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $6}'", "等待I/O的CPU时间占比", null);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuIOWaitOnly||msg=data is null");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuIOWaitOnly||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -654,11 +701,16 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuGuestOnly() {
-        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $10}'", "虚拟处理器CPU时间占比", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuGuestOnly||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $10}'", "虚拟处理器CPU时间占比", null);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuGuestOnly||msg=data is null");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuGuestOnly||msg=metric compute error", ex);
             return 0.0d;
         }
     }
@@ -677,11 +729,16 @@ public class LinuxSystemMetricsServiceImpl extends LinuxMetricsService implement
     }
 
     private Double getSystemCpuStealOnly() {
-        List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $9}'", "等待处理其他虚拟核的时间占比", null);
-        if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
-            return Double.parseDouble(lines.get(0));
-        } else {
-            LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuStealOnly||msg=data is null");
+        try {
+            List<String> lines = getOutputByCmd("mpstat | awk 'NR==4{print $9}'", "等待处理其他虚拟核的时间占比", null);
+            if (!lines.isEmpty() && StringUtils.isNotBlank(lines.get(0))) {
+                return Double.parseDouble(lines.get(0));
+            } else {
+                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemCpuStealOnly||msg=data is null");
+                return 0.0d;
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsServiceImpl||method=getSystemCpuStealOnly||msg=metric compute error", ex);
             return 0.0d;
         }
     }

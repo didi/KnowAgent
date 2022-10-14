@@ -102,36 +102,41 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Map<String, Double> getReceiveBytesPsOnly() {
-        List<String> lines = getOutputByCmd("sar -n DEV 1 1", "获取各网卡下行流量", null);
-        if(CollectionUtils.isNotEmpty(lines)) {
-            int startIndex = -1;
-            for (int i = 0; i < lines.size(); i++) {
-                if(lines.get(i).contains("IFACE")) {
-                    startIndex = i + 1;
-                }
-            }
-            if(startIndex == -1 || startIndex == lines.size() - 1) {
-                LOGGER.error(
-                        String.format(
-                                "class=LinuxNetCardMetricsServiceImpl||method=getReceiveBytesPsOnly||errMsg=获取网卡实时下行流量错误，网卡实时下行流量信息[%s]不符合预期格式",
-                                JSON.toJSONString(lines)
-                        )
-                );
-                return new HashMap<>();
-            } else {
-                Map<String, Double> result = new HashMap<>();
-                for (int i = startIndex; i < lines.size(); i++) {
-                    if(StringUtils.isNotBlank(lines.get(i))) {
-                        String[] infos = lines.get(i).split("\\s+");
-                        String device = infos[1];
-                        Double sendBytes = Double.valueOf(infos[4]) * 1024;
-                        result.put(device, sendBytes);
+        try {
+            List<String> lines = getOutputByCmd("sar -n DEV 1 1", "获取各网卡下行流量", null);
+            if(CollectionUtils.isNotEmpty(lines)) {
+                int startIndex = -1;
+                for (int i = 0; i < lines.size(); i++) {
+                    if(lines.get(i).contains("IFACE")) {
+                        startIndex = i + 1;
                     }
                 }
-                return result;
+                if(startIndex == -1 || startIndex == lines.size() - 1) {
+                    LOGGER.error(
+                            String.format(
+                                    "class=LinuxNetCardMetricsServiceImpl||method=getReceiveBytesPsOnly||errMsg=获取网卡实时下行流量错误，网卡实时下行流量信息[%s]不符合预期格式",
+                                    JSON.toJSONString(lines)
+                            )
+                    );
+                    return new HashMap<>();
+                } else {
+                    Map<String, Double> result = new HashMap<>();
+                    for (int i = startIndex; i < lines.size(); i++) {
+                        if(StringUtils.isNotBlank(lines.get(i))) {
+                            String[] infos = lines.get(i).split("\\s+");
+                            String device = infos[1];
+                            Double sendBytes = Double.valueOf(infos[4]) * 1024;
+                            result.put(device, sendBytes);
+                        }
+                    }
+                    return result;
+                }
+            } else {
+                LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getReceiveBytesPsOnly||errMsg=获取网卡实时下行流量错误，网卡实时下行流量为空");
+                return new HashMap<>();
             }
-        } else {
-            LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getReceiveBytesPsOnly||errMsg=获取网卡实时下行流量错误，网卡实时下行流量为空");
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxNetCardMetricsServiceImpl()||method=getReceiveBytesPsOnly||msg=metric compute error", ex);
             return new HashMap<>();
         }
     }
@@ -164,38 +169,44 @@ public class LinuxNetCardMetricsServiceImpl extends LinuxMetricsService implemen
     }
 
     private Map<String, Double> getSendBytesPsOnly() {
-        List<String> lines = getOutputByCmd("sar -n DEV 1 1", "获取各网卡上行流量", null);
-        if(CollectionUtils.isNotEmpty(lines)) {
-            int startIndex = -1;
-            for (int i = 0; i < lines.size(); i++) {
-                if(lines.get(i).contains("IFACE")) {
-                    startIndex = i + 1;
-                }
-            }
-            if(startIndex == -1 || startIndex == lines.size() - 1) {
-                LOGGER.error(
-                        String.format(
-                                "class=LinuxNetCardMetricsServiceImpl||method=getSendBytesPsOnly||errMsg=获取网卡实时上行流量错误，网卡实时上行流量信息[%s]不符合预期格式",
-                                JSON.toJSONString(lines)
-                        )
-                );
-                return new HashMap<>();
-            } else {
-                Map<String, Double> result = new HashMap<>();
-                for (int i = startIndex; i < lines.size(); i++) {
-                    if(StringUtils.isNotBlank(lines.get(i))) {
-                        String[] infos = lines.get(i).split("\\s+");
-                        String device = infos[1];
-                        Double sendBytes = Double.valueOf(infos[5]) * 1024;
-                        result.put(device, sendBytes);
+        try {
+            List<String> lines = getOutputByCmd("sar -n DEV 1 1", "获取各网卡上行流量", null);
+            if(CollectionUtils.isNotEmpty(lines)) {
+                int startIndex = -1;
+                for (int i = 0; i < lines.size(); i++) {
+                    if(lines.get(i).contains("IFACE")) {
+                        startIndex = i + 1;
                     }
                 }
-                return result;
+                if(startIndex == -1 || startIndex == lines.size() - 1) {
+                    LOGGER.error(
+                            String.format(
+                                    "class=LinuxNetCardMetricsServiceImpl||method=getSendBytesPsOnly||errMsg=获取网卡实时上行流量错误，网卡实时上行流量信息[%s]不符合预期格式",
+                                    JSON.toJSONString(lines)
+                            )
+                    );
+                    return new HashMap<>();
+                } else {
+                    Map<String, Double> result = new HashMap<>();
+                    for (int i = startIndex; i < lines.size(); i++) {
+                        if(StringUtils.isNotBlank(lines.get(i))) {
+                            String[] infos = lines.get(i).split("\\s+");
+                            String device = infos[1];
+                            Double sendBytes = Double.valueOf(infos[5]) * 1024;
+                            result.put(device, sendBytes);
+                        }
+                    }
+                    return result;
+                }
+            } else {
+                LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getSendBytesPsOnly||errMsg=获取网卡实时上行流量错误，网卡实时上行流量为空");
+                return new HashMap<>();
             }
-        } else {
-            LOGGER.error("class=LinuxNetCardMetricsServiceImpl||method=getSendBytesPsOnly||errMsg=获取网卡实时上行流量错误，网卡实时上行流量为空");
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxNetCardMetricsServiceImpl||method=getSendBytesPsOnly||msg=metric compute error", ex);
             return new HashMap<>();
         }
+
     }
 
 }

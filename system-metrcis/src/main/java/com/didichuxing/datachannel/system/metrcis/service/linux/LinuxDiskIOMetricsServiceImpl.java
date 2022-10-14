@@ -74,16 +74,20 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOUtilOnly() {
         Map<String, Double> result = new HashMap<>();
-        List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$14}'", "各设备I/O请求的CPU时间百分比", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxDiskIOMetricsServiceImpl()||method=getIOUtil()||msg=data is not enough");
-                return result;
+        try {
+            List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$14}'", "各设备I/O请求的CPU时间百分比", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxDiskIOMetricsServiceImpl()||method=getIOUtil()||msg=data is not enough");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsService()||method={}||msg=metric compute error", "getAvgQuSzOnly()", ex);
         }
         return result;
     }
@@ -117,17 +121,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getAvgQuSzOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 9);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备平均队列长度", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getAvgQuSz()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 9);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备平均队列长度", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getAvgQuSz()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsService()||method={}||msg=metric compute error", "getAvgQuSzOnly()", ex);
         }
         return result;
     }
@@ -161,17 +169,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getAvgRqSzOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 8);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备平均请求大小", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getAvgRqSzOnly()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 8);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备平均请求大小", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getAvgRqSzOnly()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxSystemMetricsService||method=getAvgRqSzOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -205,17 +217,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOAwaitOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 10);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备每次IO平均处理时间", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOAwaitOnly()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 10);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备每次IO平均处理时间", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOAwaitOnly()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOAwaitOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -233,17 +249,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIORAwaitOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 11);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备读请求平均耗时", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIORAwaitOnly()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 11);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备读请求平均耗时", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIORAwaitOnly()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIORAwaitOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -293,17 +313,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOReadRequestOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 4);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备每秒读请求数量", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOReadRequest()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 4);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备每秒读请求数量", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOReadRequest()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOReadRequestOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -337,16 +361,20 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOReadBytesOnly() {
         Map<String, Double> result = new HashMap<>();
-        List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$6}'", "各设备每秒读取字节数", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getIOReadBytesOnly()||msg=data is not enough");
-                return result;
+        try {
+            List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$6}'", "各设备每秒读取字节数", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method=getIOReadBytesOnly()||msg=data is not enough");
+                    return result;
+                }
+                String key = array[0];
+                double value = 1024 * Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = 1024 * Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOReadBytesOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -380,17 +408,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIORRQMSOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 2);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备每秒合并到设备队列的读请求数", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIORRQMSOnly()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 2);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备每秒合并到设备队列的读请求数", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIORRQMSOnly()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIORRQMSOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -424,17 +456,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOSVCTMOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 13);
-        List<String> lines = getOutputByCmd(procFDShell, "每次各设备IO平均服务时间", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOSVCTM()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 13);
+            List<String> lines = getOutputByCmd(procFDShell, "每次各设备IO平均服务时间", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOSVCTM()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOSVCTMOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -468,17 +504,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOWAwaitOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 12);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备写请求平均耗时", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOWAwaitOnly()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 12);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备写请求平均耗时", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOWAwaitOnly()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOWAwaitOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -512,17 +552,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOWriteRequestOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 5);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备每秒写请求数量", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOWriteRequestOnly()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 5);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备每秒写请求数量", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOWriteRequestOnly()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOWriteRequestOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -556,16 +600,20 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOWriteBytesOnly() {
         Map<String, Double> result = new HashMap<>();
-        List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$7}'", "各设备每秒写字节数", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemIOWriteBytes()||msg=data is not enough");
-                return result;
+        try {
+            List<String> lines = getOutputByCmd("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$7}'", "各设备每秒写字节数", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemIOWriteBytes()||msg=data is not enough");
+                    return result;
+                }
+                String key = array[0];
+                double value = 1024 * Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = 1024 * Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOWriteBytesOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -640,17 +688,21 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getIOWRQMSOnly() {
         Map<String, Double> result = new HashMap<>();
-        String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 3);
-        List<String> lines = getOutputByCmd(procFDShell, "各设备每秒合并到设备队列的写请求数", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOWRQMSOnly()");
-                return result;
+        try {
+            String procFDShell = String.format("iostat -dkx | head -n -1 | awk 'NR>3{print $1,$%d}'", 3);
+            List<String> lines = getOutputByCmd(procFDShell, "各设备每秒合并到设备队列的写请求数", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method={}||msg=data is not enough", "getIOWRQMSOnly()");
+                    return result;
+                }
+                String key = array[0];
+                double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getIOWRQMSOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -684,16 +736,20 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getDiskReadTimeOnly() {
         Map<String, Double> result = new HashMap<>();
-        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5}'", "各设备读操作耗时", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskReadTime()||msg=data is not enough");
-                return result;
+        try {
+            List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5}'", "各设备读操作耗时", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method=getSystemDiskReadTime()||msg=data is not enough");
+                    return result;
+                }
+                String key = array[0];
+                Double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            Double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getDiskReadTimeOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -727,19 +783,23 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getDiskReadTimePercentOnly() {
         Map<String, Double> result = new HashMap<>();
-        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5,$9}'", "读取磁盘时间百分比", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 3) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getDiskReadTimePercentOnly()||msg=data is not enough");
-                return result;
+        try {
+            List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5,$9}'", "读取磁盘时间百分比", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 3) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method=getDiskReadTimePercentOnly()||msg=data is not enough");
+                    return result;
+                }
+                String device = array[0];
+                Double readTime = Double.parseDouble(array[1]);
+                Double writeTime = Double.parseDouble(array[2]);
+                Double readWriteTime = readTime + writeTime;
+                Double readTimePercent = MathUtil.divideWith2Digit(readTime * 100, readWriteTime);
+                result.put(device, readTimePercent);
             }
-            String device = array[0];
-            Double readTime = Double.parseDouble(array[1]);
-            Double writeTime = Double.parseDouble(array[2]);
-            Double readWriteTime = readTime + writeTime;
-            Double readTimePercent = MathUtil.divideWith2Digit(readTime * 100, readWriteTime);
-            result.put(device, readTimePercent);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getDiskReadTimePercentOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -773,16 +833,20 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getDiskWriteTimeOnly() {
         Map<String, Double> result = new HashMap<>();
-        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$9}'", "各设备写操作耗时", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 2) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getDiskWriteTimeOnly()||msg=data is not enough");
-                return result;
+        try {
+            List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$9}'", "各设备写操作耗时", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 2) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method=getDiskWriteTimeOnly()||msg=data is not enough");
+                    return result;
+                }
+                String key = array[0];
+                Double value = Double.parseDouble(array[1]);
+                result.put(key, value);
             }
-            String key = array[0];
-            Double value = Double.parseDouble(array[1]);
-            result.put(key, value);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getDiskWriteTimeOnly||msg=metric compute error", ex);
         }
         return result;
     }
@@ -816,19 +880,23 @@ public class LinuxDiskIOMetricsServiceImpl extends LinuxMetricsService implement
 
     private Map<String, Double> getDiskWriteTimePercentOnly() {
         Map<String, Double> result = new HashMap<>();
-        List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5,$9}'", "读取磁盘时间百分比", null);
-        for (String line : lines) {
-            String[] array = line.split("\\s+");
-            if (array.length < 3) {
-                LOGGER.error("class=LinuxSystemMetricsService()||method=getDiskReadTimePercentOnly()||msg=data is not enough");
-                return result;
+        try {
+            List<String> lines = getOutputByCmd("vmstat -d | awk 'NR>2{print $1,$5,$9}'", "读取磁盘时间百分比", null);
+            for (String line : lines) {
+                String[] array = line.split("\\s+");
+                if (array.length < 3) {
+                    LOGGER.error("class=LinuxSystemMetricsService()||method=getDiskReadTimePercentOnly()||msg=data is not enough");
+                    return result;
+                }
+                String device = array[0];
+                Double readTime = Double.parseDouble(array[1]);
+                Double writeTime = Double.parseDouble(array[2]);
+                Double readWriteTime = readTime + writeTime;
+                Double writeTimePercent = MathUtil.divideWith2Digit(writeTime * 100, readWriteTime);
+                result.put(device, writeTimePercent);
             }
-            String device = array[0];
-            Double readTime = Double.parseDouble(array[1]);
-            Double writeTime = Double.parseDouble(array[2]);
-            Double readWriteTime = readTime + writeTime;
-            Double writeTimePercent = MathUtil.divideWith2Digit(writeTime * 100, readWriteTime);
-            result.put(device, writeTimePercent);
+        } catch (Exception ex) {
+            LOGGER.warn("class=LinuxDiskIOMetricsServiceImpl||method=getDiskWriteTimePercentOnly||msg=metric compute error", ex);
         }
         return result;
     }
