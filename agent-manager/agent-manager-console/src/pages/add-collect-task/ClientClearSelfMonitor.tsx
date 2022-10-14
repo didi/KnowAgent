@@ -90,6 +90,12 @@ const ClientClearSelfMonitor = (props: any) => {
   }, []);
 
   useEffect(() => {
+    if (props.editUrl && getFieldValue('step4_kafkaClusterId')) {
+      getReceiverTopic(getFieldValue('step4_kafkaClusterId'));
+    }
+  }, [getFieldValue('step4_kafkaClusterId')]);
+
+  useEffect(() => {
     setOpenDelay(getFieldValue('step4_opencollectDelay'));
   }, [getFieldValue('step4_opencollectDelay')]);
 
