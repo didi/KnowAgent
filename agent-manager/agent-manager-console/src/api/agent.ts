@@ -149,3 +149,10 @@ export const getDashboard = (startTime: number, endTime: number, dashboardMetric
 export const getAgentHostId = (hostName: string) => {
   return fetch(`${apiMap.getAgentHostId}?hostname=${hostName}`);
 };
+
+export const getTaskTips = () => {
+  return fetch(`${apiMap.getCollectMetrics}/advanced-config/tips`);
+};
+export const getAgentTips = () => {
+  return fetch(`${apiMap.editOpAgent}/advanced-config/tips`);
+};

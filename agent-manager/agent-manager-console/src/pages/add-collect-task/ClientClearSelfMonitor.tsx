@@ -19,7 +19,7 @@ import {
 import { clientFormItemLayout } from './config';
 import { NavRouterLink } from '../../components/CustomComponent';
 import { IReceivers } from '../../interface/agent';
-import { getReceivers, getTopics } from '../../api/agent';
+import { getReceivers, getTopics, getTaskTips } from '../../api/agent';
 import { DataSourceItemType } from '../../interface/common';
 import { UpOutlined, DownOutlined } from '@ant-design/icons';
 // import MonacoEditor from '../../components/editor/monacoEditor';
@@ -32,6 +32,8 @@ const { Panel } = Collapse;
 const ClientClearSelfMonitor = (props: any) => {
   const { getFieldValue } = props.form;
   const [receivers, setReceivers] = useState([] as any);
+  const [advancedTips, setAdvancedTips] = useState('');
+  const [advancedConfigItemList, setAdvancedConfigItemList] = useState([] as any);
   const [receiverTopic, setReceiverTopic] = useState([] as any);
   const [originReceiverTopic, setOriginReceiverTopic] = useState([] as any);
   const [activeKeys, setActiveKeys] = useState([] as string[]);
@@ -75,8 +77,16 @@ const ClientClearSelfMonitor = (props: any) => {
     }
   };
 
+  const getTaskAdvancedTips = () => {
+    getTaskTips().then((res) => {
+      setAdvancedTips(res?.summary || '');
+      setAdvancedConfigItemList(res?.advancedConfigItemList || []);
+    });
+  };
+
   useEffect(() => {
     getReceiversList();
+    getTaskAdvancedTips();
   }, []);
 
   useEffect(() => {
@@ -93,18 +103,23 @@ const ClientClearSelfMonitor = (props: any) => {
       {
         title: '配置项名称',
         dataIndex: 'name',
+        ellipsis: true,
+        width: 170,
       },
       {
         title: '配置项描述',
         dataIndex: 'description',
+        ellipsis: true,
       },
       {
         title: '配置项默认值',
         dataIndex: 'defaultValue',
+        width: 120,
       },
     ];
     Modal.info({
-      content: <Table columns={columns} dataSource={[]} />,
+      content: <Table columns={columns} dataSource={advancedConfigItemList} />,
+      width: 720,
       icon: null,
       okText: '确认',
     });
@@ -250,7 +265,7 @@ const ClientClearSelfMonitor = (props: any) => {
               >
                 <div>
                   高级配置
-                  <Tooltip title="tips：在日志预览框划取日期/时间字符串，可自动获取日志切片规则参数" placement="right">
+                  <Tooltip title={advancedTips} placement="right">
                     <IconFont type="icon-tishi"></IconFont>
                   </Tooltip>
                   &nbsp;
@@ -258,7 +273,7 @@ const ClientClearSelfMonitor = (props: any) => {
                     <a onClick={showAdvanceIntro}>高级配置项说明</a>
                   </span>
                 </div>
-                <Divider plain style={{ width: '650px', minWidth: '0' }}></Divider>
+                <Divider plain style={{ minWidth: '0' }}></Divider>
                 <a style={{ display: 'flex', alignItems: 'center' }}>
                   {activeKeys?.length ? (
                     <>
