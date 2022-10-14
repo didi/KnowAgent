@@ -109,5 +109,8 @@
   },
   "lint-staged": {
     "*.{js,tsx}": "eslint"
+  },
+  "resolutions": {
+    "@types/react-router": "5.1.18"
   }
 }
