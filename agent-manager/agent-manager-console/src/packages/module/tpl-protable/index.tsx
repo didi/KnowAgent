@@ -1,10 +1,10 @@
 import { DownOutlined } from '@ant-design/icons';
 import React, { useState, useEffect, useMemo } from 'react';
-import { ProTable, IconFont } from '@didi/dcloud-design';
-import { Button, Modal, message, Tooltip, Select } from '@didi/dcloud-design';
+import { ProTable, IconFont } from 'knowdesign';
+import { Button, Modal, message, Tooltip, Select } from 'knowdesign';
 import ProFormProject from '../tpl-proform/index';
-import { renderTableOpts } from '@didi/dcloud-design/lib/common-pages/render-table-opts';
-import '@didi/dcloud-design/lib/style/index.less';
+import { renderTableOpts } from 'knowdesign/lib/common-pages/render-table-opts';
+import 'knowdesign/lib/style/index.less';
 // import { renderOperationBtns as renderTableOpts } from "../../compoments/RenderOperationBtns";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import debounce from 'lodash/debounce';
@@ -790,7 +790,6 @@ const ProTableMoudle = (props: any) => {
     <>
       {newConfig && (
         <ProTable
-          isCustomPg={newConfig.isCustomPg}
           showQueryForm={newConfig?.search?.showQueryForm}
           // showQueryForm={true}
           queryFormProps={{

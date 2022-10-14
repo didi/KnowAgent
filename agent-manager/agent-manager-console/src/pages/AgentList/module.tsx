@@ -19,7 +19,8 @@ import {
   Col,
   ProTable,
   notification,
-} from '@didi/dcloud-design';
+  Table,
+} from 'knowdesign';
 import { arrayMoveImmutable } from 'array-move';
 // import { Imenu } from '../index';
 import moment from 'moment';
@@ -27,7 +28,7 @@ import { Link, withRouter } from 'react-router-dom';
 import ChartContainer from '../../components/chart-container';
 import DragItem from '../../components/DragItem';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
-import { getAgent, getServices } from '../../api/agent';
+import { getAgent, getAgentTips, getServices } from '../../api/agent';
 import { request } from '../../request/index';
 import './index.less';
 
@@ -57,11 +58,6 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { Panel } = Collapse;
 const regName = /^([-_.a-zA-Z0-9\u4e00-\u9fa5]{1,32})$/; // 支持中英文字母、大小写、数字、下划线、点、短横线。32位限制
-const regIp = /^((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)$/; // 支持9位数字，一共12位
-const regString128 = /^[\s\S]{0,128}$/; // 任意字符最大输入长度128位
-const regAdress = /^([-_.:,a-zA-Z0-9\u4e00-\u9fa5]{1,32})$/; // 支持中英文字母、大小写、数字、下划线、点、短横线。32位限制
-const regProducerName = /^[\s\S]{1,1024}$/; // 任意字符最大输入长度为1024位
-
 export const getHosts = () => {
   return request('/api/v1/normal/host/list');
 };
@@ -342,7 +338,7 @@ export const NewHostForm: React.FC = (props: any) => {
           {testHide && (
             <span
               style={{ color: testResult ? '#2fc25b' : '#f5222d' }}
-            // className={testResult ? 'success' : 'fail'}
+              // className={testResult ? 'success' : 'fail'}
             >
               {testResult ? '测试成功！' : '测试失败！'}
             </span>
@@ -352,19 +348,6 @@ export const NewHostForm: React.FC = (props: any) => {
     </div>
   );
 };
-
-// const agentVersions = [
-//   {
-//     key: 1,
-//     agentVersion: '1.0.1',
-//     agentVersionId: '999999',
-//   },
-//   {
-//     key: 2,
-//     agentVersion: '1.0.2',
-//     agentVersionId: '999998',
-//   },
-// ];
 
 // 选中的Agent没有采集任务时候调用（安装Agent、升级Agent）
 export const InstallHostForm: React.FC = (props: any) => {
@@ -386,22 +369,12 @@ export const InstallHostForm: React.FC = (props: any) => {
 
   useEffect(() => {
     if (props.submitEvent !== 1) {
-      props.form.validateFields().then((res) => {
-        console.log(res, '子组件触发父组件的确认标识');
-        // getTestHost(res.hostName);
-        // props.setVisible(false);
-      });
+      props.form.validateFields().then((res) => {});
     }
   }, [props.submitEvent]);
 
   return (
-    <Form
-      form={props.form}
-      name="InstallHostForm"
-      // labelCol={{ span: 4 }}
-      // wrapperCol={{ span: 20 }}
-      layout="vertical"
-    >
+    <Form form={props.form} name="InstallHostForm" layout="vertical">
       <Form.Item label="Agent版本" name="agentVersionId" rules={[{ required: true, message: '请选择' }]}>
         <Select showSearch placeholder="请选择">
           {agentVersions?.map((v, index) => (
@@ -409,11 +382,6 @@ export const InstallHostForm: React.FC = (props: any) => {
               {v.agentVersion}
             </Option>
           ))}
-          {/* {props.agentVersions?.map((v, index) => (
-            <Option key={index} value={v.agentVersionId}>
-              {v.agentVersion}
-            </Option>
-          ))} */}
         </Select>
       </Form.Item>
     </Form>
@@ -470,10 +438,7 @@ const uninstallHost = (props) => {
         ),
         content: '可点击标题跳转，或至“Agent中心”>“运维任务”模块查看详情',
         okText: '确认',
-        onOk: () => {
-          // this.setState({ selectedRowKeys: [] });
-          // this.getAgentData(this.state.queryParams);
-        },
+        onOk: () => {},
       });
     })
     .catch((err: any) => {
@@ -546,36 +511,6 @@ const HostConfigurationForm = (props: any) => {
   const [hostDetail, setHostDetail] = useState(containerData);
   const [machineZones, setMachineZones] = useState([] as string[]);
 
-  const getMachineZonesList = () => {
-    const zonesList = machineZones.map((ele: string) => {
-      return { value: ele, text: ele };
-    });
-    return zonesList;
-  };
-
-  const handleHostSubmit = (e: any) => {
-    e.preventDefault();
-    props.form.validateFields().then((values: any) => {
-      // if (err) {
-      //   return false;
-      // }
-      console.log(values, 'values');
-      const params = {
-        department: hostDetail?.department || '',
-        id: hostDetail?.hostId,
-        machineZone: values?.machineZone || '',
-      };
-      return editOpHosts(params)
-        .then((res: any) => {
-          Modal.success({ title: '保存成功！', okText: '确认', onOk: () => genData() });
-          props.setVisible(false);
-        })
-        .catch((err: any) => {
-          // console.log(err);
-        });
-    });
-  };
-
   const getMachineZones = () => {
     getHostMachineZone()
       .then((res: string[]) => {
@@ -609,7 +544,7 @@ const HostConfigurationForm = (props: any) => {
       // labelCol={{ span: 4 }}
       // wrapperCol={{ span: 20 }}
       layout="horizontal"
-    // onFinish={handleHostSubmit}
+      // onFinish={handleHostSubmit}
     >
       <div
         className="agent-list-head"
@@ -679,6 +614,8 @@ const AgentConfigurationForm = (props: any) => {
   const [errorReceivers, setErrorReceivers] = useState([] as any[]);
   const [receiverTopic, setReceiverTopic] = useState([] as any[]);
   const [errorTopic, setErrorTopic] = useState([] as any[]);
+  const [advancedTips, setAdvancedTips] = useState('');
+  const [advancedConfigItemList, setAdvancedConfigItemList] = useState([] as any);
 
   useEffect(() => {
     if (props.submitEvent !== 1) {
@@ -687,13 +624,7 @@ const AgentConfigurationForm = (props: any) => {
   }, [props.submitEvent]);
 
   const handleAgentSubmit = () => {
-    // console.log(e);
-    // e.preventDefault();
     props.form.validateFields().then((values: any) => {
-      // if (err) {
-      //   collapseCallBack(['high']);
-      //   return false;
-      // }
       const params = {
         metricsProducerConfiguration: values?.metricsProducerConfiguration,
         errorLogsProducerConfiguration: values?.errorLogsProducerConfiguration,
@@ -719,14 +650,6 @@ const AgentConfigurationForm = (props: any) => {
 
   const collapseCallBack = (key: any) => {
     setActiveKeys(key);
-  };
-
-  const onReceiverChange = (value: number) => {
-    // getReceiverTopic(value); // 等对接Kafka集群时再修复
-  };
-
-  const onErrorChange = (value: number) => {
-    // getReceiverTopic(value, true); // 等对接Kafka集群时再修复
   };
 
   const getReceiversList = () => {
@@ -763,22 +686,52 @@ const AgentConfigurationForm = (props: any) => {
         // console.log(err);
       });
   };
+  const getTaskAdvancedTips = () => {
+    getAgentTips().then((res) => {
+      setAdvancedTips(res?.summary || '');
+      setAdvancedConfigItemList(res?.advancedConfigItemList || []);
+    });
+  };
 
   useEffect(() => {
     if (containerData.agentId) {
       getAgentDetail();
       getReceiversList();
+      getTaskAdvancedTips();
     }
   }, []);
 
+  const showAdvanceIntro = (event) => {
+    event.stopPropagation();
+    const columns = [
+      {
+        title: '配置项名称',
+        dataIndex: 'name',
+        ellipsis: true,
+        width: 200,
+      },
+      {
+        title: '配置项描述',
+        dataIndex: 'description',
+        ellipsis: true,
+      },
+      {
+        title: '配置项默认值',
+        dataIndex: 'defaultValue',
+        key: 'defaultValue',
+        width: 120,
+      },
+    ];
+    Modal.info({
+      content: <Table columns={columns} dataSource={advancedConfigItemList} />,
+      width: 720,
+      icon: null,
+      okText: '确认',
+    });
+  };
+
   return (
-    <Form
-      form={props.form}
-      name="agentConfigurationForm"
-      // labelCol={{ span: 4 }}
-      // wrapperCol={{ span: 20 }}
-      layout="vertical"
-    >
+    <Form form={props.form} name="agentConfigurationForm" layout="vertical">
       <div
         className="agent-list-head"
         style={{ display: 'flex', justifyContent: 'space-between', padding: '0 24px', alignItems: 'center' }}
@@ -823,8 +776,17 @@ const AgentConfigurationForm = (props: any) => {
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    高级配置
-                    <Divider plain></Divider>
+                    <div>
+                      高级配置
+                      <Tooltip title={advancedTips} placement="right">
+                        <IconFont type="icon-tishi"></IconFont>
+                      </Tooltip>
+                      &nbsp;
+                      <span>
+                        <a onClick={showAdvanceIntro}>高级配置项说明</a>
+                      </span>
+                    </div>
+                    <Divider style={{ minWidth: '71%' }} plain></Divider>
                     <a style={{ display: 'flex', alignItems: 'center' }}>
                       {activeKeys?.length ? (
                         <>
@@ -844,126 +806,6 @@ const AgentConfigurationForm = (props: any) => {
                 key="high"
               >
                 <Row gutter={[16, 0]}>
-                  {/* <Col span={12}>
-                    <Form.Item
-                      label="指标流接收集群"
-                      name="metricsSendReceiverId"
-                      initialValue={agentDetail?.metricsSendReceiverId}
-                      rules={[
-                        {
-                          required: true,
-                          message: '请选择',
-                          // initialValue: agentDetail?.metricsSendReceiverId,
-                        },
-                      ]}
-                    >
-                      <Select onChange={onReceiverChange}>
-                        {receivers.map((v: any, index: number) => (
-                          <Option key={index} value={v.id}>
-                            {v.kafkaClusterName.length > 15 ? (
-                              <Tooltip placement="bottomLeft" title={v.kafkaClusterName}>
-                                {v.kafkaClusterName}
-                              </Tooltip>
-                            ) : (
-                              v.kafkaClusterName
-                            )}
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label="错误日志接收集群"
-                      name="errorLogsSendReceiverId"
-                      initialValue={agentDetail?.errorLogsSendReceiverId}
-                      rules={[
-                        {
-                          required: true,
-                          message: '请选择',
-                          // initialValue: agentDetail?.errorLogsSendReceiverId,
-                        },
-                      ]}
-                    >
-                      <Select onChange={onErrorChange}>
-                        {errorReceivers.map((v: any, index: number) => (
-                          <Option key={index} value={v.id}>
-                            {v.kafkaClusterName.length > 15 ? (
-                              <Tooltip placement="bottomLeft" title={v.kafkaClusterName}>
-                                {v.kafkaClusterName}
-                              </Tooltip>
-                            ) : (
-                              v.kafkaClusterName
-                            )}
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label="指标流接收Topic"
-                      name="metricsSendTopic"
-                      initialValue={agentDetail?.metricsSendTopic}
-                      rules={[
-                        {
-                          required: true,
-                          message: '请输入',
-                          // initialValue: agentDetail?.metricsSendTopic,
-                        },
-                      ]}
-                    >
-                      <AutoComplete placeholder="请选择或输入" options={receiverTopic} children={<Input style={{ border: 'none' }} />} />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label="错误日志接收Topic"
-                      name="errorLogsSendTopic"
-                      initialValue={agentDetail?.errorLogsSendTopic}
-                      rules={[
-                        {
-                          required: true,
-                          message: '请输入',
-                          // initialValue: agentDetail?.errorLogsSendTopic,
-                        },
-                      ]}
-                    >
-                      <AutoComplete placeholder="请选择或输入" options={errorTopic} children={<Input style={{ border: 'none' }} />} />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label="生产端属性"
-                      name="metricsProducerConfiguration"
-                      initialValue={agentDetail?.metricsProducerConfiguration}
-                      rules={[
-                        {
-                          message: '请输入',
-                          pattern: /^[-\w]{1,1024}$/,
-                          // initialValue: agentDetail?.metricsProducerConfiguration
-                        },
-                      ]}
-                    >
-                      <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item
-                      label="生产端属性"
-                      name="errorLogsProducerConfiguration"
-                      initialValue={agentDetail?.metricsProducerConfiguration}
-                      rules={[
-                        {
-                          message: '请输入',
-                          pattern: /^[-\w]{1,1024}$/,
-                          // initialValue: agentDetail?.metricsProducerConfiguration,
-                        },
-                      ]}
-                    >
-                      <TextArea placeholder="默认值，如修改，覆盖相应生产端配置" />
-                    </Form.Item>
-                  </Col> */}
                   <Col span={24}>
                     <Form.Item
                       label="配置信息"
@@ -1197,14 +1039,6 @@ export const hostNameList = async () => {
       value: 0,
       title: '物理机',
     },
-    // {
-    //   value: 1,
-    //   title: '容器',
-    // },
-    // {
-    //   value: 2,
-    //   label: 'VM虚拟机',
-    // }
   ];
 };
 
@@ -1320,7 +1154,6 @@ export const DiagnosisContent = (props: any) => {
       <div style={{ padding: '20px 30px' }}>{containerData.agentHealthDescription}</div>
       <div style={{ padding: '20px' }}>
         <ProTable
-          isCustomPg={true}
           showQueryForm={false}
           tableProps={{
             showHeader: false,

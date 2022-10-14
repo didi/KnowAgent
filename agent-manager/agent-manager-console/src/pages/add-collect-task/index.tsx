@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
-import { Modal, Steps, Form, Button, Spin, AppContainer } from '@didi/dcloud-design';
+import { Modal, Steps, Form, Button, Spin, AppContainer } from 'knowdesign';
 import CollectObjectConfiguration from './CollectObjectConfiguration';
 import CollectLogPathConfiguration from './CollectLogPathConfiguration';
 import CollectLogRuleConfiguration from './CollectLogRuleConfiguration';

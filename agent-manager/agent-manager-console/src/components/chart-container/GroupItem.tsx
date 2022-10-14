@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { Collapse } from '@didi/dcloud-design';
+import { Collapse } from 'knowdesign';
 const { Panel } = Collapse;
 import { CaretRightOutlined } from '@ant-design/icons';
-import { DragGroup } from '@didi/dcloud-design';
+import { DragGroup } from 'knowdesign';
 
 interface propsType extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { IconFont, Button, Input, Select, Form, Row, Col, useDynamicList, Modal, AutoComplete } from '@didi/dcloud-design';
+import { IconFont, Button, Input, Select, Form, Row, Col, useDynamicList, Modal, AutoComplete } from 'knowdesign';
 import { setlogFilePathKey } from './dateRegAndGvar';
 import { getCollectTaskFiles, getRuleTips, getFileContent, getSliceRule } from '../../api/collect';
 import { logFilePathKey } from './dateRegAndGvar';

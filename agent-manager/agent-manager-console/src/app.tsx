@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import _ from 'lodash';
-import dantdZhCN from '@didi/dcloud-design/lib/locale/zh_CN';
-import dantdEnUS from '@didi/dcloud-design/lib/locale/en_US';
+import dantdZhCN from 'knowdesign/lib/locale/zh_CN';
+import dantdEnUS from 'knowdesign/lib/locale/en_US';
 import intlZhCN from './locales/zh';
 import intlEnUS from './locales/en';
 import { systemKey, leftMenus } from './constants/menu';
-import { DLayout, AppContainer, RouteGuard, Empty, IconFont } from '@didi/dcloud-design';
+import { DLayout, AppContainer, RouteGuard, Empty, IconFont } from 'knowdesign';
 import { pageRoutes } from './pages';
 import './index.less';
 import img from './image/logo.png';

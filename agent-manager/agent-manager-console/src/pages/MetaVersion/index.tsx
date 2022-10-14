@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AppContainer, Container } from '@didi/dcloud-design';
+import { AppContainer, Container } from 'knowdesign';
 import ProTableProject from '@tpl_packages/module/tpl-protable/index';
 import ProFormProject from '@tpl_packages/module/tpl-proform/index';
 import Prodescription from '@tpl_packages/module/tpl-prodescription/index';

@@ -18,12 +18,12 @@ import {
   Space,
   ProTable,
   Modal,
-} from '@didi/dcloud-design';
+} from 'knowdesign';
 import ChartContainer from '../../components/chart-container';
 import { Link } from 'react-router-dom';
 import DragItem from '../../components/DragItem';
 import { SearchOutlined } from '@ant-design/icons';
-import { Drawer, notification } from '@didi/dcloud-design';
+import { Drawer, notification } from 'knowdesign';
 import { getAgent, getServices } from '../../api/agent';
 import { request } from '../../request/index';
 const hostTypes = [
@@ -432,7 +432,6 @@ export const DiagnosisContent = (props: any) => {
       </div>
       <div style={{ padding: '20px' }}>
         <ProTable
-          isCustomPg={true}
           showQueryForm={false}
           tableProps={{
             showHeader: false,

@@ -1,4 +1,4 @@
-import { Utils } from '@didi/dcloud-design';
+import { Utils } from 'knowdesign';
 const { formatDate, formatDuration, formatSize } = Utils;
 
 const K = 1024;

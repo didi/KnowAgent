@@ -53,8 +53,8 @@ export const getReceiversTopic = (receiverId: number) => {
   return fetch(apiMap.getReceiversTopics + `/${receiverId}/topics`);
 };
 
-export const getTopics = () => {
-  return fetch(apiMap.getTopicsBrokerServers);
+export const getTopics = (brokerServers: string) => {
+  return fetch(apiMap.getTopicsBrokerServers + `${brokerServers || ''}`);
 };
 
 export const addOpHosts = (params: any) => {
@@ -148,4 +148,11 @@ export const getDashboard = (startTime: number, endTime: number, dashboardMetric
 
 export const getAgentHostId = (hostName: string) => {
   return fetch(`${apiMap.getAgentHostId}?hostname=${hostName}`);
+};
+
+export const getTaskTips = () => {
+  return fetch(`${apiMap.getCollectMetrics}/advanced-config/tips`);
+};
+export const getAgentTips = () => {
+  return fetch(`${apiMap.editOpAgent}/advanced-config/tips`);
 };

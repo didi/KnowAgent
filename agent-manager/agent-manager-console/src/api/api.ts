@@ -21,7 +21,7 @@ export const apiMap = {
   getHostMachineZones: getApi('/normal/host/machine-zones'), // 获取系统中已存在的全量machineZone
   getReceiversList: getApi('/normal/receivers/list'), // 查询系统全量接收端信息
   getReceiversTopics: getApi('/normal/receivers'), // 根据接收端id获取该接收端对应kafka集群的所有topic列表
-  getTopicsBrokerServers: getApi('/normal/receivers/topics?brokerServers=10.255.0.49:9092'), // 获取接收端对应kafka集群的所有topic列表
+  getTopicsBrokerServers: getApi('/normal/receivers/topics?brokerServers='), // 获取接收端对应kafka集群的所有topic列表
   getHostList: getApi('/normal/host/list'), // 查询全量主机列表
   // agent
   getAgentHostList: getApi('/rd/host/paging'), // 查询主机&Agent列表

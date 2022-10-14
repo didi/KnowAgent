@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Utils } from '@didi/dcloud-design';
+import { Utils } from 'knowdesign';
 import DragItemChart from '../DragItemChart';
 import moment from 'moment';
 export const unitEnum = {
@@ -65,15 +65,15 @@ const DragItem = (props: IProps): JSX.Element => {
     const changeObj =
       type === '0'
         ? {
-            hostName: agent,
-            pathId: '',
-            logCollectTaskId: '',
-          }
+          hostName: agent,
+          pathId: '',
+          logCollectTaskId: '',
+        }
         : {
-            hostName: hostName || null,
-            pathId: pathId || '',
-            logCollectTaskId: logCollectTaskId || '',
-          };
+          hostName: hostName || null,
+          pathId: pathId || '',
+          logCollectTaskId: logCollectTaskId || '',
+        };
 
     const mergeParams = {
       ...rest,
@@ -207,8 +207,7 @@ const DragItem = (props: IProps): JSX.Element => {
               params
                 .map((item) => {
                   return `<div style="display: flex; min-width: 140px; justify-content: space-between;line-height: 20px;color: #495057;">
-                    <div style="margin-right: 20px;"><span style="display:inline-block;margin-right:8px;border-radius:50%;width:6px;height:6px;background-color:${
-                      item.color
+                    <div style="margin-right: 20px;"><span style="display:inline-block;margin-right:8px;border-radius:50%;width:6px;height:6px;background-color:${item.color
                     };"></span><span>${item.name}</span></div>
                     <div>${unitFormatFn(item.value, 'tip')}</div>
                   </div>`;
@@ -252,12 +251,12 @@ const DragItem = (props: IProps): JSX.Element => {
         const data =
           type === 1
             ? getLabelValue({
-                lableValue,
-                baseUnit,
-                displayUnit,
-              })
+              lableValue,
+              baseUnit,
+              displayUnit,
+            })
             : type === 3
-            ? singleLineChatValue?.metricPointList?.map((item: any) => {
+              ? singleLineChatValue?.metricPointList?.map((item: any) => {
                 return {
                   ...item,
                   name: singleLineChatValue?.name,
@@ -265,7 +264,7 @@ const DragItem = (props: IProps): JSX.Element => {
                   value: valueFormatFn(item.last, baseUnit, displayUnit),
                 };
               })
-            : multiLineChatValue?.map((item) => {
+              : multiLineChatValue?.map((item) => {
                 return item?.metricPointList?.map((el) => {
                   return {
                     ...el,

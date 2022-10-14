@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
-import { message } from '@didi/dcloud-design';
+import { message } from 'knowdesign';
 import moment from 'moment';
 import { oneDayMillims } from '../constants/common';
 import { ICookie, IStringMap } from '../interface/common';
