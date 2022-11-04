@@ -341,7 +341,7 @@ public class ConfigServiceTest {
                 String config = jsonObject.getString("data");
                 if (StringUtils.isNotBlank(config) && !"{}".equals(config)) {
                     ConfigService configService = new ConfigService(null);
-                    logConfig = configService.buildAgentConfigFromString(config);
+                    logConfig = configService.buildAgentConfigFromRemoteServer(config);
                 }
             }
         } catch (Exception e) {
@@ -366,8 +366,8 @@ public class ConfigServiceTest {
                 if (StringUtils.isNotBlank(config1) && !"{}".equals(config1)
                     && StringUtils.isNotBlank(config2) && !"{}".equals(config2)) {
                     ConfigService configService = new ConfigService(null);
-                    logConfig1 = configService.buildAgentConfigFromString(config1);
-                    logConfig2 = configService.buildAgentConfigFromString(config2);
+                    logConfig1 = configService.buildAgentConfigFromRemoteServer(config1);
+                    logConfig2 = configService.buildAgentConfigFromRemoteServer(config2);
                     assertTrue(logConfig1.toString().equals(logConfig2.toString()));
                 }
             }

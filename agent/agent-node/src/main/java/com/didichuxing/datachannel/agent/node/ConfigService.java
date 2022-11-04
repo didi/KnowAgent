@@ -1,16 +1,20 @@
 package com.didichuxing.datachannel.agent.node;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.didichuxing.datachannel.agent.common.configs.v2.component.*;
+import com.didichuxing.datachannel.agent.common.constants.Tags;
 import com.didichuxing.datachannel.agent.node.am.v2.AgentCollectConfigDOImpl;
 import com.didichuxing.datachannel.agent.node.service.http.client.HttpClient;
+import com.didichuxing.datachannel.agent.sink.kafkaSink.KafkaTargetConfig;
+import com.didichuxing.datachannel.agent.source.log.config.LogSourceConfig;
 import com.didichuxing.datachannel.agentmanager.common.bean.dto.agent.AgentRegisterDTO;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ErrorCodeEnum;
 import com.didichuxing.datachannel.agentmanager.common.enumeration.ResultTypeEnum;
 import com.didichuxing.datachannel.agent.common.api.LogConfigConstants;
 import com.didichuxing.datachannel.agent.common.configs.v2.AgentConfig;
-import com.didichuxing.datachannel.agent.common.configs.v2.component.ModelConfig;
 import com.didichuxing.datachannel.agent.engine.component.AgentComponent;
 import com.didichuxing.datachannel.agent.engine.utils.CommonUtils;
 
@@ -322,7 +326,7 @@ public class ConfigService extends AgentComponent {
                     } else if(code.equals(ResultTypeEnum.SUCCESS.getCode())) {//agent 配置获取成功
                         String config = jsonObject.getString("data");
                         if (StringUtils.isNotBlank(config) && !"{}".equals(config)) {
-                            agentConfig = buildAgentConfigFromString(config);
+                            agentConfig = buildAgentConfigFromRemoteServer(config);
                         } else {//agent配置对应data域不可为空
                             CONFIG_LOGGER.warn(
                                     String.format("get agent config from remote agent-manager failed, the response data field is null, the response is: %s, ip={%s},port={%d},url={%s},param={%s}.", rootStr, ip, port, url, JSON.toJSONString(param))
@@ -424,7 +428,7 @@ public class ConfigService extends AgentComponent {
 
         AgentConfig config;
         try {
-            config = buildAgentConfigFromString(new String(bytes));
+            config = buildAgentConfigFromLocal(new String(bytes));
             if (config.getErrorLogConfig() == null || config.getMetricConfig() == null) {
                 // 防止读取旧版本的logAgent的本地配置
                 CONFIG_LOGGER.warn("config is old version. ignore!");
@@ -437,10 +441,21 @@ public class ConfigService extends AgentComponent {
         return config;
     }
 
-    public AgentConfig buildAgentConfigFromString(String input) {
+    public AgentConfig buildAgentConfigFromRemoteServer(String input) {
         AgentConfig agentConfig = null;
         try {
-            /*if (StringUtils.isNotBlank(input) && !"{}".equals(input)) {
+            AgentCollectConfigDOImpl agentCollectConfigurationImpl = JSONObject.parseObject(input, AgentCollectConfigDOImpl.class);
+            return agentCollectConfigurationImpl.convertToAgentConfig();
+        } catch (Exception e) {
+            CONFIG_LOGGER.error("buildAgentConfigFromRemoteServer error! input is " + input, e);
+        }
+        return agentConfig;
+    }
+
+    public AgentConfig buildAgentConfigFromLocal(String input) {
+        AgentConfig agentConfig = null;
+        try {
+            if (StringUtils.isNotBlank(input) && !"{}".equals(input)) {
                 // 未构建出modelConfig
                 agentConfig = JSONObject.parseObject(input, AgentConfig.class);
 
@@ -455,13 +470,44 @@ public class ConfigService extends AgentComponent {
                     }
                 }
                 agentConfig.setModelConfigs(modelConfigs);
-            }*/
-            AgentCollectConfigDOImpl agentCollectConfigurationImpl = JSONObject.parseObject(input, AgentCollectConfigDOImpl.class);
-            return agentCollectConfigurationImpl.convertToAgentConfig();
+            }
         } catch (Exception e) {
-            CONFIG_LOGGER.error("buildAgentConfigFromString error! input is " + input, e);
+            CONFIG_LOGGER.error("buildAgentConfigFromLocal error! input is " + input, e);
         }
         return agentConfig;
+    }
+
+    private ModelConfig getModelConfigFromJSONObject(JSONObject object) {
+        ModelConfig modelConfig = JSONObject.parseObject(object.toString(), ModelConfig.class);
+        CommonConfig commonConfig = JSONObject.parseObject(object.get("commonConfig").toString(), CommonConfig.class);
+        modelConfig.setCommonConfig(commonConfig);
+        EventMetricsConfig eventMetricsConfig = JSONObject.parseObject(object.get("eventMetricsConfig").toString(),
+                EventMetricsConfig.class);
+        modelConfig.setEventMetricsConfig(eventMetricsConfig);
+        ModelLimitConfig modelLimitConfig = JSONObject.parseObject(object.get("modelLimitConfig").toString(),
+                ModelLimitConfig.class);
+        modelConfig.setModelLimitConfig(modelLimitConfig);
+        KafkaTargetConfig targetConfig = JSONObject.parseObject(object.get("targetConfig").toString(), KafkaTargetConfig.class);
+        modelConfig.setTargetConfig(targetConfig);
+        LogSourceConfig sourceConfig = JSONObject.parseObject(object.get("sourceConfig").toString(),
+                LogSourceConfig.class);
+        modelConfig.setSourceConfig(sourceConfig);
+        ChannelConfig channelConfig = JSONObject.parseObject(object.get("channelConfig").toString(),
+                ChannelConfig.class);
+        modelConfig.setChannelConfig(channelConfig);
+        if (object.get("version") != null) {
+            modelConfig.setVersion(Integer.parseInt(object.get("version").toString()));
+        }
+        if (object.get("hostname") != null) {
+            modelConfig.setHostname(object.get("hostname").toString());
+        }
+        if (object.get("collectType") != null) {
+            modelConfig.setCollectType(Integer.parseInt(object.get("collectType").toString()));
+        }
+        if (object.get("sourceLogModeId") != null) {
+            modelConfig.setSourceLogModeId(Long.parseLong(object.get("sourceLogModeId").toString()));
+        }
+        return modelConfig;
     }
 
     /**
