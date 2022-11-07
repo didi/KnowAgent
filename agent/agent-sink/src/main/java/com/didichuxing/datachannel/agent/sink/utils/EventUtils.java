@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class EventUtils {
 
     private static final Logger LOGGER             = LoggerFactory.getLogger(EventUtils.class
-            .getName());
+                                                       .getName());
     private static final String CUT_FLAG           = "...";
 
     private static final String START_ARRAY        = "[";
@@ -47,22 +47,22 @@ public class EventUtils {
             return getPartitionKeyByType(topicPartitionKeyType);
         }
         if (mqSink == null || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyStartFlag())
-                || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyFormat())) {
+            || StringUtils.isBlank(mqSink.getKafkaTargetConfig().getKeyFormat())) {
             if (mqSink != null
-                    && StringUtils.isNotBlank(mqSink.getKafkaTargetConfig().getRegularPartKey())) {
+                && StringUtils.isNotBlank(mqSink.getKafkaTargetConfig().getRegularPartKey())) {
                 if (mqSink.getKafkaTargetConfig().getRegularPartKey()
-                        .equals(LogConfigConstants.HOSTNAME_FLAG)) {
+                    .equals(LogConfigConstants.HOSTNAME_FLAG)) {
                     // 以主机名作为key
                     return CommonUtils.getHOSTNAME();
                 } else if (mqSink.getKafkaTargetConfig().getRegularPartKey()
-                        .equals(LogConfigConstants.FILE_FLAG)) {
+                    .equals(LogConfigConstants.FILE_FLAG)) {
                     // 以文件key作为key
                     return mqEvent.getSourceItemKey();
                 } else if (mqSink.getKafkaTargetConfig().getRegularPartKey()
-                        .startsWith(LogConfigConstants.TIME_FLAG)) {
+                    .startsWith(LogConfigConstants.TIME_FLAG)) {
                     // time
                     return mqEvent.getSourceItemKey() + System.currentTimeMillis()
-                            / mqSink.getKeyDelay();
+                           / mqSink.getKeyDelay();
 
                 } else {
                     return getPartitionKeyByType(topicPartitionKeyType);
@@ -78,7 +78,7 @@ public class EventUtils {
 
             // 若keyFormat非空，且keyFormat为特殊标记，则以hostName为key
             if (StringUtils.isNotBlank(keyFormat)
-                    && keyFormat.equals(LogConfigConstants.HOSTNAME_FLAG)) {
+                && keyFormat.equals(LogConfigConstants.HOSTNAME_FLAG)) {
                 return CommonUtils.getHOSTNAME();
             }
 
@@ -98,7 +98,7 @@ public class EventUtils {
                 if (isVaild) {
                     if (line.length() < keyFormat.length()) {
                         LOGGER.warn("Content has no key, topic is "
-                                + mqSink.getKafkaTargetConfig().getTopic());
+                                    + mqSink.getKafkaTargetConfig().getTopic());
                         return getPartitionKeyByType(topicPartitionKeyType);
                     } else {
                         return line.substring(0, keyFormat.length());
@@ -108,7 +108,7 @@ public class EventUtils {
                     return getPartitionKeyByType(topicPartitionKeyType);
                 }
             } else if (StringUtils.isEmpty(keyStartFlag) && keyStartFlagIndex == 0
-                    && StringUtils.isNotBlank(keyFormat)) {
+                       && StringUtils.isNotBlank(keyFormat)) {
                 // 兼容key的分隔符是空，但是范例有值的场景
                 if (line.length() < keyFormat.length()) {
                     return getPartitionKeyByType(topicPartitionKeyType);
@@ -156,76 +156,76 @@ public class EventUtils {
 
     public static String toObjectJson(KafkaSink kafkaSink, KafkaEvent kafkaEvent) {
         if (kafkaSink != null && kafkaSink.getModelConfig() != null
-                && kafkaSink.getModelConfig().getEventMetricsConfig() != null) {
+            && kafkaSink.getModelConfig().getEventMetricsConfig() != null) {
             StringBuilder sb = new StringBuilder("{");
             String dockerName = kafkaSink.getModelConfig().getEventMetricsConfig().getDockerName();
 
             sb.append("\"hostName\"").append(":").append("\"")
-                    .append(dockerName == null ? CommonUtils.getHOSTNAME() : dockerName).append("\"")
-                    .append(",");
+                .append(dockerName == null ? CommonUtils.getHOSTNAME() : dockerName).append("\"")
+                .append(",");
             sb.append("\"originalAppName\"").append(":").append("\"")
-                    .append(kafkaSink.getModelConfig().getEventMetricsConfig().getOriginalAppName())
-                    .append("\"").append(",");
+                .append(kafkaSink.getModelConfig().getEventMetricsConfig().getOriginalAppName())
+                .append("\"").append(",");
             sb.append("\"logName\"").append(":").append("\"")
-                    .append(kafkaEvent.getSourceItemName()).append("\"").append(",");
+                .append(kafkaEvent.getSourceItemName()).append("\"").append(",");
             sb.append("\"queryFrom\"").append(":").append("\"")
-                    .append(kafkaSink.getModelConfig().getEventMetricsConfig().getQueryFrom())
-                    .append("\"").append(",");
+                .append(kafkaSink.getModelConfig().getEventMetricsConfig().getQueryFrom())
+                .append("\"").append(",");
             if (StringUtils.isNotBlank(kafkaSink.getModelConfig().getEventMetricsConfig()
-                    .getTransName())) {
+                .getTransName())) {
                 sb.append("\"appName\"").append(":").append("\"")
-                        .append(kafkaSink.getModelConfig().getEventMetricsConfig().getTransName())
-                        .append("\"").append(",");
+                    .append(kafkaSink.getModelConfig().getEventMetricsConfig().getTransName())
+                    .append("\"").append(",");
             } else {
                 sb.append("\"appName\"")
-                        .append(":")
-                        .append("\"")
-                        .append(kafkaSink.getModelConfig().getEventMetricsConfig().getBelongToCluster())
-                        .append("\"").append(",");
+                    .append(":")
+                    .append("\"")
+                    .append(kafkaSink.getModelConfig().getEventMetricsConfig().getBelongToCluster())
+                    .append("\"").append(",");
             }
 
             if (CommonUtils.getDidienvOdinSu() == null) {
                 sb.append("\"DIDIENV_ODIN_SU\"").append(":").append("null").append(",");
             } else {
                 sb.append("\"DIDIENV_ODIN_SU\"").append(":").append("\"")
-                        .append(CommonUtils.getDidienvOdinSu()).append("\"").append(",");
+                    .append(CommonUtils.getDidienvOdinSu()).append("\"").append(",");
             }
 
             if (kafkaEvent.getMsgUniqueKey() == null) {
                 sb.append("\"uniqueKey\"").append(":").append("null").append(",");
             } else {
                 sb.append("\"uniqueKey\"").append(":").append("\"")
-                        .append(kafkaEvent.getMsgUniqueKey()).append("\"").append(",");
+                    .append(kafkaEvent.getMsgUniqueKey()).append("\"").append(",");
             }
             sb.append("\"parentPath\"").append(":").append("\"")
-                    .append(kafkaEvent.getSourceItemHeaderName()).append("\"").append(",");
+                .append(kafkaEvent.getSourceItemHeaderName()).append("\"").append(",");
             sb.append("\"odinLeaf\"").append(":").append("\"")
-                    .append(kafkaSink.getModelConfig().getEventMetricsConfig().getOdinLeaf())
-                    .append("\"").append(",");
+                .append(kafkaSink.getModelConfig().getEventMetricsConfig().getOdinLeaf())
+                .append("\"").append(",");
             sb.append("\"fileKey\"").append(":").append("\"").append(kafkaEvent.getSourceItemKey())
-                    .append("\"").append(",");
+                .append("\"").append(",");
             sb.append("\"timestamp\"").append(":").append("\"").append(kafkaEvent.getMsgTime())
-                    .append("\"").append(",");
+                .append("\"").append(",");
             sb.append("\"logId\"").append(":")
-                    .append(kafkaSink.getModelConfig().getCommonConfig().getModelId()).append(",");
+                .append(kafkaSink.getModelConfig().getCommonConfig().getModelId()).append(",");
             sb.append("\"pathId\"").append(":").append(kafkaEvent.getSourceId()).append(",");
             sb.append("\"isService\"").append(":")
-                    .append(kafkaSink.getModelConfig().getEventMetricsConfig().getIsService())
-                    .append(",");
+                .append(kafkaSink.getModelConfig().getEventMetricsConfig().getIsService())
+                .append(",");
             sb.append("\"collectTime\"").append(":").append(kafkaEvent.getCollectTime())
-                    .append(",");
+                .append(",");
             sb.append("\"offset\"").append(":").append(kafkaEvent.getRate()).append(",");
             sb.append("\"preOffset\"").append(":").append(kafkaEvent.getPreRate()).append(",");
             sb.append("\"logTime\"").append(":").append(kafkaEvent.getMsgTime()).append(",");
             sb.append("\"content\"").append(":").append("\"").append(kafkaEvent.getContent())
-                    .append("\"");
+                .append("\"");
             // sb.append("\"content\"").append(":").append("\"").append(StringEscapeUtils.escapeJava(kafkaEvent.getContent())).append("\"");
 
             if (kafkaSink.getModelConfig().getEventMetricsConfig().getOtherEvents() != null) {
                 for (Map.Entry<String, String> entry : kafkaSink.getModelConfig()
-                        .getEventMetricsConfig().getOtherEvents().entrySet()) {
+                    .getEventMetricsConfig().getOtherEvents().entrySet()) {
                     sb.append(",").append(
-                            "\"" + entry.getKey() + "\"" + ":" + "\"" + entry.getValue() + "\"");
+                        "\"" + entry.getKey() + "\"" + ":" + "\"" + entry.getValue() + "\"");
                 }
             }
             sb.append("}");
@@ -265,7 +265,7 @@ public class EventUtils {
                                                                Integer businessType) {
         // 为保证数据的一致性，防止因为配置原因导致的问题，以下字段通过手动赋值
         if (kafkaSink != null && kafkaSink.getModelConfig() != null
-                && kafkaSink.getModelConfig().getEventMetricsConfig() != null) {
+            && kafkaSink.getModelConfig().getEventMetricsConfig() != null) {
             LogEventSerializerObject object = new LogEventSerializerObject();
 
             // public核心字段
@@ -275,26 +275,26 @@ public class EventUtils {
             object.append("", "");
             object.append("uniqueKey", kafkaEvent.getMsgUniqueKey());
             object.append("originalAppName", kafkaSink.getModelConfig().getEventMetricsConfig()
-                    .getOriginalAppName());
+                .getOriginalAppName());
             object.append("odinLeaf", kafkaSink.getModelConfig().getEventMetricsConfig()
-                    .getOdinLeaf());
+                .getOdinLeaf());
             object.append("logTime", kafkaEvent.getMsgTime());
             object.append("logId", kafkaSink.getModelConfig().getCommonConfig().getModelId());
 
             if (businessType == null || businessType.equals(StandardLogType.Normal.getType())) {
                 if (StringUtils.isNotBlank(kafkaSink.getModelConfig().getEventMetricsConfig()
-                        .getTransName())) {
+                    .getTransName())) {
                     object.append("appName", kafkaSink.getModelConfig().getEventMetricsConfig()
-                            .getTransName());
+                        .getTransName());
                 } else {
                     object.append("appName", kafkaSink.getModelConfig().getEventMetricsConfig()
-                            .getBelongToCluster());
+                        .getBelongToCluster());
                 }
                 object.append("queryFrom", kafkaSink.getModelConfig().getEventMetricsConfig()
-                        .getQueryFrom());
+                    .getQueryFrom());
                 object.append("logName", kafkaEvent.getSourceItemName());
                 object.append("isService", kafkaSink.getModelConfig().getEventMetricsConfig()
-                        .getIsService());
+                    .getIsService());
                 object.append("pathId", kafkaEvent.getSourceId());
                 // 历史原因，timetamp使用logTime的string类型
                 object.append("timestamp", kafkaEvent.getMsgTime() + "");
@@ -306,7 +306,7 @@ public class EventUtils {
 
                 if (kafkaSink.getModelConfig().getEventMetricsConfig().getOtherEvents() != null) {
                     for (Map.Entry<String, String> entry : kafkaSink.getModelConfig()
-                            .getEventMetricsConfig().getOtherEvents().entrySet()) {
+                        .getEventMetricsConfig().getOtherEvents().entrySet()) {
                         object.append(entry.getKey(), entry.getValue());
                     }
                 }

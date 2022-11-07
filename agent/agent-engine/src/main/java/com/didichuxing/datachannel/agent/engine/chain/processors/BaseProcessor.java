@@ -23,9 +23,7 @@ public abstract class BaseProcessor implements Processor {
             process(eventContext);
         } catch (Exception ex) {
             LOGGER.error(
-                    String.format("class=BaseProcessor|method=process|errMsg=%s", ex.getMessage()),
-                    ex
-            );
+                String.format("class=BaseProcessor|method=process|errMsg=%s", ex.getMessage()), ex);
         }
         /*
          * 执行下一个处理器对应处理逻辑
