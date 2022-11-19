@@ -265,6 +265,9 @@ public class LogCollectTaskManageServiceImpl implements LogCollectTaskManageServ
         logCollectTaskPO.setOperator(CommonConstant.getOperator(operator));
         logCollectTaskPO.setConfigurationVersion(LogCollectTaskConstant.LOG_COLLECT_TASK_CONFIGURATION_VERSION_INIT);
         logCollectTaskPO.setLogCollectTaskStatus(LogCollectTaskStatusEnum.RUNNING.getCode());
+        Date now = new Date();
+        logCollectTaskPO.setCreateTime(now);
+        logCollectTaskPO.setModifyTime(now);
         logCollectorTaskDAO.insert(logCollectTaskPO);
         Long logCollectTaskId = logCollectTaskPO.getId();
         /*

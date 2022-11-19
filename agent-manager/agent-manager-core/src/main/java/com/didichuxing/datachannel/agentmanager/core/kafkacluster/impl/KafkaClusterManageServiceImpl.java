@@ -139,6 +139,9 @@ public class KafkaClusterManageServiceImpl implements KafkaClusterManageService 
          */
         kafkaClusterPO = kafkaClusterManageServiceExtension.kafkaCluster2KafkaClusterPO(kafkaClusterDO);
         kafkaClusterPO.setOperator(CommonConstant.getOperator(operator));
+        Date now = new Date();
+        kafkaClusterPO.setCreateTime(now);
+        kafkaClusterPO.setModifyTime(now);
         kafkaClusterDAO.insert(kafkaClusterPO);
 
         /*

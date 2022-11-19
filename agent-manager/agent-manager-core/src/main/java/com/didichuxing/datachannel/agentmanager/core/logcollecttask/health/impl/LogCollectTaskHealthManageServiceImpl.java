@@ -34,6 +34,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +133,9 @@ public class LogCollectTaskHealthManageServiceImpl implements LogCollectTaskHeal
             );
         }
         LogCollectTaskHealthPO logCollectorTaskHealthPO = logCollectTaskHealthManageServiceExtension.buildInitialLogCollectorTaskHealthPO(logCollectTaskDO, operator);
+        Date now = new Date();
+        logCollectorTaskHealthPO.setCreateTime(now);
+        logCollectorTaskHealthPO.setModifyTime(now);
         logCollectTaskHealthDAO.insert(logCollectorTaskHealthPO);
         return logCollectorTaskHealthPO.getId();
     }
