@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.ServiceHostMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="service_id" property="serviceId" jdbcType="BIGINT" />
+    <result column="host_id" property="hostId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, service_id, host_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_service_host
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_service_host
+  </select>
+  <select id="selectRelationHostCountByServiceId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    SELECT count(host_id) as hostCount FROM tb_service_host WHERE service_id = #{serviceId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_service_host
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByHostId" parameterType="java.lang.Long" >
+    delete from tb_service_host
+    where host_id = #{hostId,jdbcType=BIGINT}
+  </delete>
+  <select id="selectHostIdsByServiceId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from tb_service_host
+    where service_id = #{serviceId}
+  </select>
+  <delete id="deleteByServiceId" parameterType="java.lang.Long" >
+    delete from tb_service_host
+    where service_id = #{serviceId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
+    insert into tb_service_host (service_id, host_id)
+    values (#{serviceId,jdbcType=BIGINT}, #{hostId,jdbcType=BIGINT})
+  </insert>
+  <insert id="batchInsert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO">
+    insert into tb_service_host (service_id, host_id) values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.serviceId}, #{item.hostId})
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.service.ServiceHostPO" >
+    update tb_service_host
+    set service_id = #{serviceId,jdbcType=BIGINT},
+      host_id = #{hostId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

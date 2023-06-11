@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetaDataFileMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metadata.MetaDataFilePO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="file_path" property="filePath" jdbcType="VARCHAR" />
+    <result column="file_md5" property="fileMd5" jdbcType="TINYINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, file_name, file_path, file_md5, description, operator, create_time, modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_meta_data_file
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_meta_data_file
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_meta_data_file
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metadata.MetaDataFilePO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_meta_data_file (file_name, file_path, file_md5, description, operator)
+    values (
+            #{fileName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR},
+      #{fileMd5,jdbcType=TINYINT}, #{description,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <select id="paginationQueryByCondition" resultMap="BaseResultMap" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFilePaginationQueryConditionDO" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_meta_data_file
+    <where>
+      1 = 1
+      <if test="fileName != null">
+        and file_name like concat('%',#{fileName},'%')
+      </if>
+      <if test="fileMd5 != null">
+        and file_md5 like concat('%',#{fileMd5},'%')
+      </if>
+      <if test="description != null">
+        and description like concat('%',#{description},'%')
+      </if>
+      <if test="createTimeStart != null">
+        and create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= create_time
+      </if>
+    </where>
+    order by
+    <choose>
+      <when test="sortColumn != null">
+        ${sortColumn}
+        <choose>
+          <when test="asc == true">
+            asc
+          </when>
+          <otherwise>
+            desc
+          </otherwise>
+        </choose>
+      </when>
+      <otherwise>
+        modify_time desc
+      </otherwise>
+    </choose>
+    limit #{limitFrom}, #{limitSize}
+  </select>
+
+  <select id="queryCountByCondition" resultType="java.lang.Integer" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.domain.metadata.MetaDataFilePaginationQueryConditionDO" >
+    select
+    count(*)
+    from tb_meta_data_file
+    <where>
+      1 = 1
+      <if test="fileName != null">
+        and file_name like concat('%',#{fileName},'%')
+      </if>
+      <if test="fileMd5 != null">
+        and file_md5 like concat('%',#{fileMd5},'%')
+      </if>
+      <if test="description != null">
+        and description like concat('%',#{description},'%')
+      </if>
+      <if test="createTimeStart != null">
+        and create_time >= #{createTimeStart}
+      </if>
+      <if test="createTimeEnd != null">
+        and #{createTimeEnd} >= create_time
+      </if>
+    </where>
+  </select>
+
+</mapper>
+
+
+
+

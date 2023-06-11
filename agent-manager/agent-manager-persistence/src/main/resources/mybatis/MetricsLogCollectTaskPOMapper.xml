@@ -1,0 +1,1172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsLogCollectTaskPOMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="collectTaskId" property="collecttaskid" jdbcType="BIGINT" />
+    <result column="pathId" property="pathid" jdbcType="BIGINT" />
+    <result column="agentHostName" property="agenthostname" jdbcType="VARCHAR" />
+    <result column="collectTaskHostName" property="collecttaskhostname" jdbcType="VARCHAR" />
+    <result column="agentHostIp" property="agenthostip" jdbcType="VARCHAR" />
+    <result column="businessTimestamp" property="businesstimestamp" jdbcType="BIGINT" />
+    <result column="maxBusinessTimestampDelay" property="maxbusinesstimestampdelay" jdbcType="BIGINT" />
+    <result column="limitTime" property="limittime" jdbcType="BIGINT" />
+    <result column="tooLargeTruncateNum" property="toolargetruncatenum" jdbcType="BIGINT" />
+    <result column="tooLargeTruncateNumTotal" property="toolargetruncatenumtotal" jdbcType="BIGINT" />
+    <result column="collectPathIsExists" property="collectpathisexists" jdbcType="INTEGER" />
+    <result column="disorderExists" property="disorderexists" jdbcType="INTEGER" />
+    <result column="sliceErrorExists" property="sliceerrorexists" jdbcType="INTEGER" />
+    <result column="readBytes" property="readbytes" jdbcType="BIGINT" />
+    <result column="readCount" property="readcount" jdbcType="BIGINT" />
+    <result column="sendBytes" property="sendbytes" jdbcType="BIGINT" />
+    <result column="sendCount" property="sendcount" jdbcType="BIGINT" />
+    <result column="readTimePerEvent" property="readtimeperevent" jdbcType="BIGINT" />
+    <result column="readTimePerEventMin" property="readtimepereventmin" jdbcType="BIGINT" />
+    <result column="readTimePerEventMax" property="readtimepereventmax" jdbcType="BIGINT" />
+    <result column="readTimePerEventMean" property="readtimepereventmean" jdbcType="BIGINT" />
+    <result column="readTimePerEventStd" property="readtimepereventstd" jdbcType="BIGINT" />
+    <result column="readTimePerEvent55Quantile" property="readtimeperevent55quantile" jdbcType="BIGINT" />
+    <result column="readTimePerEvent75Quantile" property="readtimeperevent75quantile" jdbcType="BIGINT" />
+    <result column="readTimePerEvent95Quantile" property="readtimeperevent95quantile" jdbcType="BIGINT" />
+    <result column="readTimePerEvent99Quantile" property="readtimeperevent99quantile" jdbcType="BIGINT" />
+    <result column="sendTime" property="sendtime" jdbcType="BIGINT" />
+    <result column="sendTimeMin" property="sendtimemin" jdbcType="BIGINT" />
+    <result column="sendTimeMax" property="sendtimemax" jdbcType="BIGINT" />
+    <result column="sendTimeMean" property="sendtimemean" jdbcType="BIGINT" />
+    <result column="sendTimeStd" property="sendtimestd" jdbcType="BIGINT" />
+    <result column="sendTime55Quantile" property="sendtime55quantile" jdbcType="BIGINT" />
+    <result column="sendTime75Quantile" property="sendtime75quantile" jdbcType="BIGINT" />
+    <result column="sendTime95Quantile" property="sendtime95quantile" jdbcType="BIGINT" />
+    <result column="sendTime99Quantile" property="sendtime99quantile" jdbcType="BIGINT" />
+    <result column="flushTime" property="flushtime" jdbcType="BIGINT" />
+    <result column="flushTimeMin" property="flushtimemin" jdbcType="BIGINT" />
+    <result column="flushTimeMax" property="flushtimemax" jdbcType="BIGINT" />
+    <result column="flushTimeMean" property="flushtimemean" jdbcType="BIGINT" />
+    <result column="flushTimeStd" property="flushtimestd" jdbcType="BIGINT" />
+    <result column="flushTime55Quantile" property="flushtime55quantile" jdbcType="BIGINT" />
+    <result column="flushTime75Quantile" property="flushtime75quantile" jdbcType="BIGINT" />
+    <result column="flushTime95Quantile" property="flushtime95quantile" jdbcType="BIGINT" />
+    <result column="flushTime99Quantile" property="flushtime99quantile" jdbcType="BIGINT" />
+    <result column="processTimePerEvent" property="processtimeperevent" jdbcType="BIGINT" />
+    <result column="processTimePerEventMin" property="processtimepereventmin" jdbcType="BIGINT" />
+    <result column="processTimePerEventMax" property="processtimepereventmax" jdbcType="BIGINT" />
+    <result column="processTimePerEventMean" property="processtimepereventmean" jdbcType="BIGINT" />
+    <result column="processTimePerEventStd" property="processtimepereventstd" jdbcType="BIGINT" />
+    <result column="processTimePerEvent55Quantile" property="processtimeperevent55quantile" jdbcType="BIGINT" />
+    <result column="processTimePerEvent75Quantile" property="processtimeperevent75quantile" jdbcType="BIGINT" />
+    <result column="processTimePerEvent95Quantile" property="processtimeperevent95quantile" jdbcType="BIGINT" />
+    <result column="processTimePerEvent99Quantile" property="processtimeperevent99quantile" jdbcType="BIGINT" />
+    <result column="flushTimes" property="flushtimes" jdbcType="BIGINT" />
+    <result column="flushFailedTimes" property="flushfailedtimes" jdbcType="BIGINT" />
+    <result column="filterEventsNum" property="filtereventsnum" jdbcType="BIGINT" />
+    <result column="channelBytesMax" property="channelbytesmax" jdbcType="BIGINT" />
+    <result column="channelCountMax" property="channelcountmax" jdbcType="BIGINT" />
+    <result column="channelBytesSize" property="channelbytessize" jdbcType="BIGINT" />
+    <result column="channelBytesSizeMin" property="channelbytessizemin" jdbcType="BIGINT" />
+    <result column="channelBytesSizeMax" property="channelbytessizemax" jdbcType="BIGINT" />
+    <result column="channelBytesSizeMean" property="channelbytessizemean" jdbcType="BIGINT" />
+    <result column="channelBytesSizeStd" property="channelbytessizestd" jdbcType="BIGINT" />
+    <result column="channelBytesSize55Quantile" property="channelbytessize55quantile" jdbcType="BIGINT" />
+    <result column="channelBytesSize75Quantile" property="channelbytessize75quantile" jdbcType="BIGINT" />
+    <result column="channelBytesSize95Quantile" property="channelbytessize95quantile" jdbcType="BIGINT" />
+    <result column="channelBytesSize99Quantile" property="channelbytessize99quantile" jdbcType="BIGINT" />
+    <result column="channelCountSize" property="channelcountsize" jdbcType="BIGINT" />
+    <result column="channelCountSizeMin" property="channelcountsizemin" jdbcType="BIGINT" />
+    <result column="channelCountSizeMax" property="channelcountsizemax" jdbcType="BIGINT" />
+    <result column="channelCountSizeMean" property="channelcountsizemean" jdbcType="BIGINT" />
+    <result column="channelCountSizeStd" property="channelcountsizestd" jdbcType="BIGINT" />
+    <result column="channelCountSize55Quantile" property="channelcountsize55quantile" jdbcType="BIGINT" />
+    <result column="channelCountSize75Quantile" property="channelcountsize75quantile" jdbcType="BIGINT" />
+    <result column="channelCountSize95Quantile" property="channelcountsize95quantile" jdbcType="BIGINT" />
+    <result column="channelCountSize99Quantile" property="channelcountsize99quantile" jdbcType="BIGINT" />
+    <result column="channelUsedPercent" property="channelusedpercent" jdbcType="DOUBLE" />
+    <result column="channelUsedPercentMin" property="channelusedpercentmin" jdbcType="DOUBLE" />
+    <result column="channelUsedPercentMax" property="channelusedpercentmax" jdbcType="DOUBLE" />
+    <result column="channelUsedPercentMean" property="channelusedpercentmean" jdbcType="DOUBLE" />
+    <result column="channelUsedPercentStd" property="channelusedpercentstd" jdbcType="DOUBLE" />
+    <result column="channelUsedPercent55Quantile" property="channelusedpercent55quantile" jdbcType="DOUBLE" />
+    <result column="channelUsedPercent75Quantile" property="channelusedpercent75quantile" jdbcType="DOUBLE" />
+    <result column="channelUsedPercent95Quantile" property="channelusedpercent95quantile" jdbcType="DOUBLE" />
+    <result column="channelUsedPercent99Quantile" property="channelusedpercent99quantile" jdbcType="DOUBLE" />
+    <result column="receiverClusterId" property="receiverclusterid" jdbcType="BIGINT" />
+    <result column="receiverClusterTopic" property="receiverclustertopic" jdbcType="VARCHAR" />
+    <result column="collectFiles" property="collectfiles" jdbcType="VARCHAR" />
+    <result column="relatedFiles" property="relatedfiles" jdbcType="INTEGER" />
+    <result column="latestFile" property="latestfile" jdbcType="VARCHAR" />
+    <result column="masterFile" property="masterfile" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="collectTaskType" property="collecttasktype" jdbcType="INTEGER" />
+    <result column="sinkNum" property="sinknum" jdbcType="INTEGER" />
+    <result column="collectTaskVersion" property="collecttaskversion" jdbcType="INTEGER" />
+    <result column="dynamicLimiterThreshold" property="dynamiclimiterthreshold" jdbcType="BIGINT" />
+    <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
+    <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
+    <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" property="heartbeatTimeDay" jdbcType="BIGINT" />
+    <result column="serviceNames" property="serviceNames" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, collectTaskId, pathId, agentHostName, collectTaskHostName, agentHostIp, businessTimestamp, 
+    maxBusinessTimestampDelay, limitTime, tooLargeTruncateNum, tooLargeTruncateNumTotal, 
+    collectPathIsExists, disorderExists, sliceErrorExists, readBytes, readCount, sendBytes, 
+    sendCount, readTimePerEvent, readTimePerEventMin, readTimePerEventMax, readTimePerEventMean, 
+    readTimePerEventStd, readTimePerEvent55Quantile, readTimePerEvent75Quantile, readTimePerEvent95Quantile, 
+    readTimePerEvent99Quantile, sendTime, sendTimeMin, sendTimeMax, sendTimeMean, sendTimeStd, 
+    sendTime55Quantile, sendTime75Quantile, sendTime95Quantile, sendTime99Quantile, flushTime, 
+    flushTimeMin, flushTimeMax, flushTimeMean, flushTimeStd, flushTime55Quantile, flushTime75Quantile, 
+    flushTime95Quantile, flushTime99Quantile, processTimePerEvent, processTimePerEventMin, 
+    processTimePerEventMax, processTimePerEventMean, processTimePerEventStd, processTimePerEvent55Quantile, 
+    processTimePerEvent75Quantile, processTimePerEvent95Quantile, processTimePerEvent99Quantile, 
+    flushTimes, flushFailedTimes, filterEventsNum, channelBytesMax, channelCountMax, 
+    channelBytesSize, channelBytesSizeMin, channelBytesSizeMax, channelBytesSizeMean, 
+    channelBytesSizeStd, channelBytesSize55Quantile, channelBytesSize75Quantile, channelBytesSize95Quantile, 
+    channelBytesSize99Quantile, channelCountSize, channelCountSizeMin, channelCountSizeMax, 
+    channelCountSizeMean, channelCountSizeStd, channelCountSize55Quantile, channelCountSize75Quantile, 
+    channelCountSize95Quantile, channelCountSize99Quantile, channelUsedPercent, channelUsedPercentMin, 
+    channelUsedPercentMax, channelUsedPercentMean, channelUsedPercentStd, channelUsedPercent55Quantile, 
+    channelUsedPercent75Quantile, channelUsedPercent95Quantile, channelUsedPercent99Quantile, 
+    receiverClusterId, receiverClusterTopic, collectFiles, relatedFiles, latestFile, 
+    masterFile, path, collectTaskType, sinkNum, collectTaskVersion, dynamicLimiterThreshold, 
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay, serviceNames
+  </sql>
+  <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
+    <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
+    <result column="last" property="last" jdbcType="DOUBLE" />
+    <result column="min" property="min" jdbcType="DOUBLE" />
+    <result column="max" property="max" jdbcType="DOUBLE" />
+    <result column="mean" property="mean" jdbcType="DOUBLE" />
+    <result column="std" property="std" jdbcType="DOUBLE" />
+    <result column="fiftyFiveQuantile" property="fiftyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="seventyFiveQuantile" property="seventyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyFiveQuantile" property="ninetyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyNineQuantile" property="ninetyNineQuantile" jdbcType="DOUBLE" />
+    <result column="macAddress" property="macAddress" jdbcType="VARCHAR"/>
+    <result column="device" property="device" jdbcType="VARCHAR"/>
+    <result column="path" property="path" jdbcType="VARCHAR"/>
+    <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
+    <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="serviceNames" property="serviceNames" jdbcType="VARCHAR"/>
+  </resultMap>
+  <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${fieldName}
+    from tb_metrics_log_collect_task
+    where
+      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+      <if test="pathId != null">
+        and pathId = #{pathId,jdbcType=BIGINT}
+      </if>
+      <if test="hostName != null">
+        and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+      </if>
+      and
+        heartbeatTime &gt; #{startTime}
+      and
+        heartbeatTime &lt;= #{endTime}
+      order by heartbeatTime desc
+      limit 1
+  </select>
+  <select id="getSingleChatNonStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+      heartbeatTimeMinute
+      <if test="hostName != null">
+        , #{hostName,jdbcType=VARCHAR} as 'hostName'
+      </if>
+    from tb_metrics_log_collect_task
+    where
+      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+      <if test="pathId != null">
+        and pathId = #{pathId,jdbcType=BIGINT}
+      </if>
+      <if test="hostName != null">
+        and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+      </if>
+      and
+      heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+    ${function}(${fieldName}) as 'last',
+    ${function}(${fieldName}Min) as 'min',
+    ${function}(${fieldName}Max) as 'max',
+    ${function}(${fieldName}Mean) as 'mean',
+    ${function}(${fieldName}Std) as 'std',
+    ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+    ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+    ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+    ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+    heartbeatTimeMinute
+    <if test="hostName != null">
+      , #{hostName,jdbcType=VARCHAR} as 'hostName'
+    </if>
+    from tb_metrics_log_collect_task
+    where
+    collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+    <if test="pathId != null">
+      and pathId = #{pathId,jdbcType=BIGINT}
+    </if>
+    <if test="hostName != null">
+      and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    </if>
+    and
+    heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <resultMap id="TopNHostNameResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO" >
+    <result column="hostName" property="hostName" jdbcType="VARCHAR" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+  <select id="getTopNByHostName" resultMap="TopNHostNameResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(${fieldName}) as 'aggVal',
+    collectTaskHostName as 'hostName'
+    from tb_metrics_log_collect_task
+    where
+    collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+    and
+    heartbeatTimeMinute = #{sortTime,jdbcType=BIGINT}
+    <if test="pathId != null">
+      and pathId = #{pathId,jdbcType=BIGINT}
+    </if>
+    <if test="hostName != null">
+      and collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    </if>
+    group by collectTaskHostName
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_metrics_log_collect_task
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getLatestMetrics" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_log_collect_task
+    where collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+          and
+          pathId = #{logCollectPathId,jdbcType=BIGINT}
+          and
+          collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+          order by heartbeatTime desc
+          limit 1
+  </select>
+
+  <!-- TODO -->
+  <select id="getErrorMetrics" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_log_collect_task
+    where
+        collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+        AND
+        pathId = #{pathId,jdbcType=BIGINT}
+        AND
+        collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+        AND
+        <if test="errorFieldName == 'tooLargeTruncateNum'">
+          tooLargeTruncateNum > 0
+        </if>
+        <if test="errorFieldName == 'disorderExists'">
+          disorderExists > 0
+        </if>
+        <if test="errorFieldName == 'sliceErrorExists'">
+          sliceErrorExists > 0
+        </if>
+        <if test="errorFieldName == 'collectPathIsExists'">
+          collectPathIsExists = 0
+        </if>
+        AND
+        heartbeatTime &gt; #{startHeartbeatTime} and heartbeatTime &lt;= #{endHeartbeatTime}
+    order by heartbeatTime asc
+  </select>
+
+  <resultMap id="TopNByMetricPerLogCollectTaskIdResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskIdTopPO" >
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+  <select id="getTopNByMetricPerLogCollectTaskId" resultMap="TopNByMetricPerLogCollectTaskIdResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(${fieldName}) as 'aggVal',
+    collectTaskId as 'logCollectTaskId'
+    from tb_metrics_log_collect_task
+    where
+    ${sortTimeField} = #{sortTime,jdbcType=BIGINT}
+    group by collectTaskId
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+  <select id="getSingleChatNonStatisticByLogCollectTaskId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatisticByLogCollectTaskId" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               ${function}(${fieldName}Min) as 'min',
+               ${function}(${fieldName}Max) as 'max',
+               ${function}(${fieldName}Mean) as 'mean',
+               ${function}(${fieldName}Std) as 'std',
+               ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+               ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+               ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+               ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+
+  <resultMap id="TopNByMetricPerServiceNamesResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsServiceNamesTopPO">
+    <result column="serviceNames" property="serviceNames" jdbcType="VARCHAR" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+  <select id="getTopNByMetricPerServiceNames" resultMap="TopNByMetricPerServiceNamesResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(${fieldName}) as 'aggVal',
+    serviceNames as 'serviceNames'
+    from tb_metrics_log_collect_task
+    where
+    ${sortTimeField} = #{sortTime,jdbcType=BIGINT}
+    group by serviceNames
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+  <select id="getSingleChatNonStatisticByServiceNames" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         serviceNames = #{serviceNames,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatisticByServiceNames" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               ${function}(${fieldName}Min) as 'min',
+               ${function}(${fieldName}Max) as 'max',
+               ${function}(${fieldName}Mean) as 'mean',
+               ${function}(${fieldName}Std) as 'std',
+               ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+               ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+               ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+               ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+               heartbeatTimeMinute
+       from tb_metrics_log_collect_task
+       where
+         serviceNames = #{serviceNames,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+
+  <select id="aggregationQueryPerLogCollectTskAndPathAndHostNameFromMetricsLogCollectTask" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+    ${function}(${fieldName})
+    from tb_metrics_log_collect_task
+    where
+    collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+    and
+    pathId = #{pathId,jdbcType=BIGINT}
+    and
+    collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+    and
+    heartbeatTime &gt; #{startTime}
+    and
+    heartbeatTime &lt;= #{endTime}
+  </select>
+
+  <select id="getAggregationQueryPerLogCollectTskAndPathAndHostNameWithConditionFromMetricsLogCollectTask" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName})
+    from tb_metrics_log_collect_task
+    where
+      collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+      and
+      pathId = #{pathId,jdbcType=BIGINT}
+      and
+      collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+      and
+      <if test="conditionFieldName == 'collectPathIsExists'">collectPathIsExists</if>
+      <if test="conditionFieldName == 'disorderExists'">disorderExists</if>
+      <if test="conditionFieldName == 'sliceErrorExists'">sliceErrorExists</if>
+      <if test="conditionFieldName == 'tooLargeTruncateNum'">tooLargeTruncateNum</if>
+      <if test="operatorType == 0">></if>
+      <if test="operatorType == 1">>=</if>
+      <if test="operatorType == 2">&lt;</if>
+      <if test="operatorType == 3">&lt;=</if>
+      <if test="operatorType == 4">=</if>
+      #{conditionFieldValue}
+      and
+      heartbeatTime &gt; #{startTime}
+      and
+      heartbeatTime &lt;= #{endTime}
+  </select>
+
+  <select id="getLastRecord" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_log_collect_task
+    where
+        1 = 1
+        <if test="logCollectTaskId != null">
+        and
+        collectTaskId = #{logCollectTaskId,jdbcType=BIGINT}
+        </if>
+        <if test="pathId != null">
+        and
+        pathId = #{pathId,jdbcType=BIGINT}
+        </if>
+        <if test="hostName != null">
+        and
+        collectTaskHostName = #{hostName,jdbcType=VARCHAR}
+        </if>
+    order by heartbeatTime desc
+    limit 1
+  </select>
+
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
+    insert into tb_metrics_log_collect_task (id, collectTaskId, pathId, 
+      agentHostName, collectTaskHostName, agentHostIp, 
+      businessTimestamp, maxBusinessTimestampDelay, 
+      limitTime, tooLargeTruncateNum, tooLargeTruncateNumTotal, 
+      collectPathIsExists, disorderExists, sliceErrorExists, 
+      readBytes, readCount, sendBytes, 
+      sendCount, readTimePerEvent, readTimePerEventMin, 
+      readTimePerEventMax, readTimePerEventMean, 
+      readTimePerEventStd, readTimePerEvent55Quantile, 
+      readTimePerEvent75Quantile, readTimePerEvent95Quantile, 
+      readTimePerEvent99Quantile, sendTime, sendTimeMin, 
+      sendTimeMax, sendTimeMean, sendTimeStd, 
+      sendTime55Quantile, sendTime75Quantile, sendTime95Quantile, 
+      sendTime99Quantile, flushTime, flushTimeMin, 
+      flushTimeMax, flushTimeMean, flushTimeStd, 
+      flushTime55Quantile, flushTime75Quantile, 
+      flushTime95Quantile, flushTime99Quantile, 
+      processTimePerEvent, processTimePerEventMin, 
+      processTimePerEventMax, processTimePerEventMean, 
+      processTimePerEventStd, processTimePerEvent55Quantile, 
+      processTimePerEvent75Quantile, processTimePerEvent95Quantile, 
+      processTimePerEvent99Quantile, flushTimes, 
+      flushFailedTimes, filterEventsNum, channelBytesMax, 
+      channelCountMax, channelBytesSize, channelBytesSizeMin, 
+      channelBytesSizeMax, channelBytesSizeMean, 
+      channelBytesSizeStd, channelBytesSize55Quantile, 
+      channelBytesSize75Quantile, channelBytesSize95Quantile, 
+      channelBytesSize99Quantile, channelCountSize, 
+      channelCountSizeMin, channelCountSizeMax, 
+      channelCountSizeMean, channelCountSizeStd, 
+      channelCountSize55Quantile, channelCountSize75Quantile, 
+      channelCountSize95Quantile, channelCountSize99Quantile, 
+      channelUsedPercent, channelUsedPercentMin, 
+      channelUsedPercentMax, channelUsedPercentMean, 
+      channelUsedPercentStd, channelUsedPercent55Quantile, 
+      channelUsedPercent75Quantile, channelUsedPercent95Quantile, 
+      channelUsedPercent99Quantile, receiverClusterId, 
+      receiverClusterTopic, collectFiles, relatedFiles, 
+      latestFile, masterFile, path, 
+      collectTaskType, sinkNum, collectTaskVersion, 
+      dynamicLimiterThreshold, heartbeatTime, heartbeatTimeMinute, 
+      heartbeatTimeHour, heartbeatTimeDay, serviceNames)
+    values (#{id,jdbcType=BIGINT}, #{collecttaskid,jdbcType=BIGINT}, #{pathid,jdbcType=BIGINT}, 
+      #{agenthostname,jdbcType=VARCHAR}, #{collecttaskhostname,jdbcType=VARCHAR}, #{agenthostip,jdbcType=VARCHAR}, 
+      #{businesstimestamp,jdbcType=BIGINT}, #{maxbusinesstimestampdelay,jdbcType=BIGINT}, 
+      #{limittime,jdbcType=BIGINT}, #{toolargetruncatenum,jdbcType=BIGINT}, #{toolargetruncatenumtotal,jdbcType=BIGINT}, 
+      #{collectpathisexists,jdbcType=INTEGER}, #{disorderexists,jdbcType=INTEGER}, #{sliceerrorexists,jdbcType=INTEGER},
+      #{readbytes,jdbcType=BIGINT}, #{readcount,jdbcType=BIGINT}, #{sendbytes,jdbcType=BIGINT}, 
+      #{sendcount,jdbcType=BIGINT}, #{readtimeperevent,jdbcType=BIGINT}, #{readtimepereventmin,jdbcType=BIGINT}, 
+      #{readtimepereventmax,jdbcType=BIGINT}, #{readtimepereventmean,jdbcType=BIGINT}, 
+      #{readtimepereventstd,jdbcType=BIGINT}, #{readtimeperevent55quantile,jdbcType=BIGINT}, 
+      #{readtimeperevent75quantile,jdbcType=BIGINT}, #{readtimeperevent95quantile,jdbcType=BIGINT}, 
+      #{readtimeperevent99quantile,jdbcType=BIGINT}, #{sendtime,jdbcType=BIGINT}, #{sendtimemin,jdbcType=BIGINT}, 
+      #{sendtimemax,jdbcType=BIGINT}, #{sendtimemean,jdbcType=BIGINT}, #{sendtimestd,jdbcType=BIGINT}, 
+      #{sendtime55quantile,jdbcType=BIGINT}, #{sendtime75quantile,jdbcType=BIGINT}, #{sendtime95quantile,jdbcType=BIGINT}, 
+      #{sendtime99quantile,jdbcType=BIGINT}, #{flushtime,jdbcType=BIGINT}, #{flushtimemin,jdbcType=BIGINT}, 
+      #{flushtimemax,jdbcType=BIGINT}, #{flushtimemean,jdbcType=BIGINT}, #{flushtimestd,jdbcType=BIGINT}, 
+      #{flushtime55quantile,jdbcType=BIGINT}, #{flushtime75quantile,jdbcType=BIGINT}, 
+      #{flushtime95quantile,jdbcType=BIGINT}, #{flushtime99quantile,jdbcType=BIGINT}, 
+      #{processtimeperevent,jdbcType=BIGINT}, #{processtimepereventmin,jdbcType=BIGINT}, 
+      #{processtimepereventmax,jdbcType=BIGINT}, #{processtimepereventmean,jdbcType=BIGINT}, 
+      #{processtimepereventstd,jdbcType=BIGINT}, #{processtimeperevent55quantile,jdbcType=BIGINT}, 
+      #{processtimeperevent75quantile,jdbcType=BIGINT}, #{processtimeperevent95quantile,jdbcType=BIGINT}, 
+      #{processtimeperevent99quantile,jdbcType=BIGINT}, #{flushtimes,jdbcType=BIGINT}, 
+      #{flushfailedtimes,jdbcType=BIGINT}, #{filtereventsnum,jdbcType=BIGINT}, #{channelbytesmax,jdbcType=BIGINT}, 
+      #{channelcountmax,jdbcType=BIGINT}, #{channelbytessize,jdbcType=BIGINT}, #{channelbytessizemin,jdbcType=BIGINT}, 
+      #{channelbytessizemax,jdbcType=BIGINT}, #{channelbytessizemean,jdbcType=BIGINT}, 
+      #{channelbytessizestd,jdbcType=BIGINT}, #{channelbytessize55quantile,jdbcType=BIGINT}, 
+      #{channelbytessize75quantile,jdbcType=BIGINT}, #{channelbytessize95quantile,jdbcType=BIGINT}, 
+      #{channelbytessize99quantile,jdbcType=BIGINT}, #{channelcountsize,jdbcType=BIGINT}, 
+      #{channelcountsizemin,jdbcType=BIGINT}, #{channelcountsizemax,jdbcType=BIGINT}, 
+      #{channelcountsizemean,jdbcType=BIGINT}, #{channelcountsizestd,jdbcType=BIGINT}, 
+      #{channelcountsize55quantile,jdbcType=BIGINT}, #{channelcountsize75quantile,jdbcType=BIGINT}, 
+      #{channelcountsize95quantile,jdbcType=BIGINT}, #{channelcountsize99quantile,jdbcType=BIGINT}, 
+      #{channelusedpercent,jdbcType=DOUBLE}, #{channelusedpercentmin,jdbcType=DOUBLE}, 
+      #{channelusedpercentmax,jdbcType=DOUBLE}, #{channelusedpercentmean,jdbcType=DOUBLE}, 
+      #{channelusedpercentstd,jdbcType=DOUBLE}, #{channelusedpercent55quantile,jdbcType=DOUBLE}, 
+      #{channelusedpercent75quantile,jdbcType=DOUBLE}, #{channelusedpercent95quantile,jdbcType=DOUBLE}, 
+      #{channelusedpercent99quantile,jdbcType=DOUBLE}, #{receiverclusterid,jdbcType=BIGINT}, 
+      #{receiverclustertopic,jdbcType=VARCHAR}, #{collectfiles,jdbcType=VARCHAR}, #{relatedfiles,jdbcType=INTEGER}, 
+      #{latestfile,jdbcType=VARCHAR}, #{masterfile,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{collecttasktype,jdbcType=INTEGER}, #{sinknum,jdbcType=INTEGER}, #{collecttaskversion,jdbcType=INTEGER}, 
+      #{dynamiclimiterthreshold,jdbcType=BIGINT}, #{heartbeattime,jdbcType=BIGINT}, #{heartbeattimeminute,jdbcType=BIGINT}, 
+      #{heartbeattimehour,jdbcType=BIGINT},
+      #{heartbeatTimeDay,jdbcType=BIGINT},
+      #{serviceNames,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskPO" >
+    insert into tb_metrics_log_collect_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="collecttaskid != null" >
+        collectTaskId,
+      </if>
+      <if test="pathid != null" >
+        pathId,
+      </if>
+      <if test="agenthostname != null" >
+        agentHostName,
+      </if>
+      <if test="collecttaskhostname != null" >
+        collectTaskHostName,
+      </if>
+      <if test="agenthostip != null" >
+        agentHostIp,
+      </if>
+      <if test="businesstimestamp != null" >
+        businessTimestamp,
+      </if>
+      <if test="maxbusinesstimestampdelay != null" >
+        maxBusinessTimestampDelay,
+      </if>
+      <if test="limittime != null" >
+        limitTime,
+      </if>
+      <if test="toolargetruncatenum != null" >
+        tooLargeTruncateNum,
+      </if>
+      <if test="toolargetruncatenumtotal != null" >
+        tooLargeTruncateNumTotal,
+      </if>
+      <if test="collectpathisexists != null" >
+        collectPathIsExists,
+      </if>
+      <if test="disorderexists != null" >
+        disorderExists,
+      </if>
+      <if test="sliceerrorexists != null" >
+        sliceErrorExists,
+      </if>
+      <if test="readbytes != null" >
+        readBytes,
+      </if>
+      <if test="readcount != null" >
+        readCount,
+      </if>
+      <if test="sendbytes != null" >
+        sendBytes,
+      </if>
+      <if test="sendcount != null" >
+        sendCount,
+      </if>
+      <if test="readtimeperevent != null" >
+        readTimePerEvent,
+      </if>
+      <if test="readtimepereventmin != null" >
+        readTimePerEventMin,
+      </if>
+      <if test="readtimepereventmax != null" >
+        readTimePerEventMax,
+      </if>
+      <if test="readtimepereventmean != null" >
+        readTimePerEventMean,
+      </if>
+      <if test="readtimepereventstd != null" >
+        readTimePerEventStd,
+      </if>
+      <if test="readtimeperevent55quantile != null" >
+        readTimePerEvent55Quantile,
+      </if>
+      <if test="readtimeperevent75quantile != null" >
+        readTimePerEvent75Quantile,
+      </if>
+      <if test="readtimeperevent95quantile != null" >
+        readTimePerEvent95Quantile,
+      </if>
+      <if test="readtimeperevent99quantile != null" >
+        readTimePerEvent99Quantile,
+      </if>
+      <if test="sendtime != null" >
+        sendTime,
+      </if>
+      <if test="sendtimemin != null" >
+        sendTimeMin,
+      </if>
+      <if test="sendtimemax != null" >
+        sendTimeMax,
+      </if>
+      <if test="sendtimemean != null" >
+        sendTimeMean,
+      </if>
+      <if test="sendtimestd != null" >
+        sendTimeStd,
+      </if>
+      <if test="sendtime55quantile != null" >
+        sendTime55Quantile,
+      </if>
+      <if test="sendtime75quantile != null" >
+        sendTime75Quantile,
+      </if>
+      <if test="sendtime95quantile != null" >
+        sendTime95Quantile,
+      </if>
+      <if test="sendtime99quantile != null" >
+        sendTime99Quantile,
+      </if>
+      <if test="flushtime != null" >
+        flushTime,
+      </if>
+      <if test="flushtimemin != null" >
+        flushTimeMin,
+      </if>
+      <if test="flushtimemax != null" >
+        flushTimeMax,
+      </if>
+      <if test="flushtimemean != null" >
+        flushTimeMean,
+      </if>
+      <if test="flushtimestd != null" >
+        flushTimeStd,
+      </if>
+      <if test="flushtime55quantile != null" >
+        flushTime55Quantile,
+      </if>
+      <if test="flushtime75quantile != null" >
+        flushTime75Quantile,
+      </if>
+      <if test="flushtime95quantile != null" >
+        flushTime95Quantile,
+      </if>
+      <if test="flushtime99quantile != null" >
+        flushTime99Quantile,
+      </if>
+      <if test="processtimeperevent != null" >
+        processTimePerEvent,
+      </if>
+      <if test="processtimepereventmin != null" >
+        processTimePerEventMin,
+      </if>
+      <if test="processtimepereventmax != null" >
+        processTimePerEventMax,
+      </if>
+      <if test="processtimepereventmean != null" >
+        processTimePerEventMean,
+      </if>
+      <if test="processtimepereventstd != null" >
+        processTimePerEventStd,
+      </if>
+      <if test="processtimeperevent55quantile != null" >
+        processTimePerEvent55Quantile,
+      </if>
+      <if test="processtimeperevent75quantile != null" >
+        processTimePerEvent75Quantile,
+      </if>
+      <if test="processtimeperevent95quantile != null" >
+        processTimePerEvent95Quantile,
+      </if>
+      <if test="processtimeperevent99quantile != null" >
+        processTimePerEvent99Quantile,
+      </if>
+      <if test="flushtimes != null" >
+        flushTimes,
+      </if>
+      <if test="flushfailedtimes != null" >
+        flushFailedTimes,
+      </if>
+      <if test="filtereventsnum != null" >
+        filterEventsNum,
+      </if>
+      <if test="channelbytesmax != null" >
+        channelBytesMax,
+      </if>
+      <if test="channelcountmax != null" >
+        channelCountMax,
+      </if>
+      <if test="channelbytessize != null" >
+        channelBytesSize,
+      </if>
+      <if test="channelbytessizemin != null" >
+        channelBytesSizeMin,
+      </if>
+      <if test="channelbytessizemax != null" >
+        channelBytesSizeMax,
+      </if>
+      <if test="channelbytessizemean != null" >
+        channelBytesSizeMean,
+      </if>
+      <if test="channelbytessizestd != null" >
+        channelBytesSizeStd,
+      </if>
+      <if test="channelbytessize55quantile != null" >
+        channelBytesSize55Quantile,
+      </if>
+      <if test="channelbytessize75quantile != null" >
+        channelBytesSize75Quantile,
+      </if>
+      <if test="channelbytessize95quantile != null" >
+        channelBytesSize95Quantile,
+      </if>
+      <if test="channelbytessize99quantile != null" >
+        channelBytesSize99Quantile,
+      </if>
+      <if test="channelcountsize != null" >
+        channelCountSize,
+      </if>
+      <if test="channelcountsizemin != null" >
+        channelCountSizeMin,
+      </if>
+      <if test="channelcountsizemax != null" >
+        channelCountSizeMax,
+      </if>
+      <if test="channelcountsizemean != null" >
+        channelCountSizeMean,
+      </if>
+      <if test="channelcountsizestd != null" >
+        channelCountSizeStd,
+      </if>
+      <if test="channelcountsize55quantile != null" >
+        channelCountSize55Quantile,
+      </if>
+      <if test="channelcountsize75quantile != null" >
+        channelCountSize75Quantile,
+      </if>
+      <if test="channelcountsize95quantile != null" >
+        channelCountSize95Quantile,
+      </if>
+      <if test="channelcountsize99quantile != null" >
+        channelCountSize99Quantile,
+      </if>
+      <if test="channelusedpercent != null" >
+        channelUsedPercent,
+      </if>
+      <if test="channelusedpercentmin != null" >
+        channelUsedPercentMin,
+      </if>
+      <if test="channelusedpercentmax != null" >
+        channelUsedPercentMax,
+      </if>
+      <if test="channelusedpercentmean != null" >
+        channelUsedPercentMean,
+      </if>
+      <if test="channelusedpercentstd != null" >
+        channelUsedPercentStd,
+      </if>
+      <if test="channelusedpercent55quantile != null" >
+        channelUsedPercent55Quantile,
+      </if>
+      <if test="channelusedpercent75quantile != null" >
+        channelUsedPercent75Quantile,
+      </if>
+      <if test="channelusedpercent95quantile != null" >
+        channelUsedPercent95Quantile,
+      </if>
+      <if test="channelusedpercent99quantile != null" >
+        channelUsedPercent99Quantile,
+      </if>
+      <if test="receiverclusterid != null" >
+        receiverClusterId,
+      </if>
+      <if test="receiverclustertopic != null" >
+        receiverClusterTopic,
+      </if>
+      <if test="collectfiles != null" >
+        collectFiles,
+      </if>
+      <if test="relatedfiles != null" >
+        relatedFiles,
+      </if>
+      <if test="latestfile != null" >
+        latestFile,
+      </if>
+      <if test="masterfile != null" >
+        masterFile,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+      <if test="collecttasktype != null" >
+        collectTaskType,
+      </if>
+      <if test="sinknum != null" >
+        sinkNum,
+      </if>
+      <if test="collecttaskversion != null" >
+        collectTaskVersion,
+      </if>
+      <if test="dynamiclimiterthreshold != null" >
+        dynamicLimiterThreshold,
+      </if>
+      <if test="heartbeattime != null" >
+        heartbeatTime,
+      </if>
+      <if test="heartbeattimeminute != null" >
+        heartbeatTimeMinute,
+      </if>
+      <if test="heartbeattimehour != null" >
+        heartbeatTimeHour,
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
+      <if test="serviceNames != null" >
+        serviceNames,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="collecttaskid != null" >
+        #{collecttaskid,jdbcType=BIGINT},
+      </if>
+      <if test="pathid != null" >
+        #{pathid,jdbcType=BIGINT},
+      </if>
+      <if test="agenthostname != null" >
+        #{agenthostname,jdbcType=VARCHAR},
+      </if>
+      <if test="collecttaskhostname != null" >
+        #{collecttaskhostname,jdbcType=VARCHAR},
+      </if>
+      <if test="agenthostip != null" >
+        #{agenthostip,jdbcType=VARCHAR},
+      </if>
+      <if test="businesstimestamp != null" >
+        #{businesstimestamp,jdbcType=BIGINT},
+      </if>
+      <if test="maxbusinesstimestampdelay != null" >
+        #{maxbusinesstimestampdelay,jdbcType=BIGINT},
+      </if>
+      <if test="limittime != null" >
+        #{limittime,jdbcType=BIGINT},
+      </if>
+      <if test="toolargetruncatenum != null" >
+        #{toolargetruncatenum,jdbcType=BIGINT},
+      </if>
+      <if test="toolargetruncatenumtotal != null" >
+        #{toolargetruncatenumtotal,jdbcType=BIGINT},
+      </if>
+      <if test="collectpathisexists != null" >
+        #{collectpathisexists,jdbcType=INTEGER},
+      </if>
+      <if test="disorderexists != null" >
+        #{disorderexists,jdbcType=INTEGER},
+      </if>
+      <if test="sliceerrorexists != null" >
+        #{sliceerrorexists,jdbcType=INTEGER},
+      </if>
+      <if test="readbytes != null" >
+        #{readbytes,jdbcType=BIGINT},
+      </if>
+      <if test="readcount != null" >
+        #{readcount,jdbcType=BIGINT},
+      </if>
+      <if test="sendbytes != null" >
+        #{sendbytes,jdbcType=BIGINT},
+      </if>
+      <if test="sendcount != null" >
+        #{sendcount,jdbcType=BIGINT},
+      </if>
+      <if test="readtimeperevent != null" >
+        #{readtimeperevent,jdbcType=BIGINT},
+      </if>
+      <if test="readtimepereventmin != null" >
+        #{readtimepereventmin,jdbcType=BIGINT},
+      </if>
+      <if test="readtimepereventmax != null" >
+        #{readtimepereventmax,jdbcType=BIGINT},
+      </if>
+      <if test="readtimepereventmean != null" >
+        #{readtimepereventmean,jdbcType=BIGINT},
+      </if>
+      <if test="readtimepereventstd != null" >
+        #{readtimepereventstd,jdbcType=BIGINT},
+      </if>
+      <if test="readtimeperevent55quantile != null" >
+        #{readtimeperevent55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="readtimeperevent75quantile != null" >
+        #{readtimeperevent75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="readtimeperevent95quantile != null" >
+        #{readtimeperevent95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="readtimeperevent99quantile != null" >
+        #{readtimeperevent99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="sendtime != null" >
+        #{sendtime,jdbcType=BIGINT},
+      </if>
+      <if test="sendtimemin != null" >
+        #{sendtimemin,jdbcType=BIGINT},
+      </if>
+      <if test="sendtimemax != null" >
+        #{sendtimemax,jdbcType=BIGINT},
+      </if>
+      <if test="sendtimemean != null" >
+        #{sendtimemean,jdbcType=BIGINT},
+      </if>
+      <if test="sendtimestd != null" >
+        #{sendtimestd,jdbcType=BIGINT},
+      </if>
+      <if test="sendtime55quantile != null" >
+        #{sendtime55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="sendtime75quantile != null" >
+        #{sendtime75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="sendtime95quantile != null" >
+        #{sendtime95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="sendtime99quantile != null" >
+        #{sendtime99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="flushtime != null" >
+        #{flushtime,jdbcType=BIGINT},
+      </if>
+      <if test="flushtimemin != null" >
+        #{flushtimemin,jdbcType=BIGINT},
+      </if>
+      <if test="flushtimemax != null" >
+        #{flushtimemax,jdbcType=BIGINT},
+      </if>
+      <if test="flushtimemean != null" >
+        #{flushtimemean,jdbcType=BIGINT},
+      </if>
+      <if test="flushtimestd != null" >
+        #{flushtimestd,jdbcType=BIGINT},
+      </if>
+      <if test="flushtime55quantile != null" >
+        #{flushtime55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="flushtime75quantile != null" >
+        #{flushtime75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="flushtime95quantile != null" >
+        #{flushtime95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="flushtime99quantile != null" >
+        #{flushtime99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="processtimeperevent != null" >
+        #{processtimeperevent,jdbcType=BIGINT},
+      </if>
+      <if test="processtimepereventmin != null" >
+        #{processtimepereventmin,jdbcType=BIGINT},
+      </if>
+      <if test="processtimepereventmax != null" >
+        #{processtimepereventmax,jdbcType=BIGINT},
+      </if>
+      <if test="processtimepereventmean != null" >
+        #{processtimepereventmean,jdbcType=BIGINT},
+      </if>
+      <if test="processtimepereventstd != null" >
+        #{processtimepereventstd,jdbcType=BIGINT},
+      </if>
+      <if test="processtimeperevent55quantile != null" >
+        #{processtimeperevent55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="processtimeperevent75quantile != null" >
+        #{processtimeperevent75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="processtimeperevent95quantile != null" >
+        #{processtimeperevent95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="processtimeperevent99quantile != null" >
+        #{processtimeperevent99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="flushtimes != null" >
+        #{flushtimes,jdbcType=BIGINT},
+      </if>
+      <if test="flushfailedtimes != null" >
+        #{flushfailedtimes,jdbcType=BIGINT},
+      </if>
+      <if test="filtereventsnum != null" >
+        #{filtereventsnum,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytesmax != null" >
+        #{channelbytesmax,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountmax != null" >
+        #{channelcountmax,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessize != null" >
+        #{channelbytessize,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessizemin != null" >
+        #{channelbytessizemin,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessizemax != null" >
+        #{channelbytessizemax,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessizemean != null" >
+        #{channelbytessizemean,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessizestd != null" >
+        #{channelbytessizestd,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessize55quantile != null" >
+        #{channelbytessize55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessize75quantile != null" >
+        #{channelbytessize75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessize95quantile != null" >
+        #{channelbytessize95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelbytessize99quantile != null" >
+        #{channelbytessize99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsize != null" >
+        #{channelcountsize,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsizemin != null" >
+        #{channelcountsizemin,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsizemax != null" >
+        #{channelcountsizemax,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsizemean != null" >
+        #{channelcountsizemean,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsizestd != null" >
+        #{channelcountsizestd,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsize55quantile != null" >
+        #{channelcountsize55quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsize75quantile != null" >
+        #{channelcountsize75quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsize95quantile != null" >
+        #{channelcountsize95quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelcountsize99quantile != null" >
+        #{channelcountsize99quantile,jdbcType=BIGINT},
+      </if>
+      <if test="channelusedpercent != null" >
+        #{channelusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercentmin != null" >
+        #{channelusedpercentmin,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercentmax != null" >
+        #{channelusedpercentmax,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercentmean != null" >
+        #{channelusedpercentmean,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercentstd != null" >
+        #{channelusedpercentstd,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercent55quantile != null" >
+        #{channelusedpercent55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercent75quantile != null" >
+        #{channelusedpercent75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercent95quantile != null" >
+        #{channelusedpercent95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="channelusedpercent99quantile != null" >
+        #{channelusedpercent99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="receiverclusterid != null" >
+        #{receiverclusterid,jdbcType=BIGINT},
+      </if>
+      <if test="receiverclustertopic != null" >
+        #{receiverclustertopic,jdbcType=VARCHAR},
+      </if>
+      <if test="collectfiles != null" >
+        #{collectfiles,jdbcType=VARCHAR},
+      </if>
+      <if test="relatedfiles != null" >
+        #{relatedfiles,jdbcType=INTEGER},
+      </if>
+      <if test="latestfile != null" >
+        #{latestfile,jdbcType=VARCHAR},
+      </if>
+      <if test="masterfile != null" >
+        #{masterfile,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="collecttasktype != null" >
+        #{collecttasktype,jdbcType=INTEGER},
+      </if>
+      <if test="sinknum != null" >
+        #{sinknum,jdbcType=INTEGER},
+      </if>
+      <if test="collecttaskversion != null" >
+        #{collecttaskversion,jdbcType=INTEGER},
+      </if>
+      <if test="dynamiclimiterthreshold != null" >
+        #{dynamiclimiterthreshold,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattime != null" >
+        #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null" >
+        #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null" >
+        #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
+      </if>
+      <if test="serviceNames != null" >
+        #{serviceNames,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="deleteByLtHeartbeatTime" parameterType="java.lang.Long">
+    delete from tb_metrics_log_collect_task
+    where heartbeatTime &lt; #{heartBeatTime}
+  </delete>
+
+</mapper>

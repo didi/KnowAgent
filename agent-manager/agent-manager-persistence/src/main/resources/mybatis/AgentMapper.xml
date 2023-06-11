@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.AgentMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="host_name" property="hostName" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="collect_type" property="collectType" jdbcType="TINYINT" />
+    <result column="cpu_limit_threshold" property="cpuLimitThreshold" jdbcType="INTEGER" />
+    <result column="byte_limit_threshold" property="byteLimitThreshold" jdbcType="BIGINT" />
+    <result column="agent_version_id" property="agentVersionId" jdbcType="BIGINT" />
+    <result column="metrics_send_topic" property="metricsSendTopic" jdbcType="VARCHAR" />
+    <result column="metrics_send_receiver_id" property="metricsSendReceiverId" jdbcType="BIGINT" />
+    <result column="error_logs_send_topic" property="errorLogsSendTopic" jdbcType="VARCHAR" />
+    <result column="error_logs_send_receiver_id" property="errorLogsSendReceiverId" jdbcType="BIGINT" />
+    <result column="advanced_configuration_json_string" property="advancedConfigurationJsonString" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="metrics_producer_configuration" property="metricsProducerConfiguration" jdbcType="VARCHAR" />
+    <result column="error_logs_producer_configuration" property="errorLogsProducerConfiguration" jdbcType="VARCHAR" />
+    <result column="configuration_version" property="configurationVersion" jdbcType="INTEGER"/>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, host_name, ip, collect_type, cpu_limit_threshold, byte_limit_threshold,
+    agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version, operator, create_time, modify_time,
+    metrics_producer_configuration, error_logs_producer_configuration
+  </sql>
+
+  <sql id="Base_Column_List_Relate" >
+    t1.id, t1.host_name, t1.ip, t1.collect_type, t1.cpu_limit_threshold, t1.byte_limit_threshold,
+    t1.agent_version_id, t1.metrics_send_topic, t1.metrics_send_receiver_id, t1.error_logs_send_topic, t1.error_logs_send_receiver_id, t1.advanced_configuration_json_string, t1.configuration_version, t1.operator, t1.create_time, t1.modify_time,
+    t1.metrics_producer_configuration, t1.error_logs_producer_configuration
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_agent
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="listVersions" resultType="string" >
+    SELECT DISTINCT agent_version_id from tb_agent
+  </select>
+  <select id="selectByHostName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_agent
+    where host_name = #{hostName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByAgentVersionId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_agent
+    where agent_version_id = #{agentVersionId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_agent
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByHostName" parameterType="java.lang.String" >
+    delete from tb_agent
+    where host_name = #{hostName,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_agent (id, host_name, ip,
+                          collect_type, cpu_limit_threshold, byte_limit_threshold,
+                          agent_version_id, metrics_send_topic, metrics_send_receiver_id, error_logs_send_topic, error_logs_send_receiver_id, advanced_configuration_json_string, configuration_version,
+                          operator, metrics_producer_configuration, error_logs_producer_configuration
+    )
+    values (#{id,jdbcType=BIGINT}, #{hostName,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR},
+            #{collectType,jdbcType=TINYINT}, #{cpuLimitThreshold,jdbcType=INTEGER}, #{byteLimitThreshold,jdbcType=BIGINT},
+            #{agentVersionId,jdbcType=BIGINT}, #{metricsSendTopic,jdbcType=VARCHAR}, #{metricsSendReceiverId,jdbcType=BIGINT}, #{errorLogsSendTopic,jdbcType=VARCHAR}, #{errorLogsSendReceiverId,jdbcType=BIGINT},
+            #{advancedConfigurationJsonString,jdbcType=VARCHAR}, #{configurationVersion,jdbcType=INTEGER},
+            #{operator,jdbcType=VARCHAR}, #{metricsProducerConfiguration, jdbcType=VARCHAR}, #{errorLogsProducerConfiguration, jdbcType=VARCHAR}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_agent
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="hostName != null" >
+        host_name,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="collectType != null" >
+        collect_type,
+      </if>
+      <if test="cpuLimitThreshold != null" >
+        cpu_limit_threshold,
+      </if>
+      <if test="byteLimitThreshold != null" >
+        byte_limit_threshold,
+      </if>
+      <if test="agentVersionId != null" >
+        agent_version_id,
+      </if>
+      <if test="advancedConfigurationJsonString != null" >
+        advanced_configuration_json_string,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="metricsSendTopic != null" >
+        metrics_send_topic,
+      </if>
+      <if test="metricsSendReceiverId != null" >
+        metrics_send_receiver_id,
+      </if>
+      <if test="errorLogsSendTopic != null" >
+        error_logs_send_topic,
+      </if>
+      <if test="errorLogsSendReceiverId != null" >
+        error_logs_send_receiver_id,
+      </if>
+      <if test="metricsProducerConfiguration != null" >
+        metrics_producer_configuration,
+      </if>
+      <if test="errorLogsProducerConfiguration != null" >
+        error_logs_producer_configuration,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="hostName != null" >
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="collectType != null" >
+        #{collectType,jdbcType=TINYINT},
+      </if>
+      <if test="cpuLimitThreshold != null" >
+        #{cpuLimitThreshold,jdbcType=INTEGER},
+      </if>
+      <if test="byteLimitThreshold != null" >
+        #{byteLimitThreshold,jdbcType=BIGINT},
+      </if>
+      <if test="agentVersionId != null" >
+        #{agentVersionId,jdbcType=VARCHAR},
+      </if>
+      <if test="advancedConfigurationJsonString != null" >
+        #{advancedConfigurationJsonString,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="metricsSendTopic != null" >
+        #{metricsSendTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="metricsSendReceiverId != null" >
+        #{metricsSendReceiverId,jdbcType=BIGINT},
+      </if>
+      <if test="errorLogsSendTopic != null" >
+        #{errorLogsSendTopic,jdbcType=VARCHAR},
+      </if>
+      <if test="errorLogsSendReceiverId != null" >
+        #{errorLogsSendReceiverId,jdbcType=BIGINT},
+      </if>
+      <if test="metricsProducerConfiguration != null" >
+        #{metricsProducerConfiguration,jdbcType=VARCHAR},
+      </if>
+      <if test="errorLogsProducerConfiguration != null" >
+        #{errorLogsProducerConfiguration,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.agent.AgentPO" >
+    update tb_agent set
+    <if test="hostName != null">
+      host_name = #{hostName,jdbcType=VARCHAR},
+    </if>
+    <if test="ip != null">
+      ip = #{ip,jdbcType=VARCHAR},
+    </if>
+    <if test="collectType != null">
+      collect_type = #{collectType,jdbcType=TINYINT},
+    </if>
+    <if test="cpuLimitThreshold != null">
+      cpu_limit_threshold = #{cpuLimitThreshold,jdbcType=INTEGER},
+    </if>
+    <if test="byteLimitThreshold != null">
+      byte_limit_threshold = #{byteLimitThreshold,jdbcType=BIGINT},
+    </if>
+    <if test="agentVersionId != null">
+      agent_version_id = #{agentVersionId,jdbcType=VARCHAR},
+    </if>
+    <if test="metricsSendTopic != null">
+      metrics_send_topic = #{metricsSendTopic,jdbcType=VARCHAR},
+    </if>
+    <if test="metricsSendReceiverId != null">
+      metrics_send_receiver_id = #{metricsSendReceiverId,jdbcType=BIGINT},
+    </if>
+    <if test="errorLogsSendTopic != null">
+      error_logs_send_topic = #{errorLogsSendTopic,jdbcType=VARCHAR},
+    </if>
+    <if test="errorLogsSendReceiverId != null">
+      error_logs_send_receiver_id = #{errorLogsSendReceiverId,jdbcType=BIGINT},
+    </if>
+    <if test="advancedConfigurationJsonString != null">
+      advanced_configuration_json_string = #{advancedConfigurationJsonString,jdbcType=VARCHAR},
+    </if>
+    <if test="operator != null">
+      operator = #{operator,jdbcType=VARCHAR},
+    </if>
+    <if test="createTime != null">
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="modifyTime != null">
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="metricsProducerConfiguration != null">
+      metrics_producer_configuration = #{metricsProducerConfiguration, jdbcType=VARCHAR},
+    </if>
+    <if test="errorLogsProducerConfiguration != null">
+      error_logs_producer_configuration = #{errorLogsProducerConfiguration, jdbcType=VARCHAR},
+    </if>
+    configuration_version = configuration_version + 1
+    where id = #{id,jdbcType=BIGINT} and configuration_version = #{configurationVersion,jdbcType=INTEGER}
+  </update>
+
+  <select id="getAll" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_agent
+  </select>
+
+  <select id="selectByKafkaClusterId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_agent
+    where error_logs_send_receiver_id = #{kafkaClusterId,jdbcType=BIGINT} or metrics_send_receiver_id = #{kafkaClusterId,jdbcType=BIGINT}
+  </select>
+
+  <select id="countAll" resultType="java.lang.Long" >
+    select
+      count(*)
+    from tb_agent
+  </select>
+
+  <select id="getAllHostNames" resultType="java.lang.String" >
+    select
+      host_name
+    from tb_agent
+  </select>
+
+  <select id="getByHealthLevel" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List_Relate" />
+    from tb_agent t1 inner join tb_agent_health t2 on t1.id = t2.agent_id
+    where t2.agent_health_level = #{agentHealthLevelCode,jdbcType=TINYINT}
+  </select>
+
+</mapper>
