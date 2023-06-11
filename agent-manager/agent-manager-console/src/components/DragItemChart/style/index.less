@@ -1,0 +1,87 @@
+.single-label-header {
+  position: absolute;
+  width: 100%;
+  padding: 24px 24px 0px;
+  color: #495057 !important;
+  z-index: 99;
+  pointer-events: none;
+
+  .header-title {
+    float: left;
+    font-size: 13px;
+    letter-spacing: 0;
+    font-weight: bold;
+    line-height: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    pointer-events: auto;
+    cursor: default;
+    max-width: 92%
+  }
+}
+
+.long-title-tip {
+  max-width: 280px;
+}
+
+.single-label-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  .single-chart-header {
+    padding: 24px 24px 0px;
+  }
+
+  >span p {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-value {
+    font-size: 60px;
+    color: #495057;
+    line-height: 90px;
+  }
+
+  &-subValue {
+    font-size: 24px;
+    color: #74788d;
+  }
+
+  .dcloud-popover-arrow {
+    display: none;
+  }
+
+  .dcloud-popover {
+    top: 0 !important;
+    width: 80%;
+    font-size: 20px;
+  }
+}
+
+//   .reload-module {
+//       .ant-btn-link {
+//         padding: 6.8px 8px 6.8px 0;
+//       }
+//       .last-time {
+//         line-height: 36px;
+//         font-size: 12px;
+//         color: #ADB5BC;
+//         position: relative;
+//         padding: 0 8px;
+//         display: inline-block;
+//         &::before {
+//           content: '|';
+//           position: absolute;
+//           left: 0;
+//           top: -1px;
+//         }
+//       }
+//     }

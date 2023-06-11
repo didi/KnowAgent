@@ -1,0 +1,142 @@
+.dashboard {
+  background-color: #f0f2f5;
+  min-height: 800px;
+
+  .dashboardHeader {
+    margin-bottom: -24px;
+    padding: 0 8px 0 12px;
+    font-size: 16px;
+    color: #212529;
+    overflow: hidden;
+
+    .d1-row {
+      justify-content: flex-start !important;
+    }
+
+    &-wrap {
+      margin: 0 !important;
+      // &::after {
+      //   flex: auto;
+      //   content: "";
+      // }
+    }
+
+    &-title {
+      line-height: 54px;
+      height: 24px;
+      margin: 0;
+      padding-left: 12px;
+      font-size: 16px;
+      color: #212529;
+    }
+
+    &-item {
+      margin-bottom: 24px;
+      padding-left: 22px;
+      padding-top: 24px;
+      box-sizing: border-box;
+      height: 136px;
+      background: #ffffff;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.01), 0 3px 6px 3px rgba(0, 0, 0, 0.01), 0 2px 6px 0 rgba(0, 0, 0, 0.03);
+      border-radius: 4px;
+
+      &-icon {
+        box-sizing: border-box;
+        width: 16px;
+        float: left;
+        height: 100%;
+        margin-right: 3px;
+
+        &-item {
+          vertical-align: baseline;
+          font-size: 16px;
+        }
+      }
+
+      &-content {
+        float: left;
+        height: 100%;
+        width: 188px;
+
+        &-title {
+          font-size: 14px;
+          color: #495057;
+          letter-spacing: 0;
+          text-align: justify;
+          line-height: 22px;
+        }
+
+        &-context {
+          margin-top: 4px;
+
+          &-num {
+            font-size: 28px;
+            color: #212529;
+            line-height: 36px;
+          }
+
+          &-span {
+            font-size: 12px;
+            color: #495057;
+            line-height: 20px;
+            margin-left: 4px;
+          }
+        }
+
+        &-text {
+          margin-top: 5px;
+          color: #556EE6;
+          line-height: 2px;
+          height: 18px;
+          width: 220px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+
+          &.no-margin {
+            margin-top: 0px;
+          }
+
+          &-label {
+            font-size: 12px;
+            color: #74788d;
+            position: relative;
+
+            .scale-font {
+              zoom: 0.83;
+
+            }
+          }
+
+          &-span {
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 22px;
+          }
+        }
+
+      }
+    }
+  }
+}
+
+#backToTop {
+  position: fixed;
+  right: 23px;
+  bottom: 32px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  .backToTop-icon {
+    font-size: 40px;
+    background: #495057;
+    border-radius: 50%;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

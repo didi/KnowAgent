@@ -1,0 +1,283 @@
+{
+  "grid": "{gutter:10,grid:24,num:1}",
+  "dataInfo": {},
+  "name": "0",
+  "path": "",
+  "title": "0",
+  "key": "0",
+  "componentName": "contentComponent",
+  "children": [
+    {
+      "grid": {
+        "gutter": 10,
+        "grid": 24,
+        "num": 1
+      },
+      "dataInfo": {},
+      "name": "0-1",
+      "path": "",
+      "title": "0-1",
+      "key": "0-1",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": {
+            "gutter": 10,
+            "grid": 24
+          },
+          "dataInfo": {
+            "bordered": false,
+            "loading": false,
+            "columns": [
+              {
+                "title": "集群名",
+                "dataIndex": "kafkaClusterName",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "sorter": true
+              },
+              {
+                "title": "集群地址",
+                "dataIndex": "kafkaClusterBrokerConfiguration",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "ellipsis": true
+              },
+              {
+                "title": "生产端初始化属性",
+                "dataIndex": "kafkaClusterProducerInitConfiguration",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "ellipsis": true,
+                "tooltip": true,
+                "width": "400px",
+                "needTooltip": true,
+                "lineClampOne": true
+              },
+              {
+                "title": "接收端类型",
+                "dataIndex": "receiverType",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "新增时间",
+                "dataIndex": "createTime",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "valueType": "dateTime"
+              },
+              {
+                "title": "操作",
+                "dataIndex": "options",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [
+                  {
+                    "operationName": "编辑",
+                    "operationKey": "edit",
+                    "type": "icon-bianji",
+                    "baseData": "{\"XFormProps\":{\"formMap\":[{\"key\":\"name\",\"label\":\"姓名\",\"type\":\"input\",\"attrs\":{\"placeholder\":\"请输入姓名\"}},{\"key\":\"age\",\"label\":\"年龄\",\"type\":\"input\"}],\"formData\":{}},\"proFormType\":\"modal\",\"needSubmitter\":true,\"submitterPosition\":\"right\",\"isCustomContent\":true,\"formModalMap\":[{\"grid\":\"{gutter:10,grid:24,num:1}\",\"dataInfo\":{},\"name\":\"0\",\"path\":\"\",\"title\":\"0\",\"key\":\"0\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24,\"num\":1},\"dataInfo\":{},\"name\":\"0-1\",\"path\":\"\",\"title\":\"0-1\",\"key\":\"0-1\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24},\"name\":\"0-1-0\",\"path\":\"\",\"title\":\"ProTableProject\",\"key\":\"0-1-0\",\"componentName\":\"ProTableProject\",\"children\":[],\"lelf\":2,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":true}],\"lelf\":\"1\",\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":false}],\"lelf\":0,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{}}],\"customContentFormModal\":\"{\\\"grid\\\":\\\"{gutter:10,grid:24,num:1}\\\",\\\"dataInfo\\\":{},\\\"name\\\":\\\"0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0\\\",\\\"key\\\":\\\"0\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24,\\\"num\\\":1},\\\"dataInfo\\\":{},\\\"name\\\":\\\"0-1\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0-1\\\",\\\"key\\\":\\\"0-1\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24},\\\"name\\\":\\\"0-1-0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"ProTableProject\\\",\\\"key\\\":\\\"0-1-0\\\",\\\"componentName\\\":\\\"ProTableProject\\\",\\\"children\\\":[],\\\"lelf\\\":2,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":true}],\\\"lelf\\\":\\\"1\\\",\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":false}],\\\"lelf\\\":0,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{}}\"}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "modal",
+                    "containerConfig": {
+                      "title": "修改集群"
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "ActionClusterForm"
+                  },
+                  {
+                    "operationName": "删除",
+                    "operationKey": "delete",
+                    "type": "icon-shanchu",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "删除主机",
+                      "content": "是否删除主机",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "modal",
+                    "containerConfig": {
+                      "title": "删除"
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "DeleteActionCluster"
+                  }
+                ],
+                "valueType": "option",
+                "fixed": "right",
+                "width": "150px"
+              }
+            ],
+            "queryFormArray": [
+              {
+                "type": "input",
+                "title": "集群名",
+                "dataIndex": "kafkaClusterName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "input",
+                "title": "集群地址",
+                "dataIndex": "kafkaClusterBrokerConfiguration",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "dateRangePicker",
+                "title": "新增时间",
+                "dataIndex": "createTime",
+                "placeholder": ["开始时间", "结束时间"],
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128
+                }
+              }
+            ],
+            "dataSourceUrlConfig": {
+              "api": "/api/v1/normal/receivers/paging",
+              "defaultParams": "{\"pageNo\":1,\"pageSize\":20,\"kafkaClusterName\":\"\",\"receiverCreateTimeStart\":\"\",\"receiverCreateTimeEnd\":\"\"}",
+              "methods": "post",
+              "params": "function(params){\n  if(params.createTime&&params.createTime.length>0){\n    params.receiverCreateTimeStart = new Date(params.createTime[0]).getTime();\n    params.receiverCreateTimeEnd = new Date(params.createTime[1]).getTime();\n  }\n  return params\n}",
+              "resCallback": "function(data){\n  return {...data,bizData:data.resultSet}\n}"
+            },
+            "isCustomPg": true,
+            "paginationProps": {
+              "show": true,
+              "current": 1,
+              "pageSize": 10,
+              "total": 100
+            },
+            "size": "default",
+            "expandable": false,
+            "tableTitle": "高级表格",
+            "tooltip": "高级表格 tooltip",
+            "showHeader": true,
+            "footer": false,
+            "rowSelection": true,
+            "scroll": {
+              "x": "max-content"
+            },
+            "hasData": true,
+            "toolBarRender": true,
+            "tableFunction": {
+              "reload": false,
+              "search": false,
+              "placeholder": "请输入",
+              "export": false,
+              "import": false,
+              "tableId": "receiving_list",
+              "tableScreen": true,
+              "tableCustomColumns": true,
+              "custom": false,
+              "tableHeaderBtns": [
+                {
+                  "buttonText": "删除",
+                  "buttonType": "",
+                  "isBatch": true,
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "DeleteActionCluster",
+                  "containerConfig": {
+                    "title": "删除集群"
+                  }
+                },
+                {
+                  "buttonText": "新增集群",
+                  "buttonType": "primary",
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "ActionClusterForm",
+                  "containerConfig": {
+                    "title": "新增集群"
+                  }
+                }
+              ]
+            },
+            "search": {
+              "showQueryForm": true,
+              "searchText": "查询",
+              "resetText": "重置",
+              "showOptionBtns": true,
+              "colConfig": 6,
+              "style": {
+                "backgroundColor": "#F8F9FA"
+              }
+            },
+            "options": {
+              "show": true,
+              "density": true,
+              "fullScreen": true,
+              "setting": true
+            },
+            "rowKey": "id"
+          },
+          "name": "0-1-0",
+          "path": "",
+          "title": "ProTableProject",
+          "key": "0-1-0",
+          "componentName": "ProTableProject",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": {
+            "padding": "24px",
+            "backgroundColor": "#FFFFFF"
+          },
+          "checked": true
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent管理",
+      "pageName": "agent_admin",
+      "tplName": "",
+      "pageKey": "agent_admin",
+      "checked": false
+    }
+  ],
+  "lelf": 0,
+  "version": "",
+  "nodeTitle": "",
+  "nodeStyle": {},
+  "containerStyle": {},
+  "chilrenPages": [],
+  "pageDesc": "Agent版本",
+  "pageName": "agent_version",
+  "tplName": "agent_admin",
+  "pageKey": "agent_version"
+}

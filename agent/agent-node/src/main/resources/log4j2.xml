@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <Properties>
+    <Property name="baselog">./logs</Property>
+    <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] - %l - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${pattern}"/>
+    </Console>
+    <RollingFile name="log-agent" fileName="${baselog}/log-agent.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="channelAppender" fileName="${baselog}/channel-full.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="kafkaAppender" fileName="${baselog}/kafka.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="config" fileName="${baselog}/config.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="sysLogger" fileName="${baselog}/system.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="errorAppender" fileName="${baselog}/error.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="perf" fileName="${baselog}/perf.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="statics" fileName="${baselog}/statistics.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+    <RollingFile name="monitor" fileName="${baselog}/monitor.log"
+                 filePattern="${sys:user.home}/logs/$${date:yyyy-MM-dd}/info-%d{yyyy-MM-dd}-%i.log">
+      <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="100MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="5"/>
+    </RollingFile>
+
+  </Appenders>
+
+  <Loggers>
+    <root level="INFO">
+      <appender-ref ref="Console"/>
+      <appender-ref ref="log-agent"/>
+    </root>
+    <logger name="perfLogger">
+      <appender-ref ref="perf"/>
+    </logger>
+    <logger name="statics">
+      <appender-ref ref="statics"/>
+    </logger>
+    <logger name="monitor">
+      <appender-ref ref="monitor"/>
+    </logger>
+    <logger name="config">
+      <appender-ref ref="config"/>
+    </logger>
+
+  </Loggers>
+
+</configuration>

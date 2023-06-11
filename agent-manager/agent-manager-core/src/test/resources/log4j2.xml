@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status="OFF"，可以去掉，它的含义为是否记录log4j2本身的event信息，默认是OFF -->
+<configuration status="debug" monitorInterval="30">
+    <!-- 定义下面的引用名 -->
+    <Properties>
+        <!-- 控制台日志打印格式 -->
+        <property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:-} [%15.15t] %-30.30C{1.} : %m%n</property>
+
+        <!-- name的值是变量的名称，value的值时变量定义的值。通过定义的值会被插入到logger上下文中。定义后，可以使"${}"来使用变量。 -->
+        <property name="log.path">./logs/</property>
+    </Properties>
+    <!--先定义所有的appender -->
+    <appenders>
+        <!--输出控制台的配置 -->
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            <!--输出日志的格式 -->
+            <PatternLayout pattern="${log_pattern}" />
+        </Console>
+
+        <!-- level为 debug 日志  -->
+        <RollingFile name="DEBUG_FILE"
+                     filename="${log.path}/debug.log" filePattern="${log.path}/debug.log.%i"
+                     append="true">
+            <!--输出日志的格式 -->
+            <PatternLayout pattern="${log_pattern}" />
+            <Filters>
+                <ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+        </RollingFile>
+
+        <!-- level为 info 日志  -->
+        <RollingFile name="INFO_FILE"
+                     filename="${log.path}/info.log" filePattern="${log.path}/info.log.%i"
+                     append="true">
+            <!--输出日志的格式 -->
+            <PatternLayout pattern="${log_pattern}" />
+            <Filters>
+                <ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+        </RollingFile>
+
+        <!-- level为 warn 日志  -->
+        <RollingFile name="WARN_FILE"
+                     filename="${log.path}/warn.log" filePattern="${log.path}/warn.log.%i"
+                     append="true">
+            <!--输出日志的格式 -->
+            <PatternLayout pattern="${log_pattern}" />
+            <Filters>
+                <ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+        </RollingFile>
+
+        <!-- level为 error 日志  -->
+        <RollingFile name="ERROR_FILE"
+                     filename="${log.path}/error.log" filePattern="${log.path}/error.log.%i"
+                     append="true">
+            <!--输出日志的格式 -->
+            <PatternLayout pattern="${log_pattern}" />
+            <Filters>
+                <ThresholdFilter level="fatal" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100 MB" />
+            </Policies>
+        </RollingFile>
+
+    </appenders>
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效 -->
+    <loggers>
+        <root level="debug">
+            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="DEBUG_FILE"/>
+            <AppenderRef ref="INFO_FILE"/>
+            <AppenderRef ref="WARN_FILE"/>
+            <AppenderRef ref="ERROR_FILE"/>
+        </root>
+    </loggers>
+</configuration>

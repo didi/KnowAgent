@@ -1,0 +1,307 @@
+{
+  "grid": "{gutter:10,grid:24,num:1}",
+  "dataInfo": {},
+  "name": "0",
+  "path": "",
+  "title": "0",
+  "key": "0",
+  "componentName": "contentComponent",
+  "children": [
+    {
+      "grid": {
+        "gutter": 10,
+        "grid": 24,
+        "num": 1
+      },
+      "dataInfo": {},
+      "name": "0-1",
+      "path": "",
+      "title": "0-1",
+      "key": "0-1",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": {
+            "gutter": 10,
+            "grid": 24
+          },
+          "dataInfo": {
+            "bordered": false,
+            "loading": false,
+            "columns": [
+              {
+                "title": "应用名",
+                "dataIndex": "serviceName",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "operationName": "",
+                    "operationKey": "1",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "customRenderConfirm": 1,
+                    "containerType": "drawer",
+                    "containerConfig": {
+                      "title": "应用详情",
+                      "footer": false,
+                      "width": "800px"
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "ActionAppDetail"
+                  }
+                ],
+                "sorter": true,
+                "valueType": "option"
+              },
+              {
+                "title": "关联主机数",
+                "dataIndex": "relationHostCount",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": []
+              },
+              {
+                "title": "新增时间",
+                "dataIndex": "createTime",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [],
+                "valueType": "dateTime"
+              },
+              {
+                "title": "操作",
+                "dataIndex": "Thu Jan 20 2022 18:56:17 GMT+0800 (中国标准时间)",
+                "responsive": [
+                  "xs",
+                  "sm",
+                  "md",
+                  "lg",
+                  "xl",
+                  "xxl"
+                ],
+                "operationArray": [
+                  {
+                    "operationName": "修改应用",
+                    "operationKey": "edit",
+                    "type": "icon-bianji",
+                    "baseData": "{\"XFormProps\":{\"formMap\":[{\"key\":\"name\",\"label\":\"姓名\",\"type\":\"input\",\"attrs\":{\"placeholder\":\"请输入姓名\"}},{\"key\":\"age\",\"label\":\"年龄\",\"type\":\"input\"}],\"formData\":{}},\"proFormType\":\"modal\",\"needSubmitter\":true,\"submitterPosition\":\"right\",\"isCustomContent\":true,\"formModalMap\":[{\"grid\":\"{gutter:10,grid:24,num:1}\",\"dataInfo\":{},\"name\":\"0\",\"path\":\"\",\"title\":\"0\",\"key\":\"0\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24,\"num\":1},\"dataInfo\":{},\"name\":\"0-1\",\"path\":\"\",\"title\":\"0-1\",\"key\":\"0-1\",\"componentName\":\"contentComponent\",\"children\":[{\"grid\":{\"gutter\":10,\"grid\":24},\"name\":\"0-1-0\",\"path\":\"\",\"title\":\"ProTableProject\",\"key\":\"0-1-0\",\"componentName\":\"ProTableProject\",\"children\":[],\"lelf\":2,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":true}],\"lelf\":\"1\",\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{},\"checked\":false}],\"lelf\":0,\"version\":\"\",\"nodeTitle\":\"\",\"nodeStyle\":{},\"containerStyle\":{}}],\"customContentFormModal\":\"{\\\"grid\\\":\\\"{gutter:10,grid:24,num:1}\\\",\\\"dataInfo\\\":{},\\\"name\\\":\\\"0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0\\\",\\\"key\\\":\\\"0\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24,\\\"num\\\":1},\\\"dataInfo\\\":{},\\\"name\\\":\\\"0-1\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"0-1\\\",\\\"key\\\":\\\"0-1\\\",\\\"componentName\\\":\\\"contentComponent\\\",\\\"children\\\":[{\\\"grid\\\":{\\\"gutter\\\":10,\\\"grid\\\":24},\\\"name\\\":\\\"0-1-0\\\",\\\"path\\\":\\\"\\\",\\\"title\\\":\\\"ProTableProject\\\",\\\"key\\\":\\\"0-1-0\\\",\\\"componentName\\\":\\\"ProTableProject\\\",\\\"children\\\":[],\\\"lelf\\\":2,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":true}],\\\"lelf\\\":\\\"1\\\",\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{},\\\"checked\\\":false}],\\\"lelf\\\":0,\\\"version\\\":\\\"\\\",\\\"nodeTitle\\\":\\\"\\\",\\\"nodeStyle\\\":{},\\\"containerStyle\\\":{}}\"}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "标题",
+                      "content": "内容",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "modal",
+                    "containerConfig": {
+                      "title": "修改应用",
+                      "width": "600px"
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "ActionAppForm"
+                  },
+                  {
+                    "operationName": "删除应用",
+                    "operationKey": "delete",
+                    "type": "icon-shanchu",
+                    "baseData": "{}",
+                    "triggerType": "modalOrDrawer",
+                    "optConfig": {
+                      "title": "删除主机",
+                      "content": "是否删除主机",
+                      "api": "/api",
+                      "methods": "get"
+                    },
+                    "containerType": "modal",
+                    "containerConfig": {
+                      "title": "删除应用"
+                    },
+                    "customContentFormModal": "_customContent",
+                    "customPageName": "DeleteActionCluster"
+                  }
+                ],
+                "valueType": "option",
+                "fixed": "right",
+                "width": "150px"
+              }
+            ],
+            "queryFormArray": [
+              {
+                "type": "input",
+                "title": "应用名",
+                "dataIndex": "serviceName",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                }
+              },
+              {
+                "type": "dateRangePicker",
+                "title": "新增时间",
+                "placeholder": [
+                  "开始时间",
+                  "结束时间"
+                ],
+                "dataIndex": "createTime",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128
+                }
+              }
+            ],
+            "dataSourceUrlConfig": {
+              "api": "/api/v1/normal/services/paging",
+              "defaultParams": "{\"pageNo\":1,\"pageSize\":20,\"serviceCreateTimeStart\":\"\",\"serviceCreateTimeEnd\":\"\"}",
+              "methods": "post",
+              "params": "function(params){\n  if(params.createTime&&params.createTime.length>0){\n    params.serviceCreateTimeStart = new Date(params.createTime[0]).getTime();\n    params.serviceCreateTimeEnd = new Date(params.createTime[1]).getTime();\n  }\n  return params\n}",
+              "resCallback": "function(data){return {...data,bizData:data.resultSet}}"
+            },
+            "isCustomPg": true,
+            "paginationProps": {
+              "show": true,
+              "current": 1,
+              "pageSize": 20,
+              "total": 100
+            },
+            "size": "default",
+            "expandable": false,
+            "tableTitle": "高级表格",
+            "tooltip": "高级表格 tooltip",
+            "showHeader": true,
+            "footer": false,
+            "rowSelection": true,
+            "scroll": {
+              "x": "max-content"
+            },
+            "hasData": true,
+            "toolBarRender": true,
+            "tableFunction": {
+              "reload": false,
+              "search": false,
+              "export": false,
+              "import": false,
+              "tableId": "app_list",
+              "tableScreen": true,
+              "tableCustomColumns": true,
+              "custom": false,
+              "tableHeaderBtns": [
+                {
+                  "buttonText": "删除",
+                  "buttonType": "",
+                  "isBatch": true,
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "DeleteActionCluster",
+                  "containerConfig": {
+                    "title": "删除应用"
+                  }
+                },
+                {
+                  "buttonText": "新增应用",
+                  "buttonType": "primary",
+                  "containerType": "modal",
+                  "requestOp": {
+                    "api": "/api",
+                    "methods": "get"
+                  },
+                  "containerConfig": {
+                    "title": "新增应用",
+                    "width": "600px"
+                  },
+                  "customContentFormModal": "_customContent",
+                  "customPageName": "ActionAppForm"
+                }
+              ]
+            },
+            "search": {
+              "showQueryForm": true,
+              "searchText": "查询",
+              "resetText": "重置",
+              "showOptionBtns": true,
+              "colConfig": 6,
+              "style": {
+                "backgroundColor": "#F8F9FA"
+              }
+            },
+            "options": {
+              "show": true,
+              "density": true,
+              "fullScreen": true,
+              "setting": true
+            },
+            "rowKey": "id"
+          },
+          "name": "0-1-0",
+          "path": "",
+          "title": "ProTableProject",
+          "key": "0-1-0",
+          "componentName": "ProTableProject",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": {
+            "padding": "24px",
+            "backgroundColor": "#FFFFFF"
+          },
+          "checked": true
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "Agent管理",
+      "pageName": "agent_admin",
+      "tplName": "",
+      "pageKey": "agent_admin",
+      "checked": false
+    }
+  ],
+  "lelf": 0,
+  "version": "",
+  "nodeTitle": "",
+  "nodeStyle": {},
+  "containerStyle": {},
+  "chilrenPages": [],
+  "pageDesc": "Agent版本",
+  "pageName": "agent_version",
+  "tplName": "agent_admin",
+  "pageKey": "agent_version"
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.LogCollectTaskHealthMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="log_collect_task_id" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="log_collect_task_health_level" property="logCollectTaskHealthLevel" jdbcType="TINYINT" />
+    <result column="log_collect_task_health_description" property="logCollectTaskHealthDescription" jdbcType="VARCHAR" />
+    <result column="log_collect_task_health_inspection_result_type" property="logCollectTaskHealthInspectionResultType" jdbcType="INTEGER" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, log_collect_task_id, log_collect_task_health_level, log_collect_task_health_description, 
+    log_collect_task_health_inspection_result_type, operator, create_time,
+    modify_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByLogCollectTaskId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_log_collect_task_health
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByLogCollectTaskId" parameterType="java.lang.Long" >
+    delete from tb_log_collect_task_health
+    where log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthPO" >
+    insert into tb_log_collect_task_health (log_collect_task_id, log_collect_task_health_level,
+      log_collect_task_health_description, log_collect_task_health_inspection_result_type,
+      operator, create_time, modify_time
+      )
+    values (#{logCollectTaskId,jdbcType=BIGINT}, #{logCollectTaskHealthLevel,jdbcType=TINYINT},
+      #{logCollectTaskHealthDescription,jdbcType=VARCHAR}, #{logCollectTaskHealthInspectionResultType,jdbcType=INTEGER},
+      #{operator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.logcollecttask.LogCollectTaskHealthPO" >
+    update tb_log_collect_task_health
+    set log_collect_task_id = #{logCollectTaskId,jdbcType=BIGINT},
+      log_collect_task_health_level = #{logCollectTaskHealthLevel,jdbcType=TINYINT},
+      log_collect_task_health_description = #{logCollectTaskHealthDescription,jdbcType=VARCHAR},
+      log_collect_task_health_inspection_result_type = #{logCollectTaskHealthInspectionResultType,jdbcType=INTEGER},
+      operator = #{operator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

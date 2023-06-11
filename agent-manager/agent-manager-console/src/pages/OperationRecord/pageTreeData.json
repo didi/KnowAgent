@@ -1,0 +1,212 @@
+{
+  "grid": "{gutter:10,grid:24,num:1}",
+  "dataInfo": {},
+  "name": "0",
+  "path": "",
+  "title": "0",
+  "key": "0",
+  "componentName": "contentComponent",
+  "children": [
+    {
+      "grid": {
+        "gutter": 10,
+        "grid": 24,
+        "num": 1
+      },
+      "dataInfo": {},
+      "name": "0-1",
+      "path": "",
+      "title": "0-1",
+      "key": "0-1",
+      "componentName": "contentComponent",
+      "children": [
+        {
+          "grid": {
+            "gutter": 10,
+            "grid": 24
+          },
+          "dataInfo": {
+            "bordered": false,
+            "loading": false,
+            "columns": [
+              {
+                "title": "操作ID",
+                "dataIndex": "id",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "sorter": "(a, b) => a.id - b.id"
+              },
+              {
+                "title": "操作",
+                "dataIndex": "operate",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "功能模块",
+                "dataIndex": "module",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "详细记录",
+                "dataIndex": "content",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "width": "450px",
+                "needTooltip": true
+              },
+              {
+                "title": "创建人",
+                "dataIndex": "operator",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": []
+              },
+              {
+                "title": "操作时间",
+                "dataIndex": "operateTime",
+                "responsive": ["xs", "sm", "md", "lg", "xl", "xxl"],
+                "operationArray": [],
+                "sorter": "operateTime",
+                "fixed": "right",
+                "width": "250px",
+                "valueType": "dateTime"
+              }
+            ],
+            "queryFormArray": [
+              {
+                "type": "select",
+                "title": "功能模块",
+                "dataIndex": "moduleId",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "recordModuleList"
+              },
+              {
+                "type": "select",
+                "title": "操作类型",
+                "dataIndex": "operateId",
+                "placeholder": "请输入",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128,
+                  "style": {
+                    "width": "200px"
+                  }
+                },
+                "option": "operateArr"
+              },
+              {
+                "type": "dateRangePicker",
+                "title": "操作时间",
+                "placeholder": ["开始时间", "结束时间"],
+                "dataIndex": "createTime",
+                "initialValue": "",
+                "componentProps": {
+                  "maxLength": 128
+                }
+              }
+            ],
+            "dataSourceUrlConfig": {
+              "api": "/api/v1/op/record/list",
+              "defaultParams": "{\"pageNo\":1,\"pageSize\":20,\"beginTime\":\"\",\"endTime\":\"\",\"moduleId\":\"\",\"operateId\":\"\"}",
+              "methods": "post",
+              "params": "function(params){\n  if(params.createTime&&params.createTime.length>0){\n    params.beginTime = new Date(params.createTime[0]).getTime();\n    params.endTime = new Date(params.createTime[1]).getTime();\n  }\n  return params\n}",
+              "resCallback": "(data)=>{\n  return {bizData:data}\n}"
+            },
+            "isCustomPg": true,
+            "paginationProps": {
+              "show": true,
+              "current": 1,
+              "pageSize": 5,
+              "total": 100
+            },
+            "size": "default",
+            "expandable": false,
+            "tableTitle": "高级表格",
+            "tooltip": "高级表格 tooltip",
+            "showHeader": true,
+            "footer": false,
+            "rowSelection": false,
+            "scroll": {
+              "x": "max-content"
+            },
+            "hasData": true,
+            "toolBarRender": true,
+            "tableFunction": {
+              "reload": false,
+              "search": false,
+              "placeholder": "请输入",
+              "delete": false,
+              "export": false,
+              "import": false,
+              "tableId": "option_list",
+              "tableScreen": true,
+              "tableCustomColumns": true,
+              "custom": false
+            },
+            "search": {
+              "showQueryForm": true,
+              "searchText": "查询",
+              "resetText": "重置",
+              "showOptionBtns": true,
+              "colConfig": 6,
+              "style": {
+                "backgroundColor": "#F8F9FA"
+              }
+            },
+            "options": {
+              "show": true,
+              "density": true,
+              "fullScreen": true,
+              "setting": true
+            },
+            "tableHeaderTitle": false
+          },
+          "name": "0-1-0",
+          "path": "",
+          "title": "ProTableProject",
+          "key": "0-1-0",
+          "componentName": "ProTableProject",
+          "children": [],
+          "lelf": 2,
+          "version": "",
+          "nodeTitle": "",
+          "nodeStyle": {},
+          "containerStyle": {
+            "padding": "0 24px",
+            "backgroundColor": "#FFFFFF"
+          },
+          "checked": true
+        }
+      ],
+      "lelf": "1",
+      "version": "",
+      "nodeTitle": "",
+      "nodeStyle": {},
+      "containerStyle": {},
+      "chilrenPages": [],
+      "pageDesc": "List-demo",
+      "pageName": "List-demo",
+      "tplName": "",
+      "pageKey": "List-demo",
+      "checked": false
+    }
+  ],
+  "lelf": 0,
+  "version": "",
+  "nodeTitle": "",
+  "nodeStyle": {},
+  "containerStyle": {},
+  "chilrenPages": [],
+  "pageDesc": "操作记录",
+  "pageName": "operationRecord",
+  "tplName": "operationRecord",
+  "pageKey": "operationRecord"
+}

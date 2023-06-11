@@ -1,0 +1,65 @@
+#.gitignore for java
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+**/META-INF/
+# logs
+/stacktrace.log
+/test/reports
+logs/
+*.log
+*.log.*
+
+## .gitignore for intellij
+*.iml
+*.ipr
+*.iws
+.mvn/
+
+## .gitignore for eclipse
+*.pydevproject
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+tmp
+temp
+*.tmp
+*.bak
+*~.nib
+local.properties
+.loadpath
+.project
+.*proj
+.svn/
+*.swp
+*.swo
+*.pyc
+*.pyo
+
+.DS_Store
+node_modules/
+npm-debug.log
+coverage
+.cache-loader
+pub
+package-lock.json
+
+*.http
+target/
+test-output/
+.classpath
+.settings/
+.idea
+*/conf.local
+.gitversion
+output
+output.*
+templates/
+
+*.zip
+*.tar.gz
+*.tgz

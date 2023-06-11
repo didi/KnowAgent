@@ -1,0 +1,1905 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.didichuxing.datachannel.agentmanager.persistence.mysql.MetricsSystemPOMapper" >
+  <resultMap id="BaseResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="osType" property="ostype" jdbcType="VARCHAR" />
+    <result column="osVersion" property="osversion" jdbcType="VARCHAR" />
+    <result column="osKernelVersion" property="oskernelversion" jdbcType="VARCHAR" />
+    <result column="hostName" property="hostname" jdbcType="VARCHAR" />
+    <result column="ips" property="ips" jdbcType="VARCHAR" />
+    <result column="systemNtpOffset" property="systemntpoffset" jdbcType="BIGINT" />
+    <result column="systemStartupTime" property="systemstartuptime" jdbcType="BIGINT" />
+    <result column="systemUptime" property="systemuptime" jdbcType="BIGINT" />
+    <result column="processesBlocked" property="processesblocked" jdbcType="INTEGER" />
+    <result column="processesSleeping" property="processessleeping" jdbcType="INTEGER" />
+    <result column="processesZombies" property="processeszombies" jdbcType="INTEGER" />
+    <result column="processesStopped" property="processesstopped" jdbcType="INTEGER" />
+    <result column="processesRunning" property="processesrunning" jdbcType="INTEGER" />
+    <result column="processesIdle" property="processesidle" jdbcType="INTEGER" />
+    <result column="processesWait" property="processeswait" jdbcType="INTEGER" />
+    <result column="processesDead" property="processesdead" jdbcType="INTEGER" />
+    <result column="processesPaging" property="processespaging" jdbcType="INTEGER" />
+    <result column="processesUnknown" property="processesunknown" jdbcType="INTEGER" />
+    <result column="processesTotal" property="processestotal" jdbcType="INTEGER" />
+    <result column="processesTotalThreads" property="processestotalthreads" jdbcType="INTEGER" />
+    <result column="cpuCores" property="cpucores" jdbcType="INTEGER" />
+    <result column="systemCpuUtil" property="systemcpuutil" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilMin" property="systemcpuutilmin" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilMax" property="systemcpuutilmax" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilMean" property="systemcpuutilmean" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilStd" property="systemcpuutilstd" jdbcType="DOUBLE" />
+    <result column="systemCpuUtil55Quantile" property="systemcpuutil55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUtil75Quantile" property="systemcpuutil75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUtil95Quantile" property="systemcpuutil95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUtil99Quantile" property="systemcpuutil99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercent" property="systemcpuutiltotalpercent" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercentMin" property="systemcpuutiltotalpercentmin" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercentMax" property="systemcpuutiltotalpercentmax" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercentMean" property="systemcpuutiltotalpercentmean" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercentStd" property="systemcpuutiltotalpercentstd" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercent55Quantile" property="systemcpuutiltotalpercent55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercent75Quantile" property="systemcpuutiltotalpercent75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercent95Quantile" property="systemcpuutiltotalpercent95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUtilTotalPercent99Quantile" property="systemcpuutiltotalpercent99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSystem" property="systemcpusystem" jdbcType="DOUBLE" />
+    <result column="systemCpuSystemMin" property="systemcpusystemmin" jdbcType="DOUBLE" />
+    <result column="systemCpuSystemMax" property="systemcpusystemmax" jdbcType="DOUBLE" />
+    <result column="systemCpuSystemMean" property="systemcpusystemmean" jdbcType="DOUBLE" />
+    <result column="systemCpuSystemStd" property="systemcpusystemstd" jdbcType="DOUBLE" />
+    <result column="systemCpuSystem55Quantile" property="systemcpusystem55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSystem75Quantile" property="systemcpusystem75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSystem95Quantile" property="systemcpusystem95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSystem99Quantile" property="systemcpusystem99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUser" property="systemcpuuser" jdbcType="DOUBLE" />
+    <result column="systemCpuUserMin" property="systemcpuusermin" jdbcType="DOUBLE" />
+    <result column="systemCpuUserMax" property="systemcpuusermax" jdbcType="DOUBLE" />
+    <result column="systemCpuUserMean" property="systemcpuusermean" jdbcType="DOUBLE" />
+    <result column="systemCpuUserStd" property="systemcpuuserstd" jdbcType="DOUBLE" />
+    <result column="systemCpuUser55Quantile" property="systemcpuuser55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUser75Quantile" property="systemcpuuser75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUser95Quantile" property="systemcpuuser95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUser99Quantile" property="systemcpuuser99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIdle" property="systemcpuidle" jdbcType="DOUBLE" />
+    <result column="systemCpuIdleMin" property="systemcpuidlemin" jdbcType="DOUBLE" />
+    <result column="systemCpuIdleMax" property="systemcpuidlemax" jdbcType="DOUBLE" />
+    <result column="systemCpuIdleMean" property="systemcpuidlemean" jdbcType="DOUBLE" />
+    <result column="systemCpuIdleStd" property="systemcpuidlestd" jdbcType="DOUBLE" />
+    <result column="systemCpuIdle55Quantile" property="systemcpuidle55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIdle75Quantile" property="systemcpuidle75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIdle95Quantile" property="systemcpuidle95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIdle99Quantile" property="systemcpuidle99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches" property="systemcpuswitches" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitchesMin" property="systemcpuswitchesmin" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitchesMax" property="systemcpuswitchesmax" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitchesMean" property="systemcpuswitchesmean" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitchesStd" property="systemcpuswitchesstd" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches55Quantile" property="systemcpuswitches55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches75Quantile" property="systemcpuswitches75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches95Quantile" property="systemcpuswitches95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSwitches99Quantile" property="systemcpuswitches99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrq" property="systemcpuusageirq" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrqMin" property="systemcpuusageirqmin" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrqMax" property="systemcpuusageirqmax" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrqMean" property="systemcpuusageirqmean" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrqStd" property="systemcpuusageirqstd" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrq55Quantile" property="systemcpuusageirq55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrq75Quantile" property="systemcpuusageirq75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrq95Quantile" property="systemcpuusageirq95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageIrq99Quantile" property="systemcpuusageirq99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrq" property="systemcpuusagesoftirq" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrqMin" property="systemcpuusagesoftirqmin" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrqMax" property="systemcpuusagesoftirqmax" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrqMean" property="systemcpuusagesoftirqmean" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrqStd" property="systemcpuusagesoftirqstd" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrq55Quantile" property="systemcpuusagesoftirq55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrq75Quantile" property="systemcpuusagesoftirq75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrq95Quantile" property="systemcpuusagesoftirq95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuUsageSoftIrq99Quantile" property="systemcpuusagesoftirq99quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad1" property="systemload1" jdbcType="DOUBLE" />
+    <result column="systemLoad1Min" property="systemload1min" jdbcType="DOUBLE" />
+    <result column="systemLoad1Max" property="systemload1max" jdbcType="DOUBLE" />
+    <result column="systemLoad1Mean" property="systemload1mean" jdbcType="DOUBLE" />
+    <result column="systemLoad1Std" property="systemload1std" jdbcType="DOUBLE" />
+    <result column="systemLoad155Quantile" property="systemload155quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad175Quantile" property="systemload175quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad195Quantile" property="systemload195quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad199Quantile" property="systemload199quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad5" property="systemload5" jdbcType="DOUBLE" />
+    <result column="systemLoad5Min" property="systemload5min" jdbcType="DOUBLE" />
+    <result column="systemLoad5Max" property="systemload5max" jdbcType="DOUBLE" />
+    <result column="systemLoad5Mean" property="systemload5mean" jdbcType="DOUBLE" />
+    <result column="systemLoad5Std" property="systemload5std" jdbcType="DOUBLE" />
+    <result column="systemLoad555Quantile" property="systemload555quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad575Quantile" property="systemload575quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad595Quantile" property="systemload595quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad599Quantile" property="systemload599quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad15" property="systemload15" jdbcType="DOUBLE" />
+    <result column="systemLoad15Min" property="systemload15min" jdbcType="DOUBLE" />
+    <result column="systemLoad15Max" property="systemload15max" jdbcType="DOUBLE" />
+    <result column="systemLoad15Mean" property="systemload15mean" jdbcType="DOUBLE" />
+    <result column="systemLoad15Std" property="systemload15std" jdbcType="DOUBLE" />
+    <result column="systemLoad1555Quantile" property="systemload1555quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad1575Quantile" property="systemload1575quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad1595Quantile" property="systemload1595quantile" jdbcType="DOUBLE" />
+    <result column="systemLoad1599Quantile" property="systemload1599quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWait" property="systemcpuiowait" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWaitMin" property="systemcpuiowaitmin" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWaitMax" property="systemcpuiowaitmax" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWaitMean" property="systemcpuiowaitmean" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWaitStd" property="systemcpuiowaitstd" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWait55Quantile" property="systemcpuiowait55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWait75Quantile" property="systemcpuiowait75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWait95Quantile" property="systemcpuiowait95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuIOWait99Quantile" property="systemcpuiowait99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuGuest" property="systemcpuguest" jdbcType="DOUBLE" />
+    <result column="systemCpuGuestMin" property="systemcpuguestmin" jdbcType="DOUBLE" />
+    <result column="systemCpuGuestMax" property="systemcpuguestmax" jdbcType="DOUBLE" />
+    <result column="systemCpuGuestMean" property="systemcpuguestmean" jdbcType="DOUBLE" />
+    <result column="systemCpuGuestStd" property="systemcpugueststd" jdbcType="DOUBLE" />
+    <result column="systemCpuGuest55Quantile" property="systemcpuguest55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuGuest75Quantile" property="systemcpuguest75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuGuest95Quantile" property="systemcpuguest95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuGuest99Quantile" property="systemcpuguest99quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSteal" property="systemcpusteal" jdbcType="DOUBLE" />
+    <result column="systemCpuStealMin" property="systemcpustealmin" jdbcType="DOUBLE" />
+    <result column="systemCpuStealMax" property="systemcpustealmax" jdbcType="DOUBLE" />
+    <result column="systemCpuStealMean" property="systemcpustealmean" jdbcType="DOUBLE" />
+    <result column="systemCpuStealStd" property="systemcpustealstd" jdbcType="DOUBLE" />
+    <result column="systemCpuSteal55Quantile" property="systemcpusteal55quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSteal75Quantile" property="systemcpusteal75quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSteal95Quantile" property="systemcpusteal95quantile" jdbcType="DOUBLE" />
+    <result column="systemCpuSteal99Quantile" property="systemcpusteal99quantile" jdbcType="DOUBLE" />
+    <result column="systemMemCommitLimit" property="systemmemcommitlimit" jdbcType="BIGINT" />
+    <result column="systemMemCommittedAs" property="systemmemcommittedas" jdbcType="BIGINT" />
+    <result column="systemMemCommitted" property="systemmemcommitted" jdbcType="BIGINT" />
+    <result column="systemMemNonPaged" property="systemmemnonpaged" jdbcType="BIGINT" />
+    <result column="systemMemPaged" property="systemmempaged" jdbcType="BIGINT" />
+    <result column="systemMemShared" property="systemmemshared" jdbcType="BIGINT" />
+    <result column="systemMemSlab" property="systemmemslab" jdbcType="BIGINT" />
+    <result column="systemMemTotal" property="systemmemtotal" jdbcType="BIGINT" />
+    <result column="systemMemFree" property="systemmemfree" jdbcType="BIGINT" />
+    <result column="systemMemUsed" property="systemmemused" jdbcType="BIGINT" />
+    <result column="systemMemBuffered" property="systemmembuffered" jdbcType="BIGINT" />
+    <result column="systemMemCached" property="systemmemcached" jdbcType="BIGINT" />
+    <result column="systemMemFreePercent" property="systemmemfreepercent" jdbcType="DOUBLE" />
+    <result column="systemMemUsedPercent" property="systemmemusedpercent" jdbcType="DOUBLE" />
+    <result column="systemSwapCached" property="systemswapcached" jdbcType="BIGINT" />
+    <result column="systemSwapFree" property="systemswapfree" jdbcType="BIGINT" />
+    <result column="systemSwapFreePercent" property="systemswapfreepercent" jdbcType="DOUBLE" />
+    <result column="systemSwapTotal" property="systemswaptotal" jdbcType="BIGINT" />
+    <result column="systemSwapUsed" property="systemswapused" jdbcType="BIGINT" />
+    <result column="systemSwapUsedPercent" property="systemswapusedpercent" jdbcType="DOUBLE" />
+    <result column="systemDisks" property="systemdisks" jdbcType="INTEGER" />
+    <result column="systemFilesMax" property="systemfilesmax" jdbcType="INTEGER" />
+    <result column="systemFilesAllocated" property="systemfilesallocated" jdbcType="INTEGER" />
+    <result column="systemFilesLeft" property="systemfilesleft" jdbcType="INTEGER" />
+    <result column="systemFilesUsedPercent" property="systemfilesusedpercent" jdbcType="DOUBLE" />
+    <result column="systemFilesUsed" property="systemfilesused" jdbcType="INTEGER" />
+    <result column="systemFilesNotUsed" property="systemfilesnotused" jdbcType="INTEGER" />
+    <result column="systemNetCards" property="systemnetcards" jdbcType="INTEGER" />
+    <result column="systemNetworkReceiveBytesPs" property="systemnetworkreceivebytesps" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPsMin" property="systemnetworkreceivebytespsmin" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPsMax" property="systemnetworkreceivebytespsmax" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPsMean" property="systemnetworkreceivebytespsmean" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPsStd" property="systemnetworkreceivebytespsstd" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPs55Quantile" property="systemnetworkreceivebytesps55quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPs75Quantile" property="systemnetworkreceivebytesps75quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPs95Quantile" property="systemnetworkreceivebytesps95quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkReceiveBytesPs99Quantile" property="systemnetworkreceivebytesps99quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs" property="systemnetworksendbytesps" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPsMin" property="systemnetworksendbytespsmin" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPsMax" property="systemnetworksendbytespsmax" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPsMean" property="systemnetworksendbytespsmean" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPsStd" property="systemnetworksendbytespsstd" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs55Quantile" property="systemnetworksendbytesps55quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs75Quantile" property="systemnetworksendbytesps75quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs95Quantile" property="systemnetworksendbytesps95quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendBytesPs99Quantile" property="systemnetworksendbytesps99quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkTcpConnectionNum" property="systemnetworktcpconnectionnum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpListeningNum" property="systemnetworktcplisteningnum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpEstablishedNum" property="systemnetworktcpestablishednum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpSynSentNum" property="systemnetworktcpsynsentnum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpSynRecvNum" property="systemnetworktcpsynrecvnum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpFinWait1Num" property="systemnetworktcpfinwait1num" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpFinWait2Num" property="systemnetworktcpfinwait2num" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpTimeWaitNum" property="systemnetworktcptimewaitnum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpClosedNum" property="systemnetworktcpclosednum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpCloseWaitNum" property="systemnetworktcpclosewaitnum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpClosingNum" property="systemnetworktcpclosingnum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpLastAckNum" property="systemnetworktcplastacknum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpNoneNum" property="systemnetworktcpnonenum" jdbcType="INTEGER" />
+    <result column="systemNetworkTcpActiveOpens" property="systemnetworktcpactiveopens" jdbcType="BIGINT" />
+    <result column="systemNetworkTcpPassiveOpens" property="systemnetworktcppassiveopens" jdbcType="BIGINT" />
+    <result column="systemNetworkTcpAttemptFails" property="systemnetworktcpattemptfails" jdbcType="BIGINT" />
+    <result column="systemNetworkTcpEstabResets" property="systemnetworktcpestabresets" jdbcType="BIGINT" />
+    <result column="systemNetworkTcpRetransSegs" property="systemnetworktcpretranssegs" jdbcType="BIGINT" />
+    <result column="systemNetworkTcpExtListenOverflows" property="systemnetworktcpextlistenoverflows" jdbcType="BIGINT" />
+    <result column="systemNetworkUdpInDatagrams" property="systemnetworkudpindatagrams" jdbcType="BIGINT" />
+    <result column="systemNetworkUdpOutDatagrams" property="systemnetworkudpoutdatagrams" jdbcType="BIGINT" />
+    <result column="systemNetworkUdpInErrors" property="systemnetworkudpinerrors" jdbcType="BIGINT" />
+    <result column="systemNetworkUdpNoPorts" property="systemnetworkudpnoports" jdbcType="BIGINT" />
+    <result column="systemNetworkUdpSendBufferErrors" property="systemnetworkudpsendbuffererrors" jdbcType="BIGINT" />
+    <result column="heartbeatTime" property="heartbeattime" jdbcType="BIGINT" />
+    <result column="heartbeatTimeMinute" property="heartbeattimeminute" jdbcType="BIGINT" />
+    <result column="heartbeatTimeHour" property="heartbeattimehour" jdbcType="BIGINT" />
+    <result column="heartbeatTimeDay" property="heartbeatTimeDay" jdbcType="BIGINT" />
+    <result column="systemNetCardsBandWidth" property="systemNetCardsBandWidth" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs" property="systemNetworkSendAndReceiveBytesPs" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsMin" property="systemNetworkSendAndReceiveBytesPsMin" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsMax" property="systemNetworkSendAndReceiveBytesPsMax" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsMean" property="systemNetworkSendAndReceiveBytesPsMean" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPsStd" property="systemNetworkSendAndReceiveBytesPsStd" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs55Quantile" property="systemNetworkSendAndReceiveBytesPs55Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs75Quantile" property="systemNetworkSendAndReceiveBytesPs75Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs95Quantile" property="systemNetworkSendAndReceiveBytesPs95Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetworkSendAndReceiveBytesPs99Quantile" property="systemNetworkSendAndReceiveBytesPs99Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent" property="systemNetWorkBandWidthUsedPercent" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentMin" property="systemNetWorkBandWidthUsedPercentMin" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentMax" property="systemNetWorkBandWidthUsedPercentMax" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentMean" property="systemNetWorkBandWidthUsedPercentMean" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercentStd" property="systemNetWorkBandWidthUsedPercentStd" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent55Quantile" property="systemNetWorkBandWidthUsedPercent55Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent75Quantile" property="systemNetWorkBandWidthUsedPercent75Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent95Quantile" property="systemNetWorkBandWidthUsedPercent95Quantile" jdbcType="DOUBLE" />
+    <result column="systemNetWorkBandWidthUsedPercent99Quantile" property="systemNetWorkBandWidthUsedPercent99Quantile" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, osType, osVersion, osKernelVersion, hostName, ips, systemNtpOffset, systemStartupTime, 
+    systemUptime, processesBlocked, processesSleeping, processesZombies, processesStopped, 
+    processesRunning, processesIdle, processesWait, processesDead, processesPaging, processesUnknown, 
+    processesTotal, processesTotalThreads, cpuCores, systemCpuUtil, systemCpuUtilMin, 
+    systemCpuUtilMax, systemCpuUtilMean, systemCpuUtilStd, systemCpuUtil55Quantile, systemCpuUtil75Quantile, 
+    systemCpuUtil95Quantile, systemCpuUtil99Quantile, systemCpuUtilTotalPercent, systemCpuUtilTotalPercentMin, 
+    systemCpuUtilTotalPercentMax, systemCpuUtilTotalPercentMean, systemCpuUtilTotalPercentStd, 
+    systemCpuUtilTotalPercent55Quantile, systemCpuUtilTotalPercent75Quantile, systemCpuUtilTotalPercent95Quantile, 
+    systemCpuUtilTotalPercent99Quantile, systemCpuSystem, systemCpuSystemMin, systemCpuSystemMax, 
+    systemCpuSystemMean, systemCpuSystemStd, systemCpuSystem55Quantile, systemCpuSystem75Quantile, 
+    systemCpuSystem95Quantile, systemCpuSystem99Quantile, systemCpuUser, systemCpuUserMin, 
+    systemCpuUserMax, systemCpuUserMean, systemCpuUserStd, systemCpuUser55Quantile, systemCpuUser75Quantile, 
+    systemCpuUser95Quantile, systemCpuUser99Quantile, systemCpuIdle, systemCpuIdleMin, 
+    systemCpuIdleMax, systemCpuIdleMean, systemCpuIdleStd, systemCpuIdle55Quantile, systemCpuIdle75Quantile, 
+    systemCpuIdle95Quantile, systemCpuIdle99Quantile, systemCpuSwitches, systemCpuSwitchesMin, 
+    systemCpuSwitchesMax, systemCpuSwitchesMean, systemCpuSwitchesStd, systemCpuSwitches55Quantile, 
+    systemCpuSwitches75Quantile, systemCpuSwitches95Quantile, systemCpuSwitches99Quantile, 
+    systemCpuUsageIrq, systemCpuUsageIrqMin, systemCpuUsageIrqMax, systemCpuUsageIrqMean, 
+    systemCpuUsageIrqStd, systemCpuUsageIrq55Quantile, systemCpuUsageIrq75Quantile, systemCpuUsageIrq95Quantile, 
+    systemCpuUsageIrq99Quantile, systemCpuUsageSoftIrq, systemCpuUsageSoftIrqMin, systemCpuUsageSoftIrqMax, 
+    systemCpuUsageSoftIrqMean, systemCpuUsageSoftIrqStd, systemCpuUsageSoftIrq55Quantile, 
+    systemCpuUsageSoftIrq75Quantile, systemCpuUsageSoftIrq95Quantile, systemCpuUsageSoftIrq99Quantile, 
+    systemLoad1, systemLoad1Min, systemLoad1Max, systemLoad1Mean, systemLoad1Std, systemLoad155Quantile, 
+    systemLoad175Quantile, systemLoad195Quantile, systemLoad199Quantile, systemLoad5, 
+    systemLoad5Min, systemLoad5Max, systemLoad5Mean, systemLoad5Std, systemLoad555Quantile, 
+    systemLoad575Quantile, systemLoad595Quantile, systemLoad599Quantile, systemLoad15, 
+    systemLoad15Min, systemLoad15Max, systemLoad15Mean, systemLoad15Std, systemLoad1555Quantile, 
+    systemLoad1575Quantile, systemLoad1595Quantile, systemLoad1599Quantile, systemCpuIOWait, 
+    systemCpuIOWaitMin, systemCpuIOWaitMax, systemCpuIOWaitMean, systemCpuIOWaitStd, 
+    systemCpuIOWait55Quantile, systemCpuIOWait75Quantile, systemCpuIOWait95Quantile, 
+    systemCpuIOWait99Quantile, systemCpuGuest, systemCpuGuestMin, systemCpuGuestMax, 
+    systemCpuGuestMean, systemCpuGuestStd, systemCpuGuest55Quantile, systemCpuGuest75Quantile, 
+    systemCpuGuest95Quantile, systemCpuGuest99Quantile, systemCpuSteal, systemCpuStealMin, 
+    systemCpuStealMax, systemCpuStealMean, systemCpuStealStd, systemCpuSteal55Quantile, 
+    systemCpuSteal75Quantile, systemCpuSteal95Quantile, systemCpuSteal99Quantile, systemMemCommitLimit, 
+    systemMemCommittedAs, systemMemCommitted, systemMemNonPaged, systemMemPaged, systemMemShared, 
+    systemMemSlab, systemMemTotal, systemMemFree, systemMemUsed, systemMemBuffered, systemMemCached, 
+    systemMemFreePercent, systemMemUsedPercent, systemSwapCached, systemSwapFree, systemSwapFreePercent, 
+    systemSwapTotal, systemSwapUsed, systemSwapUsedPercent, systemDisks, systemFilesMax, 
+    systemFilesAllocated, systemFilesLeft, systemFilesUsedPercent, systemFilesUsed, systemFilesNotUsed, 
+    systemNetCards, systemNetworkReceiveBytesPs, systemNetworkReceiveBytesPsMin, systemNetworkReceiveBytesPsMax, 
+    systemNetworkReceiveBytesPsMean, systemNetworkReceiveBytesPsStd, systemNetworkReceiveBytesPs55Quantile, 
+    systemNetworkReceiveBytesPs75Quantile, systemNetworkReceiveBytesPs95Quantile, systemNetworkReceiveBytesPs99Quantile, 
+    systemNetworkSendBytesPs, systemNetworkSendBytesPsMin, systemNetworkSendBytesPsMax, 
+    systemNetworkSendBytesPsMean, systemNetworkSendBytesPsStd, systemNetworkSendBytesPs55Quantile, 
+    systemNetworkSendBytesPs75Quantile, systemNetworkSendBytesPs95Quantile, systemNetworkSendBytesPs99Quantile, 
+    systemNetworkTcpConnectionNum, systemNetworkTcpListeningNum, systemNetworkTcpEstablishedNum, 
+    systemNetworkTcpSynSentNum, systemNetworkTcpSynRecvNum, systemNetworkTcpFinWait1Num, 
+    systemNetworkTcpFinWait2Num, systemNetworkTcpTimeWaitNum, systemNetworkTcpClosedNum, 
+    systemNetworkTcpCloseWaitNum, systemNetworkTcpClosingNum, systemNetworkTcpLastAckNum, 
+    systemNetworkTcpNoneNum, systemNetworkTcpActiveOpens, systemNetworkTcpPassiveOpens, 
+    systemNetworkTcpAttemptFails, systemNetworkTcpEstabResets, systemNetworkTcpRetransSegs, 
+    systemNetworkTcpExtListenOverflows, systemNetworkUdpInDatagrams, systemNetworkUdpOutDatagrams, 
+    systemNetworkUdpInErrors, systemNetworkUdpNoPorts, systemNetworkUdpSendBufferErrors, 
+    heartbeatTime, heartbeatTimeMinute, heartbeatTimeHour, heartbeatTimeDay, systemNetCardsBandWidth, systemNetworkSendAndReceiveBytesPs, systemNetworkSendAndReceiveBytesPsMin, systemNetworkSendAndReceiveBytesPsMax,
+    systemNetworkSendAndReceiveBytesPsMean, systemNetworkSendAndReceiveBytesPsStd, systemNetworkSendAndReceiveBytesPs55Quantile, systemNetworkSendAndReceiveBytesPs75Quantile, systemNetworkSendAndReceiveBytesPs95Quantile,
+    systemNetworkSendAndReceiveBytesPs99Quantile, systemNetWorkBandWidthUsedPercent, systemNetWorkBandWidthUsedPercentMin, systemNetWorkBandWidthUsedPercentMax, systemNetWorkBandWidthUsedPercentMean, systemNetWorkBandWidthUsedPercentStd,
+    systemNetWorkBandWidthUsedPercent55Quantile, systemNetWorkBandWidthUsedPercent75Quantile, systemNetWorkBandWidthUsedPercent95Quantile, systemNetWorkBandWidthUsedPercent99Quantile
+  </sql>
+
+  <resultMap id="SingleChatResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.vo.metrics.MetricPoint" >
+    <result column="heartbeatTimeMinute" property="timeStampMinute" jdbcType="BIGINT" />
+    <result column="last" property="last" jdbcType="DOUBLE" />
+    <result column="min" property="min" jdbcType="DOUBLE" />
+    <result column="max" property="max" jdbcType="DOUBLE" />
+    <result column="mean" property="mean" jdbcType="DOUBLE" />
+    <result column="std" property="std" jdbcType="DOUBLE" />
+    <result column="fiftyFiveQuantile" property="fiftyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="seventyFiveQuantile" property="seventyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyFiveQuantile" property="ninetyFiveQuantile" jdbcType="DOUBLE" />
+    <result column="ninetyNineQuantile" property="ninetyNineQuantile" jdbcType="DOUBLE" />
+    <result column="macAddress" property="macAddress" jdbcType="VARCHAR"/>
+    <result column="device" property="device" jdbcType="VARCHAR"/>
+    <result column="path" property="path" jdbcType="VARCHAR"/>
+    <result column="fsType" property="fsType" jdbcType="VARCHAR"/>
+    <result column="hostName" property="hostName" jdbcType="VARCHAR"/>
+    <result column="logCollectTaskId" property="logCollectTaskId" jdbcType="BIGINT" />
+    <result column="serviceNames" property="serviceNames" jdbcType="VARCHAR"/>
+  </resultMap>
+
+  <select id="getLast" resultType="java.lang.Object" parameterType="java.util.Map" >
+    select
+      ${fieldName}
+    from tb_metrics_system
+    where
+          hostName = #{hostName,jdbcType=VARCHAR}
+            and
+          heartbeatTime &gt; #{startTime} and heartbeatTime &lt;= #{endTime}
+    order by heartbeatTime desc
+    limit 1
+  </select>
+  <select id="getSingleChatNonStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+        ${function}(${fieldName}) as 'last',
+        heartbeatTimeMinute
+    from tb_metrics_system
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatistic" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+      ${function}(${fieldName}) as 'last',
+      ${function}(${fieldName}Min) as 'min',
+      ${function}(${fieldName}Max) as 'max',
+      ${function}(${fieldName}Mean) as 'mean',
+      ${function}(${fieldName}Std) as 'std',
+      ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+      ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+      ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+      ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+      heartbeatTimeMinute
+    from tb_metrics_system
+    where
+      hostName = #{hostName,jdbcType=VARCHAR}
+      and
+      heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+    group by heartbeatTimeMinute
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_metrics_system
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <resultMap id="TopNByMetricPerHostNameResultMap" type="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsLogCollectTaskTopPO" >
+    <result column="hostName" property="hostName" jdbcType="VARCHAR" />
+    <result column="aggVal" property="aggVal" jdbcType="DOUBLE" />
+  </resultMap>
+  <select id="getTopNByMetricPerHostName" resultMap="TopNByMetricPerHostNameResultMap" parameterType="java.util.Map" >
+    select * from (
+    select
+    ${function}(${fieldName}) as 'aggVal',
+    hostName as 'hostName'
+    from tb_metrics_system
+    where
+    ${sortTimeField} = #{sortTime,jdbcType=BIGINT}
+    group by hostName
+    ) as agg_table
+    order by agg_table.aggVal ${sortType}
+    <if test="topN != 0">
+      limit #{topN}
+    </if>
+  </select>
+
+  <select id="getSingleChatNonStatisticByHostName" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               heartbeatTimeMinute
+       from tb_metrics_system
+       where
+         hostName = #{hostName,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+  <select id="getSingleChatStatisticByHostName" resultMap="SingleChatResultMap" parameterType="java.util.Map" >
+    select
+         ${function}(${fieldName}) as 'last',
+               ${function}(${fieldName}Min) as 'min',
+               ${function}(${fieldName}Max) as 'max',
+               ${function}(${fieldName}Mean) as 'mean',
+               ${function}(${fieldName}Std) as 'std',
+               ${function}(${fieldName}55Quantile) as 'fiftyFiveQuantile',
+               ${function}(${fieldName}75Quantile) as 'seventyFiveQuantile',
+               ${function}(${fieldName}95Quantile) as 'ninetyFiveQuantile',
+               ${function}(${fieldName}99Quantile) as 'ninetyNineQuantile',
+               heartbeatTimeMinute
+       from tb_metrics_system
+       where
+         hostName = #{hostName,jdbcType=VARCHAR}
+         and
+         heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+       group by heartbeatTimeMinute
+  </select>
+
+  <select id="getLastRecord" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from tb_metrics_system
+    where
+    hostName = #{hostName,jdbcType=VARCHAR}
+    order by heartbeatTime desc
+    limit 1
+  </select>
+
+  <insert id="insertSelective" parameterType="com.didichuxing.datachannel.agentmanager.common.bean.po.metrics.MetricsSystemPO" >
+    insert into tb_metrics_system
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ostype != null" >
+        osType,
+      </if>
+      <if test="osversion != null" >
+        osVersion,
+      </if>
+      <if test="oskernelversion != null" >
+        osKernelVersion,
+      </if>
+      <if test="hostname != null" >
+        hostName,
+      </if>
+      <if test="ips != null" >
+        ips,
+      </if>
+      <if test="systemntpoffset != null" >
+        systemNtpOffset,
+      </if>
+      <if test="systemstartuptime != null" >
+        systemStartupTime,
+      </if>
+      <if test="systemuptime != null" >
+        systemUptime,
+      </if>
+      <if test="processesblocked != null" >
+        processesBlocked,
+      </if>
+      <if test="processessleeping != null" >
+        processesSleeping,
+      </if>
+      <if test="processeszombies != null" >
+        processesZombies,
+      </if>
+      <if test="processesstopped != null" >
+        processesStopped,
+      </if>
+      <if test="processesrunning != null" >
+        processesRunning,
+      </if>
+      <if test="processesidle != null" >
+        processesIdle,
+      </if>
+      <if test="processeswait != null" >
+        processesWait,
+      </if>
+      <if test="processesdead != null" >
+        processesDead,
+      </if>
+      <if test="processespaging != null" >
+        processesPaging,
+      </if>
+      <if test="processesunknown != null" >
+        processesUnknown,
+      </if>
+      <if test="processestotal != null" >
+        processesTotal,
+      </if>
+      <if test="processestotalthreads != null" >
+        processesTotalThreads,
+      </if>
+      <if test="cpucores != null" >
+        cpuCores,
+      </if>
+      <if test="systemcpuutil != null" >
+        systemCpuUtil,
+      </if>
+      <if test="systemcpuutilmin != null" >
+        systemCpuUtilMin,
+      </if>
+      <if test="systemcpuutilmax != null" >
+        systemCpuUtilMax,
+      </if>
+      <if test="systemcpuutilmean != null" >
+        systemCpuUtilMean,
+      </if>
+      <if test="systemcpuutilstd != null" >
+        systemCpuUtilStd,
+      </if>
+      <if test="systemcpuutil55quantile != null" >
+        systemCpuUtil55Quantile,
+      </if>
+      <if test="systemcpuutil75quantile != null" >
+        systemCpuUtil75Quantile,
+      </if>
+      <if test="systemcpuutil95quantile != null" >
+        systemCpuUtil95Quantile,
+      </if>
+      <if test="systemcpuutil99quantile != null" >
+        systemCpuUtil99Quantile,
+      </if>
+      <if test="systemcpuutiltotalpercent != null" >
+        systemCpuUtilTotalPercent,
+      </if>
+      <if test="systemcpuutiltotalpercentmin != null" >
+        systemCpuUtilTotalPercentMin,
+      </if>
+      <if test="systemcpuutiltotalpercentmax != null" >
+        systemCpuUtilTotalPercentMax,
+      </if>
+      <if test="systemcpuutiltotalpercentmean != null" >
+        systemCpuUtilTotalPercentMean,
+      </if>
+      <if test="systemcpuutiltotalpercentstd != null" >
+        systemCpuUtilTotalPercentStd,
+      </if>
+      <if test="systemcpuutiltotalpercent55quantile != null" >
+        systemCpuUtilTotalPercent55Quantile,
+      </if>
+      <if test="systemcpuutiltotalpercent75quantile != null" >
+        systemCpuUtilTotalPercent75Quantile,
+      </if>
+      <if test="systemcpuutiltotalpercent95quantile != null" >
+        systemCpuUtilTotalPercent95Quantile,
+      </if>
+      <if test="systemcpuutiltotalpercent99quantile != null" >
+        systemCpuUtilTotalPercent99Quantile,
+      </if>
+      <if test="systemcpusystem != null" >
+        systemCpuSystem,
+      </if>
+      <if test="systemcpusystemmin != null" >
+        systemCpuSystemMin,
+      </if>
+      <if test="systemcpusystemmax != null" >
+        systemCpuSystemMax,
+      </if>
+      <if test="systemcpusystemmean != null" >
+        systemCpuSystemMean,
+      </if>
+      <if test="systemcpusystemstd != null" >
+        systemCpuSystemStd,
+      </if>
+      <if test="systemcpusystem55quantile != null" >
+        systemCpuSystem55Quantile,
+      </if>
+      <if test="systemcpusystem75quantile != null" >
+        systemCpuSystem75Quantile,
+      </if>
+      <if test="systemcpusystem95quantile != null" >
+        systemCpuSystem95Quantile,
+      </if>
+      <if test="systemcpusystem99quantile != null" >
+        systemCpuSystem99Quantile,
+      </if>
+      <if test="systemcpuuser != null" >
+        systemCpuUser,
+      </if>
+      <if test="systemcpuusermin != null" >
+        systemCpuUserMin,
+      </if>
+      <if test="systemcpuusermax != null" >
+        systemCpuUserMax,
+      </if>
+      <if test="systemcpuusermean != null" >
+        systemCpuUserMean,
+      </if>
+      <if test="systemcpuuserstd != null" >
+        systemCpuUserStd,
+      </if>
+      <if test="systemcpuuser55quantile != null" >
+        systemCpuUser55Quantile,
+      </if>
+      <if test="systemcpuuser75quantile != null" >
+        systemCpuUser75Quantile,
+      </if>
+      <if test="systemcpuuser95quantile != null" >
+        systemCpuUser95Quantile,
+      </if>
+      <if test="systemcpuuser99quantile != null" >
+        systemCpuUser99Quantile,
+      </if>
+      <if test="systemcpuidle != null" >
+        systemCpuIdle,
+      </if>
+      <if test="systemcpuidlemin != null" >
+        systemCpuIdleMin,
+      </if>
+      <if test="systemcpuidlemax != null" >
+        systemCpuIdleMax,
+      </if>
+      <if test="systemcpuidlemean != null" >
+        systemCpuIdleMean,
+      </if>
+      <if test="systemcpuidlestd != null" >
+        systemCpuIdleStd,
+      </if>
+      <if test="systemcpuidle55quantile != null" >
+        systemCpuIdle55Quantile,
+      </if>
+      <if test="systemcpuidle75quantile != null" >
+        systemCpuIdle75Quantile,
+      </if>
+      <if test="systemcpuidle95quantile != null" >
+        systemCpuIdle95Quantile,
+      </if>
+      <if test="systemcpuidle99quantile != null" >
+        systemCpuIdle99Quantile,
+      </if>
+      <if test="systemcpuswitches != null" >
+        systemCpuSwitches,
+      </if>
+      <if test="systemcpuswitchesmin != null" >
+        systemCpuSwitchesMin,
+      </if>
+      <if test="systemcpuswitchesmax != null" >
+        systemCpuSwitchesMax,
+      </if>
+      <if test="systemcpuswitchesmean != null" >
+        systemCpuSwitchesMean,
+      </if>
+      <if test="systemcpuswitchesstd != null" >
+        systemCpuSwitchesStd,
+      </if>
+      <if test="systemcpuswitches55quantile != null" >
+        systemCpuSwitches55Quantile,
+      </if>
+      <if test="systemcpuswitches75quantile != null" >
+        systemCpuSwitches75Quantile,
+      </if>
+      <if test="systemcpuswitches95quantile != null" >
+        systemCpuSwitches95Quantile,
+      </if>
+      <if test="systemcpuswitches99quantile != null" >
+        systemCpuSwitches99Quantile,
+      </if>
+      <if test="systemcpuusageirq != null" >
+        systemCpuUsageIrq,
+      </if>
+      <if test="systemcpuusageirqmin != null" >
+        systemCpuUsageIrqMin,
+      </if>
+      <if test="systemcpuusageirqmax != null" >
+        systemCpuUsageIrqMax,
+      </if>
+      <if test="systemcpuusageirqmean != null" >
+        systemCpuUsageIrqMean,
+      </if>
+      <if test="systemcpuusageirqstd != null" >
+        systemCpuUsageIrqStd,
+      </if>
+      <if test="systemcpuusageirq55quantile != null" >
+        systemCpuUsageIrq55Quantile,
+      </if>
+      <if test="systemcpuusageirq75quantile != null" >
+        systemCpuUsageIrq75Quantile,
+      </if>
+      <if test="systemcpuusageirq95quantile != null" >
+        systemCpuUsageIrq95Quantile,
+      </if>
+      <if test="systemcpuusageirq99quantile != null" >
+        systemCpuUsageIrq99Quantile,
+      </if>
+      <if test="systemcpuusagesoftirq != null" >
+        systemCpuUsageSoftIrq,
+      </if>
+      <if test="systemcpuusagesoftirqmin != null" >
+        systemCpuUsageSoftIrqMin,
+      </if>
+      <if test="systemcpuusagesoftirqmax != null" >
+        systemCpuUsageSoftIrqMax,
+      </if>
+      <if test="systemcpuusagesoftirqmean != null" >
+        systemCpuUsageSoftIrqMean,
+      </if>
+      <if test="systemcpuusagesoftirqstd != null" >
+        systemCpuUsageSoftIrqStd,
+      </if>
+      <if test="systemcpuusagesoftirq55quantile != null" >
+        systemCpuUsageSoftIrq55Quantile,
+      </if>
+      <if test="systemcpuusagesoftirq75quantile != null" >
+        systemCpuUsageSoftIrq75Quantile,
+      </if>
+      <if test="systemcpuusagesoftirq95quantile != null" >
+        systemCpuUsageSoftIrq95Quantile,
+      </if>
+      <if test="systemcpuusagesoftirq99quantile != null" >
+        systemCpuUsageSoftIrq99Quantile,
+      </if>
+      <if test="systemload1 != null" >
+        systemLoad1,
+      </if>
+      <if test="systemload1min != null" >
+        systemLoad1Min,
+      </if>
+      <if test="systemload1max != null" >
+        systemLoad1Max,
+      </if>
+      <if test="systemload1mean != null" >
+        systemLoad1Mean,
+      </if>
+      <if test="systemload1std != null" >
+        systemLoad1Std,
+      </if>
+      <if test="systemload155quantile != null" >
+        systemLoad155Quantile,
+      </if>
+      <if test="systemload175quantile != null" >
+        systemLoad175Quantile,
+      </if>
+      <if test="systemload195quantile != null" >
+        systemLoad195Quantile,
+      </if>
+      <if test="systemload199quantile != null" >
+        systemLoad199Quantile,
+      </if>
+      <if test="systemload5 != null" >
+        systemLoad5,
+      </if>
+      <if test="systemload5min != null" >
+        systemLoad5Min,
+      </if>
+      <if test="systemload5max != null" >
+        systemLoad5Max,
+      </if>
+      <if test="systemload5mean != null" >
+        systemLoad5Mean,
+      </if>
+      <if test="systemload5std != null" >
+        systemLoad5Std,
+      </if>
+      <if test="systemload555quantile != null" >
+        systemLoad555Quantile,
+      </if>
+      <if test="systemload575quantile != null" >
+        systemLoad575Quantile,
+      </if>
+      <if test="systemload595quantile != null" >
+        systemLoad595Quantile,
+      </if>
+      <if test="systemload599quantile != null" >
+        systemLoad599Quantile,
+      </if>
+      <if test="systemload15 != null" >
+        systemLoad15,
+      </if>
+      <if test="systemload15min != null" >
+        systemLoad15Min,
+      </if>
+      <if test="systemload15max != null" >
+        systemLoad15Max,
+      </if>
+      <if test="systemload15mean != null" >
+        systemLoad15Mean,
+      </if>
+      <if test="systemload15std != null" >
+        systemLoad15Std,
+      </if>
+      <if test="systemload1555quantile != null" >
+        systemLoad1555Quantile,
+      </if>
+      <if test="systemload1575quantile != null" >
+        systemLoad1575Quantile,
+      </if>
+      <if test="systemload1595quantile != null" >
+        systemLoad1595Quantile,
+      </if>
+      <if test="systemload1599quantile != null" >
+        systemLoad1599Quantile,
+      </if>
+      <if test="systemcpuiowait != null" >
+        systemCpuIOWait,
+      </if>
+      <if test="systemcpuiowaitmin != null" >
+        systemCpuIOWaitMin,
+      </if>
+      <if test="systemcpuiowaitmax != null" >
+        systemCpuIOWaitMax,
+      </if>
+      <if test="systemcpuiowaitmean != null" >
+        systemCpuIOWaitMean,
+      </if>
+      <if test="systemcpuiowaitstd != null" >
+        systemCpuIOWaitStd,
+      </if>
+      <if test="systemcpuiowait55quantile != null" >
+        systemCpuIOWait55Quantile,
+      </if>
+      <if test="systemcpuiowait75quantile != null" >
+        systemCpuIOWait75Quantile,
+      </if>
+      <if test="systemcpuiowait95quantile != null" >
+        systemCpuIOWait95Quantile,
+      </if>
+      <if test="systemcpuiowait99quantile != null" >
+        systemCpuIOWait99Quantile,
+      </if>
+      <if test="systemcpuguest != null" >
+        systemCpuGuest,
+      </if>
+      <if test="systemcpuguestmin != null" >
+        systemCpuGuestMin,
+      </if>
+      <if test="systemcpuguestmax != null" >
+        systemCpuGuestMax,
+      </if>
+      <if test="systemcpuguestmean != null" >
+        systemCpuGuestMean,
+      </if>
+      <if test="systemcpugueststd != null" >
+        systemCpuGuestStd,
+      </if>
+      <if test="systemcpuguest55quantile != null" >
+        systemCpuGuest55Quantile,
+      </if>
+      <if test="systemcpuguest75quantile != null" >
+        systemCpuGuest75Quantile,
+      </if>
+      <if test="systemcpuguest95quantile != null" >
+        systemCpuGuest95Quantile,
+      </if>
+      <if test="systemcpuguest99quantile != null" >
+        systemCpuGuest99Quantile,
+      </if>
+      <if test="systemcpusteal != null" >
+        systemCpuSteal,
+      </if>
+      <if test="systemcpustealmin != null" >
+        systemCpuStealMin,
+      </if>
+      <if test="systemcpustealmax != null" >
+        systemCpuStealMax,
+      </if>
+      <if test="systemcpustealmean != null" >
+        systemCpuStealMean,
+      </if>
+      <if test="systemcpustealstd != null" >
+        systemCpuStealStd,
+      </if>
+      <if test="systemcpusteal55quantile != null" >
+        systemCpuSteal55Quantile,
+      </if>
+      <if test="systemcpusteal75quantile != null" >
+        systemCpuSteal75Quantile,
+      </if>
+      <if test="systemcpusteal95quantile != null" >
+        systemCpuSteal95Quantile,
+      </if>
+      <if test="systemcpusteal99quantile != null" >
+        systemCpuSteal99Quantile,
+      </if>
+      <if test="systemmemcommitlimit != null" >
+        systemMemCommitLimit,
+      </if>
+      <if test="systemmemcommittedas != null" >
+        systemMemCommittedAs,
+      </if>
+      <if test="systemmemcommitted != null" >
+        systemMemCommitted,
+      </if>
+      <if test="systemmemnonpaged != null" >
+        systemMemNonPaged,
+      </if>
+      <if test="systemmempaged != null" >
+        systemMemPaged,
+      </if>
+      <if test="systemmemshared != null" >
+        systemMemShared,
+      </if>
+      <if test="systemmemslab != null" >
+        systemMemSlab,
+      </if>
+      <if test="systemmemtotal != null" >
+        systemMemTotal,
+      </if>
+      <if test="systemmemfree != null" >
+        systemMemFree,
+      </if>
+      <if test="systemmemused != null" >
+        systemMemUsed,
+      </if>
+      <if test="systemmembuffered != null" >
+        systemMemBuffered,
+      </if>
+      <if test="systemmemcached != null" >
+        systemMemCached,
+      </if>
+      <if test="systemmemfreepercent != null" >
+        systemMemFreePercent,
+      </if>
+      <if test="systemmemusedpercent != null" >
+        systemMemUsedPercent,
+      </if>
+      <if test="systemswapcached != null" >
+        systemSwapCached,
+      </if>
+      <if test="systemswapfree != null" >
+        systemSwapFree,
+      </if>
+      <if test="systemswapfreepercent != null" >
+        systemSwapFreePercent,
+      </if>
+      <if test="systemswaptotal != null" >
+        systemSwapTotal,
+      </if>
+      <if test="systemswapused != null" >
+        systemSwapUsed,
+      </if>
+      <if test="systemswapusedpercent != null" >
+        systemSwapUsedPercent,
+      </if>
+      <if test="systemdisks != null" >
+        systemDisks,
+      </if>
+      <if test="systemfilesmax != null" >
+        systemFilesMax,
+      </if>
+      <if test="systemfilesallocated != null" >
+        systemFilesAllocated,
+      </if>
+      <if test="systemfilesleft != null" >
+        systemFilesLeft,
+      </if>
+      <if test="systemfilesusedpercent != null" >
+        systemFilesUsedPercent,
+      </if>
+      <if test="systemfilesused != null" >
+        systemFilesUsed,
+      </if>
+      <if test="systemfilesnotused != null" >
+        systemFilesNotUsed,
+      </if>
+      <if test="systemnetcards != null" >
+        systemNetCards,
+      </if>
+      <if test="systemnetworkreceivebytesps != null" >
+        systemNetworkReceiveBytesPs,
+      </if>
+      <if test="systemnetworkreceivebytespsmin != null" >
+        systemNetworkReceiveBytesPsMin,
+      </if>
+      <if test="systemnetworkreceivebytespsmax != null" >
+        systemNetworkReceiveBytesPsMax,
+      </if>
+      <if test="systemnetworkreceivebytespsmean != null" >
+        systemNetworkReceiveBytesPsMean,
+      </if>
+      <if test="systemnetworkreceivebytespsstd != null" >
+        systemNetworkReceiveBytesPsStd,
+      </if>
+      <if test="systemnetworkreceivebytesps55quantile != null" >
+        systemNetworkReceiveBytesPs55Quantile,
+      </if>
+      <if test="systemnetworkreceivebytesps75quantile != null" >
+        systemNetworkReceiveBytesPs75Quantile,
+      </if>
+      <if test="systemnetworkreceivebytesps95quantile != null" >
+        systemNetworkReceiveBytesPs95Quantile,
+      </if>
+      <if test="systemnetworkreceivebytesps99quantile != null" >
+        systemNetworkReceiveBytesPs99Quantile,
+      </if>
+      <if test="systemnetworksendbytesps != null" >
+        systemNetworkSendBytesPs,
+      </if>
+      <if test="systemnetworksendbytespsmin != null" >
+        systemNetworkSendBytesPsMin,
+      </if>
+      <if test="systemnetworksendbytespsmax != null" >
+        systemNetworkSendBytesPsMax,
+      </if>
+      <if test="systemnetworksendbytespsmean != null" >
+        systemNetworkSendBytesPsMean,
+      </if>
+      <if test="systemnetworksendbytespsstd != null" >
+        systemNetworkSendBytesPsStd,
+      </if>
+      <if test="systemnetworksendbytesps55quantile != null" >
+        systemNetworkSendBytesPs55Quantile,
+      </if>
+      <if test="systemnetworksendbytesps75quantile != null" >
+        systemNetworkSendBytesPs75Quantile,
+      </if>
+      <if test="systemnetworksendbytesps95quantile != null" >
+        systemNetworkSendBytesPs95Quantile,
+      </if>
+      <if test="systemnetworksendbytesps99quantile != null" >
+        systemNetworkSendBytesPs99Quantile,
+      </if>
+      <if test="systemnetworktcpconnectionnum != null" >
+        systemNetworkTcpConnectionNum,
+      </if>
+      <if test="systemnetworktcplisteningnum != null" >
+        systemNetworkTcpListeningNum,
+      </if>
+      <if test="systemnetworktcpestablishednum != null" >
+        systemNetworkTcpEstablishedNum,
+      </if>
+      <if test="systemnetworktcpsynsentnum != null" >
+        systemNetworkTcpSynSentNum,
+      </if>
+      <if test="systemnetworktcpsynrecvnum != null" >
+        systemNetworkTcpSynRecvNum,
+      </if>
+      <if test="systemnetworktcpfinwait1num != null" >
+        systemNetworkTcpFinWait1Num,
+      </if>
+      <if test="systemnetworktcpfinwait2num != null" >
+        systemNetworkTcpFinWait2Num,
+      </if>
+      <if test="systemnetworktcptimewaitnum != null" >
+        systemNetworkTcpTimeWaitNum,
+      </if>
+      <if test="systemnetworktcpclosednum != null" >
+        systemNetworkTcpClosedNum,
+      </if>
+      <if test="systemnetworktcpclosewaitnum != null" >
+        systemNetworkTcpCloseWaitNum,
+      </if>
+      <if test="systemnetworktcpclosingnum != null" >
+        systemNetworkTcpClosingNum,
+      </if>
+      <if test="systemnetworktcplastacknum != null" >
+        systemNetworkTcpLastAckNum,
+      </if>
+      <if test="systemnetworktcpnonenum != null" >
+        systemNetworkTcpNoneNum,
+      </if>
+      <if test="systemnetworktcpactiveopens != null" >
+        systemNetworkTcpActiveOpens,
+      </if>
+      <if test="systemnetworktcppassiveopens != null" >
+        systemNetworkTcpPassiveOpens,
+      </if>
+      <if test="systemnetworktcpattemptfails != null" >
+        systemNetworkTcpAttemptFails,
+      </if>
+      <if test="systemnetworktcpestabresets != null" >
+        systemNetworkTcpEstabResets,
+      </if>
+      <if test="systemnetworktcpretranssegs != null" >
+        systemNetworkTcpRetransSegs,
+      </if>
+      <if test="systemnetworktcpextlistenoverflows != null" >
+        systemNetworkTcpExtListenOverflows,
+      </if>
+      <if test="systemnetworkudpindatagrams != null" >
+        systemNetworkUdpInDatagrams,
+      </if>
+      <if test="systemnetworkudpoutdatagrams != null" >
+        systemNetworkUdpOutDatagrams,
+      </if>
+      <if test="systemnetworkudpinerrors != null" >
+        systemNetworkUdpInErrors,
+      </if>
+      <if test="systemnetworkudpnoports != null" >
+        systemNetworkUdpNoPorts,
+      </if>
+      <if test="systemnetworkudpsendbuffererrors != null" >
+        systemNetworkUdpSendBufferErrors,
+      </if>
+      <if test="heartbeattime != null" >
+        heartbeatTime,
+      </if>
+      <if test="heartbeattimeminute != null" >
+        heartbeatTimeMinute,
+      </if>
+      <if test="heartbeattimehour != null" >
+        heartbeatTimeHour,
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        heartbeatTimeDay,
+      </if>
+      <if test="systemNetCardsBandWidth != null" >
+        systemNetCardsBandWidth,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs != null" >
+        systemNetworkSendAndReceiveBytesPs,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMin != null" >
+        systemNetworkSendAndReceiveBytesPsMin,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMax != null" >
+        systemNetworkSendAndReceiveBytesPsMax,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMean != null" >
+        systemNetworkSendAndReceiveBytesPsMean,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsStd != null" >
+        systemNetworkSendAndReceiveBytesPsStd,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs55Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs55Quantile,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs75Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs75Quantile,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs95Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs95Quantile,
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs99Quantile != null" >
+        systemNetworkSendAndReceiveBytesPs99Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent != null" >
+        systemNetWorkBandWidthUsedPercent,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMin != null" >
+        systemNetWorkBandWidthUsedPercentMin,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMax != null" >
+        systemNetWorkBandWidthUsedPercentMax,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMean != null" >
+        systemNetWorkBandWidthUsedPercentMean,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentStd != null" >
+        systemNetWorkBandWidthUsedPercentStd,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent55Quantile != null" >
+        systemNetWorkBandWidthUsedPercent55Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent75Quantile != null" >
+        systemNetWorkBandWidthUsedPercent75Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent95Quantile != null" >
+        systemNetWorkBandWidthUsedPercent95Quantile,
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent99Quantile != null" >
+        systemNetWorkBandWidthUsedPercent99Quantile,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="ostype != null" >
+        #{ostype,jdbcType=VARCHAR},
+      </if>
+      <if test="osversion != null" >
+        #{osversion,jdbcType=VARCHAR},
+      </if>
+      <if test="oskernelversion != null" >
+        #{oskernelversion,jdbcType=VARCHAR},
+      </if>
+      <if test="hostname != null" >
+        #{hostname,jdbcType=VARCHAR},
+      </if>
+      <if test="ips != null" >
+        #{ips,jdbcType=VARCHAR},
+      </if>
+      <if test="systemntpoffset != null" >
+        #{systemntpoffset,jdbcType=BIGINT},
+      </if>
+      <if test="systemstartuptime != null" >
+        #{systemstartuptime,jdbcType=BIGINT},
+      </if>
+      <if test="systemuptime != null" >
+        #{systemuptime,jdbcType=BIGINT},
+      </if>
+      <if test="processesblocked != null" >
+        #{processesblocked,jdbcType=INTEGER},
+      </if>
+      <if test="processessleeping != null" >
+        #{processessleeping,jdbcType=INTEGER},
+      </if>
+      <if test="processeszombies != null" >
+        #{processeszombies,jdbcType=INTEGER},
+      </if>
+      <if test="processesstopped != null" >
+        #{processesstopped,jdbcType=INTEGER},
+      </if>
+      <if test="processesrunning != null" >
+        #{processesrunning,jdbcType=INTEGER},
+      </if>
+      <if test="processesidle != null" >
+        #{processesidle,jdbcType=INTEGER},
+      </if>
+      <if test="processeswait != null" >
+        #{processeswait,jdbcType=INTEGER},
+      </if>
+      <if test="processesdead != null" >
+        #{processesdead,jdbcType=INTEGER},
+      </if>
+      <if test="processespaging != null" >
+        #{processespaging,jdbcType=INTEGER},
+      </if>
+      <if test="processesunknown != null" >
+        #{processesunknown,jdbcType=INTEGER},
+      </if>
+      <if test="processestotal != null" >
+        #{processestotal,jdbcType=INTEGER},
+      </if>
+      <if test="processestotalthreads != null" >
+        #{processestotalthreads,jdbcType=INTEGER},
+      </if>
+      <if test="cpucores != null" >
+        #{cpucores,jdbcType=INTEGER},
+      </if>
+      <if test="systemcpuutil != null" >
+        #{systemcpuutil,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutilmin != null" >
+        #{systemcpuutilmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutilmax != null" >
+        #{systemcpuutilmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutilmean != null" >
+        #{systemcpuutilmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutilstd != null" >
+        #{systemcpuutilstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutil55quantile != null" >
+        #{systemcpuutil55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutil75quantile != null" >
+        #{systemcpuutil75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutil95quantile != null" >
+        #{systemcpuutil95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutil99quantile != null" >
+        #{systemcpuutil99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercent != null" >
+        #{systemcpuutiltotalpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercentmin != null" >
+        #{systemcpuutiltotalpercentmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercentmax != null" >
+        #{systemcpuutiltotalpercentmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercentmean != null" >
+        #{systemcpuutiltotalpercentmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercentstd != null" >
+        #{systemcpuutiltotalpercentstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercent55quantile != null" >
+        #{systemcpuutiltotalpercent55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercent75quantile != null" >
+        #{systemcpuutiltotalpercent75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercent95quantile != null" >
+        #{systemcpuutiltotalpercent95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuutiltotalpercent99quantile != null" >
+        #{systemcpuutiltotalpercent99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystem != null" >
+        #{systemcpusystem,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystemmin != null" >
+        #{systemcpusystemmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystemmax != null" >
+        #{systemcpusystemmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystemmean != null" >
+        #{systemcpusystemmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystemstd != null" >
+        #{systemcpusystemstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystem55quantile != null" >
+        #{systemcpusystem55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystem75quantile != null" >
+        #{systemcpusystem75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystem95quantile != null" >
+        #{systemcpusystem95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusystem99quantile != null" >
+        #{systemcpusystem99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuuser != null" >
+        #{systemcpuuser,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusermin != null" >
+        #{systemcpuusermin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusermax != null" >
+        #{systemcpuusermax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusermean != null" >
+        #{systemcpuusermean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuuserstd != null" >
+        #{systemcpuuserstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuuser55quantile != null" >
+        #{systemcpuuser55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuuser75quantile != null" >
+        #{systemcpuuser75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuuser95quantile != null" >
+        #{systemcpuuser95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuuser99quantile != null" >
+        #{systemcpuuser99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidle != null" >
+        #{systemcpuidle,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidlemin != null" >
+        #{systemcpuidlemin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidlemax != null" >
+        #{systemcpuidlemax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidlemean != null" >
+        #{systemcpuidlemean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidlestd != null" >
+        #{systemcpuidlestd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidle55quantile != null" >
+        #{systemcpuidle55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidle75quantile != null" >
+        #{systemcpuidle75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidle95quantile != null" >
+        #{systemcpuidle95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuidle99quantile != null" >
+        #{systemcpuidle99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitches != null" >
+        #{systemcpuswitches,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitchesmin != null" >
+        #{systemcpuswitchesmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitchesmax != null" >
+        #{systemcpuswitchesmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitchesmean != null" >
+        #{systemcpuswitchesmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitchesstd != null" >
+        #{systemcpuswitchesstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitches55quantile != null" >
+        #{systemcpuswitches55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitches75quantile != null" >
+        #{systemcpuswitches75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitches95quantile != null" >
+        #{systemcpuswitches95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuswitches99quantile != null" >
+        #{systemcpuswitches99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirq != null" >
+        #{systemcpuusageirq,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirqmin != null" >
+        #{systemcpuusageirqmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirqmax != null" >
+        #{systemcpuusageirqmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirqmean != null" >
+        #{systemcpuusageirqmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirqstd != null" >
+        #{systemcpuusageirqstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirq55quantile != null" >
+        #{systemcpuusageirq55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirq75quantile != null" >
+        #{systemcpuusageirq75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirq95quantile != null" >
+        #{systemcpuusageirq95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusageirq99quantile != null" >
+        #{systemcpuusageirq99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirq != null" >
+        #{systemcpuusagesoftirq,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirqmin != null" >
+        #{systemcpuusagesoftirqmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirqmax != null" >
+        #{systemcpuusagesoftirqmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirqmean != null" >
+        #{systemcpuusagesoftirqmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirqstd != null" >
+        #{systemcpuusagesoftirqstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirq55quantile != null" >
+        #{systemcpuusagesoftirq55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirq75quantile != null" >
+        #{systemcpuusagesoftirq75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirq95quantile != null" >
+        #{systemcpuusagesoftirq95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuusagesoftirq99quantile != null" >
+        #{systemcpuusagesoftirq99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1 != null" >
+        #{systemload1,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1min != null" >
+        #{systemload1min,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1max != null" >
+        #{systemload1max,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1mean != null" >
+        #{systemload1mean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1std != null" >
+        #{systemload1std,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload155quantile != null" >
+        #{systemload155quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload175quantile != null" >
+        #{systemload175quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload195quantile != null" >
+        #{systemload195quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload199quantile != null" >
+        #{systemload199quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload5 != null" >
+        #{systemload5,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload5min != null" >
+        #{systemload5min,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload5max != null" >
+        #{systemload5max,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload5mean != null" >
+        #{systemload5mean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload5std != null" >
+        #{systemload5std,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload555quantile != null" >
+        #{systemload555quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload575quantile != null" >
+        #{systemload575quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload595quantile != null" >
+        #{systemload595quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload599quantile != null" >
+        #{systemload599quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload15 != null" >
+        #{systemload15,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload15min != null" >
+        #{systemload15min,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload15max != null" >
+        #{systemload15max,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload15mean != null" >
+        #{systemload15mean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload15std != null" >
+        #{systemload15std,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1555quantile != null" >
+        #{systemload1555quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1575quantile != null" >
+        #{systemload1575quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1595quantile != null" >
+        #{systemload1595quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemload1599quantile != null" >
+        #{systemload1599quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowait != null" >
+        #{systemcpuiowait,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowaitmin != null" >
+        #{systemcpuiowaitmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowaitmax != null" >
+        #{systemcpuiowaitmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowaitmean != null" >
+        #{systemcpuiowaitmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowaitstd != null" >
+        #{systemcpuiowaitstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowait55quantile != null" >
+        #{systemcpuiowait55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowait75quantile != null" >
+        #{systemcpuiowait75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowait95quantile != null" >
+        #{systemcpuiowait95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuiowait99quantile != null" >
+        #{systemcpuiowait99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguest != null" >
+        #{systemcpuguest,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguestmin != null" >
+        #{systemcpuguestmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguestmax != null" >
+        #{systemcpuguestmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguestmean != null" >
+        #{systemcpuguestmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpugueststd != null" >
+        #{systemcpugueststd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguest55quantile != null" >
+        #{systemcpuguest55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguest75quantile != null" >
+        #{systemcpuguest75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguest95quantile != null" >
+        #{systemcpuguest95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpuguest99quantile != null" >
+        #{systemcpuguest99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusteal != null" >
+        #{systemcpusteal,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpustealmin != null" >
+        #{systemcpustealmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpustealmax != null" >
+        #{systemcpustealmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpustealmean != null" >
+        #{systemcpustealmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpustealstd != null" >
+        #{systemcpustealstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusteal55quantile != null" >
+        #{systemcpusteal55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusteal75quantile != null" >
+        #{systemcpusteal75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusteal95quantile != null" >
+        #{systemcpusteal95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemcpusteal99quantile != null" >
+        #{systemcpusteal99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemmemcommitlimit != null" >
+        #{systemmemcommitlimit,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemcommittedas != null" >
+        #{systemmemcommittedas,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemcommitted != null" >
+        #{systemmemcommitted,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemnonpaged != null" >
+        #{systemmemnonpaged,jdbcType=BIGINT},
+      </if>
+      <if test="systemmempaged != null" >
+        #{systemmempaged,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemshared != null" >
+        #{systemmemshared,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemslab != null" >
+        #{systemmemslab,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemtotal != null" >
+        #{systemmemtotal,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemfree != null" >
+        #{systemmemfree,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemused != null" >
+        #{systemmemused,jdbcType=BIGINT},
+      </if>
+      <if test="systemmembuffered != null" >
+        #{systemmembuffered,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemcached != null" >
+        #{systemmemcached,jdbcType=BIGINT},
+      </if>
+      <if test="systemmemfreepercent != null" >
+        #{systemmemfreepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemmemusedpercent != null" >
+        #{systemmemusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemswapcached != null" >
+        #{systemswapcached,jdbcType=BIGINT},
+      </if>
+      <if test="systemswapfree != null" >
+        #{systemswapfree,jdbcType=BIGINT},
+      </if>
+      <if test="systemswapfreepercent != null" >
+        #{systemswapfreepercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemswaptotal != null" >
+        #{systemswaptotal,jdbcType=BIGINT},
+      </if>
+      <if test="systemswapused != null" >
+        #{systemswapused,jdbcType=BIGINT},
+      </if>
+      <if test="systemswapusedpercent != null" >
+        #{systemswapusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemdisks != null" >
+        #{systemdisks,jdbcType=INTEGER},
+      </if>
+      <if test="systemfilesmax != null" >
+        #{systemfilesmax,jdbcType=INTEGER},
+      </if>
+      <if test="systemfilesallocated != null" >
+        #{systemfilesallocated,jdbcType=INTEGER},
+      </if>
+      <if test="systemfilesleft != null" >
+        #{systemfilesleft,jdbcType=INTEGER},
+      </if>
+      <if test="systemfilesusedpercent != null" >
+        #{systemfilesusedpercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemfilesused != null" >
+        #{systemfilesused,jdbcType=INTEGER},
+      </if>
+      <if test="systemfilesnotused != null" >
+        #{systemfilesnotused,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetcards != null" >
+        #{systemnetcards,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworkreceivebytesps != null" >
+        #{systemnetworkreceivebytesps,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytespsmin != null" >
+        #{systemnetworkreceivebytespsmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytespsmax != null" >
+        #{systemnetworkreceivebytespsmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytespsmean != null" >
+        #{systemnetworkreceivebytespsmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytespsstd != null" >
+        #{systemnetworkreceivebytespsstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytesps55quantile != null" >
+        #{systemnetworkreceivebytesps55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytesps75quantile != null" >
+        #{systemnetworkreceivebytesps75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytesps95quantile != null" >
+        #{systemnetworkreceivebytesps95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworkreceivebytesps99quantile != null" >
+        #{systemnetworkreceivebytesps99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytesps != null" >
+        #{systemnetworksendbytesps,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytespsmin != null" >
+        #{systemnetworksendbytespsmin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytespsmax != null" >
+        #{systemnetworksendbytespsmax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytespsmean != null" >
+        #{systemnetworksendbytespsmean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytespsstd != null" >
+        #{systemnetworksendbytespsstd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytesps55quantile != null" >
+        #{systemnetworksendbytesps55quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytesps75quantile != null" >
+        #{systemnetworksendbytesps75quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytesps95quantile != null" >
+        #{systemnetworksendbytesps95quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworksendbytesps99quantile != null" >
+        #{systemnetworksendbytesps99quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemnetworktcpconnectionnum != null" >
+        #{systemnetworktcpconnectionnum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcplisteningnum != null" >
+        #{systemnetworktcplisteningnum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpestablishednum != null" >
+        #{systemnetworktcpestablishednum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpsynsentnum != null" >
+        #{systemnetworktcpsynsentnum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpsynrecvnum != null" >
+        #{systemnetworktcpsynrecvnum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpfinwait1num != null" >
+        #{systemnetworktcpfinwait1num,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpfinwait2num != null" >
+        #{systemnetworktcpfinwait2num,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcptimewaitnum != null" >
+        #{systemnetworktcptimewaitnum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpclosednum != null" >
+        #{systemnetworktcpclosednum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpclosewaitnum != null" >
+        #{systemnetworktcpclosewaitnum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpclosingnum != null" >
+        #{systemnetworktcpclosingnum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcplastacknum != null" >
+        #{systemnetworktcplastacknum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpnonenum != null" >
+        #{systemnetworktcpnonenum,jdbcType=INTEGER},
+      </if>
+      <if test="systemnetworktcpactiveopens != null" >
+        #{systemnetworktcpactiveopens,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworktcppassiveopens != null" >
+        #{systemnetworktcppassiveopens,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworktcpattemptfails != null" >
+        #{systemnetworktcpattemptfails,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworktcpestabresets != null" >
+        #{systemnetworktcpestabresets,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworktcpretranssegs != null" >
+        #{systemnetworktcpretranssegs,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworktcpextlistenoverflows != null" >
+        #{systemnetworktcpextlistenoverflows,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworkudpindatagrams != null" >
+        #{systemnetworkudpindatagrams,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworkudpoutdatagrams != null" >
+        #{systemnetworkudpoutdatagrams,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworkudpinerrors != null" >
+        #{systemnetworkudpinerrors,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworkudpnoports != null" >
+        #{systemnetworkudpnoports,jdbcType=BIGINT},
+      </if>
+      <if test="systemnetworkudpsendbuffererrors != null" >
+        #{systemnetworkudpsendbuffererrors,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattime != null" >
+        #{heartbeattime,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimeminute != null" >
+        #{heartbeattimeminute,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeattimehour != null" >
+        #{heartbeattimehour,jdbcType=BIGINT},
+      </if>
+      <if test="heartbeatTimeDay != null" >
+        #{heartbeatTimeDay,jdbcType=BIGINT},
+      </if>
+      <if test="systemNetCardsBandWidth != null" >
+        #{systemNetCardsBandWidth,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs != null" >
+        #{systemNetworkSendAndReceiveBytesPs,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMin != null" >
+        #{systemNetworkSendAndReceiveBytesPsMin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMax != null" >
+        #{systemNetworkSendAndReceiveBytesPsMax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsMean != null" >
+        #{systemNetworkSendAndReceiveBytesPsMean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPsStd != null" >
+        #{systemNetworkSendAndReceiveBytesPsStd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs55Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs55Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs75Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs75Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs95Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs95Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetworkSendAndReceiveBytesPs99Quantile != null" >
+        #{systemNetworkSendAndReceiveBytesPs99Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent != null" >
+        #{systemNetWorkBandWidthUsedPercent,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMin != null" >
+        #{systemNetWorkBandWidthUsedPercentMin,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMax != null" >
+        #{systemNetWorkBandWidthUsedPercentMax,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentMean != null" >
+        #{systemNetWorkBandWidthUsedPercentMean,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercentStd != null" >
+        #{systemNetWorkBandWidthUsedPercentStd,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent55Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent55Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent75Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent75Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent95Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent95Quantile,jdbcType=DOUBLE},
+      </if>
+      <if test="systemNetWorkBandWidthUsedPercent99Quantile != null" >
+        #{systemNetWorkBandWidthUsedPercent99Quantile,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="deleteByLtHeartbeatTime" parameterType="java.lang.Long">
+    delete from tb_metrics_system
+    where heartbeatTime &lt; #{heartBeatTime}
+  </delete>
+
+  <select id="getSumMetricAllAgents" resultType="java.lang.Double" parameterType="java.util.Map">
+    SELECT SUM(t1.stat) FROM (
+                               SELECT ${function}(${fieldName}) AS 'stat'
+                               from tb_metrics_system
+                               where heartbeatTime &gt;= #{startTime} and heartbeatTime &lt;= #{endTime}
+                               GROUP BY hostName
+                             ) AS t1
+  </select>
+
+</mapper>
