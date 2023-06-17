@@ -68,12 +68,8 @@ function start() {
     JAVA_OPTS="-DtaskName=$TASK_NAME -Dbaselog=$LOG_DIRS $APP_OPTS"
     JAVA_OPTS=" $JAVA_OPTS -cp $BASE_CLASS_PATH "
 
-    #判断是否是centos6.7版本的系统
-    if [ "X$LINUX_VERSION" == "X6.7" ];then
-        JAVA_OPTS=" $JAVA_OPTS -Djava.library.path=${workspace}/bin/"
-    else
-        JAVA_OPTS=" $JAVA_OPTS -Djava.library.path=${workspace}/bin/"
-    fi
+    JAVA_OPTS=" $JAVA_OPTS -Djava.library.path=${workspace}/bin/"
+
 
     # 判断JAVA_HOME是否存在
     if [ "X$JAVA_HOME" == "X" ];then
