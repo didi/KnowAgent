@@ -112,7 +112,7 @@
 
 # 3 KnowAgent开源用户交流群
 
-​	请添加微信号：mike_zhangliang 或 WilliamHu66，回复”KnowAgent 加群“。
+​	请添加微信号：mike_zhangliang 或 William_Hu1989，回复”KnowAgent 加群“。
 
 # 4 协议
 
