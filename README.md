@@ -118,5 +118,6 @@
 # 4 协议
 
 ​	`KnowAgent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)。
+[![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
 
 
