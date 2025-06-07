@@ -20,7 +20,12 @@
 
 ## 1.2 快速体验地址
 
-- 体验地址 [http://101.43.178.205:9011/](http://101.43.178.205:9011) 
+- 体验地址 [http://101.43.178.205:9011/](http://101.43.178.205:9011)
+ <div style="width: 1px; height: 1px; overflow: hidden; display: inline-block">
+ 
+    [![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
+
+</div>
 
 ## 1.3 用户体验地图
 
@@ -119,8 +124,4 @@
 
 ​	`KnowAgent`基于`Apache-2.0`协议进行分发和使用，更多信息参见[协议文件](LICENSE)。
 
-<div style="width: 1px; height: 1px; overflow: hidden; display: inline-block">
- 
-    [![Powered by DartNode](https://dartnode.com/branding/DN-Open-Source-sm.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
 
-</div>
